@@ -14,7 +14,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import info.nightscout.androidaps.R;
 
@@ -139,7 +138,7 @@ public class ObjectivesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_objectives, container, false);
+        View view = inflater.inflate(R.layout.objectives_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.objectives_recyclerview);
         recyclerView.setHasFixedSize(true);

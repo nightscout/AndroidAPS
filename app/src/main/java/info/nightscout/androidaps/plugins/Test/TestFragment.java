@@ -30,7 +30,7 @@ public class TestFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstance) {
-        View layout = inflater.inflate(R.layout.app_fragment, container, false);
+        View layout = inflater.inflate(R.layout.test_fragment, container, false);
         textView = (TextView) layout.findViewById(R.id.position);
         Bundle bundle = getArguments();
         if (bundle != null) {

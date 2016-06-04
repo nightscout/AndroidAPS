@@ -27,5 +27,12 @@
     <string name="objectives_gate_label_string">Gate:</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
+    <string name="profileview_dia_label">DIA:</string>
+    <string name="profileview_activeprofile_label">Active profile:</string>
+    <string name="profileview_ic_label">IC:</string>
+    <string name="profileview_isf_label">ISF:</string>
+    <string name="profileview_basal_label">Basal:</string>
+    <string name="profileview_target_label">Target:</string>
+    <string name="profileview_noprofile_text">NO PROFILE SET</string>
 
 </resources>
