@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">AndroidAPS</string>
+    <string name="title_activity_main">AndroidAPS</string>
+
+    <string name="title_activity_preferences">Preferences</string>
+    <string name="ns_sync_title">Nightscout synchronization</string>
+    <string name="ns_sync_profile_title">Synchronize profile</string>
+    <string name="ns_units">Units</string>
+    <string name="safety_title">Safety</string>
+    <string name="safety_maxbolus_title">Max allowed bolus</string>
+    <string name="safety_maxcarbs_title">Max allowed carbs</string>
+    <string name="nav_home">Home</string>
+    <string name="nav_preferences">Preferences</string>
+    <string name="nav_refreshtreatments">Refresh treatments from NS</string>
+    <string name="nav_backup">Backup</string>
+    <string name="nav_test_alarm">Test alarm</string>
+    <string name="nav_resetdb">Reset databases</string>
+    <string name="nav_exit">Exit</string>
+    <string name="safety_useextended_title">Use extended boluses</string>
+    <string name="safety_useextended_summary">Use extended boluses for high temps (\>200%)</string>
+    <string name="ns_sync_use_absolute_title">Use absolute values</string>
+    <string name="ns_sync_use_absolute_summary">Use absolute basal values instead of percent in upload to NS</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="objectives_objective_label_string">Objective:</string>
+    <string name="objectives_gate_label_string">Gate:</string>
+    <string name="objectives_button_start">Start</string>
+    <string name="objectives_button_verify">Verify</string>
+
+</resources>

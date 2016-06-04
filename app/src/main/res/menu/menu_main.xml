@@ -1,0 +1,25 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MainActivity">
+    <item
+        android:id="@+id/nav_home"
+        android:title="@string/nav_home" />
+    <item
+        android:id="@+id/nav_preferences"
+        android:title="@string/nav_preferences" />
+    <item
+        android:id="@+id/nav_refreshtreatments"
+        android:title="@string/nav_refreshtreatments" />
+    <item
+        android:id="@+id/nav_resetdb"
+        android:title="@string/nav_resetdb" />
+    <item
+        android:id="@+id/nav_backup"
+        android:title="@string/nav_backup" />
+    <item
+        android:id="@+id/nav_test_alarm"
+        android:title="@string/nav_test_alarm" />
+    <item
+        android:id="@+id/nav_exit"
+        android:title="@string/nav_exit" />
+</menu>
