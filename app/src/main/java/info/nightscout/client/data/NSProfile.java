@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 public class NSProfile {
@@ -272,6 +273,18 @@ public class NSProfile {
     public static int secondsFromMidnight() {
         Calendar c = Calendar.getInstance();
         long now = c.getTimeInMillis();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.set(Calendar.MILLISECOND, 0);
+        long passed = now - c.getTimeInMillis();
+        return (int) (passed / 1000);
+    }
+
+    public static int secondsFromMidnight(Date date) {
+        Calendar c = Calendar.getInstance();
+        long now = date.getTime();
+        c.setTime(date);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);

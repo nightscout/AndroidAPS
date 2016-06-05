@@ -16,8 +16,10 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.data.Iob;
 import info.nightscout.client.broadcasts.Intents;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
 @DatabaseTable(tableName = "Treatments")
@@ -53,40 +55,43 @@ public class Treatment {
         this.insulin = t.insulin;
         this.carbs = t.carbs;
     }
-/*
-    public Iob iobCalc(Date time, Double dia) {
-        Double diaratio = 3.0 / dia;
-        Double peak = 75d;
-        Double end = 180d;
-        //var sens = profile_data.sens;
 
-        Iob results = new Iob();
+    public Iob iobCalc(Date time) {
 
-        if (insulin != 0) {
-            long bolusTime = created_at.getTime();
-            Double minAgo = diaratio * (time.getTime() - bolusTime) / 1000 / 60;
-            Double iobContrib = 0d;
-            Double activityContrib = 0d;
+        Iob result = new Iob();
+        NSProfile profile = MainApp.getNSProfile();
 
-            if (minAgo < peak) {
-                Double x = (minAgo/5 + 1);
-                iobContrib = insulin * (1 - 0.001852 * x * x + 0.001852 * x);
-                //activityContrib=sens*treatment.insulin*(2/dia/60/peak)*minAgo;
-                activityContrib = insulin * (2 / dia / 60 / peak) * minAgo;
-            } else if (minAgo < end) {
-                Double y = (minAgo-peak)/5;
-                iobContrib = insulin * (0.001323 * y * y - .054233 * y + .55556);
-                //activityContrib=sens*treatment.insulin*(2/dia/60-(minAgo-peak)*2/dia/60/(60*dia-peak));
-                activityContrib = insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * dia - peak));
-            }
-
-            results.iobContrib = iobContrib;
-            results.activityContrib = activityContrib;
+        if (profile == null) {
+            return result;
         }
 
-        return results;
+        Double dia = profile.getDia();
+        Double sens = profile.getIsf(profile.secondsFromMidnight(time));
+
+        Double scaleFactor = 3.0 / dia;
+        Double peak = 75d;
+        Double end = 180d;
+
+        if (this.insulin != 0d) {
+            Long bolusTime = this.created_at.getTime();
+            Double minAgo = scaleFactor * (time.getTime() - bolusTime) / 1000d / 60d;
+
+            if (minAgo < peak) {
+                Double x1 = minAgo / 5 + 1;
+                result.iobContrib = this.insulin * (1 - 0.001852 * x1 * x1 + 0.001852 * x1);
+                // units: BG (mg/dL)  = (BG/U) *    U insulin     * scalar
+                result.activityContrib = sens * this.insulin * (2 / dia / 60 / peak) * minAgo;
+
+            } else if (minAgo < end) {
+                Double x2 = (minAgo - 75) / 5;
+                result.iobContrib = this.insulin * (0.001323 * x2 * x2 - 0.054233 * x2 + 0.55556);
+                result.activityContrib = sens * this.insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * dia - peak));
+            }
+        }
+        return result;
     }
 
+/*
     public Iob calcIobOpenAPS() {
         IobCalc calc = new IobCalc(created_at,insulin,new Date());
         calc.setBolusDiaTimesTwo();
