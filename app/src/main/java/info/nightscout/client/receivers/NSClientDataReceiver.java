@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.client.broadcasts.Intents;
@@ -182,12 +183,17 @@ public class NSClientDataReceiver extends BroadcastReceiver {
                         removeTreatmentFromDb(_id);
                     }
                 }
+                MainApp.bus().post(new EventTreatmentChange());
 
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
+        }
+
+        if (intent.getAction().equals(Intents.ACTION_NEW_SGV)) {
+            MainApp.bus().post(new EventNewBG());
         }
     }
 

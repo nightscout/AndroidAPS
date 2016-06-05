@@ -34,5 +34,11 @@
     <string name="profileview_basal_label">Basal:</string>
     <string name="profileview_target_label">Target:</string>
     <string name="profileview_noprofile_text">NO PROFILE SET</string>
+    <string name="treatments_insulin_label_string">Insulin:</string>
+    <string name="treatments_carbs_label_string">Carbs:</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="treatments_activity_string">Activity:</string>
+    <string name="treatments_iobtotal_label_string">Toal IOB:</string>
+    <string name="treatments_iobactivitytotal_label_string">Total IOB activity:</string>
 
 </resources>

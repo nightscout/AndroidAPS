@@ -91,6 +91,4 @@ public class ProfileViewerFragment extends Fragment {
     public void onStatusEvent(final EventNewBasalProfile ev) {
         setContent();
     }
-
-
 }

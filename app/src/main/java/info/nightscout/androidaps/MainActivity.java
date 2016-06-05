@@ -15,12 +15,15 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import info.nightscout.androidaps.plugins.ProfileViewer.ProfileViewerFragment;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.tabs.*;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.Test.TestFragment;
 import info.nightscout.client.broadcasts.Intents;
 
-public class MainActivity extends AppCompatActivity implements ObjectivesFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements ObjectivesFragment.OnFragmentInteractionListener,
+                   TreatmentsFragment.OnFragmentInteractionListener {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
     private Toolbar toolbar;
@@ -36,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements ObjectivesFragmen
         // Register all tabs in app here
         mAdapter = new TabPageAdapter(getSupportFragmentManager());
         mAdapter.registerNewFragment("Test", TestFragment.newInstance());
+        mAdapter.registerNewFragment("Treatments", TreatmentsFragment.newInstance());
         mAdapter.registerNewFragment("Profile", ProfileViewerFragment.newInstance());
         mAdapter.registerNewFragment("Objectives", ObjectivesFragment.newInstance());
 
