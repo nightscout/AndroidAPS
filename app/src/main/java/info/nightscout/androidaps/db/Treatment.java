@@ -87,12 +87,12 @@ public class Treatment {
                 Double x1 = minAgo / 5d + 1;
                 result.iobContrib = this.insulin * (1 - 0.001852 * x1 * x1 + 0.001852 * x1);
                 // units: BG (mg/dL)  = (BG/U) *    U insulin     * scalar
-                result.activityContrib = sens * this.insulin * (2 / dia / 60 / peak) * minAgo;
+                result.activityContrib = this.insulin * (2 / dia / 60 / peak) * minAgo;
 
             } else if (minAgo < end) {
                 Double x2 = (minAgo - 75) / 5;
                 result.iobContrib = this.insulin * (0.001323 * x2 * x2 - 0.054233 * x2 + 0.55556);
-                result.activityContrib = sens * this.insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * dia - peak));
+                result.activityContrib = this.insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * dia - peak));
             }
         }
         return result;
