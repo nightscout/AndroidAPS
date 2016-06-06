@@ -57,6 +57,13 @@ public class Treatment {
     }
 
     public Iob iobCalc(Date time) {
+        Iob resultNow = doIobCalc(time);
+        Iob resultIn5min = doIobCalc(new Date(time.getTime() + 5 * 60 * 1000));
+        resultNow.activityContrib = resultNow.iobContrib - resultIn5min.iobContrib;
+        return resultNow;
+    }
+
+    public Iob doIobCalc(Date time) {
 
         Iob result = new Iob();
         NSProfile profile = MainApp.getNSProfile();
@@ -77,7 +84,7 @@ public class Treatment {
             Double minAgo = scaleFactor * (time.getTime() - bolusTime) / 1000d / 60d;
 
             if (minAgo < peak) {
-                Double x1 = minAgo / 5 + 1;
+                Double x1 = minAgo / 5d + 1;
                 result.iobContrib = this.insulin * (1 - 0.001852 * x1 * x1 + 0.001852 * x1);
                 // units: BG (mg/dL)  = (BG/U) *    U insulin     * scalar
                 result.activityContrib = sens * this.insulin * (2 / dia / 60 / peak) * minAgo;

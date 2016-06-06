@@ -66,7 +66,6 @@ public class TreatmentsFragment extends Fragment {
         }
         if (recyclerView != null) {
             recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
-            //recyclerView.getAdapter().notifyDataSetChanged();
         }
         updateTotalIOB();
     }
