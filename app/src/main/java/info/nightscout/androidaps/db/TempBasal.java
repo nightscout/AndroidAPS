@@ -10,6 +10,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.Iob;
+import info.nightscout.client.data.NSProfile;
+
 @DatabaseTable(tableName = "TempBasals")
 public class TempBasal {
     private static Logger log = LoggerFactory.getLogger(TempBasal.class);
@@ -33,10 +37,10 @@ public class TempBasal {
     public Date timeEnd;
 
     @DatabaseField
-    public int percent;     // In % of current basal
+    public int percent;     // In % of current basal.  100% == current basal
 
     @DatabaseField
-    public int absolute;    // Absolute value in U
+    public Double absolute;    // Absolute value in U
 
     @DatabaseField
     public int duration;    // in minutes
@@ -47,64 +51,117 @@ public class TempBasal {
     @DatabaseField
     public boolean isAbsolute; // true if if set as absolute value in U
 
-/*
-    public Iob calcIob() {
-        Iob iob = new Iob();
 
-        long msAgo = getMillisecondsFromStart();
-        Calendar startAdjusted = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-        startAdjusted.setTime(this.timeStart);
-        int minutes = startAdjusted.get(Calendar.MINUTE);
-        minutes = minutes % 4;
-        if (startAdjusted.get(Calendar.SECOND) > 0 && minutes == 0) {
-            minutes += 4;
-        }
-        startAdjusted.add(Calendar.MINUTE, minutes);
-        startAdjusted.set(Calendar.SECOND, 0);
+    public Iob iobCalc(Date time) {
+        Iob result = new Iob();
+        NSProfile profile = MainApp.getNSProfile();
 
-        IobCalc iobCalc = new IobCalc();
-        iobCalc.setTime(new Date());
-        iobCalc.setAmount(-1.0d * (baseRatio - tempRatio) / 15.0d / 100.0d);
+        if (profile == null)
+            return result;
 
-        long timeStartTime = startAdjusted.getTimeInMillis();
-        Date currentTimeEnd = timeEnd;
-        if (currentTimeEnd == null) {
-            currentTimeEnd = new Date();
-            if (getPlannedTimeEnd().getTime() < currentTimeEnd.getTime()) {
-                currentTimeEnd = getPlannedTimeEnd();
+        int realDuration = getRealDuration();
+
+        if (realDuration > 0) {
+            Double netBasalRate = 0d;
+            Double basalRate = profile.getBasal(profile.secondsFromMidnight(time));
+            Double tempBolusSize = 0.05;
+
+            if (this.isAbsolute) {
+                netBasalRate = this.absolute - basalRate;
+            } else {
+                netBasalRate = (this.percent - 100) / 100d * basalRate;
+            }
+
+            result.netRatio = netBasalRate;
+            Double netBasalAmount = Math.round(netBasalRate * realDuration * 10 / 6) / 100d;
+            result.netInsulin = netBasalAmount;
+            if (netBasalAmount < 0.1) {
+                tempBolusSize = 0.01;
+            }
+            if (netBasalRate < 0) {
+                tempBolusSize = -tempBolusSize;
+            }
+            Long tempBolusCount = Math.round(netBasalAmount / tempBolusSize);
+            if (tempBolusCount > 0) {
+                Long tempBolusSpacing = realDuration / tempBolusCount;
+                for (Long j = 0l; j < tempBolusCount; j++) {
+                    Treatment tempBolusPart = new Treatment();
+                    tempBolusPart.insulin = tempBolusSize;
+                    Long date = this.timeStart.getTime() + j * tempBolusSpacing * 60 * 1000;
+                    tempBolusPart.created_at = new Date(date);
+                    Iob iob = tempBolusPart.iobCalc(time);
+                    result.plus(iob);
+                }
             }
         }
-        for (long time = timeStartTime; time < currentTimeEnd.getTime(); time += 4 * 60_000) {
-            Date start = new Date(time);
-
-            iobCalc.setTimeStart(start);
-            iob.plus(iobCalc.invoke());
-        }
-
-        if (Settings.logTempIOBCalculation) {
-            log.debug("TempIOB start: " + this.timeStart + " end: " + this.timeEnd + " Percent: " + this.percent + " Duration: " + this.duration + " CalcDurat: " + (int) ((currentTimeEnd.getTime() - this.timeStart.getTime()) / 1000 / 60)
-                    + "min minAgo: " + (int) (msAgo / 1000 / 60) + " IOB: " + iob.iobContrib + " Activity: " + iob.activityContrib + " Impact: " + (-0.01d * (baseRatio - tempRatio) * ((currentTimeEnd.getTime() - this.timeStart.getTime()) / 1000 / 60) / 60)
-            );
-        }
-
-        return iob;
+        return result;
     }
-*/
+
+    /*
+        public Iob calcIob() {
+            Iob iob = new Iob();
+
+            long msAgo = getMillisecondsFromStart();
+            Calendar startAdjusted = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            startAdjusted.setTime(this.timeStart);
+            int minutes = startAdjusted.get(Calendar.MINUTE);
+            minutes = minutes % 4;
+            if (startAdjusted.get(Calendar.SECOND) > 0 && minutes == 0) {
+                minutes += 4;
+            }
+            startAdjusted.add(Calendar.MINUTE, minutes);
+            startAdjusted.set(Calendar.SECOND, 0);
+
+            IobCalc iobCalc = new IobCalc();
+            iobCalc.setTime(new Date());
+            iobCalc.setAmount(-1.0d * (baseRatio - tempRatio) / 15.0d / 100.0d);
+
+            long timeStartTime = startAdjusted.getTimeInMillis();
+            Date currentTimeEnd = timeEnd;
+            if (currentTimeEnd == null) {
+                currentTimeEnd = new Date();
+                if (getPlannedTimeEnd().getTime() < currentTimeEnd.getTime()) {
+                    currentTimeEnd = getPlannedTimeEnd();
+                }
+            }
+            for (long time = timeStartTime; time < currentTimeEnd.getTime(); time += 4 * 60_000) {
+                Date start = new Date(time);
+
+                iobCalc.setTimeStart(start);
+                iob.plus(iobCalc.invoke());
+            }
+
+            if (Settings.logTempIOBCalculation) {
+                log.debug("TempIOB start: " + this.timeStart + " end: " + this.timeEnd + " Percent: " + this.percent + " Duration: " + this.duration + " CalcDurat: " + (int) ((currentTimeEnd.getTime() - this.timeStart.getTime()) / 1000 / 60)
+                        + "min minAgo: " + (int) (msAgo / 1000 / 60) + " IOB: " + iob.iobContrib + " Activity: " + iob.activityContrib + " Impact: " + (-0.01d * (baseRatio - tempRatio) * ((currentTimeEnd.getTime() - this.timeStart.getTime()) / 1000 / 60) / 60)
+                );
+            }
+
+            return iob;
+        }
+    */
     // Determine end of basal
     public Date getTimeEnd() {
         Date tempBasalTimePlannedEnd = getPlannedTimeEnd();
+        Date now = new Date();
 
-        // End already exists in database
-        if (timeEnd != null) {
-            return timeEnd;
+        if (timeEnd != null && timeEnd.getTime() < tempBasalTimePlannedEnd.getTime()) {
+            tempBasalTimePlannedEnd = timeEnd;
         }
 
-        // if not return planned time
+        if (now.getTime() < tempBasalTimePlannedEnd.getTime())
+            tempBasalTimePlannedEnd = now;
+
         return tempBasalTimePlannedEnd;
     }
 
     public Date getPlannedTimeEnd() {
         return new Date(timeStart.getTime() + 60 * 1_000 * duration);
+    }
+
+    public int getRealDuration() {
+        Long msecs = getTimeEnd().getTime() - timeStart.getTime();
+        return (int) (msecs / 60 / 1000);
     }
 
     public long getMillisecondsFromStart() {

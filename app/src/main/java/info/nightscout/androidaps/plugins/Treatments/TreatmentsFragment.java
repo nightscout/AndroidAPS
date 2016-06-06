@@ -66,7 +66,6 @@ public class TreatmentsFragment extends Fragment {
         }
         if (recyclerView != null) {
             recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
-            //recyclerView.getAdapter().notifyDataSetChanged();
         }
         updateTotalIOB();
     }
@@ -218,6 +217,14 @@ public class TreatmentsFragment extends Fragment {
     public void onStatusEvent(final EventNewBG ev) {
         updateTotalIOB();
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser)
+            updateTotalIOB();
     }
 
     /**
