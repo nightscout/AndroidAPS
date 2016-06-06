@@ -12,4 +12,5 @@ public interface Intents {
 
     // App -> NSClient
     String ACTION_DATABASE = "info.nightscout.client.DBACCESS";
+    String ACTION_RESTART = "info.nightscout.client.RESTART";
 }

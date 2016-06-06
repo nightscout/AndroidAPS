@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
@@ -34,8 +36,9 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.client.broadcasts.Intents;
 
-public class TreatmentsFragment extends Fragment {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     RecyclerView recyclerView;
@@ -43,6 +46,7 @@ public class TreatmentsFragment extends Fragment {
 
     TextView iobTotal;
     TextView activityTotal;
+    Button refreshFromNS;
 
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -171,17 +175,24 @@ public class TreatmentsFragment extends Fragment {
         iobTotal = (TextView) view.findViewById(R.id.treatments_iobtotal);
         activityTotal = (TextView) view.findViewById(R.id.treatments_iobactivitytotal);
 
+        refreshFromNS = (Button) view.findViewById(R.id.treatments_reshreshfromnightscout);
+
+        refreshFromNS.setOnClickListener(this);
         return view;
     }
 
-    /*
-        // TODO: Rename method, update argument and hook method into UI event
-        public void onButtonPressed(Uri uri) {
-            if (mListener != null) {
-                mListener.onFragmentInteraction(uri);
-            }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.treatments_reshreshfromnightscout:
+                MainApp.getDbHelper().resetTreatments();
+                initializeData();
+                Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                break;
         }
-    */
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);

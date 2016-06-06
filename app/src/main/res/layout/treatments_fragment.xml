@@ -47,6 +47,13 @@
                 android:paddingLeft="10dp" />
         </LinearLayout>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Refresh treatments from Nightscout"
+            android:id="@+id/treatments_reshreshfromnightscout"
+            android:layout_gravity="center_horizontal" />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/treatments_recyclerview"
             android:layout_width="match_parent"
