@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,7 +78,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     private void updateTotalIOB() {
         Iob total = new Iob();
-        for (Integer pos = 0; pos < treatments.size(); pos++ ) {
+        for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
             total.plus(t.iobCalc(new Date()));
         }
@@ -185,10 +187,20 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
-                MainApp.getDbHelper().resetTreatments();
-                initializeData();
-                Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle("Dialog");
+                builder.setMessage("Do you want to refresh treatments from Nightscout");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MainApp.getDbHelper().resetTreatments();
+                        initializeData();
+                        Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                        MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+
                 break;
         }
     }
@@ -243,7 +255,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p/>
+     * <p>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
