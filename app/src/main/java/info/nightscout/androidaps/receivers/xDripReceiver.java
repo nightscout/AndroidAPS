@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Services.DataService;
-import info.nightscout.androidaps.tabs.Config;
+import info.nightscout.androidaps.Config;
 
 
 public class xDripReceiver extends WakefulBroadcastReceiver {

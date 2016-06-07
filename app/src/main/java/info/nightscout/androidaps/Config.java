@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.tabs;
+package info.nightscout.androidaps;
 
 /**
  * Created by mike on 07.06.2016.

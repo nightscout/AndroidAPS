@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Services.DataService;
-import info.nightscout.androidaps.tabs.Config;
+import info.nightscout.androidaps.Config;
 
 public class NSClientDataReceiver extends WakefulBroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(NSClientDataReceiver.class);

@@ -10,12 +10,12 @@ import android.view.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.ProfileViewer.ProfileViewerFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.tabs.*;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
-import info.nightscout.androidaps.plugins.Test.TestFragment;
 
 public class MainActivity extends AppCompatActivity
         implements ObjectivesFragment.OnFragmentInteractionListener,
@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity
 
         // Register all tabs in app here
         mAdapter = new TabPageAdapter(getSupportFragmentManager());
-        mAdapter.registerNewFragment("Test", TestFragment.newInstance());
+        mAdapter.registerNewFragment("Overview", OverviewFragment.newInstance());
         mAdapter.registerNewFragment("Treatments", treatmentsFragment = TreatmentsFragment.newInstance());
         mAdapter.registerNewFragment("TempBasals", tempBasalsFragment = TempBasalsFragment.newInstance());
         mAdapter.registerNewFragment("Profile", ProfileViewerFragment.newInstance());

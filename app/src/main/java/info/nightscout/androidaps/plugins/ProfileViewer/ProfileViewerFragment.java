@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.ProfileViewer;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,6 +10,9 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
@@ -17,6 +21,8 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.client.data.NSProfile;
 
 public class ProfileViewerFragment extends Fragment {
+    private static Logger log = LoggerFactory.getLogger(ProfileViewerFragment.class);
+
     private static TextView noProfile;
     private static TextView dia;
     private static TextView activeProfile;
@@ -77,7 +83,7 @@ public class ProfileViewerFragment extends Fragment {
         isf.setText(profile.getIsfList());
         basal.setText(profile.getBasalList());
         target.setText(profile.getTargetList());
-     }
+    }
 
     private void registerBus() {
         try {
@@ -90,6 +96,15 @@ public class ProfileViewerFragment extends Fragment {
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
-        setContent();
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setContent();
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
     }
 }

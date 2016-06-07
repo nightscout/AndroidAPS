@@ -53,13 +53,6 @@ public class BgReading {
         raw = sgv.getFiltered();
     }
 
-    public String valInUnit(String units) {
-        DecimalFormat formatMmol = new DecimalFormat("0.0");
-        DecimalFormat formatMgdl = new DecimalFormat("0");
-        if (units.equals(Constants.MGDL)) return formatMgdl.format(value);
-        else return formatMmol.format(value/18d);
-    }
-
     public Double valueToUnits(String units) {
         if (units.equals(Constants.MGDL))
             return value;
@@ -74,7 +67,7 @@ public class BgReading {
 
     @Override
     public String toString() {
-        return "TempBasal{" +
+        return "BgReading{" +
                 "timeIndex=" + timeIndex +
                 ", timestamp=" + timestamp +
                 ", date=" + new Date(timestamp) +

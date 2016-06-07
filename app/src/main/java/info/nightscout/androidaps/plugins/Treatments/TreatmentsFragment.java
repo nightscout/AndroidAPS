@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -249,23 +250,31 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                initializeData();
-            }
-        });
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initializeData();
+                }
+            });
+        else
+            log.debug("EventTreatmentChange: Activity is null");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                updateTotalIOB();
-                recyclerView.getAdapter().notifyDataSetChanged();            }
-        });
-
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateTotalIOB();
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
     }
 
     @Override
@@ -281,7 +290,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.

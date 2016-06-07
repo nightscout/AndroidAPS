@@ -28,7 +28,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.tabs.Config;
+import info.nightscout.androidaps.Config;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
 
@@ -114,7 +114,7 @@ public class DataService extends IntentService {
             log.debug("XDRIPREC BG " + bgReading.toString());
 
         try {
-            MainApp.instance().getDbHelper().getDaoBgReadings().update(bgReading);
+            MainApp.instance().getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -296,7 +296,7 @@ public class DataService extends IntentService {
                     JSONObject sgvJson = new JSONObject(sgvstring);
                     NSSgv nsSgv = new NSSgv(sgvJson);
                     BgReading bgReading = new BgReading(nsSgv);
-                    MainApp.getDbHelper().getDaoBgReadings().update(bgReading);
+                    MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
                     if (Config.logIncommingData)
                         log.debug("ADD: Stored new BG: " + bgReading.toString());
                 }
@@ -308,7 +308,7 @@ public class DataService extends IntentService {
                         JSONObject sgvJson = jsonArray.getJSONObject(i);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
-                        MainApp.getDbHelper().getDaoBgReadings().update(bgReading);
+                        MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
                         if (Config.logIncommingData)
                             log.debug("ADD: Stored new BG: " + bgReading.toString());
                     }
