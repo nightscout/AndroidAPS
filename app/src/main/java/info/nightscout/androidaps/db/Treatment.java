@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.client.broadcasts.Intents;
+import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;

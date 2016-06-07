@@ -14,6 +14,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
+    <!-- To receive data from xdrip. -->
+    <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
+
     <application
         android:name=".MainApp"
         android:allowBackup="true"
@@ -29,12 +32,11 @@
             </intent-filter>
         </activity>
 
-        <!--   Receiver from NSClient -->
+        <!-- Receiver from NSClient -->
         <receiver
             android:name="info.nightscout.client.receivers.NSClientDataReceiver"
             android:enabled="true"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="info.nightscout.client.NEW_TREATMENT" />
                 <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
@@ -44,6 +46,21 @@
                 <action android:name="info.nightscout.client.NEW_STATUS" />
             </intent-filter>
         </receiver>
+
+        <!-- Receiver from xDrip -->
+        <receiver
+            android:name=".receivers.xDripReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Service processing incomming data -->
+        <service
+            android:name=".Services.DataService"
+            android:exported="false"></service>
 
     </application>
 

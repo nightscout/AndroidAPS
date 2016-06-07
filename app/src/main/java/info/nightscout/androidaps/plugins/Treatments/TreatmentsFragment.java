@@ -31,16 +31,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.client.broadcasts.Intents;
+import info.nightscout.androidaps.plugins.Treatments.Dialogs.NewTreatmentDialogFragment;
+import info.nightscout.androidaps.Services.Intents;
 
-public class TreatmentsFragment extends Fragment implements View.OnClickListener {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener, NewTreatmentDialogFragment.Communicator {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     RecyclerView recyclerView;
@@ -49,6 +50,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     TextView iobTotal;
     TextView activityTotal;
     Button refreshFromNS;
+
+    public long lastCalculationTimestamp = 0;
+    public Iob lastCalculation;
 
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -76,6 +80,15 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         updateTotalIOB();
     }
 
+    /*
+     * Recalculate IOB if value is older than 1 minute
+     */
+    public void updateTotalIOBIfNeeded() {
+        if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
+            return;
+        updateTotalIOB();
+    }
+
     private void updateTotalIOB() {
         Iob total = new Iob();
         for (Integer pos = 0; pos < treatments.size(); pos++) {
@@ -86,6 +99,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             iobTotal.setText(formatNumber2decimalplaces.format(total.iobContrib));
         if (activityTotal != null)
             activityTotal.setText(formatNumber3decimalplaces.format(total.activityContrib));
+
+        lastCalculationTimestamp = new Date().getTime();
+        lastCalculation = total;
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TreatmentsViewHolder> {
@@ -233,13 +249,23 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        initializeData();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initializeData();
+            }
+        });
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        updateTotalIOB();
-        recyclerView.getAdapter().notifyDataSetChanged();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateTotalIOB();
+                recyclerView.getAdapter().notifyDataSetChanged();            }
+        });
+
     }
 
     @Override
@@ -247,7 +273,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser)
-            updateTotalIOB();
+            updateTotalIOBIfNeeded();
     }
 
     /**
@@ -264,4 +290,10 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         // TODO: Update argument type and name
         void onFragmentInteraction(String param);
     }
+
+    @Override
+    public void treatmentDeliverRequest(Double insulin, Double carbs) {
+        // TODO: implement treatment delivery
+    }
+
 }

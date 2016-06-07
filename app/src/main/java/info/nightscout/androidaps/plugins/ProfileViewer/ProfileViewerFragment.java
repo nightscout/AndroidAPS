@@ -67,6 +67,7 @@ public class ProfileViewerFragment extends Fragment {
         NSProfile profile = MainApp.getNSProfile();
         if (profile == null) {
             noProfile.setVisibility(View.VISIBLE);
+            return;
         } else {
             noProfile.setVisibility(View.GONE);
         }

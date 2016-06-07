@@ -47,5 +47,13 @@
     <string name="tempbasals_activity_string">Activity:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
     <string name="tempbasals_iobactivitytotal_label_string">Total IOB activity:</string>
+    <string name="treatments_newtreatment_insulinamount_label">Insulin amount</string>
+    <string name="treatments_newtreatment_carbsamount_label">Carbs amount</string>
+    <string name="treatments_wizard_bg_label">BG</string>
+    <string name="treatments_wizard_carbs_label">Carbs</string>
+    <string name="treatments_wizard_correction_label">Corr</string>
+    <string name="treatments_wizard_unit_label">U</string>
+    <string name="treatments_wizard_iob_label">IOB</string>
+    <string name="treatments_wizard_total_label">TOTAL</string>
 
 </resources>

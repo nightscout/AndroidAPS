@@ -45,6 +45,9 @@ public class TempBasalsFragment extends Fragment {
     TextView iobTotal;
     TextView activityTotal;
 
+    public long lastCalculationTimestamp = 0;
+    public Iob lastCalculation;
+
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
     private static DecimalFormat formatNumber3decimalplaces = new DecimalFormat("0.000");
@@ -83,6 +86,15 @@ public class TempBasalsFragment extends Fragment {
 
 
 
+        updateTotalIOB();
+    }
+
+    /*
+     * Recalculate IOB if value is older than 1 minute
+     */
+    public void updateTotalIOBIfNeeded() {
+        if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
+            return;
         updateTotalIOB();
     }
 
@@ -253,8 +265,13 @@ public class TempBasalsFragment extends Fragment {
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        updateTotalIOB();
-        recyclerView.getAdapter().notifyDataSetChanged();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                updateTotalIOB();
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -262,7 +279,7 @@ public class TempBasalsFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser)
-            updateTotalIOB();
+            updateTotalIOBIfNeeded();
     }
 
     /**

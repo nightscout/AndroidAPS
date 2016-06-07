@@ -1,4 +1,4 @@
-package info.nightscout.client.receivers;
+package info.nightscout.androidaps.receivers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,9 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Services.DataService;
 import info.nightscout.androidaps.tabs.Config;
 
-public class NSClientDataReceiver extends WakefulBroadcastReceiver {
-    private static Logger log = LoggerFactory.getLogger(NSClientDataReceiver.class);
+
+public class xDripReceiver extends WakefulBroadcastReceiver {
+    private static Logger log = LoggerFactory.getLogger(xDripReceiver.class);
 
     @Override
     public void onReceive(Context context, Intent intent) {
