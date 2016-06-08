@@ -1,14 +1,19 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
@@ -27,15 +32,17 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.plugins.Treatments.Dialogs.NewTreatmentDialogFragment;
+import info.nightscout.androidaps.Services.Intents;
 
-public class TreatmentsFragment extends Fragment {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener, NewTreatmentDialogFragment.Communicator {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     RecyclerView recyclerView;
@@ -43,6 +50,10 @@ public class TreatmentsFragment extends Fragment {
 
     TextView iobTotal;
     TextView activityTotal;
+    Button refreshFromNS;
+
+    public long lastCalculationTimestamp = 0;
+    public Iob lastCalculation;
 
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -70,9 +81,18 @@ public class TreatmentsFragment extends Fragment {
         updateTotalIOB();
     }
 
+    /*
+     * Recalculate IOB if value is older than 1 minute
+     */
+    public void updateTotalIOBIfNeeded() {
+        if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
+            return;
+        updateTotalIOB();
+    }
+
     private void updateTotalIOB() {
         Iob total = new Iob();
-        for (Integer pos = 0; pos < treatments.size(); pos++ ) {
+        for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
             total.plus(t.iobCalc(new Date()));
         }
@@ -80,6 +100,9 @@ public class TreatmentsFragment extends Fragment {
             iobTotal.setText(formatNumber2decimalplaces.format(total.iobContrib));
         if (activityTotal != null)
             activityTotal.setText(formatNumber3decimalplaces.format(total.activityContrib));
+
+        lastCalculationTimestamp = new Date().getTime();
+        lastCalculation = total;
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TreatmentsViewHolder> {
@@ -171,17 +194,34 @@ public class TreatmentsFragment extends Fragment {
         iobTotal = (TextView) view.findViewById(R.id.treatments_iobtotal);
         activityTotal = (TextView) view.findViewById(R.id.treatments_iobactivitytotal);
 
+        refreshFromNS = (Button) view.findViewById(R.id.treatments_reshreshfromnightscout);
+
+        refreshFromNS.setOnClickListener(this);
         return view;
     }
 
-    /*
-        // TODO: Rename method, update argument and hook method into UI event
-        public void onButtonPressed(Uri uri) {
-            if (mListener != null) {
-                mListener.onFragmentInteraction(uri);
-            }
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.treatments_reshreshfromnightscout:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle("Dialog");
+                builder.setMessage("Do you want to refresh treatments from Nightscout");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MainApp.getDbHelper().resetTreatments();
+                        initializeData();
+                        Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                        MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+
+                break;
         }
-    */
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -210,13 +250,31 @@ public class TreatmentsFragment extends Fragment {
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        initializeData();
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    initializeData();
+                }
+            });
+        else
+            log.debug("EventTreatmentChange: Activity is null");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        updateTotalIOB();
-        recyclerView.getAdapter().notifyDataSetChanged();
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateTotalIOB();
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
     }
 
     @Override
@@ -224,7 +282,7 @@ public class TreatmentsFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser)
-            updateTotalIOB();
+            updateTotalIOBIfNeeded();
     }
 
     /**
@@ -241,4 +299,10 @@ public class TreatmentsFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(String param);
     }
+
+    @Override
+    public void treatmentDeliverRequest(Double insulin, Double carbs) {
+        // TODO: implement treatment delivery
+    }
+
 }

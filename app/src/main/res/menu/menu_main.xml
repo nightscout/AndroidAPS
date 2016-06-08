@@ -2,14 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
     <item
-        android:id="@+id/nav_home"
-        android:title="@string/nav_home" />
-    <item
         android:id="@+id/nav_preferences"
         android:title="@string/nav_preferences" />
-    <item
-        android:id="@+id/nav_refreshtreatments"
-        android:title="@string/nav_refreshtreatments" />
     <item
         android:id="@+id/nav_resetdb"
         android:title="@string/nav_resetdb" />

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.TempBasals;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,6 +46,9 @@ public class TempBasalsFragment extends Fragment {
     TextView iobTotal;
     TextView activityTotal;
 
+    public long lastCalculationTimestamp = 0;
+    public Iob lastCalculation;
+
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
     private static DecimalFormat formatNumber3decimalplaces = new DecimalFormat("0.000");
@@ -65,7 +69,7 @@ public class TempBasalsFragment extends Fragment {
             fake.percent = 150;
             fake.isAbsolute = false;
             fake.isExtended = false;
-            dao.create(fake);
+            dao.createOrUpdate(fake);
             // **************** TESTING CREATE FAKE RECORD *****************
 
             QueryBuilder<TempBasal, Long> queryBuilder = dao.queryBuilder();
@@ -80,9 +84,15 @@ public class TempBasalsFragment extends Fragment {
         if (recyclerView != null) {
             recyclerView.swapAdapter(new RecyclerViewAdapter(tempBasals), false);
         }
+        updateTotalIOB();
+    }
 
-
-
+    /*
+     * Recalculate IOB if value is older than 1 minute
+     */
+    public void updateTotalIOBIfNeeded() {
+        if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
+            return;
         updateTotalIOB();
     }
 
@@ -196,7 +206,7 @@ public class TempBasalsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.tempbasals_fragment, container, false);
+        View view = inflater.inflate(R.layout.tempbasals_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.tempbasals_recyclerview);
         recyclerView.setHasFixedSize(true);
@@ -248,13 +258,32 @@ public class TempBasalsFragment extends Fragment {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        initializeData();
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateTotalIOB();
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            });
+        else
+            log.debug("EventTempBasalChange: Activity is null");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        updateTotalIOB();
-        recyclerView.getAdapter().notifyDataSetChanged();
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateTotalIOB();
+                    recyclerView.getAdapter().notifyDataSetChanged();
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
     }
 
     @Override
@@ -262,7 +291,7 @@ public class TempBasalsFragment extends Fragment {
         super.setUserVisibleHint(isVisibleToUser);
 
         if (isVisibleToUser)
-            updateTotalIOB();
+            updateTotalIOBIfNeeded();
     }
 
     /**
