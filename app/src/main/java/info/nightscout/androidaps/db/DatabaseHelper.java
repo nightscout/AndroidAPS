@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.db;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
@@ -140,4 +142,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         return null;
     }
+
+    public List<BgReading> get12HoursOfBg() {
+        try {
+            Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
+            List<BgReading> bgReadings;
+            QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
+            queryBuilder.orderBy("timeIndex", false);
+            Where where = queryBuilder.where();
+            long now = new Date().getTime();
+            long dayAgo = now - 12 * 60 * 60 * 1000l;
+            where.ge("timeIndex", (long) Math.ceil(dayAgo / 60000d));
+            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
+            bgReadings = daoBgreadings.query(preparedQuery);
+            return bgReadings;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<BgReading>();
+    }
+
 }

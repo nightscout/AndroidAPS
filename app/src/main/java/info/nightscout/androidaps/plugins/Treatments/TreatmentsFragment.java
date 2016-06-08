@@ -251,7 +251,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         Activity activity = getActivity();
-        if (activity != null)
+        if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -265,7 +265,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
         Activity activity = getActivity();
-        if (activity != null)
+        if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

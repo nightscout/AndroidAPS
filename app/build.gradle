@@ -31,4 +31,5 @@ dependencies {
     compile 'com.j256.ormlite:ormlite-android:4.46'
     compile 'com.github.tony19:logback-android-classic:1.1.1-4'
     compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'com.jjoe64:graphview:4.0.1'
 }

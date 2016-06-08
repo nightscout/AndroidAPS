@@ -259,7 +259,7 @@ public class TempBasalsFragment extends Fragment {
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
         Activity activity = getActivity();
-        if (activity != null)
+        if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -274,7 +274,7 @@ public class TempBasalsFragment extends Fragment {
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
         Activity activity = getActivity();
-        if (activity != null)
+        if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
