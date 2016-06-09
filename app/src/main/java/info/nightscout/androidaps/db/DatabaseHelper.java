@@ -143,7 +143,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    public List<BgReading> get12HoursOfBg() {
+    public List<BgReading> getHoursOfBg(int hoursToFetch) {
         try {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
             List<BgReading> bgReadings;
@@ -151,7 +151,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             queryBuilder.orderBy("timeIndex", false);
             Where where = queryBuilder.where();
             long now = new Date().getTime();
-            long dayAgo = now - 12 * 60 * 60 * 1000l;
+            long dayAgo = now - hoursToFetch * 60 * 60 * 1000l;
             where.ge("timeIndex", (long) Math.ceil(dayAgo / 60000d));
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);

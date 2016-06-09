@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.ShareCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -76,9 +79,14 @@ public class OverviewFragment extends Fragment {
         if (bgGraph == null)
             return;
 
-        List<BgReading> bgReadingsArray = MainApp.getDbHelper().get12HoursOfBg();
+        int hoursToFetch = 6;
+
+        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getHoursOfBg(hoursToFetch);
         BgReading[] bgReadings = new BgReading[bgReadingsArray.size()];
         bgReadings = bgReadingsArray.toArray(bgReadings);
+
+        if (bgReadings.length == 0)
+            return;
 
         PointsGraphSeries<BgReading> series = new PointsGraphSeries<BgReading>(bgReadings);
         bgGraph.addSeries(series);
@@ -87,16 +95,23 @@ public class OverviewFragment extends Fragment {
         series.setColor(Color.GREEN);
 
         // set date label formatter
-        bgGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), android.text.format.DateFormat.getTimeFormat(getActivity())));
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(5); // only 4 because of the space
-        //bgGraph.getGridLabelRenderer().setNumHorizontalLabels(3); // only 4 because of the space
+        bgGraph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), new SimpleDateFormat("HH")));
+        bgGraph.getGridLabelRenderer().setNumVerticalLabels(11); // only 5 because of the space
+        bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
+        // allign to hours
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(bgReadings[0].timestamp);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.HOUR, 1);
         // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(bgReadings[0].timestamp);
-        bgGraph.getViewport().setMinX(bgReadings[bgReadings.length-1].timestamp);
+        bgGraph.getViewport().setMaxX(calendar.getTimeInMillis());
+        bgGraph.getViewport().setMinX(calendar.getTimeInMillis() - hoursToFetch * 60 * 60 * 1000l);
         bgGraph.getViewport().setXAxisBoundsManual(true);
 
         // set manual y bounds to have nice steps
+        // TODO: MGDL support
         bgGraph.getViewport().setMaxY(20);
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
