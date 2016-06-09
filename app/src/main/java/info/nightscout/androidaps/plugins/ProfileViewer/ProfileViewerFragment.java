@@ -24,6 +24,7 @@ public class ProfileViewerFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(ProfileViewerFragment.class);
 
     private static TextView noProfile;
+    private static TextView units;
     private static TextView dia;
     private static TextView activeProfile;
     private static TextView ic;
@@ -53,6 +54,7 @@ public class ProfileViewerFragment extends Fragment {
         View layout = inflater.inflate(R.layout.profileviewer_fragment, container, false);
 
         noProfile = (TextView) layout.findViewById(R.id.profileview_noprofile);
+        units = (TextView) layout.findViewById(R.id.profileview_units);
         dia = (TextView) layout.findViewById(R.id.profileview_dia);
         activeProfile = (TextView) layout.findViewById(R.id.profileview_activeprofile);
         ic = (TextView) layout.findViewById(R.id.profileview_ic);
@@ -77,6 +79,7 @@ public class ProfileViewerFragment extends Fragment {
         } else {
             noProfile.setVisibility(View.GONE);
         }
+        units.setText(profile.getUnits());
         dia.setText(formatNumber2decimalplaces.format(profile.getDia()) + " h");
         activeProfile.setText(profile.getActiveProfile());
         ic.setText(profile.getIcList());

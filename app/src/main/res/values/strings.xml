@@ -55,5 +55,6 @@
     <string name="treatments_wizard_unit_label">U</string>
     <string name="treatments_wizard_iob_label">IOB</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
+    <string name="profileview_units_label">Units:</string>
 
 </resources>
