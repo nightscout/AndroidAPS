@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.squareup.otto.Subscribe;
 
@@ -23,6 +25,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -86,15 +89,36 @@ public class OverviewFragment extends Fragment implements PluginBase {
         if (profile != null && bgReading != null && bg != null) {
             bg.setText(bgReading.valueToUnitsToString(profile.getUnits()));
             BgReading.units = profile.getUnits();
-        }
+        } else
+            return;
 
         // Skip if not initialized yet
         if (bgGraph == null)
             return;
 
-        int hoursToFetch = 6;
+        // allign to hours
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(new Date().getTime());
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.add(Calendar.HOUR, 1);
 
-        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getHoursOfBg(hoursToFetch);
+        int hoursToFetch = 6;
+        long toTime = calendar.getTimeInMillis();
+        long fromTime = toTime - hoursToFetch * 60 * 60 * 1000l;
+
+        Double lowLine = 80d; // TODO: make this customisable
+        Double highLine = 180d;
+        Double maxY = 400d; // TODO: add some scale support
+
+        String units = profile.getUnits();
+        if (units.equals(Constants.MMOL)) {
+            lowLine = 4d;
+            highLine = 10d;
+            maxY = 20d;
+        }
+
+        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
         BgReading[] bgReadings = new BgReading[bgReadingsArray.size()];
         bgReadings = bgReadingsArray.toArray(bgReadings);
 
@@ -107,24 +131,33 @@ public class OverviewFragment extends Fragment implements PluginBase {
         series.setSize(5);
         series.setColor(Color.GREEN);
 
-        // allign to hours
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(new Date().getTime());
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.add(Calendar.HOUR, 1);
+        // targets
+        LineGraphSeries<DataPoint> seriesLow = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(fromTime, lowLine),
+                new DataPoint(toTime, lowLine)
+        });
+        seriesLow.setColor(Color.RED);
+        bgGraph.addSeries(seriesLow);
+
+        LineGraphSeries<DataPoint> seriesHigh = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                new DataPoint(fromTime, highLine),
+                new DataPoint(toTime, highLine)
+        });
+        seriesHigh.setColor(Color.RED);
+        bgGraph.addSeries(seriesHigh);
+
+
         // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(calendar.getTimeInMillis());
-        bgGraph.getViewport().setMinX(calendar.getTimeInMillis() - hoursToFetch * 60 * 60 * 1000l);
+        bgGraph.getViewport().setMaxX(toTime);
+        bgGraph.getViewport().setMinX(fromTime);
         bgGraph.getViewport().setXAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(),"HH"));
+        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
         bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
         String test = new SimpleDateFormat("HH").format(calendar.getTimeInMillis());
 
         // set manual y bounds to have nice steps
-        // TODO: MGDL support, some scale support
-        bgGraph.getViewport().setMaxY(20);
+        bgGraph.getViewport().setMaxY(maxY);
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setNumVerticalLabels(11);
