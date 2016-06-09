@@ -2,6 +2,8 @@ package info.nightscout.androidaps.db;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +16,7 @@ import info.nightscout.client.data.NSCal;
 import info.nightscout.client.data.NSSgv;
 
 @DatabaseTable(tableName = "BgReadings")
-public class BgReading {
+public class BgReading implements DataPointInterface {
     private static Logger log = LoggerFactory.getLogger(BgReading.class);
     public static final DecimalFormat mmolFormat = new DecimalFormat("0.0");
     public static final DecimalFormat mgdlFormat = new DecimalFormat("0");
@@ -44,6 +46,8 @@ public class BgReading {
 
     @DatabaseField
     public int battery_level;
+
+    public static String units = Constants.MGDL;
 
     public BgReading() {}
 
@@ -76,5 +80,15 @@ public class BgReading {
                 ", raw=" + raw +
                 ", battery_level=" + battery_level +
                 '}';
+    }
+
+    @Override
+    public double getX() {
+        return timestamp;
+    }
+
+    @Override
+    public double getY() {
+        return valueToUnits(units);
     }
 }

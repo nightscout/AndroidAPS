@@ -18,12 +18,14 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.plugins.PluginBase;
 import info.nightscout.client.data.NSProfile;
 
-public class ProfileViewerFragment extends Fragment {
+public class ProfileViewerFragment extends Fragment implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(ProfileViewerFragment.class);
 
     private static TextView noProfile;
+    private static TextView units;
     private static TextView dia;
     private static TextView activeProfile;
     private static TextView ic;
@@ -33,7 +35,15 @@ public class ProfileViewerFragment extends Fragment {
 
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
-    public ProfileViewerFragment() {
+
+    @Override
+    public int getType() {
+        return PluginBase.PROFILE;
+    }
+
+    @Override
+    public boolean isFragmentVisible() {
+        return true;
     }
 
     public static ProfileViewerFragment newInstance(String param1, String param2) {
@@ -53,6 +63,7 @@ public class ProfileViewerFragment extends Fragment {
         View layout = inflater.inflate(R.layout.profileviewer_fragment, container, false);
 
         noProfile = (TextView) layout.findViewById(R.id.profileview_noprofile);
+        units = (TextView) layout.findViewById(R.id.profileview_units);
         dia = (TextView) layout.findViewById(R.id.profileview_dia);
         activeProfile = (TextView) layout.findViewById(R.id.profileview_activeprofile);
         ic = (TextView) layout.findViewById(R.id.profileview_ic);
@@ -77,6 +88,7 @@ public class ProfileViewerFragment extends Fragment {
         } else {
             noProfile.setVisibility(View.GONE);
         }
+        units.setText(profile.getUnits());
         dia.setText(formatNumber2decimalplaces.format(profile.getDia()) + " h");
         activeProfile.setText(profile.getActiveProfile());
         ic.setText(profile.getIcList());

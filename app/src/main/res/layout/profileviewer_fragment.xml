@@ -39,6 +39,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:text="@string/profileview_units_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_units"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/profileview_dia_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />

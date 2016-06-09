@@ -17,10 +17,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.tabs.*;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 
-public class MainActivity extends AppCompatActivity
-        implements ObjectivesFragment.OnFragmentInteractionListener,
-                   TreatmentsFragment.OnFragmentInteractionListener,
-                   TempBasalsFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
     private Toolbar toolbar;
@@ -69,11 +66,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
-    @Override
-    public void onFragmentInteraction(String param) {
-
-    }
 
     private void registerBus() {
         try {
