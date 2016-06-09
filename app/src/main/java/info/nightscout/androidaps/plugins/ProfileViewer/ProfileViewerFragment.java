@@ -18,9 +18,10 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.plugins.PluginBase;
 import info.nightscout.client.data.NSProfile;
 
-public class ProfileViewerFragment extends Fragment {
+public class ProfileViewerFragment extends Fragment implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(ProfileViewerFragment.class);
 
     private static TextView noProfile;
@@ -34,7 +35,15 @@ public class ProfileViewerFragment extends Fragment {
 
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
-    public ProfileViewerFragment() {
+
+    @Override
+    public int getType() {
+        return PluginBase.PROFILE;
+    }
+
+    @Override
+    public boolean isFragmentVisible() {
+        return true;
     }
 
     public static ProfileViewerFragment newInstance(String param1, String param2) {

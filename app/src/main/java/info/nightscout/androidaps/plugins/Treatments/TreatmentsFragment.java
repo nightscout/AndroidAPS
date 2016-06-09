@@ -39,10 +39,11 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.plugins.PluginBase;
 import info.nightscout.androidaps.plugins.Treatments.Dialogs.NewTreatmentDialogFragment;
 import info.nightscout.androidaps.Services.Intents;
 
-public class TreatmentsFragment extends Fragment implements View.OnClickListener, NewTreatmentDialogFragment.Communicator {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener, NewTreatmentDialogFragment.Communicator, PluginBase {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     RecyclerView recyclerView;
@@ -59,9 +60,18 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
     private static DecimalFormat formatNumber3decimalplaces = new DecimalFormat("0.000");
 
-    private OnFragmentInteractionListener mListener;
-
     private List<Treatment> treatments;
+
+
+    @Override
+    public int getType() {
+        return PluginBase.GENERAL;
+    }
+
+    @Override
+    public boolean isFragmentVisible() {
+        return true;
+    }
 
     private void initializeData() {
         try {
@@ -222,23 +232,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
     private void registerBus() {
         try {
             MainApp.bus().unregister(this);
@@ -283,21 +276,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
         if (isVisibleToUser)
             updateTotalIOBIfNeeded();
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(String param);
     }
 
     @Override

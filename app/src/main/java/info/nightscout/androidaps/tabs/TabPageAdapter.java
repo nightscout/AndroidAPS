@@ -1,12 +1,15 @@
 package info.nightscout.androidaps.tabs;
 
 import android.os.Bundle;
+import android.support.annotation.PluralsRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import info.nightscout.androidaps.plugins.PluginBase;
 
 /**
  * Created by mike on 30.05.2016.
@@ -39,12 +42,15 @@ public class TabPageAdapter extends FragmentPagerAdapter {
     }
 
     public int registerNewFragment(String name, Fragment fragment) {
-        fragmentList.add(fragment);
-        Bundle args = new Bundle();
-        args.putString("name", name);
-        fragment.setArguments(args);
-        registeredTabs++;
-        notifyDataSetChanged();
-        return registeredTabs-1;
+        if (((PluginBase) fragment).isFragmentVisible()){
+            fragmentList.add(fragment);
+            Bundle args = new Bundle();
+            args.putString("name", name);
+            fragment.setArguments(args);
+            registeredTabs++;
+            notifyDataSetChanged();
+            return registeredTabs - 1;
+        }
+        return  registeredTabs;
     }
 }

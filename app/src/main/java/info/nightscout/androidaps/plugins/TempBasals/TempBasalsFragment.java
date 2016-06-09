@@ -35,9 +35,10 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.PluginBase;
 
 
-public class TempBasalsFragment extends Fragment {
+public class TempBasalsFragment extends Fragment implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(TempBasalsFragment.class);
 
     RecyclerView recyclerView;
@@ -53,9 +54,18 @@ public class TempBasalsFragment extends Fragment {
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
     private static DecimalFormat formatNumber3decimalplaces = new DecimalFormat("0.000");
 
-    private OnFragmentInteractionListener mListener;
-
     private List<TempBasal> tempBasals;
+
+
+    @Override
+    public int getType() {
+        return PluginBase.GENERAL;
+    }
+
+    @Override
+    public boolean isFragmentVisible() {
+        return true;
+    }
 
     private void initializeData() {
         try {
@@ -221,31 +231,6 @@ public class TempBasalsFragment extends Fragment {
 
         return view;
     }
-    /*
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-    */
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
 
     private void registerBus() {
         try {
@@ -292,20 +277,5 @@ public class TempBasalsFragment extends Fragment {
 
         if (isVisibleToUser)
             updateTotalIOBIfNeeded();
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(String param);
     }
 }
