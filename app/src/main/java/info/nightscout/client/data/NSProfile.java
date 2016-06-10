@@ -9,6 +9,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import info.nightscout.androidaps.Constants;
+
 public class NSProfile {
     private JSONObject json = null;
     private String activeProfile = null;
@@ -291,5 +293,10 @@ public class NSProfile {
         c.set(Calendar.MILLISECOND, 0);
         long passed = now - c.getTimeInMillis();
         return (int) (passed / 1000);
+    }
+
+    public static Double toMgdl(Double value, String units) {
+        if (units.equals(Constants.MGDL)) return value;
+        else return value * Constants.MMOLL_TO_MGDL;
     }
 }

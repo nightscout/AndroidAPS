@@ -10,6 +10,8 @@ import android.view.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
+import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.ProfileViewer.ProfileViewerFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
@@ -37,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         // Register all tabs in app here
         mAdapter = new TabPageAdapter(getSupportFragmentManager());
         mAdapter.registerNewFragment("Overview", OverviewFragment.newInstance());
+        mAdapter.registerNewFragment("LowSuspend", LowSuspendFragment.newInstance());
+        mAdapter.registerNewFragment("OpenAPS MA", OpenAPSMAFragment.newInstance());
         mAdapter.registerNewFragment("Treatments", treatmentsFragment = TreatmentsFragment.newInstance());
         mAdapter.registerNewFragment("TempBasals", tempBasalsFragment = TempBasalsFragment.newInstance());
         mAdapter.registerNewFragment("Profile", ProfileViewerFragment.newInstance());

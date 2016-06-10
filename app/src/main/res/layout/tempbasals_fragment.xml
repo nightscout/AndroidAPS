@@ -31,20 +31,6 @@
                 android:id="@+id/tempbasals_iobtotal"
                 android:paddingLeft="10dp" />
 
-            <TextView
-                android:id="@+id/tempbasals_iobactivitytotal_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/tempbasals_iobactivitytotal_label_string"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tempbasals_iobactivitytotal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView

@@ -56,24 +56,8 @@ public class Treatment {
         this.carbs = t.carbs;
     }
 
-    public Iob iobCalc(Date time) {
-        Iob resultNow = doIobCalc(time);
-        Iob resultIn5min = doIobCalc(new Date(time.getTime() + 5 * 60 * 1000));
-        resultNow.activityContrib = resultNow.iobContrib - resultIn5min.iobContrib;
-        return resultNow;
-    }
-
-    public Iob doIobCalc(Date time) {
-
+    public Iob iobCalc(Date time, Double dia) {
         Iob result = new Iob();
-        NSProfile profile = MainApp.getNSProfile();
-
-        if (profile == null) {
-            return result;
-        }
-
-        Double dia = profile.getDia();
-        Double sens = profile.getIsf(profile.secondsFromMidnight(time));
 
         Double scaleFactor = 3.0 / dia;
         Double peak = 75d;
@@ -97,22 +81,6 @@ public class Treatment {
         }
         return result;
     }
-
-/*
-    public Iob calcIobOpenAPS() {
-        IobCalc calc = new IobCalc(created_at,insulin,new Date());
-        calc.setBolusDiaTimesTwo();
-        Iob iob = calc.invoke();
-
-        return iob;
-    }
-    public Iob calcIob() {
-        IobCalc calc = new IobCalc(created_at,insulin,new Date());
-        Iob iob = calc.invoke();
-
-        return iob;
-    }
-*/
 
     public long getMillisecondsFromStart() {
         return new Date().getTime() - created_at.getTime();
@@ -180,6 +148,4 @@ public class Treatment {
             log.error("DBUPDATE No receivers");
         } else log.debug("DBUPDATE dbUpdate " + q.size() + " receivers " + _id + " " + data.toString());
     }
-
-
 }
