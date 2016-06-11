@@ -100,7 +100,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                run();
+                invoke();
                 break;
         }
 
@@ -113,7 +113,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    run();
+                    invoke();
                 }
             });
         else
@@ -135,7 +135,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void run() {
+    public void invoke() {
 
         //   private DatermineBasalResult openAps(int glucoseValue, int delta, double deltaAvg15min, StatusEvent status, LowSuspendStatus lowSuspendStatus, IobTotal iobTotal, CarbCalc.Meal mealdata) {
         DetermineBasalAdapterJS determineBasalAdapterJS = null;

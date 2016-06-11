@@ -1,16 +1,34 @@
 package info.nightscout.androidaps.data;
 
+import org.json.JSONObject;
+
+import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.client.data.NSProfile;
+
 /**
  * Created by mike on 04.06.2016.
  */
-public abstract class Pump {
+public interface Pump {
 
-    boolean tempBasalInProgress = false;
+    boolean isTempBasalInProgress();
+    boolean isExtendedBoluslInProgress();
+
+    Integer getBatteryPercent();
+    Integer getReservoirValue();
 
     // Upload to pump new basal profile from MainApp.getNSProfile()
-    public abstract void setNewBasalProfile();
+    void setNewBasalProfile(NSProfile profile);
 
-    public abstract double getBaseBasalRate(); // base basal rate, not temp basal
-    public abstract double getTempBasalAbsoluteRate();
-    public abstract double getTempBasalRemainingMinutes();
+    double getBaseBasalRate(); // base basal rate, not temp basal
+    double getTempBasalAbsoluteRate();
+    double getTempBasalRemainingMinutes();
+
+    Result deliverTreatment(Double insulin, Double carbs);
+    Result setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
+    Result setTempBasalPercent(Integer percent, Integer durationInMinutes);
+    Result setExtendedBolus(Double insulin, Integer durationInMinutes);
+    Result cancelTempBasal();
+    Result cancelExtendedBolus();
+
+    JSONObject getJSONStatus();
 }

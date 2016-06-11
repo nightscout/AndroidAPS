@@ -47,10 +47,10 @@ public class TempBasal {
     public int duration;    // in minutes
 
     @DatabaseField
-    public boolean isExtended; // true if set as extended bolus
+    public boolean isExtended = false; // true if set as extended bolus
 
     @DatabaseField
-    public boolean isAbsolute; // true if if set as absolute value in U
+    public boolean isAbsolute = false; // true if if set as absolute value in U
 
 
     public IobTotal iobCalc(Date time) {

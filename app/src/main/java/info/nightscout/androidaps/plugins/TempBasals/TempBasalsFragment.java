@@ -115,7 +115,11 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
         }
         if (iobTotal != null)
             iobTotal.setText(formatNumber2decimalplaces.format(total.basaliob));
+
+        lastCalculationTimestamp = new Date().getTime();
+        lastCalculation = total;
     }
+
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 

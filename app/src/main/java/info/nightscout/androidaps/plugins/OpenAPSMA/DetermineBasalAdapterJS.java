@@ -114,7 +114,7 @@ public class DetermineBasalAdapterJS {
 
         String ret = mV8rt.executeStringScript("JSON.stringify(rT);");
         if (Config.logAPSResult)
-            log.debug(ret);
+            log.debug("Result: " + ret);
 
         V8Object v8ObjectReuslt = mV8rt.getObject("rT");
 
@@ -170,7 +170,7 @@ public class DetermineBasalAdapterJS {
                 if (parameters.length() > 0) {
                     Object arg1 = parameters.get(0);
                     if (Config.logAPSResult)
-                        log.debug("JSLOG " + arg1);
+                        log.debug("Input params: " + arg1);
                 }
             }
         };
