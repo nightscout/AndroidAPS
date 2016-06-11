@@ -21,8 +21,6 @@
     <string name="ns_sync_use_absolute_title">Use absolute values</string>
     <string name="ns_sync_use_absolute_summary">Use absolute basal values instead of percent in upload to NS</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="objectives_objective_label_string">Objective:</string>
     <string name="objectives_gate_label_string">Gate:</string>
     <string name="objectives_button_start">Start</string>
@@ -55,5 +53,13 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="profileview_units_label">Units:</string>
     <string name="openapsma_run">Run now</string>
+    <string name="vitualpump_label">VITUAL PUMP</string>
+    <string name="virtualpump_basebasalrate_label">Base basal rate:</string>
+    <string name="virtualpump_tempbasal_label">Temp basal:</string>
+    <string name="virtualpump_extendedbolus_label">Extended bolus:</string>
+    <string name="virtualpump_battery_label">Battery:</string>
+    <string name="virtualpump_reservoir_label">Reservoir:</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="virtualpump_sqlerror">SQL Error</string>
 
 </resources>

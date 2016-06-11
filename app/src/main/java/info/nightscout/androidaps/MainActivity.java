@@ -16,6 +16,7 @@ import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.ProfileViewer.ProfileViewerFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
+import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import info.nightscout.androidaps.tabs.*;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         // Register all tabs in app here
         mAdapter = new TabPageAdapter(getSupportFragmentManager());
         mAdapter.registerNewFragment("Overview", OverviewFragment.newInstance());
+        mAdapter.registerNewFragment("VirtualPump", (VirtualPumpFragment) MainApp.setActivePump(VirtualPumpFragment.newInstance()));
         mAdapter.registerNewFragment("LowSuspend", LowSuspendFragment.newInstance());
         mAdapter.registerNewFragment("OpenAPS MA", OpenAPSMAFragment.newInstance());
         mAdapter.registerNewFragment("Treatments", treatmentsFragment = TreatmentsFragment.newInstance());

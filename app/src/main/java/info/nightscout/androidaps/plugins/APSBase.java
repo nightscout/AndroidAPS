@@ -9,5 +9,5 @@ public interface APSBase {
     public APSResult getLastAPSResult();
     public Date getLastAPSRun();
 
-    public void run();
+    public void invoke();
 }

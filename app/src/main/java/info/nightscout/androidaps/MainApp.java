@@ -103,8 +103,9 @@ public class MainApp  extends Application {
     public static Pump getActivePump() {
         return activePump;
     }
-    public static void setActivePump(Pump activepump) {
+    public static Pump setActivePump(Pump activepump) {
         activePump = activepump;
+        return activepump;
     }
 
 }

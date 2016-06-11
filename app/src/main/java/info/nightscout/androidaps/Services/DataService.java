@@ -136,7 +136,7 @@ public class DataService extends IntentService {
                 MainApp.instance().setActiveProfile(activeProfile);
                 storeNSProfile();
                 if (MainApp.getActivePump() != null) {
-                    MainApp.getActivePump().setNewBasalProfile();
+                    MainApp.getActivePump().setNewBasalProfile(MainApp.getNSProfile());
                 } else {
                     log.error("No active pump selected");
                 }
