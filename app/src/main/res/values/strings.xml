@@ -53,7 +53,7 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="profileview_units_label">Units:</string>
     <string name="openapsma_run">Run now</string>
-    <string name="vitualpump_label">VITUAL PUMP</string>
+    <string name="vitualpump_label">VIRTUAL PUMP</string>
     <string name="virtualpump_basebasalrate_label">Base basal rate:</string>
     <string name="virtualpump_tempbasal_label">Temp basal:</string>
     <string name="virtualpump_extendedbolus_label">Extended bolus:</string>

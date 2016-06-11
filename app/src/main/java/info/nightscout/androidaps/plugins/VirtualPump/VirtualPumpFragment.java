@@ -85,7 +85,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
         checkForExpiredTempsAndExtended();
-        
+
         basaBasalRateView.setText(getBaseBasalRate() + "U");
         if (isTempBasalInProgress()) {
             if (tempBasal.isAbsolute) {
