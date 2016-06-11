@@ -12,6 +12,7 @@ import java.util.TimeZone;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
 
 @DatabaseTable(tableName = "TempBasals")
@@ -52,8 +53,8 @@ public class TempBasal {
     public boolean isAbsolute; // true if if set as absolute value in U
 
 
-    public Iob iobCalc(Date time) {
-        Iob result = new Iob();
+    public IobTotal iobCalc(Date time) {
+        IobTotal result = new IobTotal();
         NSProfile profile = MainApp.getNSProfile();
 
         if (profile == null)
@@ -89,8 +90,16 @@ public class TempBasal {
                     tempBolusPart.insulin = tempBolusSize;
                     Long date = this.timeStart.getTime() + j * tempBolusSpacing * 60 * 1000;
                     tempBolusPart.created_at = new Date(date);
-                    Iob iob = tempBolusPart.iobCalc(time);
-                    result.plus(iob);
+
+                    Iob aIOB = tempBolusPart.iobCalc(time, profile.getDia());
+                    result.basaliob += aIOB.iobContrib;
+                    Double dia_ago = time.getTime() - profile.getDia() * 60 * 60 * 1000;
+                    if (date > dia_ago && date <= time.getTime()) {
+                        result.netbasalinsulin += tempBolusPart.insulin;
+                        if (tempBolusPart.insulin > 0) {
+                            result.hightempinsulin += tempBolusPart.insulin;
+                        }
+                    }
                 }
             }
         }

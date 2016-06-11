@@ -60,8 +60,8 @@ public class NewTreatmentDialogFragment extends DialogFragment implements OnClic
                 Double maxcarbs = Double.parseDouble(SP.getString("safety_maxcarbs", "48"));
 
 
-                String insulinText = this.insulin.getText().toString();
-                String carbsText = this.carbs.getText().toString();
+                String insulinText = this.insulin.getText().toString().replace(",", ".");
+                String carbsText = this.carbs.getText().toString().replace(",", ".");
                 Double insulin = Double.parseDouble(!insulinText.equals("") ? this.insulin.getText().toString() : "0");
                 Double carbs = Double.parseDouble(!carbsText.equals("") ? this.carbs.getText().toString() : "0");
                 if (insulin > maxbolus) {

@@ -1,0 +1,77 @@
+package info.nightscout.androidaps.plugins.OpenAPSMA;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Date;
+
+import info.nightscout.utils.DateUtil;
+
+public class IobTotal {
+    public Double iob;
+    public Double activity;
+    public Double bolussnooze;
+    public Double basaliob;
+    public Double netbasalinsulin;
+    public Double hightempinsulin;
+
+    public Double netInsulin = 0d; // for calculations from temp basals only
+    public Double netRatio = 0d; // for calculations from temp basals only
+
+    public IobTotal() {
+        this.iob = 0d;
+        this.activity = 0d;
+        this.bolussnooze = 0d;
+        this.basaliob = 0d;
+        this.netbasalinsulin = 0d;
+        this.hightempinsulin = 0d;
+    }
+
+    public IobTotal plus(IobTotal other) {
+        iob += other.iob;
+        activity = other.activity;
+        bolussnooze = other.bolussnooze;
+        basaliob = other.iob;
+        netbasalinsulin = other.netbasalinsulin;
+        hightempinsulin = other.hightempinsulin;
+        netInsulin += other.netInsulin;
+        netRatio += other.netRatio;
+        return this;
+    }
+
+    public static IobTotal combine(IobTotal bolusIOB, IobTotal basalIob) {
+        IobTotal result = new IobTotal();
+        result.iob = bolusIOB.iob;
+        result.activity = bolusIOB.activity;
+        result.bolussnooze = bolusIOB.bolussnooze;
+        result.basaliob = basalIob.iob;
+        result.netbasalinsulin = basalIob.netbasalinsulin;
+        result.hightempinsulin = basalIob.hightempinsulin;
+        return result;
+    }
+
+    public JSONObject json() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("iob", iob);
+            json.put("activity", activity);
+            json.put("bolusIob", bolussnooze);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+
+    public JSONObject nsJson() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("iob", bolussnooze);
+            json.put("basaliob", iob);
+            json.put("activity", activity);
+            json.put("timestamp", DateUtil.toISOString(new Date()));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+}

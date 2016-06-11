@@ -160,4 +160,65 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
+    /*
+     * Returns glucose_status for openAPS or null if no actual data available
+     */
+    public class GlucoseStatus {
+        public double glucose = 0d;
+        public double delta = 0d;
+        public double avgdelta = 0d;
+    }
+
+    public GlucoseStatus getGlucoseStatusData() {
+        GlucoseStatus result = new GlucoseStatus();
+        try {
+
+            Dao<BgReading, Long> daoBgreadings = null;
+            daoBgreadings = getDaoBgReadings();
+            List<BgReading> bgReadings;
+            QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
+            queryBuilder.orderBy("timeIndex", false);
+            queryBuilder.limit(4l);
+            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
+            bgReadings = daoBgreadings.query(preparedQuery);
+
+            int sizeRecords = bgReadings.size();
+
+            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 1).timestamp > new Date().getTime() - 7 * 60 * 1000l)
+                return null;
+
+            int minutes = 5;
+            double change;
+            double avg;
+
+            if (bgReadings.size() > 3) {
+                BgReading now = bgReadings.get(sizeRecords - 1);
+                BgReading last = bgReadings.get(sizeRecords - 2);
+                BgReading last1 = bgReadings.get(sizeRecords - 3);
+                BgReading last2 = bgReadings.get(sizeRecords - 4);
+                if (last2.value > 30) {
+                    minutes = 3 * 5;
+                    change = now.value - last2.value;
+                } else if (last1.value > 30) {
+                    minutes = 2 * 5;
+                    change = now.value - last1.value;
+                } else if (last.value > 30) {
+                    minutes = 5;
+                    change = now.value - last.value;
+                } else {
+                    change = 0;
+                }
+                //multiply by 5 to get the same unit as delta, i.e. mg/dL/5m
+                avg = change / minutes * 5;
+
+                result.glucose = now.value;
+                result.delta = change;
+                result.avgdelta = avg;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result;
+    }
 }

@@ -44,9 +44,7 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_activity_string">Activity:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="tempbasals_iobactivitytotal_label_string">Total IOB activity:</string>
     <string name="treatments_newtreatment_insulinamount_label">Insulin amount</string>
     <string name="treatments_newtreatment_carbsamount_label">Carbs amount</string>
     <string name="treatments_wizard_bg_label">BG</string>
@@ -56,5 +54,6 @@
     <string name="treatments_wizard_iob_label">IOB</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="profileview_units_label">Units:</string>
+    <string name="openapsma_run">Run now</string>
 
 </resources>

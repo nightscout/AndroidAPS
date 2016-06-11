@@ -24,6 +24,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.*;
@@ -175,10 +176,10 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         MainActivity.treatmentsFragment.updateTotalIOBIfNeeded();
         MainActivity.tempBasalsFragment.updateTotalIOBIfNeeded();
 
-        Iob bolusIob = MainActivity.treatmentsFragment.lastCalculation;
-        Iob basalIob = MainActivity.tempBasalsFragment.lastCalculation;
-        bolusIob.plus(basalIob);
-        iobInsulin.setText("-" + numberFormat.format(bolusIob.iobContrib) + "U");
+        IobTotal bolusIob = MainActivity.treatmentsFragment.lastCalculation;
+        IobTotal basalIob = MainActivity.tempBasalsFragment.lastCalculation;
+        Double iobTotal = bolusIob.iob + basalIob.iob;
+        iobInsulin.setText("-" + numberFormat.format(iobTotal) + "U");
 
         totalInsulin.setText("");
         wizardDialogDeliverButton.setVisibility(Button.GONE);
@@ -194,9 +195,9 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         NSProfile profile = MainApp.instance().getNSProfile();
 
         // Entered values
-        String i_bg = this.bgInput.getText().toString();
-        String i_carbs = this.carbsInput.getText().toString();
-        String i_correction = this.correctionInput.getText().toString();
+        String i_bg = this.bgInput.getText().toString().replace("," , ".");
+        String i_carbs = this.carbsInput.getText().toString().replace(",", ".");
+        String i_correction = this.correctionInput.getText().toString().replace(",", ".");
         Double c_bg = 0d;
         try { c_bg = Double.parseDouble(i_bg.equals("") ? "0" : i_bg); } catch (Exception e) {}
         Double c_carbs = 0d;
@@ -240,10 +241,10 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         MainActivity.treatmentsFragment.updateTotalIOBIfNeeded();
         MainActivity.tempBasalsFragment.updateTotalIOBIfNeeded();
 
-        Iob bolusIob = MainActivity.treatmentsFragment.lastCalculation;
-        Iob basalIob = MainActivity.tempBasalsFragment.lastCalculation;
-        bolusIob.plus(basalIob);
-        Double insulingFromIOB = iobCheckbox.isChecked() ? bolusIob.iobContrib : 0d;
+        IobTotal bolusIob = MainActivity.treatmentsFragment.lastCalculation;
+        IobTotal basalIob = MainActivity.tempBasalsFragment.lastCalculation;
+        Double iobTotal = bolusIob.iob + basalIob.iob;
+        Double insulingFromIOB = iobCheckbox.isChecked() ? iobTotal : 0d;
         iobInsulin.setText("-" + numberFormat.format(insulingFromIOB) + "U");
 
         // Insulin from correction

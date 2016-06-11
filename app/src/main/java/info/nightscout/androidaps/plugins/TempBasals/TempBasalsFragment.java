@@ -35,6 +35,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.PluginBase;
 
 
@@ -45,10 +46,9 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
     LinearLayoutManager llm;
 
     TextView iobTotal;
-    TextView activityTotal;
 
     public long lastCalculationTimestamp = 0;
-    public Iob lastCalculation;
+    public IobTotal lastCalculation;
 
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -107,15 +107,14 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
     }
 
     private void updateTotalIOB() {
-        Iob total = new Iob();
+        Date now = new Date();
+        IobTotal total = new IobTotal();
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
             TempBasal t = tempBasals.get(pos);
-            total.plus(t.iobCalc(new Date()));
+            total.plus(t.iobCalc(now));
         }
         if (iobTotal != null)
-            iobTotal.setText(formatNumber2decimalplaces.format(total.iobContrib));
-        if (activityTotal != null)
-            activityTotal.setText(formatNumber3decimalplaces.format(total.activityContrib));
+            iobTotal.setText(formatNumber2decimalplaces.format(total.basaliob));
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
@@ -152,9 +151,8 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
                 holder.percent.setText(formatNumber0decimalplaces.format(tempBasals.get(position).percent) + "%");
             }
             holder.realDuration.setText(formatNumber0decimalplaces.format(tempBasals.get(position).getRealDuration()) + " min");
-            Iob iob = tempBasals.get(position).iobCalc(new Date());
-            holder.iob.setText(formatNumber2decimalplaces.format(iob.iobContrib) + " U");
-            holder.activity.setText(formatNumber3decimalplaces.format(iob.activityContrib) + " U");
+            IobTotal iob = tempBasals.get(position).iobCalc(new Date());
+            holder.iob.setText(formatNumber2decimalplaces.format(iob.basaliob) + " U");
             holder.netInsulin.setText(formatNumber2decimalplaces.format(iob.netInsulin) + " U");
             holder.netRatio.setText(formatNumber2decimalplaces.format(iob.netRatio) + " U/h");
         }
@@ -179,7 +177,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
             TextView netRatio;
             TextView netInsulin;
             TextView iob;
-            TextView activity;
 
             TempBasalsViewHolder(View itemView) {
                 super(itemView);
@@ -192,7 +189,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
                 netRatio = (TextView) itemView.findViewById(R.id.tempbasals_netratio);
                 netInsulin = (TextView) itemView.findViewById(R.id.tempbasals_netinsulin);
                 iob = (TextView) itemView.findViewById(R.id.tempbasals_iob);
-                activity = (TextView) itemView.findViewById(R.id.tempbasals_activity);
             }
         }
     }
@@ -227,7 +223,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
         recyclerView.setAdapter(adapter);
 
         iobTotal = (TextView) view.findViewById(R.id.tempbasals_iobtotal);
-        activityTotal = (TextView) view.findViewById(R.id.tempbasals_iobactivitytotal);
 
         return view;
     }

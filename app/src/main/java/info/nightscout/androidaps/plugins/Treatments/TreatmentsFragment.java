@@ -39,9 +39,11 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.PluginBase;
 import info.nightscout.androidaps.plugins.Treatments.Dialogs.NewTreatmentDialogFragment;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.client.data.NSProfile;
 
 public class TreatmentsFragment extends Fragment implements View.OnClickListener, NewTreatmentDialogFragment.Communicator, PluginBase {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
@@ -54,7 +56,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     Button refreshFromNS;
 
     public long lastCalculationTimestamp = 0;
-    public Iob lastCalculation;
+    public IobTotal lastCalculation;
 
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -101,18 +103,59 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     }
 
     private void updateTotalIOB() {
-        Iob total = new Iob();
+        IobTotal total = new IobTotal();
+
+        NSProfile profile = MainApp.getNSProfile();
+        if (profile == null) {
+            lastCalculation = total;
+            return;
+        }
+
+        Double dia = profile.getDia();
+
+        Date now = new Date();
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
-            total.plus(t.iobCalc(new Date()));
+            Iob tIOB = t.iobCalc(now, dia);
+            total.iob += tIOB.iobContrib;
+            total.activity += tIOB.activityContrib;
+            Iob bIOB = t.iobCalc(now, dia / 2);
+            total.bolussnooze += bIOB.iobContrib;
         }
         if (iobTotal != null)
-            iobTotal.setText(formatNumber2decimalplaces.format(total.iobContrib));
+            iobTotal.setText(formatNumber2decimalplaces.format(total.iob));
         if (activityTotal != null)
-            activityTotal.setText(formatNumber3decimalplaces.format(total.activityContrib));
+            activityTotal.setText(formatNumber3decimalplaces.format(total.activity));
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
+    }
+
+    public class MealData {
+        public double boluses = 0d;
+        public double carbs = 0d;
+    }
+
+    public MealData getMealData() {
+        MealData result = new MealData();
+        NSProfile profile = MainApp.getNSProfile();
+        if (profile == null)
+            return result;
+
+        for (Treatment treatment : treatments) {
+            long now = new Date().getTime();
+            long dia_ago = now - (new Double(profile.getDia() * 60 * 60 * 1000l)).longValue();
+            long t = treatment.created_at.getTime();
+            if (t > dia_ago && t <= now) {
+                if (treatment.carbs >= 1) {
+                    result.carbs += treatment.carbs;
+                }
+                if (treatment.insulin >= 0.1) {
+                    result.boluses += treatment.insulin;
+                }
+            }
+        }
+        return result;
     }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TreatmentsViewHolder> {
@@ -132,12 +175,15 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
+            NSProfile profile = MainApp.getNSProfile();
+            if (profile == null)
+                return;
             // TODO: implement locales
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, new Locale("cs", "CZ"));
             holder.date.setText(df.format(treatments.get(position).created_at));
             holder.insulin.setText(formatNumber2decimalplaces.format(treatments.get(position).insulin) + " U");
             holder.carbs.setText(formatNumber0decimalplaces.format(treatments.get(position).carbs) + " g");
-            Iob iob = treatments.get(position).iobCalc(new Date());
+            Iob iob = treatments.get(position).iobCalc(new Date(), profile.getDia());
             holder.iob.setText(formatNumber2decimalplaces.format(iob.iobContrib) + " U");
             holder.activity.setText(formatNumber3decimalplaces.format(iob.activityContrib) + " U");
         }
@@ -205,8 +251,8 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         activityTotal = (TextView) view.findViewById(R.id.treatments_iobactivitytotal);
 
         refreshFromNS = (Button) view.findViewById(R.id.treatments_reshreshfromnightscout);
-
         refreshFromNS.setOnClickListener(this);
+
         return view;
     }
 

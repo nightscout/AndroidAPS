@@ -144,26 +144,6 @@
                 android:layout_marginRight="30dp"
                 android:text="0.12 U" />
 
-            <TextView
-                android:id="@+id/tempbasals_activity_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="top"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:text="@string/tempbasals_activity_string"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tempbasals_activity"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="30dp"
-                android:text="0.002 U" />
-
-
         </LinearLayout>
 
     </LinearLayout>
