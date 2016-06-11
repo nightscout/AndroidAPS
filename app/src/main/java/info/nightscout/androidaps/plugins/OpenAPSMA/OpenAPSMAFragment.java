@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
@@ -41,6 +42,13 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAFragment.class);
 
     Button run;
+    TextView lastRunView;
+    TextView glucoseStatusView;
+    TextView currentTempView;
+    TextView iobDataView;
+    TextView profileView;
+    TextView mealDataView;
+    TextView resultView;
 
     Date lastAPSRun = null;
     APSResult lastAPSResult = null;
@@ -83,6 +91,13 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
         run = (Button) view.findViewById(R.id.openapsma_run);
         run.setOnClickListener(this);
+        lastRunView = (TextView) view.findViewById(R.id.openapsma_lastrun);
+        glucoseStatusView = (TextView) view.findViewById(R.id.openapsma_glucosestatus);
+        currentTempView = (TextView) view.findViewById(R.id.openapsma_currenttemp);
+        iobDataView = (TextView) view.findViewById(R.id.openapsma_iobdata);
+        profileView = (TextView) view.findViewById(R.id.openapsma_profile);
+        mealDataView = (TextView) view.findViewById(R.id.openapsma_mealdata);
+        resultView = (TextView) view.findViewById(R.id.openapsma_result);
 
         return view;
     }
@@ -127,7 +142,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    run();
+                    invoke();
                 }
             });
         else
@@ -192,7 +207,18 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         TreatmentsFragment.MealData mealData = MainActivity.treatmentsFragment.getMealData();
 
         determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, pump, iobTotal, glucoseStatus, mealData);
+
+        glucoseStatusView.setText(determineBasalAdapterJS.getGlucoseStatusParam());
+        currentTempView.setText(determineBasalAdapterJS.getCurrentTempParam());
+        iobDataView.setText(determineBasalAdapterJS.getIobDataParam());
+        profileView.setText(determineBasalAdapterJS.getProfileParam());
+        mealDataView.setText(determineBasalAdapterJS.getMealDataParam());
+
         DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
+
+        resultView.setText(determineBasalResult.json.toString());
+        lastRunView.setText(new Date().toLocaleString());
+
         determineBasalAdapterJS.release();
 
         try {

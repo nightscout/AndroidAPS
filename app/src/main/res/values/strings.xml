@@ -61,5 +61,13 @@
     <string name="virtualpump_reservoir_label">Reservoir:</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
+    <string name="openapsma_lastrun_label">Last run</string>
+    <string name="openapsma_inputparameters_label">Input parameters</string>
+    <string name="openapsma_glucosestatus_label">Glucose status</string>
+    <string name="openapsma_currenttemp_label">Current temp</string>
+    <string name="openapsma_iobdata_label">IOB data</string>
+    <string name="openapsma_profile_label">Profile</string>
+    <string name="openapsma_mealdata_label">Meal data</string>
+    <string name="openapsma_result_label">Result</string>
 
 </resources>

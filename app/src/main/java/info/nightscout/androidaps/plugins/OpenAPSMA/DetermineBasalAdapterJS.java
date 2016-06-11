@@ -96,10 +96,11 @@ public class DetermineBasalAdapterJS {
         mV8rt.executeVoidScript(
                 "console.error(\"determine_basal(\"+\n" +
                         "JSON.stringify(" + PARAM_glucoseStatus + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_currentTemp + ")+ \", \" + \n" +
-                        "JSON.stringify(" + PARAM_iobData + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_meal_data + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_profile + ")+ \") \");");
+                        "JSON.stringify(" + PARAM_currentTemp +   ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_iobData +       ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_profile +       ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_meal_data +     ")+ \") \");"
+        );
         mV8rt.executeVoidScript(
                 "var rT = determine_basal(" +
                         PARAM_glucoseStatus + ", " +
@@ -127,13 +128,32 @@ public class DetermineBasalAdapterJS {
         return result;
     }
 
+    String getGlucoseStatusParam() {
+        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
+    }
+
+    String getCurrentTempParam() {
+        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
+    }
+
+    String getIobDataParam() {
+        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");");
+    }
+
+    String getProfileParam() {
+        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");");
+    }
+
+    String getMealDataParam() {
+        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");");
+    }
+
     private void loadScript() throws IOException {
         mV8rt.executeVoidScript(
                 readFile("OpenAPSMA/determine-basal.js"),
                 "OpenAPSMA/bin/oref0-determine-basal.js",
                 0);
         mV8rt.executeVoidScript("var determine_basal = module.exports;");
-        // TODO: convert to variable too
         mV8rt.executeVoidScript(
                 "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
                         "rT.duration = duration;\n" +
