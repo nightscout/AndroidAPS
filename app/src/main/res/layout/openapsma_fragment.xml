@@ -64,7 +64,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
                     android:id="@+id/openapsma_glucosestatus"
                     android:layout_marginLeft="10dp" />
                <TextView
@@ -77,7 +76,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
                     android:id="@+id/openapsma_currenttemp"
                     android:layout_marginLeft="10dp" />
                 <TextView
@@ -90,7 +88,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
                     android:id="@+id/openapsma_iobdata"
                     android:layout_marginLeft="10dp" />
                 <TextView
@@ -103,7 +100,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
                     android:id="@+id/openapsma_profile"
                     android:layout_marginLeft="10dp" />
                 <TextView
@@ -116,7 +112,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
                     android:id="@+id/openapsma_mealdata"
                     android:layout_marginLeft="10dp" />
             </LinearLayout>
@@ -138,7 +133,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:text="Small Text"
                     android:id="@+id/openapsma_result"
                     android:layout_marginLeft="10dp" />
             </LinearLayout>
