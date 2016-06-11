@@ -192,10 +192,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             double avg;
 
             if (bgReadings.size() > 3) {
-                BgReading now = bgReadings.get(sizeRecords - 1);
-                BgReading last = bgReadings.get(sizeRecords - 2);
-                BgReading last1 = bgReadings.get(sizeRecords - 3);
-                BgReading last2 = bgReadings.get(sizeRecords - 4);
+                BgReading now = bgReadings.get(sizeRecords - 4);
+                BgReading last = bgReadings.get(sizeRecords - 3);
+                BgReading last1 = bgReadings.get(sizeRecords - 2);
+                BgReading last2 = bgReadings.get(sizeRecords - 1);
                 if (last2.value > 30) {
                     minutes = 3 * 5;
                     change = now.value - last2.value;
@@ -212,7 +212,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 avg = change / minutes * 5;
 
                 result.glucose = now.value;
-                result.delta = change;
+                result.delta = now.value - last.value;
                 result.avgdelta = avg;
             }
         } catch (SQLException e) {
