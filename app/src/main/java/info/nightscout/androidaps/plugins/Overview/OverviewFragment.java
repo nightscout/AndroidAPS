@@ -105,7 +105,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
         if (profile != null && lastBG != null && bgView != null) {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-            deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+            if (glucoseStatus != null)
+                deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
             BgReading.units = profile.getUnits();
         } else
             return;

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.tabs;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.annotation.PluralsRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,6 +25,7 @@ public class TabPageAdapter extends FragmentPagerAdapter {
     }
 
     @Override
+    @Nullable
     public Fragment getItem(int position) {
         if (position > registeredTabs)
             return null;

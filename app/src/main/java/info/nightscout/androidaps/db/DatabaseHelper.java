@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.annotation.Nullable;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -109,6 +110,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /*
      * Return last BgReading from database or null if db is empty
      */
+    @Nullable
     public BgReading lastBg() {
         List<BgReading> bgList = null;
 
@@ -133,6 +135,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * Return bg reading if not old ( <9 min )
      * or null if older
      */
+    @Nullable
     public BgReading actualBg() {
         BgReading lastBg = lastBg();
 
@@ -182,6 +185,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    @Nullable
     public GlucoseStatus getGlucoseStatusData() {
         GlucoseStatus result = new GlucoseStatus();
         try {

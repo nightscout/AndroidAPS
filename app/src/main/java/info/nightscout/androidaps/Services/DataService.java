@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.annotation.Nullable;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -332,6 +333,7 @@ public class DataService extends IntentService {
         editor.commit();
     }
 
+    @Nullable
     public static Treatment findById(String _id) {
         try {
             QueryBuilder<Treatment, String> qb = null;
@@ -355,6 +357,7 @@ public class DataService extends IntentService {
         return null;
     }
 
+    @Nullable
     public static Treatment findByTimeIndex(Long timeIndex) {
         try {
             QueryBuilder<Treatment, String> qb = null;
