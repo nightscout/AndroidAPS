@@ -69,5 +69,19 @@
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
     <string name="openapsma_result_label">Result</string>
+    <string name="openapsma_noglucosedata">No glucose data available</string>
+    <string name="openapsma_noprofile">No profile available</string>
+    <string name="openapsma_nopump">No pump available</string>
+    <string name="nochangerequested">No change requested</string>
+    <string name="openapsma_request_label">Request</string>
+    <string name="openapsma_minbg_label">Low target</string>
+    <string name="lowsuspend_lowmessage">LOW: Temp basal 0%</string>
+    <string name="lowsuspend_lowprojectedmessage">LOW PROJECTED: Temp basal 0%</string>
+    <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
+    <string name="lowsuspend_low">Low:</string>
+    <string name="lowsuspend_lowprojected">Low projected:</string>
+    <string name="rate">Rate:</string>
+    <string name="duration">Duration:</string>
+    <string name="reason">Reason:</string>
 
 </resources>

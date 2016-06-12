@@ -49,6 +49,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     TextView profileView;
     TextView mealDataView;
     TextView resultView;
+    TextView requestView;
 
     Date lastAPSRun = null;
     APSResult lastAPSResult = null;
@@ -98,6 +99,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         profileView = (TextView) view.findViewById(R.id.openapsma_profile);
         mealDataView = (TextView) view.findViewById(R.id.openapsma_mealdata);
         resultView = (TextView) view.findViewById(R.id.openapsma_result);
+        requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
         return view;
     }
@@ -151,9 +153,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void invoke() {
-
-        //   private DatermineBasalResult openAps(int glucoseValue, int delta, double deltaAvg15min, StatusEvent status, LowSuspendStatus lowSuspendStatus, IobTotal iobTotal, CarbCalc.Meal mealdata) {
-        DetermineBasalAdapterJS determineBasalAdapterJS = null;
+       DetermineBasalAdapterJS determineBasalAdapterJS = null;
         try {
             determineBasalAdapterJS = new DetermineBasalAdapterJS(new ScriptReader(MainApp.instance().getBaseContext()));
         } catch (IOException e) {
@@ -166,17 +166,20 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         Pump pump = MainApp.getActivePump();
 
         if (glucoseStatus == null) {
-            if (Config.logAPSResult) log.debug("No glucose data available");
+            resultView.setText(getString(R.string.openapsma_noglucosedata));
+            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_noglucosedata));
             return;
         }
 
         if (profile == null) {
-            if (Config.logAPSResult) log.debug("No profile available");
+            resultView.setText(getString(R.string.openapsma_noprofile));
+            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_noprofile));
             return;
         }
 
         if (pump == null) {
-            if (Config.logAPSResult) log.debug("No pump available");
+            resultView.setText(getString(R.string.openapsma_nopump));
+            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_nopump));
             return;
         }
 
@@ -217,6 +220,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
 
         resultView.setText(determineBasalResult.json.toString());
+        requestView.setText(determineBasalResult.toString());
         lastRunView.setText(new Date().toLocaleString());
 
         determineBasalAdapterJS.release();
