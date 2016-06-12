@@ -184,7 +184,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             int sizeRecords = bgReadings.size();
 
-            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 1).timestamp > new Date().getTime() - 7 * 60 * 1000l)
+            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timestamp < new Date().getTime() - 7 * 60 * 1000l)
                 return null;
 
             int minutes = 5;
