@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.db;
 
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -167,6 +169,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         public double glucose = 0d;
         public double delta = 0d;
         public double avgdelta = 0d;
+
+        @Override
+        public String toString() {
+            Context context = MainApp.instance().getApplicationContext();
+            DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
+            DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+
+            return context.getString(R.string.glucose) + " " +  formatNumber0decimalplaces.format(glucose) + "\n" +
+                    context.getString(R.string.delta) + " " + formatNumber0decimalplaces.format(delta) + "\n" +
+                    context.getString(R.string.avgdelta) + " " + formatNumber2decimalplaces.format(avgdelta);
+        }
     }
 
     public GlucoseStatus getGlucoseStatusData() {

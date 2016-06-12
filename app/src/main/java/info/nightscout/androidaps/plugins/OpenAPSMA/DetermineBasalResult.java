@@ -20,6 +20,7 @@ public class DetermineBasalResult extends APSResult {
         snoozeBG = result.getDouble("snoozeBG");
         if(result.contains("rate")) {
             rate = result.getDouble("rate");
+            if (rate < 0d) rate = 0d;
             changeRequested = true;
         } else {
             rate = -1;

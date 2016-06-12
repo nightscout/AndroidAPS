@@ -299,4 +299,21 @@ public class NSProfile {
         if (units.equals(Constants.MGDL)) return value;
         else return value * Constants.MMOLL_TO_MGDL;
     }
+
+    public static Double fromMgdlToUnits(Double value, String units) {
+        if (units.equals(Constants.MGDL)) return value;
+        else return value * Constants.MGDL_TO_MMOLL;
+    }
+
+    public static Double toUnits(Double valueInMgdl, Double valueInMmol, String units) {
+        if (units.equals(Constants.MGDL)) return valueInMgdl;
+        else return valueInMmol;
+    }
+
+    public static String toUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
+        DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
+        DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
+        if (units.equals(Constants.MGDL)) return formatNumber0decimalplaces.format(valueInMgdl);
+        else return formatNumber1decimalplaces.format(valueInMmol);
+    }
 }
