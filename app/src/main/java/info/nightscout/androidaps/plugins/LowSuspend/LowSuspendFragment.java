@@ -102,6 +102,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         }
         MainApp.bus().register(this);
     }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -187,7 +188,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
                 request.changeRequested = false;
                 request.reason = getString(R.string.nochangerequested);
             }
-        } else if (tempBasalRate == 0d){
+        } else if (tempBasalRate == 0d) {
             request.changeRequested = true;
             request.rate = baseBasalRate;
             request.duration = 30;

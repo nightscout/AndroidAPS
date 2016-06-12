@@ -83,5 +83,9 @@
     <string name="rate">Rate:</string>
     <string name="duration">Duration:</string>
     <string name="reason">Reason:</string>
+    <string name="glucose">Glucose:</string>
+    <string name="delta">Delta:</string>
+    <string name="avgdelta">Avg. delta:</string>
+    <string name="minago">min ago</string>
 
 </resources>

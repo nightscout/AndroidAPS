@@ -25,9 +25,9 @@ public class APSResult {
         DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
         if (changeRequested)
-        return context.getString(R.string.rate) + " " +  formatNumber2decimalplaces.format(rate) + " U/h\n" +
-               context.getString(R.string.duration)  + " " + formatNumber0decimalplaces.format(duration) + " min\n" +
-               context.getString(R.string.reason)  + " " + reason;
+            return context.getString(R.string.rate) + " " + formatNumber2decimalplaces.format(rate) + " U/h\n" +
+                    context.getString(R.string.duration) + " " + formatNumber0decimalplaces.format(duration) + " min\n" +
+                    context.getString(R.string.reason) + " " + reason;
         else
             return MainApp.instance().getApplicationContext().getString(R.string.nochangerequested);
     }
