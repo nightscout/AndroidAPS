@@ -22,8 +22,9 @@
             android:id="@+id/configbuilder_pumplistview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:layout_marginRight="10dp" />
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:background="@color/cardColorBackground" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,7 +36,10 @@
         <ListView
             android:id="@+id/configbuilder_treatmentslistview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/cardColorBackground" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,7 +51,10 @@
         <ListView
             android:id="@+id/configbuilder_tempslistview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/cardColorBackground" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +66,10 @@
         <ListView
             android:id="@+id/configbuilder_profilelistview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/cardColorBackground" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,7 +81,10 @@
         <ListView
             android:id="@+id/configbuilder_apslistview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/cardColorBackground" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,7 +96,10 @@
         <ListView
             android:id="@+id/configbuilder_generallistview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@color/cardColorBackground" />
     </LinearLayout>
 
 </FrameLayout>
