@@ -7,10 +7,18 @@ import java.util.Date;
  */
 public interface PluginBase {
     int GENERAL = 1;
-    int PROFILE = 2;
-    int APS = 3;
-    int PUMP = 4;
+    int TREATMENT = 2;
+    int TEMPBASAL = 3;
+    int PROFILE = 4;
+    int APS = 5;
+    int PUMP = 6;
 
     public int getType();
-    public boolean isFragmentVisible();
+
+    String getName();
+    boolean isEnabled();
+    boolean isVisibleInTabs();
+    boolean canBeHidden();
+    void setFragmentEnabled(boolean fragmentEnabled);
+    void setFragmentVisible(boolean fragmentVisible);
 }

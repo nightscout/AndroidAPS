@@ -1,58 +1,69 @@
 package info.nightscout.androidaps.tabs;
 
-import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.PluralsRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 import info.nightscout.androidaps.plugins.PluginBase;
 
 /**
  * Created by mike on 30.05.2016.
  */
-public class TabPageAdapter extends FragmentPagerAdapter {
+public class TabPageAdapter extends FragmentStatePagerAdapter {
 
-    int registeredTabs = 0;
-    List<Fragment> fragmentList = new ArrayList<Fragment>();
+    ArrayList<PluginBase> fragmentList = new ArrayList<PluginBase>();
+    ArrayList<PluginBase> visibleFragmentList = new ArrayList<PluginBase>();
+
+    FragmentManager fm;
 
     public TabPageAdapter(FragmentManager fm) {
         super(fm);
+        this.fm = fm;
     }
 
     @Override
     @Nullable
     public Fragment getItem(int position) {
-        if (position > registeredTabs)
-            return null;
-        Fragment fragment = fragmentList.get(position);
+        Fragment fragment = (Fragment) visibleFragmentList.get(position);
         return fragment;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return fragmentList.get(position).getArguments().getString("name");
+        return visibleFragmentList.get(position).getName();
     }
 
     @Override
     public int getCount() {
-        return registeredTabs;
+        return visibleFragmentList.size();
     }
 
-    public int registerNewFragment(String name, Fragment fragment) {
-        if (((PluginBase) fragment).isFragmentVisible()){
-            fragmentList.add(fragment);
-            Bundle args = new Bundle();
-            args.putString("name", name);
-            fragment.setArguments(args);
-            registeredTabs++;
+    public void registerNewFragment(Fragment fragment) {
+        PluginBase plugin = (PluginBase) fragment;
+        fragmentList.add(plugin);
+        if (plugin.isVisibleInTabs()) {
+            visibleFragmentList.add(plugin);
             notifyDataSetChanged();
-            return registeredTabs - 1;
         }
-        return  registeredTabs;
+    }
+
+    public ArrayList<PluginBase> getPluginsList() {
+        return fragmentList;
+    }
+
+    public ArrayList<PluginBase> getSpecificPluginsList(int type) {
+        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
+
+        Iterator<PluginBase> it = fragmentList.iterator();
+        while (it.hasNext()) {
+            PluginBase p = it.next();
+            if (p.getType() == type)
+                newList.add(p);
+        }
+        return newList;
     }
 }

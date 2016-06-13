@@ -44,15 +44,39 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView deltaView;
     GraphView bgGraph;
 
+    @Override
+    public String getName() {
+        return MainApp.instance().getString(R.string.overview);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return true;
+    }
+
+    @Override
+    public boolean canBeHidden() {
+        return false;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        // Always enabled
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        // Always visible
+    }
 
     @Override
     public int getType() {
         return PluginBase.GENERAL;
-    }
-
-    @Override
-    public boolean isFragmentVisible() {
-        return true;
     }
 
     public static OverviewFragment newInstance() {
@@ -136,7 +160,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         Double lowLine = NSProfile.toUnits(80d, 4d, units); // TODO: make this customisable
         Double highLine = NSProfile.toUnits(180d, 10d, units);
-        Double maxY = NSProfile.toUnits(400d , 20d, units); // TODO: add some scale support
+        Double maxY = NSProfile.toUnits(400d, 20d, units); // TODO: add some scale support
 
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
         List<BgReading> inRangeArray = new ArrayList<BgReading>();

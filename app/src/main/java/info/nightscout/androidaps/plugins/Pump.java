@@ -1,8 +1,8 @@
-package info.nightscout.androidaps.data;
+package info.nightscout.androidaps.plugins;
 
 import org.json.JSONObject;
 
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.data.Result;
 import info.nightscout.client.data.NSProfile;
 
 /**
@@ -16,7 +16,7 @@ public interface Pump {
     Integer getBatteryPercent();
     Integer getReservoirValue();
 
-    // Upload to pump new basal profile from MainApp.getNSProfile()
+    // Upload to pump new basal profile
     void setNewBasalProfile(NSProfile profile);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
