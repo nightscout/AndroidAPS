@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
@@ -64,15 +62,42 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     private List<Treatment> treatments;
 
+    boolean fragmentEnabled = true;
+    boolean fragmentVisible = true;
 
     @Override
-    public int getType() {
-        return PluginBase.GENERAL;
+    public String getName() {
+        return MainApp.instance().getString(R.string.treatments);
     }
 
     @Override
-    public boolean isFragmentVisible() {
+    public boolean isEnabled() {
+        return fragmentEnabled;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return fragmentVisible;
+    }
+
+    @Override
+    public boolean canBeHidden() {
         return true;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        this.fragmentEnabled = fragmentEnabled;
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getType() {
+        return PluginBase.TREATMENT;
     }
 
     private void initializeData() {

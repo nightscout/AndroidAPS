@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.data.Pump;
+import info.nightscout.androidaps.plugins.Pump;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;

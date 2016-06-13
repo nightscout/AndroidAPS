@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Objectives;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -15,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PluginBase;
 
@@ -22,14 +22,40 @@ public class ObjectivesFragment extends Fragment implements PluginBase {
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
+    boolean fragmentVisible = true;
+
     @Override
     public int getType() {
         return PluginBase.GENERAL;
     }
 
     @Override
-    public boolean isFragmentVisible() {
+    public String getName() {
+        return MainApp.instance().getString(R.string.objectives);
+    }
+
+    @Override
+    public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return fragmentVisible;
+    }
+
+    @Override
+    public boolean canBeHidden() {
+        return true;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
     }
 
     class Objective {
@@ -92,7 +118,7 @@ public class ObjectivesFragment extends Fragment implements PluginBase {
 
         @Override
         public void onBindViewHolder(ObjectiveViewHolder holder, int position) {
-            holder.position.setText(String.valueOf(position+1));
+            holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(objectives.get(position).objective);
             holder.gate.setText(objectives.get(position).gate);
             holder.started.setText(objectives.get(position).started.toString());

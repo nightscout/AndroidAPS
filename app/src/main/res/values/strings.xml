@@ -88,4 +88,20 @@
     <string name="avgdelta">Avg. delta:</string>
     <string name="minago">min ago</string>
 
+    <string name="configbuilder">Config Builder</string>
+    <string name="lowsuspend">Low Suspend</string>
+    <string name="objectives">Objectives</string>
+    <string name="openapsma">OpenAPS MA</string>
+    <string name="overview">Overview</string>
+    <string name="profileviewer">Profile Viewer</string>
+    <string name="tempbasals">Temp Basals</string>
+    <string name="treatments">Treatments</string>
+    <string name="virtualpump">Virtual Pump</string>
+    <string name="configbuilder_pump">Pump</string>
+    <string name="configbuilder_treatments">Treatments</string>
+    <string name="configbuilder_tempbasals">Temp Basals</string>
+    <string name="configbuilder_profile">Profile</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_general">General</string>
+
 </resources>

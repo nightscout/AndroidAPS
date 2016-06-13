@@ -44,15 +44,39 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView deltaView;
     GraphView bgGraph;
 
+    @Override
+    public String getName() {
+        return MainApp.instance().getString(R.string.overview);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return true;
+    }
+
+    @Override
+    public boolean canBeHidden() {
+        return false;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        // Always enabled
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        // Always visible
+    }
 
     @Override
     public int getType() {
         return PluginBase.GENERAL;
-    }
-
-    @Override
-    public boolean isFragmentVisible() {
-        return true;
     }
 
     public static OverviewFragment newInstance() {
@@ -101,15 +125,16 @@ public class OverviewFragment extends Fragment implements PluginBase {
         if (bgGraph == null)
             return;
 
+        // **** BG value ****
         if (profile != null && lastBG != null && bgView != null) {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-            deltaView.setText(NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+            if (glucoseStatus != null)
+                deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
             BgReading.units = profile.getUnits();
         } else
             return;
 
-        // **** BG value ****
         Integer flag = bgView.getPaintFlags();
         if (actualBG == null) {
             flag |= Paint.STRIKE_THRU_TEXT_FLAG;
@@ -118,7 +143,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         bgView.setPaintFlags(flag);
 
         Long agoMsec = new Date().getTime() - lastBG.timestamp;
-        int agoMin = (int) (agoMsec / 60d / 60d / 1000d);
+        int agoMin = (int) (agoMsec / 60d / 1000d);
         timeAgoView.setText(agoMin + " " + getString(R.string.minago));
 
         // **** BG graph ****
@@ -135,7 +160,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         Double lowLine = NSProfile.toUnits(80d, 4d, units); // TODO: make this customisable
         Double highLine = NSProfile.toUnits(180d, 10d, units);
-        Double maxY = NSProfile.toUnits(400d , 20d, units); // TODO: add some scale support
+        Double maxY = NSProfile.toUnits(400d, 20d, units); // TODO: add some scale support
 
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
         List<BgReading> inRangeArray = new ArrayList<BgReading>();

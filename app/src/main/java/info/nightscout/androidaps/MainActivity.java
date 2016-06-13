@@ -1,5 +1,6 @@
 package info.nightscout.androidaps;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,9 +8,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.squareup.otto.Subscribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
+import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
@@ -26,7 +33,9 @@ public class MainActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
-    private TabPageAdapter mAdapter;
+    private static TabPageAdapter pageAdapter;
+
+    ArrayList<Fragment> pluginsList = new ArrayList<Fragment>();
 
     public static TreatmentsFragment treatmentsFragment;
     public static TempBasalsFragment tempBasalsFragment;
@@ -38,25 +47,51 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         // Register all tabs in app here
-        mAdapter = new TabPageAdapter(getSupportFragmentManager());
-        mAdapter.registerNewFragment("Overview", OverviewFragment.newInstance());
-        mAdapter.registerNewFragment("VirtualPump", (VirtualPumpFragment) MainApp.setActivePump(VirtualPumpFragment.newInstance()));
-        mAdapter.registerNewFragment("LowSuspend", LowSuspendFragment.newInstance());
-        mAdapter.registerNewFragment("OpenAPS MA", OpenAPSMAFragment.newInstance());
-        mAdapter.registerNewFragment("Treatments", treatmentsFragment = TreatmentsFragment.newInstance());
-        mAdapter.registerNewFragment("TempBasals", tempBasalsFragment = TempBasalsFragment.newInstance());
-        mAdapter.registerNewFragment("Profile", ProfileViewerFragment.newInstance());
-        mAdapter.registerNewFragment("Objectives", ObjectivesFragment.newInstance());
+        pluginsList.add(OverviewFragment.newInstance());
+        pluginsList.add((VirtualPumpFragment) MainApp.setActivePump(VirtualPumpFragment.newInstance()));
+        pluginsList.add(LowSuspendFragment.newInstance());
+        pluginsList.add(OpenAPSMAFragment.newInstance());
+        pluginsList.add(treatmentsFragment = TreatmentsFragment.newInstance());
+        pluginsList.add(tempBasalsFragment = TempBasalsFragment.newInstance());
+        pluginsList.add(ProfileViewerFragment.newInstance());
+        pluginsList.add(ObjectivesFragment.newInstance());
+        pluginsList.add(ConfigBuilderFragment.newInstance());
 
+/*
+        pageAdapter.registerNewFragment(OverviewFragment.newInstance());
+        pageAdapter.registerNewFragment((VirtualPumpFragment) MainApp.setActivePump(VirtualPumpFragment.newInstance()));
+        pageAdapter.registerNewFragment(LowSuspendFragment.newInstance());
+        pageAdapter.registerNewFragment(OpenAPSMAFragment.newInstance());
+        pageAdapter.registerNewFragment(treatmentsFragment = TreatmentsFragment.newInstance());
+        pageAdapter.registerNewFragment(tempBasalsFragment = TempBasalsFragment.newInstance());
+        pageAdapter.registerNewFragment(ProfileViewerFragment.newInstance());
+        pageAdapter.registerNewFragment(ObjectivesFragment.newInstance());
+        pageAdapter.registerNewFragment(ConfigBuilderFragment.newInstance());
+*/
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mPager = (ViewPager) findViewById(R.id.pager);
-        mPager.setAdapter(mAdapter);
-        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
-        mTabs.setViewPager(mPager);
 
         registerBus();
 
+        setUpTabs(false);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventRefreshGui ev) {
+        setUpTabs(true);
+    }
+
+    private void setUpTabs(boolean switchToLast) {
+        pageAdapter = new TabPageAdapter(getSupportFragmentManager());
+        for(Fragment f: pluginsList) {
+            pageAdapter.registerNewFragment(f);
+        }
+        mPager = (ViewPager) findViewById(R.id.pager);
+        mPager.setAdapter(pageAdapter);
+        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        mTabs.setViewPager(mPager);
+        if (switchToLast)
+            mPager.setCurrentItem(pageAdapter.getCount()-1, false);
     }
 
     @Override
@@ -82,5 +117,7 @@ public class MainActivity extends AppCompatActivity {
         MainApp.bus().register(this);
     }
 
-
+    public static TabPageAdapter getPageAdapter() {
+        return pageAdapter;
+    }
 }

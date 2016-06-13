@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.TempBasals;
 
 import android.app.Activity;
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
@@ -31,7 +29,6 @@ import java.util.Locale;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -56,15 +53,42 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
 
     private List<TempBasal> tempBasals;
 
+    boolean fragmentEnabled = true;
+    boolean fragmentVisible = true;
 
     @Override
-    public int getType() {
-        return PluginBase.GENERAL;
+    public String getName() {
+        return MainApp.instance().getString(R.string.tempbasals);
     }
 
     @Override
-    public boolean isFragmentVisible() {
+    public boolean isEnabled() {
+        return fragmentEnabled;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return fragmentVisible;
+    }
+
+    @Override
+    public boolean canBeHidden() {
         return true;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        this.fragmentEnabled = fragmentEnabled;
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getType() {
+        return PluginBase.TEMPBASAL;
     }
 
     private void initializeData() {

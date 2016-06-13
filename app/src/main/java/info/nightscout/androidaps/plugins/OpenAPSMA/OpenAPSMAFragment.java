@@ -25,8 +25,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.data.Pump;
+import info.nightscout.androidaps.plugins.Pump;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -54,14 +53,42 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     Date lastAPSRun = null;
     APSResult lastAPSResult = null;
 
+    boolean fragmentEnabled = false;
+    boolean fragmentVisible = true;
+
     @Override
-    public int getType() {
-        return PluginBase.APS;
+    public String getName() {
+        return MainApp.instance().getString(R.string.openapsma);
     }
 
     @Override
-    public boolean isFragmentVisible() {
+    public boolean isEnabled() {
+        return fragmentEnabled;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return fragmentVisible;
+    }
+
+    @Override
+    public boolean canBeHidden() {
         return true;
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        this.fragmentEnabled = fragmentEnabled;
+    }
+
+    @Override
+    public int getType() {
+        return PluginBase.APS;
     }
 
     @Override
@@ -153,7 +180,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void invoke() {
-       DetermineBasalAdapterJS determineBasalAdapterJS = null;
+        DetermineBasalAdapterJS determineBasalAdapterJS = null;
         try {
             determineBasalAdapterJS = new DetermineBasalAdapterJS(new ScriptReader(MainApp.instance().getBaseContext()));
         } catch (IOException e) {

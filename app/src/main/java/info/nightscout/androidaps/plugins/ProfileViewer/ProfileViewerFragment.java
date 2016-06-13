@@ -35,15 +35,42 @@ public class ProfileViewerFragment extends Fragment implements PluginBase {
 
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
+    boolean fragmentEnabled = true;
+    boolean fragmentVisible = true;
+
+    @Override
+    public String getName() {
+        return MainApp.instance().getString(R.string.profileviewer);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return fragmentEnabled;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return fragmentVisible;
+    }
+
+    @Override
+    public boolean canBeHidden() {
+        return true;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        this.fragmentEnabled = fragmentEnabled;
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
+    }
 
     @Override
     public int getType() {
         return PluginBase.PROFILE;
-    }
-
-    @Override
-    public boolean isFragmentVisible() {
-        return true;
     }
 
     public static ProfileViewerFragment newInstance(String param1, String param2) {

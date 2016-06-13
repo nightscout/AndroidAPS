@@ -20,10 +20,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Pump;
+import info.nightscout.androidaps.plugins.Pump;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -47,14 +46,41 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
     TextView batteryView;
     TextView reservoirView;
 
+    boolean fragmentEnabled = true;
+    boolean fragmentVisible = true;
+
     @Override
-    public int getType() {
-        return PluginBase.PUMP;
+    public String getName() {
+        return MainApp.instance().getString(R.string.virtualpump);
     }
 
     @Override
-    public boolean isFragmentVisible() {
+    public boolean isEnabled() {
+        return fragmentEnabled;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return fragmentVisible;
+    }
+
+    @Override
+    public boolean canBeHidden() {
         return true;
+    }
+
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        this.fragmentEnabled = fragmentEnabled;
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
+    }
+
+    @Override
+    public int getType() {
+        return PluginBase.PUMP;
     }
 
     public static VirtualPumpFragment newInstance() {
@@ -128,7 +154,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
                 tempBasal = null;
             }
         }
-       if (isExtendedBoluslInProgress()) {
+        if (isExtendedBoluslInProgress()) {
             long plannedTimeEnd = extendedBolus.getPlannedTimeEnd().getTime();
             if (plannedTimeEnd < now) {
                 extendedBolus.timeEnd = new Date(plannedTimeEnd);
@@ -344,7 +370,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
     }
 
     @Override
-    public JSONObject getJSONStatus(){
+    public JSONObject getJSONStatus() {
         JSONObject pump = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();

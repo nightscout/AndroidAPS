@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.LowSuspend;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -25,7 +23,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Pump;
+import info.nightscout.androidaps.plugins.Pump;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.plugins.APSBase;
@@ -46,15 +44,42 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     Date lastAPSRun = null;
     APSResult lastAPSResult = null;
 
+    boolean fragmentEnabled = false;
+    boolean fragmentVisible = true;
+
+    @Override
+    public String getName() {
+        return MainApp.instance().getString(R.string.lowsuspend);
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return fragmentEnabled;
+    }
+
+    @Override
+    public boolean isVisibleInTabs() {
+        return fragmentVisible;
+    }
+
+    @Override
+    public boolean canBeHidden() {
+        return true;
+    }
+
+    @Override
+    public void setFragmentEnabled(boolean selected) {
+        this.fragmentEnabled = selected;
+    }
+
+    @Override
+    public void setFragmentVisible(boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
+    }
 
     @Override
     public int getType() {
         return PluginBase.APS;
-    }
-
-    @Override
-    public boolean isFragmentVisible() {
-        return true;
     }
 
     @Override
