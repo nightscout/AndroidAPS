@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.ProfileViewer;
+package info.nightscout.androidaps.plugins.NSProfileViewer;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -21,8 +21,8 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.plugins.PluginBase;
 import info.nightscout.client.data.NSProfile;
 
-public class ProfileViewerFragment extends Fragment implements PluginBase {
-    private static Logger log = LoggerFactory.getLogger(ProfileViewerFragment.class);
+public class NSProfileViewerFragment extends Fragment implements PluginBase {
+    private static Logger log = LoggerFactory.getLogger(NSProfileViewerFragment.class);
 
     private static TextView noProfile;
     private static TextView units;
@@ -73,11 +73,6 @@ public class ProfileViewerFragment extends Fragment implements PluginBase {
         return PluginBase.PROFILE;
     }
 
-    public static ProfileViewerFragment newInstance(String param1, String param2) {
-        ProfileViewerFragment fragment = new ProfileViewerFragment();
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +82,7 @@ public class ProfileViewerFragment extends Fragment implements PluginBase {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.profileviewer_fragment, container, false);
+        View layout = inflater.inflate(R.layout.nsprofileviewer_fragment, container, false);
 
         noProfile = (TextView) layout.findViewById(R.id.profileview_noprofile);
         units = (TextView) layout.findViewById(R.id.profileview_units);
@@ -102,8 +97,8 @@ public class ProfileViewerFragment extends Fragment implements PluginBase {
         return layout;
     }
 
-    public static ProfileViewerFragment newInstance() {
-        ProfileViewerFragment fragment = new ProfileViewerFragment();
+    public static NSProfileViewerFragment newInstance() {
+        NSProfileViewerFragment fragment = new NSProfileViewerFragment();
         return fragment;
     }
 

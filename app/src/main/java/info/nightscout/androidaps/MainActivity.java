@@ -18,9 +18,9 @@ import java.util.ArrayList;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
+import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
-import info.nightscout.androidaps.plugins.ProfileViewer.ProfileViewerFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         pluginsList.add(OpenAPSMAFragment.newInstance());
         pluginsList.add(treatmentsFragment = TreatmentsFragment.newInstance());
         pluginsList.add(tempBasalsFragment = TempBasalsFragment.newInstance());
-        pluginsList.add(ProfileViewerFragment.newInstance());
+        pluginsList.add(NSProfileViewerFragment.newInstance());
         pluginsList.add(ObjectivesFragment.newInstance());
         pluginsList.add(ConfigBuilderFragment.newInstance());
 
@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
         pageAdapter.registerNewFragment(OpenAPSMAFragment.newInstance());
         pageAdapter.registerNewFragment(treatmentsFragment = TreatmentsFragment.newInstance());
         pageAdapter.registerNewFragment(tempBasalsFragment = TempBasalsFragment.newInstance());
-        pageAdapter.registerNewFragment(ProfileViewerFragment.newInstance());
+        pageAdapter.registerNewFragment(NSProfileViewerFragment.newInstance());
         pageAdapter.registerNewFragment(ObjectivesFragment.newInstance());
         pageAdapter.registerNewFragment(ConfigBuilderFragment.newInstance());
 */

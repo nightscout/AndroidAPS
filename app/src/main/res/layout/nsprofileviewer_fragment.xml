@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".plugins.ProfileViewer.ProfileViewerFragment">
+    tools:context=".plugins.NSProfileViewer.NSProfileViewerFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
                 android:id="@+id/profileview_noprofile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_noprofile_text"
+                android:text="@string/nsprofileview_noprofile_text"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/holo_red_light"
                 android:textStyle="bold"
@@ -26,7 +26,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_activeprofile_label"
+                android:text="@string/nsprofileview_activeprofile_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />
 
@@ -39,7 +39,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_units_label"
+                android:text="@string/nsprofileview_units_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />
 
@@ -52,7 +52,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_dia_label"
+                android:text="@string/nsprofileview_dia_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />
 
@@ -65,7 +65,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_ic_label"
+                android:text="@string/nsprofileview_ic_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />
 
@@ -78,7 +78,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_isf_label"
+                android:text="@string/nsprofileview_isf_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />
 
@@ -91,7 +91,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_basal_label"
+                android:text="@string/nsprofileview_basal_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />
 
@@ -104,7 +104,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/profileview_target_label"
+                android:text="@string/nsprofileview_target_label"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_marginLeft="10dp" />
 
