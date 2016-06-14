@@ -2,7 +2,9 @@ package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,22 +16,36 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Result;
+import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventRefreshGui;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.TempBasalsInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
+import info.nightscout.client.data.NSProfile;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ConfigBuilderFragment extends Fragment implements PluginBase {
+public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderFragment.class);
+
+    private static final String PREFS_NAME = "Settings";
 
     ListView pumpListView;
     ListView treatmentsListView;
@@ -46,6 +62,37 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase {
     PluginCustomAdapter generalDataAdapter = null;
 
 
+    PumpInterface activePump;
+    ProfileInterface activeProfile;
+    TreatmentsInterface activeTreatments;
+    TempBasalsInterface activeTempBasals;
+
+    ArrayList<PluginBase> pluginList;
+
+    public ConfigBuilderFragment() {
+        super();
+        registerBus();
+    }
+
+    public void initialize() {
+        pluginList = MainActivity.getPluginsList();
+        loadSettings();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    private void registerBus() {
+        try {
+            MainApp.bus().unregister(this);
+        } catch (RuntimeException x) {
+            // Ignore
+        }
+        MainApp.bus().register(this);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,19 +104,22 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase {
         apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
         generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
 
-        //Array list of countries
-        ArrayList<PluginBase> pluginList = MainActivity.getPageAdapter().getPluginsList();
-        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getPageAdapter().getSpecificPluginsList(PluginBase.PUMP));
+        setViews();
+        return view;
+    }
+
+    void setViews() {
+        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP));
         pumpListView.setAdapter(pumpDataAdapter);
-        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getPageAdapter().getSpecificPluginsList(PluginBase.TREATMENT));
+        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT));
         treatmentsListView.setAdapter(treatmentsDataAdapter);
-        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getPageAdapter().getSpecificPluginsList(PluginBase.TEMPBASAL));
+        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TEMPBASAL));
         tempsListView.setAdapter(tempsDataAdapter);
-        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getPageAdapter().getSpecificPluginsList(PluginBase.PROFILE));
+        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PROFILE));
         profileListView.setAdapter(profileDataAdapter);
-        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getPageAdapter().getSpecificPluginsList(PluginBase.APS));
+        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS));
         apsListView.setAdapter(apsDataAdapter);
-        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getPageAdapter().getSpecificPluginsList(PluginBase.GENERAL));
+        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.GENERAL));
         generalListView.setAdapter(generalDataAdapter);
 
 
@@ -83,10 +133,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase {
                         Toast.LENGTH_LONG).show();
             }
         });
-
-        return view;
     }
 
+    /*
+     * PluginBase interface
+     */
     @Override
     public int getType() {
         return PluginBase.GENERAL;
@@ -126,6 +177,100 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase {
         ConfigBuilderFragment fragment = new ConfigBuilderFragment();
         return fragment;
     }
+
+
+    /*
+     * Pump interface
+     *
+     * Config builder return itself as a pump and check constrains before it passes command to pump driver
+     */
+    @Nullable
+    public PumpInterface getActivePump() {
+        return this;
+    }
+
+    @Override
+    public boolean isTempBasalInProgress() {
+        return activePump.isTempBasalInProgress();
+    }
+
+    @Override
+    public boolean isExtendedBoluslInProgress() {
+        return activePump.isExtendedBoluslInProgress();
+    }
+
+    @Override
+    public Integer getBatteryPercent() {
+        return activePump.getBatteryPercent();
+    }
+
+    @Override
+    public Integer getReservoirValue() {
+        return activePump.getReservoirValue();
+    }
+
+    @Override
+    public void setNewBasalProfile(NSProfile profile) {
+        activePump.setNewBasalProfile(profile);
+    }
+
+    @Override
+    public double getBaseBasalRate() {
+        return activePump.getBaseBasalRate();
+    }
+
+    @Override
+    public double getTempBasalAbsoluteRate() {
+        return activePump.getTempBasalAbsoluteRate();
+    }
+
+    @Override
+    public double getTempBasalRemainingMinutes() {
+        return activePump.getTempBasalRemainingMinutes();
+    }
+
+    @Override
+    public Result deliverTreatment(Double insulin, Double carbs) {
+        // TODO: constrains here
+        return activePump.deliverTreatment(insulin, carbs);
+    }
+
+    @Override
+    public Result setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+        // TODO: constrains here
+        return activePump.setTempBasalAbsolute(absoluteRate, durationInMinutes);
+    }
+
+    @Override
+    public Result setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+        // TODO: constrains here
+        return activePump.setTempBasalPercent(percent, durationInMinutes);
+    }
+
+    @Override
+    public Result setExtendedBolus(Double insulin, Integer durationInMinutes) {
+        // TODO: constrains here
+        return activePump.setExtendedBolus(insulin, durationInMinutes);
+    }
+
+    @Override
+    public Result cancelTempBasal() {
+        return activePump.cancelTempBasal();
+    }
+
+    @Override
+    public Result cancelExtendedBolus() {
+        return activePump.cancelExtendedBolus();
+    }
+
+    @Override
+    public JSONObject getJSONStatus() {
+        return activePump.getJSONStatus();
+    }
+
+    /*
+     * ConfigBuilderFragment code
+     */
 
     private class PluginCustomAdapter extends ArrayAdapter<PluginBase> {
 
@@ -167,6 +312,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase {
                                         " is " + cb.isChecked(),
                                 Toast.LENGTH_LONG).show();
                         plugin.setFragmentEnabled(cb.isChecked());
+                        onEnabledCategoryChanged(plugin);
                     }
                 });
 
@@ -180,6 +326,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase {
                                 Toast.LENGTH_LONG).show();
                         plugin.setFragmentVisible(cb.isChecked());
                         MainApp.bus().post(new EventRefreshGui());
+                        storeSettings();
                     }
                 });
             } else {
@@ -199,12 +346,139 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase {
                 holder.checkboxVisible.setEnabled(false);
             }
 
+            int type = plugin.getType();
+            if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
+                if (pluginList.size() < 2)
+                    holder.checkboxEnabled.setEnabled(false);
+
             return convertView;
 
         }
     }
 
-    private void displayListView() {
-
+    @Nullable
+    public ProfileInterface getActiveProfile() {
+        return activeProfile;
     }
+
+    @Nullable
+    public TreatmentsInterface getActiveTreatments() {
+        return activeTreatments;
+    }
+
+    @Nullable
+    public TempBasalsInterface getActiveTempBasals() {
+        return activeTempBasals;
+    }
+
+    void onEnabledCategoryChanged(PluginBase changedPlugin) {
+        int category = changedPlugin.getType();
+        ArrayList<PluginBase> pluginsInCategory = MainActivity.getSpecificPluginsList(category);
+        switch (category) {
+            // Multiple selection allowed
+            case PluginBase.APS:
+            case PluginBase.GENERAL:
+                break;
+            // Single selection allowed
+            case PluginBase.PROFILE:
+            case PluginBase.PUMP:
+            case PluginBase.TEMPBASAL:
+            case PluginBase.TREATMENT:
+                boolean newSelection = changedPlugin.isEnabled();
+                if (newSelection) { // new plugin selected -> disable others
+                    for (PluginBase p : pluginsInCategory) {
+                        if (p.getName().equals(changedPlugin.getName())) {
+                            // this is new selected
+                        } else {
+                            p.setFragmentEnabled(false);
+                            setViews();
+                        }
+                    }
+                } else { // enable first plugin in list
+                    pluginsInCategory.get(0).setFragmentEnabled(true);
+                }
+                break;
+        }
+        storeSettings();
+    }
+
+    private void verifySelectionInCategories() {
+        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.TEMPBASAL, PluginBase.TREATMENT}) {
+            ArrayList<PluginBase> pluginsInCategory = MainActivity.getSpecificPluginsList(category);
+            switch (category) {
+                // Multiple selection allowed
+                case PluginBase.APS:
+                case PluginBase.GENERAL:
+                    break;
+                // Single selection allowed
+                case PluginBase.PROFILE:
+                    activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory);
+                    if (Config.logConfigBuilder)
+                        log.debug("Selected profile interface: " + ((PluginBase) activeProfile).getName());
+                    break;
+                case PluginBase.PUMP:
+                    activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory);
+                    if (Config.logConfigBuilder)
+                        log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
+                    break;
+                case PluginBase.TEMPBASAL:
+                    activeTempBasals = (TempBasalsInterface) getTheOneEnabledInArray(pluginsInCategory);
+                    if (Config.logConfigBuilder)
+                        log.debug("Selected tempbasal interface: " + ((PluginBase) activeTempBasals).getName());
+                    break;
+                case PluginBase.TREATMENT:
+                    activeTreatments = (TreatmentsInterface) getTheOneEnabledInArray(pluginsInCategory);
+                    if (Config.logConfigBuilder)
+                        log.debug("Selected treatment interface: " + ((PluginBase) activeTreatments).getName());
+                    break;
+            }
+
+        }
+    }
+
+    private PluginBase getTheOneEnabledInArray(ArrayList<PluginBase> pluginsInCategory) {
+        PluginBase found = null;
+        for (PluginBase p : pluginsInCategory) {
+            if (p.isEnabled() && found == null) {
+                found = p;
+                continue;
+            } else if (p.isEnabled()) {
+                // set others disabled
+                p.setFragmentEnabled(false);
+            }
+        }
+        // If none enabled, enable first one
+        if (found == null)
+            found = pluginsInCategory.get(0);
+        return found;
+    }
+
+    private void storeSettings() {
+        if (Config.logPrefsChange)
+            log.debug("Storing settings");
+        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+
+        for (PluginBase p : pluginList) {
+            editor.putBoolean(p.getName() + "Enabled", p.isEnabled());
+            editor.putBoolean(p.getName() + "Visible", p.isVisibleInTabs());
+        }
+        editor.commit();
+        verifySelectionInCategories();
+    }
+
+    private void loadSettings() {
+        if (Config.logPrefsChange)
+            log.debug("Loading stored settings");
+        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        for (PluginBase p : pluginList) {
+            if (settings.contains(p.getName() + "Enabled"))
+                p.setFragmentEnabled(settings.getBoolean(p.getName() + "Enabled", true));
+            if (settings.contains(p.getName() + "Visible"))
+                p.setFragmentVisible(settings.getBoolean(p.getName() + "Visible", true));
+        }
+        verifySelectionInCategories();
+    }
+
+
 }

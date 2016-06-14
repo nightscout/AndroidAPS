@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins;
+package info.nightscout.androidaps.interfaces;
 
 import java.util.Date;
 

@@ -32,11 +32,12 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
 
 
-public class TempBasalsFragment extends Fragment implements PluginBase {
+public class TempBasalsFragment extends Fragment implements PluginBase, TempBasalsInterface {
     private static Logger log = LoggerFactory.getLogger(TempBasalsFragment.class);
 
     RecyclerView recyclerView;
@@ -118,7 +119,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
         if (recyclerView != null) {
             recyclerView.swapAdapter(new RecyclerViewAdapter(tempBasals), false);
         }
-        updateTotalIOB();
     }
 
     /*
@@ -128,6 +128,11 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
         if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
             return;
         updateTotalIOB();
+    }
+
+    @Override
+    public IobTotal getLastCalculation() {
+        return lastCalculation;
     }
 
     private void updateTotalIOB() {
@@ -223,6 +228,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
 
     public TempBasalsFragment() {
         super();
+        registerBus();
         initializeData();
     }
 
@@ -234,7 +240,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerBus();
     }
 
     @Override

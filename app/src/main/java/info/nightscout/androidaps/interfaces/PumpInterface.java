@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins;
+package info.nightscout.androidaps.interfaces;
 
 import org.json.JSONObject;
 
@@ -8,7 +8,7 @@ import info.nightscout.client.data.NSProfile;
 /**
  * Created by mike on 04.06.2016.
  */
-public interface Pump {
+public interface PumpInterface {
 
     boolean isTempBasalInProgress();
     boolean isExtendedBoluslInProgress();
@@ -30,5 +30,6 @@ public interface Pump {
     Result cancelTempBasal();
     Result cancelExtendedBolus();
 
+    // Status to be passed to NS
     JSONObject getJSONStatus();
 }

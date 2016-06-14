@@ -25,19 +25,22 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Pump;
+import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.plugins.APSBase;
+import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.TempBasalsInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.APSResult;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
-public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, PluginBase, APSBase {
+public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAFragment.class);
 
     Button run;
@@ -55,6 +58,11 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
     boolean fragmentEnabled = false;
     boolean fragmentVisible = true;
+
+    public OpenAPSMAFragment() {
+        super();
+        registerBus();
+    }
 
     @Override
     public String getName() {
@@ -109,7 +117,6 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerBus();
     }
 
     @Override
@@ -189,8 +196,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         }
 
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-        NSProfile profile = MainApp.getNSProfile();
-        Pump pump = MainApp.getActivePump();
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
 
         if (glucoseStatus == null) {
             resultView.setText(getString(R.string.openapsma_noglucosedata));
@@ -227,14 +234,16 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("min_bg", minBgDefault).replace(",", ".")), units);
         double maxBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("max_bg", maxBgDefault).replace(",", ".")), units);
 
-        MainActivity.treatmentsFragment.updateTotalIOBIfNeeded();
-        MainActivity.tempBasalsFragment.updateTotalIOBIfNeeded();
-        IobTotal bolusIob = MainActivity.treatmentsFragment.lastCalculation;
-        IobTotal basalIob = MainActivity.tempBasalsFragment.lastCalculation;
+        TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
+        TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
+        treatments.updateTotalIOBIfNeeded();
+        tempBasals.updateTotalIOBIfNeeded();
+        IobTotal bolusIob = treatments.getLastCalculation();
+        IobTotal basalIob = tempBasals.getLastCalculation();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob);
 
-        TreatmentsFragment.MealData mealData = MainActivity.treatmentsFragment.getMealData();
+        TreatmentsFragment.MealData mealData = treatments.getMealData();
 
         determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, pump, iobTotal, glucoseStatus, mealData);
 

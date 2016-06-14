@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.NSProfileViewer;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,18 +12,22 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.client.data.NSProfile;
 
-public class NSProfileViewerFragment extends Fragment implements PluginBase {
+public class NSProfileViewerFragment extends Fragment implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(NSProfileViewerFragment.class);
 
     private static TextView noProfile;
@@ -33,10 +39,19 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase {
     private static TextView basal;
     private static TextView target;
 
+    private static final String PREFS_NAME = "NightscoutProfile";
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
+
+    NSProfile profile = null;
+
+    public NSProfileViewerFragment () {
+        super();
+        loadNSProfile();
+        registerBus();
+    }
 
     @Override
     public String getName() {
@@ -76,7 +91,6 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerBus();
     }
 
     @Override
@@ -103,7 +117,6 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase {
     }
 
     private void setContent() {
-        NSProfile profile = MainApp.getNSProfile();
         if (profile == null) {
             noProfile.setVisibility(View.VISIBLE);
             return;
@@ -130,6 +143,8 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
+        profile = new NSProfile(ev.newNSProfile.getData(), ev.newNSProfile.getActiveProfile());
+        storeNSProfile();
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
@@ -140,5 +155,45 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase {
             });
         else
             log.debug("EventNewBG: Activity is null");
+    }
+
+    private void storeNSProfile() {
+        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("profile", profile.getData().toString());
+        editor.putString("activeProfile", profile.getActiveProfile());
+        editor.commit();
+        if (Config.logPrefsChange)
+            log.debug("Storing profile");
+    }
+
+    private void loadNSProfile() {
+        if (Config.logPrefsChange)
+            log.debug("Loading stored profile");
+        SharedPreferences store = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        String activeProfile = store.getString("activeProfile", null);
+        String profileString = store.getString("profile", null);
+        if (profileString != null) {
+            if (Config.logPrefsChange) {
+                log.debug("Loaded profile: " + profileString);
+                log.debug("Loaded active profile: " + activeProfile);
+                try {
+                    profile = new NSProfile(new JSONObject(profileString), activeProfile);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    profile = null;
+                }
+            }
+        } else {
+            if (Config.logPrefsChange) {
+                log.debug("Stored profile not found");
+            }
+        }
+    }
+
+    @Nullable
+    @Override
+    public NSProfile getProfile() {
+        return profile;
     }
 }

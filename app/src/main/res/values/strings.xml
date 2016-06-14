@@ -94,9 +94,11 @@
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Overview</string>
     <string name="profileviewer">NS Profile</string>
+    <string name="simpleprofile">Simple profile</string>
     <string name="tempbasals">Temp Basals</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
+
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_treatments">Treatments</string>
     <string name="configbuilder_tempbasals">Temp Basals</string>

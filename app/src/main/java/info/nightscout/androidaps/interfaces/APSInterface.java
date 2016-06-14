@@ -1,11 +1,13 @@
-package info.nightscout.androidaps.plugins;
+package info.nightscout.androidaps.interfaces;
 
 import java.util.Date;
+
+import info.nightscout.androidaps.plugins.APSResult;
 
 /**
  * Created by mike on 10.06.2016.
  */
-public interface APSBase {
+public interface APSInterface {
     public APSResult getLastAPSResult();
     public Date getLastAPSRun();
 

@@ -21,17 +21,18 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Pump;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.plugins.APSBase;
+import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.plugins.APSResult;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
 
-public class LowSuspendFragment extends Fragment implements View.OnClickListener, PluginBase, APSBase {
+public class LowSuspendFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(LowSuspendFragment.class);
 
     Button run;
@@ -46,6 +47,11 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
 
     boolean fragmentEnabled = false;
     boolean fragmentVisible = true;
+
+    public LowSuspendFragment() {
+        super();
+        registerBus();
+    }
 
     @Override
     public String getName() {
@@ -100,7 +106,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerBus();
     }
 
     @Override
@@ -157,8 +162,8 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
         DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
-        NSProfile profile = MainApp.getNSProfile();
-        Pump pump = MainApp.getActivePump();
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
 
         if (glucoseStatus == null) {
             resultView.setText(getString(R.string.openapsma_noglucosedata));
@@ -179,7 +184,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         }
 
         String minBgDefault = "90";
-        if (!MainApp.getNSProfile().getUnits().equals(Constants.MGDL)) {
+        if (!profile.getUnits().equals(Constants.MGDL)) {
             minBgDefault = "5";
         }
 

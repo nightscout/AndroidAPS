@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
 
 /**
  * Created by mike on 30.05.2016.
@@ -49,21 +49,5 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
             visibleFragmentList.add(plugin);
             notifyDataSetChanged();
         }
-    }
-
-    public ArrayList<PluginBase> getPluginsList() {
-        return fragmentList;
-    }
-
-    public ArrayList<PluginBase> getSpecificPluginsList(int type) {
-        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
-
-        Iterator<PluginBase> it = fragmentList.iterator();
-        while (it.hasNext()) {
-            PluginBase p = it.next();
-            if (p.getType() == type)
-                newList.add(p);
-        }
-        return newList;
     }
 }

@@ -14,13 +14,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
 import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
+import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
@@ -35,44 +38,39 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mPager;
     private static TabPageAdapter pageAdapter;
 
-    ArrayList<Fragment> pluginsList = new ArrayList<Fragment>();
+    private static ArrayList<PluginBase> pluginsList = new ArrayList<PluginBase>();
 
-    public static TreatmentsFragment treatmentsFragment;
-    public static TempBasalsFragment tempBasalsFragment;
+    private static ConfigBuilderFragment configBuilderFragment;
 
+    public static ConfigBuilderFragment getConfigBuilder() {
+        return configBuilderFragment;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (Config.logFunctionCalls)
+            log.debug("onCreate");
 
         // Register all tabs in app here
         pluginsList.add(OverviewFragment.newInstance());
-        pluginsList.add((VirtualPumpFragment) MainApp.setActivePump(VirtualPumpFragment.newInstance()));
+        pluginsList.add(VirtualPumpFragment.newInstance());
         pluginsList.add(LowSuspendFragment.newInstance());
         pluginsList.add(OpenAPSMAFragment.newInstance());
-        pluginsList.add(treatmentsFragment = TreatmentsFragment.newInstance());
-        pluginsList.add(tempBasalsFragment = TempBasalsFragment.newInstance());
         pluginsList.add(NSProfileViewerFragment.newInstance());
+        pluginsList.add(SimpleProfileFragment.newInstance());
+        pluginsList.add(TreatmentsFragment.newInstance());
+        pluginsList.add(TempBasalsFragment.newInstance());
         pluginsList.add(ObjectivesFragment.newInstance());
-        pluginsList.add(ConfigBuilderFragment.newInstance());
+        pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
 
-/*
-        pageAdapter.registerNewFragment(OverviewFragment.newInstance());
-        pageAdapter.registerNewFragment((VirtualPumpFragment) MainApp.setActivePump(VirtualPumpFragment.newInstance()));
-        pageAdapter.registerNewFragment(LowSuspendFragment.newInstance());
-        pageAdapter.registerNewFragment(OpenAPSMAFragment.newInstance());
-        pageAdapter.registerNewFragment(treatmentsFragment = TreatmentsFragment.newInstance());
-        pageAdapter.registerNewFragment(tempBasalsFragment = TempBasalsFragment.newInstance());
-        pageAdapter.registerNewFragment(NSProfileViewerFragment.newInstance());
-        pageAdapter.registerNewFragment(ObjectivesFragment.newInstance());
-        pageAdapter.registerNewFragment(ConfigBuilderFragment.newInstance());
-*/
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         registerBus();
 
+        configBuilderFragment.initialize();
         setUpTabs(false);
     }
 
@@ -83,15 +81,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpTabs(boolean switchToLast) {
         pageAdapter = new TabPageAdapter(getSupportFragmentManager());
-        for(Fragment f: pluginsList) {
-            pageAdapter.registerNewFragment(f);
+        for (PluginBase f : pluginsList) {
+            pageAdapter.registerNewFragment((Fragment) f);
         }
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(pageAdapter);
         mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setViewPager(mPager);
         if (switchToLast)
-            mPager.setCurrentItem(pageAdapter.getCount()-1, false);
+            mPager.setCurrentItem(pageAdapter.getCount() - 1, false);
     }
 
     @Override
@@ -119,5 +117,21 @@ public class MainActivity extends AppCompatActivity {
 
     public static TabPageAdapter getPageAdapter() {
         return pageAdapter;
+    }
+
+    public static ArrayList<PluginBase> getPluginsList() {
+        return pluginsList;
+    }
+
+    public static ArrayList<PluginBase> getSpecificPluginsList(int type) {
+        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
+
+        Iterator<PluginBase> it = pluginsList.iterator();
+        while (it.hasNext()) {
+            PluginBase p = it.next();
+            if (p.getType() == type)
+                newList.add(p);
+        }
+        return newList;
     }
 }

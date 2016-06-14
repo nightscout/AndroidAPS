@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.Pump;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
@@ -204,7 +204,7 @@ public class DetermineBasalAdapterJS {
                         double maxBasal,
                         double minBg,
                         double maxBg,
-                        Pump pump,
+                        PumpInterface pump,
                         IobTotal iobData,
                         DatabaseHelper.GlucoseStatus glucoseStatus,
                         TreatmentsFragment.MealData mealData) {

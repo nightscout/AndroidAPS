@@ -26,13 +26,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
 
 
@@ -43,6 +44,11 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView timeAgoView;
     TextView deltaView;
     GraphView bgGraph;
+
+    public OverviewFragment() {
+        super();
+        registerBus();
+    }
 
     @Override
     public String getName() {
@@ -87,7 +93,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerBus();
     }
 
     @Override
@@ -112,10 +117,12 @@ public class OverviewFragment extends Fragment implements PluginBase {
         MainApp.bus().register(this);
     }
 
-    private void updateData() {
+    public void updateData() {
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
-        NSProfile profile = MainApp.getNSProfile();
+        if (MainActivity.getConfigBuilder() == null || MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+            return;
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)
             return;
 

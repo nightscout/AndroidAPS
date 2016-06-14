@@ -16,7 +16,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
 
 public class ObjectivesFragment extends Fragment implements PluginBase {
     RecyclerView recyclerView;
