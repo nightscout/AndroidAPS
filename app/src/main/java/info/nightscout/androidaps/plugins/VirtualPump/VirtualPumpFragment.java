@@ -20,17 +20,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.Pump;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.plugins.PluginBase;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
-public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
+public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInterface {
     private static Logger log = LoggerFactory.getLogger(VirtualPumpFragment.class);
 
     Double defaultBasalValue = 0.2d;
@@ -102,7 +103,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         extendedBolusView = (TextView) view.findViewById(R.id.virtualpump_extendedbolus);
         batteryView = (TextView) view.findViewById(R.id.virtualpump_battery);
         reservoirView = (TextView) view.findViewById(R.id.virtualpump_reservoir);
-        updateView();
+
         return view;
     }
 
@@ -135,6 +136,14 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         }
         batteryView.setText(getBatteryPercent() + "%");
         reservoirView.setText(getReservoirValue() + "U");
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser)
+            updateView();
     }
 
     void checkForExpiredTempsAndExtended() {
@@ -193,12 +202,12 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
 
     @Override
     public void setNewBasalProfile(NSProfile profile) {
-        // Do nothing here. we are using MainApp.getNSProfile();
+        // Do nothing here. we are using MainActivity.getConfigBuilder().getActiveProfile().getProfile();
     }
 
     @Override
     public double getBaseBasalRate() {
-        NSProfile profile = MainApp.getNSProfile();
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)
             return defaultBasalValue;
         return profile.getBasal(profile.secondsFromMidnight());
@@ -211,7 +220,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         if (tempBasal.isAbsolute) {
             return tempBasal.absolute;
         } else {
-            NSProfile profile = MainApp.getNSProfile();
+            NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return defaultBasalValue;
             Double baseRate = profile.getBasal(profile.secondsFromMidnight());
@@ -247,6 +256,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         }
         if (Config.logPumpComm)
             log.debug("Delivering treatment: " + t + " " + result);
+        updateView();
         return result;
     }
 
@@ -272,6 +282,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         }
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + result);
+        updateView();
         return result;
     }
 
@@ -297,6 +308,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         }
         if (Config.logPumpComm)
             log.debug("Settings temp basal percent: " + result);
+        updateView();
         return result;
     }
 
@@ -322,6 +334,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         }
         if (Config.logPumpComm)
             log.debug("Setting extended bolus: " + result);
+        updateView();
         return result;
     }
 
@@ -344,6 +357,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         tempBasal = null;
         if (Config.logPumpComm)
             log.debug("Canceling temp basal: " + result);
+        updateView();
         return result;
     }
 
@@ -366,6 +380,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, Pump {
         extendedBolus = null;
         if (Config.logPumpComm)
             log.debug("Canceling extended basal: " + result);
+        updateView();
         return result;
     }
 

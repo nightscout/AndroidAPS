@@ -10,4 +10,6 @@ public class Config {
     public static final boolean logIncommingData = true;
     public static final boolean logAPSResult = true;
     public static final boolean logPumpComm = true;
+    public static final boolean logPrefsChange = true;
+    public static final boolean logConfigBuilder = true;
 }

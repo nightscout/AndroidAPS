@@ -10,30 +10,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
 public class NewTreatmentDialogFragment extends DialogFragment implements OnClickListener {
 
     Button deliverButton;
-    Communicator communicator;
     TextView insulin;
     TextView carbs;
-
-    @Override
-    public void onAttach(Activity activity) {
-
-        super.onAttach(activity);
-
-        if (activity instanceof Communicator) {
-            communicator = (Communicator) getActivity();
-
-        } else {
-            throw new ClassCastException(activity.toString()
-                    + " must implemenet NewTreatmentDialogFragment.Communicator");
-        }
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,15 +55,11 @@ public class NewTreatmentDialogFragment extends DialogFragment implements OnClic
                     this.carbs.setText("");
                 } else if (insulin > 0d || carbs > 0d) {
                     dismiss();
-                    communicator.treatmentDeliverRequest(insulin, carbs);
+                    MainActivity.getConfigBuilder().getActivePump().deliverTreatment(insulin, carbs);
                 }
                 break;
         }
 
-    }
-
-    public interface Communicator {
-        void treatmentDeliverRequest(Double insulin, Double carbs);
     }
 
 }

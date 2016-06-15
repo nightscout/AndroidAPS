@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
@@ -55,7 +56,7 @@ public class TempBasal {
 
     public IobTotal iobCalc(Date time) {
         IobTotal result = new IobTotal();
-        NSProfile profile = MainApp.getNSProfile();
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null)
             return result;

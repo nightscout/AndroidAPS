@@ -167,7 +167,7 @@ public class NSProfile {
         JSONObject profile = getDefaultProfile();
         if (profile != null) {
             try {
-                return getValuesList(profile.getJSONArray("sens"), null, new DecimalFormat("0"), getUnits() + "/U");
+                return getValuesList(profile.getJSONArray("sens"), null, new DecimalFormat("0.0"), getUnits() + "/U");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

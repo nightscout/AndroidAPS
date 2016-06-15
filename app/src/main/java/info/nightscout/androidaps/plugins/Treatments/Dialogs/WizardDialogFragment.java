@@ -24,6 +24,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.TempBasalsInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
@@ -32,7 +34,6 @@ import info.nightscout.utils.*;
 public class WizardDialogFragment extends DialogFragment implements OnClickListener {
 
     Button wizardDialogDeliverButton;
-    Communicator communicator;
     TextView correctionInput;
     TextView carbsInput;
     TextView bgInput;
@@ -69,21 +70,6 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
             calculateInsulin();
         }
     };
-
-    @Override
-    public void onAttach(Activity activity) {
-
-        super.onAttach(activity);
-
-        if (activity instanceof Communicator) {
-            communicator = (Communicator) getActivity();
-
-        } else {
-            throw new ClassCastException(activity.toString()
-                    + " must implemenet WizardDialogFragment.Communicator");
-        }
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -129,7 +115,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
             case R.id.treatments_wizard_deliverButton:
                 if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d){
                     dismiss();
-                    communicator.treatmentDialogDeliver(calculatedTotalInsulin, calculatedCarbs);
+                    MainActivity.getConfigBuilder().getActivePump().deliverTreatment(calculatedTotalInsulin, calculatedCarbs);
                 }
                 break;
         }
@@ -139,8 +125,9 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
     private void initDialog() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String units = SP.getString("ns_units", Constants.MGDL);
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
 
-        if (MainApp.getNSProfile() == null) {
+        if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "No profile loaded from NS yet");
             dismiss();
             return;
@@ -153,9 +140,9 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         Double lastBgValue = lastBg.valueToUnits(units);
 
         if (lastBg != null) {
-            Double sens = MainApp.getNSProfile().getIsf(MainApp.getNSProfile().secondsFromMidnight());
-            Double targetBGLow  = MainApp.getNSProfile().getTargetLow(MainApp.getNSProfile().secondsFromMidnight());
-            Double targetBGHigh  = MainApp.getNSProfile().getTargetHigh(MainApp.getNSProfile().secondsFromMidnight());
+            Double sens = profile.getIsf(NSProfile.secondsFromMidnight());
+            Double targetBGLow  = profile.getTargetLow(NSProfile.secondsFromMidnight());
+            Double targetBGHigh  = profile.getTargetHigh(NSProfile.secondsFromMidnight());
             Double bgDiff;
             if (lastBgValue <= targetBGLow) {
                 bgDiff = lastBgValue - targetBGLow;
@@ -173,11 +160,13 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         }
 
         // IOB calculation
-        MainActivity.treatmentsFragment.updateTotalIOBIfNeeded();
-        MainActivity.tempBasalsFragment.updateTotalIOBIfNeeded();
+        TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
+        TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
+        treatments.updateTotalIOBIfNeeded();
+        tempBasals.updateTotalIOBIfNeeded();
+        IobTotal bolusIob = treatments.getLastCalculation();
+        IobTotal basalIob = tempBasals.getLastCalculation();
 
-        IobTotal bolusIob = MainActivity.treatmentsFragment.lastCalculation;
-        IobTotal basalIob = MainActivity.tempBasalsFragment.lastCalculation;
         Double iobTotal = bolusIob.iob + basalIob.iob;
         iobInsulin.setText("-" + numberFormat.format(iobTotal) + "U");
 
@@ -192,7 +181,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         Double maxcarbs = Double.parseDouble(SP.getString("safety_maxcarbs", "48"));
         String units = SP.getString("ns_units", Constants.MGDL);
 
-        NSProfile profile = MainApp.instance().getNSProfile();
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
 
         // Entered values
         String i_bg = this.bgInput.getText().toString().replace("," , ".");
@@ -218,9 +207,9 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
 
 
         // Insulin from BG
-        Double sens = profile.getIsf(MainApp.getNSProfile().secondsFromMidnight());
-        Double targetBGLow  = profile.getTargetLow(MainApp.getNSProfile().secondsFromMidnight());
-        Double targetBGHigh  = profile.getTargetHigh(MainApp.getNSProfile().secondsFromMidnight());
+        Double sens = profile.getIsf(NSProfile.secondsFromMidnight());
+        Double targetBGLow  = profile.getTargetLow(NSProfile.secondsFromMidnight());
+        Double targetBGHigh  = profile.getTargetHigh(NSProfile.secondsFromMidnight());
         Double bgDiff;
         if (c_bg <= targetBGLow) {
             bgDiff = c_bg - targetBGLow;
@@ -232,17 +221,19 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         bgInsulin.setText(numberFormat.format(insulinFromBG) + "U");
 
         // Insuling from carbs
-        Double ic = profile.getIc(MainApp.getNSProfile().secondsFromMidnight());
+        Double ic = profile.getIc(NSProfile.secondsFromMidnight());
         Double insulinFromCarbs = c_carbs / ic;
         carbs.setText(intFormat.format(c_carbs) + "g IC: " + intFormat.format(ic));
         carbsInsulin.setText(numberFormat.format(insulinFromCarbs) + "U");
 
         // Insulin from IOB
-        MainActivity.treatmentsFragment.updateTotalIOBIfNeeded();
-        MainActivity.tempBasalsFragment.updateTotalIOBIfNeeded();
+        TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
+        TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
+        treatments.updateTotalIOBIfNeeded();
+        tempBasals.updateTotalIOBIfNeeded();
+        IobTotal bolusIob = treatments.getLastCalculation();
+        IobTotal basalIob = tempBasals.getLastCalculation();
 
-        IobTotal bolusIob = MainActivity.treatmentsFragment.lastCalculation;
-        IobTotal basalIob = MainActivity.tempBasalsFragment.lastCalculation;
         Double iobTotal = bolusIob.iob + basalIob.iob;
         Double insulingFromIOB = iobCheckbox.isChecked() ? iobTotal : 0d;
         iobInsulin.setText("-" + numberFormat.format(insulingFromIOB) + "U");
@@ -288,9 +279,4 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         }
         return 0d;
     }
-
-    public interface Communicator {
-        void treatmentDialogDeliver(Double insulin, Double carbs);
-    }
-
 }

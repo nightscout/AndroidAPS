@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
@@ -30,6 +31,7 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
 
@@ -133,17 +135,16 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
-                MainApp.instance().setNSProfile(nsProfile);
-                MainApp.instance().setActiveProfile(activeProfile);
-                storeNSProfile();
-                if (MainApp.getActivePump() != null) {
-                    MainApp.getActivePump().setNewBasalProfile(MainApp.getNSProfile());
+                EventNewBasalProfile event = new EventNewBasalProfile(nsProfile);
+                PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                if (pump != null) {
+                    pump.setNewBasalProfile(nsProfile);
                 } else {
                     log.error("No active pump selected");
                 }
                 if (Config.logIncommingData)
                     log.debug("Received profile: " + activeProfile + " " + profile);
-                MainApp.bus().post(new EventNewBasalProfile());
+                MainApp.bus().post(event);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -323,14 +324,6 @@ public class DataService extends IntentService {
             }
             MainApp.bus().post(new EventNewBG());
         }
-    }
-
-    public void storeNSProfile() {
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(MainApp.instance().PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putString("profile", MainApp.instance().getNSProfile().getData().toString());
-        editor.putString("activeProfile", MainApp.instance().getActiveProfile());
-        editor.commit();
     }
 
     @Nullable

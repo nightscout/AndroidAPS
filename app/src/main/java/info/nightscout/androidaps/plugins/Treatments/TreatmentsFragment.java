@@ -31,19 +31,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.PluginBase;
-import info.nightscout.androidaps.plugins.Treatments.Dialogs.NewTreatmentDialogFragment;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.client.data.NSProfile;
 
-public class TreatmentsFragment extends Fragment implements View.OnClickListener, NewTreatmentDialogFragment.Communicator, PluginBase {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener, PluginBase, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     RecyclerView recyclerView;
@@ -53,8 +54,8 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     TextView activityTotal;
     Button refreshFromNS;
 
-    public long lastCalculationTimestamp = 0;
-    public IobTotal lastCalculation;
+    private long lastCalculationTimestamp = 0;
+    private IobTotal lastCalculation;
 
     private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -115,22 +116,29 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         if (recyclerView != null) {
             recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
         }
-        updateTotalIOB();
     }
 
     /*
      * Recalculate IOB if value is older than 1 minute
      */
+    @Override
     public void updateTotalIOBIfNeeded() {
         if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
             return;
         updateTotalIOB();
     }
 
+    @Override
+    public IobTotal getLastCalculation() {
+        return lastCalculation;
+    }
+
     private void updateTotalIOB() {
         IobTotal total = new IobTotal();
 
-        NSProfile profile = MainApp.getNSProfile();
+        if (MainActivity.getConfigBuilder() == null ||  MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+            return;
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null) {
             lastCalculation = total;
             return;
@@ -161,9 +169,10 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         public double carbs = 0d;
     }
 
+    @Override
     public MealData getMealData() {
         MealData result = new MealData();
-        NSProfile profile = MainApp.getNSProfile();
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)
             return result;
 
@@ -200,7 +209,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
-            NSProfile profile = MainApp.getNSProfile();
+            if (MainActivity.getConfigBuilder() == null ||  MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+                return;
+            NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return;
             // TODO: implement locales
@@ -245,6 +256,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     public TreatmentsFragment() {
         super();
+        registerBus();
         initializeData();
     }
 
@@ -256,7 +268,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        registerBus();
     }
 
     @Override
@@ -348,10 +359,4 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         if (isVisibleToUser)
             updateTotalIOBIfNeeded();
     }
-
-    @Override
-    public void treatmentDeliverRequest(Double insulin, Double carbs) {
-        // TODO: implement treatment delivery
-    }
-
 }
