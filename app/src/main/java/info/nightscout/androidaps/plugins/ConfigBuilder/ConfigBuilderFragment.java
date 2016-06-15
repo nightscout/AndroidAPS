@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,6 +53,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ListView tempsListView;
     ListView profileListView;
     ListView apsListView;
+    ListView constrainsListView;
     ListView generalListView;
 
     PluginCustomAdapter pumpDataAdapter = null;
@@ -59,6 +61,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     PluginCustomAdapter tempsDataAdapter = null;
     PluginCustomAdapter profileDataAdapter = null;
     PluginCustomAdapter apsDataAdapter = null;
+    PluginCustomAdapter constrainsDataAdapter = null;
     PluginCustomAdapter generalDataAdapter = null;
 
 
@@ -102,6 +105,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         tempsListView = (ListView) view.findViewById(R.id.configbuilder_tempslistview);
         profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
         apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
+        constrainsListView = (ListView) view.findViewById(R.id.configbuilder_constrainslistview);
         generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
 
         setViews();
@@ -111,28 +115,26 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     void setViews() {
         pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP));
         pumpListView.setAdapter(pumpDataAdapter);
+        setListViewHeightBasedOnChildren(pumpListView);
         treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT));
         treatmentsListView.setAdapter(treatmentsDataAdapter);
+        setListViewHeightBasedOnChildren(treatmentsListView);
         tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TEMPBASAL));
         tempsListView.setAdapter(tempsDataAdapter);
+        setListViewHeightBasedOnChildren(tempsListView);
         profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PROFILE));
         profileListView.setAdapter(profileDataAdapter);
+        setListViewHeightBasedOnChildren(profileListView);
         apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS));
         apsListView.setAdapter(apsDataAdapter);
+        setListViewHeightBasedOnChildren(apsListView);
+        constrainsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS));
+        constrainsListView.setAdapter(constrainsDataAdapter);
+        setListViewHeightBasedOnChildren(constrainsListView);
         generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.GENERAL));
         generalListView.setAdapter(generalDataAdapter);
+        setListViewHeightBasedOnChildren(generalListView);
 
-
-        apsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                // When clicked, show a toast with the TextView text
-                PluginBase plugin = (PluginBase) parent.getItemAtPosition(position);
-                Toast.makeText(MainApp.instance().getApplicationContext(),
-                        "Clicked on Row: " + plugin.getName(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
     }
 
     /*
@@ -307,10 +309,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
-                        Toast.makeText(MainApp.instance().getApplicationContext(),
-                                "Clicked on ENABLED: " + plugin.getName() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
                         plugin.setFragmentEnabled(cb.isChecked());
                         onEnabledCategoryChanged(plugin);
                     }
@@ -320,10 +318,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
-                        Toast.makeText(MainApp.instance().getApplicationContext(),
-                                "Clicked on VISIBLE: " + plugin.getName() +
-                                        " is " + cb.isChecked(),
-                                Toast.LENGTH_LONG).show();
                         plugin.setFragmentVisible(cb.isChecked());
                         MainApp.bus().post(new EventRefreshGui());
                         storeSettings();
@@ -350,6 +344,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
                 if (pluginList.size() < 2)
                     holder.checkboxEnabled.setEnabled(false);
+            if (type == PluginBase.CONSTRAINS)
+                holder.checkboxEnabled.setEnabled(false);
 
             return convertView;
 
@@ -378,6 +374,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             // Multiple selection allowed
             case PluginBase.APS:
             case PluginBase.GENERAL:
+            case PluginBase.CONSTRAINS:
                 break;
             // Single selection allowed
             case PluginBase.PROFILE:
@@ -409,6 +406,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 // Multiple selection allowed
                 case PluginBase.APS:
                 case PluginBase.GENERAL:
+                case PluginBase.CONSTRAINS:
                     break;
                 // Single selection allowed
                 case PluginBase.PROFILE:
@@ -480,5 +478,29 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         verifySelectionInCategories();
     }
 
+    /****
+     * Method for Setting the Height of the ListView dynamically.
+     * *** Hack to fix the issue of not showing all the items of the ListView
+     * *** when placed inside a ScrollView
+     ****/
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null)
+            return;
 
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0)
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+    }
 }

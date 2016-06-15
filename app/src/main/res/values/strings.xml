@@ -105,5 +105,8 @@
     <string name="configbuilder_profile">Profile</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">General</string>
+    <string name="days">days</string>
+    <string name="minimalduration">Minimal duration</string>
+    <string name="configbuilder_constrains">Constrains</string>
 
 </resources>
