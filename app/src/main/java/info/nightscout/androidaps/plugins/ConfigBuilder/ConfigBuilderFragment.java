@@ -31,6 +31,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.interfaces.ConstrainsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -40,10 +41,7 @@ import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpInterface {
+public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpInterface, ConstrainsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderFragment.class);
 
     private static final String PREFS_NAME = "Settings";
@@ -310,7 +308,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
                         plugin.setFragmentEnabled(cb.isChecked());
+                        if (cb.isChecked()) plugin.setFragmentVisible(true);
                         onEnabledCategoryChanged(plugin);
+                        storeSettings();
                     }
                 });
 
@@ -319,8 +319,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
                         plugin.setFragmentVisible(cb.isChecked());
-                        MainApp.bus().post(new EventRefreshGui());
                         storeSettings();
+                        MainApp.bus().post(new EventRefreshGui());
                     }
                 });
             } else {
@@ -341,11 +341,24 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             }
 
             int type = plugin.getType();
+            // Force enabled if there is only one plugin
             if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
                 if (pluginList.size() < 2)
                     holder.checkboxEnabled.setEnabled(false);
+
+            // Constrains cannot be disabled
             if (type == PluginBase.CONSTRAINS)
                 holder.checkboxEnabled.setEnabled(false);
+
+            // Hide disabled profiles by default
+            if (type == PluginBase.PROFILE) {
+                if (!plugin.isEnabled()) {
+                    holder.checkboxVisible.setEnabled(false);
+                    holder.checkboxVisible.setChecked(false);
+                } else {
+                    holder.checkboxVisible.setEnabled(true);
+                }
+            }
 
             return convertView;
 
@@ -396,7 +409,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 }
                 break;
         }
-        storeSettings();
     }
 
     private void verifySelectionInCategories() {
@@ -413,21 +425,41 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory);
                     if (Config.logConfigBuilder)
                         log.debug("Selected profile interface: " + ((PluginBase) activeProfile).getName());
+                    for (PluginBase p : pluginsInCategory) {
+                        if (!p.getName().equals(((PluginBase) activeProfile).getName())) {
+                            p.setFragmentVisible(false);
+                        }
+                    }
                     break;
                 case PluginBase.PUMP:
                     activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory);
                     if (Config.logConfigBuilder)
                         log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
+                    for (PluginBase p : pluginsInCategory) {
+                        if (!p.getName().equals(((PluginBase) activePump).getName())) {
+                            p.setFragmentVisible(false);
+                        }
+                    }
                     break;
                 case PluginBase.TEMPBASAL:
                     activeTempBasals = (TempBasalsInterface) getTheOneEnabledInArray(pluginsInCategory);
                     if (Config.logConfigBuilder)
                         log.debug("Selected tempbasal interface: " + ((PluginBase) activeTempBasals).getName());
+                    for (PluginBase p : pluginsInCategory) {
+                        if (!p.getName().equals(((PluginBase) activeTempBasals).getName())) {
+                            p.setFragmentVisible(false);
+                        }
+                    }
                     break;
                 case PluginBase.TREATMENT:
                     activeTreatments = (TreatmentsInterface) getTheOneEnabledInArray(pluginsInCategory);
                     if (Config.logConfigBuilder)
                         log.debug("Selected treatment interface: " + ((PluginBase) activeTreatments).getName());
+                    for (PluginBase p : pluginsInCategory) {
+                        if (!p.getName().equals(((PluginBase) activeTreatments).getName())) {
+                            p.setFragmentVisible(false);
+                        }
+                    }
                     break;
             }
 
