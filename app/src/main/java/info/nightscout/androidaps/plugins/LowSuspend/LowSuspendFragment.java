@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.LowSuspend;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -42,11 +44,64 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     TextView resultView;
     TextView requestView;
 
-    Date lastAPSRun = null;
-    APSResult lastAPSResult = null;
+    // last values
+    class LastRun implements Parcelable {
+        public Boolean lastLow = null;
+        public Boolean lastLowProjected = null;
+        public Double lastMinBg = null;
+        public String lastUnits = null;
+        public DatabaseHelper.GlucoseStatus lastGlucoseStatus = null;
+        public Date lastAPSRun = null;
+        public APSResult lastAPSResult = null;
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = true;
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(lastLow ? 1 : 0);
+            dest.writeInt(lastLowProjected ? 1 : 0);
+            dest.writeDouble(lastMinBg);
+            dest.writeString(lastUnits);
+            dest.writeDouble(lastGlucoseStatus.avgdelta);
+            dest.writeDouble(lastGlucoseStatus.delta);
+            dest.writeDouble(lastGlucoseStatus.glucose);
+            dest.writeLong(lastAPSRun.getTime());
+            dest.writeParcelable(lastAPSResult, 0);
+        }
+
+        public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
+            public LastRun createFromParcel(Parcel in) {
+                return new LastRun(in);
+            }
+
+            public LastRun[] newArray(int size) {
+                return new LastRun[size];
+            }
+        };
+
+        private LastRun(Parcel in) {
+            lastLow = in.readInt() == 1;
+            lastLowProjected = in.readInt() == 1;
+            lastMinBg = in.readDouble();
+            lastUnits = in.readString();
+            lastGlucoseStatus = new DatabaseHelper.GlucoseStatus();
+            lastGlucoseStatus.avgdelta = in.readDouble();
+            lastGlucoseStatus.delta = in.readDouble();
+            lastGlucoseStatus.glucose = in.readDouble();
+            lastAPSRun = new Date(in.readLong());
+            lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
+        }
+
+        public LastRun() {}
+    }
+
+    static LastRun lastRun = null;
+
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = true;
 
     public LowSuspendFragment() {
         super();
@@ -90,12 +145,16 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
 
     @Override
     public APSResult getLastAPSResult() {
-        return lastAPSResult;
+        if (lastRun != null)
+            return lastRun.lastAPSResult;
+        else return null;
     }
 
     @Override
     public Date getLastAPSRun() {
-        return lastAPSRun;
+        if (lastRun != null)
+            return lastRun.lastAPSRun;
+        else return null;
     }
 
     public static LowSuspendFragment newInstance() {
@@ -121,7 +180,17 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         resultView = (TextView) view.findViewById(R.id.lowsuspend_result);
         requestView = (TextView) view.findViewById(R.id.lowsuspend_request);
 
+        if (savedInstanceState != null) {
+            lastRun = savedInstanceState.getParcelable("lastrun");
+        }
+        updateGUI();
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("lastrun", lastRun);
     }
 
     private void registerBus() {
@@ -161,7 +230,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     public void invoke() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-        DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
 
@@ -197,6 +265,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         Double baseBasalRate = pump.getBaseBasalRate();
         boolean isTempBasalInProgress = pump.isTempBasalInProgress();
         Double tempBasalRate = pump.getTempBasalAbsoluteRate();
+        Date now = new Date();
 
         if (low && !lowProjected) {
             if (!isTempBasalInProgress || tempBasalRate != 0d) {
@@ -227,13 +296,26 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             request.changeRequested = false;
             request.reason = getString(R.string.nochangerequested);
         }
-        glucoseStatusView.setText(glucoseStatus.toString());
-        minBgView.setText(formatNumber1decimalplaces.format(minBg) + " " + profile.getUnits());
-        resultView.setText(getString(R.string.lowsuspend_low) + " " + low + "\n" + getString(R.string.lowsuspend_lowprojected) + " " + lowProjected);
-        requestView.setText(request.toString());
-        lastRunView.setText(new Date().toLocaleString());
 
-        lastAPSResult = request;
-        lastAPSRun = new Date();
+        lastRun = new LastRun();
+        lastRun.lastMinBg = minBg;
+        lastRun.lastLow = low;
+        lastRun.lastLowProjected = lowProjected;
+        lastRun.lastGlucoseStatus = glucoseStatus;
+        lastRun.lastUnits = profile.getUnits();
+        lastRun.lastAPSResult = request;
+        lastRun.lastAPSRun = now;
+        updateGUI();
+    }
+
+    void updateGUI() {
+        if (lastRun != null) {
+            DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
+            glucoseStatusView.setText(lastRun.lastGlucoseStatus.toString());
+            minBgView.setText(formatNumber1decimalplaces.format(lastRun.lastMinBg) + " " + lastRun.lastUnits);
+            resultView.setText(getString(R.string.lowsuspend_low) + " " + lastRun.lastLow + "\n" + getString(R.string.lowsuspend_lowprojected) + " " + lastRun.lastLowProjected);
+            requestView.setText(lastRun.lastAPSResult.toString());
+            lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
+        }
     }
 }

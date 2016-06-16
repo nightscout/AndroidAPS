@@ -168,7 +168,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /*
      * Returns glucose_status for openAPS or null if no actual data available
      */
-    public class GlucoseStatus {
+    public static class GlucoseStatus {
         public double glucose = 0d;
         public double delta = 0d;
         public double avgdelta = 0d;
