@@ -65,9 +65,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             dest.writeInt(lastLowProjected ? 1 : 0);
             dest.writeDouble(lastMinBg);
             dest.writeString(lastUnits);
-            dest.writeDouble(lastGlucoseStatus.avgdelta);
-            dest.writeDouble(lastGlucoseStatus.delta);
-            dest.writeDouble(lastGlucoseStatus.glucose);
+            dest.writeParcelable(lastGlucoseStatus, 0);
             dest.writeLong(lastAPSRun.getTime());
             dest.writeParcelable(lastAPSResult, 0);
         }
@@ -87,10 +85,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             lastLowProjected = in.readInt() == 1;
             lastMinBg = in.readDouble();
             lastUnits = in.readString();
-            lastGlucoseStatus = new DatabaseHelper.GlucoseStatus();
-            lastGlucoseStatus.avgdelta = in.readDouble();
-            lastGlucoseStatus.delta = in.readDouble();
-            lastGlucoseStatus.glucose = in.readDouble();
+            lastGlucoseStatus = in.readParcelable(DatabaseHelper.GlucoseStatus.class.getClassLoader());
             lastAPSRun = new Date(in.readLong());
             lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
         }

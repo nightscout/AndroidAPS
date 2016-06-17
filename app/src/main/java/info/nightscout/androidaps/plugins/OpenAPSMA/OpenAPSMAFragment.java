@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.OpenAPSMA;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -53,8 +55,45 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     TextView resultView;
     TextView requestView;
 
-    Date lastAPSRun = null;
-    APSResult lastAPSResult = null;
+    // last values
+    class LastRun implements Parcelable {
+        DetermineBasalAdapterJS lastDetermineBasalAdapterJS = null;
+        Date lastAPSRun = null;
+        DetermineBasalResult lastAPSResult = null;
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(lastDetermineBasalAdapterJS, 0);
+            dest.writeParcelable(lastAPSResult, 0);
+            dest.writeLong(lastAPSRun.getTime());
+            dest.writeParcelable(lastAPSResult, 0);
+        }
+        public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
+            public LastRun createFromParcel(Parcel in) {
+                return new LastRun(in);
+            }
+
+            public LastRun[] newArray(int size) {
+                return new LastRun[size];
+            }
+        };
+
+        private LastRun(Parcel in) {
+            lastDetermineBasalAdapterJS = in.readParcelable(DetermineBasalAdapterJS.class.getClassLoader());
+            lastAPSResult = in.readParcelable(DetermineBasalResult.class.getClassLoader());
+            lastAPSRun = new Date(in.readLong());
+            lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
+        }
+
+        public LastRun() {}
+    }
+
+    LastRun lastRun = null;
 
     boolean fragmentEnabled = false;
     boolean fragmentVisible = true;
@@ -101,12 +140,12 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public APSResult getLastAPSResult() {
-        return lastAPSResult;
+        return lastRun.lastAPSResult;
     }
 
     @Override
     public Date getLastAPSRun() {
-        return lastAPSRun;
+        return lastRun.lastAPSRun;
     }
 
     public static OpenAPSMAFragment newInstance() {
@@ -135,7 +174,17 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         resultView = (TextView) view.findViewById(R.id.openapsma_result);
         requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
+        if (savedInstanceState != null) {
+            lastRun = savedInstanceState.getParcelable("lastrun");
+        }
+        updateGUI();
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("lastrun", lastRun);
     }
 
     private void registerBus() {
@@ -227,6 +276,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             minBgDefault = "5";
         }
 
+        Date now = new Date();
+
         // TODO: objectives limits
         double maxIob = Double.parseDouble(SP.getString("max_iob", "1.5").replace(",", "."));
         double maxBasal = Double.parseDouble(SP.getString("max_basal", "1").replace(",", "."));
@@ -247,29 +298,37 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
         determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, pump, iobTotal, glucoseStatus, mealData);
 
-        glucoseStatusView.setText(determineBasalAdapterJS.getGlucoseStatusParam());
-        currentTempView.setText(determineBasalAdapterJS.getCurrentTempParam());
-        iobDataView.setText(determineBasalAdapterJS.getIobDataParam());
-        profileView.setText(determineBasalAdapterJS.getProfileParam());
-        mealDataView.setText(determineBasalAdapterJS.getMealDataParam());
 
         DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
-
-        resultView.setText(determineBasalResult.json.toString());
-        requestView.setText(determineBasalResult.toString());
-        lastRunView.setText(new Date().toLocaleString());
 
         determineBasalAdapterJS.release();
 
         try {
-            determineBasalResult.json.put("timestamp", DateUtil.toISOString(new Date()));
+            determineBasalResult.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        lastAPSResult = determineBasalResult;
-        lastAPSRun = new Date();
+
+        lastRun = new LastRun();
+        lastRun.lastDetermineBasalAdapterJS = determineBasalAdapterJS;
+        lastRun.lastAPSResult = determineBasalResult;
+        lastRun.lastAPSRun = now;
+        updateGUI();
 
         //deviceStatus.suggested = determineBasalResult.json;
+    }
+
+    void updateGUI() {
+        if (lastRun != null) {
+            glucoseStatusView.setText(lastRun.lastDetermineBasalAdapterJS.getGlucoseStatusParam());
+            currentTempView.setText(lastRun.lastDetermineBasalAdapterJS.getCurrentTempParam());
+            iobDataView.setText(lastRun.lastDetermineBasalAdapterJS.getIobDataParam());
+            profileView.setText(lastRun.lastDetermineBasalAdapterJS.getProfileParam());
+            mealDataView.setText(lastRun.lastDetermineBasalAdapterJS.getMealDataParam());
+            resultView.setText(lastRun.lastAPSResult.json.toString());
+            requestView.setText(lastRun.lastAPSResult.toString());
+            lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
+        }
 
     }
 }

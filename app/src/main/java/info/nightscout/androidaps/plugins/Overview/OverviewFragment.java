@@ -268,8 +268,12 @@ public class OverviewFragment extends Fragment implements PluginBase {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (isVisibleToUser)
+        if (isVisibleToUser) {
             updateData();
+            log.debug("Overview visible");
+        } else {
+            log.debug("Overview hidden");
+        }
     }
 
 }

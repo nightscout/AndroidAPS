@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mPager;
     private static TabPageAdapter pageAdapter;
 
-    private static ArrayList<PluginBase> pluginsList = new ArrayList<PluginBase>();
+    private static ArrayList<PluginBase> pluginsList = null;
 
     private static ConfigBuilderFragment configBuilderFragment;
 
@@ -53,25 +53,27 @@ public class MainActivity extends AppCompatActivity {
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
-        // Register all tabs in app here
-        pluginsList.add(OverviewFragment.newInstance());
-        pluginsList.add(VirtualPumpFragment.newInstance());
-        pluginsList.add(LowSuspendFragment.newInstance());
-        pluginsList.add(OpenAPSMAFragment.newInstance());
-        pluginsList.add(NSProfileViewerFragment.newInstance());
-        pluginsList.add(SimpleProfileFragment.newInstance());
-        pluginsList.add(TreatmentsFragment.newInstance());
-        pluginsList.add(TempBasalsFragment.newInstance());
-        pluginsList.add(ObjectivesFragment.newInstance());
-        pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
+        if (pluginsList == null) {
+            pluginsList = new ArrayList<PluginBase>();
+            // Register all tabs in app here
+            pluginsList.add(OverviewFragment.newInstance());
+            pluginsList.add(VirtualPumpFragment.newInstance());
+            pluginsList.add(LowSuspendFragment.newInstance());
+            pluginsList.add(OpenAPSMAFragment.newInstance());
+            pluginsList.add(NSProfileViewerFragment.newInstance());
+            pluginsList.add(SimpleProfileFragment.newInstance());
+            pluginsList.add(TreatmentsFragment.newInstance());
+            pluginsList.add(TempBasalsFragment.newInstance());
+            pluginsList.add(ObjectivesFragment.newInstance());
+            pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
+            toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+            registerBus();
 
-        registerBus();
-
-        configBuilderFragment.initialize();
-        setUpTabs(false);
+            configBuilderFragment.initialize();
+            setUpTabs(false);
+        }
     }
 
     @Subscribe

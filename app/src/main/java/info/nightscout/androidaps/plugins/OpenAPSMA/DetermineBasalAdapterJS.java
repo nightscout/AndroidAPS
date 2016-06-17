@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -19,11 +22,11 @@ import info.nightscout.androidaps.plugins.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 
-public class DetermineBasalAdapterJS {
+public class DetermineBasalAdapterJS implements Parcelable {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterJS.class);
 
 
-    private final ScriptReader mScriptReader;
+    private ScriptReader mScriptReader = null;
     V8 mV8rt;
     private V8Object mProfile;
     private V8Object mGlucoseStatus;
@@ -36,6 +39,54 @@ public class DetermineBasalAdapterJS {
     private final String PARAM_glucoseStatus = "glucose_status";
     private final String PARAM_profile = "profile";
     private final String PARAM_meal_data = "meal_data";
+
+    private String storedCurrentTemp = null;
+    private String storedIobData = null;
+    private String storedGlucoseStatus = null;
+    private String storedProfile = null;
+    private String storedMeal_data = null;
+
+    /**
+     *   Parcelable implementation
+     *   result string for display only
+     **/
+    protected DetermineBasalAdapterJS(Parcel in) {
+        storedCurrentTemp = in.readString();
+        storedIobData = in.readString();
+        storedGlucoseStatus = in.readString();
+        storedProfile = in.readString();
+        storedMeal_data = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(storedCurrentTemp);
+        dest.writeString(storedIobData);
+        dest.writeString(storedGlucoseStatus);
+        dest.writeString(storedProfile);
+        dest.writeString(storedMeal_data);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<DetermineBasalAdapterJS> CREATOR = new Creator<DetermineBasalAdapterJS>() {
+        @Override
+        public DetermineBasalAdapterJS createFromParcel(Parcel in) {
+            return new DetermineBasalAdapterJS(in);
+        }
+
+        @Override
+        public DetermineBasalAdapterJS[] newArray(int size) {
+            return new DetermineBasalAdapterJS[size];
+        }
+    };
+
+    /**
+     *  Main code
+     */
 
     public DetermineBasalAdapterJS(ScriptReader scriptReader) throws IOException {
         mV8rt = V8.createV8Runtime();
@@ -125,27 +176,35 @@ public class DetermineBasalAdapterJS {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        // Store input params for Parcelable
+        storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
+        storedIobData = mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");");
+        storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
+        storedProfile = mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");");
+        storedMeal_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");");
+
         return result;
     }
 
     String getGlucoseStatusParam() {
-        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
+        return storedGlucoseStatus;
     }
 
     String getCurrentTempParam() {
-        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
+        return storedCurrentTemp;
     }
 
     String getIobDataParam() {
-        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");");
+        return storedIobData;
     }
 
     String getProfileParam() {
-        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");");
+        return storedProfile;
     }
 
     String getMealDataParam() {
-        return mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");");
+        return storedMeal_data;
     }
 
     private void loadScript() throws IOException {
