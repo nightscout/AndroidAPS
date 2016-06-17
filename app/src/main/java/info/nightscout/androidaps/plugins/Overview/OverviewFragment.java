@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +45,10 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView timeAgoView;
     TextView deltaView;
     GraphView bgGraph;
+
+    boolean visibleNow = false;
+    Handler loopHandler = new Handler();
+    Runnable refreshLoop = null;
 
     public OverviewFragment() {
         super();
@@ -93,6 +98,25 @@ public class OverviewFragment extends Fragment implements PluginBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (refreshLoop == null) {
+            refreshLoop = new Runnable() {
+                @Override
+                public void run() {
+                    if (visibleNow) {
+                        Activity activity = getActivity();
+                        if (activity != null)
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateData();
+                                }
+                            });
+                    }
+                    loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+                }
+            };
+            loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+        }
     }
 
     @Override
@@ -270,9 +294,9 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         if (isVisibleToUser) {
             updateData();
-            log.debug("Overview visible");
+            visibleNow = true;
         } else {
-            log.debug("Overview hidden");
+            visibleNow = false;
         }
     }
 
