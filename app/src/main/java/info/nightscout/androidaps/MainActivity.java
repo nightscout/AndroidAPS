@@ -115,10 +115,6 @@ public class MainActivity extends AppCompatActivity {
         MainApp.bus().register(this);
     }
 
-    public static TabPageAdapter getPageAdapter() {
-        return pageAdapter;
-    }
-
     public static ArrayList<PluginBase> getPluginsList() {
         return pluginsList;
     }

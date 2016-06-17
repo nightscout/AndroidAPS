@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.text.DecimalFormat;
 
@@ -11,7 +13,7 @@ import info.nightscout.androidaps.R;
 /**
  * Created by mike on 09.06.2016.
  */
-public class APSResult {
+public class APSResult implements Parcelable {
     public String reason;
     public double rate;
     public int duration;
@@ -31,4 +33,37 @@ public class APSResult {
         else
             return MainApp.instance().getApplicationContext().getString(R.string.nochangerequested);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(reason);
+        dest.writeDouble(rate);
+        dest.writeInt(duration);
+        dest.writeInt(changeRequested ? 1 : 0);
+    }
+
+    public final Parcelable.Creator<APSResult> CREATOR = new Parcelable.Creator<APSResult>() {
+        public APSResult createFromParcel(Parcel in) {
+            return new APSResult(in);
+        }
+
+        public APSResult[] newArray(int size) {
+            return new APSResult[size];
+        }
+    };
+
+    private APSResult(Parcel in) {
+        reason = in.readString();
+        rate = in.readDouble();
+        duration = in.readInt();
+        changeRequested = in.readInt() == 1;
+    }
+
+    public APSResult() {}
+
 }

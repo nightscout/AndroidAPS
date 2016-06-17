@@ -4,12 +4,24 @@
     android:layout_height="match_parent"
     tools:context=".plugins.Objectives.ObjectivesFragment">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/objectives_recyclerview"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    </android.support.v7.widget.RecyclerView>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Enable fake time"
+            android:id="@+id/objectives_faketime" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/objectives_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+    </LinearLayout>
 
 
 </FrameLayout>

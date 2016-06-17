@@ -68,7 +68,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/objectives_gate_linearlayout">
 
             <TextView
                 android:id="@+id/objectives_gate_label"
@@ -93,7 +94,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/objectives_start_linearlayout">
 
             <Button
                 android:id="@+id/objectives_start"
@@ -110,9 +112,22 @@
         </LinearLayout>
 
         <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/objectives_duration_linearlayout">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/objectives_duration" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/objectives_verify_linearlayout">
 
             <Button
                 android:id="@+id/objectives_verify"
