@@ -8,6 +8,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -168,7 +170,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /*
      * Returns glucose_status for openAPS or null if no actual data available
      */
-    public static class GlucoseStatus {
+    public static class GlucoseStatus implements Parcelable {
         public double glucose = 0d;
         public double delta = 0d;
         public double avgdelta = 0d;
@@ -183,6 +185,35 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     context.getString(R.string.delta) + " " + formatNumber0decimalplaces.format(delta) + "\n" +
                     context.getString(R.string.avgdelta) + " " + formatNumber2decimalplaces.format(avgdelta);
         }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeDouble(avgdelta);
+            dest.writeDouble(delta);
+            dest.writeDouble(glucose);
+        }
+        public final Parcelable.Creator<GlucoseStatus> CREATOR = new Parcelable.Creator<GlucoseStatus>() {
+            public GlucoseStatus createFromParcel(Parcel in) {
+                return new GlucoseStatus(in);
+            }
+
+            public GlucoseStatus[] newArray(int size) {
+                return new GlucoseStatus[size];
+            }
+        };
+
+        private GlucoseStatus(Parcel in) {
+            avgdelta = in.readDouble();
+            delta = in.readDouble();
+            glucose = in.readDouble();
+        }
+
+        public GlucoseStatus() {}
     }
 
     @Nullable
