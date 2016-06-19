@@ -56,6 +56,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
+    boolean visibleNow = false;
 
     @Override
     public String getName() {
@@ -95,7 +96,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
     private void initializeData() {
         try {
             Dao<TempBasal, Long> dao = MainApp.getDbHelper().getDaoTempBasals();
-
+/*
             // **************** TESTING CREATE FAKE RECORD *****************
             TempBasal fake = new TempBasal();
             fake.timeStart = new Date(new Date().getTime() - 45 * 40 * 1000);
@@ -106,7 +107,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             fake.isExtended = false;
             dao.createOrUpdate(fake);
             // **************** TESTING CREATE FAKE RECORD *****************
-
+*/
             QueryBuilder<TempBasal, Long> queryBuilder = dao.queryBuilder();
             queryBuilder.orderBy("timeIndex", false);
             queryBuilder.limit(30l);
@@ -115,9 +116,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         } catch (SQLException e) {
             log.debug(e.getMessage(), e);
             tempBasals = new ArrayList<TempBasal>();
-        }
-        if (recyclerView != null) {
-            recyclerView.swapAdapter(new RecyclerViewAdapter(tempBasals), false);
         }
     }
 
@@ -135,7 +133,8 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         return lastCalculation;
     }
 
-    private void updateTotalIOB() {
+    @Override
+    public void updateTotalIOB() {
         Date now = new Date();
         IobTotal total = new IobTotal();
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
@@ -230,6 +229,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         super();
         registerBus();
         initializeData();
+        updateGUI();
     }
 
     public static TempBasalsFragment newInstance() {
@@ -271,39 +271,30 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        Activity activity = getActivity();
-        if (activity != null && recyclerView != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateTotalIOB();
-                    recyclerView.getAdapter().notifyDataSetChanged();
-                }
-            });
-        else
-            log.debug("EventTempBasalChange: Activity is null");
+        initializeData();
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
+    public void updateGUI() {
         Activity activity = getActivity();
-        if (activity != null && recyclerView != null)
+        if (visibleNow && activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateTotalIOB();
-                    recyclerView.getAdapter().notifyDataSetChanged();
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(tempBasals), false);
                 }
             });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (isVisibleToUser)
+        if (isVisibleToUser) {
+            visibleNow = true;
             updateTotalIOBIfNeeded();
+            updateGUI();
+        } else
+            visibleNow = false;
     }
+
 }

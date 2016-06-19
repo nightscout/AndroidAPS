@@ -136,6 +136,10 @@ public class DataService extends IntentService {
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
                 EventNewBasalProfile event = new EventNewBasalProfile(nsProfile);
+                if (MainActivity.getConfigBuilder() == null) {
+                    log.error("Config builder not ready on receive profile");
+                    return;
+                }
                 PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
                 if (pump != null) {
                     pump.setNewBasalProfile(nsProfile);
@@ -178,6 +182,7 @@ public class DataService extends IntentService {
                         stored._id = _id;
                         MainApp.getDbHelper().getDaoTreatments().update(stored);
                     }
+                    MainApp.bus().post(new EventTreatmentChange());
                     return;
                 } else {
                     if (Config.logIncommingData)
@@ -192,10 +197,10 @@ public class DataService extends IntentService {
                         MainApp.getDbHelper().getDaoTreatments().create(treatment);
                         if (Config.logIncommingData)
                             log.debug("ADD: Stored treatment: " + treatment.log());
-                        MainApp.bus().post(new EventTreatmentChange());
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                    MainApp.bus().post(new EventTreatmentChange());
                 }
 
             } catch (JSONException e) {
@@ -251,10 +256,10 @@ public class DataService extends IntentService {
                         MainApp.getDbHelper().getDaoTreatments().create(treatment);
                         if (Config.logIncommingData)
                             log.debug("CHANGE: Stored treatment: " + treatment.log());
-                        MainApp.bus().post(new EventTreatmentChange());
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
+                    MainApp.bus().post(new EventTreatmentChange());
                 }
 
             } catch (JSONException e) {

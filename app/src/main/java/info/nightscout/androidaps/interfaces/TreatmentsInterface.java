@@ -7,7 +7,8 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
  * Created by mike on 14.06.2016.
  */
 public interface TreatmentsInterface {
-    void updateTotalIOBIfNeeded();
+
+    void updateTotalIOB();
     IobTotal getLastCalculation();
     TreatmentsFragment.MealData getMealData();
 }

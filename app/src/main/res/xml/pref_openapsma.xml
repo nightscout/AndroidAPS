@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="bgRange"
+        android:title="APS target BG range">
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="openapsma_min_bg"
+            android:numeric="decimal"
+            android:summary="The minimum value you consider to be in range."
+            android:title="Low Value" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="openapsma_max_bg"
+            android:numeric="decimal"
+            android:summary="The maximum value you consider to be in range."
+            android:title="High Value" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:key="aps_limits"
+        android:title="APS Limits">
+
+        <EditTextPreference
+            android:defaultValue="1"
+            android:key="openapsma_max_basal"
+            android:numeric="decimal"
+            android:summary="Max U/hr a Temp Basal can be set to"
+            android:title="Max Basal" />
+        <EditTextPreference
+            android:defaultValue="1.5"
+            android:key="openapsma_max_iob"
+            android:numeric="decimal"
+            android:summary="Maximum amount of non-bolus IOB OpenAPS can deliver"
+            android:title="Max Basal IOB" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

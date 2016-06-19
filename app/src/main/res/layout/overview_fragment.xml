@@ -50,6 +50,46 @@
             android:id="@+id/overview_bggraph"
             android:layout_width="match_parent"
             android:layout_height="200dip" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cancel temp basal"
+                android:id="@+id/overview_canceltemp"
+                android:background="@color/colorCancelTempButton"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Treatment"
+                android:id="@+id/overview_treatment"
+                android:background="@color/colorTreatmentButton"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calculator"
+                android:id="@+id/overview_wizard"
+                android:background="@color/colorWizardButton"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5" />
+        </LinearLayout>
     </LinearLayout>
 
 </FrameLayout>

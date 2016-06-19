@@ -57,7 +57,7 @@ public class APSResult implements Parcelable {
         }
     };
 
-    private APSResult(Parcel in) {
+    protected APSResult(Parcel in) {
         reason = in.readString();
         rate = in.readDouble();
         duration = in.readInt();
@@ -65,5 +65,14 @@ public class APSResult implements Parcelable {
     }
 
     public APSResult() {}
+
+    public APSResult clone() {
+        APSResult newResult = new APSResult();
+        newResult.reason = new String(reason);
+        newResult.rate = rate;
+        newResult.duration = duration;
+        newResult.changeRequested = changeRequested;
+        return newResult;
+    }
 
 }

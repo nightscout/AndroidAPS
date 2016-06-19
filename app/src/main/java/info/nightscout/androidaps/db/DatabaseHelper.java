@@ -23,8 +23,12 @@ import com.j256.ormlite.table.TableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.events.EventTreatmentChange;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -82,6 +86,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
+            MainApp.bus().post(new EventNewBG());
+            MainApp.bus().post(new EventTreatmentChange());
+            MainApp.bus().post(new EventTempBasalChange());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -214,6 +221,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
 
         public GlucoseStatus() {}
+
+        public GlucoseStatus(Double glucose, Double delta, Double avgdelta) {
+            this.glucose = glucose;
+            this.delta = delta;
+            this.avgdelta = avgdelta;
+        }
     }
 
     @Nullable
@@ -232,8 +245,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             int sizeRecords = bgReadings.size();
 
-            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timestamp < new Date().getTime() - 7 * 60 * 1000l)
+            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timestamp < new Date().getTime() - 7 * 60 * 1000l) {
+                if (Config.fakeGlucoseData) {
+                    return new GlucoseStatus(Math.random() * 400, (Math. random() - 0.5)* 18, (Math. random() - 0.5)* 18);
+                }
                 return null;
+            }
 
             int minutes = 5;
             double change;

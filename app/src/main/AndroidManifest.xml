@@ -60,8 +60,9 @@
         <!-- Service processing incomming data -->
         <service
             android:name=".Services.DataService"
-            android:exported="false"></service>
+            android:exported="false" />
 
+        <activity android:name=".PreferencesActivity"></activity>
     </application>
 
 </manifest>

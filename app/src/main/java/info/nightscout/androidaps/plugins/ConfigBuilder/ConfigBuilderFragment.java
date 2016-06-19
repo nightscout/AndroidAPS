@@ -2,8 +2,11 @@ package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,24 +25,33 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstrainsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DateUtil;
 
 public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpInterface, ConstrainsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderFragment.class);
@@ -47,6 +59,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     private static final String PREFS_NAME = "Settings";
 
     ListView pumpListView;
+    ListView loopListView;
     ListView treatmentsListView;
     ListView tempsListView;
     ListView profileListView;
@@ -55,6 +68,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ListView generalListView;
 
     PluginCustomAdapter pumpDataAdapter = null;
+    PluginCustomAdapter loopDataAdapter = null;
     PluginCustomAdapter treatmentsDataAdapter = null;
     PluginCustomAdapter tempsDataAdapter = null;
     PluginCustomAdapter profileDataAdapter = null;
@@ -99,6 +113,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.configbuilder_fragment, container, false);
         pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
+        loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
         treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
         tempsListView = (ListView) view.findViewById(R.id.configbuilder_tempslistview);
         profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
@@ -114,6 +129,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP));
         pumpListView.setAdapter(pumpDataAdapter);
         setListViewHeightBasedOnChildren(pumpListView);
+        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.LOOP));
+        loopListView.setAdapter(loopDataAdapter);
+        setListViewHeightBasedOnChildren(loopListView);
         treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT));
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
@@ -230,9 +248,39 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
+    public TempBasal getTempBasal() {
+        return activePump.getTempBasal();
+    }
+
+    @Override
     public Result deliverTreatment(Double insulin, Double carbs) {
-        // TODO: constrains here
-        return activePump.deliverTreatment(insulin, carbs);
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        Double maxbolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
+        Double maxcarbs = Double.parseDouble(SP.getString("treatmentssafety_maxcarbs", "48"));
+
+        if (insulin > maxbolus || carbs > maxcarbs) {
+            Result failResult = new Result();
+            failResult.success = false;
+            failResult.comment = MainApp.instance().getString(R.string.constrains_violation);
+            return failResult;
+        }
+        Result result = activePump.deliverTreatment(insulin, carbs);
+
+        if (result.success) {
+            Treatment t = new Treatment();
+            t.insulin = result.bolusDelivered;
+            t.carbs = carbs;
+            t.created_at = new Date();
+            try {
+                MainApp.instance().getDbHelper().getDaoTreatments().create(t);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            t.setTimeIndex(t.getTimeIndex());
+            t.sendToNSClient();
+            MainApp.bus().post(new EventTreatmentChange());
+        }
+        return result;
     }
 
     @Override
@@ -255,12 +303,23 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     @Override
     public Result cancelTempBasal() {
-        return activePump.cancelTempBasal();
+        Result result = activePump.cancelTempBasal();
+        if (result.enacted)
+            uploadTempBasalEnd();
+        return result;
     }
 
     @Override
     public Result cancelExtendedBolus() {
         return activePump.cancelExtendedBolus();
+    }
+
+    @Override
+    public Result applyAPSRequest(APSResult request) {
+        Result result =  activePump.applyAPSRequest(request);
+        if (result.enacted)
+            uploadTempBasalStart(result.absolute, result.duration);
+        return result;
     }
 
     @Override
@@ -392,6 +451,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             // Single selection allowed
             case PluginBase.PROFILE:
             case PluginBase.PUMP:
+            case PluginBase.LOOP:
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
                 boolean newSelection = changedPlugin.isEnabled();
@@ -412,7 +472,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     private void verifySelectionInCategories() {
-        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.TEMPBASAL, PluginBase.TREATMENT}) {
+        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.LOOP, PluginBase.TEMPBASAL, PluginBase.TREATMENT}) {
             ArrayList<PluginBase> pluginsInCategory = MainActivity.getSpecificPluginsList(category);
             switch (category) {
                 // Multiple selection allowed
@@ -437,6 +497,16 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                         log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
                     for (PluginBase p : pluginsInCategory) {
                         if (!p.getName().equals(((PluginBase) activePump).getName())) {
+                            p.setFragmentVisible(false);
+                        }
+                    }
+                    break;
+                case PluginBase.LOOP:
+                    PluginBase loop = getTheOneEnabledInArray(pluginsInCategory);
+                    if (Config.logConfigBuilder)
+                        log.debug("Selected loop interface: " + loop.getName());
+                    for (PluginBase p : pluginsInCategory) {
+                        if (!p.getName().equals(loop.getName())) {
                             p.setFragmentVisible(false);
                         }
                     }
@@ -535,4 +605,99 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
+
+    /**
+     * Constrains interface
+     **/
+    @Override
+    public boolean isAutomaticProcessingEnabled() {
+        boolean result = true;
+
+        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
+        for (PluginBase p : constrainsPlugins) {
+            ConstrainsInterface constrain = (ConstrainsInterface) p;
+            if (!p.isEnabled()) continue;
+            result = result && constrain.isAutomaticProcessingEnabled();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean manualConfirmationNeeded() {
+        boolean result = false;
+
+        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
+        for (PluginBase p : constrainsPlugins) {
+            ConstrainsInterface constrain = (ConstrainsInterface) p;
+            if (!p.isEnabled()) continue;
+            result = result || constrain.manualConfirmationNeeded();
+        }
+        return result;
+    }
+
+    @Override
+    public APSResult applyBasalConstrains(APSResult result) {
+        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
+        for (PluginBase p : constrainsPlugins) {
+            ConstrainsInterface constrain = (ConstrainsInterface) p;
+            if (!p.isEnabled()) continue;
+            constrain.applyBasalConstrains(result);
+        }
+        return result;
+    }
+
+    public static void uploadTempBasalStart(Double absolute, double durationInMinutes) {
+        try {
+            //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            //boolean useAbsoluteForUpload = sp.getBoolean("ns_sync_use_absolute", false);
+
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", "Temp Basal");
+            data.put("duration", durationInMinutes);
+            //if (useAbsoluteForUpload && absolute != null)
+                data.put("absolute", absolute);
+            //else
+            //    data.put("percent", percent - 100);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+            if (q.size() < 1) {
+                log.error("DBADD No receivers");
+            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+        } catch (JSONException e) {
+        }
+    }
+
+    public static void uploadTempBasalEnd() {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", "Temp Basal");
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+            if (q.size() < 1) {
+                log.error("DBADD No receivers");
+            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+        } catch (JSONException e) {
+        }
+    }
+
 }
