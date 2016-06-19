@@ -1,5 +1,6 @@
 package info.nightscout.androidaps;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -59,10 +60,13 @@ public class MainActivity extends AppCompatActivity {
             pluginsList = new ArrayList<PluginBase>();
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.newInstance());
-            pluginsList.add(LoopFragment.newInstance());
             pluginsList.add(VirtualPumpFragment.newInstance());
-            pluginsList.add(LowSuspendFragment.newInstance());
-            pluginsList.add(OpenAPSMAFragment.newInstance());
+            if (Config.LOOPENABLED)
+                pluginsList.add(LoopFragment.newInstance());
+            if (Config.LOWSUSPEDENABLED)
+                pluginsList.add(LowSuspendFragment.newInstance());
+            if (Config.OPENAPSMAENABLED)
+                pluginsList.add(OpenAPSMAFragment.newInstance());
             pluginsList.add(NSProfileViewerFragment.newInstance());
             pluginsList.add(SimpleProfileFragment.newInstance());
             pluginsList.add(TreatmentsFragment.newInstance());
@@ -108,6 +112,11 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
+            case R.id.nav_preferences: {
+                Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
+                startActivity(i);
+                break;
+            }
             case R.id.nav_resetdb:
                 MainApp.getDbHelper().resetDatabases();
                 break;

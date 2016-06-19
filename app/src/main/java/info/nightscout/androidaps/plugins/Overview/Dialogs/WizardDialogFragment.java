@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.plugins.Treatments.Dialogs;
+package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
-import android.app.Activity;
-import android.app.DialogFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;
@@ -15,19 +14,15 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
-import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.*;
 
@@ -123,8 +118,6 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
     }
 
     private void initDialog() {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        String units = SP.getString("ns_units", Constants.MGDL);
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null) {
@@ -133,6 +126,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
             return;
         }
 
+        String units = profile.getUnits();
         bgUnits.setText(units);
 
         // Set BG if not old
@@ -177,9 +171,8 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
 
     private void calculateInsulin() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxbolus = Double.parseDouble(SP.getString("safety_maxbolus", "3"));
-        Double maxcarbs = Double.parseDouble(SP.getString("safety_maxcarbs", "48"));
-        String units = SP.getString("ns_units", Constants.MGDL);
+        Double maxbolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
+        Double maxcarbs = Double.parseDouble(SP.getString("treatmentssafety_maxcarbs", "48"));
 
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
 
@@ -266,11 +259,6 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         } else {
             wizardDialogDeliverButton.setVisibility(Button.GONE);
         }
-    }
-
-    private double fromMgdl(Double value, String units) {
-        if (units.equals(Constants.MGDL)) return value;
-        else return value / 18;
     }
 
     private Double roundTo(Double x, Double step) {

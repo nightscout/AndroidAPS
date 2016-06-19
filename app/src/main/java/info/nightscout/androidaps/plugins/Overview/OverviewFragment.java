@@ -6,9 +6,12 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
@@ -32,9 +35,13 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialogFragment;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialogFragment;
 import info.nightscout.client.data.NSProfile;
 
 
@@ -45,6 +52,10 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView timeAgoView;
     TextView deltaView;
     GraphView bgGraph;
+
+    Button cancelTempButton;
+    Button treatmentButton;
+    Button wizardButton;
 
     boolean visibleNow = false;
     Handler loopHandler = new Handler();
@@ -108,7 +119,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    updateData();
+                                    updateGUI();
                                 }
                             });
                     }
@@ -127,8 +138,39 @@ public class OverviewFragment extends Fragment implements PluginBase {
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
+        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
+        treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
+        wizardButton = (Button) view.findViewById(R.id.overview_wizard);
 
-        updateData();
+        treatmentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                NewTreatmentDialogFragment treatmentDialogFragment = new NewTreatmentDialogFragment();
+                treatmentDialogFragment.show(manager, "TreatmentDialog");
+            }
+        });
+
+        wizardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                WizardDialogFragment wizardDialogFragment = new WizardDialogFragment();
+                wizardDialogFragment.show(manager, "WizardDialog");
+            }
+        });
+
+        cancelTempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                if (pump.isTempBasalInProgress()) {
+                    pump.cancelTempBasal();
+                    MainApp.bus().post(new EventTempBasalChange());
+                }
+            }
+        });
+        updateGUI();
         return view;
     }
 
@@ -141,7 +183,47 @@ public class OverviewFragment extends Fragment implements PluginBase {
         MainApp.bus().register(this);
     }
 
-    public void updateData() {
+    @Subscribe
+    public void onStatusEvent(final EventTempBasalChange ev) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                }
+            });
+        else
+            log.debug("EventTempBasalChange: Activity is null");
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventNewBG ev) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            updateGUI();
+            visibleNow = true;
+        } else {
+            visibleNow = false;
+        }
+    }
+
+    public void updateGUI() {
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (MainActivity.getConfigBuilder() == null || MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
@@ -155,6 +237,17 @@ public class OverviewFragment extends Fragment implements PluginBase {
         // Skip if not initialized yet
         if (bgGraph == null)
             return;
+
+        // **** Temp button ****
+        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+
+        if (pump.isTempBasalInProgress()) {
+            TempBasal activeTemp = pump.getTempBasal();
+            cancelTempButton.setVisibility(View.VISIBLE);
+            cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
+        } else {
+            cancelTempButton.setVisibility(View.INVISIBLE);
+        }
 
         // **** BG value ****
         if (profile != null && lastBG != null && bgView != null) {
@@ -258,46 +351,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setNumVerticalLabels(11);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateData();
-                }
-            });
-        else
-            log.debug("EventTempBasalChange: Activity is null");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateData();
-                }
-            });
-        else
-            log.debug("EventNewBG: Activity is null");
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            updateData();
-            visibleNow = true;
-        } else {
-            visibleNow = false;
-        }
     }
 
 }

@@ -3,9 +3,10 @@
     <string name="title_activity_main">AndroidAPS</string>
 
     <string name="title_activity_preferences">Preferences</string>
-    <string name="safety_title">Safety</string>
-    <string name="safety_maxbolus_title">Max allowed bolus</string>
-    <string name="safety_maxcarbs_title">Max allowed carbs</string>
+    <string name="treatmentssafety_title">Tratments safety</string>
+    <string name="treatmentssafety_maxbolus_title">Max allowed bolus</string>
+    <string name="treatmentssafety_maxcarbs_title">Max allowed carbs</string>
+
     <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
     <string name="nav_backup">Backup</string>
@@ -114,6 +115,7 @@
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
     <string name="dialog">Dialog</string>
+    <string name="alert">Alert</string>
     <string name="refreshfromnightscout">Do you want to refresh treatments from Nightscout</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
@@ -124,5 +126,9 @@
     <string name="maxbasal_summary">Max U/hr a Temp Basal can be set to</string>
     <string name="maxbasaliob_title">Max basal IOB</string>
     <string name="maxbasaliob_summary">Maximum amount of non-bolus IOB OpenAPS can deliver</string>
+    <string name="lowsuspend_low_title">Low BG threshold</string>
+    <string name="openapsma_disabled">Plugin is disabled</string>
+    <string name="constrains_violation">Constrains violation</string>
+    <string name="bolusdeliveryerror">Treatment delivery error</string>
 
 </resources>

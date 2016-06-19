@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.SafetyFragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -29,24 +30,6 @@ import info.nightscout.client.data.NSProfile;
 public class SafetyFragment extends Fragment implements PluginBase, ConstrainsInterface {
     private static Logger log = LoggerFactory.getLogger(SafetyFragment.class);
 
-    private static final String PREFS_NAME = "Safety";
-
-    EditText maxBolusEdit;
-    EditText maxCarbsEdit;
-    EditText maxBasalEdit;
-    EditText maxBasalIOBEdit;
-
-    Double maxBolus;
-    Double maxCarbs;
-    Double maxBasal;
-    Double maxBasalIOB;
-
-    boolean fragmentVisible = true;
-
-    public SafetyFragment() {
-        super();
-        loadSettings();
-    }
 
     @Override
     public int getType() {
@@ -65,7 +48,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstrainsIn
 
     @Override
     public boolean isVisibleInTabs() {
-        return fragmentVisible;
+        return false;
     }
 
     @Override
@@ -80,78 +63,11 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstrainsIn
 
     @Override
     public void setFragmentVisible(boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
     }
 
     public static SafetyFragment newInstance() {
         SafetyFragment fragment = new SafetyFragment();
         return fragment;
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.safety_fragment, container, false);
-        maxBolusEdit = (EditText) layout.findViewById(R.id.safety_maxbolus);
-        maxCarbsEdit = (EditText) layout.findViewById(R.id.safety_maxcarbs);
-        maxBasalEdit = (EditText) layout.findViewById(R.id.safety_maxbasal);
-        maxBasalIOBEdit = (EditText) layout.findViewById(R.id.safety_maxiob);
-
-        maxBolusEdit.setText(maxBolus.toString());
-        maxCarbsEdit.setText(maxCarbs.toString());
-        maxBasalEdit.setText(maxBasal.toString());
-        maxBasalIOBEdit.setText(maxBasalIOB.toString());
-
-        TextWatcher textWatch = new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-                try { maxBolus = Double.parseDouble(maxBolusEdit.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { maxCarbs = Double.parseDouble(maxCarbsEdit.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { maxBasal = Double.parseDouble(maxBasalEdit.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { maxBasalIOB = Double.parseDouble(maxBasalIOBEdit.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                storeSettings();
-            }
-        };
-        maxBolusEdit.addTextChangedListener(textWatch);
-        maxCarbsEdit.addTextChangedListener(textWatch);
-        maxBasalEdit.addTextChangedListener(textWatch);
-        maxBasalIOBEdit.addTextChangedListener(textWatch);
-
-        return layout;
-    }
-
-    private void storeSettings() {
-        if (Config.logPrefsChange)
-            log.debug("Storing settings");
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-        SharedPreferences.Editor editor = settings.edit();
-        editor.putFloat("maxBolus", new Float(maxBolus));
-        editor.putFloat("maxCarbs", new Float(maxCarbs));
-        editor.putFloat("maxBasal", new Float(maxBasal));
-        editor.putFloat("maxBasalIOB", new Float(maxBasalIOB));
-        editor.commit();
-    }
-
-    private void loadSettings() {
-        if (Config.logPrefsChange)
-            log.debug("Loading stored settings");
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
-
-        if (settings.contains("maxBolus")) maxBolus = (double) settings.getFloat("maxBolus", 3); else maxBolus = 3d;
-        if (settings.contains("maxCarbs")) maxCarbs = (double) settings.getFloat("maxCarbs", 48); else maxCarbs = 48d;
-        if (settings.contains("maxBasal")) maxBasal = (double) settings.getFloat("maxBasal", 1); else maxBasal = 1d;
-        if (settings.contains("maxBasalIOB")) maxBasalIOB = (double) settings.getFloat("maxBasalIOB", 1); else maxBasalIOB = 1d;
     }
 
     /**
@@ -169,6 +85,9 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstrainsIn
 
     @Override
     public APSResult applyBasalConstrains(APSResult result) {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        Double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
+
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         if (result.rate < 0) result.rate = 0;
 
@@ -179,7 +98,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstrainsIn
         if (result.rate > maxBasal) {
             result.rate = maxBasal;
             if (Config.logConstrainsChnages)
-                log.debug("Limiting rate " + origRate + " by maxBasal to " + result.rate + "U/h");
+                log.debug("Limiting rate " + origRate + " by maxBasal preference to " + result.rate + "U/h");
         }
         if (result.rate > maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight())) {
             result.rate = Math.floor(maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight()) * 100) / 100;

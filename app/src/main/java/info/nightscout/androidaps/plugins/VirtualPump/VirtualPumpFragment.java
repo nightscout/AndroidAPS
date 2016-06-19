@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.VirtualPump;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
@@ -48,6 +51,9 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     TextView extendedBolusView;
     TextView batteryView;
     TextView reservoirView;
+
+    Handler loopHandler = new Handler();
+    Runnable refreshLoop = null;
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
@@ -93,6 +99,21 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (refreshLoop == null) {
+            refreshLoop = new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                    loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+                }
+            };
+            loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.vitualpump_fragment, container, false);
@@ -121,6 +142,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
                 if (Config.logPumpComm)
                     log.debug("Canceling expired temp: " + tempBasal);
                 tempBasal = null;
+                MainApp.bus().post(new EventTreatmentChange());
             }
         }
         if (isExtendedBoluslInProgress()) {
@@ -190,6 +212,11 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
+    public TempBasal getTempBasal() {
+        return tempBasal;
+    }
+
+    @Override
     public double getTempBasalRemainingMinutes() {
         if (!isTempBasalInProgress())
             return 0;
@@ -203,19 +230,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         result.bolusDelivered = insulin;
         result.comment = getString(R.string.virtualpump_resultok);
 
-        Treatment t = new Treatment();
-        t.insulin = insulin;
-        t.carbs = carbs;
-        t.created_at = new Date();
-        try {
-            MainApp.instance().getDbHelper().getDaoTreatments().create(t);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            result.success = false;
-            result.comment = getString(R.string.virtualpump_sqlerror);
-        }
         if (Config.logPumpComm)
-            log.debug("Delivering treatment: " + t + " " + result);
+            log.debug("Delivering treatment insulin: " + insulin + "U carbs: " + carbs + "g " + result);
         updateGUI();
         return result;
     }
@@ -233,6 +249,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         tempBasal.duration = durationInMinutes;
         result.success = true;
         result.enacted = true;
+        result.absolute = absoluteRate;
+        result.duration = durationInMinutes;
         result.comment = getString(R.string.virtualpump_resultok);
         try {
             MainApp.instance().getDbHelper().getDaoTempBasals().create(tempBasal);
@@ -263,6 +281,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         tempBasal.duration = durationInMinutes;
         result.success = true;
         result.enacted = true;
+        result.percent = percent;
+        result.duration = durationInMinutes;
         result.comment = getString(R.string.virtualpump_resultok);
         try {
             MainApp.instance().getDbHelper().getDaoTempBasals().create(tempBasal);
@@ -308,19 +328,20 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     public Result cancelTempBasal() {
         checkForExpiredTempsAndExtended();
         Result result = new Result();
+        result.success = true;
+        result.comment = getString(R.string.virtualpump_resultok);
         if (isTempBasalInProgress()) {
+            result.enacted = true;
             tempBasal.timeEnd = new Date();
             try {
                 MainApp.instance().getDbHelper().getDaoTempBasals().update(tempBasal);
             } catch (SQLException e) {
                 e.printStackTrace();
                 result.success = false;
+                result.enacted = false;
                 result.comment = getString(R.string.virtualpump_sqlerror);
             }
         }
-        result.success = true;
-        result.enacted = true;
-        result.comment = getString(R.string.virtualpump_resultok);
         tempBasal = null;
         if (Config.logPumpComm)
             log.debug("Canceling temp basal: " + result);
@@ -421,28 +442,15 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    DateFormat formatDateToJustTime = new SimpleDateFormat("HH:mm");
-                    DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
-
 
                     basaBasalRateView.setText(getBaseBasalRate() + "U");
                     if (isTempBasalInProgress()) {
-                        if (tempBasal.isAbsolute) {
-                            tempBasalView.setText(formatNumber2decimalplaces.format(tempBasal.absolute) + "U/h @" +
-                                    formatDateToJustTime.format(tempBasal.timeStart) +
-                                    " " + tempBasal.getRemainingMinutes() + "/" + tempBasal.duration + "min");
-                        } else { // percent
-                            tempBasalView.setText(tempBasal.percent + "% @" +
-                                    formatDateToJustTime.format(tempBasal.timeStart) +
-                                    " " + tempBasal.getRemainingMinutes() + "/" + tempBasal.duration + "min");
-                        }
+                        tempBasalView.setText(tempBasal.toString());
                     } else {
                         tempBasalView.setText("");
                     }
                     if (isExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(formatNumber2decimalplaces.format(extendedBolus.absolute) + "U/h @" +
-                                formatDateToJustTime.format(extendedBolus.timeStart) +
-                                " " + extendedBolus.getRemainingMinutes() + "/" + extendedBolus.duration + "min");
+                        extendedBolusView.setText(extendedBolus.toString());
                     } else {
                         extendedBolusView.setText("");
                     }

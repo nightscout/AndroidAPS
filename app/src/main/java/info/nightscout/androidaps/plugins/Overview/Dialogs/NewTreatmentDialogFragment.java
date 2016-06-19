@@ -1,10 +1,12 @@
-package info.nightscout.androidaps.plugins.Treatments.Dialogs;
+package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
-import android.app.Activity;
-import android.app.DialogFragment;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.*;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -13,6 +15,8 @@ import android.widget.TextView;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.Result;
 
 public class NewTreatmentDialogFragment extends DialogFragment implements OnClickListener {
 
@@ -41,8 +45,8 @@ public class NewTreatmentDialogFragment extends DialogFragment implements OnClic
         switch (view.getId()) {
             case R.id.treatments_newtreatment_deliverbutton:
                 SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-                Double maxbolus = Double.parseDouble(SP.getString("safety_maxbolus", "3"));
-                Double maxcarbs = Double.parseDouble(SP.getString("safety_maxcarbs", "48"));
+                Double maxbolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
+                Double maxcarbs = Double.parseDouble(SP.getString("treatmentssafety_maxcarbs", "48"));
 
 
                 String insulinText = this.insulin.getText().toString().replace(",", ".");
@@ -55,7 +59,15 @@ public class NewTreatmentDialogFragment extends DialogFragment implements OnClic
                     this.carbs.setText("");
                 } else if (insulin > 0d || carbs > 0d) {
                     dismiss();
-                    MainActivity.getConfigBuilder().getActivePump().deliverTreatment(insulin, carbs);
+                    Result result = MainActivity.getConfigBuilder().getActivePump().deliverTreatment(insulin, carbs);
+                    if (!result.success) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                        builder.setTitle(this.getContext().getString(R.string.bolusdeliveryerror));
+                        builder.setMessage(result.comment);
+                        builder.setPositiveButton(this.getContext().getString(R.string.ok), null);
+                        builder.show();
+
+                    }
                 }
                 break;
         }

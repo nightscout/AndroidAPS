@@ -18,7 +18,13 @@ public class Result extends Object implements Parcelable{
     }
 
     public String toString() {
-        return "Success: " + success + "\nEnacted: " + enacted + "\nComment: " + comment + "\nDuration: " + duration + "\nAbsolute: " + absolute;
+        String ret = "Success: " + success;
+        if (enacted) {
+            ret += "\nEnacted: " + enacted + "\nComment: " + comment + "\nDuration: " + duration + " min\nAbsolute: " + absolute + " U/h";
+        } else {
+            ret += "\nComment: " + comment;
+        }
+        return ret;
     }
 
     @Override

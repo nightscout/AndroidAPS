@@ -32,15 +32,14 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
 
 /**
- *  LOW SUSPEND ALGORITHM
- *
- *  Define projection as BG + 6 * avgdelta    (estimated BG in 30 min)
- *
- *  If BG is bellow low threshold and projection too: set basal rate to 0 U/h if low temp is not running
- *  else if projection is bellow low threshold: set basal rate to 0 U/h if low temp is not running
- *  else if exists low temp: cancel it
- *  else no change
- *
+ * LOW SUSPEND ALGORITHM
+ * <p/>
+ * Define projection as BG + 6 * avgdelta    (estimated BG in 30 min)
+ * <p/>
+ * If BG is bellow low threshold and projection too: set basal rate to 0 U/h if low temp is not running
+ * else if projection is bellow low threshold: set basal rate to 0 U/h if low temp is not running
+ * else if exists low temp: cancel it
+ * else no change
  */
 
 public class LowSuspendFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
@@ -224,21 +223,31 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
 
+        if (!isEnabled()) {
+            updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_disabled));
+            return;
+        }
+
         if (glucoseStatus == null) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_noglucosedata));
-            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
             return;
         }
 
         if (profile == null) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_noprofile));
-            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
             return;
         }
 
         if (pump == null) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_nopump));
-            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
             return;
         }
 
@@ -247,7 +256,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             minBgDefault = "5";
         }
 
-        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("min_bg", minBgDefault).replace(",", ".")), profile.getUnits());
+        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("lowsuspend_lowthreshold", minBgDefault).replace(",", ".")), profile.getUnits());
 
         boolean lowProjected = (glucoseStatus.glucose + 6.0 * glucoseStatus.avgdelta) < minBg;
         boolean low = glucoseStatus.glucose < minBg;
@@ -325,16 +334,12 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (lastRun != null) {
-                        resultView.setText(text);
-                        glucoseStatusView.setText("");
-                        minBgView.setText("");
-                        requestView.setText("");
-                        lastRunView.setText("");
-                    }
+                    resultView.setText(text);
+                    glucoseStatusView.setText("");
+                    minBgView.setText("");
+                    requestView.setText("");
+                    lastRunView.setText("");
                 }
             });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 }

@@ -6,6 +6,9 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
@@ -183,8 +186,7 @@ public class TempBasal {
         return (remainingMin < 0) ? 0 : (int) remainingMin;
     }
 
-    @Override
-    public String toString() {
+    public String log() {
         return "TempBasal{" +
                 "timeIndex=" + timeIndex +
                 ", timeStart=" + timeStart +
@@ -196,4 +198,20 @@ public class TempBasal {
                 ", isExtended=" + isExtended +
                 '}';
     }
+
+    public String toString() {
+        DateFormat formatDateToJustTime = new SimpleDateFormat("HH:mm");
+        DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+
+        if (isAbsolute) {
+            return formatNumber2decimalplaces.format(absolute) + "U/h @" +
+                    formatDateToJustTime.format(timeStart) +
+                    " " + getRealDuration() + "/" + duration + "min";
+        } else { // percent
+            return percent + "% @" +
+                    formatDateToJustTime.format(timeStart) +
+                    " " + getRealDuration() + "/" + duration + "min";
+        }
+    }
+
 }

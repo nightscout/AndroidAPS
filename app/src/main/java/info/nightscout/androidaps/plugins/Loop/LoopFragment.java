@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -223,7 +222,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         PumpInterface pumpInterface = MainActivity.getConfigBuilder().getActivePump();
         APSResult result = null;
 
-        if (constrainsInterface == null || pumpInterface == null)
+        if (constrainsInterface == null || pumpInterface == null || !isEnabled())
             return;
 
         APSInterface usedAPS = null;

@@ -218,21 +218,31 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
 
+        if (!isEnabled()) {
+            updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_disabled));
+            return;
+        }
+
         if (glucoseStatus == null) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_noglucosedata));
-            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
             return;
         }
 
         if (profile == null) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_noprofile));
-            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
             return;
         }
 
         if (pump == null) {
             updateResultGUI(getString(R.string.openapsma_nopump));
-            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
             return;
         }
 
@@ -248,12 +258,10 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
         Date now = new Date();
 
-        // TODO: objectives limits
-        double maxIob = Double.parseDouble(SP.getString("max_iob", "1.5").replace(",", "."));
-        double maxBasal = Double.parseDouble(SP.getString("max_basal", "1").replace(",", "."));
-        // TODO: min_bg, max_bg in prefs
-        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("min_bg", minBgDefault).replace(",", ".")), units);
-        double maxBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("max_bg", maxBgDefault).replace(",", ".")), units);
+        double maxIob = Double.parseDouble(SP.getString("openapsma_max_iob", "1.5").replace(",", "."));
+        double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
+        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_min_bg", minBgDefault).replace(",", ".")), units);
+        double maxBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_max_bg", maxBgDefault).replace(",", ".")), units);
 
         TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
@@ -306,8 +314,6 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
                     }
                 }
             });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 
     void updateResultGUI(final String text) {
@@ -316,19 +322,15 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (lastRun != null) {
-                        resultView.setText(text);
-                        glucoseStatusView.setText("");
-                        currentTempView.setText("");
-                        iobDataView.setText("");
-                        profileView.setText("");
-                        mealDataView.setText("");
-                        requestView.setText("");
-                        lastRunView.setText("");
-                    }
+                    resultView.setText(text);
+                    glucoseStatusView.setText("");
+                    currentTempView.setText("");
+                    iobDataView.setText("");
+                    profileView.setText("");
+                    mealDataView.setText("");
+                    requestView.setText("");
+                    lastRunView.setText("");
                 }
             });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 }

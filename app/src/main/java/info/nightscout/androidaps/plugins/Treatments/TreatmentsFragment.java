@@ -326,6 +326,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         initializeData();
+        updateGUI();
     }
 
     public void updateGUI() {

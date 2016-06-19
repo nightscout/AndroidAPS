@@ -8,4 +8,8 @@
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="linearBlockBackground">#3e3d3d</color>
+
+    <color name="colorTreatmentButton">#FFB347</color>
+    <color name="colorWizardButton">#77dd77</color>
+    <color name="colorCancelTempButton">#FF47C8FF</color>
 </resources>
