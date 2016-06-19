@@ -27,6 +27,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstrainsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.APSResult;
 
 public class ObjectivesFragment extends Fragment implements View.OnClickListener, PluginBase, ConstrainsInterface {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
@@ -310,6 +311,24 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     void updateView() {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(objectives);
         recyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * Constrains interface
+     **/
+    @Override
+    public boolean isAutomaticProcessingEnabled() {
+        return objectives.get(3).started.getTime() > 0;
+    }
+
+    @Override
+    public boolean manualConfirmationNeeded() {
+        return objectives.get(3).started.getTime() < 0;
+    }
+
+    @Override
+    public APSResult applyBasalConstrains(APSResult result) {
+        return result;
     }
 
 }

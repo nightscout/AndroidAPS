@@ -13,6 +13,7 @@ public interface PluginBase {
     int APS = 5;
     int PUMP = 6;
     int CONSTRAINS = 7;
+    int LOOP = 8;
 
     public int getType();
 

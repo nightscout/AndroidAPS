@@ -19,10 +19,12 @@ import java.util.Iterator;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
 import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
+import info.nightscout.androidaps.plugins.SafetyFragment.SafetyFragment;
 import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
             pluginsList = new ArrayList<PluginBase>();
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.newInstance());
+            pluginsList.add(LoopFragment.newInstance());
             pluginsList.add(VirtualPumpFragment.newInstance());
             pluginsList.add(LowSuspendFragment.newInstance());
             pluginsList.add(OpenAPSMAFragment.newInstance());
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             pluginsList.add(SimpleProfileFragment.newInstance());
             pluginsList.add(TreatmentsFragment.newInstance());
             pluginsList.add(TempBasalsFragment.newInstance());
+            pluginsList.add(SafetyFragment.newInstance());
             pluginsList.add(ObjectivesFragment.newInstance());
             pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
             toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
             registerBus();
 
             configBuilderFragment.initialize();
-            setUpTabs(false);
         }
+        setUpTabs(false);
     }
 
     @Subscribe
@@ -103,7 +107,23 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        switch (id) {
+            case R.id.nav_resetdb:
+                MainApp.getDbHelper().resetDatabases();
+                break;
+            case R.id.nav_exit:
+                log.debug("Exiting");
+                //chancelAlarmManager();
 
+                //MainApp.bus().post(new StopEvent());
+                MainApp.closeDbHelper();
+
+                finish();
+                System.runFinalization();
+                System.exit(0);
+
+                break;
+        }
         return super.onOptionsItemSelected(item);
     }
 

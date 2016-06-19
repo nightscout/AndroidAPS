@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,11 +26,22 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
+
+/**
+ *  LOW SUSPEND ALGORITHM
+ *
+ *  Define projection as BG + 6 * avgdelta    (estimated BG in 30 min)
+ *
+ *  If BG is bellow low threshold and projection too: set basal rate to 0 U/h if low temp is not running
+ *  else if projection is bellow low threshold: set basal rate to 0 U/h if low temp is not running
+ *  else if exists low temp: cancel it
+ *  else no change
+ *
+ */
 
 public class LowSuspendFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(LowSuspendFragment.class);
@@ -90,7 +99,8 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
         }
 
-        public LastRun() {}
+        public LastRun() {
+        }
     }
 
     static LastRun lastRun = null;
@@ -124,8 +134,8 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void setFragmentEnabled(boolean selected) {
-        this.fragmentEnabled = selected;
+    public void setFragmentEnabled(boolean fragmentEnabled) {
+        this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
@@ -207,20 +217,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
 
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    invoke();
-                }
-            });
-        else
-            log.debug("EventNewBG: Activity is null");
-    }
-
     @Override
     public void invoke() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
@@ -229,20 +225,20 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
 
         if (glucoseStatus == null) {
-            resultView.setText(getString(R.string.openapsma_noglucosedata));
-            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_noglucosedata));
+            updateResultGUI(MainApp.instance().getString(R.string.openapsma_noglucosedata));
+            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
             return;
         }
 
         if (profile == null) {
-            resultView.setText(getString(R.string.openapsma_noprofile));
-            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_noprofile));
+            updateResultGUI(MainApp.instance().getString(R.string.openapsma_noprofile));
+            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
             return;
         }
 
         if (pump == null) {
-            resultView.setText(getString(R.string.openapsma_nopump));
-            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_nopump));
+            updateResultGUI(MainApp.instance().getString(R.string.openapsma_nopump));
+            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
             return;
         }
 
@@ -267,29 +263,29 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
                 request.changeRequested = true;
                 request.rate = 0d;
                 request.duration = 30;
-                request.reason = getString(R.string.lowsuspend_lowmessage);
+                request.reason = MainApp.instance().getString(R.string.lowsuspend_lowmessage);
             } else {
                 request.changeRequested = false;
-                request.reason = getString(R.string.nochangerequested);
+                request.reason = MainApp.instance().getString(R.string.nochangerequested);
             }
         } else if (lowProjected) {
             if (!isTempBasalInProgress || tempBasalRate != 0d) {
                 request.changeRequested = true;
                 request.rate = 0d;
                 request.duration = 30;
-                request.reason = getString(R.string.lowsuspend_lowprojectedmessage);
+                request.reason = MainApp.instance().getString(R.string.lowsuspend_lowprojectedmessage);
             } else {
                 request.changeRequested = false;
-                request.reason = getString(R.string.nochangerequested);
+                request.reason = MainApp.instance().getString(R.string.nochangerequested);
             }
-        } else if (tempBasalRate == 0d) {
+        } else if (isTempBasalInProgress && tempBasalRate == 0d) {
             request.changeRequested = true;
             request.rate = baseBasalRate;
             request.duration = 30;
-            request.reason = getString(R.string.lowsuspend_cancelmessage);
+            request.reason = MainApp.instance().getString(R.string.lowsuspend_cancelmessage);
         } else {
             request.changeRequested = false;
-            request.reason = getString(R.string.nochangerequested);
+            request.reason = MainApp.instance().getString(R.string.nochangerequested);
         }
 
         lastRun = new LastRun();
@@ -304,13 +300,41 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     }
 
     void updateGUI() {
-        if (lastRun != null) {
-            DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
-            glucoseStatusView.setText(lastRun.lastGlucoseStatus.toString());
-            minBgView.setText(formatNumber1decimalplaces.format(lastRun.lastMinBg) + " " + lastRun.lastUnits);
-            resultView.setText(getString(R.string.lowsuspend_low) + " " + lastRun.lastLow + "\n" + getString(R.string.lowsuspend_lowprojected) + " " + lastRun.lastLowProjected);
-            requestView.setText(lastRun.lastAPSResult.toString());
-            lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
-        }
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (lastRun != null) {
+                        DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
+                        glucoseStatusView.setText(lastRun.lastGlucoseStatus.toString());
+                        minBgView.setText(formatNumber1decimalplaces.format(lastRun.lastMinBg) + " " + lastRun.lastUnits);
+                        resultView.setText(getString(R.string.lowsuspend_low) + " " + lastRun.lastLow + "\n" + getString(R.string.lowsuspend_lowprojected) + " " + lastRun.lastLowProjected);
+                        requestView.setText(lastRun.lastAPSResult.toString());
+                        lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
+                    }
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
+    }
+
+    void updateResultGUI(final String text) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (lastRun != null) {
+                        resultView.setText(text);
+                        glucoseStatusView.setText("");
+                        minBgView.setText("");
+                        requestView.setText("");
+                        lastRunView.setText("");
+                    }
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
     }
 }

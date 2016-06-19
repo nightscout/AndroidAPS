@@ -6,4 +6,6 @@
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
+
+    <color name="linearBlockBackground">#3e3d3d</color>
 </resources>

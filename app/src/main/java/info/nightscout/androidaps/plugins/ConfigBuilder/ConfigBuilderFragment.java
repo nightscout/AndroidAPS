@@ -31,12 +31,14 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstrainsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
@@ -47,6 +49,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     private static final String PREFS_NAME = "Settings";
 
     ListView pumpListView;
+    ListView loopListView;
     ListView treatmentsListView;
     ListView tempsListView;
     ListView profileListView;
@@ -55,6 +58,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ListView generalListView;
 
     PluginCustomAdapter pumpDataAdapter = null;
+    PluginCustomAdapter loopDataAdapter = null;
     PluginCustomAdapter treatmentsDataAdapter = null;
     PluginCustomAdapter tempsDataAdapter = null;
     PluginCustomAdapter profileDataAdapter = null;
@@ -99,6 +103,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.configbuilder_fragment, container, false);
         pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
+        loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
         treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
         tempsListView = (ListView) view.findViewById(R.id.configbuilder_tempslistview);
         profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
@@ -114,6 +119,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP));
         pumpListView.setAdapter(pumpDataAdapter);
         setListViewHeightBasedOnChildren(pumpListView);
+        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.LOOP));
+        loopListView.setAdapter(loopDataAdapter);
+        setListViewHeightBasedOnChildren(loopListView);
         treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT));
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
@@ -264,6 +272,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
+    public Result applyAPSRequest(APSResult request) {
+        return activePump.applyAPSRequest(request);
+    }
+
+    @Override
     public JSONObject getJSONStatus() {
         return activePump.getJSONStatus();
     }
@@ -392,6 +405,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             // Single selection allowed
             case PluginBase.PROFILE:
             case PluginBase.PUMP:
+            case PluginBase.LOOP:
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
                 boolean newSelection = changedPlugin.isEnabled();
@@ -412,7 +426,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     private void verifySelectionInCategories() {
-        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.TEMPBASAL, PluginBase.TREATMENT}) {
+        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.LOOP, PluginBase.TEMPBASAL, PluginBase.TREATMENT}) {
             ArrayList<PluginBase> pluginsInCategory = MainActivity.getSpecificPluginsList(category);
             switch (category) {
                 // Multiple selection allowed
@@ -437,6 +451,16 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                         log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
                     for (PluginBase p : pluginsInCategory) {
                         if (!p.getName().equals(((PluginBase) activePump).getName())) {
+                            p.setFragmentVisible(false);
+                        }
+                    }
+                    break;
+                case PluginBase.LOOP:
+                    PluginBase loop = getTheOneEnabledInArray(pluginsInCategory);
+                    if (Config.logConfigBuilder)
+                        log.debug("Selected loop interface: " + loop.getName());
+                    for (PluginBase p : pluginsInCategory) {
+                        if (!p.getName().equals(loop.getName())) {
                             p.setFragmentVisible(false);
                         }
                     }
@@ -535,4 +559,45 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
         listView.setLayoutParams(params);
     }
+
+    /**
+     * Constrains interface
+     **/
+    @Override
+    public boolean isAutomaticProcessingEnabled() {
+        boolean result = true;
+
+        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
+        for(PluginBase p: constrainsPlugins) {
+            ConstrainsInterface constrain = (ConstrainsInterface) p;
+            if (!p.isEnabled()) continue;
+            result = result && constrain.isAutomaticProcessingEnabled();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean manualConfirmationNeeded() {
+        boolean result = false;
+
+        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
+        for(PluginBase p: constrainsPlugins) {
+            ConstrainsInterface constrain = (ConstrainsInterface) p;
+            if (!p.isEnabled()) continue;
+            result = result || constrain.manualConfirmationNeeded();
+        }
+        return result;
+    }
+
+    @Override
+    public APSResult applyBasalConstrains(APSResult result) {
+        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
+        for(PluginBase p: constrainsPlugins) {
+            ConstrainsInterface constrain = (ConstrainsInterface) p;
+            if (!p.isEnabled()) continue;
+            constrain.applyBasalConstrains(result);
+        }
+        return result;
+    }
+
 }

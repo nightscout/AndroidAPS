@@ -6,6 +6,6 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
  * Created by mike on 14.06.2016.
  */
 public interface TempBasalsInterface {
-    void updateTotalIOBIfNeeded();
+    void updateTotalIOB();
     IobTotal getLastCalculation();
 }

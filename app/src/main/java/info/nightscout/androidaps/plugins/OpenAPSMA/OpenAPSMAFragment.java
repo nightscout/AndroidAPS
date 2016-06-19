@@ -13,8 +13,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,11 +25,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -73,6 +68,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             dest.writeLong(lastAPSRun.getTime());
             dest.writeParcelable(lastAPSResult, 0);
         }
+
         public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
             public LastRun createFromParcel(Parcel in) {
                 return new LastRun(in);
@@ -90,7 +86,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
         }
 
-        public LastRun() {}
+        public LastRun() {
+        }
     }
 
     LastRun lastRun = null;
@@ -140,6 +137,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public APSResult getLastAPSResult() {
+        if (lastRun == null) return null;
         return lastRun.lastAPSResult;
     }
 
@@ -206,34 +204,6 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    invoke();
-                }
-            });
-        else
-            log.debug("EventTreatmentChange: Activity is null");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    invoke();
-                }
-            });
-        else
-            log.debug("EventNewBG: Activity is null");
-    }
-
     @Override
     public void invoke() {
         DetermineBasalAdapterJS determineBasalAdapterJS = null;
@@ -249,20 +219,20 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
 
         if (glucoseStatus == null) {
-            resultView.setText(getString(R.string.openapsma_noglucosedata));
-            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_noglucosedata));
+            updateResultGUI(MainApp.instance().getString(R.string.openapsma_noglucosedata));
+            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
             return;
         }
 
         if (profile == null) {
-            resultView.setText(getString(R.string.openapsma_noprofile));
-            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_noprofile));
+            updateResultGUI(MainApp.instance().getString(R.string.openapsma_noprofile));
+            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
             return;
         }
 
         if (pump == null) {
-            resultView.setText(getString(R.string.openapsma_nopump));
-            if (Config.logAPSResult) log.debug(getString(R.string.openapsma_nopump));
+            updateResultGUI(getString(R.string.openapsma_nopump));
+            if (Config.logAPSResult) log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
             return;
         }
 
@@ -287,8 +257,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
         TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOBIfNeeded();
-        tempBasals.updateTotalIOBIfNeeded();
+        treatments.updateTotalIOB();
+        tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();
         IobTotal basalIob = tempBasals.getLastCalculation();
 
@@ -319,16 +289,46 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     }
 
     void updateGUI() {
-        if (lastRun != null) {
-            glucoseStatusView.setText(lastRun.lastDetermineBasalAdapterJS.getGlucoseStatusParam());
-            currentTempView.setText(lastRun.lastDetermineBasalAdapterJS.getCurrentTempParam());
-            iobDataView.setText(lastRun.lastDetermineBasalAdapterJS.getIobDataParam());
-            profileView.setText(lastRun.lastDetermineBasalAdapterJS.getProfileParam());
-            mealDataView.setText(lastRun.lastDetermineBasalAdapterJS.getMealDataParam());
-            resultView.setText(lastRun.lastAPSResult.json.toString());
-            requestView.setText(lastRun.lastAPSResult.toString());
-            lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
-        }
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (lastRun != null) {
+                        glucoseStatusView.setText(lastRun.lastDetermineBasalAdapterJS.getGlucoseStatusParam());
+                        currentTempView.setText(lastRun.lastDetermineBasalAdapterJS.getCurrentTempParam());
+                        iobDataView.setText(lastRun.lastDetermineBasalAdapterJS.getIobDataParam());
+                        profileView.setText(lastRun.lastDetermineBasalAdapterJS.getProfileParam());
+                        mealDataView.setText(lastRun.lastDetermineBasalAdapterJS.getMealDataParam());
+                        resultView.setText(lastRun.lastAPSResult.json.toString());
+                        requestView.setText(lastRun.lastAPSResult.toString());
+                        lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
+                    }
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
+    }
 
+    void updateResultGUI(final String text) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (lastRun != null) {
+                        resultView.setText(text);
+                        glucoseStatusView.setText("");
+                        currentTempView.setText("");
+                        iobDataView.setText("");
+                        profileView.setText("");
+                        mealDataView.setText("");
+                        requestView.setText("");
+                        lastRunView.setText("");
+                    }
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
     }
 }

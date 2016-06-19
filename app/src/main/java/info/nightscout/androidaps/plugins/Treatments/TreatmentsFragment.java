@@ -65,6 +65,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
+    boolean visibleNow = false;
 
     @Override
     public String getName() {
@@ -113,15 +114,11 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             log.debug(e.getMessage(), e);
             treatments = new ArrayList<Treatment>();
         }
-        if (recyclerView != null) {
-            recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
-        }
     }
 
     /*
      * Recalculate IOB if value is older than 1 minute
      */
-    @Override
     public void updateTotalIOBIfNeeded() {
         if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
             return;
@@ -133,10 +130,11 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         return lastCalculation;
     }
 
-    private void updateTotalIOB() {
+    @Override
+    public void updateTotalIOB() {
         IobTotal total = new IobTotal();
 
-        if (MainActivity.getConfigBuilder() == null ||  MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+        if (MainActivity.getConfigBuilder() == null || MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
             return;
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null) {
@@ -209,7 +207,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
-            if (MainActivity.getConfigBuilder() == null ||  MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+            if (MainActivity.getConfigBuilder() == null || MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
                 return;
             NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
@@ -258,6 +256,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         super();
         registerBus();
         initializeData();
+        updateGUI();
     }
 
     public static TreatmentsFragment newInstance() {
@@ -297,17 +296,18 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle("Dialog");
-                builder.setMessage("Do you want to refresh treatments from Nightscout");
-                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                builder.setTitle(this.getContext().getString(R.string.dialog));
+                builder.setMessage(this.getContext().getString(R.string.refreshfromnightscout));
+                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetTreatments();
                         initializeData();
+                        updateGUI();
                         Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                         MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                     }
                 });
-                builder.setNegativeButton("Cancel", null);
+                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
                 builder.show();
 
                 break;
@@ -325,38 +325,29 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        Activity activity = getActivity();
-        if (activity != null && recyclerView != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    initializeData();
-                }
-            });
-        else
-            log.debug("EventTreatmentChange: Activity is null");
+        initializeData();
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
+    public void updateGUI() {
         Activity activity = getActivity();
-        if (activity != null && recyclerView != null)
+        if (visibleNow && activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateTotalIOB();
-                    recyclerView.getAdapter().notifyDataSetChanged();
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
                 }
             });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
-        if (isVisibleToUser)
+        if (isVisibleToUser) {
+            visibleNow = true;
             updateTotalIOBIfNeeded();
+            updateGUI();
+        } else
+            visibleNow = false;
     }
 }

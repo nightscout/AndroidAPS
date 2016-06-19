@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.VirtualPump;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -28,6 +29,7 @@ import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
@@ -49,6 +51,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
+    boolean visibleNow = false;
 
     @Override
     public String getName() {
@@ -90,11 +93,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.vitualpump_fragment, container, false);
@@ -104,46 +102,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         batteryView = (TextView) view.findViewById(R.id.virtualpump_battery);
         reservoirView = (TextView) view.findViewById(R.id.virtualpump_reservoir);
 
+        updateGUI();
         return view;
-    }
-
-    public void updateView() {
-        DateFormat formatDateToJustTime = new SimpleDateFormat("HH:mm");
-        DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
-
-        checkForExpiredTempsAndExtended();
-
-        basaBasalRateView.setText(getBaseBasalRate() + "U");
-        if (isTempBasalInProgress()) {
-            if (tempBasal.isAbsolute) {
-                tempBasalView.setText(formatNumber2decimalplaces.format(tempBasal.absolute) + "U/h @" +
-                        formatDateToJustTime.format(tempBasal.timeStart) +
-                        " " + tempBasal.getRemainingMinutes() + "/" + tempBasal.duration + "min");
-            } else { // percent
-                tempBasalView.setText(tempBasal.percent + "% @" +
-                        formatDateToJustTime.format(tempBasal.timeStart) +
-                        " " + tempBasal.getRemainingMinutes() + "/" + tempBasal.duration + "min");
-            }
-        } else {
-            tempBasalView.setText("");
-        }
-        if (isExtendedBoluslInProgress()) {
-            extendedBolusView.setText(formatNumber2decimalplaces.format(extendedBolus.absolute) + "U/h @" +
-                    formatDateToJustTime.format(extendedBolus.timeStart) +
-                    " " + extendedBolus.getRemainingMinutes() + "/" + extendedBolus.duration + "min");
-        } else {
-            extendedBolusView.setText("");
-        }
-        batteryView.setText(getBatteryPercent() + "%");
-        reservoirView.setText(getReservoirValue() + "U");
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser)
-            updateView();
     }
 
     void checkForExpiredTempsAndExtended() {
@@ -256,7 +216,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         }
         if (Config.logPumpComm)
             log.debug("Delivering treatment: " + t + " " + result);
-        updateView();
+        updateGUI();
         return result;
     }
 
@@ -272,6 +232,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         tempBasal.absolute = absoluteRate;
         tempBasal.duration = durationInMinutes;
         result.success = true;
+        result.enacted = true;
         result.comment = getString(R.string.virtualpump_resultok);
         try {
             MainApp.instance().getDbHelper().getDaoTempBasals().create(tempBasal);
@@ -282,22 +243,26 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         }
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + result);
-        updateView();
+        updateGUI();
         return result;
     }
 
     @Override
     public Result setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         checkForExpiredTempsAndExtended();
-        Result result = cancelTempBasal();
-        if (!result.success)
-            return result;
+        Result result = new Result();
+        if (isTempBasalInProgress()) {
+            result = cancelTempBasal();
+            if (!result.success)
+                return result;
+        }
         tempBasal = new TempBasal();
         tempBasal.timeStart = new Date();
         tempBasal.isAbsolute = false;
         tempBasal.percent = percent;
         tempBasal.duration = durationInMinutes;
         result.success = true;
+        result.enacted = true;
         result.comment = getString(R.string.virtualpump_resultok);
         try {
             MainApp.instance().getDbHelper().getDaoTempBasals().create(tempBasal);
@@ -308,7 +273,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         }
         if (Config.logPumpComm)
             log.debug("Settings temp basal percent: " + result);
-        updateView();
+        updateGUI();
         return result;
     }
 
@@ -324,6 +289,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         extendedBolus.absolute = insulin * 60d / durationInMinutes;
         extendedBolus.duration = durationInMinutes;
         result.success = true;
+        result.enacted = true;
         result.comment = getString(R.string.virtualpump_resultok);
         try {
             MainApp.instance().getDbHelper().getDaoTempBasals().create(extendedBolus);
@@ -334,7 +300,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         }
         if (Config.logPumpComm)
             log.debug("Setting extended bolus: " + result);
-        updateView();
+        updateGUI();
         return result;
     }
 
@@ -353,11 +319,12 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             }
         }
         result.success = true;
+        result.enacted = true;
         result.comment = getString(R.string.virtualpump_resultok);
         tempBasal = null;
         if (Config.logPumpComm)
             log.debug("Canceling temp basal: " + result);
-        updateView();
+        updateGUI();
         return result;
     }
 
@@ -376,12 +343,37 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             }
         }
         result.success = true;
+        result.enacted = true;
         result.comment = getString(R.string.virtualpump_resultok);
         extendedBolus = null;
         if (Config.logPumpComm)
             log.debug("Canceling extended basal: " + result);
-        updateView();
+        updateGUI();
         return result;
+    }
+
+    @Override
+    public Result applyAPSRequest(APSResult request) {
+        if (isTempBasalInProgress()) {
+            if (request.rate == getTempBasalAbsoluteRate()) {
+                Result noChange = new Result();
+                noChange.enacted = false;
+                noChange.comment = "Temp basal set correctly";
+                noChange.success = true;
+                return noChange;
+            } else {
+                return setTempBasalAbsolute(request.rate, request.duration);
+            }
+        }
+        if (request.rate == getBaseBasalRate()) {
+            Result noChange = new Result();
+            noChange.enacted = false;
+            noChange.comment = "Basal set correctly";
+            noChange.success = true;
+            return noChange;
+        }
+
+        return setTempBasalAbsolute(request.rate, request.duration);
     }
 
     @Override
@@ -410,4 +402,53 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         return pump;
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser) {
+            visibleNow = true;
+            updateGUI();
+        } else
+            visibleNow = false;
+
+    }
+
+    public void updateGUI() {
+        checkForExpiredTempsAndExtended();
+        Activity activity = getActivity();
+        if (activity != null && visibleNow && basaBasalRateView != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    DateFormat formatDateToJustTime = new SimpleDateFormat("HH:mm");
+                    DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+
+
+                    basaBasalRateView.setText(getBaseBasalRate() + "U");
+                    if (isTempBasalInProgress()) {
+                        if (tempBasal.isAbsolute) {
+                            tempBasalView.setText(formatNumber2decimalplaces.format(tempBasal.absolute) + "U/h @" +
+                                    formatDateToJustTime.format(tempBasal.timeStart) +
+                                    " " + tempBasal.getRemainingMinutes() + "/" + tempBasal.duration + "min");
+                        } else { // percent
+                            tempBasalView.setText(tempBasal.percent + "% @" +
+                                    formatDateToJustTime.format(tempBasal.timeStart) +
+                                    " " + tempBasal.getRemainingMinutes() + "/" + tempBasal.duration + "min");
+                        }
+                    } else {
+                        tempBasalView.setText("");
+                    }
+                    if (isExtendedBoluslInProgress()) {
+                        extendedBolusView.setText(formatNumber2decimalplaces.format(extendedBolus.absolute) + "U/h @" +
+                                formatDateToJustTime.format(extendedBolus.timeStart) +
+                                " " + extendedBolus.getRemainingMinutes() + "/" + extendedBolus.duration + "min");
+                    } else {
+                        extendedBolusView.setText("");
+                    }
+                    batteryView.setText(getBatteryPercent() + "%");
+                    reservoirView.setText(getReservoirValue() + "U");
+                }
+            });
+    }
 }

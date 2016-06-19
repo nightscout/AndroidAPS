@@ -162,8 +162,8 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         // IOB calculation
         TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOBIfNeeded();
-        tempBasals.updateTotalIOBIfNeeded();
+        treatments.updateTotalIOB();
+        tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();
         IobTotal basalIob = tempBasals.getLastCalculation();
 
@@ -229,8 +229,8 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         // Insulin from IOB
         TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOBIfNeeded();
-        tempBasals.updateTotalIOBIfNeeded();
+        treatments.updateTotalIOB();
+        tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();
         IobTotal basalIob = tempBasals.getLastCalculation();
 

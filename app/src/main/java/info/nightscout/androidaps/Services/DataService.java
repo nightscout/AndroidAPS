@@ -136,6 +136,10 @@ public class DataService extends IntentService {
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
                 EventNewBasalProfile event = new EventNewBasalProfile(nsProfile);
+                if (MainActivity.getConfigBuilder() == null) {
+                    log.error("Config builder not ready on receive profile");
+                    return;
+                }
                 PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
                 if (pump != null) {
                     pump.setNewBasalProfile(nsProfile);

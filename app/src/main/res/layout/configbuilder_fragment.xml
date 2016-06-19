@@ -16,10 +16,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="@string/configbuilder_pump"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
+                android:textStyle="bold" />
 
             <ListView
                 android:id="@+id/configbuilder_pumplistview"
@@ -29,16 +29,34 @@
                 android:layout_marginRight="10dp"
                 android:background="@color/cardColorBackground" />
 
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/configbuilder_treatments"
+                android:layout_marginLeft="5dp"
+                android:text="@string/configbuilder_aps"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
+                android:textStyle="bold" />
 
             <ListView
-                android:id="@+id/configbuilder_treatmentslistview"
+                android:id="@+id/configbuilder_apslistview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/cardColorBackground" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/configbuilder_loop"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/configbuilder_looplistview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -48,26 +66,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/configbuilder_tempbasals"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
-
-            <ListView
-                android:id="@+id/configbuilder_tempslistview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:background="@color/cardColorBackground" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="@string/configbuilder_profile"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
+                android:textStyle="bold" />
 
             <ListView
                 android:id="@+id/configbuilder_profilelistview"
@@ -80,13 +82,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/configbuilder_aps"
+                android:layout_marginLeft="5dp"
+                android:text="@string/configbuilder_treatments"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
+                android:textStyle="bold" />
 
             <ListView
-                android:id="@+id/configbuilder_apslistview"
+                android:id="@+id/configbuilder_treatmentslistview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -96,10 +98,27 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/configbuilder_tempbasals"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/configbuilder_tempslistview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/cardColorBackground" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="@string/configbuilder_constrains"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
+                android:textStyle="bold" />
 
             <ListView
                 android:id="@+id/configbuilder_constrainslistview"
@@ -112,10 +131,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:text="@string/configbuilder_general"
                 android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:layout_marginLeft="5dp" />
+                android:textStyle="bold" />
 
             <ListView
                 android:id="@+id/configbuilder_generallistview"

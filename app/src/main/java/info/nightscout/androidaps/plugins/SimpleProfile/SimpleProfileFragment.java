@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.SimpleProfile;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -99,11 +100,6 @@ public class SimpleProfileFragment extends Fragment implements PluginBase, Profi
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.simpleprofile_fragment, container, false);
@@ -160,13 +156,14 @@ public class SimpleProfileFragment extends Fragment implements PluginBase, Profi
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                dia = Double.parseDouble(diaView.getText().toString().replace(",", "."));
-                ic = Double.parseDouble(icView.getText().toString().replace(",", "."));
-                isf = Double.parseDouble(isfView.getText().toString().replace(",", "."));
-                car = Double.parseDouble(carView.getText().toString().replace(",", "."));
-                basal = Double.parseDouble(basalView.getText().toString().replace(",", "."));
-                targetLow = Double.parseDouble(targetlowView.getText().toString().replace(",", "."));
-                targetHigh = Double.parseDouble(targethighView.getText().toString().replace(",", "."));
+                try { dia = Double.parseDouble(diaView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                try { ic = Double.parseDouble(icView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                try { isf = Double.parseDouble(isfView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                try { car = Double.parseDouble(carView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                try { basal = Double.parseDouble(basalView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                try { targetLow = Double.parseDouble(targetlowView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                try { targetHigh = Double.parseDouble(targethighView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                storeSettings();
             }
         };
         diaView.addTextChangedListener(textWatch);
