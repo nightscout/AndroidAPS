@@ -26,7 +26,7 @@ public interface PumpInterface {
     double getTempBasalRemainingMinutes();
     TempBasal getTempBasal();
 
-    Result deliverTreatment(Double insulin, Double carbs);
+    Result deliverTreatment(Double insulin, Integer carbs);
     Result setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
     Result setTempBasalPercent(Integer percent, Integer durationInMinutes);
     Result setExtendedBolus(Double insulin, Integer durationInMinutes);

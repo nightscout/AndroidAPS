@@ -132,8 +132,8 @@ public class DetermineBasalAdapterJS implements Parcelable {
         mV8rt.add(PARAM_iobData, mIobData);
         // Glucose status
         mGlucoseStatus = new V8Object(mV8rt);
-        mGlucoseStatus.add("delta", 0);
         mGlucoseStatus.add("glucose", 0);
+        mGlucoseStatus.add("delta", 0);
         mGlucoseStatus.add("avgdelta", 0);
         mV8rt.add(PARAM_glucoseStatus, mGlucoseStatus);
         // Meal data

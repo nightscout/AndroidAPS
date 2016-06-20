@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.Round;
 
 public class IobTotal {
     public Double iob;
@@ -48,6 +49,16 @@ public class IobTotal {
         result.netbasalinsulin = basalIob.netbasalinsulin;
         result.hightempinsulin = basalIob.hightempinsulin;
         return result;
+    }
+
+    public IobTotal round() {
+        this.iob = Round.roundTo(this.iob, 0.001);
+        this.activity = Round.roundTo(this.activity, 0.0001);
+        this.bolussnooze = Round.roundTo(this.bolussnooze, 0.0001);
+        this.basaliob = Round.roundTo(this.basaliob, 0.001);
+        this.netbasalinsulin = Round.roundTo(this.netbasalinsulin, 0.001);
+        this.hightempinsulin = Round.roundTo(this.hightempinsulin, 0.001);
+        return this;
     }
 
     public JSONObject json() {

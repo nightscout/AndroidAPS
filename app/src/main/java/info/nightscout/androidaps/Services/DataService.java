@@ -334,7 +334,6 @@ public class DataService extends IntentService {
     @Nullable
     public static Treatment findById(String _id) {
         try {
-            QueryBuilder<Treatment, String> qb = null;
             Dao<Treatment, Long> daoTreatments = MainApp.getDbHelper().getDaoTreatments();
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
             Where where = queryBuilder.where();

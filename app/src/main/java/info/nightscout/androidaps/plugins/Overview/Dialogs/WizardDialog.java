@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;
@@ -15,18 +17,19 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.*;
 
-public class WizardDialogFragment extends DialogFragment implements OnClickListener {
+public class WizardDialog extends DialogFragment implements OnClickListener {
 
     Button wizardDialogDeliverButton;
     TextView correctionInput;
@@ -43,7 +46,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
     public static final DecimalFormat numberFormat = new DecimalFormat("0.00");
     public static final DecimalFormat intFormat = new DecimalFormat("0");
 
-    Double calculatedCarbs = 0d;
+    Integer calculatedCarbs = 0;
     Double calculatedTotalInsulin = 0d;
 
     final private TextWatcher textWatcher = new TextWatcher() {
@@ -69,7 +72,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.treatments_wizard_fragment, null, false);
+        View view = inflater.inflate(R.layout.overview_wizard_fragment, null, false);
 
         wizardDialogDeliverButton = (Button) view.findViewById(R.id.treatments_wizard_deliverButton);
         wizardDialogDeliverButton.setOnClickListener(this);
@@ -109,8 +112,48 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         switch (view.getId()) {
             case R.id.treatments_wizard_deliverButton:
                 if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d){
+                    DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+                    String confirmMessage = getString(R.string.entertreatmentquestion);
+
+                    Double insulinAfterConstraints = MainActivity.getConfigBuilder().applyBolusConstraints(calculatedTotalInsulin);
+                    Integer carbsAfterConstraints = MainActivity.getConfigBuilder().applyCarbsConstraints(calculatedCarbs);
+
+                    confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
+                    confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+
+                    if (insulinAfterConstraints != calculatedTotalInsulin || carbsAfterConstraints != calculatedCarbs) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                        builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));
+                        builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                        builder.show();
+                        return;
+                    }
+
+                    final Double finalInsulinAfterConstraints = insulinAfterConstraints;
+                    final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    builder.setTitle(this.getContext().getString(R.string.confirmation));
+                    builder.setMessage(confirmMessage);
+                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                                Result result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
+                                if (!result.success) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                                    builder.setMessage(result.comment);
+                                    builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                                    builder.show();
+                                }
+                            }
+                        }
+                    });
+                    builder.setNegativeButton(getString(R.string.cancel), null);
+                    builder.show();
                     dismiss();
-                    MainActivity.getConfigBuilder().getActivePump().deliverTreatment(calculatedTotalInsulin, calculatedCarbs);
                 }
                 break;
         }
@@ -170,10 +213,6 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
     }
 
     private void calculateInsulin() {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxbolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
-        Double maxcarbs = Double.parseDouble(SP.getString("treatmentssafety_maxcarbs", "48"));
-
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
 
         // Entered values
@@ -182,17 +221,17 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         String i_correction = this.correctionInput.getText().toString().replace(",", ".");
         Double c_bg = 0d;
         try { c_bg = Double.parseDouble(i_bg.equals("") ? "0" : i_bg); } catch (Exception e) {}
-        Double c_carbs = 0d;
-        try { c_carbs = Double.parseDouble(i_carbs.equals("") ? "0" : i_carbs); } catch (Exception e) {}
-        c_carbs = ((Long)Math.round(c_carbs)).doubleValue();
+        Integer c_carbs = 0;
+        try { c_carbs = Integer.parseInt(i_carbs.equals("") ? "0" : i_carbs); } catch (Exception e) {}
+        c_carbs = (Integer) Math.round(c_carbs);
         Double c_correction = 0d;
         try { c_correction = Double.parseDouble(i_correction.equals("") ? "0" : i_correction);  } catch (Exception e) {}
-        if(c_correction > maxbolus) {
+        if(c_correction != MainActivity.getConfigBuilder().applyBolusConstraints(c_correction)) {
             this.correctionInput.setText("");
             wizardDialogDeliverButton.setVisibility(Button.GONE);
             return;
         }
-        if(c_carbs > maxcarbs) {
+        if(c_carbs != MainActivity.getConfigBuilder().applyCarbsConstraints(c_carbs)) {
             this.carbsInput.setText("");
             wizardDialogDeliverButton.setVisibility(Button.GONE);
             return;
@@ -244,7 +283,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
             calculatedTotalInsulin = 0d;
             totalInsulin.setText("");
         } else {
-            calculatedTotalInsulin = roundTo(calculatedTotalInsulin, 0.05d);
+            calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, 0.05d);
             total.setText("");
             totalInsulin.setText(numberFormat.format(calculatedTotalInsulin) + "U");
         }
@@ -259,12 +298,5 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         } else {
             wizardDialogDeliverButton.setVisibility(Button.GONE);
         }
-    }
-
-    private Double roundTo(Double x, Double step) {
-        if (x != 0d) {
-            return Math.round(x / step) * step;
-        }
-        return 0d;
     }
 }

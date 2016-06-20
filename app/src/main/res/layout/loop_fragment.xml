@@ -96,11 +96,11 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/loop_constrainsprocessed_label"
+                    android:text="@string/loop_constraintsprocessed_label"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
         
                 <TextView
-                    android:id="@+id/loop_constrainsprocessed"
+                    android:id="@+id/loop_constraintsprocessed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"

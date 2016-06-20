@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -110,6 +111,8 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 */
             QueryBuilder<TempBasal, Long> queryBuilder = dao.queryBuilder();
             queryBuilder.orderBy("timeIndex", false);
+            Where where = queryBuilder.where();
+            where.eq("isExtended", false);
             queryBuilder.limit(30l);
             PreparedQuery<TempBasal> preparedQuery = queryBuilder.prepare();
             tempBasals = dao.query(preparedQuery);
