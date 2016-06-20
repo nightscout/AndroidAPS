@@ -14,6 +14,7 @@ public interface PluginBase {
     int PUMP = 6;
     int CONSTRAINTS = 7;
     int LOOP = 8;
+    int BGSOURCE = 9;
 
     public int getType();
 

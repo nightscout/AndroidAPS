@@ -34,7 +34,7 @@
 
         <!-- Receiver from NSClient -->
         <receiver
-            android:name="info.nightscout.client.receivers.NSClientDataReceiver"
+            android:name=".receivers.NSClientDataReceiver"
             android:enabled="true"
             android:exported="true">
             <intent-filter>

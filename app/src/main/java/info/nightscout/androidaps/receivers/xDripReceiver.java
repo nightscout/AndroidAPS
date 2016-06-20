@@ -7,8 +7,10 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.Services.DataService;
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 
 
 public class xDripReceiver extends WakefulBroadcastReceiver {
@@ -16,10 +18,16 @@ public class xDripReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Config.logFunctionCalls)
-            log.debug("onReceive " + intent);
-        startWakefulService(context, new Intent(context, DataService.class)
-                .setAction(intent.getAction())
-                .putExtras(intent));
+        if (MainActivity.getConfigBuilder().getActiveBgSource() == null) {
+            log.debug("getActiveBgSource is still null");
+            return;
+        }
+        if (MainActivity.getConfigBuilder().getActiveBgSource().getClass().equals(SourceXdripFragment.class)) {
+            if (Config.logFunctionCalls)
+                log.debug("onReceive " + intent);
+            startWakefulService(context, new Intent(context, DataService.class)
+                    .setAction(intent.getAction())
+                    .putExtras(intent));
+        }
     }
 }

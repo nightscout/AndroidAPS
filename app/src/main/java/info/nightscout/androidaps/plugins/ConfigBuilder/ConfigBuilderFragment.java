@@ -39,6 +39,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -54,6 +55,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     private static final String PREFS_NAME = "Settings";
 
+    ListView bgsourceListView;
     ListView pumpListView;
     ListView loopListView;
     ListView treatmentsListView;
@@ -63,6 +65,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ListView constraintsListView;
     ListView generalListView;
 
+    PluginCustomAdapter bgsourceDataAdapter = null;
     PluginCustomAdapter pumpDataAdapter = null;
     PluginCustomAdapter loopDataAdapter = null;
     PluginCustomAdapter treatmentsDataAdapter = null;
@@ -73,6 +76,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     PluginCustomAdapter generalDataAdapter = null;
 
 
+    BgSourceInterface activeBgSource;
     PumpInterface activePump;
     ProfileInterface activeProfile;
     TreatmentsInterface activeTreatments;
@@ -108,6 +112,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.configbuilder_fragment, container, false);
+        bgsourceListView = (ListView) view.findViewById(R.id.configbuilder_bgsourcelistview);
         pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
         loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
         treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
@@ -122,6 +127,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     void setViews() {
+        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE));
+        bgsourceListView.setAdapter(bgsourceDataAdapter);
+        setListViewHeightBasedOnChildren(bgsourceListView);
         pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP));
         pumpListView.setAdapter(pumpDataAdapter);
         setListViewHeightBasedOnChildren(pumpListView);
@@ -198,11 +206,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      *
      * Config builder return itself as a pump and check constraints before it passes command to pump driver
      */
-    @Nullable
-    public PumpInterface getActivePump() {
-        return this;
-    }
-
     @Override
     public boolean isTempBasalInProgress() {
         return activePump.isTempBasalInProgress();
@@ -310,8 +313,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     @Override
     public Result setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        // TODO: constraints here
-        return activePump.setExtendedBolus(insulin, durationInMinutes);
+        Double rateAfterConstraints = applyBasalConstraints(insulin);
+        Result result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
+        if (result.enacted) {
+            uploadExtendedBolus(result.bolusDelivered, result.duration);
+            MainApp.bus().post(new EventTreatmentChange());
+        }
+        return result;
     }
 
     @Override
@@ -461,6 +469,16 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Nullable
+    public BgSourceInterface getActiveBgSource() {
+        return activeBgSource;
+    }
+
+    @Nullable
+    public PumpInterface getActivePump() {
+        return this;
+    }
+
+    @Nullable
     public ProfileInterface getActiveProfile() {
         return activeProfile;
     }
@@ -487,6 +505,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             // Single selection allowed
             case PluginBase.PROFILE:
             case PluginBase.PUMP:
+            case PluginBase.BGSOURCE:
             case PluginBase.LOOP:
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
@@ -508,13 +527,24 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     private void verifySelectionInCategories() {
-        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.LOOP, PluginBase.TEMPBASAL, PluginBase.TREATMENT}) {
+        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.LOOP, PluginBase.TEMPBASAL, PluginBase.TREATMENT, PluginBase.BGSOURCE}) {
             ArrayList<PluginBase> pluginsInCategory = MainActivity.getSpecificPluginsList(category);
             switch (category) {
                 // Multiple selection allowed
                 case PluginBase.APS:
                 case PluginBase.GENERAL:
                 case PluginBase.CONSTRAINTS:
+                    break;
+                // Single selection allowed
+                case PluginBase.BGSOURCE:
+                    activeBgSource = (BgSourceInterface) getTheOneEnabledInArray(pluginsInCategory);
+                    if (Config.logConfigBuilder)
+                        log.debug("Selected bgSource interface: " + ((PluginBase) activeBgSource).getName());
+                    for (PluginBase p : pluginsInCategory) {
+                        if (!p.getName().equals(((PluginBase) activeBgSource).getName())) {
+                            p.setFragmentVisible(false);
+                        }
+                    }
                     break;
                 // Single selection allowed
                 case PluginBase.PROFILE:
@@ -785,6 +815,34 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", "Temp Basal");
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+            if (q.size() < 1) {
+                log.error("DBADD No receivers");
+            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+        } catch (JSONException e) {
+        }
+    }
+
+    public static void uploadExtendedBolus(Double insulin, double durationInMinutes) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", "Combo Bolus");
+            data.put("duration", durationInMinutes);
+            data.put("splitNow", 0);
+            data.put("splitExt", 100);
+            data.put("enteredinsulin", insulin);
+            data.put("relative", insulin);
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
