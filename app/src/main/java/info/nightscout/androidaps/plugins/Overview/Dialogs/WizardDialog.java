@@ -1,9 +1,11 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.*;
@@ -18,7 +20,9 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
@@ -108,8 +112,48 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         switch (view.getId()) {
             case R.id.treatments_wizard_deliverButton:
                 if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d){
+                    DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+                    String confirmMessage = getString(R.string.entertreatmentquestion);
+
+                    Double insulinAfterConstraints = MainActivity.getConfigBuilder().applyBolusConstraints(calculatedTotalInsulin);
+                    Integer carbsAfterConstraints = MainActivity.getConfigBuilder().applyCarbsConstraints(calculatedCarbs);
+
+                    confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
+                    confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+
+                    if (insulinAfterConstraints != calculatedTotalInsulin || carbsAfterConstraints != calculatedCarbs) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                        builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));
+                        builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                        builder.show();
+                        return;
+                    }
+
+                    final Double finalInsulinAfterConstraints = insulinAfterConstraints;
+                    final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    builder.setTitle(this.getContext().getString(R.string.confirmation));
+                    builder.setMessage(confirmMessage);
+                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                                Result result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
+                                if (!result.success) {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                                    builder.setMessage(result.comment);
+                                    builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                                    builder.show();
+                                }
+                            }
+                        }
+                    });
+                    builder.setNegativeButton(getString(R.string.cancel), null);
+                    builder.show();
                     dismiss();
-                    MainActivity.getConfigBuilder().getActivePump().deliverTreatment(calculatedTotalInsulin, calculatedCarbs);
                 }
                 break;
         }
@@ -169,10 +213,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     }
 
     private void calculateInsulin() {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxbolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
-        Double maxcarbs = Double.parseDouble(SP.getString("treatmentssafety_maxcarbs", "48"));
-
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
 
         // Entered values
@@ -186,12 +226,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         c_carbs = (Integer) Math.round(c_carbs);
         Double c_correction = 0d;
         try { c_correction = Double.parseDouble(i_correction.equals("") ? "0" : i_correction);  } catch (Exception e) {}
-        if(c_correction > maxbolus) {
+        if(c_correction != MainActivity.getConfigBuilder().applyBolusConstraints(c_correction)) {
             this.correctionInput.setText("");
             wizardDialogDeliverButton.setVisibility(Button.GONE);
             return;
         }
-        if(c_carbs > maxcarbs) {
+        if(c_carbs != MainActivity.getConfigBuilder().applyCarbsConstraints(c_carbs)) {
             this.carbsInput.setText("");
             wizardDialogDeliverButton.setVisibility(Button.GONE);
             return;

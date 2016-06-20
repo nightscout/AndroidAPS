@@ -41,6 +41,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
@@ -147,6 +148,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
         wizardButton = (Button) view.findViewById(R.id.overview_wizard);
+        setExtenedButton = (Button) view.findViewById(R.id.overview_extendedbolus);
         setTempButton = (Button) view.findViewById(R.id.overview_settempbasal);
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         setTempLayout = (LinearLayout) view.findViewById(R.id.overview_settemplayout);
@@ -187,6 +189,15 @@ public class OverviewFragment extends Fragment implements PluginBase {
                 FragmentManager manager = getFragmentManager();
                 NewTempBasalDialog newTempDialog = new NewTempBasalDialog();
                 newTempDialog.show(manager, "NewTempDialog");
+            }
+        });
+
+        setExtenedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                NewExtendedBolusDialog newExtendedDialog = new NewExtendedBolusDialog();
+                newExtendedDialog.show(manager, "NewExtendedDialog");
             }
         });
 

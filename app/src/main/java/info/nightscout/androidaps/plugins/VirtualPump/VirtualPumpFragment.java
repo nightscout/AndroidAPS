@@ -306,6 +306,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         extendedBolus.isExtended = true;
         extendedBolus.absolute = insulin * 60d / durationInMinutes;
         extendedBolus.duration = durationInMinutes;
+        extendedBolus.isAbsolute = true;
         result.success = true;
         result.enacted = true;
         result.comment = getString(R.string.virtualpump_resultok);

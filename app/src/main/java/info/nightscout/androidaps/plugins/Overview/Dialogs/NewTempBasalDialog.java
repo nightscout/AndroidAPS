@@ -64,12 +64,14 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     String confirmMessage = getString(R.string.setbasalquestion);
                     if (setAsPercent) {
                         basalPercent = MainActivity.getConfigBuilder().applyBasalConstraints(basal.intValue());
-                        confirmMessage += " " + basalPercent + "% ?";
+                        confirmMessage += "\n " + basalPercent + "% ";
+                        confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (basalPercent != basal.intValue())
                             confirmMessage += "\n" + getString(R.string.constraintapllied);
                     } else {
                         Double basalAfterConstraint = MainActivity.getConfigBuilder().applyBasalConstraints(basal);
-                        confirmMessage += " " + basalAfterConstraint + " U/h ?";
+                        confirmMessage += "\n " + basalAfterConstraint + " U/h ";
+                        confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (basalAfterConstraint != basal)
                             confirmMessage += "\n" + getString(R.string.constraintapllied);
                         basal = basalAfterConstraint;

@@ -140,5 +140,7 @@
     <string name="entertreatmentquestion">Enter new treatment:</string>
     <string name="bolus">Bolus</string>
     <string name="carbs">Carbs</string>
+    <string name="changeyourinput">Change your input!</string>
+    <string name="setextendedbolusquestion">Set new extended bolus:</string>
 
 </resources>
