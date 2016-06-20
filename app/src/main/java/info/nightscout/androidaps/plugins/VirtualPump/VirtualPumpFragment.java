@@ -17,9 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
@@ -30,7 +27,6 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.client.data.NSProfile;
@@ -220,7 +216,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     public double getTempBasalRemainingMinutes() {
         if (!isTempBasalInProgress())
             return 0;
-        return tempBasal.getRemainingMinutes();
+        return tempBasal.getPlannedRemainingMinutes();
     }
 
     @Override
@@ -410,7 +406,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             if (isTempBasalInProgress()) {
                 status.put("tempbasalpct", tempBasal.percent);
                 status.put("tempbasalstart", DateUtil.toISOString(tempBasal.timeStart));
-                status.put("tempbasalremainmin", tempBasal.getRemainingMinutes());
+                status.put("tempbasalremainmin", tempBasal.getPlannedRemainingMinutes());
             }
             status.put("timestamp", DateUtil.toISOString(new Date()));
 

@@ -110,49 +110,6 @@ public class TempBasal {
         return result;
     }
 
-    /*
-        public Iob calcIob() {
-            Iob iob = new Iob();
-
-            long msAgo = getMillisecondsFromStart();
-            Calendar startAdjusted = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-            startAdjusted.setTime(this.timeStart);
-            int minutes = startAdjusted.get(Calendar.MINUTE);
-            minutes = minutes % 4;
-            if (startAdjusted.get(Calendar.SECOND) > 0 && minutes == 0) {
-                minutes += 4;
-            }
-            startAdjusted.add(Calendar.MINUTE, minutes);
-            startAdjusted.set(Calendar.SECOND, 0);
-
-            IobCalc iobCalc = new IobCalc();
-            iobCalc.setTime(new Date());
-            iobCalc.setAmount(-1.0d * (baseRatio - tempRatio) / 15.0d / 100.0d);
-
-            long timeStartTime = startAdjusted.getTimeInMillis();
-            Date currentTimeEnd = timeEnd;
-            if (currentTimeEnd == null) {
-                currentTimeEnd = new Date();
-                if (getPlannedTimeEnd().getTime() < currentTimeEnd.getTime()) {
-                    currentTimeEnd = getPlannedTimeEnd();
-                }
-            }
-            for (long time = timeStartTime; time < currentTimeEnd.getTime(); time += 4 * 60_000) {
-                Date start = new Date(time);
-
-                iobCalc.setTimeStart(start);
-                iob.plus(iobCalc.invoke());
-            }
-
-            if (Settings.logTempIOBCalculation) {
-                log.debug("TempIOB start: " + this.timeStart + " end: " + this.timeEnd + " Percent: " + this.percent + " Duration: " + this.duration + " CalcDurat: " + (int) ((currentTimeEnd.getTime() - this.timeStart.getTime()) / 1000 / 60)
-                        + "min minAgo: " + (int) (msAgo / 1000 / 60) + " IOB: " + iob.iobContrib + " Activity: " + iob.activityContrib + " Impact: " + (-0.01d * (baseRatio - tempRatio) * ((currentTimeEnd.getTime() - this.timeStart.getTime()) / 1000 / 60) / 60)
-                );
-            }
-
-            return iob;
-        }
-    */
     // Determine end of basal
     public Date getTimeEnd() {
         Date tempBasalTimePlannedEnd = getPlannedTimeEnd();
@@ -181,8 +138,9 @@ public class TempBasal {
         return new Date().getTime() - timeStart.getTime();
     }
 
-    public int getRemainingMinutes() {
-        long remainingMin = (getTimeEnd().getTime() - new Date().getTime()) / 1000 / 60;
+    public int getPlannedRemainingMinutes() {
+        if (timeEnd != null) return 0;
+        long remainingMin = (getPlannedTimeEnd().getTime() - new Date().getTime()) / 1000 / 60;
         return (remainingMin < 0) ? 0 : (int) remainingMin;
     }
 
