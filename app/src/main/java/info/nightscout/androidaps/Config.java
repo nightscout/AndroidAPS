@@ -19,7 +19,7 @@ public class Config {
     public static final boolean logPumpComm = true;
     public static final boolean logPrefsChange = true;
     public static final boolean logConfigBuilder = true;
-    public static final boolean logConstrainsChnages = true;
+    public static final boolean logConstraintsChanges = true;
 
     // Developing mode only - never turn on
     public static final boolean fakeGlucoseData = true;

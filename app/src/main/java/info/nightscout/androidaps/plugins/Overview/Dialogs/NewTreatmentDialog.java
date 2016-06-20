@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -15,10 +13,9 @@ import android.widget.TextView;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Result;
 
-public class NewTreatmentDialogFragment extends DialogFragment implements OnClickListener {
+public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
 
     Button deliverButton;
     TextView insulin;
@@ -27,7 +24,7 @@ public class NewTreatmentDialogFragment extends DialogFragment implements OnClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.treatments_newtreatment_fragment, null, false);
+        View view = inflater.inflate(R.layout.overview_newtreatment_fragment, null, false);
 
         deliverButton = (Button) view.findViewById(R.id.treatments_newtreatment_deliverbutton);
 
@@ -48,26 +45,28 @@ public class NewTreatmentDialogFragment extends DialogFragment implements OnClic
                 Double maxbolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
                 Double maxcarbs = Double.parseDouble(SP.getString("treatmentssafety_maxcarbs", "48"));
 
-
-                String insulinText = this.insulin.getText().toString().replace(",", ".");
-                String carbsText = this.carbs.getText().toString().replace(",", ".");
-                Double insulin = Double.parseDouble(!insulinText.equals("") ? this.insulin.getText().toString() : "0");
-                Double carbs = Double.parseDouble(!carbsText.equals("") ? this.carbs.getText().toString() : "0");
-                if (insulin > maxbolus) {
-                    this.insulin.setText("");
-                } else if (carbs > maxcarbs) {
-                    this.carbs.setText("");
-                } else if (insulin > 0d || carbs > 0d) {
-                    dismiss();
-                    Result result = MainActivity.getConfigBuilder().getActivePump().deliverTreatment(insulin, carbs);
-                    if (!result.success) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                        builder.setTitle(this.getContext().getString(R.string.bolusdeliveryerror));
-                        builder.setMessage(result.comment);
-                        builder.setPositiveButton(this.getContext().getString(R.string.ok), null);
-                        builder.show();
-
+                try {
+                    String insulinText = this.insulin.getText().toString().replace(",", ".");
+                    String carbsText = this.carbs.getText().toString().replace(",", ".");
+                    Double insulin = Double.parseDouble(!insulinText.equals("") ? insulinText : "0");
+                    Double carbs = Double.parseDouble(!carbsText.equals("") ? carbsText : "0");
+                    if (insulin > maxbolus) {
+                        this.insulin.setText("");
+                    } else if (carbs > maxcarbs) {
+                        this.carbs.setText("");
+                    } else if (insulin > 0d || carbs > 0d) {
+                        dismiss();
+                        Result result = MainActivity.getConfigBuilder().getActivePump().deliverTreatment(insulin, carbs);
+                        if (!result.success) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                            builder.setTitle(this.getContext().getString(R.string.treatmentdeliveryerror));
+                            builder.setMessage(result.comment);
+                            builder.setPositiveButton(this.getContext().getString(R.string.ok), null);
+                            builder.show();
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 break;
         }

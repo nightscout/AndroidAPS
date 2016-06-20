@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.Loop;
 
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -29,7 +27,7 @@ import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.ConstrainsInterface;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.APSResult;
@@ -42,14 +40,14 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     TextView lastEnactView;
     TextView sourceView;
     TextView requestView;
-    TextView constrainsProcessedView;
+    TextView constraintsProcessedView;
     TextView setByPumpView;
 
     boolean confirmed;
 
     class LastRun implements Parcelable {
         public APSResult request = null;
-        public APSResult constrainsProcessed = null;
+        public APSResult constraintsProcessed = null;
         public Result setByPump = null;
         public String source = null;
         public Date lastAPSRun = null;
@@ -63,11 +61,11 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         @Override
         public void writeToParcel(Parcel dest, int flags) {
             dest.writeParcelable(request, 0);
-            dest.writeParcelable(constrainsProcessed, 0);
+            dest.writeParcelable(constraintsProcessed, 0);
             dest.writeParcelable(setByPump, 0);
             dest.writeString(source);
             dest.writeLong(lastAPSRun.getTime());
-            dest.writeLong(lastEnact.getTime());
+            dest.writeLong(lastEnact!= null ? lastEnact.getTime(): 0l);
         }
 
         public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
@@ -82,7 +80,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
         private LastRun(Parcel in) {
             request = in.readParcelable(APSResult.class.getClassLoader());
-            constrainsProcessed = in.readParcelable(APSResult.class.getClassLoader());
+            constraintsProcessed = in.readParcelable(APSResult.class.getClassLoader());
             setByPump = in.readParcelable(Result.class.getClassLoader());
             source = in.readString();
             lastAPSRun = new Date(in.readLong());
@@ -157,7 +155,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         lastEnactView = (TextView) view.findViewById(R.id.loop_lastenact);
         sourceView = (TextView) view.findViewById(R.id.loop_source);
         requestView = (TextView) view.findViewById(R.id.loop_request);
-        constrainsProcessedView = (TextView) view.findViewById(R.id.loop_constrainsprocessed);
+        constraintsProcessedView = (TextView) view.findViewById(R.id.loop_constraintsprocessed);
         setByPumpView = (TextView) view.findViewById(R.id.loop_setbypump);
         runNowButton = (Button) view.findViewById(R.id.loop_run);
         runNowButton.setOnClickListener(this);
@@ -210,19 +208,19 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        ConstrainsInterface constrainsInterface = MainActivity.getConfigBuilder();
-        if (constrainsInterface.isAutomaticProcessingEnabled()) {
+        ConstraintsInterface constraintsInterface = MainActivity.getConfigBuilder();
+        if (constraintsInterface.isAutomaticProcessingEnabled()) {
             invoke();
             updateGUI();
         }
     }
 
     private void invoke() {
-        ConstrainsInterface constrainsInterface = MainActivity.getConfigBuilder();
+        ConstraintsInterface constraintsInterface = MainActivity.getConfigBuilder();
         PumpInterface pumpInterface = MainActivity.getConfigBuilder().getActivePump();
         APSResult result = null;
 
-        if (constrainsInterface == null || pumpInterface == null || !isEnabled())
+        if (constraintsInterface == null || pumpInterface == null || !isEnabled())
             return;
 
         APSInterface usedAPS = null;
@@ -255,7 +253,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         }
 
         confirmed = false;
-        if (constrainsInterface.manualConfirmationNeeded()) {
+        if (constraintsInterface.manualConfirmationNeeded()) {
             // TODO: user notification here
             confirmed = true;
         } else {
@@ -263,15 +261,15 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         }
 
         // check rate for constrais
-        APSResult resultAfterConstrains = result.clone();
+        APSResult resultAfterConstraints = result.clone();
 
         if (result.changeRequested) {
-            constrainsInterface.applyBasalConstrains(resultAfterConstrains);
-            Result applyResult = pumpInterface.applyAPSRequest(resultAfterConstrains);
+            constraintsInterface.applyBasalConstraints(resultAfterConstraints);
+            Result applyResult = pumpInterface.applyAPSRequest(resultAfterConstraints);
             Date lastEnact = lastRun != null ? lastRun.lastEnact : new Date(0, 0, 0);
             lastRun = new LastRun();
             lastRun.request = result;
-            lastRun.constrainsProcessed = resultAfterConstrains;
+            lastRun.constraintsProcessed = resultAfterConstraints;
             lastRun.setByPump = applyResult;
             lastRun.source = ((PluginBase) usedAPS).getName();
             lastRun.lastAPSRun = new Date();
@@ -282,7 +280,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         } else {
             if (lastRun == null) lastRun = new LastRun();
             lastRun.request = result;
-            lastRun.constrainsProcessed = resultAfterConstrains;
+            lastRun.constraintsProcessed = resultAfterConstraints;
             lastRun.setByPump = null;
             lastRun.source = null;
             lastRun.lastAPSRun = new Date();
@@ -298,7 +296,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                 public void run() {
                     if (lastRun != null) {
                         requestView.setText(lastRun.request != null ? lastRun.request.toString() : "");
-                        constrainsProcessedView.setText(lastRun.constrainsProcessed != null ? lastRun.constrainsProcessed.toString() : "");
+                        constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toString() : "");
                         setByPumpView.setText(lastRun.setByPump != null ? lastRun.setByPump.toString() : "");
                         sourceView.setText(lastRun.source != null ? lastRun.source.toString() : "");
                         lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
@@ -315,7 +313,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                 @Override
                 public void run() {
                     requestView.setText("");
-                    constrainsProcessedView.setText("");
+                    constraintsProcessedView.setText("");
                     setByPumpView.setText("");
                     sourceView.setText("");
                     lastRunView.setText("");

@@ -104,14 +104,14 @@
     <string name="configbuilder_general">General</string>
     <string name="days">days</string>
     <string name="minimalduration">Minimal duration</string>
-    <string name="configbuilder_constrains">Constrains</string>
+    <string name="configbuilder_constraints">Constraints</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
-    <string name="loop_constrainsprocessed_label">After processed constrains</string>
+    <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
     <string name="dialog">Dialog</string>
@@ -128,7 +128,14 @@
     <string name="maxbasaliob_summary">Maximum amount of non-bolus IOB OpenAPS can deliver</string>
     <string name="lowsuspend_low_title">Low BG threshold</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
-    <string name="constrains_violation">Constrains violation</string>
-    <string name="bolusdeliveryerror">Treatment delivery error</string>
+    <string name="constraints_violation">Constraints violation</string>
+    <string name="treatmentdeliveryerror">Treatment delivery error</string>
+    <string name="overview_newtempbasal_basal_label">Basal value</string>
+    <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
+    <string name="setbasalquestion">Set new temp basal:</string>
+    <string name="overview_treatment_label">Treatment</string>
+    <string name="overview_calculator_label">Calculator</string>
+    <string name="constraintapllied">Constraint applied!</string>
+    <string name="confirmation">Confirmation</string>
 
 </resources>

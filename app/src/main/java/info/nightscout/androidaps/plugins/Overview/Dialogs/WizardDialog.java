@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -26,7 +25,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.*;
 
-public class WizardDialogFragment extends DialogFragment implements OnClickListener {
+public class WizardDialog extends DialogFragment implements OnClickListener {
 
     Button wizardDialogDeliverButton;
     TextView correctionInput;
@@ -69,7 +68,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.treatments_wizard_fragment, null, false);
+        View view = inflater.inflate(R.layout.overview_wizard_fragment, null, false);
 
         wizardDialogDeliverButton = (Button) view.findViewById(R.id.treatments_wizard_deliverButton);
         wizardDialogDeliverButton.setOnClickListener(this);

@@ -25,11 +25,11 @@ import java.util.List;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.ConstrainsInterface;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.APSResult;
 
-public class ObjectivesFragment extends Fragment implements View.OnClickListener, PluginBase, ConstrainsInterface {
+public class ObjectivesFragment extends Fragment implements View.OnClickListener, PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
 
     RecyclerView recyclerView;
@@ -42,7 +42,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
 
     @Override
     public int getType() {
-        return PluginBase.CONSTRAINS;
+        return PluginBase.CONSTRAINTS;
     }
 
     @Override
@@ -314,7 +314,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     }
 
     /**
-     * Constrains interface
+     * Constraints interface
      **/
     @Override
     public boolean isAutomaticProcessingEnabled() {
@@ -327,8 +327,18 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public APSResult applyBasalConstrains(APSResult result) {
+    public APSResult applyBasalConstraints(APSResult result) {
         return result;
+    }
+
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
+        return absoluteRate;
+    }
+
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        return percentRate;
     }
 
 }

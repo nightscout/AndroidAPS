@@ -278,6 +278,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         result.success = true;
         result.enacted = true;
         result.percent = percent;
+        result.isPercent = true;
         result.duration = durationInMinutes;
         result.comment = getString(R.string.virtualpump_resultok);
         try {
@@ -374,6 +375,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         if (isTempBasalInProgress()) {
             if (request.rate == getTempBasalAbsoluteRate()) {
                 Result noChange = new Result();
+                noChange.absolute = request.rate;
+                noChange.duration = tempBasal.getPlannedRemainingMinutes();
                 noChange.enacted = false;
                 noChange.comment = "Temp basal set correctly";
                 noChange.success = true;
@@ -384,6 +387,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         }
         if (request.rate == getBaseBasalRate()) {
             Result noChange = new Result();
+            noChange.absolute = request.rate;
+            noChange.duration = 0;
             noChange.enacted = false;
             noChange.comment = "Basal set correctly";
             noChange.success = true;

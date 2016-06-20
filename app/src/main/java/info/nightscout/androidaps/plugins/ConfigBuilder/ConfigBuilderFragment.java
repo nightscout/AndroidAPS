@@ -12,13 +12,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,21 +37,19 @@ import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.ConstrainsInterface;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.APSResult;
-import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
-public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpInterface, ConstrainsInterface {
+public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpInterface, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderFragment.class);
 
     private static final String PREFS_NAME = "Settings";
@@ -64,7 +60,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ListView tempsListView;
     ListView profileListView;
     ListView apsListView;
-    ListView constrainsListView;
+    ListView constraintsListView;
     ListView generalListView;
 
     PluginCustomAdapter pumpDataAdapter = null;
@@ -73,7 +69,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     PluginCustomAdapter tempsDataAdapter = null;
     PluginCustomAdapter profileDataAdapter = null;
     PluginCustomAdapter apsDataAdapter = null;
-    PluginCustomAdapter constrainsDataAdapter = null;
+    PluginCustomAdapter constraintsDataAdapter = null;
     PluginCustomAdapter generalDataAdapter = null;
 
 
@@ -118,7 +114,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         tempsListView = (ListView) view.findViewById(R.id.configbuilder_tempslistview);
         profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
         apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
-        constrainsListView = (ListView) view.findViewById(R.id.configbuilder_constrainslistview);
+        constraintsListView = (ListView) view.findViewById(R.id.configbuilder_constraintslistview);
         generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
 
         setViews();
@@ -144,9 +140,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS));
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
-        constrainsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS));
-        constrainsListView.setAdapter(constrainsDataAdapter);
-        setListViewHeightBasedOnChildren(constrainsListView);
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS));
+        constraintsListView.setAdapter(constraintsDataAdapter);
+        setListViewHeightBasedOnChildren(constraintsListView);
         generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.GENERAL));
         generalListView.setAdapter(generalDataAdapter);
         setListViewHeightBasedOnChildren(generalListView);
@@ -200,7 +196,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     /*
      * Pump interface
      *
-     * Config builder return itself as a pump and check constrains before it passes command to pump driver
+     * Config builder return itself as a pump and check constraints before it passes command to pump driver
      */
     @Nullable
     public PumpInterface getActivePump() {
@@ -261,7 +257,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         if (insulin > maxbolus || carbs > maxcarbs) {
             Result failResult = new Result();
             failResult.success = false;
-            failResult.comment = MainApp.instance().getString(R.string.constrains_violation);
+            failResult.comment = MainApp.instance().getString(R.string.constraints_violation);
             return failResult;
         }
         Result result = activePump.deliverTreatment(insulin, carbs);
@@ -283,29 +279,55 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         return result;
     }
 
+    /**
+     * apply constraints, set temp based on absolute valus and expecting absolute result
+     *
+     * @param absoluteRate
+     * @param durationInMinutes
+     * @return
+     */
     @Override
     public Result setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
-        // TODO: constrains here
-        return activePump.setTempBasalAbsolute(absoluteRate, durationInMinutes);
+        Double rateAfterConstraints = applyBasalConstraints(absoluteRate);
+        Result result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
+        if (result.enacted) {
+            uploadTempBasalStartAbsolute(result.absolute, result.duration);
+            MainApp.bus().post(new EventTempBasalChange());
+        }
+        return result;
     }
 
+    /**
+     * apply constraints, set temp based on percent and expecting result in percent
+     *
+     * @param percent 0 ... 100 ...
+     * @param durationInMinutes
+     * @return result
+     */
     @Override
     public Result setTempBasalPercent(Integer percent, Integer durationInMinutes) {
-        // TODO: constrains here
-        return activePump.setTempBasalPercent(percent, durationInMinutes);
+        Integer percentAfterConstraints = applyBasalConstraints(percent);
+        Result result = activePump.setTempBasalPercent(percentAfterConstraints, durationInMinutes);
+        if (result.enacted) {
+            uploadTempBasalStartPercent(result.percent, result.duration);
+            MainApp.bus().post(new EventTempBasalChange());
+        }
+        return result;
     }
 
     @Override
     public Result setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        // TODO: constrains here
+        // TODO: constraints here
         return activePump.setExtendedBolus(insulin, durationInMinutes);
     }
 
     @Override
     public Result cancelTempBasal() {
         Result result = activePump.cancelTempBasal();
-        if (result.enacted)
+        if (result.enacted) {
             uploadTempBasalEnd();
+            MainApp.bus().post(new EventTempBasalChange());
+        }
         return result;
     }
 
@@ -314,11 +336,32 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         return activePump.cancelExtendedBolus();
     }
 
+    /**
+     *  expect absolute request and allow both absolute and percent response based on pump capabilities
+     * @param request
+     * @return
+     */
     @Override
     public Result applyAPSRequest(APSResult request) {
-        Result result =  activePump.applyAPSRequest(request);
-        if (result.enacted)
-            uploadTempBasalStart(result.absolute, result.duration);
+        Double rateAfterConstraints = applyBasalConstraints(request.rate);
+        request.rate = rateAfterConstraints;
+        Result result = activePump.applyAPSRequest(request);
+        if (result.enacted) {
+            if (result.isPercent) {
+                if (result.percent == 0) {
+                    uploadTempBasalEnd();
+                } else {
+                    uploadTempBasalStartPercent(result.percent, result.duration);
+                }
+            } else {
+                if (result.absolute == 0d) {
+                    uploadTempBasalEnd();
+                } else {
+                    uploadTempBasalStartAbsolute(result.absolute, result.duration);
+                }
+            }
+            MainApp.bus().post(new EventTempBasalChange());
+        }
         return result;
     }
 
@@ -405,8 +448,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 if (pluginList.size() < 2)
                     holder.checkboxEnabled.setEnabled(false);
 
-            // Constrains cannot be disabled
-            if (type == PluginBase.CONSTRAINS)
+            // Constraints cannot be disabled
+            if (type == PluginBase.CONSTRAINTS)
                 holder.checkboxEnabled.setEnabled(false);
 
             // Hide disabled profiles by default
@@ -446,7 +489,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             // Multiple selection allowed
             case PluginBase.APS:
             case PluginBase.GENERAL:
-            case PluginBase.CONSTRAINS:
+            case PluginBase.CONSTRAINTS:
                 break;
             // Single selection allowed
             case PluginBase.PROFILE:
@@ -478,7 +521,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 // Multiple selection allowed
                 case PluginBase.APS:
                 case PluginBase.GENERAL:
-                case PluginBase.CONSTRAINS:
+                case PluginBase.CONSTRAINTS:
                     break;
                 // Single selection allowed
                 case PluginBase.PROFILE:
@@ -607,15 +650,15 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     /**
-     * Constrains interface
+     * Constraints interface
      **/
     @Override
     public boolean isAutomaticProcessingEnabled() {
         boolean result = true;
 
-        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
-        for (PluginBase p : constrainsPlugins) {
-            ConstrainsInterface constrain = (ConstrainsInterface) p;
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
             result = result && constrain.isAutomaticProcessingEnabled();
         }
@@ -626,9 +669,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public boolean manualConfirmationNeeded() {
         boolean result = false;
 
-        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
-        for (PluginBase p : constrainsPlugins) {
-            ConstrainsInterface constrain = (ConstrainsInterface) p;
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
             result = result || constrain.manualConfirmationNeeded();
         }
@@ -636,29 +679,72 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public APSResult applyBasalConstrains(APSResult result) {
-        ArrayList<PluginBase> constrainsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINS);
-        for (PluginBase p : constrainsPlugins) {
-            ConstrainsInterface constrain = (ConstrainsInterface) p;
+    public APSResult applyBasalConstraints(APSResult result) {
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            constrain.applyBasalConstrains(result);
+            constrain.applyBasalConstraints(result);
         }
         return result;
     }
 
-    public static void uploadTempBasalStart(Double absolute, double durationInMinutes) {
-        try {
-            //SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            //boolean useAbsoluteForUpload = sp.getBoolean("ns_sync_use_absolute", false);
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
+        Double rateAfterConstrain = absoluteRate;
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            rateAfterConstrain = constrain.applyBasalConstraints(rateAfterConstrain);
+        }
+        return rateAfterConstrain;
+    }
 
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        Integer rateAfterConstrain = percentRate;
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            rateAfterConstrain = constrain.applyBasalConstraints(rateAfterConstrain);
+        }
+        return rateAfterConstrain;
+    }
+
+    public static void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes) {
+        try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", "Temp Basal");
             data.put("duration", durationInMinutes);
-            //if (useAbsoluteForUpload && absolute != null)
-                data.put("absolute", absolute);
-            //else
-            //    data.put("percent", percent - 100);
+            data.put("absolute", absolute);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+            if (q.size() < 1) {
+                log.error("DBADD No receivers");
+            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+        } catch (JSONException e) {
+        }
+    }
+
+   public static void uploadTempBasalStartPercent(Integer percent, double durationInMinutes) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", "Temp Basal");
+            data.put("duration", durationInMinutes);
+            data.put("percent", percent - 100);
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();

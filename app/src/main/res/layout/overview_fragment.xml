@@ -6,42 +6,42 @@
 
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/overview_bg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|top"
-                android:textSize="100dp" />
+                android:textSize="60dp" />
 
             <LinearLayout
-                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="top"
-                android:layout_marginTop="10dp">
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
                     android:id="@+id/overview_timeago"
-                    android:layout_marginLeft="10dp" />
-
-                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginLeft="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                <TextView
                     android:id="@+id/overview_delta"
-                    android:layout_marginLeft="10dp" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
         </LinearLayout>
@@ -52,44 +52,72 @@
             android:layout_height="200dip" />
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/overview_canceltemplayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Cancel temp basal"
                 android:id="@+id/overview_canceltemp"
-                android:background="@color/colorCancelTempButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:layout_weight="0.5" />
+                android:layout_weight="0.5"
+                android:background="@color/colorCancelTempButton"
+                android:text="Cancel temp basal" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/overview_settemplayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
-                android:layout_width="wrap_content"
+                android:id="@+id/overview_settempbasal"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Treatment"
-                android:id="@+id/overview_treatment"
-                android:background="@color/colorTreatmentButton"
                 android:layout_margin="10dp"
-                android:layout_weight="0.5" />
+                android:layout_weight="0.5"
+                android:background="@color/colorSetTempButton"
+                android:text="TempBasal" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:id="@+id/overview_extendedbolus"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:text="Calculator"
-                android:id="@+id/overview_wizard"
-                android:background="@color/colorWizardButton"
                 android:layout_margin="10dp"
-                android:layout_weight="0.5" />
+                android:layout_weight="0.5"
+                android:background="@color/colorSetExtendedButton"
+                android:text="Extended Bolus" />
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/overview_treatment"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorTreatmentButton"
+                android:text="@string/overview_treatment_label" />
+
+            <Button
+                android:id="@+id/overview_wizard"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
+                android:background="@color/colorWizardButton"
+                android:text="@string/overview_calculator_label" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </FrameLayout>

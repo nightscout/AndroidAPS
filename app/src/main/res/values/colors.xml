@@ -12,4 +12,6 @@
     <color name="colorTreatmentButton">#FFB347</color>
     <color name="colorWizardButton">#77dd77</color>
     <color name="colorCancelTempButton">#FF47C8FF</color>
+    <color name="colorSetTempButton">#FF478EFF</color>
+    <color name="colorSetExtendedButton">#FFDD7792</color>
 </resources>

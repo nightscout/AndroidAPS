@@ -38,10 +38,12 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialogFragment;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialogFragment;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.client.data.NSProfile;
 
 
@@ -53,9 +55,13 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView deltaView;
     GraphView bgGraph;
 
+    LinearLayout cancelTempLayout;
+    LinearLayout setTempLayout;
     Button cancelTempButton;
     Button treatmentButton;
     Button wizardButton;
+    Button setTempButton;
+    Button setExtenedButton;
 
     boolean visibleNow = false;
     Handler loopHandler = new Handler();
@@ -141,12 +147,16 @@ public class OverviewFragment extends Fragment implements PluginBase {
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
         wizardButton = (Button) view.findViewById(R.id.overview_wizard);
+        setTempButton = (Button) view.findViewById(R.id.overview_settempbasal);
+        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
+        setTempLayout = (LinearLayout) view.findViewById(R.id.overview_settemplayout);
+        cancelTempLayout = (LinearLayout) view.findViewById(R.id.overview_canceltemplayout);
 
         treatmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
-                NewTreatmentDialogFragment treatmentDialogFragment = new NewTreatmentDialogFragment();
+                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
             }
         });
@@ -155,8 +165,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
-                WizardDialogFragment wizardDialogFragment = new WizardDialogFragment();
-                wizardDialogFragment.show(manager, "WizardDialog");
+                WizardDialog wizardDialog = new WizardDialog();
+                wizardDialog.show(manager, "WizardDialog");
             }
         });
 
@@ -170,6 +180,16 @@ public class OverviewFragment extends Fragment implements PluginBase {
                 }
             }
         });
+
+        setTempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                NewTempBasalDialog newTempDialog = new NewTempBasalDialog();
+                newTempDialog.show(manager, "NewTempDialog");
+            }
+        });
+
         updateGUI();
         return view;
     }
@@ -181,6 +201,20 @@ public class OverviewFragment extends Fragment implements PluginBase {
             // Ignore
         }
         MainApp.bus().register(this);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventTreatmentChange ev) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                }
+            });
+        else
+            log.debug("EventTreatmentChange: Activity is null");
     }
 
     @Subscribe
@@ -243,10 +277,12 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         if (pump.isTempBasalInProgress()) {
             TempBasal activeTemp = pump.getTempBasal();
-            cancelTempButton.setVisibility(View.VISIBLE);
+            cancelTempLayout.setVisibility(View.VISIBLE);
+            setTempLayout.setVisibility(View.GONE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
         } else {
-            cancelTempButton.setVisibility(View.INVISIBLE);
+            cancelTempLayout.setVisibility(View.GONE);
+            setTempLayout.setVisibility(View.VISIBLE);
         }
 
         // **** BG value ****

@@ -2,17 +2,8 @@ package info.nightscout.androidaps.plugins.SafetyFragment;
 
 
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,19 +12,19 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.ConstrainsInterface;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.Round;
 
-public class SafetyFragment extends Fragment implements PluginBase, ConstrainsInterface {
+public class SafetyFragment extends Fragment implements PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(SafetyFragment.class);
 
 
     @Override
     public int getType() {
-        return PluginBase.CONSTRAINS;
+        return PluginBase.CONSTRAINTS;
     }
 
     @Override
@@ -71,7 +62,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstrainsIn
     }
 
     /**
-     * Constrains interface
+     * Constraints interface
      **/
     @Override
     public boolean isAutomaticProcessingEnabled() {
@@ -84,33 +75,83 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstrainsIn
     }
 
     @Override
-    public APSResult applyBasalConstrains(APSResult result) {
+    public APSResult applyBasalConstraints(APSResult result) {
+        result.rate = applyBasalConstraints(result.rate);
+        return result;
+    }
+
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         Double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
 
         NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
-        if (result.rate < 0) result.rate = 0;
+        if (absoluteRate < 0) absoluteRate = 0d;
 
         Integer maxBasalMult = 4;
         Integer maxBasalFromDaily = 3;
         // Check percentRate but absolute rate too, because we know real current basal in pump
-        Double origRate = result.rate;
-        if (result.rate > maxBasal) {
-            result.rate = maxBasal;
-            if (Config.logConstrainsChnages)
-                log.debug("Limiting rate " + origRate + " by maxBasal preference to " + result.rate + "U/h");
+        Double origRate = absoluteRate;
+        if (absoluteRate > maxBasal) {
+            absoluteRate = maxBasal;
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting rate " + origRate + " by maxBasal preference to " + absoluteRate + "U/h");
         }
-        if (result.rate > maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight())) {
-            result.rate = Math.floor(maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight()) * 100) / 100;
-            if (Config.logConstrainsChnages)
-                log.debug("Limiting rate " + origRate + " by maxBasalMult to " + result.rate + "U/h");
+        if (absoluteRate > maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight())) {
+            absoluteRate = Math.floor(maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight()) * 100) / 100;
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting rate " + origRate + " by maxBasalMult to " + absoluteRate + "U/h");
         }
-        if (result.rate > profile.getMaxDailyBasal() * maxBasalFromDaily) {
-            result.rate = profile.getMaxDailyBasal() * maxBasalFromDaily;
-            if (Config.logConstrainsChnages)
-                log.debug("Limiting rate " + origRate + " by 3 * maxDailyBasal to " + result.rate + "U/h");
+        if (absoluteRate > profile.getMaxDailyBasal() * maxBasalFromDaily) {
+            absoluteRate = profile.getMaxDailyBasal() * maxBasalFromDaily;
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting rate " + origRate + " by 3 * maxDailyBasal to " + absoluteRate + "U/h");
         }
-        return result;
+        return absoluteRate;
+    }
+
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        Double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
+
+        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        Double currentBasal = profile.getBasal(profile.secondsFromMidnight());
+
+        Double absoluteRate = currentBasal * ((double) percentRate / 100);
+
+        if (Config.logConstraintsChanges)
+            log.debug("Percent rate " + percentRate + "% recalculated to " + absoluteRate + "U/h with current basal " + currentBasal + "U/h");
+
+        if (absoluteRate < 0) absoluteRate = 0d;
+
+        Integer maxBasalMult = 4;
+        Integer maxBasalFromDaily = 3;
+        // Check percentRate but absolute rate too, because we know real current basal in pump
+        Double origRate = absoluteRate;
+        if (absoluteRate > maxBasal) {
+            absoluteRate = maxBasal;
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting rate " + origRate + " by maxBasal preference to " + absoluteRate + "U/h");
+        }
+        if (absoluteRate > maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight())) {
+            absoluteRate = Math.floor(maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight()) * 100) / 100;
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting rate " + origRate + " by maxBasalMult to " + absoluteRate + "U/h");
+        }
+        if (absoluteRate > profile.getMaxDailyBasal() * maxBasalFromDaily) {
+            absoluteRate = profile.getMaxDailyBasal() * maxBasalFromDaily;
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting rate " + origRate + " by 3 * maxDailyBasal to " + absoluteRate + "U/h");
+        }
+
+        Integer percentRateAfterConst = new Double(absoluteRate / currentBasal * 100).intValue();
+        if (percentRateAfterConst < 100) Round.ceilTo(absoluteRate, 10d).intValue();
+        else  Round.floorTo(absoluteRate, 10d).intValue();
+
+        if (Config.logConstraintsChanges)
+            log.debug("Recalculated percent rate " + percentRate + "% to " + percentRateAfterConst + "%");
+        return percentRateAfterConst;
     }
 
 }
