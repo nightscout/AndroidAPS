@@ -27,6 +27,8 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.SafetyFragment.SafetyFragment;
 import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
+import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
+import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
             pluginsList.add(TempBasalsFragment.newInstance());
             pluginsList.add(SafetyFragment.newInstance());
             pluginsList.add(ObjectivesFragment.newInstance());
+            pluginsList.add(SourceXdripFragment.newInstance());
+            pluginsList.add(SourceNSClientFragment.newInstance());
             pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
             toolbar = (Toolbar) findViewById(R.id.toolbar);
             setSupportActionBar(toolbar);

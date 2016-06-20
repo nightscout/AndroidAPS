@@ -32,6 +32,7 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
 
@@ -297,37 +298,39 @@ public class DataService extends IntentService {
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_SGV)) {
-            try {
-                if (bundles.containsKey("sgv")) {
-                    String sgvstring = bundles.getString("sgv");
-                    JSONObject sgvJson = new JSONObject(sgvstring);
-                    NSSgv nsSgv = new NSSgv(sgvJson);
-                    BgReading bgReading = new BgReading(nsSgv);
-                    MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
-                    if (Config.logIncommingData)
-                        log.debug("ADD: Stored new BG: " + bgReading.toString());
-                }
-
-                if (bundles.containsKey("sgvs")) {
-                    String sgvstring = bundles.getString("sgvs");
-                    JSONArray jsonArray = new JSONArray(sgvstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject sgvJson = jsonArray.getJSONObject(i);
+            if (MainActivity.getConfigBuilder().getActiveBgSource().getClass().equals(SourceNSClientFragment.class)) {
+                try {
+                    if (bundles.containsKey("sgv")) {
+                        String sgvstring = bundles.getString("sgv");
+                        JSONObject sgvJson = new JSONObject(sgvstring);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
                         MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
                         if (Config.logIncommingData)
                             log.debug("ADD: Stored new BG: " + bgReading.toString());
                     }
-                }
-                MainApp.bus().post(new EventTreatmentChange());
 
-            } catch (JSONException e) {
-                e.printStackTrace();
-            } catch (Exception e1) {
-                e1.printStackTrace();
+                    if (bundles.containsKey("sgvs")) {
+                        String sgvstring = bundles.getString("sgvs");
+                        JSONArray jsonArray = new JSONArray(sgvstring);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject sgvJson = jsonArray.getJSONObject(i);
+                            NSSgv nsSgv = new NSSgv(sgvJson);
+                            BgReading bgReading = new BgReading(nsSgv);
+                            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+                            if (Config.logIncommingData)
+                                log.debug("ADD: Stored new BG: " + bgReading.toString());
+                        }
+                    }
+                    MainApp.bus().post(new EventTreatmentChange());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                MainApp.bus().post(new EventNewBG());
             }
-            MainApp.bus().post(new EventNewBG());
         }
     }
 

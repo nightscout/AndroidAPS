@@ -142,5 +142,8 @@
     <string name="carbs">Carbs</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="setextendedbolusquestion">Set new extended bolus:</string>
+    <string name="configbuilder_bgsource">BG Source</string>
+    <string name="xdrip">xDrip</string>
+    <string name="nsclient">NSClient</string>
 
 </resources>
