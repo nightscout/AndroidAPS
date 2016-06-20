@@ -309,12 +309,15 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         extendedBolus.isAbsolute = true;
         result.success = true;
         result.enacted = true;
+        result.bolusDelivered = insulin;
+        result.duration = durationInMinutes;
         result.comment = getString(R.string.virtualpump_resultok);
         try {
             MainApp.instance().getDbHelper().getDaoTempBasals().create(extendedBolus);
         } catch (SQLException e) {
             e.printStackTrace();
             result.success = false;
+            result.enacted = false;
             result.comment = getString(R.string.virtualpump_sqlerror);
         }
         if (Config.logPumpComm)

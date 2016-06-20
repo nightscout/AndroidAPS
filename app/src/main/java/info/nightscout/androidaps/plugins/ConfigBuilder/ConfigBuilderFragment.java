@@ -310,8 +310,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     @Override
     public Result setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        // TODO: constraints here
-        return activePump.setExtendedBolus(insulin, durationInMinutes);
+        Double rateAfterConstraints = applyBasalConstraints(insulin);
+        Result result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
+        if (result.enacted) {
+            uploadExtendedBolus(result.bolusDelivered, result.duration);
+            MainApp.bus().post(new EventTreatmentChange());
+        }
+        return result;
     }
 
     @Override
@@ -785,6 +790,34 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", "Temp Basal");
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+            if (q.size() < 1) {
+                log.error("DBADD No receivers");
+            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+        } catch (JSONException e) {
+        }
+    }
+
+    public static void uploadExtendedBolus(Double insulin, double durationInMinutes) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", "Combo Bolus");
+            data.put("duration", durationInMinutes);
+            data.put("splitNow", 0);
+            data.put("splitExt", 100);
+            data.put("enteredinsulin", insulin);
+            data.put("relative", insulin);
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
