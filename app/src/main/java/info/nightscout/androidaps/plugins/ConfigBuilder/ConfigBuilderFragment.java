@@ -249,23 +249,16 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public Result deliverTreatment(Double insulin, Double carbs) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxbolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
-        Double maxcarbs = Double.parseDouble(SP.getString("treatmentssafety_maxcarbs", "48"));
+    public Result deliverTreatment(Double insulin, Integer carbs) {
+        insulin = applyBolusConstraints(insulin);
+        carbs = applyCarbsConstraints(carbs);
 
-        if (insulin > maxbolus || carbs > maxcarbs) {
-            Result failResult = new Result();
-            failResult.success = false;
-            failResult.comment = MainApp.instance().getString(R.string.constraints_violation);
-            return failResult;
-        }
         Result result = activePump.deliverTreatment(insulin, carbs);
 
         if (result.success) {
             Treatment t = new Treatment();
             t.insulin = result.bolusDelivered;
-            t.carbs = carbs;
+            t.carbs = (double) result.carbsDelivered;
             t.created_at = new Date();
             try {
                 MainApp.instance().getDbHelper().getDaoTreatments().create(t);
@@ -711,6 +704,30 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             rateAfterConstrain = constrain.applyBasalConstraints(rateAfterConstrain);
         }
         return rateAfterConstrain;
+    }
+
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        Double insulinAfterConstrain = insulin;
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            insulinAfterConstrain = constrain.applyBolusConstraints(insulinAfterConstrain);
+        }
+        return insulinAfterConstrain;
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        Integer carbsAfterConstrain = carbs;
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            carbsAfterConstrain = constrain.applyCarbsConstraints(carbsAfterConstrain);
+        }
+        return carbsAfterConstrain;
     }
 
     public static void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes) {

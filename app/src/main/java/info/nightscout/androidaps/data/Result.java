@@ -13,8 +13,9 @@ public class Result extends Object implements Parcelable{
     public Double absolute = -1d;      // absolute rate [U/h] , isPercent = false
     public Integer percent = -1;       // percent of current basal [%] (100% = current basal), isPercent = true
     public boolean isPercent = false;  // if true percent is used, otherwise absolute
-    // Result of bolus delivery
+    // Result of treatment delivery
     public Double bolusDelivered = 0d; // real value of delivered insulin
+    public Integer carbsDelivered = 0; // real value of delivered carbs
 
     public String log() {
         return "Success: " + success + " Enacted: " + enacted + " Comment: " + comment + " Duration: " + duration + " Absolute: " + absolute + " Percent: " + percent + " IsPercent: " + isPercent;

@@ -154,4 +154,32 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         return percentRateAfterConst;
     }
 
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        try {
+            Double maxBolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
+
+            if (insulin < 0) insulin = 0d;
+            if (insulin > maxBolus) insulin = maxBolus;
+        } catch (Exception e) {
+            insulin = 0d;
+        }
+        return insulin;
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        try {
+            Integer maxCarbs = Integer.parseInt(SP.getString("treatmentssafety_maxcarbs", "48"));
+
+            if (carbs < 0) carbs = 0;
+            if (carbs > maxCarbs) carbs = maxCarbs;
+        } catch (Exception e) {
+            carbs = 0;
+        }
+        return carbs;
+    }
+
 }

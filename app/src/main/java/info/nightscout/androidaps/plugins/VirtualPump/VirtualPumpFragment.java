@@ -220,10 +220,11 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public Result deliverTreatment(Double insulin, Double carbs) {
+    public Result deliverTreatment(Double insulin, Integer carbs) {
         Result result = new Result();
         result.success = true;
         result.bolusDelivered = insulin;
+        result.carbsDelivered = carbs;
         result.comment = getString(R.string.virtualpump_resultok);
 
         if (Config.logPumpComm)

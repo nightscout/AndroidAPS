@@ -341,4 +341,14 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         return percentRate;
     }
 
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        return insulin;
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        return carbs;
+    }
+
 }

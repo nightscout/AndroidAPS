@@ -12,4 +12,7 @@ public interface ConstraintsInterface {
     APSResult applyBasalConstraints(APSResult request);
     Double applyBasalConstraints(Double absoluteRate);
     Integer applyBasalConstraints(Integer percentRate);
+
+    Double applyBolusConstraints(Double insulin);
+    Integer applyCarbsConstraints(Integer carbs);
 }

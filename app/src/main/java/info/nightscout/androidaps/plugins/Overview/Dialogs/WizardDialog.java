@@ -42,7 +42,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     public static final DecimalFormat numberFormat = new DecimalFormat("0.00");
     public static final DecimalFormat intFormat = new DecimalFormat("0");
 
-    Double calculatedCarbs = 0d;
+    Integer calculatedCarbs = 0;
     Double calculatedTotalInsulin = 0d;
 
     final private TextWatcher textWatcher = new TextWatcher() {
@@ -181,9 +181,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         String i_correction = this.correctionInput.getText().toString().replace(",", ".");
         Double c_bg = 0d;
         try { c_bg = Double.parseDouble(i_bg.equals("") ? "0" : i_bg); } catch (Exception e) {}
-        Double c_carbs = 0d;
-        try { c_carbs = Double.parseDouble(i_carbs.equals("") ? "0" : i_carbs); } catch (Exception e) {}
-        c_carbs = ((Long)Math.round(c_carbs)).doubleValue();
+        Integer c_carbs = 0;
+        try { c_carbs = Integer.parseInt(i_carbs.equals("") ? "0" : i_carbs); } catch (Exception e) {}
+        c_carbs = (Integer) Math.round(c_carbs);
         Double c_correction = 0d;
         try { c_correction = Double.parseDouble(i_correction.equals("") ? "0" : i_correction);  } catch (Exception e) {}
         if(c_correction > maxbolus) {

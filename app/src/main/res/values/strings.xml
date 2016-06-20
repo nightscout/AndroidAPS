@@ -137,5 +137,8 @@
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="confirmation">Confirmation</string>
+    <string name="entertreatmentquestion">Enter new treatment:</string>
+    <string name="bolus">Bolus</string>
+    <string name="carbs">Carbs</string>
 
 </resources>
