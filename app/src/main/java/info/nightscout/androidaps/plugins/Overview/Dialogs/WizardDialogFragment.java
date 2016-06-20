@@ -244,7 +244,7 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
             calculatedTotalInsulin = 0d;
             totalInsulin.setText("");
         } else {
-            calculatedTotalInsulin = roundTo(calculatedTotalInsulin, 0.05d);
+            calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, 0.05d);
             total.setText("");
             totalInsulin.setText(numberFormat.format(calculatedTotalInsulin) + "U");
         }
@@ -259,12 +259,5 @@ public class WizardDialogFragment extends DialogFragment implements OnClickListe
         } else {
             wizardDialogDeliverButton.setVisibility(Button.GONE);
         }
-    }
-
-    private Double roundTo(Double x, Double step) {
-        if (x != 0d) {
-            return Math.round(x / step) * step;
-        }
-        return 0d;
     }
 }

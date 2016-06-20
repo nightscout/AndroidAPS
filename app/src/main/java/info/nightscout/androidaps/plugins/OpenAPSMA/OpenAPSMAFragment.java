@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.Round;
 
 public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAFragment.class);
@@ -262,6 +263,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
         double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_min_bg", minBgDefault).replace(",", ".")), units);
         double maxBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_max_bg", maxBgDefault).replace(",", ".")), units);
+        minBg = Round.roundTo(minBg, 1d);
+        maxBg = Round.roundTo(maxBg, 1d);
 
         TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
@@ -270,7 +273,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         IobTotal bolusIob = treatments.getLastCalculation();
         IobTotal basalIob = tempBasals.getLastCalculation();
 
-        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob);
+        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
         TreatmentsFragment.MealData mealData = treatments.getMealData();
 

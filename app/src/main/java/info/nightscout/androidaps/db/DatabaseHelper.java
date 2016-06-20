@@ -29,6 +29,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.utils.Round;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -227,6 +228,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             this.delta = delta;
             this.avgdelta = avgdelta;
         }
+
+        public GlucoseStatus round() {
+            this.glucose = Round.roundTo(this.glucose, 0.1);
+            this.delta = Round.roundTo(this.delta, 0.01);
+            this.avgdelta = Round.roundTo(this.avgdelta, 0.01);
+            return this;
+        }
     }
 
     @Nullable
@@ -284,6 +292,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
             return null;
         }
+        result.round();
         return result;
     }
 }

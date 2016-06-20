@@ -32,7 +32,7 @@ public class DetermineBasalResult extends APSResult {
         }
         if (result.contains("duration")) {
             duration = result.getInteger("duration");
-            changeRequested = changeRequested & true;
+            changeRequested = changeRequested;
         } else {
             duration = -1;
             changeRequested = false;
