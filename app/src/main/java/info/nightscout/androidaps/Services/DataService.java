@@ -23,6 +23,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
@@ -32,7 +33,11 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
+import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
+import info.nightscout.androidaps.receivers.NSClientDataReceiver;
+import info.nightscout.androidaps.receivers.xDripReceiver;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
 
@@ -40,8 +45,8 @@ import info.nightscout.client.data.NSSgv;
 public class DataService extends IntentService {
     private static Logger log = LoggerFactory.getLogger(DataService.class);
 
-    Handler mHandler;
-    private HandlerThread mHandlerThread;
+    boolean xDripEnabled = true;
+    boolean nsClientEnabled = true;
 
     public DataService() {
         super("DataService");
@@ -52,10 +57,23 @@ public class DataService extends IntentService {
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent");
 
+        if (MainApp.getConfigBuilder() != null) {
+            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceXdripFragment.class)) {
+                xDripEnabled = true;
+                nsClientEnabled = false;
+            }
+            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceNSClientFragment.class)) {
+                xDripEnabled = false;
+                nsClientEnabled = true;
+            }
+        }
+
         if (intent != null) {
             final String action = intent.getAction();
             if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
-                handleNewDataFromXDrip(intent);
+                if (xDripEnabled)
+                    handleNewDataFromXDrip(intent);
+                xDripReceiver.completeWakefulIntent(intent);
             } else if (Intents.ACTION_NEW_PROFILE.equals(action) ||
                     Intents.ACTION_NEW_TREATMENT.equals(action) ||
                     Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
@@ -63,6 +81,7 @@ public class DataService extends IntentService {
                     Intents.ACTION_NEW_SGV.equals(action)
                     ) {
                 handleNewDataFromNSClient(intent);
+                NSClientDataReceiver.completeWakefulIntent(intent);
             }
         }
     }
@@ -74,17 +93,7 @@ public class DataService extends IntentService {
         if (Config.logFunctionCalls)
             log.debug("onStartCommand");
 
-        if (mHandlerThread == null) {
-            if (Config.detailedLog)
-                log.debug("Creating handler thread");
-
-            this.mHandlerThread = new HandlerThread(DataService.class.getSimpleName() + "Handler");
-            mHandlerThread.start();
-
-            this.mHandler = new Handler(mHandlerThread.getLooper());
-
-            registerBus();
-        }
+        registerBus();
         return START_STICKY;
     }
 
@@ -113,6 +122,12 @@ public class DataService extends IntentService {
         bgReading.battery_level = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY);
         bgReading.timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
+
+        if (bgReading.timestamp < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+            if (Config.logIncommingBG)
+                log.debug("Ignoring old XDRIPREC BG " + bgReading.toString());
+            return;
+        }
 
         if (Config.logIncommingBG)
             log.debug("XDRIPREC BG " + bgReading.toString());
@@ -298,13 +313,18 @@ public class DataService extends IntentService {
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_SGV)) {
-            if (MainActivity.getConfigBuilder().getActiveBgSource().getClass().equals(SourceNSClientFragment.class)) {
+            if (nsClientEnabled) {
                 try {
                     if (bundles.containsKey("sgv")) {
                         String sgvstring = bundles.getString("sgv");
                         JSONObject sgvJson = new JSONObject(sgvstring);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
+                        if (bgReading.timestamp < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                            if (Config.logIncommingData)
+                                log.debug("Ignoring old BG: " + bgReading.toString());
+                            return;
+                        }
                         MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
                         if (Config.logIncommingData)
                             log.debug("ADD: Stored new BG: " + bgReading.toString());
@@ -317,9 +337,14 @@ public class DataService extends IntentService {
                             JSONObject sgvJson = jsonArray.getJSONObject(i);
                             NSSgv nsSgv = new NSSgv(sgvJson);
                             BgReading bgReading = new BgReading(nsSgv);
-                            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
-                            if (Config.logIncommingData)
-                                log.debug("ADD: Stored new BG: " + bgReading.toString());
+                            if (bgReading.timestamp < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                                if (Config.logIncommingData)
+                                    log.debug("Ignoring old BG: " + bgReading.toString());
+                            } else {
+                                MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+                                if (Config.logIncommingData)
+                                    log.debug("ADD: Stored new BG: " + bgReading.toString());
+                            }
                         }
                     }
                     MainApp.bus().post(new EventTreatmentChange());

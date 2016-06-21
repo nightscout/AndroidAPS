@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             registerBus();
 
             configBuilderFragment.initialize();
+            MainApp.setConfigBuilder(configBuilderFragment);
         }
         setUpTabs(false);
     }

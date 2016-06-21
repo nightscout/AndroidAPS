@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -24,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -50,7 +52,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
-            // TODO: add bg support
         } catch (SQLException e) {
             log.error(DatabaseHelper.class.getName(), "Can't create database", e);
             throw new RuntimeException(e);
@@ -77,6 +78,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
+    }
+
+    public void cleanUpDatabases() {
+        // TODO: call it somewhere
+        log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "BgReadings"));
+        getWritableDatabase().delete("BgReadings", "timeIndex" + " < '" + Math.ceil((new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) / 60000d) + "'", null);
+        log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "BgReadings"));
+
+        log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "TempBasals"));
+        getWritableDatabase().delete("TempBasals", "timeIndex" + " < '" + Math.ceil((new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) / 60000d) + "'", null);
+        log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "TempBasals"));
+
+        log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
+        getWritableDatabase().delete("Treatments", "timeIndex" + " < '" + Math.ceil((new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) / 60000d) + "'", null);
+        log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
     }
 
     public void resetDatabases() {
@@ -114,6 +130,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<BgReading, Long> getDaoBgReadings() throws SQLException {
+        //SQLiteDatabase db = getReadableDatabase();
+        //log.debug("BgReadings size: " + DatabaseUtils.queryNumEntries(db, "BgReadings"));
         return getDao(BgReading.class);
     }
 
