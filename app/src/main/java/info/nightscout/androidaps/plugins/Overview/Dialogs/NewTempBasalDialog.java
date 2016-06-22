@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -63,13 +64,13 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
 
                     String confirmMessage = getString(R.string.setbasalquestion);
                     if (setAsPercent) {
-                        basalPercent = MainActivity.getConfigBuilder().applyBasalConstraints(basal.intValue());
+                        basalPercent = MainApp.getConfigBuilder().applyBasalConstraints(basal.intValue());
                         confirmMessage += "\n " + basalPercent + "% ";
                         confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (basalPercent != basal.intValue())
                             confirmMessage += "\n" + getString(R.string.constraintapllied);
                     } else {
-                        Double basalAfterConstraint = MainActivity.getConfigBuilder().applyBasalConstraints(basal);
+                        Double basalAfterConstraint = MainApp.getConfigBuilder().applyBasalConstraints(basal);
                         confirmMessage += "\n " + basalAfterConstraint + " U/h ";
                         confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                         if (basalAfterConstraint != basal)
@@ -86,7 +87,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                             Result result;
                             if (setAsPercent) {
                                 result = pump.setTempBasalPercent(finalBasalPercent, finalDurationInMinutes);

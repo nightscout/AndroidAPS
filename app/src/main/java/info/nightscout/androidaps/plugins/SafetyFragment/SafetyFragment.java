@@ -85,7 +85,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         Double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
 
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (absoluteRate < 0) absoluteRate = 0d;
 
         Integer maxBasalMult = 4;
@@ -115,7 +115,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         Double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
 
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         Double currentBasal = profile.getBasal(profile.secondsFromMidnight());
 
         Double absoluteRate = currentBasal * ((double) percentRate / 100);

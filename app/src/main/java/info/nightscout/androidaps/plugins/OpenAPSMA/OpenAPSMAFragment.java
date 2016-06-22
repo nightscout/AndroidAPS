@@ -216,8 +216,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         }
 
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
-        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
         if (!isEnabled()) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));
@@ -266,8 +266,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         minBg = Round.roundTo(minBg, 1d);
         maxBg = Round.roundTo(maxBg, 1d);
 
-        TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
+        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
+        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
         treatments.updateTotalIOB();
         tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();

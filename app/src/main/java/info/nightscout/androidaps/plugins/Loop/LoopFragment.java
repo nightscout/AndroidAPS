@@ -208,7 +208,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        ConstraintsInterface constraintsInterface = MainActivity.getConfigBuilder();
+        ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
         if (constraintsInterface.isAutomaticProcessingEnabled()) {
             invoke();
             updateGUI();
@@ -216,8 +216,8 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     }
 
     private void invoke() {
-        ConstraintsInterface constraintsInterface = MainActivity.getConfigBuilder();
-        PumpInterface pumpInterface = MainActivity.getConfigBuilder().getActivePump();
+        ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
+        PumpInterface pumpInterface = MainApp.getConfigBuilder().getActivePump();
         APSResult result = null;
 
         if (constraintsInterface == null || pumpInterface == null || !isEnabled())

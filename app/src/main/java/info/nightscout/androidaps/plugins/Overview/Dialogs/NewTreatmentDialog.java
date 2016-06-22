@@ -53,8 +53,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
                     String confirmMessage = getString(R.string.entertreatmentquestion);
 
-                    Double insulinAfterConstraints = MainActivity.getConfigBuilder().applyBolusConstraints(insulin);
-                    Integer carbsAfterConstraints = MainActivity.getConfigBuilder().applyCarbsConstraints(carbs);
+                    Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+                    Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
 
                     confirmMessage += getString(R.string.bolus) + ": " + insulinAfterConstraints + "U";
                     confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -70,7 +70,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                                PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                                 Result result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
                                 if (!result.success) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

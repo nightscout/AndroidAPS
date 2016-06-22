@@ -47,10 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static ConfigBuilderFragment configBuilderFragment;
 
-    public static ConfigBuilderFragment getConfigBuilder() {
-        return configBuilderFragment;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

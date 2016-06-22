@@ -220,8 +220,8 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     public void invoke() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
-        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
         if (!isEnabled()) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));

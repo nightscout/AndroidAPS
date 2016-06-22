@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -58,7 +59,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
                     String confirmMessage = getString(R.string.setextendedbolusquestion);
 
-                    Double insulinAfterConstraint = MainActivity.getConfigBuilder().applyBolusConstraints(insulin);
+                    Double insulinAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
                     confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                     if (insulinAfterConstraint != insulin)
@@ -73,7 +74,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                             Result result = pump.setExtendedBolus(finalInsulin, finalDurationInMinutes);
                             if (!result.success) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

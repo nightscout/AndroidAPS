@@ -180,12 +180,12 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
     @Override
     public void setNewBasalProfile(NSProfile profile) {
-        // Do nothing here. we are using MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
     }
 
     @Override
     public double getBaseBasalRate() {
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)
             return defaultBasalValue;
         return profile.getBasal(profile.secondsFromMidnight());
@@ -198,7 +198,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         if (tempBasal.isAbsolute) {
             return tempBasal.absolute;
         } else {
-            NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return defaultBasalValue;
             Double baseRate = profile.getBasal(profile.secondsFromMidnight());

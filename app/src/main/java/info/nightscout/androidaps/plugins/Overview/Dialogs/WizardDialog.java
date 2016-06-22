@@ -115,8 +115,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
                     String confirmMessage = getString(R.string.entertreatmentquestion);
 
-                    Double insulinAfterConstraints = MainActivity.getConfigBuilder().applyBolusConstraints(calculatedTotalInsulin);
-                    Integer carbsAfterConstraints = MainActivity.getConfigBuilder().applyCarbsConstraints(calculatedCarbs);
+                    Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(calculatedTotalInsulin);
+                    Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(calculatedCarbs);
 
                     confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                     confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
@@ -139,7 +139,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                                PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                                 Result result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
                                 if (!result.success) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -161,7 +161,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     }
 
     private void initDialog() {
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "No profile loaded from NS yet");
@@ -197,8 +197,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         }
 
         // IOB calculation
-        TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
+        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
+        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
         treatments.updateTotalIOB();
         tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();
@@ -213,7 +213,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     }
 
     private void calculateInsulin() {
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         // Entered values
         String i_bg = this.bgInput.getText().toString().replace("," , ".");
@@ -226,12 +226,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         c_carbs = (Integer) Math.round(c_carbs);
         Double c_correction = 0d;
         try { c_correction = Double.parseDouble(i_correction.equals("") ? "0" : i_correction);  } catch (Exception e) {}
-        if(c_correction != MainActivity.getConfigBuilder().applyBolusConstraints(c_correction)) {
+        if(c_correction != MainApp.getConfigBuilder().applyBolusConstraints(c_correction)) {
             this.correctionInput.setText("");
             wizardDialogDeliverButton.setVisibility(Button.GONE);
             return;
         }
-        if(c_carbs != MainActivity.getConfigBuilder().applyCarbsConstraints(c_carbs)) {
+        if(c_carbs != MainApp.getConfigBuilder().applyCarbsConstraints(c_carbs)) {
             this.carbsInput.setText("");
             wizardDialogDeliverButton.setVisibility(Button.GONE);
             return;
@@ -259,8 +259,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         carbsInsulin.setText(numberFormat.format(insulinFromCarbs) + "U");
 
         // Insulin from IOB
-        TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
+        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
+        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
         treatments.updateTotalIOB();
         tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();

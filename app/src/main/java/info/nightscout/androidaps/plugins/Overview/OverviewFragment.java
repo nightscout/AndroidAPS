@@ -175,7 +175,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         cancelTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                 if (pump.isTempBasalInProgress()) {
                     pump.cancelTempBasal();
                     MainApp.bus().post(new EventTempBasalChange());
@@ -271,9 +271,9 @@ public class OverviewFragment extends Fragment implements PluginBase {
     public void updateGUI() {
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
-        if (MainActivity.getConfigBuilder() == null || MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
             return;
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)
             return;
 
@@ -284,7 +284,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             return;
 
         // **** Temp button ****
-        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
         if (pump.isTempBasalInProgress()) {
             TempBasal activeTemp = pump.getTempBasal();
