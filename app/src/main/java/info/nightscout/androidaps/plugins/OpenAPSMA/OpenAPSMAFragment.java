@@ -153,11 +153,6 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.openapsma_fragment, container, false);
@@ -173,9 +168,9 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         resultView = (TextView) view.findViewById(R.id.openapsma_result);
         requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
-        if (savedInstanceState != null) {
-            lastRun = savedInstanceState.getParcelable("lastrun");
-        }
+//        if (savedInstanceState != null) {
+//            lastRun = savedInstanceState.getParcelable("lastrun");
+//        }
         updateGUI();
         return view;
     }

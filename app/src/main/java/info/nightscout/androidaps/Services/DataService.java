@@ -347,8 +347,6 @@ public class DataService extends IntentService {
                             }
                         }
                     }
-                    MainApp.bus().post(new EventTreatmentChange());
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (Exception e1) {

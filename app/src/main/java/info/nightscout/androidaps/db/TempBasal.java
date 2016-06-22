@@ -144,6 +144,19 @@ public class TempBasal {
         return (remainingMin < 0) ? 0 : (int) remainingMin;
     }
 
+    public boolean isInProgress() {
+        long now = new Date().getTime();
+        if (timeStart.getTime() > now) return false; // in the future
+        if (timeEnd == null) { // open end
+            if (timeStart.getTime() < now && getPlannedTimeEnd().getTime() > now)
+                return true; // in interval
+            return false;
+        }
+        // closed end
+        if (timeStart.getTime() < now && timeEnd.getTime() > now) return true; // in interval
+        return false;
+    }
+
     public String log() {
         return "TempBasal{" +
                 "timeIndex=" + timeIndex +

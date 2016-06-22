@@ -167,11 +167,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lowsuspend_fragment, container, false);
@@ -184,9 +179,9 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         resultView = (TextView) view.findViewById(R.id.lowsuspend_result);
         requestView = (TextView) view.findViewById(R.id.lowsuspend_request);
 
-        if (savedInstanceState != null) {
-            lastRun = savedInstanceState.getParcelable("lastrun");
-        }
+//        if (savedInstanceState != null) {
+//            lastRun = savedInstanceState.getParcelable("lastrun");
+//        }
         updateGUI();
         return view;
     }

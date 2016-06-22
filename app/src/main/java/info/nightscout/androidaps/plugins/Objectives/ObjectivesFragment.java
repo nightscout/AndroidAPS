@@ -318,12 +318,14 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
      **/
     @Override
     public boolean isAutomaticProcessingEnabled() {
-        return objectives.get(3).started.getTime() > 0;
+        return true; // TODO: revert back
+        //return objectives.get(3).started.getTime() > 0;
     }
 
     @Override
     public boolean manualConfirmationNeeded() {
-        return objectives.get(3).started.getTime() < 0;
+        return false; // TODO: revert back
+        //return objectives.get(3).started.getTime() < 0;
     }
 
     @Override

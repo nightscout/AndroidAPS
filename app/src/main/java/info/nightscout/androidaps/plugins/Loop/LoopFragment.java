@@ -194,16 +194,11 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-//                    invoke();
-                }
-            });
-        else
-            log.debug("EventTreatmentChange: Activity is null");
+        ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
+        if (constraintsInterface.isAutomaticProcessingEnabled()) {
+            invoke();
+            updateGUI();
+        }
     }
 
     @Subscribe

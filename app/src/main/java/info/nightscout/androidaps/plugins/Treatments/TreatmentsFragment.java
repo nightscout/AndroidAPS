@@ -153,10 +153,20 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             Iob bIOB = t.iobCalc(now, dia / 2);
             total.bolussnooze += bIOB.iobContrib;
         }
-        if (iobTotal != null)
-            iobTotal.setText(formatNumber2decimalplaces.format(total.iob));
-        if (activityTotal != null)
-            activityTotal.setText(formatNumber3decimalplaces.format(total.activity));
+
+        final IobTotal finalTotal = total;
+
+        Activity activity = getActivity();
+        if (visibleNow && activity != null && recyclerView != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (iobTotal != null)
+                        iobTotal.setText(formatNumber2decimalplaces.format(finalTotal.iob));
+                    if (activityTotal != null)
+                        activityTotal.setText(formatNumber3decimalplaces.format(finalTotal.activity));
+                }
+            });
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
