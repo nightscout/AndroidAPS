@@ -16,6 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.utils.SafeParse;
 
 public class NewTempBasalDialog extends DialogFragment implements View.OnClickListener {
 
@@ -53,8 +54,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
             case R.id.overview_newtempbasal_okbutton:
                 try {
                     int basalPercent = 100;
-                    String basalText = basalEdit.getText().toString().replace(",", ".");
-                    Double basal = Double.parseDouble(!basalText.equals("") ? basalText : "0");
+                    Double basal = SafeParse.stringToDouble(basalEdit.getText().toString());
                     final boolean setAsPercent = percentRadio.isChecked();
                     int durationInMinutes = 30;
                     if (h10Radio.isChecked()) durationInMinutes = 60;

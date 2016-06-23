@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.TempBasals;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.*;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
@@ -123,12 +125,16 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
                 boolean update = false;
                 if (t.timeEnd == null && t.getPlannedTimeEnd().getTime() < now) {
                     t.timeEnd = new Date(t.getPlannedTimeEnd().getTime());
+                    if (Config.logTempBasalsCut)
+                        log.debug("Add timeEnd to old record");
                     update = true;
                 }
                 if (position > 0) {
                     Date startofnewer = tempBasals.get(position - 1).timeStart;
                     if (t.timeEnd == null) {
                         t.timeEnd = new Date(Math.min(startofnewer.getTime(), t.getPlannedTimeEnd().getTime()));
+                        if (Config.logTempBasalsCut)
+                            log.debug("Add timeEnd to old record");
                         update = true;
                     } else if (t.timeEnd.getTime() > startofnewer.getTime()) {
                         t.timeEnd = startofnewer;
@@ -137,8 +143,11 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
                 }
                 if (update) {
                     dao.update(t);
-                    log.debug("Fixing unfinished temp end: " + t.log());
-                    if (position > 0) log.debug("Previous: " + tempBasals.get(position - 1).log());
+                    if (Config.logTempBasalsCut) {
+                        log.debug("Fixing unfinished temp end: " + t.log());
+                        if (position > 0)
+                            log.debug("Previous: " + tempBasals.get(position - 1).log());
+                    }
                 }
 
             }
@@ -186,6 +195,14 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         lastCalculation = total;
     }
 
+    @Nullable
+    @Override
+    public TempBasal getTempBasal(Date time) {
+        for (TempBasal t: tempBasals) {
+            if (t.isInProgress(time)) return t;
+        }
+        return null;
+    }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 

@@ -38,7 +38,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
     Double defaultBasalValue = 0.2d;
 
-    TempBasal tempBasal = null;
+    //TempBasal tempBasal = null;
     TempBasal extendedBolus = null;
     Integer batteryPercent = 50;
     Integer resevoirInUnits = 50;
@@ -127,18 +127,22 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     void checkForExpiredTempsAndExtended() {
         long now = new Date().getTime();
         if (isTempBasalInProgress()) {
-            long plannedTimeEnd = tempBasal.getPlannedTimeEnd().getTime();
+            //long plannedTimeEnd = tempBasal.getPlannedTimeEnd().getTime();
+            long plannedTimeEnd = getTempBasal().getPlannedTimeEnd().getTime();
             if (plannedTimeEnd < now) {
-                tempBasal.timeEnd = new Date(plannedTimeEnd);
+                //tempBasal.timeEnd = new Date(plannedTimeEnd);
+                getTempBasal().timeEnd = new Date(plannedTimeEnd);
                 try {
-                    MainApp.instance().getDbHelper().getDaoTempBasals().update(tempBasal);
+                    //MainApp.instance().getDbHelper().getDaoTempBasals().update(tempBasal);
+                    MainApp.instance().getDbHelper().getDaoTempBasals().update(getTempBasal());
                 } catch (SQLException e) {
                     e.printStackTrace();
                     log.error(e.getMessage());
                 }
                 if (Config.logPumpComm)
-                    log.debug("Canceling expired temp: " + tempBasal);
-                tempBasal = null;
+                    //log.debug("Canceling expired temp: " + tempBasal);
+                    log.debug("Canceling expired temp: " + getTempBasal());
+                //tempBasal = null;
                 MainApp.bus().post(new EventTreatmentChange());
             }
         }
@@ -161,7 +165,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
     @Override
     public boolean isTempBasalInProgress() {
-        return tempBasal != null;
+        //return tempBasal != null;
+        return getTempBasal() != null;
     }
 
     @Override
@@ -196,28 +201,33 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     public double getTempBasalAbsoluteRate() {
         if (!isTempBasalInProgress())
             return 0;
-        if (tempBasal.isAbsolute) {
-            return tempBasal.absolute;
+        //if (tempBasal.isAbsolute) {
+        if (getTempBasal().isAbsolute) {
+            //return tempBasal.absolute;
+            return getTempBasal().absolute;
         } else {
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return defaultBasalValue;
             Double baseRate = profile.getBasal(profile.secondsFromMidnight());
-            Double tempRate = baseRate * (tempBasal.percent / 100d);
+            //Double tempRate = baseRate * (tempBasal.percent / 100d);
+            Double tempRate = baseRate * (getTempBasal().percent / 100d);
             return baseRate + tempRate;
         }
     }
 
     @Override
     public TempBasal getTempBasal() {
-        return tempBasal;
+        //return tempBasal;
+        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
     }
 
     @Override
     public double getTempBasalRemainingMinutes() {
         if (!isTempBasalInProgress())
             return 0;
-        return tempBasal.getPlannedRemainingMinutes();
+        //return tempBasal.getPlannedRemainingMinutes();
+        return getTempBasal().getPlannedRemainingMinutes();
     }
 
     @Override
@@ -240,7 +250,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         Result result = cancelTempBasal();
         if (!result.success)
             return result;
-        tempBasal = new TempBasal();
+        //tempBasal = new TempBasal();
+        TempBasal tempBasal = new TempBasal();
         tempBasal.timeStart = new Date();
         tempBasal.isAbsolute = true;
         tempBasal.absolute = absoluteRate;
@@ -272,7 +283,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             if (!result.success)
                 return result;
         }
-        tempBasal = new TempBasal();
+        //tempBasal = new TempBasal();
+        TempBasal tempBasal = new TempBasal();
         tempBasal.timeStart = new Date();
         tempBasal.isAbsolute = false;
         tempBasal.percent = percent;
@@ -332,13 +344,15 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         checkForExpiredTempsAndExtended();
         Result result = new Result();
         result.success = true;
+        result.isTempCancel = true;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
         if (isTempBasalInProgress()) {
             result.enacted = true;
-            tempBasal.timeEnd = new Date();
+            //tempBasal.timeEnd = new Date();
+            getTempBasal().timeEnd = new Date();
             try {
-                MainApp.instance().getDbHelper().getDaoTempBasals().update(tempBasal);
-                tempBasal = null;
+                MainApp.instance().getDbHelper().getDaoTempBasals().update(getTempBasal());
+                //tempBasal = null;
                 if (Config.logPumpComm)
                     log.debug("Canceling temp basal: " + result);
                 updateGUI();
@@ -359,7 +373,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         if (isExtendedBoluslInProgress()) {
             extendedBolus.timeEnd = new Date();
             try {
-                MainApp.instance().getDbHelper().getDaoTempBasals().update(tempBasal);
+                MainApp.instance().getDbHelper().getDaoTempBasals().update(extendedBolus);
             } catch (SQLException e) {
                 e.printStackTrace();
                 result.success = false;
@@ -390,12 +404,13 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         try {
             battery.put("percent", batteryPercent);
             status.put("status", "normal");
-            //status.put("lastbolus", last_bolus_amount);
-            //status.put("lastbolustime", DateUtil.toISOString(last_bolus_time));
             if (isTempBasalInProgress()) {
-                status.put("tempbasalpct", tempBasal.percent);
-                status.put("tempbasalstart", DateUtil.toISOString(tempBasal.timeStart));
-                status.put("tempbasalremainmin", tempBasal.getPlannedRemainingMinutes());
+                //status.put("tempbasalpct", tempBasal.percent);
+                //status.put("tempbasalstart", DateUtil.toISOString(tempBasal.timeStart));
+                //status.put("tempbasalremainmin", tempBasal.getPlannedRemainingMinutes());
+                status.put("tempbasalpct", getTempBasal().percent);
+                status.put("tempbasalstart", DateUtil.toISOString(getTempBasal().timeStart));
+                status.put("tempbasalremainmin", getTempBasal().getPlannedRemainingMinutes());
             }
             status.put("timestamp", DateUtil.toISOString(new Date()));
 
@@ -430,7 +445,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
                     basaBasalRateView.setText(getBaseBasalRate() + "U");
                     if (isTempBasalInProgress()) {
-                        tempBasalView.setText(tempBasal.toString());
+                        //tempBasalView.setText(tempBasal.toString());
+                        tempBasalView.setText(getTempBasal().toString());
                     } else {
                         tempBasalView.setText("");
                     }

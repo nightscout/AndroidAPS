@@ -216,16 +216,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         // Entered values
-        String i_bg = this.bgInput.getText().toString().replace("," , ".");
-        String i_carbs = this.carbsInput.getText().toString().replace(",", ".");
-        String i_correction = this.correctionInput.getText().toString().replace(",", ".");
-        Double c_bg = 0d;
-        try { c_bg = Double.parseDouble(i_bg.equals("") ? "0" : i_bg); } catch (Exception e) {}
-        Integer c_carbs = 0;
-        try { c_carbs = Integer.parseInt(i_carbs.equals("") ? "0" : i_carbs); } catch (Exception e) {}
-        c_carbs = (Integer) Math.round(c_carbs);
-        Double c_correction = 0d;
-        try { c_correction = Double.parseDouble(i_correction.equals("") ? "0" : i_correction);  } catch (Exception e) {}
+        Double c_bg = SafeParse.stringToDouble(this.bgInput.getText().toString());
+        Integer c_carbs = SafeParse.stringToInt(this.carbsInput.getText().toString());
+        Double c_correction = SafeParse.stringToDouble(this.correctionInput.getText().toString());
         if(c_correction != MainApp.getConfigBuilder().applyBolusConstraints(c_correction)) {
             this.correctionInput.setText("");
             wizardDialogDeliverButton.setVisibility(Button.GONE);

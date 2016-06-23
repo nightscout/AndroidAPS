@@ -37,6 +37,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SafeParse;
 
 public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAFragment.class);
@@ -254,10 +255,10 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
         Date now = new Date();
 
-        double maxIob = Double.parseDouble(SP.getString("openapsma_max_iob", "1.5").replace(",", "."));
-        double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
-        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_min_bg", minBgDefault).replace(",", ".")), units);
-        double maxBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_max_bg", maxBgDefault).replace(",", ".")), units);
+        double maxIob = SafeParse.stringToDouble(SP.getString("openapsma_max_iob", "1.5"));
+        double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
+        double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_min_bg", minBgDefault)), units);
+        double maxBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_max_bg", minBgDefault)), units);
         minBg = Round.roundTo(minBg, 1d);
         maxBg = Round.roundTo(maxBg, 1d);
 

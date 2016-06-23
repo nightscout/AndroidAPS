@@ -2,9 +2,11 @@ package info.nightscout.androidaps.plugins.Overview;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -15,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
@@ -317,7 +321,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
         int agoMin = (int) (agoMsec / 60d / 1000d);
         timeAgoView.setText(agoMin + " " + getString(R.string.minago));
 
-        // **** BG graph ****
+        // ****** GRAPH *******
+
         // allign to hours
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(new Date().getTime());
@@ -333,6 +338,56 @@ public class OverviewFragment extends Fragment implements PluginBase {
         Double highLine = NSProfile.toUnits(180d, 10d, units);
         Double maxY = NSProfile.toUnits(400d, 20d, units); // TODO: add some scale support
 
+        BarGraphSeries<DataPoint> basalsSeries = null;
+        LineGraphSeries<DataPoint> seriesLow = null;
+        LineGraphSeries<DataPoint> seriesHigh = null;
+        LineGraphSeries<DataPoint> seriesNow = null;
+        PointsGraphSeries<BgReading> seriesInRage = null;
+        PointsGraphSeries<BgReading> seriesOutOfRange = null;
+
+        bgGraph.removeAllSeries();
+
+        // **** TEMP BASALS graph ****
+        class BarDataPoint extends DataPoint {
+            public BarDataPoint(double x, double y, boolean isTempBasal) {
+                super(x, y);
+                this.isTempBasal = isTempBasal;
+            }
+            public boolean isTempBasal = false;
+        }
+
+        Double maxAllowedBasal = MainApp.getConfigBuilder().applyBasalConstraints(1000d);
+
+        long now = new Date().getTime();
+        List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
+        for (long time = fromTime; time < now; time += 5 * 60 * 1000l) {
+            TempBasal tb = MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date(time));
+            if (tb != null)
+                basalArray.add(new BarDataPoint(time, tb.tempBasalConvertedToAbsolute(), true));
+            else
+                basalArray.add(new BarDataPoint(time, profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
+        }
+        BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
+        log.debug("Bars: " + basalArray.size());
+        basal = basalArray.toArray(basal);
+        bgGraph.addSeries(basalsSeries = new BarGraphSeries<DataPoint>(basal));
+        basalsSeries.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+            @Override
+            public int get(DataPoint data) {
+                BarDataPoint point = (BarDataPoint) data;
+                if (point.isTempBasal) return Color.CYAN;
+                else return Color.BLUE;
+            }
+        });
+
+        // set second scale
+        bgGraph.getSecondScale().addSeries(basalsSeries);
+        bgGraph.getSecondScale().setMinY(0);
+        bgGraph.getSecondScale().setMaxY(maxAllowedBasal * 4);
+        bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark));
+
+
+        // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
         List<BgReading> inRangeArray = new ArrayList<BgReading>();
         List<BgReading> outOfRangeArray = new ArrayList<BgReading>();
@@ -354,37 +409,52 @@ public class OverviewFragment extends Fragment implements PluginBase {
         outOfRange = outOfRangeArray.toArray(outOfRange);
 
 
-        // targets
-        LineGraphSeries<DataPoint> seriesLow = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(fromTime, lowLine),
-                new DataPoint(toTime, lowLine)
-        });
-        seriesLow.setColor(Color.RED);
-        bgGraph.addSeries(seriesLow);
-
-        LineGraphSeries<DataPoint> seriesHigh = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(fromTime, highLine),
-                new DataPoint(toTime, highLine)
-        });
-        seriesHigh.setColor(Color.RED);
-        bgGraph.addSeries(seriesHigh);
-
-
         if (inRange.length > 0) {
-            PointsGraphSeries<BgReading> seriesInRage = new PointsGraphSeries<BgReading>(inRange);
-            bgGraph.addSeries(seriesInRage);
+            bgGraph.addSeries(seriesInRage = new PointsGraphSeries<BgReading>(inRange));
             seriesInRage.setShape(PointsGraphSeries.Shape.POINT);
             seriesInRage.setSize(5);
             seriesInRage.setColor(Color.GREEN);
         }
 
         if (outOfRange.length > 0) {
-            PointsGraphSeries<BgReading> seriesOutOfRange = new PointsGraphSeries<BgReading>(outOfRange);
-            bgGraph.addSeries(seriesOutOfRange);
+            bgGraph.addSeries(seriesOutOfRange = new PointsGraphSeries<BgReading>(outOfRange));
             seriesOutOfRange.setShape(PointsGraphSeries.Shape.POINT);
             seriesOutOfRange.setSize(5);
             seriesOutOfRange.setColor(Color.RED);
         }
+
+
+        // **** HIGH and LOW targets graph ****
+        DataPoint[] lowDataPoints = new DataPoint[]{
+                new DataPoint(fromTime, lowLine),
+                new DataPoint(toTime, lowLine)
+        };
+        DataPoint[] highDataPoints = new DataPoint[]{
+                new DataPoint(fromTime, highLine),
+                new DataPoint(toTime, highLine)
+        };
+        bgGraph.addSeries(seriesLow = new LineGraphSeries<DataPoint>(lowDataPoints));
+        seriesLow.setColor(Color.RED);
+        bgGraph.addSeries(seriesHigh = new LineGraphSeries<DataPoint>(highDataPoints));
+        seriesHigh.setColor(Color.RED);
+
+        // **** NOW line ****
+        DataPoint[] nowPoints = new DataPoint[]{
+                new DataPoint(now, 0),
+                new DataPoint(now, maxY)
+        };
+        bgGraph.addSeries(seriesNow = new LineGraphSeries<DataPoint>(nowPoints));
+        seriesNow.setColor(Color.GREEN);
+        seriesNow.setDrawDataPoints(false);
+        //seriesNow.setThickness(1);
+        // custom paint to make a dotted line
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(1);
+        paint.setPathEffect(new DashPathEffect(new float[]{4, 20}, 0));
+        paint.setColor(Color.WHITE);
+        seriesNow.setCustomPaint(paint);
+
 
         // set manual x bounds to have nice steps
         bgGraph.getViewport().setMaxX(toTime);

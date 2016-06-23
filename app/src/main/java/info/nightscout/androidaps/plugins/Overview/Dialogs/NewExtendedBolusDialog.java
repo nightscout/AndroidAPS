@@ -16,6 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
 
@@ -48,9 +49,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         switch (view.getId()) {
             case R.id.overview_newextendedbolus_okbutton:
                 try {
-                    int basalPercent = 100;
-                    String insulinText = insulinEdit.getText().toString().replace(",", ".");
-                    Double insulin = Double.parseDouble(!insulinText.equals("") ? insulinText : "0");
+                    Double insulin = SafeParse.stringToDouble(insulinEdit.getText().toString());
                     int durationInMinutes = 30;
                     if (h10Radio.isChecked()) durationInMinutes = 60;
                     if (h20Radio.isChecked()) durationInMinutes = 120;

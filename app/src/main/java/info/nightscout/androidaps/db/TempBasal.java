@@ -145,15 +145,27 @@ public class TempBasal {
     }
 
     public boolean isInProgress() {
-        long now = new Date().getTime();
-        if (timeStart.getTime() > now) return false; // in the future
+        return isInProgress(new Date());
+    }
+
+    public double tempBasalConvertedToAbsolute() {
+        if (isAbsolute) return absolute;
+        else {
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            double absval = profile.getBasal(NSProfile.secondsFromMidnight()) * percent / 100;
+            return absval;
+        }
+    }
+
+    public boolean isInProgress(Date time) {
+        if (timeStart.getTime() > time.getTime()) return false; // in the future
         if (timeEnd == null) { // open end
-            if (timeStart.getTime() < now && getPlannedTimeEnd().getTime() > now)
+            if (timeStart.getTime() < time.getTime() && getPlannedTimeEnd().getTime() > time.getTime())
                 return true; // in interval
             return false;
         }
         // closed end
-        if (timeStart.getTime() < now && timeEnd.getTime() > now) return true; // in interval
+        if (timeStart.getTime() < time.getTime() && timeEnd.getTime() > time.getTime()) return true; // in interval
         return false;
     }
 

@@ -30,6 +30,7 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SafeParse;
 
 /**
  * LOW SUSPEND ALGORITHM
@@ -251,7 +252,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             minBgDefault = "5";
         }
 
-        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("lowsuspend_lowthreshold", minBgDefault).replace(",", ".")), profile.getUnits());
+        double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("lowsuspend_lowthreshold", minBgDefault)), profile.getUnits());
 
         boolean lowProjected = (glucoseStatus.glucose + 6.0 * glucoseStatus.avgdelta) < minBg;
         boolean low = glucoseStatus.glucose < minBg;
