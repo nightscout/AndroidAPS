@@ -30,6 +30,7 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SafeParse;
 
 /**
  * LOW SUSPEND ALGORITHM
@@ -167,11 +168,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.lowsuspend_fragment, container, false);
@@ -184,9 +180,9 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         resultView = (TextView) view.findViewById(R.id.lowsuspend_result);
         requestView = (TextView) view.findViewById(R.id.lowsuspend_request);
 
-        if (savedInstanceState != null) {
-            lastRun = savedInstanceState.getParcelable("lastrun");
-        }
+//        if (savedInstanceState != null) {
+//            lastRun = savedInstanceState.getParcelable("lastrun");
+//        }
         updateGUI();
         return view;
     }
@@ -220,8 +216,8 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     public void invoke() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
-        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
         if (!isEnabled()) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));
@@ -256,7 +252,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             minBgDefault = "5";
         }
 
-        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("lowsuspend_lowthreshold", minBgDefault).replace(",", ".")), profile.getUnits());
+        double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("lowsuspend_lowthreshold", minBgDefault)), profile.getUnits());
 
         boolean lowProjected = (glucoseStatus.glucose + 6.0 * glucoseStatus.avgdelta) < minBg;
         boolean low = glucoseStatus.glucose < minBg;

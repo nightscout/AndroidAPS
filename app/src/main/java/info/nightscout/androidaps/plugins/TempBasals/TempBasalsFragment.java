@@ -2,13 +2,13 @@ package info.nightscout.androidaps.plugins.TempBasals;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.*;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
@@ -116,6 +117,40 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             queryBuilder.limit(30l);
             PreparedQuery<TempBasal> preparedQuery = queryBuilder.prepare();
             tempBasals = dao.query(preparedQuery);
+
+            // Update ended
+            long now = new Date().getTime();
+            for (int position = tempBasals.size() - 1; position >= 0; position--) {
+                TempBasal t = tempBasals.get(position);
+                boolean update = false;
+                if (t.timeEnd == null && t.getPlannedTimeEnd().getTime() < now) {
+                    t.timeEnd = new Date(t.getPlannedTimeEnd().getTime());
+                    if (Config.logTempBasalsCut)
+                        log.debug("Add timeEnd to old record");
+                    update = true;
+                }
+                if (position > 0) {
+                    Date startofnewer = tempBasals.get(position - 1).timeStart;
+                    if (t.timeEnd == null) {
+                        t.timeEnd = new Date(Math.min(startofnewer.getTime(), t.getPlannedTimeEnd().getTime()));
+                        if (Config.logTempBasalsCut)
+                            log.debug("Add timeEnd to old record");
+                        update = true;
+                    } else if (t.timeEnd.getTime() > startofnewer.getTime()) {
+                        t.timeEnd = startofnewer;
+                        update = true;
+                    }
+                }
+                if (update) {
+                    dao.update(t);
+                    if (Config.logTempBasalsCut) {
+                        log.debug("Fixing unfinished temp end: " + t.log());
+                        if (position > 0)
+                            log.debug("Previous: " + tempBasals.get(position - 1).log());
+                    }
+                }
+
+            }
         } catch (SQLException e) {
             log.debug(e.getMessage(), e);
             tempBasals = new ArrayList<TempBasal>();
@@ -144,13 +179,30 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             TempBasal t = tempBasals.get(pos);
             total.plus(t.iobCalc(now));
         }
-        if (iobTotal != null)
-            iobTotal.setText(formatNumber2decimalplaces.format(total.basaliob));
+        final IobTotal finalTotal = total;
+
+        Activity activity = getActivity();
+        if (visibleNow && activity != null && recyclerView != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (iobTotal != null)
+                        iobTotal.setText(formatNumber2decimalplaces.format(finalTotal.basaliob));
+                }
+            });
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
     }
 
+    @Nullable
+    @Override
+    public TempBasal getTempBasal(Date time) {
+        for (TempBasal t: tempBasals) {
+            if (t.isInProgress(time)) return t;
+        }
+        return null;
+    }
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 
@@ -172,24 +224,33 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             // TODO: implement locales
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, new Locale("cs", "CZ"));
             DateFormat enddf = DateFormat.getTimeInstance(DateFormat.SHORT, new Locale("cs", "CZ"));
-            if (tempBasals.get(position).timeEnd != null) {
-                holder.date.setText(df.format(tempBasals.get(position).timeStart) + " - " + enddf.format(tempBasals.get(position).timeEnd));
+            TempBasal tempBasal = tempBasals.get(position);
+            if (tempBasal.timeEnd != null) {
+                holder.date.setText(df.format(tempBasal.timeStart) + " - " + enddf.format(tempBasals.get(position).timeEnd));
             } else {
-                holder.date.setText(df.format(tempBasals.get(position).timeStart));
+                holder.date.setText(df.format(tempBasal.timeStart));
             }
-            holder.duration.setText(formatNumber0decimalplaces.format(tempBasals.get(position).duration) + " min");
-            if (tempBasals.get(position).isAbsolute) {
-                holder.absolute.setText(formatNumber0decimalplaces.format(tempBasals.get(position).absolute) + " U/h");
+            holder.duration.setText(formatNumber0decimalplaces.format(tempBasal.duration) + " min");
+            if (tempBasal.isAbsolute) {
+                holder.absolute.setText(formatNumber0decimalplaces.format(tempBasal.absolute) + " U/h");
                 holder.percent.setText("");
             } else {
                 holder.absolute.setText("");
-                holder.percent.setText(formatNumber0decimalplaces.format(tempBasals.get(position).percent) + "%");
+                holder.percent.setText(formatNumber0decimalplaces.format(tempBasal.percent) + "%");
             }
-            holder.realDuration.setText(formatNumber0decimalplaces.format(tempBasals.get(position).getRealDuration()) + " min");
-            IobTotal iob = tempBasals.get(position).iobCalc(new Date());
+            holder.realDuration.setText(formatNumber0decimalplaces.format(tempBasal.getRealDuration()) + " min");
+            IobTotal iob = tempBasal.iobCalc(new Date());
             holder.iob.setText(formatNumber2decimalplaces.format(iob.basaliob) + " U");
             holder.netInsulin.setText(formatNumber2decimalplaces.format(iob.netInsulin) + " U");
             holder.netRatio.setText(formatNumber2decimalplaces.format(iob.netRatio) + " U/h");
+            if (tempBasal.isInProgress())
+                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
+            else if (tempBasal.timeEnd == null)
+                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorNotEnded));
+            else if (tempBasal.iobCalc(new Date()).basaliob != 0)
+                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorAffectingIOB));
+            else
+                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.cardColorBackground));
         }
 
         @Override
@@ -212,6 +273,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             TextView netRatio;
             TextView netInsulin;
             TextView iob;
+            LinearLayout dateLinearLayout;
 
             TempBasalsViewHolder(View itemView) {
                 super(itemView);
@@ -224,6 +286,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
                 netRatio = (TextView) itemView.findViewById(R.id.tempbasals_netratio);
                 netInsulin = (TextView) itemView.findViewById(R.id.tempbasals_netinsulin);
                 iob = (TextView) itemView.findViewById(R.id.tempbasals_iob);
+                dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.tempbasals_datelinearlayout);
             }
         }
     }

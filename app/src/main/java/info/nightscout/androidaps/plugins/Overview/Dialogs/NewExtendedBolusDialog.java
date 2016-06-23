@@ -12,9 +12,11 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
 
@@ -47,9 +49,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         switch (view.getId()) {
             case R.id.overview_newextendedbolus_okbutton:
                 try {
-                    int basalPercent = 100;
-                    String insulinText = insulinEdit.getText().toString().replace(",", ".");
-                    Double insulin = Double.parseDouble(!insulinText.equals("") ? insulinText : "0");
+                    Double insulin = SafeParse.stringToDouble(insulinEdit.getText().toString());
                     int durationInMinutes = 30;
                     if (h10Radio.isChecked()) durationInMinutes = 60;
                     if (h20Radio.isChecked()) durationInMinutes = 120;
@@ -58,7 +58,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
                     String confirmMessage = getString(R.string.setextendedbolusquestion);
 
-                    Double insulinAfterConstraint = MainActivity.getConfigBuilder().applyBolusConstraints(insulin);
+                    Double insulinAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
                     confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
                     if (insulinAfterConstraint != insulin)
@@ -73,7 +73,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+                            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                             Result result = pump.setExtendedBolus(finalInsulin, finalDurationInMinutes);
                             if (!result.success) {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

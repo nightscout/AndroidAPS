@@ -37,6 +37,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SafeParse;
 
 public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAFragment.class);
@@ -153,11 +154,6 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.openapsma_fragment, container, false);
@@ -173,9 +169,9 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         resultView = (TextView) view.findViewById(R.id.openapsma_result);
         requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
-        if (savedInstanceState != null) {
-            lastRun = savedInstanceState.getParcelable("lastrun");
-        }
+//        if (savedInstanceState != null) {
+//            lastRun = savedInstanceState.getParcelable("lastrun");
+//        }
         updateGUI();
         return view;
     }
@@ -216,8 +212,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         }
 
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
-        PumpInterface pump = MainActivity.getConfigBuilder().getActivePump();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
         if (!isEnabled()) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));
@@ -259,15 +255,15 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
         Date now = new Date();
 
-        double maxIob = Double.parseDouble(SP.getString("openapsma_max_iob", "1.5").replace(",", "."));
-        double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
-        double minBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_min_bg", minBgDefault).replace(",", ".")), units);
-        double maxBg = NSProfile.toMgdl(Double.parseDouble(SP.getString("openapsma_max_bg", maxBgDefault).replace(",", ".")), units);
+        double maxIob = SafeParse.stringToDouble(SP.getString("openapsma_max_iob", "1.5"));
+        double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
+        double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_min_bg", minBgDefault)), units);
+        double maxBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_max_bg", minBgDefault)), units);
         minBg = Round.roundTo(minBg, 1d);
         maxBg = Round.roundTo(maxBg, 1d);
 
-        TreatmentsInterface treatments = MainActivity.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainActivity.getConfigBuilder().getActiveTempBasals();
+        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
+        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
         treatments.updateTotalIOB();
         tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();

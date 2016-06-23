@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 
 
 public class MainApp  extends Application {
@@ -19,6 +20,7 @@ public class MainApp  extends Application {
     private static MainApp sInstance;
 
     private static DatabaseHelper databaseHelper = null;
+    private static ConfigBuilderFragment configBuilder = null;
 
     @Override
     public void onCreate() {
@@ -47,6 +49,14 @@ public class MainApp  extends Application {
             databaseHelper.close();
             databaseHelper = null;
         }
+    }
+
+    public static void setConfigBuilder(ConfigBuilderFragment cb) {
+        configBuilder = cb;
+    }
+
+    public static ConfigBuilderFragment getConfigBuilder() {
+        return configBuilder;
     }
 
     @Override

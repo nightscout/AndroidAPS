@@ -27,6 +27,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SafeParse;
 
 public class SimpleProfileFragment extends Fragment implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(SimpleProfileFragment.class);
@@ -156,13 +157,13 @@ public class SimpleProfileFragment extends Fragment implements PluginBase, Profi
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                try { dia = Double.parseDouble(diaView.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { ic = Double.parseDouble(icView.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { isf = Double.parseDouble(isfView.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { car = Double.parseDouble(carView.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { basal = Double.parseDouble(basalView.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { targetLow = Double.parseDouble(targetlowView.getText().toString().replace(",", ".")); } catch (Exception e) {};
-                try { targetHigh = Double.parseDouble(targethighView.getText().toString().replace(",", ".")); } catch (Exception e) {};
+                dia = SafeParse.stringToDouble(diaView.getText().toString());
+                ic = SafeParse.stringToDouble(icView.getText().toString());
+                isf = SafeParse.stringToDouble(isfView.getText().toString());
+                car = SafeParse.stringToDouble(carView.getText().toString());
+                basal = SafeParse.stringToDouble(basalView.getText().toString());
+                targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
+                targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
                 storeSettings();
             }
         };

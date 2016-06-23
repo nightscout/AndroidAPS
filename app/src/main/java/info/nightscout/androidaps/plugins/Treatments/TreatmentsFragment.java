@@ -134,9 +134,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     public void updateTotalIOB() {
         IobTotal total = new IobTotal();
 
-        if (MainActivity.getConfigBuilder() == null || MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
             return;
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null) {
             lastCalculation = total;
             return;
@@ -153,10 +153,20 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             Iob bIOB = t.iobCalc(now, dia / 2);
             total.bolussnooze += bIOB.iobContrib;
         }
-        if (iobTotal != null)
-            iobTotal.setText(formatNumber2decimalplaces.format(total.iob));
-        if (activityTotal != null)
-            activityTotal.setText(formatNumber3decimalplaces.format(total.activity));
+
+        final IobTotal finalTotal = total;
+
+        Activity activity = getActivity();
+        if (visibleNow && activity != null && recyclerView != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (iobTotal != null)
+                        iobTotal.setText(formatNumber2decimalplaces.format(finalTotal.iob));
+                    if (activityTotal != null)
+                        activityTotal.setText(formatNumber3decimalplaces.format(finalTotal.activity));
+                }
+            });
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
@@ -170,7 +180,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     @Override
     public MealData getMealData() {
         MealData result = new MealData();
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)
             return result;
 
@@ -207,9 +217,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
-            if (MainActivity.getConfigBuilder() == null || MainActivity.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+            if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
                 return;
-            NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return;
             // TODO: implement locales

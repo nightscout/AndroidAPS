@@ -13,6 +13,7 @@ public class Result extends Object implements Parcelable{
     public Double absolute = -1d;      // absolute rate [U/h] , isPercent = false
     public Integer percent = -1;       // percent of current basal [%] (100% = current basal), isPercent = true
     public boolean isPercent = false;  // if true percent is used, otherwise absolute
+    public boolean isTempCancel = false; // if true we are caceling temp basal
     // Result of treatment delivery
     public Double bolusDelivered = 0d; // real value of delivered insulin
     public Integer carbsDelivered = 0; // real value of delivered carbs
@@ -24,7 +25,10 @@ public class Result extends Object implements Parcelable{
     public String toString() {
         String ret = "Success: " + success;
         if (enacted) {
-            if (isPercent) {
+            if (isTempCancel) {
+                ret += "\nEnacted: " + enacted + "\nComment: " + comment + "\n" +
+                        "Temp cancel";
+            } else if (isPercent) {
                 ret += "\nEnacted: " + enacted + "\nComment: " + comment + "\nDuration: " + duration + " min\nPercent: " + percent + "%";
             } else {
                 ret += "\nEnacted: " + enacted + "\nComment: " + comment + "\nDuration: " + duration + " min\nAbsolute: " + absolute + " U/h";

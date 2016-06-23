@@ -18,16 +18,10 @@ public class xDripReceiver extends WakefulBroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (MainActivity.getConfigBuilder().getActiveBgSource() == null) {
-            log.debug("getActiveBgSource is still null");
-            return;
-        }
-        if (MainActivity.getConfigBuilder().getActiveBgSource().getClass().equals(SourceXdripFragment.class)) {
-            if (Config.logFunctionCalls)
-                log.debug("onReceive " + intent);
-            startWakefulService(context, new Intent(context, DataService.class)
-                    .setAction(intent.getAction())
-                    .putExtras(intent));
-        }
+        if (Config.logFunctionCalls)
+            log.debug("onReceive " + intent);
+        startWakefulService(context, new Intent(context, DataService.class)
+                .setAction(intent.getAction())
+                .putExtras(intent));
     }
 }

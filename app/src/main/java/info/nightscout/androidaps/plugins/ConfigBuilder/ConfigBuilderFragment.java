@@ -296,7 +296,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     /**
      * apply constraints, set temp based on percent and expecting result in percent
      *
-     * @param percent 0 ... 100 ...
+     * @param percent           0 ... 100 ...
      * @param durationInMinutes
      * @return result
      */
@@ -338,7 +338,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     /**
-     *  expect absolute request and allow both absolute and percent response based on pump capabilities
+     * expect absolute request and allow both absolute and percent response based on pump capabilities
+     *
      * @param request
      * @return
      */
@@ -346,22 +347,40 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public Result applyAPSRequest(APSResult request) {
         Double rateAfterConstraints = applyBasalConstraints(request.rate);
         request.rate = rateAfterConstraints;
-        Result result = activePump.applyAPSRequest(request);
-        if (result.enacted) {
-            if (result.isPercent) {
-                if (result.percent == 0) {
+        Result result = null;
+
+        if (request.rate == getBaseBasalRate()) {
+            if (isTempBasalInProgress()) {
+                result = cancelTempBasal();
+                if (result.enacted) {
                     uploadTempBasalEnd();
-                } else {
-                    uploadTempBasalStartPercent(result.percent, result.duration);
+                    MainApp.bus().post(new EventTempBasalChange());
                 }
             } else {
-                if (result.absolute == 0d) {
-                    uploadTempBasalEnd();
+                result = new Result();
+                result.absolute = request.rate;
+                result.duration = 0;
+                result.enacted = false;
+                result.comment = "Basal set correctly";
+                result.success = true;
+            }
+        } else if (isTempBasalInProgress() && request.rate == getTempBasalAbsoluteRate()) {
+            result = new Result();
+            result.absolute = request.rate;
+            result.duration = activePump.getTempBasal().getPlannedRemainingMinutes();
+            result.enacted = false;
+            result.comment = "Temp basal set correctly";
+            result.success = true;
+        } else {
+            result = setTempBasalAbsolute(request.rate, request.duration);
+            if (result.enacted) {
+                if (result.isPercent) {
+                    uploadTempBasalStartPercent(result.percent, result.duration);
                 } else {
                     uploadTempBasalStartAbsolute(result.absolute, result.duration);
                 }
+                MainApp.bus().post(new EventTempBasalChange());
             }
-            MainApp.bus().post(new EventTempBasalChange());
         }
         return result;
     }
@@ -466,6 +485,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             return convertView;
 
         }
+
     }
 
     @Nullable
@@ -785,7 +805,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
     }
 
-   public static void uploadTempBasalStartPercent(Integer percent, double durationInMinutes) {
+    public static void uploadTempBasalStartPercent(Integer percent, double durationInMinutes) {
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();

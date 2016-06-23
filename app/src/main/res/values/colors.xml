@@ -14,4 +14,9 @@
     <color name="colorCancelTempButton">#FF47C8FF</color>
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
+
+    <color name="colorInProgress">#c45026</color>
+    <color name="colorAffectingIOB">#830400</color>
+    <color name="colorNotEnded">#190084</color>
+
 </resources>

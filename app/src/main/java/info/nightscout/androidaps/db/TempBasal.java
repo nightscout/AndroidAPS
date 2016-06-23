@@ -59,7 +59,7 @@ public class TempBasal {
 
     public IobTotal iobCalc(Date time) {
         IobTotal result = new IobTotal();
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null)
             return result;
@@ -142,6 +142,31 @@ public class TempBasal {
         if (timeEnd != null) return 0;
         long remainingMin = (getPlannedTimeEnd().getTime() - new Date().getTime()) / 1000 / 60;
         return (remainingMin < 0) ? 0 : (int) remainingMin;
+    }
+
+    public boolean isInProgress() {
+        return isInProgress(new Date());
+    }
+
+    public double tempBasalConvertedToAbsolute() {
+        if (isAbsolute) return absolute;
+        else {
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            double absval = profile.getBasal(NSProfile.secondsFromMidnight()) * percent / 100;
+            return absval;
+        }
+    }
+
+    public boolean isInProgress(Date time) {
+        if (timeStart.getTime() > time.getTime()) return false; // in the future
+        if (timeEnd == null) { // open end
+            if (timeStart.getTime() < time.getTime() && getPlannedTimeEnd().getTime() > time.getTime())
+                return true; // in interval
+            return false;
+        }
+        // closed end
+        if (timeStart.getTime() < time.getTime() && timeEnd.getTime() > time.getTime()) return true; // in interval
+        return false;
     }
 
     public String log() {

@@ -20,8 +20,9 @@ public class Config {
     public static final boolean logPrefsChange = true;
     public static final boolean logConfigBuilder = true;
     public static final boolean logConstraintsChanges = true;
+    public static final boolean logTempBasalsCut = true;
 
     // Developing mode only - never turn on
     // TODO: remove fakeGlucoseData
-    public static final boolean fakeGlucoseData = true;
+    public static final boolean fakeGlucoseData = false;
 }

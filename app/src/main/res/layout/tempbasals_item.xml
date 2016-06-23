@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/tempbasals_datelinearlayout">
 
             <TextView
                 android:id="@+id/tempbasals_date"

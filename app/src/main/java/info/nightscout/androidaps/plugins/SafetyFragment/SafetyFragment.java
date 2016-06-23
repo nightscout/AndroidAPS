@@ -17,6 +17,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SafeParse;
 
 public class SafetyFragment extends Fragment implements PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(SafetyFragment.class);
@@ -83,9 +84,9 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
+        Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
 
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (absoluteRate < 0) absoluteRate = 0d;
 
         Integer maxBasalMult = 4;
@@ -113,9 +114,9 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
     @Override
     public Integer applyBasalConstraints(Integer percentRate) {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxBasal = Double.parseDouble(SP.getString("openapsma_max_basal", "1").replace(",", "."));
+        Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
 
-        NSProfile profile = MainActivity.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         Double currentBasal = profile.getBasal(profile.secondsFromMidnight());
 
         Double absoluteRate = currentBasal * ((double) percentRate / 100);
@@ -158,7 +159,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
     public Double applyBolusConstraints(Double insulin) {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         try {
-            Double maxBolus = Double.parseDouble(SP.getString("treatmentssafety_maxbolus", "3"));
+            Double maxBolus = SafeParse.stringToDouble(SP.getString("treatmentssafety_maxbolus", "3"));
 
             if (insulin < 0) insulin = 0d;
             if (insulin > maxBolus) insulin = maxBolus;
