@@ -919,7 +919,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 deviceStatus.enacted = lastRun.request.json();
                 deviceStatus.enacted.put("rate", lastRun.setByPump.json().get("rate"));
                 deviceStatus.enacted.put("duration", lastRun.setByPump.json().get("duration"));
-                deviceStatus.enacted.put("received", true);
+                deviceStatus.enacted.put("recieved", true);
                 JSONObject requested = new JSONObject();
                 requested.put("duration", lastRun.request.duration);
                 requested.put("rate", lastRun.request.rate);
