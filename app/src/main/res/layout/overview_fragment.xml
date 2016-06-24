@@ -74,11 +74,12 @@
 
             <Button
                 android:id="@+id/overview_canceltemp"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:background="@color/colorCancelTempButton"
+                android:textColor="@color/colorCancelTempButton"
                 android:text="Cancel temp basal" />
 
         </LinearLayout>
@@ -91,20 +92,22 @@
 
             <Button
                 android:id="@+id/overview_settempbasal"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:background="@color/colorSetTempButton"
+                android:textColor="@color/colorSetTempButton"
                 android:text="TempBasal" />
 
             <Button
                 android:id="@+id/overview_extendedbolus"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:background="@color/colorSetExtendedButton"
+                android:textColor="@color/colorSetExtendedButton"
                 android:text="Extended Bolus" />
         </LinearLayout>
 
@@ -115,20 +118,22 @@
 
             <Button
                 android:id="@+id/overview_treatment"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:background="@color/colorTreatmentButton"
+                android:textColor="@color/colorTreatmentButton"
                 android:text="@string/overview_treatment_label" />
 
             <Button
                 android:id="@+id/overview_wizard"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:background="@color/colorWizardButton"
+                android:textColor="@color/colorWizardButton"
                 android:text="@string/overview_calculator_label" />
         </LinearLayout>
 

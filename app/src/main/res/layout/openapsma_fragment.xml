@@ -21,6 +21,7 @@
 
                 <Button
                     android:id="@+id/openapsma_run"
+                    style="?android:attr/borderlessButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_run" />
