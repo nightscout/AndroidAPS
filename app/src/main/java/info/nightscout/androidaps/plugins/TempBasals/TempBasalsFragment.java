@@ -207,17 +207,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             TempBasal t = tempBasals.get(pos);
             total.plus(t.iobCalc(now));
         }
-        final IobTotal finalTotal = total;
-
-        Activity activity = getActivity();
-        if (visibleNow && activity != null && recyclerView != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (iobTotal != null)
-                        iobTotal.setText(formatNumber2decimalplaces.format(finalTotal.basaliob));
-                }
-            });
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
@@ -385,6 +374,9 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
                 @Override
                 public void run() {
                     recyclerView.swapAdapter(new RecyclerViewAdapter(tempBasals), false);
+                    if (lastCalculation != null)
+                        iobTotal.setText(formatNumber2decimalplaces.format(lastCalculation.basaliob));
+
                 }
             });
     }
