@@ -13,4 +13,5 @@ public interface TempBasalsInterface {
     IobTotal getLastCalculation();
 
     TempBasal getTempBasal (Date time);
+    TempBasal getExtendedBolus (Date time);
 }

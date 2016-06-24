@@ -18,15 +18,13 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.concurrent.ExecutionException;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.Result;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.APSResult;
@@ -38,8 +36,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
     Double defaultBasalValue = 0.2d;
 
-    //TempBasal tempBasal = null;
-    TempBasal extendedBolus = null;
     Integer batteryPercent = 50;
     Integer resevoirInUnits = 50;
 
@@ -124,54 +120,14 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         return view;
     }
 
-    void checkForExpiredTempsAndExtended() {
-        long now = new Date().getTime();
-        if (isTempBasalInProgress()) {
-            //long plannedTimeEnd = tempBasal.getPlannedTimeEnd().getTime();
-            long plannedTimeEnd = getTempBasal().getPlannedTimeEnd().getTime();
-            if (plannedTimeEnd < now) {
-                //tempBasal.timeEnd = new Date(plannedTimeEnd);
-                getTempBasal().timeEnd = new Date(plannedTimeEnd);
-                try {
-                    //MainApp.instance().getDbHelper().getDaoTempBasals().update(tempBasal);
-                    MainApp.instance().getDbHelper().getDaoTempBasals().update(getTempBasal());
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    log.error(e.getMessage());
-                }
-                if (Config.logPumpComm)
-                    //log.debug("Canceling expired temp: " + tempBasal);
-                    log.debug("Canceling expired temp: " + getTempBasal());
-                //tempBasal = null;
-                MainApp.bus().post(new EventTreatmentChange());
-            }
-        }
-        if (isExtendedBoluslInProgress()) {
-            long plannedTimeEnd = extendedBolus.getPlannedTimeEnd().getTime();
-            if (plannedTimeEnd < now) {
-                extendedBolus.timeEnd = new Date(plannedTimeEnd);
-                try {
-                    MainApp.instance().getDbHelper().getDaoTempBasals().update(extendedBolus);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                    log.error(e.getMessage());
-                }
-                if (Config.logPumpComm)
-                    log.debug("Canceling expired extended bolus: " + extendedBolus);
-                extendedBolus = null;
-            }
-        }
-    }
-
     @Override
     public boolean isTempBasalInProgress() {
-        //return tempBasal != null;
         return getTempBasal() != null;
     }
 
     @Override
     public boolean isExtendedBoluslInProgress() {
-        return extendedBolus != null;
+        return getExtendedBolus() != null;
     }
 
     @Override
@@ -201,16 +157,13 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     public double getTempBasalAbsoluteRate() {
         if (!isTempBasalInProgress())
             return 0;
-        //if (tempBasal.isAbsolute) {
         if (getTempBasal().isAbsolute) {
-            //return tempBasal.absolute;
             return getTempBasal().absolute;
         } else {
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return defaultBasalValue;
             Double baseRate = profile.getBasal(profile.secondsFromMidnight());
-            //Double tempRate = baseRate * (tempBasal.percent / 100d);
             Double tempRate = baseRate * (getTempBasal().percent / 100d);
             return baseRate + tempRate;
         }
@@ -218,21 +171,24 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
     @Override
     public TempBasal getTempBasal() {
-        //return tempBasal;
         return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
+    }
+
+    @Override
+    public TempBasal getExtendedBolus() {
+        return MainApp.getConfigBuilder().getActiveTempBasals().getExtendedBolus(new Date());
     }
 
     @Override
     public double getTempBasalRemainingMinutes() {
         if (!isTempBasalInProgress())
             return 0;
-        //return tempBasal.getPlannedRemainingMinutes();
         return getTempBasal().getPlannedRemainingMinutes();
     }
 
     @Override
-    public Result deliverTreatment(Double insulin, Integer carbs) {
-        Result result = new Result();
+    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs) {
+        PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.bolusDelivered = insulin;
         result.carbsDelivered = carbs;
@@ -245,12 +201,10 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public Result setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
-        checkForExpiredTempsAndExtended();
-        Result result = cancelTempBasal();
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+        PumpEnactResult result = cancelTempBasal();
         if (!result.success)
             return result;
-        //tempBasal = new TempBasal();
         TempBasal tempBasal = new TempBasal();
         tempBasal.timeStart = new Date();
         tempBasal.isAbsolute = true;
@@ -258,6 +212,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         tempBasal.duration = durationInMinutes;
         result.success = true;
         result.enacted = true;
+        result.isTempCancel = false;
         result.absolute = absoluteRate;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -275,15 +230,13 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public Result setTempBasalPercent(Integer percent, Integer durationInMinutes) {
-        checkForExpiredTempsAndExtended();
-        Result result = new Result();
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+        PumpEnactResult result = new PumpEnactResult();
         if (isTempBasalInProgress()) {
             result = cancelTempBasal();
             if (!result.success)
                 return result;
         }
-        //tempBasal = new TempBasal();
         TempBasal tempBasal = new TempBasal();
         tempBasal.timeStart = new Date();
         tempBasal.isAbsolute = false;
@@ -293,6 +246,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         result.enacted = true;
         result.percent = percent;
         result.isPercent = true;
+        result.isTempCancel = false;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
         try {
@@ -309,12 +263,11 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public Result setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        checkForExpiredTempsAndExtended();
-        Result result = cancelExtendedBolus();
+    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+        PumpEnactResult result = cancelExtendedBolus();
         if (!result.success)
             return result;
-        extendedBolus = new TempBasal();
+        TempBasal extendedBolus = new TempBasal();
         extendedBolus.timeStart = new Date();
         extendedBolus.isExtended = true;
         extendedBolus.absolute = insulin * 60d / durationInMinutes;
@@ -323,6 +276,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         result.success = true;
         result.enacted = true;
         result.bolusDelivered = insulin;
+        result.isTempCancel = false;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
         try {
@@ -340,18 +294,17 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public Result cancelTempBasal() {
-        checkForExpiredTempsAndExtended();
-        Result result = new Result();
+    public PumpEnactResult cancelTempBasal() {
+        PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.isTempCancel = true;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
         if (isTempBasalInProgress()) {
             result.enacted = true;
-            //tempBasal.timeEnd = new Date();
-            getTempBasal().timeEnd = new Date();
+            TempBasal tb = getTempBasal();
+            tb.timeEnd = new Date();
             try {
-                MainApp.instance().getDbHelper().getDaoTempBasals().update(getTempBasal());
+                MainApp.instance().getDbHelper().getDaoTempBasals().update(tb);
                 //tempBasal = null;
                 if (Config.logPumpComm)
                     log.debug("Canceling temp basal: " + result);
@@ -367,10 +320,10 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public Result cancelExtendedBolus() {
-        checkForExpiredTempsAndExtended();
-        Result result = new Result();
+    public PumpEnactResult cancelExtendedBolus() {
+        PumpEnactResult result = new PumpEnactResult();
         if (isExtendedBoluslInProgress()) {
+            TempBasal extendedBolus = getExtendedBolus();
             extendedBolus.timeEnd = new Date();
             try {
                 MainApp.instance().getDbHelper().getDaoTempBasals().update(extendedBolus);
@@ -382,8 +335,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
         }
         result.success = true;
         result.enacted = true;
+        result.isTempCancel = true;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        extendedBolus = null;
         if (Config.logPumpComm)
             log.debug("Canceling extended basal: " + result);
         updateGUI();
@@ -391,7 +344,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public Result applyAPSRequest(APSResult request) {
+    public PumpEnactResult applyAPSRequest(APSResult request) {
         // This should be implemented only on ConfigBuilder
         return null;
     }
@@ -405,9 +358,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             battery.put("percent", batteryPercent);
             status.put("status", "normal");
             if (isTempBasalInProgress()) {
-                //status.put("tempbasalpct", tempBasal.percent);
-                //status.put("tempbasalstart", DateUtil.toISOString(tempBasal.timeStart));
-                //status.put("tempbasalremainmin", tempBasal.getPlannedRemainingMinutes());
                 status.put("tempbasalpct", getTempBasal().percent);
                 status.put("tempbasalstart", DateUtil.toISOString(getTempBasal().timeStart));
                 status.put("tempbasalremainmin", getTempBasal().getPlannedRemainingMinutes());
@@ -424,6 +374,11 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
+    public String deviceID() {
+        return "VirtualPump";
+    }
+
+    @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
 
@@ -436,7 +391,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     public void updateGUI() {
-        checkForExpiredTempsAndExtended();
         Activity activity = getActivity();
         if (activity != null && visibleNow && basaBasalRateView != null)
             activity.runOnUiThread(new Runnable() {
@@ -451,7 +405,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
                         tempBasalView.setText("");
                     }
                     if (isExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(extendedBolus.toString());
+                        extendedBolusView.setText(getExtendedBolus().toString());
                     } else {
                         extendedBolusView.setText("");
                     }

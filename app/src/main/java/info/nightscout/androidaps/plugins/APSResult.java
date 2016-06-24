@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainActivity;
@@ -75,4 +78,17 @@ public class APSResult implements Parcelable {
         return newResult;
     }
 
+    public JSONObject json() {
+        JSONObject json = new JSONObject();
+        try {
+            if (changeRequested) {
+                json.put("rate", rate);
+                json.put("duration", duration);
+                json.put("reason", reason);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
 }

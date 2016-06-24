@@ -273,7 +273,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timestamp < new Date().getTime() - 7 * 60 * 1000l) {
                 if (Config.fakeGlucoseData) {
-                    return new GlucoseStatus(Math.random() * 400, (Math. random() - 0.5)* 18, (Math. random() - 0.5)* 18);
+                    return new GlucoseStatus(Math.random() * 400 + 40, (Math. random() - 0.5)* 18, (Math. random() - 0.5)* 18);
                 }
                 return null;
             }

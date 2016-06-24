@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.MainApp;
@@ -119,7 +120,8 @@ public class Treatment {
         List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
             log.error("DBADD No receivers");
-        } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+        } else  if (Config.logNSUpload)
+            log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
     }
 
     public void updateToNSClient() {
@@ -146,6 +148,7 @@ public class Treatment {
         List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
             log.error("DBUPDATE No receivers");
-        } else log.debug("DBUPDATE dbUpdate " + q.size() + " receivers " + _id + " " + data.toString());
+        } else  if (Config.logNSUpload)
+            log.debug("DBUPDATE dbUpdate " + q.size() + " receivers " + _id + " " + data.toString());
     }
 }

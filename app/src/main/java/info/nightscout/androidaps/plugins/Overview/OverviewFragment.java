@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.Round;
 
 
 public class OverviewFragment extends Fragment implements PluginBase {
@@ -326,17 +327,17 @@ public class OverviewFragment extends Fragment implements PluginBase {
         // allign to hours
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(new Date().getTime());
+        calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.add(Calendar.HOUR, 1);
 
         int hoursToFetch = 6;
-        long toTime = calendar.getTimeInMillis();
+        long toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
         long fromTime = toTime - hoursToFetch * 60 * 60 * 1000l;
 
         Double lowLine = NSProfile.toUnits(80d, 4d, units); // TODO: make this customisable
         Double highLine = NSProfile.toUnits(180d, 10d, units);
-        Double maxY = NSProfile.toUnits(400d, 20d, units); // TODO: add some scale support
 
         BarGraphSeries<DataPoint> basalsSeries = null;
         LineGraphSeries<DataPoint> seriesLow = null;
@@ -345,6 +346,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         PointsGraphSeries<BgReading> seriesInRage = null;
         PointsGraphSeries<BgReading> seriesOutOfRange = null;
 
+        // remove old data from graph
         bgGraph.removeAllSeries();
 
         // **** TEMP BASALS graph ****
@@ -356,11 +358,11 @@ public class OverviewFragment extends Fragment implements PluginBase {
             public boolean isTempBasal = false;
         }
 
-        Double maxAllowedBasal = MainApp.getConfigBuilder().applyBasalConstraints(1000d);
+        Double maxAllowedBasal = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
 
         long now = new Date().getTime();
         List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
-        for (long time = fromTime; time < now; time += 5 * 60 * 1000l) {
+        for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
             TempBasal tb = MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date(time));
             if (tb != null)
                 basalArray.add(new BarDataPoint(time, tb.tempBasalConvertedToAbsolute(), true));
@@ -368,7 +370,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
                 basalArray.add(new BarDataPoint(time, profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
         }
         BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
-        log.debug("Bars: " + basalArray.size());
         basal = basalArray.toArray(basal);
         bgGraph.addSeries(basalsSeries = new BarGraphSeries<DataPoint>(basal));
         basalsSeries.setValueDependentColor(new ValueDependentColor<DataPoint>() {
@@ -384,7 +385,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         bgGraph.getSecondScale().addSeries(basalsSeries);
         bgGraph.getSecondScale().setMinY(0);
         bgGraph.getSecondScale().setMaxY(maxAllowedBasal * 4);
-        bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark));
+        bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
 
 
         // **** BG graph ****
@@ -396,13 +397,19 @@ public class OverviewFragment extends Fragment implements PluginBase {
             return;
 
         Iterator<BgReading> it = bgReadingsArray.iterator();
+        Double maxBgValue = 0d;
         while (it.hasNext()) {
             BgReading bg = it.next();
+            if (bg.value > maxBgValue) maxBgValue = bg.value;
             if (bg.valueToUnits(units) < lowLine || bg.valueToUnits(units) > highLine)
                 outOfRangeArray.add(bg);
             else
                 inRangeArray.add(bg);
         }
+        maxBgValue = NSProfile.fromMgdlToUnits(maxBgValue, units);
+        maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
+        Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
+
         BgReading[] inRange = new BgReading[inRangeArray.size()];
         BgReading[] outOfRange = new BgReading[outOfRangeArray.size()];
         inRange = inRangeArray.toArray(inRange);
@@ -441,7 +448,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         // **** NOW line ****
         DataPoint[] nowPoints = new DataPoint[]{
                 new DataPoint(now, 0),
-                new DataPoint(now, maxY)
+                new DataPoint(now, maxBgValue)
         };
         bgGraph.addSeries(seriesNow = new LineGraphSeries<DataPoint>(nowPoints));
         seriesNow.setColor(Color.GREEN);
@@ -464,10 +471,10 @@ public class OverviewFragment extends Fragment implements PluginBase {
         bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
         // set manual y bounds to have nice steps
-        bgGraph.getViewport().setMaxY(maxY);
+        bgGraph.getViewport().setMaxY(maxBgValue);
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(11);
+        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
     }
 
 }

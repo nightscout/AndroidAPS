@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -33,7 +32,7 @@ import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.data.Result;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -47,6 +46,9 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.APSResult;
+import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
+import info.nightscout.androidaps.plugins.Loop.LoopFragment;
+import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
@@ -81,6 +83,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ProfileInterface activeProfile;
     TreatmentsInterface activeTreatments;
     TempBasalsInterface activeTempBasals;
+    LoopFragment activeLoop;
 
     ArrayList<PluginBase> pluginList;
 
@@ -252,11 +255,16 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public Result deliverTreatment(Double insulin, Integer carbs) {
+    public TempBasal getExtendedBolus() {
+        return activePump.getExtendedBolus();
+    }
+
+    @Override
+    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs) {
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
-        Result result = activePump.deliverTreatment(insulin, carbs);
+        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs);
 
         if (result.success) {
             Treatment t = new Treatment();
@@ -283,9 +291,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * @return
      */
     @Override
-    public Result setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         Double rateAfterConstraints = applyBasalConstraints(absoluteRate);
-        Result result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
+        PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
         if (result.enacted) {
             uploadTempBasalStartAbsolute(result.absolute, result.duration);
             MainApp.bus().post(new EventTempBasalChange());
@@ -301,9 +309,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * @return result
      */
     @Override
-    public Result setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         Integer percentAfterConstraints = applyBasalConstraints(percent);
-        Result result = activePump.setTempBasalPercent(percentAfterConstraints, durationInMinutes);
+        PumpEnactResult result = activePump.setTempBasalPercent(percentAfterConstraints, durationInMinutes);
         if (result.enacted) {
             uploadTempBasalStartPercent(result.percent, result.duration);
             MainApp.bus().post(new EventTempBasalChange());
@@ -312,9 +320,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public Result setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        Double rateAfterConstraints = applyBasalConstraints(insulin);
-        Result result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
+    public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+        Double rateAfterConstraints = applyBolusConstraints(insulin);
+        PumpEnactResult result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
         if (result.enacted) {
             uploadExtendedBolus(result.bolusDelivered, result.duration);
             MainApp.bus().post(new EventTreatmentChange());
@@ -323,8 +331,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public Result cancelTempBasal() {
-        Result result = activePump.cancelTempBasal();
+    public PumpEnactResult cancelTempBasal() {
+        PumpEnactResult result = activePump.cancelTempBasal();
         if (result.enacted) {
             uploadTempBasalEnd();
             MainApp.bus().post(new EventTempBasalChange());
@@ -333,7 +341,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public Result cancelExtendedBolus() {
+    public PumpEnactResult cancelExtendedBolus() {
         return activePump.cancelExtendedBolus();
     }
 
@@ -344,10 +352,10 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * @return
      */
     @Override
-    public Result applyAPSRequest(APSResult request) {
+    public PumpEnactResult applyAPSRequest(APSResult request) {
         Double rateAfterConstraints = applyBasalConstraints(request.rate);
         request.rate = rateAfterConstraints;
-        Result result = null;
+        PumpEnactResult result = null;
 
         if (request.rate == getBaseBasalRate()) {
             if (isTempBasalInProgress()) {
@@ -357,7 +365,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     MainApp.bus().post(new EventTempBasalChange());
                 }
             } else {
-                result = new Result();
+                result = new PumpEnactResult();
                 result.absolute = request.rate;
                 result.duration = 0;
                 result.enacted = false;
@@ -365,7 +373,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 result.success = true;
             }
         } else if (isTempBasalInProgress() && request.rate == getTempBasalAbsoluteRate()) {
-            result = new Result();
+            result = new PumpEnactResult();
             result.absolute = request.rate;
             result.duration = activePump.getTempBasal().getPlannedRemainingMinutes();
             result.enacted = false;
@@ -388,6 +396,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public JSONObject getJSONStatus() {
         return activePump.getJSONStatus();
+    }
+
+    @Override
+    public String deviceID() {
+        return activePump.deviceID();
     }
 
     /*
@@ -488,12 +501,10 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     }
 
-    @Nullable
     public BgSourceInterface getActiveBgSource() {
         return activeBgSource;
     }
 
-    @Nullable
     public PumpInterface getActivePump() {
         return this;
     }
@@ -503,14 +514,16 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         return activeProfile;
     }
 
-    @Nullable
     public TreatmentsInterface getActiveTreatments() {
         return activeTreatments;
     }
 
-    @Nullable
     public TempBasalsInterface getActiveTempBasals() {
         return activeTempBasals;
+    }
+
+    public LoopFragment getActiveLoop() {
+        return activeLoop;
     }
 
     void onEnabledCategoryChanged(PluginBase changedPlugin) {
@@ -588,11 +601,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     }
                     break;
                 case PluginBase.LOOP:
-                    PluginBase loop = getTheOneEnabledInArray(pluginsInCategory);
+                    activeLoop = (LoopFragment) getTheOneEnabledInArray(pluginsInCategory);
                     if (Config.logConfigBuilder)
-                        log.debug("Selected loop interface: " + loop.getName());
+                        log.debug("Selected loop interface: " + activeLoop.getName());
                     for (PluginBase p : pluginsInCategory) {
-                        if (!p.getName().equals(loop.getName())) {
+                        if (!p.getName().equals(activeLoop.getName())) {
                             p.setFragmentVisible(false);
                         }
                     }
@@ -800,7 +813,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
             if (q.size() < 1) {
                 log.error("DBADD No receivers");
-            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            } else if (Config.logNSUpload)
+                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
         } catch (JSONException e) {
         }
     }
@@ -825,7 +839,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
             if (q.size() < 1) {
                 log.error("DBADD No receivers");
-            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            } else if (Config.logNSUpload)
+                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
         } catch (JSONException e) {
         }
     }
@@ -848,7 +863,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
             if (q.size() < 1) {
                 log.error("DBADD No receivers");
-            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            } else if (Config.logNSUpload)
+                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
         } catch (JSONException e) {
         }
     }
@@ -876,9 +892,49 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
             if (q.size() < 1) {
                 log.error("DBADD No receivers");
-            } else log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            } else if (Config.logNSUpload)
+                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
         } catch (JSONException e) {
         }
     }
 
+    public void uploadDeviceStatus() {
+        DeviceStatus deviceStatus = new DeviceStatus();
+        try {
+            LoopFragment.LastRun lastRun = LoopFragment.lastRun;
+            if (lastRun == null) return;
+            if (lastRun.lastAPSRun.getTime() < new Date().getTime() - 60 * 1000L)
+                return; // do not send if result is older than 1 min
+
+            String openapsmaPluginName = MainApp.resources.getString(R.string.openapsma);
+            if (lastRun.source.equals(openapsmaPluginName)) {
+                DetermineBasalResult result = (DetermineBasalResult) lastRun.request;
+                result.json.put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
+                deviceStatus.suggested = result.json;
+                deviceStatus.iob = result.iob.json();
+                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+            }
+
+            if (lastRun.setByPump != null && lastRun.setByPump.enacted) { // enacted
+                deviceStatus.enacted = lastRun.request.json();
+                deviceStatus.enacted.put("rate", lastRun.setByPump.json().get("rate"));
+                deviceStatus.enacted.put("duration", lastRun.setByPump.json().get("duration"));
+                deviceStatus.enacted.put("received", true);
+                JSONObject requested = new JSONObject();
+                requested.put("duration", lastRun.request.duration);
+                requested.put("rate", lastRun.request.rate);
+                requested.put("temp", "absolute");
+                deviceStatus.enacted.put("requested", requested);
+            }
+
+            deviceStatus.device = "openaps://" + getActivePump().deviceID();
+            deviceStatus.pump = getActivePump().getJSONStatus();
+
+            deviceStatus.created_at = DateUtil.toISOString(new Date());
+
+            deviceStatus.sendToNSClient();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 }

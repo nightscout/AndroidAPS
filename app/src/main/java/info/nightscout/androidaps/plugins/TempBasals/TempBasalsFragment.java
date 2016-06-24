@@ -32,7 +32,6 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
@@ -55,6 +54,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
     private static DecimalFormat formatNumber3decimalplaces = new DecimalFormat("0.000");
 
     private List<TempBasal> tempBasals;
+    private List<TempBasal> extendedBoluses;
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
@@ -114,46 +114,72 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             queryBuilder.orderBy("timeIndex", false);
             Where where = queryBuilder.where();
             where.eq("isExtended", false);
-            queryBuilder.limit(30l);
+            queryBuilder.limit(30L);
             PreparedQuery<TempBasal> preparedQuery = queryBuilder.prepare();
             tempBasals = dao.query(preparedQuery);
 
-            // Update ended
-            long now = new Date().getTime();
-            for (int position = tempBasals.size() - 1; position >= 0; position--) {
-                TempBasal t = tempBasals.get(position);
-                boolean update = false;
-                if (t.timeEnd == null && t.getPlannedTimeEnd().getTime() < now) {
-                    t.timeEnd = new Date(t.getPlannedTimeEnd().getTime());
-                    if (Config.logTempBasalsCut)
-                        log.debug("Add timeEnd to old record");
-                    update = true;
-                }
-                if (position > 0) {
-                    Date startofnewer = tempBasals.get(position - 1).timeStart;
-                    if (t.timeEnd == null) {
-                        t.timeEnd = new Date(Math.min(startofnewer.getTime(), t.getPlannedTimeEnd().getTime()));
-                        if (Config.logTempBasalsCut)
-                            log.debug("Add timeEnd to old record");
-                        update = true;
-                    } else if (t.timeEnd.getTime() > startofnewer.getTime()) {
-                        t.timeEnd = startofnewer;
-                        update = true;
-                    }
-                }
-                if (update) {
-                    dao.update(t);
-                    if (Config.logTempBasalsCut) {
-                        log.debug("Fixing unfinished temp end: " + t.log());
-                        if (position > 0)
-                            log.debug("Previous: " + tempBasals.get(position - 1).log());
-                    }
-                }
+            QueryBuilder<TempBasal, Long> queryBuilderExt = dao.queryBuilder();
+            queryBuilderExt.orderBy("timeIndex", false);
+            Where whereExt = queryBuilderExt.where();
+            whereExt.eq("isExtended", true);
+            queryBuilderExt.limit(5L);
+            PreparedQuery<TempBasal> preparedQueryExt = queryBuilderExt.prepare();
+            extendedBoluses = dao.query(preparedQueryExt);
 
-            }
+            // Update ended
+            checkForExpiredExtended();
+            checkForExpiredTemps();
+
         } catch (SQLException e) {
             log.debug(e.getMessage(), e);
             tempBasals = new ArrayList<TempBasal>();
+        }
+    }
+
+    public void checkForExpiredTemps() {
+        checkForExpired(tempBasals);
+    }
+
+    public void checkForExpiredExtended() {
+        checkForExpired(extendedBoluses);
+    }
+
+    private void checkForExpired(List<TempBasal> list) {
+        long now = new Date().getTime();
+        for (int position = list.size() - 1; position >= 0; position--) {
+            TempBasal t = list.get(position);
+            boolean update = false;
+            if (t.timeEnd == null && t.getPlannedTimeEnd().getTime() < now) {
+                t.timeEnd = new Date(t.getPlannedTimeEnd().getTime());
+                if (Config.logTempBasalsCut)
+                    log.debug("Add timeEnd to old record");
+                update = true;
+            }
+            if (position > 0) {
+                Date startofnewer = list.get(position - 1).timeStart;
+                if (t.timeEnd == null) {
+                    t.timeEnd = new Date(Math.min(startofnewer.getTime(), t.getPlannedTimeEnd().getTime()));
+                    if (Config.logTempBasalsCut)
+                        log.debug("Add timeEnd to old record");
+                    update = true;
+                } else if (t.timeEnd.getTime() > startofnewer.getTime()) {
+                    t.timeEnd = startofnewer;
+                    update = true;
+                }
+            }
+            if (update) {
+                try {
+                    Dao<TempBasal, Long> dao = MainApp.getDbHelper().getDaoTempBasals();
+                    dao.update(t);
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                if (Config.logTempBasalsCut) {
+                    log.debug("Fixing unfinished temp end: " + t.log());
+                    if (position > 0)
+                        log.debug("Previous: " + list.get(position - 1).log());
+                }
+            }
         }
     }
 
@@ -173,6 +199,8 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
     @Override
     public void updateTotalIOB() {
+        checkForExpired(tempBasals);
+        checkForExpired(extendedBoluses);
         Date now = new Date();
         IobTotal total = new IobTotal();
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
@@ -198,7 +226,17 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
     @Nullable
     @Override
     public TempBasal getTempBasal(Date time) {
-        for (TempBasal t: tempBasals) {
+        checkForExpired(tempBasals);
+        for (TempBasal t : tempBasals) {
+            if (t.isInProgress(time)) return t;
+        }
+        return null;
+    }
+
+    @Override
+    public TempBasal getExtendedBolus(Date time) {
+        checkForExpired(extendedBoluses);
+        for (TempBasal t : extendedBoluses) {
             if (t.isInProgress(time)) return t;
         }
         return null;

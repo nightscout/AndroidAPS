@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -83,6 +83,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
 
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
+        Double origAbsoluteRate = absoluteRate;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
 
@@ -95,17 +96,17 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         Double origRate = absoluteRate;
         if (absoluteRate > maxBasal) {
             absoluteRate = maxBasal;
-            if (Config.logConstraintsChanges)
+            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
                 log.debug("Limiting rate " + origRate + " by maxBasal preference to " + absoluteRate + "U/h");
         }
         if (absoluteRate > maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight())) {
             absoluteRate = Math.floor(maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight()) * 100) / 100;
-            if (Config.logConstraintsChanges)
+            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
                 log.debug("Limiting rate " + origRate + " by maxBasalMult to " + absoluteRate + "U/h");
         }
         if (absoluteRate > profile.getMaxDailyBasal() * maxBasalFromDaily) {
             absoluteRate = profile.getMaxDailyBasal() * maxBasalFromDaily;
-            if (Config.logConstraintsChanges)
+            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
                 log.debug("Limiting rate " + origRate + " by 3 * maxDailyBasal to " + absoluteRate + "U/h");
         }
         return absoluteRate;
@@ -113,6 +114,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
 
     @Override
     public Integer applyBasalConstraints(Integer percentRate) {
+        Integer origPercentRate = percentRate;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
 
@@ -132,17 +134,17 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         Double origRate = absoluteRate;
         if (absoluteRate > maxBasal) {
             absoluteRate = maxBasal;
-            if (Config.logConstraintsChanges)
+            if (Config.logConstraintsChanges && origPercentRate != Constants.basalPercentOnlyForCheckLimit)
                 log.debug("Limiting rate " + origRate + " by maxBasal preference to " + absoluteRate + "U/h");
         }
         if (absoluteRate > maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight())) {
             absoluteRate = Math.floor(maxBasalMult * profile.getBasal(NSProfile.secondsFromMidnight()) * 100) / 100;
-            if (Config.logConstraintsChanges)
+            if (Config.logConstraintsChanges && origPercentRate != Constants.basalPercentOnlyForCheckLimit)
                 log.debug("Limiting rate " + origRate + " by maxBasalMult to " + absoluteRate + "U/h");
         }
         if (absoluteRate > profile.getMaxDailyBasal() * maxBasalFromDaily) {
             absoluteRate = profile.getMaxDailyBasal() * maxBasalFromDaily;
-            if (Config.logConstraintsChanges)
+            if (Config.logConstraintsChanges && origPercentRate != Constants.basalPercentOnlyForCheckLimit)
                 log.debug("Limiting rate " + origRate + " by 3 * maxDailyBasal to " + absoluteRate + "U/h");
         }
 
@@ -150,7 +152,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         if (percentRateAfterConst < 100) Round.ceilTo(absoluteRate, 10d).intValue();
         else  Round.floorTo(absoluteRate, 10d).intValue();
 
-        if (Config.logConstraintsChanges)
+        if (Config.logConstraintsChanges && origPercentRate != Constants.basalPercentOnlyForCheckLimit)
             log.debug("Recalculated percent rate " + percentRate + "% to " + percentRateAfterConst + "%");
         return percentRateAfterConst;
     }

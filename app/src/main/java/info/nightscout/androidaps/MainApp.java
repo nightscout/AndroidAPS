@@ -1,6 +1,7 @@
 package info.nightscout.androidaps;
 
 import android.app.Application;
+import android.content.res.Resources;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
@@ -18,6 +19,7 @@ public class MainApp  extends Application {
 
     private static Bus sBus;
     private static MainApp sInstance;
+    public static Resources resources;
 
     private static DatabaseHelper databaseHelper = null;
     private static ConfigBuilderFragment configBuilder = null;
@@ -28,6 +30,7 @@ public class MainApp  extends Application {
 
         sBus = new Bus(ThreadEnforcer.ANY);
         sInstance = this;
+        resources = getResources();
     }
 
     public static Bus bus() {
