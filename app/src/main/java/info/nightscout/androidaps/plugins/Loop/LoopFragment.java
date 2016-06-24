@@ -277,7 +277,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
             lastRun.request = result;
             lastRun.constraintsProcessed = resultAfterConstraints;
             lastRun.setByPump = null;
-            lastRun.source = ((PluginBase) usedAPS).getName();
+            lastRun.source = null;
             lastRun.lastAPSRun = new Date();
         }
         updateGUI();
