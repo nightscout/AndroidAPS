@@ -65,21 +65,11 @@ public class IobTotal {
         JSONObject json = new JSONObject();
         try {
             json.put("iob", iob);
-            json.put("activity", activity);
-            json.put("bolusIob", bolussnooze);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return json;
-    }
-
-    public JSONObject nsJson() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("iob", bolussnooze);
+            json.put("bolussnooze", bolussnooze);
             json.put("basaliob", iob);
             json.put("activity", activity);
-            json.put("timestamp", DateUtil.toISOString(new Date()));
+            json.put("hightempinsulin", hightempinsulin);
+            json.put("netbasalinsulin", netbasalinsulin);
         } catch (JSONException e) {
             e.printStackTrace();
         }

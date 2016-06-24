@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -17,10 +15,9 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Result;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
@@ -140,7 +137,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
                                 PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-                                Result result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
+                                PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
                                 if (!result.success) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));

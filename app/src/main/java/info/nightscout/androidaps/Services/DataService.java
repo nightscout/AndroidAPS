@@ -120,10 +120,10 @@ public class DataService extends IntentService {
         bgReading.value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE);
         bgReading.slope = bundle.getDouble(Intents.EXTRA_BG_SLOPE);
         bgReading.battery_level = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY);
-        bgReading.timestamp = bundle.getLong(Intents.EXTRA_TIMESTAMP);
+        bgReading.timeIndex = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
 
-        if (bgReading.timestamp < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+        if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
             if (Config.logIncommingBG)
                 log.debug("Ignoring old XDRIPREC BG " + bgReading.toString());
             return;
@@ -320,7 +320,7 @@ public class DataService extends IntentService {
                         JSONObject sgvJson = new JSONObject(sgvstring);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
-                        if (bgReading.timestamp < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                        if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
                             if (Config.logIncommingData)
                                 log.debug("Ignoring old BG: " + bgReading.toString());
                             return;
@@ -337,7 +337,7 @@ public class DataService extends IntentService {
                             JSONObject sgvJson = jsonArray.getJSONObject(i);
                             NSSgv nsSgv = new NSSgv(sgvJson);
                             BgReading bgReading = new BgReading(nsSgv);
-                            if (bgReading.timestamp < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                            if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
                                 if (Config.logIncommingData)
                                     log.debug("Ignoring old BG: " + bgReading.toString());
                             } else {

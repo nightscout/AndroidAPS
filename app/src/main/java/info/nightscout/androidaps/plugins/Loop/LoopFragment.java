@@ -23,7 +23,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Result;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -45,10 +45,10 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
     boolean confirmed;
 
-    class LastRun implements Parcelable {
+    public class LastRun implements Parcelable {
         public APSResult request = null;
         public APSResult constraintsProcessed = null;
-        public Result setByPump = null;
+        public PumpEnactResult setByPump = null;
         public String source = null;
         public Date lastAPSRun = null;
         public Date lastEnact = null;
@@ -81,7 +81,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         private LastRun(Parcel in) {
             request = in.readParcelable(APSResult.class.getClassLoader());
             constraintsProcessed = in.readParcelable(APSResult.class.getClassLoader());
-            setByPump = in.readParcelable(Result.class.getClassLoader());
+            setByPump = in.readParcelable(PumpEnactResult.class.getClassLoader());
             source = in.readString();
             lastAPSRun = new Date(in.readLong());
             lastEnact = new Date(in.readLong());
@@ -91,7 +91,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         }
     }
 
-    static LastRun lastRun = null;
+    static public LastRun lastRun = null;
 
     private boolean fragmentEnabled = false;
     private boolean fragmentVisible = true;
@@ -160,9 +160,9 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         runNowButton = (Button) view.findViewById(R.id.loop_run);
         runNowButton.setOnClickListener(this);
 
-        if (savedInstanceState != null) {
-            lastRun = savedInstanceState.getParcelable("lastrun");
-        }
+        //if (savedInstanceState != null) {
+        //    lastRun = savedInstanceState.getParcelable("lastrun");
+        //}
         updateGUI();
         return view;
     }
@@ -260,7 +260,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
         if (result.changeRequested) {
             constraintsInterface.applyBasalConstraints(resultAfterConstraints);
-            Result applyResult = pumpInterface.applyAPSRequest(resultAfterConstraints);
+            PumpEnactResult applyResult = pumpInterface.applyAPSRequest(resultAfterConstraints);
             Date lastEnact = lastRun != null ? lastRun.lastEnact : new Date(0, 0, 0);
             lastRun = new LastRun();
             lastRun.request = result;
@@ -281,6 +281,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
             lastRun.lastAPSRun = new Date();
         }
         updateGUI();
+        MainApp.getConfigBuilder().uploadDeviceStatus();
     }
 
     void updateGUI() {

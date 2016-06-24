@@ -16,6 +16,7 @@ public class DetermineBasalResult extends APSResult {
     public double eventualBG;
     public double snoozeBG;
     public String mealAssist;
+    public IobTotal iob;
 
     public DetermineBasalResult(V8Object result, JSONObject j) {
         json = j;
@@ -75,11 +76,16 @@ public class DetermineBasalResult extends APSResult {
         mealAssist = in.readString();
     }
 
-    public DetermineBasalResult() {}
+    public DetermineBasalResult() {
+    }
 
     @Override
     public DetermineBasalResult clone() {
         DetermineBasalResult newResult = new DetermineBasalResult();
+        newResult.reason = new String(reason);
+        newResult.rate = rate;
+        newResult.duration = duration;
+        newResult.changeRequested = changeRequested;
         newResult.rate = rate;
         newResult.duration = duration;
         newResult.changeRequested = changeRequested;
@@ -94,4 +100,16 @@ public class DetermineBasalResult extends APSResult {
         newResult.mealAssist = new String(mealAssist);
         return newResult;
     }
+
+    @Override
+    public JSONObject json() {
+        try {
+            JSONObject ret = new JSONObject(this.json.toString());
+            return ret;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

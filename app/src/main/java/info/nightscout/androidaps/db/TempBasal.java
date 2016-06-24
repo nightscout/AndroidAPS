@@ -24,7 +24,7 @@ public class TempBasal {
     private static Logger log = LoggerFactory.getLogger(TempBasal.class);
 
     public long getTimeIndex() {
-        return (long) Math.ceil(timeStart.getTime() / 60000d);
+        return timeStart.getTime();
     }
 
     public void setTimeIndex(long timeIndex) {
@@ -33,7 +33,6 @@ public class TempBasal {
 
     @DatabaseField(id = true, useGetSet = true)
     public long timeIndex;
-
 
     @DatabaseField
     public Date timeStart;

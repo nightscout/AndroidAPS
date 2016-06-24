@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces;
 
 import org.json.JSONObject;
 
-import info.nightscout.androidaps.data.Result;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.plugins.APSResult;
 import info.nightscout.client.data.NSProfile;
@@ -25,15 +25,17 @@ public interface PumpInterface {
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();
     TempBasal getTempBasal();
+    TempBasal getExtendedBolus();
 
-    Result deliverTreatment(Double insulin, Integer carbs);
-    Result setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
-    Result setTempBasalPercent(Integer percent, Integer durationInMinutes);
-    Result setExtendedBolus(Double insulin, Integer durationInMinutes);
-    Result cancelTempBasal();
-    Result cancelExtendedBolus();
-    Result applyAPSRequest(APSResult request);
+    PumpEnactResult deliverTreatment(Double insulin, Integer carbs);
+    PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
+    PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes);
+    PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes);
+    PumpEnactResult cancelTempBasal();
+    PumpEnactResult cancelExtendedBolus();
+    PumpEnactResult applyAPSRequest(APSResult request);
 
     // Status to be passed to NS
     JSONObject getJSONStatus();
+    String deviceID();
 }

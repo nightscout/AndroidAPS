@@ -277,6 +277,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
 
         DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
+        determineBasalResult.iob = iobTotal;
 
         determineBasalAdapterJS.release();
 

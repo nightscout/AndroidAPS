@@ -3,7 +3,14 @@ package info.nightscout.androidaps.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Result extends Object implements Parcelable{
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.Round;
+
+public class PumpEnactResult extends Object implements Parcelable {
     public boolean success = false;    // request was processed successfully (but possible no change was needed)
     public boolean enacted = false;    // request was processed successfully and change has been made
     public String comment = "";
@@ -55,17 +62,17 @@ public class Result extends Object implements Parcelable{
         dest.writeInt(percent);
     }
 
-    public final Parcelable.Creator<Result> CREATOR = new Parcelable.Creator<Result>() {
-        public Result createFromParcel(Parcel in) {
-            return new Result(in);
+    public final Parcelable.Creator<PumpEnactResult> CREATOR = new Parcelable.Creator<PumpEnactResult>() {
+        public PumpEnactResult createFromParcel(Parcel in) {
+            return new PumpEnactResult(in);
         }
 
-        public Result[] newArray(int size) {
-            return new Result[size];
+        public PumpEnactResult[] newArray(int size) {
+            return new PumpEnactResult[size];
         }
     };
 
-    protected Result(Parcel in) {
+    protected PumpEnactResult(Parcel in) {
         success = in.readInt() == 1 ? true : false;
         enacted = in.readInt() == 1 ? true : false;
         isPercent = in.readInt() == 1 ? true : false;
@@ -76,6 +83,27 @@ public class Result extends Object implements Parcelable{
 
     }
 
-    public Result() {}
+    public PumpEnactResult() {
+    }
 
+    public JSONObject json() {
+        JSONObject result = new JSONObject();
+        try {
+            if (isTempCancel) {
+                result.put("rate", 0);
+                result.put("duration", 0);
+            } else if (isPercent) {
+                // Nightscout is expecting absolute value
+                Double abs = Round.roundTo(MainApp.getConfigBuilder().getActiveProfile().getProfile().getBasal(NSProfile.secondsFromMidnight()) * percent / 100, 0.01);
+                result.put("rate", abs);
+                result.put("duration", duration);
+            } else {
+                result.put("rate", absolute);
+                result.put("duration", duration);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

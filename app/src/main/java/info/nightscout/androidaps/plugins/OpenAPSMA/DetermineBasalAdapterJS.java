@@ -41,7 +41,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
     private final String PARAM_meal_data = "meal_data";
 
     private String storedCurrentTemp = null;
-    private String storedIobData = null;
+    public String storedIobData = null;
     private String storedGlucoseStatus = null;
     private String storedProfile = null;
     private String storedMeal_data = null;
@@ -124,7 +124,6 @@ public class DetermineBasalAdapterJS implements Parcelable {
         mIobData = new V8Object(mV8rt);
         mIobData.add("iob", 0); //netIob
         mIobData.add("activity", 0); //netActivity
-        mIobData.add("bolusiob", 0); // backward compatibility with master
         mIobData.add("bolussnooze", 0); //bolusIob
         mIobData.add("basaliob", 0);
         mIobData.add("netbasalinsulin", 0);
@@ -287,7 +286,6 @@ public class DetermineBasalAdapterJS implements Parcelable {
 
         mIobData.add("iob", iobData.iob); //netIob
         mIobData.add("activity", iobData.activity); //netActivity
-        mIobData.add("bolusiob", iobData.bolussnooze); // backward compatibility with master
         mIobData.add("bolussnooze", iobData.bolussnooze); //bolusIob
         mIobData.add("basaliob", iobData.basaliob);
         mIobData.add("netbasalinsulin", iobData.netbasalinsulin);

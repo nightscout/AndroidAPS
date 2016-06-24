@@ -11,10 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.Result;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.utils.SafeParse;
 
@@ -88,7 +87,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-                            Result result;
+                            PumpEnactResult result;
                             if (setAsPercent) {
                                 result = pump.setTempBasalPercent(finalBasalPercent, finalDurationInMinutes);
                             } else {
