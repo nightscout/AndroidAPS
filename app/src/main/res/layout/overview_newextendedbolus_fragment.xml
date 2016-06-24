@@ -69,7 +69,7 @@
 
     <Button
         android:id="@+id/overview_newextendedbolus_okbutton"
-        style="?android:attr/borderlessButtonStyle"
+        style="?android:attr/buttonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"

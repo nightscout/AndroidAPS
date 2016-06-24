@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:text="Refresh treatments from Nightscout"
             android:id="@+id/treatments_reshreshfromnightscout"
-            style="?android:attr/borderlessButtonStyle"
+            style="?android:attr/buttonStyle"
             android:layout_gravity="center_horizontal" />
 
         <android.support.v7.widget.RecyclerView
