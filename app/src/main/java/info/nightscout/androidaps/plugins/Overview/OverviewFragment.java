@@ -27,6 +27,7 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
@@ -59,6 +61,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView bgView;
     TextView timeAgoView;
     TextView deltaView;
+    TextView runningTempView;
+    TextView iobView;
     GraphView bgGraph;
 
     LinearLayout cancelTempLayout;
@@ -149,6 +153,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
+        runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
+        iobView = (TextView) view.findViewById(R.id.overview_iob);
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
@@ -274,6 +280,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
     }
 
     public void updateGUI() {
+        DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
@@ -296,9 +303,12 @@ public class OverviewFragment extends Fragment implements PluginBase {
             cancelTempLayout.setVisibility(View.VISIBLE);
             setTempLayout.setVisibility(View.GONE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
+            runningTempView.setText(activeTemp.toString());
         } else {
             cancelTempLayout.setVisibility(View.GONE);
             setTempLayout.setVisibility(View.VISIBLE);
+            Double currentBasal = pump.getBaseBasalRate();
+            runningTempView.setText(formatNumber2decimalplaces.format(currentBasal) + " U/h");
         }
 
         // **** BG value ****
@@ -321,6 +331,18 @@ public class OverviewFragment extends Fragment implements PluginBase {
         Long agoMsec = new Date().getTime() - lastBG.timeIndex;
         int agoMin = (int) (agoMsec / 60d / 1000d);
         timeAgoView.setText(agoMin + " " + getString(R.string.minago));
+
+        // iob
+        MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation();
+        if (bolusIob == null) bolusIob = new IobTotal();
+        MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
+        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation();
+        if (basalIob == null) basalIob = new IobTotal();
+        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
+
+        String iobtext = getString(R.string.treatments_iob_label_string) + " " + formatNumber2decimalplaces.format(iobTotal.iob) + "U (" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(bolusIob.iob) + "U " + getString(R.string.basal) + ": " + formatNumber2decimalplaces.format(basalIob.iob) + "U)";
+        iobView.setText(iobtext);
 
         // ****** GRAPH *******
 

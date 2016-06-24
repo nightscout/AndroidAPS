@@ -154,20 +154,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             total.bolussnooze += bIOB.iobContrib;
         }
 
-        final IobTotal finalTotal = total;
-
-        Activity activity = getActivity();
-        if (visibleNow && activity != null && recyclerView != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (iobTotal != null)
-                        iobTotal.setText(formatNumber2decimalplaces.format(finalTotal.iob));
-                    if (activityTotal != null)
-                        activityTotal.setText(formatNumber3decimalplaces.format(finalTotal.activity));
-                }
-            });
-
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
     }
@@ -346,6 +332,10 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 @Override
                 public void run() {
                     recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
+                    if (lastCalculation != null)
+                        iobTotal.setText(formatNumber2decimalplaces.format(lastCalculation.iob));
+                    if (lastCalculation != null)
+                        activityTotal.setText(formatNumber3decimalplaces.format(lastCalculation.activity));
                 }
             });
     }

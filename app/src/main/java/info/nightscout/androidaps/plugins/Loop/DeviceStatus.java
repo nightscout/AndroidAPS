@@ -375,18 +375,17 @@ import info.nightscout.androidaps.Services.Intents;
 
 public class DeviceStatus {
     private static Logger log = LoggerFactory.getLogger(DeviceStatus.class);
-    public static DeviceStatus deviceStatus;
 
-    public static String device = null;
-    public static JSONObject pump = null;
-    public static JSONObject enacted = null;
-    public static JSONObject suggested = null;
-    public static JSONObject iob = null;
-    public static String created_at = null;
+    public String device = null;
+    public JSONObject pump = null;
+    public JSONObject enacted = null;
+    public JSONObject suggested = null;
+    public JSONObject iob = null;
+    public String created_at = null;
 
-    public static JSONObject lowsuspend = null;
+    public JSONObject lowsuspend = null;
 
-    public static JSONObject mongoRecord () {
+    public JSONObject mongoRecord () {
         JSONObject record = new JSONObject();
 
         try {
