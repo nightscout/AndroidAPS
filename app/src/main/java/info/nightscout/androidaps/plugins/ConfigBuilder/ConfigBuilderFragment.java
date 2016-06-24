@@ -907,7 +907,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 return; // do not send if result is older than 1 min
 
             String openapsmaPluginName = MainApp.resources.getString(R.string.openapsma);
-            if (lastRun.source.equals(openapsmaPluginName)) {
+            if (lastRun.source != null && lastRun.source.equals(openapsmaPluginName)) {
                 DetermineBasalResult result = (DetermineBasalResult) lastRun.request;
                 result.json.put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
                 deviceStatus.suggested = result.json;

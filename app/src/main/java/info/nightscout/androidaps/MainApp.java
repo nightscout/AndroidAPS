@@ -3,10 +3,12 @@ package info.nightscout.androidaps;
 import android.app.Application;
 import android.content.res.Resources;
 
+import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
+import io.fabric.sdk.android.Fabric;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +29,7 @@ public class MainApp  extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         sBus = new Bus(ThreadEnforcer.ANY);
         sInstance = this;
