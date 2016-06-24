@@ -38,7 +38,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -83,15 +83,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void cleanUpDatabases() {
         // TODO: call it somewhere
         log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "BgReadings"));
-        getWritableDatabase().delete("BgReadings", "timeIndex" + " < '" + Math.ceil((new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) / 60000d) + "'", null);
+        getWritableDatabase().delete("BgReadings", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "BgReadings"));
 
         log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "TempBasals"));
-        getWritableDatabase().delete("TempBasals", "timeIndex" + " < '" + Math.ceil((new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) / 60000d) + "'", null);
+        getWritableDatabase().delete("TempBasals", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "TempBasals"));
 
         log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
-        getWritableDatabase().delete("Treatments", "timeIndex" + " < '" + Math.ceil((new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) / 60000d) + "'", null);
+        getWritableDatabase().delete("Treatments", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
     }
 
@@ -146,14 +146,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Dao<BgReading, Long> daoBgReadings = MainApp.getDbHelper().getDaoBgReadings();
             QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
             queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.limit(1l);
+            queryBuilder.limit(1L);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgList = daoBgReadings.query(preparedQuery);
 
         } catch (SQLException e) {
             log.debug(e.getMessage(), e);
         }
-        if (bgList.size() > 0)
+        if (bgList != null && bgList.size() > 0)
             return bgList.get(0);
         else
             return null;
@@ -170,7 +170,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         if (lastBg == null)
             return null;
 
-        if (lastBg.timestamp > new Date().getTime() - 9 * 60 * 1000)
+        if (lastBg.timeIndex > new Date().getTime() - 9 * 60 * 1000)
             return lastBg;
 
         return null;
@@ -271,7 +271,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
             int sizeRecords = bgReadings.size();
 
-            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timestamp < new Date().getTime() - 7 * 60 * 1000l) {
+            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {
                 if (Config.fakeGlucoseData) {
                     return new GlucoseStatus(Math.random() * 400 + 40, (Math. random() - 0.5)* 18, (Math. random() - 0.5)* 18);
                 }

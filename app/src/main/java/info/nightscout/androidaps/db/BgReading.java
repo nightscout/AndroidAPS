@@ -22,18 +22,15 @@ public class BgReading implements DataPointInterface {
     public static final DecimalFormat mgdlFormat = new DecimalFormat("0");
 
     public long getTimeIndex() {
-        return (long) Math.ceil(timestamp / 60000d);
+        return timeIndex;
     }
 
     public void setTimeIndex(long timeIndex) {
-        this.timestamp = timeIndex;
+        this.timeIndex = timeIndex;
     }
 
     @DatabaseField(id = true, useGetSet = true)
     public long timeIndex;
-
-    @DatabaseField
-    public long timestamp;
 
     @DatabaseField
     public double value;
@@ -52,7 +49,7 @@ public class BgReading implements DataPointInterface {
     public BgReading() {}
 
     public BgReading(NSSgv sgv) {
-        timestamp = sgv.getMills();
+        timeIndex = sgv.getMills();
         value = sgv.getMgdl();
         raw = sgv.getFiltered();
     }
@@ -73,8 +70,7 @@ public class BgReading implements DataPointInterface {
     public String toString() {
         return "BgReading{" +
                 "timeIndex=" + timeIndex +
-                ", timestamp=" + timestamp +
-                ", date=" + new Date(timestamp) +
+                ", date=" + new Date(timeIndex) +
                 ", value=" + value +
                 ", slope=" + slope +
                 ", raw=" + raw +
@@ -84,7 +80,7 @@ public class BgReading implements DataPointInterface {
 
     @Override
     public double getX() {
-        return timestamp;
+        return timeIndex;
     }
 
     @Override

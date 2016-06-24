@@ -318,7 +318,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
         bgView.setPaintFlags(flag);
 
-        Long agoMsec = new Date().getTime() - lastBG.timestamp;
+        Long agoMsec = new Date().getTime() - lastBG.timeIndex;
         int agoMin = (int) (agoMsec / 60d / 1000d);
         timeAgoView.setText(agoMin + " " + getString(R.string.minago));
 

@@ -28,7 +28,7 @@ public class Treatment {
     private static Logger log = LoggerFactory.getLogger(Treatment.class);
 
     public long getTimeIndex() {
-        return (long) Math.ceil(created_at.getTime() / 60000d);
+        return created_at.getTime();
     }
 
     public void setTimeIndex(long timeIndex) {
