@@ -27,6 +27,7 @@ public class DetermineBasalResult extends APSResult {
             duration = -1;
             mealAssist = "";
         } else {
+            reason = result.getString("reason");
             eventualBG = result.getDouble("eventualBG");
             snoozeBG = result.getDouble("snoozeBG");
             if (result.contains("rate")) {
