@@ -341,7 +341,9 @@ public class OverviewFragment extends Fragment implements PluginBase {
         if (basalIob == null) basalIob = new IobTotal();
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        String iobtext = getString(R.string.treatments_iob_label_string) + " " + formatNumber2decimalplaces.format(iobTotal.iob) + "U (" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(bolusIob.iob) + "U " + getString(R.string.basal) + ": " + formatNumber2decimalplaces.format(basalIob.iob) + "U)";
+        String iobtext = getString(R.string.treatments_iob_label_string) + " " + formatNumber2decimalplaces.format(iobTotal.iob) + "U ("
+                + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(bolusIob.iob) + "U "
+                + getString(R.string.basal) + ": " + formatNumber2decimalplaces.format(basalIob.basaliob) + "U)";
         iobView.setText(iobtext);
 
         // ****** GRAPH *******

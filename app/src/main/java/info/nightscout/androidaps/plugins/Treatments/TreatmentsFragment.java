@@ -284,6 +284,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         refreshFromNS = (Button) view.findViewById(R.id.treatments_reshreshfromnightscout);
         refreshFromNS.setOnClickListener(this);
 
+        updateGUI();
         return view;
     }
 

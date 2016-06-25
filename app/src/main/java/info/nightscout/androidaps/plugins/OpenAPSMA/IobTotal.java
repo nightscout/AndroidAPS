@@ -30,11 +30,11 @@ public class IobTotal {
 
     public IobTotal plus(IobTotal other) {
         iob += other.iob;
-        activity = other.activity;
-        bolussnooze = other.bolussnooze;
-        basaliob = other.iob;
-        netbasalinsulin = other.netbasalinsulin;
-        hightempinsulin = other.hightempinsulin;
+        activity += other.activity;
+        bolussnooze += other.bolussnooze;
+        basaliob += other.basaliob;
+        netbasalinsulin += other.netbasalinsulin;
+        hightempinsulin += other.hightempinsulin;
         netInsulin += other.netInsulin;
         netRatio += other.netRatio;
         return this;
