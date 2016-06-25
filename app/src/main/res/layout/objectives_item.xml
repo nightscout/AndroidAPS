@@ -99,7 +99,7 @@
 
             <Button
                 android:id="@+id/objectives_start"
-                style="?android:attr/borderlessButtonStyle"
+                style="?android:attr/buttonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/objectives_button_start" />
@@ -132,7 +132,7 @@
 
             <Button
                 android:id="@+id/objectives_verify"
-                style="?android:attr/borderlessButtonStyle"
+                style="?android:attr/buttonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/objectives_button_verify" />

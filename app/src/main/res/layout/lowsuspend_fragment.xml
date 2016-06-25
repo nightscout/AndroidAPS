@@ -15,7 +15,7 @@
 
             <Button
                 android:id="@+id/lowsuspend_run"
-                style="?android:attr/borderlessButtonStyle"
+                style="?android:attr/buttonStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/openapsma_run" />

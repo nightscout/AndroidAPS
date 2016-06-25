@@ -317,7 +317,7 @@
 
     <Button
         android:id="@+id/treatments_wizard_deliverButton"
-        style="?android:attr/borderlessButtonStyle"
+        style="?android:attr/buttonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SEND TO PUMP"
