@@ -171,9 +171,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
         // Set BG if not old
         BgReading lastBg = MainApp.getDbHelper().lastBg();
-        Double lastBgValue = lastBg.valueToUnits(units);
 
         if (lastBg != null) {
+            Double lastBgValue = lastBg.valueToUnits(units);
             Double sens = profile.getIsf(NSProfile.secondsFromMidnight());
             Double targetBGLow  = profile.getTargetLow(NSProfile.secondsFromMidnight());
             Double targetBGHigh  = profile.getTargetHigh(NSProfile.secondsFromMidnight());

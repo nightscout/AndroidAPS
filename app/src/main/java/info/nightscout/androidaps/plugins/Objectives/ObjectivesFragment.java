@@ -317,15 +317,9 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
      * Constraints interface
      **/
     @Override
-    public boolean isAutomaticProcessingEnabled() {
+    public boolean isClosedModeEnabled() {
         return true; // TODO: revert back
         //return objectives.get(3).started.getTime() > 0;
-    }
-
-    @Override
-    public boolean manualConfirmationNeeded() {
-        return false; // TODO: revert back
-        //return objectives.get(3).started.getTime() < 0;
     }
 
     @Override

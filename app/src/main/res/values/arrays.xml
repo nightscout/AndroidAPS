@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="aps_modeArray">
+        <item>@string/closedloop</item>
+        <item>@string/openloop</item>
+    </string-array>
+    <string-array name="aps_modeValues">
+        <item>closed</item>
+        <item>open</item>
+    </string-array>
+</resources>

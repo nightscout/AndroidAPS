@@ -1,14 +1,15 @@
 package info.nightscout.androidaps.plugins.Overview;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.ContactsContract;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,18 +35,23 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOpenLoop;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
@@ -63,15 +69,18 @@ public class OverviewFragment extends Fragment implements PluginBase {
     TextView deltaView;
     TextView runningTempView;
     TextView iobView;
+    TextView apsModeView;
     GraphView bgGraph;
 
     LinearLayout cancelTempLayout;
     LinearLayout setTempLayout;
+    LinearLayout acceptTempLayout;
     Button cancelTempButton;
     Button treatmentButton;
     Button wizardButton;
     Button setTempButton;
     Button setExtenedButton;
+    Button acceptTempButton;
 
     boolean visibleNow = false;
     Handler loopHandler = new Handler();
@@ -155,6 +164,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
         iobView = (TextView) view.findViewById(R.id.overview_iob);
+        apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
@@ -164,6 +174,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         setTempLayout = (LinearLayout) view.findViewById(R.id.overview_settemplayout);
         cancelTempLayout = (LinearLayout) view.findViewById(R.id.overview_canceltemplayout);
+        acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
+        acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
         treatmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,6 +224,34 @@ public class OverviewFragment extends Fragment implements PluginBase {
             }
         });
 
+        acceptTempButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainApp.getConfigBuilder().getActiveLoop().invoke(false);
+                final LoopFragment.LastRun finalLastRun = MainApp.getConfigBuilder().getActiveLoop().lastRun;
+                if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle(getContext().getString(R.string.dialog));
+                    builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
+                    builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            PumpEnactResult applyResult = MainApp.getConfigBuilder().getActivePump().applyAPSRequest(finalLastRun.constraintsProcessed);
+                            if (applyResult.enacted) {
+                                finalLastRun.setByPump = applyResult;
+                                finalLastRun.lastEnact = new Date();
+                                finalLastRun.lastOpenModeAccept = new Date();
+                                MainApp.getConfigBuilder().uploadDeviceStatus();
+                            }
+                            updateGUI();
+                        }
+                    });
+                    builder.setNegativeButton(getContext().getString(R.string.cancel), null);
+                    builder.show();
+                }
+                updateGUI();
+            }
+        });
+
         updateGUI();
         return view;
     }
@@ -223,6 +263,34 @@ public class OverviewFragment extends Fragment implements PluginBase {
             // Ignore
         }
         MainApp.bus().register(this);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventPreferenceChange ev) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                }
+            });
+        else
+            log.debug("EventPreferenceChange: Activity is null");
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventRefreshGui ev) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                }
+            });
+        else
+            log.debug("EventRefreshGui: Activity is null");
     }
 
     @Subscribe
@@ -267,6 +335,20 @@ public class OverviewFragment extends Fragment implements PluginBase {
             log.debug("EventNewBG: Activity is null");
     }
 
+   @Subscribe
+    public void onStatusEvent(final EventRefreshOpenLoop ev) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -294,6 +376,30 @@ public class OverviewFragment extends Fragment implements PluginBase {
         // Skip if not initialized yet
         if (bgGraph == null)
             return;
+
+        // open loop mode
+        final LoopFragment.LastRun finalLastRun = MainApp.getConfigBuilder().getActiveLoop().lastRun;
+        if (Config.APS) {
+            apsModeView.setVisibility(View.VISIBLE);
+            if (MainApp.getConfigBuilder().isClosedModeEnabled())
+                apsModeView.setText(MainApp.resources.getString(R.string.closedloop));
+            else apsModeView.setText(MainApp.resources.getString(R.string.openloop));
+        } else {
+            apsModeView.setVisibility(View.GONE);
+        }
+
+        boolean showAcceptButton = true;
+        showAcceptButton = showAcceptButton && !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
+        showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
+        showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
+        showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
+
+        if (showAcceptButton) {
+            acceptTempLayout.setVisibility(View.VISIBLE);
+            acceptTempButton.setText(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
+        } else {
+            acceptTempLayout.setVisibility(View.GONE);
+        }
 
         // **** Temp button ****
         PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
@@ -379,6 +485,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
                 super(x, y);
                 this.isTempBasal = isTempBasal;
             }
+
             public boolean isTempBasal = false;
         }
 

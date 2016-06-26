@@ -2,10 +2,17 @@ package info.nightscout.androidaps.plugins.Loop;
 
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.app.TaskStackBuilder;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +27,13 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Date;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventRefreshOpenLoop;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -43,8 +52,6 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     TextView constraintsProcessedView;
     TextView setByPumpView;
 
-    boolean confirmed;
-
     public class LastRun implements Parcelable {
         public APSResult request = null;
         public APSResult constraintsProcessed = null;
@@ -52,6 +59,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         public String source = null;
         public Date lastAPSRun = null;
         public Date lastEnact = null;
+        public Date lastOpenModeAccept = null;
 
         @Override
         public int describeContents() {
@@ -65,7 +73,8 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
             dest.writeParcelable(setByPump, 0);
             dest.writeString(source);
             dest.writeLong(lastAPSRun.getTime());
-            dest.writeLong(lastEnact!= null ? lastEnact.getTime(): 0l);
+            dest.writeLong(lastEnact != null ? lastEnact.getTime() : 0l);
+            dest.writeLong(lastOpenModeAccept != null ? lastOpenModeAccept.getTime() : 0l);
         }
 
         public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
@@ -85,6 +94,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
             source = in.readString();
             lastAPSRun = new Date(in.readLong());
             lastEnact = new Date(in.readLong());
+            lastOpenModeAccept = new Date(in.readLong());
         }
 
         public LastRun() {
@@ -186,7 +196,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loop_run:
-                invoke();
+                invoke(true);
                 break;
         }
 
@@ -195,22 +205,15 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
-        if (constraintsInterface.isAutomaticProcessingEnabled()) {
-            invoke();
-            updateGUI();
-        }
+        invoke(true);
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
-        if (constraintsInterface.isAutomaticProcessingEnabled()) {
-            invoke();
-            updateGUI();
-        }
+        invoke(true);
     }
 
-    private void invoke() {
+    public void invoke(boolean allowNotification) {
         ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
         PumpInterface pumpInterface = MainApp.getConfigBuilder().getActivePump();
         APSResult result = null;
@@ -247,39 +250,63 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
             return;
         }
 
-        confirmed = false;
-        if (constraintsInterface.manualConfirmationNeeded()) {
-            // TODO: user notification here
-            confirmed = true;
-        } else {
-            confirmed = true;
-        }
-
         // check rate for constrais
         APSResult resultAfterConstraints = result.clone();
+        constraintsInterface.applyBasalConstraints(resultAfterConstraints);
 
-        if (result.changeRequested) {
-            constraintsInterface.applyBasalConstraints(resultAfterConstraints);
-            PumpEnactResult applyResult = pumpInterface.applyAPSRequest(resultAfterConstraints);
-            Date lastEnact = lastRun != null ? lastRun.lastEnact : new Date(0, 0, 0);
-            lastRun = new LastRun();
-            lastRun.request = result;
-            lastRun.constraintsProcessed = resultAfterConstraints;
-            lastRun.setByPump = applyResult;
-            lastRun.source = ((PluginBase) usedAPS).getName();
-            lastRun.lastAPSRun = new Date();
-            if (applyResult.enacted)
-                lastRun.lastEnact = lastRun.lastAPSRun;
-            else
-                lastRun.lastEnact = lastEnact;
+        if (lastRun == null) lastRun = new LastRun();
+        lastRun.request = result;
+        lastRun.constraintsProcessed = resultAfterConstraints;
+        lastRun.lastAPSRun = new Date();
+        lastRun.source = usedAPS != null ? ((PluginBase) usedAPS).getName() : "";
+        lastRun.setByPump = null;
+
+        if (constraintsInterface.isClosedModeEnabled()) {
+            if (result.changeRequested) {
+                PumpEnactResult applyResult = pumpInterface.applyAPSRequest(resultAfterConstraints);
+                if (applyResult.enacted) {
+                    lastRun.setByPump = applyResult;
+                    lastRun.lastEnact = lastRun.lastAPSRun;
+                }
+            } else {
+                lastRun.setByPump = null;
+                lastRun.source = null;
+            }
         } else {
-            if (lastRun == null) lastRun = new LastRun();
-            lastRun.request = result;
-            lastRun.constraintsProcessed = resultAfterConstraints;
-            lastRun.setByPump = null;
-            lastRun.source = null;
-            lastRun.lastAPSRun = new Date();
+            if (result.changeRequested && allowNotification) {
+                NotificationCompat.Builder builder =
+                        new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
+                builder.setSmallIcon(R.drawable.notification_icon)
+                        .setContentTitle(MainApp.resources.getString(R.string.openloop_newsuggestion))
+                        .setContentText(resultAfterConstraints.toString())
+                        .setAutoCancel(true)
+                        .setPriority(Notification.PRIORITY_HIGH)
+                        .setCategory(Notification.CATEGORY_ALARM)
+                        .setVisibility(Notification.VISIBILITY_PUBLIC);
+
+                // Creates an explicit intent for an Activity in your app
+                Intent resultIntent = new Intent(MainApp.instance().getApplicationContext(), MainActivity.class);
+
+                // The stack builder object will contain an artificial back stack for the
+                // started Activity.
+                // This ensures that navigating backward from the Activity leads out of
+                // your application to the Home screen.
+                TaskStackBuilder stackBuilder = TaskStackBuilder.create(MainApp.instance().getApplicationContext());
+                stackBuilder.addParentStack(MainActivity.class);
+                // Adds the Intent that starts the Activity to the top of the stack
+                stackBuilder.addNextIntent(resultIntent);
+                PendingIntent resultPendingIntent =
+                        stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                builder.setContentIntent(resultPendingIntent);
+                builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                NotificationManager mNotificationManager =
+                        (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+                // mId allows you to update the notification later on.
+                mNotificationManager.notify(Constants.notificationID, builder.build());
+                MainApp.bus().post(new EventRefreshOpenLoop());
+            }
         }
+
         updateGUI();
         MainApp.getConfigBuilder().uploadDeviceStatus();
     }
@@ -296,7 +323,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                         setByPumpView.setText(lastRun.setByPump != null ? lastRun.setByPump.toString() : "");
                         sourceView.setText(lastRun.source != null ? lastRun.source.toString() : "");
                         lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
-                        lastEnactView.setText(lastRun.lastEnact!= null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");
+                        lastEnactView.setText(lastRun.lastEnact != null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");
                     }
                 }
             });

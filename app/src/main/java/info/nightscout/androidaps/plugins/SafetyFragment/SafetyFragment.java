@@ -66,13 +66,10 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
      * Constraints interface
      **/
     @Override
-    public boolean isAutomaticProcessingEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean manualConfirmationNeeded() {
-        return false;
+    public boolean isClosedModeEnabled() {
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        String mode = SP.getString("aps_mode", "open");
+        return mode.equals("closed");
     }
 
     @Override

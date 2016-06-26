@@ -7,8 +7,7 @@ import info.nightscout.androidaps.plugins.APSResult;
  */
 public interface ConstraintsInterface {
 
-    boolean isAutomaticProcessingEnabled();
-    boolean manualConfirmationNeeded();
+    boolean isClosedModeEnabled();
     APSResult applyBasalConstraints(APSResult request);
     Double applyBasalConstraints(Double absoluteRate);
     Integer applyBasalConstraints(Integer percentRate);

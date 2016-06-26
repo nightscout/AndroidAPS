@@ -30,12 +30,32 @@
                 android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/overview_timeago"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/overview_timeago"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:layout_weight="0.5" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="Medium Text"
+                        android:id="@+id/overview_apsmode"
+                        android:layout_marginRight="10dp"
+                        android:background="@drawable/loopmodeborder"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:gravity="center_vertical|center_horizontal" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/overview_delta"
@@ -67,6 +87,22 @@
             android:layout_height="160dip" />
 
         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/overview_accepttemplayout">
+
+            <Button
+                android:id="@+id/overview_accepttempbutton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="0.5"
+                android:text="Accept new temp\n0.25U/h"
+                android:textColor="@color/colorAcceptTempButton" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/overview_canceltemplayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,8 +115,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:textColor="@color/colorCancelTempButton"
-                android:text="Cancel temp basal" />
+                android:text="Cancel temp basal"
+                android:textColor="@color/colorCancelTempButton" />
 
         </LinearLayout>
 
@@ -97,8 +133,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:textColor="@color/colorSetTempButton"
-                android:text="TempBasal" />
+                android:text="TempBasal"
+                android:textColor="@color/colorSetTempButton" />
 
             <Button
                 android:id="@+id/overview_extendedbolus"
@@ -107,8 +143,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:textColor="@color/colorSetExtendedButton"
-                android:text="Extended Bolus" />
+                android:text="Extended Bolus"
+                android:textColor="@color/colorSetExtendedButton" />
         </LinearLayout>
 
         <LinearLayout
@@ -123,8 +159,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:textColor="@color/colorTreatmentButton"
-                android:text="@string/overview_treatment_label" />
+                android:text="@string/overview_treatment_label"
+                android:textColor="@color/colorTreatmentButton" />
 
             <Button
                 android:id="@+id/overview_wizard"
@@ -133,8 +169,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:textColor="@color/colorWizardButton"
-                android:text="@string/overview_calculator_label" />
+                android:text="@string/overview_calculator_label"
+                android:textColor="@color/colorWizardButton" />
         </LinearLayout>
 
 

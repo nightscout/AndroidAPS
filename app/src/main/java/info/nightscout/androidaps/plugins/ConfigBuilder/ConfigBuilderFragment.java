@@ -709,27 +709,14 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * Constraints interface
      **/
     @Override
-    public boolean isAutomaticProcessingEnabled() {
+    public boolean isClosedModeEnabled() {
         boolean result = true;
 
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            result = result && constrain.isAutomaticProcessingEnabled();
-        }
-        return result;
-    }
-
-    @Override
-    public boolean manualConfirmationNeeded() {
-        boolean result = false;
-
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
-            result = result || constrain.manualConfirmationNeeded();
+            result = result && constrain.isClosedModeEnabled();
         }
         return result;
     }

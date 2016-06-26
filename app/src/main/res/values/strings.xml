@@ -106,8 +106,6 @@
     <string name="minimalduration">Minimal duration</string>
     <string name="configbuilder_constraints">Constraints</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
@@ -132,7 +130,7 @@
     <string name="treatmentdeliveryerror">Treatment delivery error</string>
     <string name="overview_newtempbasal_basal_label">Basal value</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
-    <string name="setbasalquestion">Set new temp basal:</string>
+    <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_treatment_label">Treatment</string>
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Constraint applied!</string>
@@ -146,5 +144,10 @@
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="xdrip">xDrip</string>
     <string name="nsclient">NSClient</string>
+    <string name="apsmode_title">APS Mode</string>
+    <string name="apsmode_summary">APS Loop Mode</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="openloop_newsuggestion">New suggestion available</string>
 
 </resources>

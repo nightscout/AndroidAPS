@@ -27,6 +27,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_treatments);
+            if (Config.APS)
+                addPreferencesFromResource(R.xml.pref_closedmode);
             if (Config.OPENAPSMAENABLED)
                 addPreferencesFromResource(R.xml.pref_openapsma);
             if (Config.LOWSUSPEDENABLED)
