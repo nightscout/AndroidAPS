@@ -99,6 +99,11 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         }
     }
 
+    // Objective 0
+    public boolean bgIsAvailableInNS = false;
+    public boolean pumpStatusIsAvailableInNS = false;
+
+
     private List<Objective> objectives;
 
     private void initializeData() {

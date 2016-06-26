@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -66,6 +67,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ListView apsListView;
     ListView constraintsListView;
     ListView generalListView;
+    TextView nsclientVerView;
+    TextView nightscoutVerView;
 
     PluginCustomAdapter bgsourceDataAdapter = null;
     PluginCustomAdapter pumpDataAdapter = null;
@@ -84,6 +87,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     TreatmentsInterface activeTreatments;
     TempBasalsInterface activeTempBasals;
     LoopFragment activeLoop;
+
+    public String nightscoutVersionName = "";
+    public Integer nightscoutVersionCode = 0;
+    public String nsClientVersionName = "";
+    public Integer nsClientVersionCode = 0;
 
     ArrayList<PluginBase> pluginList;
 
@@ -124,7 +132,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
         constraintsListView = (ListView) view.findViewById(R.id.configbuilder_constraintslistview);
         generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
+        nsclientVerView = (TextView) view.findViewById(R.id.configbuilder_nsclientversion);
+        nightscoutVerView = (TextView) view.findViewById(R.id.configbuilder_nightscoutversion);
 
+        nsclientVerView.setText(nsClientVersionName);
+        nightscoutVerView.setText(nightscoutVersionName);
+        if (nsClientVersionCode < 117) nsclientVerView.setTextColor(Color.RED);
+        if (nightscoutVersionCode < 900) nightscoutVerView.setTextColor(Color.RED);
         setViews();
         return view;
     }

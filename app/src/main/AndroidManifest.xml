@@ -44,6 +44,10 @@
                 <action android:name="info.nightscout.client.NEW_PROFILE" />
                 <action android:name="info.nightscout.client.NEW_SGV" />
                 <action android:name="info.nightscout.client.NEW_STATUS" />
+                <action android:name="info.nightscout.client.NEW_MBG" />
+                <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
+                <action android:name="info.nightscout.client.NEW_CAL" />
+                <action android:name="info.nightscout.client.NEW_STATUS" />
             </intent-filter>
         </receiver>
 

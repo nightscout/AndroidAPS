@@ -59,18 +59,15 @@ public class MainActivity extends AppCompatActivity {
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.newInstance());
             pluginsList.add(VirtualPumpFragment.newInstance());
-            if (Config.LOOPENABLED)
-                pluginsList.add(LoopFragment.newInstance());
-            if (Config.LOWSUSPEDENABLED)
-                pluginsList.add(LowSuspendFragment.newInstance());
-            if (Config.OPENAPSMAENABLED)
-                pluginsList.add(OpenAPSMAFragment.newInstance());
+            if (Config.LOOPENABLED) pluginsList.add(LoopFragment.newInstance());
+            if (Config.LOWSUSPEDENABLED) pluginsList.add(LowSuspendFragment.newInstance());
+            if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.newInstance());
             pluginsList.add(NSProfileViewerFragment.newInstance());
             pluginsList.add(SimpleProfileFragment.newInstance());
             pluginsList.add(TreatmentsFragment.newInstance());
             pluginsList.add(TempBasalsFragment.newInstance());
             pluginsList.add(SafetyFragment.newInstance());
-            pluginsList.add(ObjectivesFragment.newInstance());
+            if (Config.OPENAPSMAENABLED) pluginsList.add(ObjectivesFragment.newInstance());
             pluginsList.add(SourceXdripFragment.newInstance());
             pluginsList.add(SourceNSClientFragment.newInstance());
             pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
@@ -161,5 +158,15 @@ public class MainActivity extends AppCompatActivity {
                 newList.add(p);
         }
         return newList;
+    }
+
+    public static PluginBase getSpecificPlugin(Class pluginClass) {
+        Iterator<PluginBase> it = pluginsList.iterator();
+        while (it.hasNext()) {
+            PluginBase p = it.next();
+            if (p.getClass() == pluginClass)
+               return p;
+        }
+        return null;
     }
 }
