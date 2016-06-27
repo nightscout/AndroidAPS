@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.NSProfileViewer;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -119,7 +121,7 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
     private void setContent() {
         if (profile == null) {
             noProfile.setVisibility(View.VISIBLE);
-            return;
+           return;
         } else {
             noProfile.setVisibility(View.GONE);
         }
@@ -187,6 +189,9 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
         } else {
             if (Config.logPrefsChange) {
                 log.debug("Stored profile not found");
+                // force restart of nsclient to fetch profile
+                Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
             }
         }
     }

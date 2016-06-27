@@ -47,7 +47,7 @@
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="treatments_wizard_unit_label">U</string>
-    <string name="treatments_wizard_iob_label">IOB</string>
+    <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
@@ -156,5 +156,8 @@
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="cs_lang">Czech language</string>
     <string name="en_lang">English language</string>
+    <string name="treatments_wizard_basaliob_label">Basal IOB</string>
+    <string name="bolusconstraintapplied">Bolus constraint applied</string>
+    <string name="carbsconstraintapplied">Carbs constraint applied</string>
 
 </resources>

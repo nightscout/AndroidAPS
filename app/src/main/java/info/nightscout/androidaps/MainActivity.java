@@ -1,6 +1,7 @@
 package info.nightscout.androidaps;
 
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -184,12 +185,17 @@ public class MainActivity extends AppCompatActivity {
         return newList;
     }
 
+    @Nullable
     public static PluginBase getSpecificPlugin(Class pluginClass) {
-        Iterator<PluginBase> it = pluginsList.iterator();
-        while (it.hasNext()) {
-            PluginBase p = it.next();
-            if (p.getClass() == pluginClass)
-               return p;
+        if (pluginsList != null) {
+            Iterator<PluginBase> it = pluginsList.iterator();
+            while (it.hasNext()) {
+                PluginBase p = it.next();
+                if (p.getClass() == pluginClass)
+                    return p;
+            }
+        } else {
+            log.debug("pluginsList=null");
         }
         return null;
     }

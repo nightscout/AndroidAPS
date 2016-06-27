@@ -204,28 +204,64 @@
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:width="32dp"
-           android:id="@+id/treatments_wizard_iobcheckbox"
+           android:id="@+id/treatments_wizard_bolusiobcheckbox"
            android:checked="true" />
 
        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/treatments_wizard_iob_label"
-            android:width="50dp" />
+            android:text="@string/treatments_wizard_bolusiob_label"
+            android:width="100dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:width="100dp"
-            android:id="@+id/treatments_wizard_iob" />
+            android:width="50dp"
+            android:id="@+id/treatments_wizard_bolusiob" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:id="@+id/treatments_wizard_iobinsulin"
+            android:id="@+id/treatments_wizard_bolusiobinsulin"
+            android:width="50dp"
+            android:gravity="end" />
+    </LinearLayout>
+
+   <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+       android:layout_gravity="center">
+
+       <CheckBox
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:width="32dp"
+           android:id="@+id/treatments_wizard_basaliobcheckbox"
+           android:checked="true" />
+
+       <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="@string/treatments_wizard_basaliob_label"
+            android:width="100dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:width="50dp"
+            android:id="@+id/treatments_wizard_basaliob" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/treatments_wizard_basaliobinsulin"
             android:width="50dp"
             android:gravity="end" />
     </LinearLayout>

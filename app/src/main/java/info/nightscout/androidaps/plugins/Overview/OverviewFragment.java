@@ -377,11 +377,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
             return;
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null)
-            return;
-
-        String units = profile.getUnits();
 
         // Skip if not initialized yet
         if (bgGraph == null)
@@ -412,6 +407,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         }
 
         // **** Temp button ****
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
         if (pump.isTempBasalInProgress()) {
@@ -426,6 +422,22 @@ public class OverviewFragment extends Fragment implements PluginBase {
             Double currentBasal = pump.getBaseBasalRate();
             runningTempView.setText(formatNumber2decimalplaces.format(currentBasal) + " U/h");
         }
+
+        if (profile == null) {
+            // disable all treatment buttons because we are not able to check constraints without profile
+            setExtenedButton.setVisibility(View.INVISIBLE);
+            setTempLayout.setVisibility(View.INVISIBLE);
+            wizardButton.setVisibility(View.INVISIBLE);
+            treatmentButton.setVisibility(View.INVISIBLE);
+            return;
+        } else {
+            setExtenedButton.setVisibility(View.VISIBLE);
+            setTempLayout.setVisibility(View.VISIBLE);
+            wizardButton.setVisibility(View.VISIBLE);
+            treatmentButton.setVisibility(View.VISIBLE);
+        }
+
+        String units = profile.getUnits();
 
         // **** BG value ****
         if (profile != null && lastBG != null && bgView != null) {

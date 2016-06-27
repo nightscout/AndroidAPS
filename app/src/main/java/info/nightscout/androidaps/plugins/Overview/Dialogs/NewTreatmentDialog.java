@@ -46,7 +46,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     Double insulin = SafeParse.stringToDouble(this.insulin.getText().toString());
                     Integer carbs = SafeParse.stringToInt(this.carbs.getText().toString());
 
-                    String confirmMessage = getString(R.string.entertreatmentquestion);
+                    String confirmMessage = getString(R.string.entertreatmentquestion) + "\n";
 
                     Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
                     Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
