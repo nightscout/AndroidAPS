@@ -37,6 +37,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -52,6 +53,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
+import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
@@ -241,6 +243,11 @@ public class OverviewFragment extends Fragment implements PluginBase {
                                 finalLastRun.lastEnact = new Date();
                                 finalLastRun.lastOpenModeAccept = new Date();
                                 MainApp.getConfigBuilder().uploadDeviceStatus();
+                                ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
+                                if (objectivesFragment != null) {
+                                    objectivesFragment.manualEnacts++;
+                                    objectivesFragment.saveProgress();
+                                }
                             }
                             updateGUI();
                         }

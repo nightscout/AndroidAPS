@@ -273,6 +273,8 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
 
         TreatmentsFragment.MealData mealData = treatments.getMealData();
 
+        maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
+
         determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, pump, iobTotal, glucoseStatus, mealData);
 
 

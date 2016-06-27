@@ -160,6 +160,18 @@ public class MainActivity extends AppCompatActivity {
         return newList;
     }
 
+    public static ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
+        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
+
+        Iterator<PluginBase> it = pluginsList.iterator();
+        while (it.hasNext()) {
+            PluginBase p = it.next();
+            if (p.getClass() != ConfigBuilderFragment.class && interfaceClass.isAssignableFrom(p.getClass()))
+                newList.add(p);
+        }
+        return newList;
+    }
+
     public static PluginBase getSpecificPlugin(Class pluginClass) {
         Iterator<PluginBase> it = pluginsList.iterator();
         while (it.hasNext()) {

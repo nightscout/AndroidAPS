@@ -112,7 +112,7 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
-    <string name="dialog">Dialog</string>
+    <string name="dialog">Confirmation</string>
     <string name="alert">Alert</string>
     <string name="refreshfromnightscout">Do you want to refresh treatments from Nightscout</string>
     <string name="ok">OK</string>
@@ -150,5 +150,9 @@
     <string name="openloop">Open Loop</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
+    <string name="bgavailableinns">BG available in NS</string>
+    <string name="pumpstatusavailableinns">Pump status available in NS</string>
+    <string name="manualenacts">Manual enacts</string>
+    <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
 
 </resources>

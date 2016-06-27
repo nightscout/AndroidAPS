@@ -62,6 +62,11 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         return fragment;
     }
 
+    @Override
+    public boolean isLoopEnabled() {
+        return true;
+    }
+
     /**
      * Constraints interface
      **/
@@ -73,8 +78,18 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
     }
 
     @Override
+    public boolean isAutosensModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        return true;
+    }
+
+    @Override
     public APSResult applyBasalConstraints(APSResult result) {
-        result.rate = applyBasalConstraints(result.rate);
+        result.rate = Math.min(applyBasalConstraints(result.rate), result.rate);
         return result;
     }
 
@@ -180,6 +195,11 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
             carbs = 0;
         }
         return carbs;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        return maxIob;
     }
 
 }

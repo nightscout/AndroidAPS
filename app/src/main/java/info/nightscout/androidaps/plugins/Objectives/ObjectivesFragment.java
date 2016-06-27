@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Objectives;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +26,10 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.APSResult;
@@ -34,7 +39,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
-    CheckBox enableFakeTime;
+    CheckBox enableFake; // TODO: remove faking
 
     boolean fragmentVisible = true;
 
@@ -84,13 +89,15 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     }
 
     class Objective {
+        Integer num;
         String objective;
         String gate;
         Date started;
         Integer durationInDays;
         Date accomplished;
 
-        Objective(String objective, String gate, Date started, Integer durationInDays, Date accomplished) {
+        Objective(Integer num, String objective, String gate, Date started, Integer durationInDays, Date accomplished) {
+            this.num = num;
             this.objective = objective;
             this.gate = gate;
             this.started = started;
@@ -102,36 +109,91 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     // Objective 0
     public boolean bgIsAvailableInNS = false;
     public boolean pumpStatusIsAvailableInNS = false;
+    // Objective 1
+    public Integer manualEnacts = 0;
+    public final Integer manualEnactsNeeded = 20;
+
+    class RequirementResult {
+        boolean done = false;
+        String comment = "";
+
+        public RequirementResult(boolean done, String comment) {
+            this.done = done;
+            this.comment = comment;
+        }
+    }
+
+    private String yesOrNo(boolean yes) {
+        if (yes) return "☺";
+        else return "---";
+    }
+
+    private RequirementResult requirementsMet(Integer objNum) {
+        switch (objNum) {
+            case 0:
+                return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS,
+                        getString(R.string.bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
+                                + " " + getString(R.string.pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS));
+            case 1:
+                return new RequirementResult(manualEnacts >= manualEnactsNeeded,
+                        getString(R.string.manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
+            case 2:
+                return new RequirementResult(true, "");
+            default:
+                return new RequirementResult(false, "");
+        }
+    }
 
 
     private List<Objective> objectives;
 
     private void initializeData() {
         objectives = new ArrayList<>();
-        objectives.add(new Objective("Setting up visualization and monitoring, and analyzing basals and ratios",
+        objectives.add(new Objective(0,
+                "Setting up visualization and monitoring, and analyzing basals and ratios",
                 "Verify that BG is available in Nightscout, and pump insulin data is being uploaded",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Starting on an open loop",
+                new Date(0, 0, 0),
+                1, // 1 day
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(1,
+                "Starting on an open loop",
                 "Run in Open Loop mode for a few days, and manually enact lots of temp basals",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Understanding your open loop, including its temp basal recommendations",
-                "Based on that experience, decide what max basal should be, and set it on the pump",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Starting to close the loop with Low Glucose Suspend",
+                new Date(0, 0, 0),
+                7, // 7 days
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(2,
+                "Understanding your open loop, including its temp basal recommendations",
+                "Based on that experience, decide what max basal should be, and set it on the pump and preferences",
+                new Date(0, 0, 0),
+                0, // 0 days
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(3,
+                "Starting to close the loop with Low Glucose Suspend",
                 "Run in closed loop with max IOB = 0 for a few days without too many LGS events",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets",
+                new Date(0, 0, 0),
+                5, // 5 days
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(4,
+                "Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets",
                 "Run for a few days, and at least one night with no low BG alarms, before dropping BG",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Adjust basals and ratios if needed, and then enable auto-sens",
+                new Date(0, 0, 0),
+                1,
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(5,
+                "Adjust basals and ratios if needed, and then enable auto-sens",
                 "1 week successful daytime looping with regular carb entry",
-                new Date(0, 0, 0), 7, new Date(0, 0, 0)));
-        objectives.add(new Objective("Enabling additional features for daytime use, such as advanced meal assist",
+                new Date(0, 0, 0),
+                7,
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(6,
+                "Enabling additional features for daytime use, such as advanced meal assist",
                 "",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
+                new Date(0, 0, 0),
+                1,
+                new Date(0, 0, 0)));
     }
 
-    void saveProgress() {
+    public void saveProgress() {
         SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
         SharedPreferences.Editor editor = settings.edit();
         for (int num = 0; num < objectives.size(); num++) {
@@ -139,6 +201,9 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
             editor.putLong(num + "started", o.started.getTime());
             editor.putLong(num + "accomplished", o.accomplished.getTime());
         }
+        editor.putBoolean("bgIsAvailableInNS", bgIsAvailableInNS);
+        editor.putBoolean("pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
+        editor.putInt("manualEnacts", manualEnacts);
         editor.commit();
         if (Config.logPrefsChange)
             log.debug("Objectives stored");
@@ -151,12 +216,11 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
             o.started = new Date(settings.getLong(num + "started", 0));
             o.accomplished = new Date(settings.getLong(num + "accomplished", 0));
         }
+        bgIsAvailableInNS = settings.getBoolean("bgIsAvailableInNS", false);
+        pumpStatusIsAvailableInNS = settings.getBoolean("pumpStatusIsAvailableInNS", false);
+        manualEnacts = settings.getInt("manualEnacts", 0);
         if (Config.logPrefsChange)
             log.debug("Objectives loaded");
-    }
-
-    boolean isAPSEnabledAtAll() {
-        return true;
     }
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ObjectiveViewHolder> {
@@ -177,11 +241,13 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         @Override
         public void onBindViewHolder(ObjectiveViewHolder holder, int position) {
             Objective o = objectives.get(position);
+            RequirementResult requirementsMet = requirementsMet(position);
             Context context = MainApp.instance().getApplicationContext();
             holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(o.objective);
             holder.gate.setText(o.gate);
             holder.duration.setText(context.getString(R.string.minimalduration) + " " + o.durationInDays + " " + context.getString(R.string.days));
+            holder.progress.setText(requirementsMet.comment);
             holder.started.setText(o.started.toLocaleString());
             holder.accomplished.setText(o.accomplished.toLocaleString());
 
@@ -192,16 +258,18 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                 public void onClick(View v) {
                     Objective o = (Objective) v.getTag();
                     o.started = new Date();
-                    updateView();
-                    //saveProgress();
+                    updateGUI();
+                    saveProgress();
                 }
             });
             holder.verifyButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     Objective o = (Objective) v.getTag();
-                    o.accomplished = new Date();
-                    updateView();
-                    //saveProgress();
+                    if (requirementsMet(o.num).done || enableFake.isChecked()) {
+                        o.accomplished = new Date();
+                        updateGUI();
+                        saveProgress();
+                    }
                 }
             });
 
@@ -210,18 +278,20 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                 // Phase 0: previous not completed
                 holder.startedLayout.setVisibility(View.GONE);
                 holder.durationLayout.setVisibility(View.GONE);
+                holder.progressLayout.setVisibility(View.GONE);
                 holder.verifyLayout.setVisibility(View.GONE);
             } else if (o.started.getTime() == 0) {
                 // Phase 1: not started
                 holder.durationLayout.setVisibility(View.GONE);
+                holder.progressLayout.setVisibility(View.GONE);
                 holder.verifyLayout.setVisibility(View.GONE);
                 holder.started.setVisibility(View.GONE);
-            } else if (o.started.getTime() > 0 && !enableFakeTime.isChecked() && o.accomplished.getTime() == 0 && o.started.getTime() + o.durationInDays * 24 * 60 * 60 * 1000 > now) {
-                // Phase 2: started, waiting for duration
+            } else if (o.started.getTime() > 0 && !enableFake.isChecked() && o.accomplished.getTime() == 0 && o.started.getTime() + o.durationInDays * 24 * 60 * 60 * 1000 > now && !requirementsMet.done) {
+                // Phase 2: started, waiting for duration and met requirements
                 holder.startButton.setEnabled(false);
                 holder.verifyLayout.setVisibility(View.GONE);
-            } else if (o.accomplished.getTime() == 0 ) {
-                // Phase 3: started, after duration
+            } else if (o.accomplished.getTime() == 0) {
+                // Phase 3: started, after duration, requirements met
                 holder.startButton.setEnabled(false);
                 holder.accomplished.setVisibility(View.INVISIBLE);
             } else {
@@ -229,6 +299,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                 holder.gateLayout.setVisibility(View.GONE);
                 holder.startedLayout.setVisibility(View.GONE);
                 holder.durationLayout.setVisibility(View.GONE);
+                holder.progressLayout.setVisibility(View.GONE);
                 holder.verifyButton.setVisibility(View.INVISIBLE);
             }
         }
@@ -251,6 +322,8 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
             TextView gate;
             TextView duration;
             LinearLayout durationLayout;
+            TextView progress;
+            LinearLayout progressLayout;
             TextView started;
             Button startButton;
             LinearLayout startedLayout;
@@ -265,6 +338,8 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                 objective = (TextView) itemView.findViewById(R.id.objectives_objective);
                 durationLayout = (LinearLayout) itemView.findViewById(R.id.objectives_duration_linearlayout);
                 duration = (TextView) itemView.findViewById(R.id.objectives_duration);
+                progressLayout = (LinearLayout) itemView.findViewById(R.id.objectives_progresslayout);
+                progress = (TextView) itemView.findViewById(R.id.objectives_progress);
                 gateLayout = (LinearLayout) itemView.findViewById(R.id.objectives_gate_linearlayout);
                 gate = (TextView) itemView.findViewById(R.id.objectives_gate);
                 startedLayout = (LinearLayout) itemView.findViewById(R.id.objectives_start_linearlayout);
@@ -281,6 +356,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         super();
         initializeData();
         loadProgress();
+        registerBus();
     }
 
     public static ObjectivesFragment newInstance() {
@@ -302,29 +378,84 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
-        enableFakeTime = (CheckBox) view.findViewById(R.id.objectives_faketime);
-        enableFakeTime.setOnClickListener(new View.OnClickListener() {
+        enableFake = (CheckBox) view.findViewById(R.id.objectives_fake);
+        enableFake.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                updateView();
+                updateGUI();
             }
         });
-        updateView();
+        updateGUI();
 
         return view;
     }
 
-    void updateView() {
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(objectives);
-        recyclerView.setAdapter(adapter);
+    private void registerBus() {
+        try {
+            MainApp.bus().unregister(this);
+        } catch (RuntimeException x) {
+            // Ignore
+        }
+        MainApp.bus().register(this);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventNewBG ev) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    updateGUI();
+                }
+            });
+        else
+            log.debug("EventNewBG: Activity is null");
+    }
+
+    void updateGUI() {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(objectives);
+                    recyclerView.setAdapter(adapter);
+                }
+            });
     }
 
     /**
      * Constraints interface
      **/
     @Override
+    public boolean isLoopEnabled() {
+        return objectives.get(1).started.getTime() > 0;
+    }
+
+    @Override
     public boolean isClosedModeEnabled() {
-        return true; // TODO: revert back
-        //return objectives.get(3).started.getTime() > 0;
+        return objectives.get(3).started.getTime() > 0;
+    }
+
+    @Override
+    public boolean isAutosensModeEnabled() {
+        return objectives.get(5).started.getTime() > 0;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        return objectives.get(6).started.getTime() > 0;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        if (objectives.get(4).started.getTime() > 0)
+            return maxIob;
+        else {
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting maxIOB " + maxIob + " to " + 0 + "U");
+            return 0d;
+        }
     }
 
     @Override

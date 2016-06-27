@@ -723,10 +723,23 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * Constraints interface
      **/
     @Override
+    public boolean isLoopEnabled() {
+        boolean result = true;
+
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            result = result && constrain.isLoopEnabled();
+        }
+        return result;
+    }
+
+    @Override
     public boolean isClosedModeEnabled() {
         boolean result = true;
 
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
@@ -736,8 +749,34 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
+    public boolean isAutosensModeEnabled() {
+        boolean result = true;
+
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            result = result && constrain.isAutosensModeEnabled();
+        }
+        return result;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        boolean result = true;
+
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            result = result && constrain.isAMAModeEnabled();
+        }
+        return result;
+    }
+
+    @Override
     public APSResult applyBasalConstraints(APSResult result) {
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
@@ -749,11 +788,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         Double rateAfterConstrain = absoluteRate;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            rateAfterConstrain = constrain.applyBasalConstraints(rateAfterConstrain);
+            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(rateAfterConstrain), rateAfterConstrain);
         }
         return rateAfterConstrain;
     }
@@ -761,11 +800,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer rateAfterConstrain = percentRate;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            rateAfterConstrain = constrain.applyBasalConstraints(rateAfterConstrain);
+            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(rateAfterConstrain), rateAfterConstrain);
         }
         return rateAfterConstrain;
     }
@@ -773,11 +812,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Double applyBolusConstraints(Double insulin) {
         Double insulinAfterConstrain = insulin;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            insulinAfterConstrain = constrain.applyBolusConstraints(insulinAfterConstrain);
+            insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulinAfterConstrain), insulinAfterConstrain);
         }
         return insulinAfterConstrain;
     }
@@ -785,13 +824,25 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Integer applyCarbsConstraints(Integer carbs) {
         Integer carbsAfterConstrain = carbs;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS);
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            carbsAfterConstrain = constrain.applyCarbsConstraints(carbsAfterConstrain);
+            carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbsAfterConstrain), carbsAfterConstrain);
         }
         return carbsAfterConstrain;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        Double maxIobAfterConstrain = maxIob;
+        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        for (PluginBase p : constraintsPlugins) {
+            ConstraintsInterface constrain = (ConstraintsInterface) p;
+            if (!p.isEnabled()) continue;
+            maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIobAfterConstrain), maxIobAfterConstrain);
+        }
+        return maxIobAfterConstrain;
     }
 
     public static void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes) {

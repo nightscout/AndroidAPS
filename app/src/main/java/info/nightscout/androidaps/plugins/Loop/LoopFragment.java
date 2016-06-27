@@ -215,6 +215,18 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
     public void invoke(boolean allowNotification) {
         ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
+        if (!constraintsInterface.isLoopEnabled()) {
+            clearGUI();
+            final Activity activity = getActivity();
+            if (activity != null)
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        lastRunView.setText(activity.getString(R.string.loopdisabled));
+                    }
+                });
+            return;
+        }
         PumpInterface pumpInterface = MainApp.getConfigBuilder().getActivePump();
         APSResult result = null;
 

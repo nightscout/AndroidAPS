@@ -157,15 +157,40 @@ public class DataService extends IntentService {
                 log.debug("Received status: " + bundles);
             if (bundles.containsKey("nsclientversioncode")) {
                 ConfigBuilderFragment configBuilderFragment = MainApp.getConfigBuilder();
-                configBuilderFragment.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
-                configBuilderFragment.nightscoutVersionName = bundles.getString("nightscoutversionname");
-                configBuilderFragment.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
-                configBuilderFragment.nsClientVersionName = bundles.getString("nsclientversionname");
-                log.debug("Got versions: NSClient: " + configBuilderFragment.nsClientVersionName + " Nightscout: " + configBuilderFragment.nightscoutVersionName);
-                if (configBuilderFragment.nsClientVersionCode < 117)
-                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.resources.getString(R.string.unsupportedclientver));
+                if (configBuilderFragment != null) {
+                    configBuilderFragment.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
+                    configBuilderFragment.nightscoutVersionName = bundles.getString("nightscoutversionname");
+                    configBuilderFragment.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
+                    configBuilderFragment.nsClientVersionName = bundles.getString("nsclientversionname");
+                    log.debug("Got versions: NSClient: " + configBuilderFragment.nsClientVersionName + " Nightscout: " + configBuilderFragment.nightscoutVersionName);
+                    if (configBuilderFragment.nsClientVersionCode < 117)
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.resources.getString(R.string.unsupportedclientver));
+                }
             } else {
                 ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.resources.getString(R.string.unsupportedclientver));
+            }
+        }
+        if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
+            if (nsClientEnabled) {
+                try {
+                    if (bundles.containsKey("devicestatuses")) {
+                        String devicestatusesstring = bundles.getString("devicestatuses");
+                        JSONArray jsonArray = new JSONArray(devicestatusesstring);
+                        if (jsonArray.length() > 0) {
+                            JSONObject devicestatusJson = jsonArray.getJSONObject(0);
+                            if (devicestatusJson.has("pump")) {
+                                // Objectives 0
+                                ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
+                                if (objectivesFragment != null) {
+                                    objectivesFragment.pumpStatusIsAvailableInNS = true;
+                                    objectivesFragment.saveProgress();
+                                }
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         // Handle profile
@@ -242,10 +267,8 @@ public class DataService extends IntentService {
                     MainApp.bus().post(new EventTreatmentChange());
                 }
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (Exception e1) {
-                e1.printStackTrace();
             }
 
         }
@@ -301,10 +324,8 @@ public class DataService extends IntentService {
                     MainApp.bus().post(new EventTreatmentChange());
                 }
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (Exception e1) {
-                e1.printStackTrace();
             }
         }
 
@@ -328,10 +349,8 @@ public class DataService extends IntentService {
                 }
                 MainApp.bus().post(new EventTreatmentChange());
 
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            } catch (Exception e1) {
-                e1.printStackTrace();
             }
         }
 
@@ -370,16 +389,17 @@ public class DataService extends IntentService {
                             }
                         }
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
                 }
                 MainApp.bus().post(new EventNewBG());
             }
             // Objectives 0
             ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
-            if (objectivesFragment != null) objectivesFragment.bgIsAvailableInNS = true;
+            if (objectivesFragment != null) {
+                objectivesFragment.bgIsAvailableInNS = true;
+                objectivesFragment.saveProgress();
+            }
         }
     }
 
