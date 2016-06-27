@@ -249,9 +249,8 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
         @Override
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
-            // TODO: implement locales
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, new Locale("cs", "CZ"));
-            DateFormat enddf = DateFormat.getTimeInstance(DateFormat.SHORT, new Locale("cs", "CZ"));
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
+            DateFormat enddf = DateFormat.getTimeInstance(DateFormat.SHORT);
             TempBasal tempBasal = tempBasals.get(position);
             if (tempBasal.timeEnd != null) {
                 holder.date.setText(df.format(tempBasal.timeStart) + " - " + enddf.format(tempBasals.get(position).timeEnd));
