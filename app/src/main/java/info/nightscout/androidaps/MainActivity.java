@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import info.nightscout.androidaps.tabs.*;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.utils.LocaleHelper;
 
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
@@ -118,6 +119,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_resetdb:
                 MainApp.getDbHelper().resetDatabases();
                 break;
+            case R.id.en_lang: {
+                LocaleHelper.setLocale(this, "en");
+                break;
+            }
+            case R.id.cs_lang: {
+                LocaleHelper.setLocale(this, "cs");
+                break;
+            }
             case R.id.nav_exit:
                 log.debug("Exiting");
                 //chancelAlarmManager();

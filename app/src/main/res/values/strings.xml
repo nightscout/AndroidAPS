@@ -154,5 +154,7 @@
     <string name="pumpstatusavailableinns">Pump status available in NS</string>
     <string name="manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="cs_lang">Czech language</string>
+    <string name="en_lang">English language</string>
 
 </resources>
