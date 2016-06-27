@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity {
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         if (pluginsList == null) {
             pluginsList = new ArrayList<PluginBase>();
             // Register all tabs in app here
@@ -72,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
             pluginsList.add(SourceXdripFragment.newInstance());
             pluginsList.add(SourceNSClientFragment.newInstance());
             pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
-            toolbar = (Toolbar) findViewById(R.id.toolbar);
-            setSupportActionBar(toolbar);
 
             registerBus();
 
@@ -121,10 +122,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.en_lang: {
                 LocaleHelper.setLocale(this, "en");
+                recreate();
                 break;
             }
             case R.id.cs_lang: {
                 LocaleHelper.setLocale(this, "cs");
+                recreate();
                 break;
             }
             case R.id.nav_exit:
