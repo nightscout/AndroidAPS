@@ -88,6 +88,9 @@ public class OverviewFragment extends Fragment implements PluginBase {
     Handler loopHandler = new Handler();
     Runnable refreshLoop = null;
 
+    public Double bgTargetLow = 80d;
+    public Double bgTargetHigh = 180d;
+
     public OverviewFragment() {
         super();
         registerBus();
@@ -342,7 +345,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             log.debug("EventNewBG: Activity is null");
     }
 
-   @Subscribe
+    @Subscribe
     public void onStatusEvent(final EventRefreshOpenLoop ev) {
         Activity activity = getActivity();
         if (activity != null)
@@ -473,8 +476,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
         long toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
         long fromTime = toTime - hoursToFetch * 60 * 60 * 1000l;
 
-        Double lowLine = NSProfile.toUnits(80d, 4d, units); // TODO: make this customisable
-        Double highLine = NSProfile.toUnits(180d, 10d, units);
+        Double lowLine = NSProfile.fromMgdlToUnits(bgTargetLow, units);
+        Double highLine = NSProfile.fromMgdlToUnits(bgTargetHigh, units);
 
         BarGraphSeries<DataPoint> basalsSeries = null;
         LineGraphSeries<DataPoint> seriesLow = null;

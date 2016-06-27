@@ -36,6 +36,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.receivers.NSClientDataReceiver;
@@ -168,6 +169,26 @@ public class DataService extends IntentService {
                 }
             } else {
                 ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.resources.getString(R.string.unsupportedclientver));
+            }
+            if (bundles.containsKey("status")) {
+                try {
+                    JSONObject statusJson = new JSONObject(bundles.getString("status"));
+                    if (statusJson.has("settings")) {
+                        JSONObject settings = statusJson.getJSONObject("settings");
+                        if (settings.has("thresholds")) {
+                            JSONObject thresholds = settings.getJSONObject("thresholds");
+                            OverviewFragment overviewFragment = (OverviewFragment) MainActivity.getSpecificPlugin(OverviewFragment.class);
+                            if (thresholds.has("bgTargetTop")) {
+                                overviewFragment.bgTargetHigh = thresholds.getDouble("bgTargetTop");
+                            }
+                            if (thresholds.has("bgTargetBottom")) {
+                                overviewFragment.bgTargetLow = thresholds.getDouble("bgTargetBottom");
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         }
         if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
