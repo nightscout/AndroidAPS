@@ -2,7 +2,7 @@ package info.nightscout.androidaps.interfaces;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.plugins.APSResult;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
 
 /**
  * Created by mike on 10.06.2016.

@@ -26,13 +26,12 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.APSResult;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
 
 public class ObjectivesFragment extends Fragment implements View.OnClickListener, PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);

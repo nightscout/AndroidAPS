@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins;
+package info.nightscout.androidaps.plugins.Loop;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 

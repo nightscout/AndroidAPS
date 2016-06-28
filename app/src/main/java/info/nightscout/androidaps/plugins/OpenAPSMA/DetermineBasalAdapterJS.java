@@ -18,7 +18,7 @@ import java.io.IOException;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.plugins.ScriptReader;
+import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 

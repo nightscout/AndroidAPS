@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins;
+package info.nightscout.androidaps.plugins.Loop;
 
 import android.content.Context;
 import android.content.res.AssetManager;

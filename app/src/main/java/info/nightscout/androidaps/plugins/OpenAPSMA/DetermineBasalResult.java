@@ -8,7 +8,7 @@ import com.eclipsesource.v8.V8Object;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import info.nightscout.androidaps.plugins.APSResult;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
 
 public class DetermineBasalResult extends APSResult {
 

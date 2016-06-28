@@ -39,7 +39,6 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.APSResult;
 
 public class LoopFragment extends Fragment implements View.OnClickListener, PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
