@@ -9,10 +9,14 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
+
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
@@ -20,6 +24,9 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     Button deliverButton;
     TextView insulin;
     TextView carbs;
+
+    PlusMinusEditText editCarbs;
+    PlusMinusEditText editInsulin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,9 +37,15 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
         deliverButton.setOnClickListener(this);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         insulin = (TextView) view.findViewById(R.id.treatments_newtreatment_insulinamount);
         carbs = (TextView) view.findViewById(R.id.treatments_newtreatment_carbsamount);
+
+        Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+
+        editCarbs = new PlusMinusEditText(view, R.id.treatments_newtreatment_carbsamount, R.id.treatments_newtreatment_carbsamount_plus, R.id.treatments_newtreatment_carbsamount_minus, 0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"));
+        editInsulin = new PlusMinusEditText(view, R.id.treatments_newtreatment_insulinamount, R.id.treatments_newtreatment_insulinamount_plus, R.id.treatments_newtreatment_insulinamount_minus, 0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"));
 
         return view;
     }
@@ -53,7 +66,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
                     confirmMessage += getString(R.string.bolus) + ": " + insulinAfterConstraints + "U";
                     confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-                    if (insulinAfterConstraints != insulin || carbsAfterConstraints != carbs)
+                    if (insulinAfterConstraints - insulin  != 0 || carbsAfterConstraints != carbs)
                         confirmMessage += "\n" + getString(R.string.constraintapllied);
 
                     final Double finalInsulinAfterConstraints = insulinAfterConstraints;

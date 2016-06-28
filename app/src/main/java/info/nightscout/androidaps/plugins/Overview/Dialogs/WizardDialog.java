@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -41,6 +42,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     CheckBox basalIobCheckbox;
     TextView correctionInsulin;
     TextView total, totalInsulin;
+
+    PlusMinusEditText editBg;
+    PlusMinusEditText editCarbs;
+    PlusMinusEditText editCorr;
 
     public static final DecimalFormat numberFormat = new DecimalFormat("0.00");
     public static final DecimalFormat intFormat = new DecimalFormat("0");
@@ -79,7 +84,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         wizardDialogDeliverButton.setOnClickListener(this);
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         correctionInput = (TextView) view.findViewById(R.id.treatments_wizard_correctioninput);
         carbsInput = (TextView) view.findViewById(R.id.treatments_wizard_carbsinput);
         bgInput = (TextView) view.findViewById(R.id.treatments_wizard_bginput);
@@ -106,6 +112,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         basalIobCheckbox.setOnCheckedChangeListener(onCheckedChangeListener);
         bolusIobCheckbox.setOnCheckedChangeListener(onCheckedChangeListener);
 
+        Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
+        Double maxCorrection = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+
+        editBg = new PlusMinusEditText(view, R.id.treatments_wizard_bginput, R.id.treatments_wizard_bginput_plus, R.id.treatments_wizard_bginput_minus, 0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"));
+        editCarbs = new PlusMinusEditText(view, R.id.treatments_wizard_carbsinput, R.id.treatments_wizard_carbsinput_plus, R.id.treatments_wizard_carbsinput_minus, 0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"));
+        editCorr = new PlusMinusEditText(view, R.id.treatments_wizard_correctioninput, R.id.treatments_wizard_correctioninput_plus, R.id.treatments_wizard_correctioninput_minus, 0d, 0d, maxCorrection, 0.05d, new DecimalFormat("0.00"));
         initDialog();
         return view;
     }
@@ -173,6 +185,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
         String units = profile.getUnits();
         bgUnits.setText(units);
+        if (units.equals(Constants.MGDL)) editBg.setStep(1d);
+        else editBg.setStep(0.1d);
 
         // Set BG if not old
         BgReading lastBg = MainApp.getDbHelper().lastBg();
@@ -192,13 +206,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
             bg.setText(lastBg.valueToUnitsToString(units) + " ISF: " + intFormat.format(sens));
             bgInsulin.setText(numberFormat.format(bgDiff / sens) + "U");
             bgInput.removeTextChangedListener(textWatcher);
-            bgInput.setText(lastBg.valueToUnitsToString(units));
+            //bgInput.setText(lastBg.valueToUnitsToString(units));
+            editBg.setValue(lastBg.valueToUnits(units));
             bgInput.addTextChangedListener(textWatcher);
         } else {
             bg.setText("");
             bgInsulin.setText("");
             bgInput.removeTextChangedListener(textWatcher);
-            bgInput.setText("");
+            //bgInput.setText("");
+            editBg.setValue(0d);
             bgInput.addTextChangedListener(textWatcher);
         }
 
@@ -214,7 +230,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         basalIobInsulin.setText("-" + numberFormat.format(basalIob.basaliob) + "U");
 
         totalInsulin.setText("");
-        wizardDialogDeliverButton.setVisibility(Button.GONE);
+        wizardDialogDeliverButton.setVisibility(Button.INVISIBLE);
 
     }
 
@@ -304,7 +320,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
             wizardDialogDeliverButton.setText("SEND " + insulinText + " " + carbsText);
             wizardDialogDeliverButton.setVisibility(Button.VISIBLE);
         } else {
-            wizardDialogDeliverButton.setVisibility(Button.GONE);
+            wizardDialogDeliverButton.setVisibility(Button.INVISIBLE);
         }
     }
 }

@@ -14,6 +14,8 @@ public class Constants {
 
     public static final double basalAbsoluteOnlyForCheckLimit = 10101010d;
     public static final Integer basalPercentOnlyForCheckLimit = 10101010;
+    public static final double bolusOnlyForCheckLimit = 10101010d;
+    public static final Integer carbsOnlyForCheckLimit = 10101010;
 
     public static final Integer notificationID = 556677;
 

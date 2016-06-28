@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:orientation="vertical"
-    >
+    android:minWidth="300dp"
+    android:focusableInTouchMode="true">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -21,6 +22,16 @@
             android:layout_gravity="center_horizontal"
             android:width="80dp" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/treatments_wizard_bginput_plus"
+            android:src="@drawable/ic_action_add"
+            android:layout_gravity="center"
+            android:background="@drawable/circle"
+            android:backgroundTint="#ffffff"
+            android:tint="#ffffff" />
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -31,6 +42,16 @@
             android:inputType="numberDecimal"
             android:gravity="center_horizontal"
             android:layout_weight="0.5" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/treatments_wizard_bginput_minus"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_minus"
+            android:background="@drawable/circle"
+            android:backgroundTint="#ffffff"
+            android:tint="#ffffff" />
 
         <TextView
             android:id="@+id/treatments_wizard_bgunits"
@@ -59,6 +80,16 @@
             android:layout_gravity="center_horizontal"
             android:width="80dp" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/treatments_wizard_carbsinput_plus"
+            android:src="@drawable/ic_action_add"
+            android:layout_gravity="center"
+            android:background="@drawable/circle"
+            android:backgroundTint="#ffffff"
+            android:tint="#ffffff" />
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -71,6 +102,16 @@
             android:inputType="numberDecimal"
             android:gravity="center_horizontal"
             android:layout_weight="0.5" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/treatments_wizard_carbsinput_minus"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_minus"
+            android:background="@drawable/circle"
+            android:backgroundTint="#ffffff"
+            android:tint="#ffffff" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -98,6 +139,16 @@
             android:layout_gravity="center_horizontal"
             android:width="80dp" />
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/treatments_wizard_correctioninput_plus"
+            android:src="@drawable/ic_action_add"
+            android:layout_gravity="center"
+            android:background="@drawable/circle"
+            android:backgroundTint="#ffffff"
+            android:tint="#ffffff" />
+
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -110,6 +161,16 @@
             android:inputType="numberSigned|numberDecimal"
             android:gravity="center_horizontal"
             android:layout_weight="0.5" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/treatments_wizard_correctioninput_minus"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_action_minus"
+            android:background="@drawable/circle"
+            android:backgroundTint="#ffffff"
+            android:tint="#ffffff" />
 
         <TextView
             android:layout_width="wrap_content"
