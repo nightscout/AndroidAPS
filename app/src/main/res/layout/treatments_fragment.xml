@@ -50,7 +50,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Refresh treatments from Nightscout"
+            android:text="@string/nav_refreshtreatments"
             android:id="@+id/treatments_reshreshfromnightscout"
             style="?android:attr/buttonStyle"
             android:layout_gravity="center_horizontal" />

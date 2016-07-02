@@ -293,7 +293,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle(this.getContext().getString(R.string.dialog));
+                builder.setTitle(this.getContext().getString(R.string.confirmation));
                 builder.setMessage(this.getContext().getString(R.string.refreshfromnightscout));
                 builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

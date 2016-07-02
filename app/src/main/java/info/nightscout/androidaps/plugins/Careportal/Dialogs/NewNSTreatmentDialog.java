@@ -506,7 +506,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         final JSONObject data = gatherData();
         String confirmText = buildConfirmText(data);
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getContext().getString(R.string.dialog));
+        builder.setTitle(getContext().getString(R.string.confirmation));
         builder.setMessage(confirmText);
         builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

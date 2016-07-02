@@ -8,7 +8,6 @@
             android:title="@string/apsmode_title"
             android:key="aps_mode"
             android:defaultValue="open"
-            android:summary="@string/apsmode_summary"
             android:entries="@array/aps_modeArray"
             android:entryValues="@array/aps_modeValues"/>
     </PreferenceCategory>

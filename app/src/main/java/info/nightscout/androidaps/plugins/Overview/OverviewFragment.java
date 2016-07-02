@@ -236,7 +236,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
                 final LoopFragment.LastRun finalLastRun = MainApp.getConfigBuilder().getActiveLoop().lastRun;
                 if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle(getContext().getString(R.string.dialog));
+                    builder.setTitle(getContext().getString(R.string.confirmation));
                     builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
                     builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {

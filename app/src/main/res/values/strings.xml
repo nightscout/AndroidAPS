@@ -114,7 +114,6 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
-    <string name="dialog">Confirmation</string>
     <string name="alert">Alert</string>
     <string name="refreshfromnightscout">Do you want to refresh treatments from Nightscout</string>
     <string name="ok">OK</string>
@@ -123,13 +122,13 @@
     <string name="safety">Safety</string>
     <string name="limits_title">Limits</string>
     <string name="maxbasal_title">Max basal</string>
-    <string name="maxbasal_summary">Max U/hr a Temp Basal can be set to</string>
+    <string name="maxbasal_summary">Max U/hr of Temp Basal can be set to</string>
     <string name="maxbasaliob_title">Max basal IOB</string>
     <string name="maxbasaliob_summary">Maximum amount of non-bolus IOB OpenAPS can deliver</string>
     <string name="lowsuspend_low_title">Low BG threshold</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
-    <string name="treatmentdeliveryerror">Treatment delivery error</string>
+    <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="overview_newtempbasal_basal_label">Basal value</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
@@ -147,7 +146,7 @@
     <string name="xdrip">xDrip</string>
     <string name="nsclient">NSClient</string>
     <string name="apsmode_title">APS Mode</string>
-    <string name="apsmode_summary">APS Loop Mode</string>
+
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
