@@ -49,7 +49,7 @@ import info.nightscout.utils.ToastUtils;
 public class DataService extends IntentService {
     private static Logger log = LoggerFactory.getLogger(DataService.class);
 
-    boolean xDripEnabled = true;
+    boolean xDripEnabled = false;
     boolean nsClientEnabled = true;
 
     public DataService() {
@@ -178,10 +178,10 @@ public class DataService extends IntentService {
                         if (settings.has("thresholds")) {
                             JSONObject thresholds = settings.getJSONObject("thresholds");
                             OverviewFragment overviewFragment = (OverviewFragment) MainActivity.getSpecificPlugin(OverviewFragment.class);
-                            if (thresholds.has("bgTargetTop")) {
+                            if (overviewFragment != null && thresholds.has("bgTargetTop")) {
                                 overviewFragment.bgTargetHigh = thresholds.getDouble("bgTargetTop");
                             }
-                            if (thresholds.has("bgTargetBottom")) {
+                            if (overviewFragment != null && thresholds.has("bgTargetBottom")) {
                                 overviewFragment.bgTargetLow = thresholds.getDouble("bgTargetBottom");
                             }
                         }

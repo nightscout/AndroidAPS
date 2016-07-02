@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.newInstance());
             pluginsList.add(VirtualPumpFragment.newInstance());
+            if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.newInstance());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.newInstance());
             if (Config.LOWSUSPEDENABLED) pluginsList.add(LowSuspendFragment.newInstance());
             if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.newInstance());
@@ -72,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
             pluginsList.add(TreatmentsFragment.newInstance());
             pluginsList.add(TempBasalsFragment.newInstance());
             pluginsList.add(SafetyFragment.newInstance());
-            if (Config.OPENAPSMAENABLED) pluginsList.add(ObjectivesFragment.newInstance());
+            if (Config.OBJECTIVESENABLED) pluginsList.add(ObjectivesFragment.newInstance());
             pluginsList.add(SourceXdripFragment.newInstance());
             pluginsList.add(SourceNSClientFragment.newInstance());
             pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
@@ -164,11 +166,15 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<PluginBase> getSpecificPluginsList(int type) {
         ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
 
-        Iterator<PluginBase> it = pluginsList.iterator();
-        while (it.hasNext()) {
-            PluginBase p = it.next();
-            if (p.getType() == type)
-                newList.add(p);
+        if (pluginsList != null) {
+            Iterator<PluginBase> it = pluginsList.iterator();
+            while (it.hasNext()) {
+                PluginBase p = it.next();
+                if (p.getType() == type)
+                    newList.add(p);
+            }
+        } else {
+            log.error("pluginsList=null");
         }
         return newList;
     }
@@ -176,11 +182,15 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
         ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
 
-        Iterator<PluginBase> it = pluginsList.iterator();
-        while (it.hasNext()) {
-            PluginBase p = it.next();
-            if (p.getClass() != ConfigBuilderFragment.class && interfaceClass.isAssignableFrom(p.getClass()))
-                newList.add(p);
+        if (pluginsList != null) {
+            Iterator<PluginBase> it = pluginsList.iterator();
+            while (it.hasNext()) {
+                PluginBase p = it.next();
+                if (p.getClass() != ConfigBuilderFragment.class && interfaceClass.isAssignableFrom(p.getClass()))
+                    newList.add(p);
+            }
+        } else {
+            log.error("pluginsList=null");
         }
         return newList;
     }
@@ -195,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                     return p;
             }
         } else {
-            log.debug("pluginsList=null");
+            log.error("pluginsList=null");
         }
         return null;
     }

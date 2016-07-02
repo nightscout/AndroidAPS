@@ -11,6 +11,7 @@ public class Config {
     public static final boolean OPENAPSMAENABLED = APS && true;
     public static final boolean LOOPENABLED = APS && true;
     public static final boolean OBJECTIVESENABLED = APS && true;
+    public static final boolean CAREPORTALENABLED = true;
 
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;

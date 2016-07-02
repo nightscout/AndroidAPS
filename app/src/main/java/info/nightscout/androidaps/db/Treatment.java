@@ -20,6 +20,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
@@ -117,11 +118,7 @@ public class Treatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-        if (q.size() < 1) {
-            log.error("DBADD No receivers");
-        } else  if (Config.logNSUpload)
-            log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+        DbLogger.dbAdd(intent, data.toString(), Treatment.class);
     }
 
     public void updateToNSClient() {

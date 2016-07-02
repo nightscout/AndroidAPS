@@ -1,0 +1,202 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    tools:context="info.nightscout.androidaps.plugins.Careportal.CareportalFragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.GridLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:padding="10dip"
+            app:columnCount="3">
+
+            <Button
+                android:id="@+id/careportal_bgcheck"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_bgcheck"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/careportal_exercise"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_exercise"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/careportal_note"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_note"
+                app:layout_column="2"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="0" />
+
+            <Button
+                android:id="@+id/careportal_snackbolus"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_snackbolus"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="1" />
+
+            <Button
+                android:id="@+id/careportal_mealbolus"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_mealbolus"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="1" />
+
+            <Button
+                android:id="@+id/careportal_correctionbolus"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_correctionbolus"
+                app:layout_column="2"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="1" />
+
+           <Button
+                android:id="@+id/careportal_carbscorrection"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_carbscorrection"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="2" />
+
+             <Button
+                android:id="@+id/careportal_combobolus"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_combobolus"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="2" />
+
+             <Button
+                android:id="@+id/careportal_tempbasalstart"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_tempbasalstart"
+                app:layout_column="2"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="2" />
+
+             <Button
+                android:id="@+id/careportal_tempbasalend"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_tempbasalend"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="3" />
+
+            <Button
+                android:id="@+id/careportal_announcement"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_announcement"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="3" />
+
+            <Button
+                android:id="@+id/careportal_question"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_question"
+                app:layout_column="2"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="3" />
+
+            <Button
+                android:id="@+id/careportal_pumpsitechange"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_pumpsitechange"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="4" />
+
+            <Button
+                android:id="@+id/careportal_cgmsensorinsert"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_cgmsensorinsert"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="4" />
+
+            <Button
+                android:id="@+id/careportal_cgmsensorstart"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_cgmsensorstart"
+                app:layout_column="2"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="4" />
+
+            <Button
+                android:id="@+id/careportal_insulincartridgechange"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_insulincartridgechange"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="5" />
+
+            <Button
+                android:id="@+id/careportal_profileswitch"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_profileswitch"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="5" />
+
+            <Button
+                android:id="@+id/careportal_openapsoffline"
+                android:layout_width="0dp"
+                android:layout_height="80dp"
+                android:text="@string/careportal_openapsoffline"
+                app:layout_column="2"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="5" />
+
+        </android.support.v7.widget.GridLayout>
+    </ScrollView>
+</FrameLayout>

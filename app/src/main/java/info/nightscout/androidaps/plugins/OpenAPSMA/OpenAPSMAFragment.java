@@ -178,7 +178,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelable("lastrun", lastRun);
+        //outState.putParcelable("lastrun", lastRun);
     }
 
     private void registerBus() {

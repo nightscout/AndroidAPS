@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
+import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
@@ -861,12 +862,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-            if (q.size() < 1) {
-                log.error("DBADD No receivers");
-            } else if (Config.logNSUpload)
-                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
         }
     }
@@ -888,11 +884,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-            if (q.size() < 1) {
-                log.error("DBADD No receivers");
-            } else if (Config.logNSUpload)
-                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
         }
     }
@@ -912,11 +904,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-            if (q.size() < 1) {
-                log.error("DBADD No receivers");
-            } else if (Config.logNSUpload)
-                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
         }
     }
@@ -941,11 +929,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-            if (q.size() < 1) {
-                log.error("DBADD No receivers");
-            } else if (Config.logNSUpload)
-                log.debug("DBADD dbAdd " + q.size() + " receivers " + data.toString());
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
         }
     }

@@ -33,6 +33,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_openapsma);
             if (Config.LOWSUSPEDENABLED)
                 addPreferencesFromResource(R.xml.pref_lowsuspend);
+            if (Config.CAREPORTALENABLED)
+                addPreferencesFromResource(R.xml.pref_careportal);
 
         }
     }

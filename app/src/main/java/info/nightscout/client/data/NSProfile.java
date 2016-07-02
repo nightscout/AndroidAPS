@@ -5,8 +5,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
@@ -36,6 +38,26 @@ public class NSProfile {
         }
 
         return profile;
+    }
+
+    public ArrayList<CharSequence> getProfileList() {
+        ArrayList<CharSequence> ret = new ArrayList<CharSequence>();
+
+        JSONObject store;
+        JSONObject profile = null;
+        try {
+            store = json.getJSONObject("store");
+            Iterator<?> keys = store.keys();
+
+            while( keys.hasNext() ) {
+                String profileName = (String) keys.next();
+                ret.add(profileName);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return ret;
     }
 
     public String log() {

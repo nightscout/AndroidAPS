@@ -34,6 +34,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
     Double maxValue = 1d;
     Double step = 1d;
     NumberFormat formater;
+    boolean allowZero = false;
 
     private Handler mHandler;
     private ScheduledExecutorService mUpdater;
@@ -57,7 +58,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
     private static final int MSG_INC = 0;
     private static final int MSG_DEC = 1;
 
-    public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater) {
+    public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero) {
         editText = (TextView) view.findViewById(editTextID);
         minusImage = (ImageView) view.findViewById(minusID);
         plusImage = (ImageView) view.findViewById(plusID);
@@ -67,6 +68,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         this.maxValue = maxValue;
         this.step = step;
         this.formater = formater;
+        this.allowZero = allowZero;
 
         mHandler = new Handler() {
             @Override
@@ -89,6 +91,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         plusImage.setOnTouchListener(this);
         plusImage.setOnKeyListener(this);
         plusImage.setOnClickListener(this);
+        updateEditText();
     }
 
     public void setValue(Double value) {
@@ -117,7 +120,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
     }
 
     private void updateEditText() {
-        if (value == 0d)
+        if (value == 0d && !allowZero)
             editText.setText("");
         else
             editText.setText(formater.format(value));

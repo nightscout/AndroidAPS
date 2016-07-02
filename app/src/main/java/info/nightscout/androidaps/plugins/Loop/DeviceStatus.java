@@ -15,6 +15,7 @@ import java.util.List;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.client.data.DbLogger;
 
 /*
 {
@@ -416,10 +417,6 @@ public class DeviceStatus {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-        if (q.size() < 1) {
-            log.error("DBADD No receivers");
-        } else if (Config.logNSUpload)
-            log.debug("DBADD dbAdd " + q.size() + " receivers " + mongoRecord().toString());
+        DbLogger.dbAdd(intent, mongoRecord().toString(), DeviceStatus.class);
     }
 }

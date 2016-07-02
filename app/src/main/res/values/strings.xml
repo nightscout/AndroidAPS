@@ -95,6 +95,8 @@
     <string name="tempbasals">Temp Basals</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
+    <string name="careportal">Careportal</string>
+
 
     <string name="configbuilder_pump">Pump</string>
     <string name="configbuilder_treatments">Treatments</string>
@@ -150,6 +152,7 @@
     <string name="openloop">Open Loop</string>
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
+    <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
     <string name="bgavailableinns">BG available in NS</string>
     <string name="pumpstatusavailableinns">Pump status available in NS</string>
     <string name="manualenacts">Manual enacts</string>
@@ -159,5 +162,42 @@
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
+    <string name="careportal_bgcheck">BG Check</string>
+    <string name="careportal_announcement">Announcement</string>
+    <string name="careportal_note">Note</string>
+    <string name="careportal_question">Question</string>
+    <string name="careportal_exercise">Exercise</string>
+    <string name="careportal_pumpsitechange">Pump Site Change</string>
+    <string name="careportal_cgmsensorinsert">CGM Sensor Insert</string>
+    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_insulincartridgechange">Insulin Cartridge Change</string>
+    <string name="careportal_profileswitch">Profile Switch</string>
+    <string name="careportal_snackbolus">Snack Bolus</string>
+    <string name="careportal_mealbolus">Meal Bolus</string>
+    <string name="careportal_correctionbolus">Correction Bolus</string>
+    <string name="careportal_combobolus">Combo Bolus</string>
+    <string name="careportal_tempbasalstart">Temp Basal Start</string>
+    <string name="careportal_tempbasalend">Temp Basal End</string>
+    <string name="careportal_carbscorrection">Carbs correction</string>
+    <string name="careportal_openapsoffline">OpenAPS Offline</string>
+
+    <string name="careportal_newnstreatment_eventtype">Event type</string>
+    <string name="careportal_newnstreatment_other">Other</string>
+    <string name="careportal_newnstreatment_meter">Meter</string>
+    <string name="careportal_newnstreatment_sensor">Sensor</string>
+    <string name="careportal_newnstreatment_carbs_label">Carbs</string>
+    <string name="careportal_newnstreatment_insulin_label">Insulin</string>
+    <string name="careportal_newnstreatment_carbtime_label">Carb time</string>
+    <string name="careportal_newnstreatment_split_label">Split</string>
+    <string name="careportal_newnstreatment_duration_label">Duration</string>
+    <string name="careportal_newnstreatment_percent_label">Percent</string>
+    <string name="careportal_newnstreatment_absolute_label">Absolute</string>
+    <string name="careportal_newnstreatment_duration_min">min</string>
+    <string name="careportal_newnstreatment_notes_label">Notes</string>
+    <string name="careportal_newnstreatment_eventtime_label">Event time</string>
+    <string name="careportal_newnstreatment_profile_label">Profile</string>
+    <string name="careportal_newnstreatment_enteredby_title">Entered By</string>
+    <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
+    <string name="noprofile">No profile loaded from NS yet</string>
 
 </resources>
