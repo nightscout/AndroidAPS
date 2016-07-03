@@ -23,8 +23,8 @@ android {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1003
-        versionName "1.0.03"
+        versionCode 1004
+        versionName "1.0.04"
     }
     buildTypes {
         release {

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -57,6 +58,12 @@ public class MainActivity extends AppCompatActivity {
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
+        // show version in toolbar
+        try {
+            setTitle(getString(R.string.app_name) + " v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
