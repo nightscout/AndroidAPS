@@ -130,7 +130,7 @@
     <string name="overview_calculator_label">Kalkulačka</string>
     <string name="overview_newtempbasal_basal_label">Hodnota bazálu</string>
     <string name="overview_newtempbasal_percent_label">% (100% = současný)</string>
-    <string name="overview_treatment_label">Ošetření</string>
+    <string name="overview_bolus_label">Bolus</string>
     <string name="profileviewer">NS profil</string>
     <string name="pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="rate">Hodnota:</string>
@@ -195,4 +195,5 @@
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
     <string name="configbuilder_nsclientversion_label">Verze NSClienta:</string>
     <string name="send">POSLAT</string>
+    <string name="missing">Chybí</string>
 </resources>

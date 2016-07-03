@@ -159,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:layout_weight="0.5"
-                android:text="@string/overview_treatment_label"
+                android:text="@string/overview_bolus_label"
                 android:textColor="@color/colorTreatmentButton" />
 
             <Button

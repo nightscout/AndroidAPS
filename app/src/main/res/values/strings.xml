@@ -132,7 +132,7 @@
     <string name="overview_newtempbasal_basal_label">Basal value</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
-    <string name="overview_treatment_label">Treatment</string>
+    <string name="overview_bolus_label">Bolus</string>
     <string name="overview_calculator_label">Calculator</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="confirmation">Confirmation</string>
@@ -203,5 +203,6 @@
     <string name="configbuilder_nsclientversion_label">NSClient version:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="send">SEND</string>
+    <string name="missing">Missing</string>
 
 </resources>

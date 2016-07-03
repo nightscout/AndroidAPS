@@ -303,7 +303,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
         if (calculatedTotalInsulin < 0) {
             Double carbsEquivalent = -calculatedTotalInsulin * ic;
-            total.setText("Missing " + intFormat.format(carbsEquivalent) + "g");
+            total.setText(getString(R.string.missing) + " " + intFormat.format(carbsEquivalent) + "g");
             calculatedTotalInsulin = 0d;
             totalInsulin.setText("");
         } else {
