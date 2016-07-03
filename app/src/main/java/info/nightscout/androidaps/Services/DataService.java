@@ -276,7 +276,7 @@ public class DataService extends IntentService {
                     treatment.created_at = new Date(trJson.getLong("mills"));
                     treatment.setTimeIndex(treatment.getTimeIndex());
                     try {
-                        MainApp.getDbHelper().getDaoTreatments().create(treatment);
+                        MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
                         if (Config.logIncommingData)
                             log.debug("ADD: Stored treatment: " + treatment.log());
                     } catch (SQLException e) {
