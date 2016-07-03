@@ -11,10 +11,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import java.text.DecimalFormat;
+
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
@@ -26,6 +30,8 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
     RadioButton h20Radio;
     RadioButton h30Radio;
     RadioButton h40Radio;
+
+    PlusMinusEditText editInsulin;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +46,9 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         h20Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_2h);
         h30Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_3h);
         h40Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_4h);
+
+        Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
+        editInsulin = new PlusMinusEditText(view, R.id.overview_newextendedbolus_insulin, R.id.overview_newextendedbolus_insulin_plus, R.id.overview_newextendedbolus_insulin_minus, 0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false);
 
         okButton.setOnClickListener(this);
         return view;
