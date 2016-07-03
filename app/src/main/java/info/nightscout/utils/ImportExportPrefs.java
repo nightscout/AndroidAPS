@@ -33,7 +33,7 @@ public class ImportExportPrefs {
     public static void exportSharedPreferences(final Context c) {
 
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.resources.getString(R.string.export_to) + " " + path + "/" + file + "?")
+                .setMessage(MainApp.resources.getString(R.string.export_to) + " " + file + "?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -59,7 +59,7 @@ public class ImportExportPrefs {
 
     public static void importSharedPreferences(final Context c) {
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.resources.getString(R.string.import_from) + " " + path + "/" + file + "?")
+                .setMessage(MainApp.resources.getString(R.string.import_from) + " " + file + "?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
