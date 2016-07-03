@@ -196,4 +196,7 @@
     <string name="configbuilder_nsclientversion_label">Verze NSClienta:</string>
     <string name="send">POSLAT</string>
     <string name="missing">Chybí</string>
+    <string name="enabled">Povolený</string>
+    <string name="visible">Viditelný</string>
+    <string name="up">Nahoru</string>
 </resources>

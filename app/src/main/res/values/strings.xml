@@ -204,5 +204,8 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="send">SEND</string>
     <string name="missing">Missing</string>
+    <string name="enabled">Enabled</string>
+    <string name="visible">Visible</string>
+    <string name="up">Up</string>
 
 </resources>

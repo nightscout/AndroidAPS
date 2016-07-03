@@ -287,7 +287,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             t.carbs = (double) result.carbsDelivered;
             t.created_at = new Date();
             try {
-                MainApp.instance().getDbHelper().getDaoTreatments().create(t);
+                MainApp.getDbHelper().getDaoTreatments().create(t);
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -368,8 +368,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      */
     @Override
     public PumpEnactResult applyAPSRequest(APSResult request) {
-        Double rateAfterConstraints = applyBasalConstraints(request.rate);
-        request.rate = rateAfterConstraints;
+        request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result = null;
 
         if (request.rate == getBaseBasalRate()) {
