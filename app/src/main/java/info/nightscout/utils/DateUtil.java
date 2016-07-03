@@ -13,7 +13,7 @@ public class DateUtil
 {
 
     /** The date format in iso. */
-    public static String FORMAT_DATE_ISO="yyyy-MM-dd'T'HH:mm:ssZ";
+    public static String FORMAT_DATE_ISO="yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     /**
      * Takes in an ISO date string of the following format:
