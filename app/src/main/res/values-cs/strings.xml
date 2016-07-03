@@ -75,10 +75,10 @@
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
     <string name="loop_setbypump_label">Nastaveno pumpou</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
-    <string name="lowsuspend"></string>
+    <string name="lowsuspend">Low Suspend</string>
     <string name="lowsuspend_low_title">Hodnota nízké glykémie</string>
     <string name="manualenacts">Ručně spuštěno</string>
-    <string name="lowsuspend_lowprojected"></string>
+    <string name="lowsuspend_lowprojected">Předpokládaná nízká glykémie:</string>
     <string name="maxbasal_summary">Max U/h dočasného bázálu jsou</string>
     <string name="maxbasal_title">Max bazál</string>
     <string name="maxbasaliob_summary">Maximální množství nebolusového IOB, které může OpenAPS používat</string>
@@ -100,7 +100,7 @@
     <string name="nsprofileview_activeprofile_label">Aktivní profil:</string>
     <string name="nsprofileview_basal_label">Bazál:</string>
     <string name="nsprofileview_dia_label">Trvání inzulínu:</string>
-    <string name="nsprofileview_ic_label"></string>
+    <string name="nsprofileview_ic_label">Inzlínosacharidový poměr:</string>
     <string name="nsprofileview_noprofile_text">ŽÁDNÝ PROFIL NENASTAVEN</string>
     <string name="nsprofileview_target_label">Cíl:</string>
     <string name="nsprofileview_units_label">Jednotky:</string>
@@ -118,7 +118,7 @@
     <string name="openapsma_lastenact_label">Poslední provedení</string>
     <string name="openapsma_lastrun_label">Poslední spuštění</string>
     <string name="openapsma_mealdata_label">Data o jídle</string>
-    <string name="openapsma_minbg_label"></string>
+    <string name="openapsma_minbg_label">Cílová nízká glykémie</string>
     <string name="openapsma_noglucosedata">Nedostupná data o glykémiích</string>
     <string name="openapsma_noprofile">Nedostupný profil</string>
     <string name="openapsma_nopump">Žádná pumpa</string>
@@ -181,4 +181,14 @@
     <string name="virtualpump_tempbasal_label">Dočasný bazál:</string>
     <string name="vitualpump_label">VIRTUÁLNÍ PUMPA</string>
     <string name="xdrip"></string>
+    <string name="overview_extendedbolus_button">Kombo bolus</string>
+    <string name="overview_tempbasal_button">Dočasný bazál</string>
+    <string name="nsprofileview_isf_label">Citlivost:</string>
+    <string name="nsclientnotinstalled">NSClient není nainstalován. Záznam je ztracen!</string>
+    <string name="lowsuspend_lowprojectedmessage">Předpokládaná nízká glykémie: Dočasný bazál 0%</string>
+    <string name="lowsuspend_lowmessage">Nízká glykémie: Dočasný bazál 0%</string>
+    <string name="lowsuspend_cancelmessage">Low Suspend: Zrušení dočasného bazálu</string>
+    <string name="lowsuspend_low">Low Suspend:</string>
+    <string name="careportal_newnstreatment_eventtype">Typ události</string>
+    <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
 </resources>

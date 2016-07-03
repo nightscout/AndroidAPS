@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">AndroidAPS</string>
-    <string name="title_activity_main">AndroidAPS</string>
+    <string name="title_activity_main" translatable="false">AndroidAPS</string>
 
     <string name="title_activity_preferences">Preferences</string>
     <string name="treatmentssafety_title">Tratments safety</string>
@@ -75,7 +75,7 @@
     <string name="lowsuspend_lowmessage">LOW: Temp basal 0%</string>
     <string name="lowsuspend_lowprojectedmessage">LOW PROJECTED: Temp basal 0%</string>
     <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
-    <string name="lowsuspend_low">Low:</string>
+    <string name="lowsuspend_low">Low Suspend:</string>
     <string name="lowsuspend_lowprojected">Low projected:</string>
     <string name="rate">Rate:</string>
     <string name="duration">Duration:</string>
@@ -88,7 +88,7 @@
     <string name="configbuilder">Config Builder</string>
     <string name="lowsuspend">Low Suspend</string>
     <string name="objectives">Objectives</string>
-    <string name="openapsma">OpenAPS MA</string>
+    <string name="openapsma" translatable="false">OpenAPS MA</string>
     <string name="overview">Overview</string>
     <string name="profileviewer">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
@@ -143,8 +143,8 @@
     <string name="changeyourinput">Change your input!</string>
     <string name="setextendedbolusquestion">Set new extended bolus:</string>
     <string name="configbuilder_bgsource">BG Source</string>
-    <string name="xdrip">xDrip</string>
-    <string name="nsclient">NSClient</string>
+    <string name="xdrip" translatable="false">xDrip</string>
+    <string name="nsclient" translatable="false">NSClient</string>
     <string name="apsmode_title">APS Mode</string>
 
     <string name="closedloop">Closed Loop</string>
@@ -198,5 +198,7 @@
     <string name="careportal_newnstreatment_enteredby_title">Entered By</string>
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="noprofile">No profile loaded from NS yet</string>
+    <string name="overview_tempbasal_button">TempBasal</string>
+    <string name="overview_extendedbolus_button">Extended Bolus</string>
 
 </resources>
