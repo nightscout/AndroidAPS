@@ -208,8 +208,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return;
-            // TODO: implement locales
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, new Locale("cs", "CZ"));
+            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
             holder.date.setText(df.format(treatments.get(position).created_at));
             holder.insulin.setText(formatNumber2decimalplaces.format(treatments.get(position).insulin) + " U");
             holder.carbs.setText(formatNumber0decimalplaces.format(treatments.get(position).carbs) + " g");
