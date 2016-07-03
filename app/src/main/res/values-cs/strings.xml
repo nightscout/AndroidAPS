@@ -206,5 +206,15 @@
     <string name="export_to">Exportovat nastavení do</string>
     <string name="nav_export">Exportovat nastavení</string>
     <string name="nav_import">Importovat nastavení</string>
-    <string name="de_lang">Němčina</string>
+    <string name="de_lang">German</string>
+    <string name="openapsma_apslimits_label">Limity APS</string>
+    <string name="openapsma_high_summary">Maximální hodnota ještě v rozsahu</string>
+    <string name="openapsma_high_title">Horní limit</string>
+    <string name="openapsma_low_summary">Minimální hodnota ještě v rozsahu</string>
+    <string name="openapsma_low_title">Dolní limit</string>
+    <string name="openapsma_maxbasal_summary">Maximální povolený bazál [U/h]</string>
+    <string name="openapsma_maxbasal_title">Maximální bazál</string>
+    <string name="openapsma_maxbasaliob_title">Maximální IOB z bazálů</string>
+    <string name="openapsma_maxiob_summary">Maximální nebolusové IOB, které může OpenAPS použít</string>
+    <string name="openapsma_targetrange_label">Cílový rozsah pro OpenAPS</string>
 </resources>
