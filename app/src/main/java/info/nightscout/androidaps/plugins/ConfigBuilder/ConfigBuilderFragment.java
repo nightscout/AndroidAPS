@@ -863,6 +863,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             Intent intent = new Intent(Intents.ACTION_DATABASE);
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
         }
