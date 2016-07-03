@@ -317,7 +317,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
             String insulinText = calculatedTotalInsulin > 0d ? (numberFormat.format(calculatedTotalInsulin) + "U") : "";
             String carbsText = calculatedCarbs > 0d ? (intFormat.format(calculatedCarbs) + "g") : "";
-            wizardDialogDeliverButton.setText("SEND " + insulinText + " " + carbsText);
+            wizardDialogDeliverButton.setText(getString(R.string.send) + " " + insulinText + " " + carbsText);
             wizardDialogDeliverButton.setVisibility(Button.VISIBLE);
         } else {
             wizardDialogDeliverButton.setVisibility(Button.INVISIBLE);

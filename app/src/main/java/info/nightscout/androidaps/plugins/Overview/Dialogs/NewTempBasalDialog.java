@@ -9,41 +9,73 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import java.text.DecimalFormat;
+
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
-public class NewTempBasalDialog extends DialogFragment implements View.OnClickListener {
+public class NewTempBasalDialog extends DialogFragment implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
 
     Button okButton;
-    EditText basalEdit;
+    EditText basalPercentEdit;
+    EditText basalAbsoluteEdit;
     RadioButton percentRadio;
     RadioButton absoluteRadio;
+    RadioGroup basalTypeRadioGroup;
     RadioButton h05Radio;
     RadioButton h10Radio;
     RadioButton h20Radio;
     RadioButton h30Radio;
     RadioButton h40Radio;
 
+    LinearLayout percentLayout;
+    LinearLayout absoluteLayout;
+
+    PlusMinusEditText basalPercentPM;
+    PlusMinusEditText basalAbsolutePM;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        getDialog().setTitle(getString(R.string.overview_tempbasal_button));
+
         View view = inflater.inflate(R.layout.overview_newtempbasal_fragment, container, false);
         okButton = (Button) view.findViewById(R.id.overview_newtempbasal_okbutton);
-        basalEdit = (EditText) view.findViewById(R.id.overview_newtempbasal_basal);
-        percentRadio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_percent);
-        absoluteRadio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_absolute);
+        basalPercentEdit = (EditText) view.findViewById(R.id.overview_newtempbasal_basalpercentinput);
+        basalAbsoluteEdit = (EditText) view.findViewById(R.id.overview_newtempbasal_basalabsoluteinput);
+        percentLayout = (LinearLayout) view.findViewById(R.id.overview_newtempbasal_percent_layout);
+        absoluteLayout = (LinearLayout) view.findViewById(R.id.overview_newtempbasal_absolute_layout);
+        percentRadio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_percent_radio);
+        basalTypeRadioGroup = (RadioGroup) view.findViewById(R.id.overview_newtempbasal_radiogroup);
+        absoluteRadio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_absolute_radio);
         h05Radio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_05h);
         h10Radio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_1h);
         h20Radio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_2h);
         h30Radio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_3h);
         h40Radio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_4h);
 
+        Integer maxPercent = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalPercentOnlyForCheckLimit);
+        basalPercentPM = new PlusMinusEditText(view, R.id.overview_newtempbasal_basalpercentinput, R.id.overview_newtempbasal_basalpercent_plus, R.id.overview_newtempbasal_basalpercent_minus, 100d, 0d, (double) maxPercent, 5d, new DecimalFormat("0"), true);
+
+        Double maxAbsolute = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Double currentBasal = 0d;
+        if (profile != null) currentBasal = profile.getBasal(NSProfile.secondsFromMidnight());
+        basalAbsolutePM = new PlusMinusEditText(view, R.id.overview_newtempbasal_basalabsoluteinput, R.id.overview_newtempbasal_basalabsolute_plus, R.id.overview_newtempbasal_basalabsolute_minus, currentBasal, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true);
+
+        absoluteLayout.setVisibility(View.GONE);
         okButton.setOnClickListener(this);
+        basalTypeRadioGroup.setOnCheckedChangeListener(this);
         return view;
     }
 
@@ -52,8 +84,8 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         switch (view.getId()) {
             case R.id.overview_newtempbasal_okbutton:
                 try {
-                    int basalPercent = 100;
-                    Double basal = SafeParse.stringToDouble(basalEdit.getText().toString());
+                    int basalPercent = 0;
+                    Double basalAbsolute = 0d;
                     final boolean setAsPercent = percentRadio.isChecked();
                     int durationInMinutes = 30;
                     if (h10Radio.isChecked()) durationInMinutes = 60;
@@ -63,22 +95,23 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
 
                     String confirmMessage = getString(R.string.setbasalquestion);
                     if (setAsPercent) {
-                        basalPercent = MainApp.getConfigBuilder().applyBasalConstraints(basal.intValue());
-                        confirmMessage += "\n " + basalPercent + "% ";
-                        confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
-                        if (basalPercent != basal.intValue())
+                        int basalPercentInput = SafeParse.stringToDouble(basalPercentEdit.getText().toString()).intValue();
+                        basalPercent = MainApp.getConfigBuilder().applyBasalConstraints(basalPercentInput);
+                        confirmMessage += "\n" + basalPercent + "% ";
+                        confirmMessage += "\n" + getString(R.string.duration) + " " + durationInMinutes + "min ?";
+                        if (basalPercent != basalPercentInput)
                             confirmMessage += "\n" + getString(R.string.constraintapllied);
                     } else {
-                        Double basalAfterConstraint = MainApp.getConfigBuilder().applyBasalConstraints(basal);
-                        confirmMessage += "\n " + basalAfterConstraint + " U/h ";
-                        confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
-                        if (basalAfterConstraint != basal)
+                        Double basalAbsoluteInput = SafeParse.stringToDouble(basalAbsoluteEdit.getText().toString());
+                        basalAbsolute = MainApp.getConfigBuilder().applyBasalConstraints(basalAbsoluteInput);
+                        confirmMessage += "\n" + basalAbsolute + " U/h ";
+                        confirmMessage += "\n" + getString(R.string.duration) + " " + durationInMinutes + "min ?";
+                        if (basalAbsolute - basalAbsoluteInput != 0d)
                             confirmMessage += "\n" + getString(R.string.constraintapllied);
-                        basal = basalAfterConstraint;
                     }
 
                     final int finalBasalPercent = basalPercent;
-                    final Double finalBasal = basal;
+                    final Double finalBasal = basalAbsolute;
                     final int finalDurationInMinutes = durationInMinutes;
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
@@ -109,6 +142,20 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+        }
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.overview_newtempbasal_percent_radio:
+                percentLayout.setVisibility(View.VISIBLE);
+                absoluteLayout.setVisibility(View.GONE);
+                break;
+            case R.id.overview_newtempbasal_absolute_radio:
+                percentLayout.setVisibility(View.GONE);
+                absoluteLayout.setVisibility(View.VISIBLE);
+                break;
         }
     }
 }

@@ -200,5 +200,8 @@
     <string name="noprofile">No profile loaded from NS yet</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
+    <string name="configbuilder_nsclientversion_label">NSClient version:</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
+    <string name="send">SEND</string>
 
 </resources>

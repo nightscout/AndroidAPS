@@ -4,7 +4,6 @@
     <string name="closedloop">Uzavřená smyčka</string>
     <string name="openloop">Otevřená smyčka</string>
     <string name="alert">Výstaha</string>
-    <string name="apsmode_summary">Typ smyčky</string>
     <string name="apsmode_title">Typ smyčky</string>
     <string name="avgdelta">Prům. změna</string>
     <string name="basal">Bazál</string>
@@ -193,4 +192,7 @@
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="title_activity_main">AndroidAPS</string>
     <string name="openapsma">OpenAPS MA</string>
+    <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
+    <string name="configbuilder_nsclientversion_label">Verze NSClienta:</string>
+    <string name="send">POSLAT</string>
 </resources>

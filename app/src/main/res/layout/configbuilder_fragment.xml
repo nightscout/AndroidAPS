@@ -22,7 +22,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="NSClient version:" />
+                    android:text="@string/configbuilder_nsclientversion_label" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="Nightscout version:" />
+                    android:text="@string/configbuilder_nightscoutversion_label" />
 
                 <TextView
                     android:layout_width="wrap_content"
