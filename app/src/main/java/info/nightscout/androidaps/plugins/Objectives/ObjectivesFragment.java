@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,8 +42,6 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     CheckBox enableFake; // TODO: remove faking
 
     boolean fragmentVisible = true;
-
-    String PREFS_NAME = "Objectives";
 
     @Override
     public int getType() {
@@ -193,31 +192,31 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     }
 
     public void saveProgress() {
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
-            editor.putLong(num + "started", o.started.getTime());
-            editor.putLong(num + "accomplished", o.accomplished.getTime());
+            editor.putLong("Objectives" + num + "started", o.started.getTime());
+            editor.putLong("Objectives" + num + "accomplished", o.accomplished.getTime());
         }
-        editor.putBoolean("bgIsAvailableInNS", bgIsAvailableInNS);
-        editor.putBoolean("pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
-        editor.putInt("manualEnacts", manualEnacts);
+        editor.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
+        editor.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
+        editor.putInt("Objectives" + "manualEnacts", manualEnacts);
         editor.commit();
         if (Config.logPrefsChange)
             log.debug("Objectives stored");
     }
 
     void loadProgress() {
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
-            o.started = new Date(settings.getLong(num + "started", 0));
-            o.accomplished = new Date(settings.getLong(num + "accomplished", 0));
+            o.started = new Date(settings.getLong("Objectives" + num + "started", 0));
+            o.accomplished = new Date(settings.getLong("Objectives" + num + "accomplished", 0));
         }
-        bgIsAvailableInNS = settings.getBoolean("bgIsAvailableInNS", false);
-        pumpStatusIsAvailableInNS = settings.getBoolean("pumpStatusIsAvailableInNS", false);
-        manualEnacts = settings.getInt("manualEnacts", 0);
+        bgIsAvailableInNS = settings.getBoolean("Objectives" + "bgIsAvailableInNS", false);
+        pumpStatusIsAvailableInNS = settings.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
+        manualEnacts = settings.getInt("Objectives" + "manualEnacts", 0);
         if (Config.logPrefsChange)
             log.debug("Objectives loaded");
     }
@@ -233,8 +232,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         @Override
         public ObjectiveViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.objectives_item, viewGroup, false);
-            ObjectiveViewHolder objectiveViewHolder = new ObjectiveViewHolder(v);
-            return objectiveViewHolder;
+            return new ObjectiveViewHolder(v);
         }
 
         @Override

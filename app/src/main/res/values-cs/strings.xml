@@ -199,4 +199,11 @@
     <string name="enabled">Povolený</string>
     <string name="visible">Viditelný</string>
     <string name="up">Nahoru</string>
+    <string name="exported">Nastavení exportováno</string>
+    <string name="setting_imported">Nastavení importováno</string>
+    <string name="import_from">Importovat nastavení z</string>
+    <string name="filenotfound">Soubor nenalezen</string>
+    <string name="export_to">Exportovat nastavení do</string>
+    <string name="nav_export">Exportovat nastavení</string>
+    <string name="nav_import">Importovat nastavení</string>
 </resources>

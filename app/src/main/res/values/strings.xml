@@ -207,5 +207,12 @@
     <string name="enabled">Enabled</string>
     <string name="visible">Visible</string>
     <string name="up">Up</string>
+    <string name="exported">Preferences exported</string>
+    <string name="export_to">Export settings to</string>
+    <string name="import_from">Import settings from</string>
+    <string name="setting_imported">Settings imported</string>
+    <string name="filenotfound">File not found</string>
+    <string name="nav_export">Export settings</string>
+    <string name="nav_import">Import settings</string>
 
 </resources>

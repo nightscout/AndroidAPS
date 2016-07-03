@@ -2,10 +2,7 @@ package info.nightscout.androidaps.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 
 import com.j256.ormlite.dao.Dao;

@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -56,8 +57,6 @@ import info.nightscout.utils.DateUtil;
 
 public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpInterface, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderFragment.class);
-
-    private static final String PREFS_NAME = "Settings";
 
     ListView bgsourceListView;
     ListView pumpListView;
@@ -672,12 +671,12 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     private void storeSettings() {
         if (Config.logPrefsChange)
             log.debug("Storing settings");
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
 
         for (PluginBase p : pluginList) {
-            editor.putBoolean(p.getName() + "Enabled", p.isEnabled());
-            editor.putBoolean(p.getName() + "Visible", p.isVisibleInTabs());
+            editor.putBoolean("ConfigBuilder" + p.getName() + "Enabled", p.isEnabled());
+            editor.putBoolean("ConfigBuilder" + p.getName() + "Visible", p.isVisibleInTabs());
         }
         editor.commit();
         verifySelectionInCategories();
@@ -686,12 +685,12 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     private void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (PluginBase p : pluginList) {
-            if (settings.contains(p.getName() + "Enabled"))
-                p.setFragmentEnabled(settings.getBoolean(p.getName() + "Enabled", true));
-            if (settings.contains(p.getName() + "Visible"))
-                p.setFragmentVisible(settings.getBoolean(p.getName() + "Visible", true));
+            if (settings.contains("ConfigBuilder" + p.getName() + "Enabled"))
+                p.setFragmentEnabled(settings.getBoolean("ConfigBuilder" + p.getName() + "Enabled", true));
+            if (settings.contains("ConfigBuilder" + p.getName() + "Visible"))
+                p.setFragmentVisible(settings.getBoolean("ConfigBuilder" + p.getName() + "Visible", true));
         }
         verifySelectionInCategories();
     }

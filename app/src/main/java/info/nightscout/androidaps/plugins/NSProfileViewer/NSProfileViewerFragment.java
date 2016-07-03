@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -41,7 +42,6 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
     private static TextView basal;
     private static TextView target;
 
-    private static final String PREFS_NAME = "NightscoutProfile";
     private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
     boolean fragmentEnabled = true;
@@ -160,7 +160,7 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
     }
 
     private void storeNSProfile() {
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("profile", profile.getData().toString());
         editor.putString("activeProfile", profile.getActiveProfile());
@@ -172,7 +172,7 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
     private void loadNSProfile() {
         if (Config.logPrefsChange)
             log.debug("Loading stored profile");
-        SharedPreferences store = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences store = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String activeProfile = store.getString("activeProfile", null);
         String profileString = store.getString("profile", null);
         if (profileString != null) {

@@ -37,6 +37,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import info.nightscout.androidaps.tabs.*;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 
 public class MainActivity extends AppCompatActivity {
@@ -140,17 +141,23 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
                 break;
             }
+            case R.id.nav_export: {
+                ImportExportPrefs.exportSharedPreferences(this);
+                break;
+            }
+            case R.id.nav_import: {
+                ImportExportPrefs.importSharedPreferences(this);
+                break;
+            }
             case R.id.nav_exit:
                 log.debug("Exiting");
                 //chancelAlarmManager();
 
                 //MainApp.bus().post(new StopEvent());
                 MainApp.closeDbHelper();
-
                 finish();
                 System.runFinalization();
                 System.exit(0);
-
                 break;
         }
         return super.onOptionsItemSelected(item);

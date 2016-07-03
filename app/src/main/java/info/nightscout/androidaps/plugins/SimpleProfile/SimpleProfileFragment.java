@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.SimpleProfile;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NotificationCompat;
 import android.text.Editable;
@@ -194,17 +195,17 @@ public class SimpleProfileFragment extends Fragment implements PluginBase, Profi
     private void storeSettings() {
         if (Config.logPrefsChange)
             log.debug("Storing settings");
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("mmol", mmol);
-        editor.putBoolean("mgdl", mgdl);
-        editor.putFloat("dia", new Float(dia));
-        editor.putFloat("ic", new Float(ic));
-        editor.putFloat("isf", new Float(isf));
-        editor.putFloat("car", new Float(car));
-        editor.putFloat("basal", new Float(basal));
-        editor.putFloat("targetlow", new Float(targetLow));
-        editor.putFloat("targethigh", new Float(targetHigh));
+        editor.putBoolean("SimpleProfile" + "mmol", mmol);
+        editor.putBoolean("SimpleProfile" + "mgdl", mgdl);
+        editor.putFloat("SimpleProfile" + "dia", new Float(dia));
+        editor.putFloat("SimpleProfile" + "ic", new Float(ic));
+        editor.putFloat("SimpleProfile" + "isf", new Float(isf));
+        editor.putFloat("SimpleProfile" + "car", new Float(car));
+        editor.putFloat("SimpleProfile" + "basal", new Float(basal));
+        editor.putFloat("SimpleProfile" + "targetlow", new Float(targetLow));
+        editor.putFloat("SimpleProfile" + "targethigh", new Float(targetHigh));
 
         editor.commit();
         createConvertedProfile();
@@ -213,18 +214,18 @@ public class SimpleProfileFragment extends Fragment implements PluginBase, Profi
     private void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
-        SharedPreferences settings = MainApp.instance().getApplicationContext().getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
-        if (settings.contains("mgdl")) mgdl = settings.getBoolean("mgdl", true); else mgdl = true;
-        if (settings.contains("mmol")) mmol = settings.getBoolean("mmol", false); else mmol = false;
-        if (settings.contains("dia")) dia = (double) settings.getFloat("dia", 3); else dia = 3d;
-        if (settings.contains("ic")) ic = (double) settings.getFloat("ic", 20); else ic = 20d;
-        if (settings.contains("isf")) isf = (double) settings.getFloat("isf", 200); else isf = 200d;
-        if (settings.contains("car")) car = (double) settings.getFloat("car", 20); else car = 20d;
-        if (settings.contains("basal")) basal = (double) settings.getFloat("basal", 1); else basal = 1d;
-        if (settings.contains("targetlow")) targetLow = (double) settings.getFloat("targetlow", 80); else targetLow = 80d;
-        if (settings.contains("targethigh"))
-            targetHigh = (double) settings.getFloat("targethigh", 120); else targetHigh = 120d;
+        if (settings.contains("SimpleProfile" + "mgdl")) mgdl = settings.getBoolean("SimpleProfile" + "mgdl", true); else mgdl = true;
+        if (settings.contains("SimpleProfile" + "mmol")) mmol = settings.getBoolean("SimpleProfile" + "mmol", false); else mmol = false;
+        if (settings.contains("SimpleProfile" + "dia")) dia = (double) settings.getFloat("SimpleProfile" + "dia", 3); else dia = 3d;
+        if (settings.contains("SimpleProfile" + "ic")) ic = (double) settings.getFloat("SimpleProfile" + "ic", 20); else ic = 20d;
+        if (settings.contains("SimpleProfile" + "isf")) isf = (double) settings.getFloat("SimpleProfile" + "isf", 200); else isf = 200d;
+        if (settings.contains("SimpleProfile" + "car")) car = (double) settings.getFloat("SimpleProfile" + "car", 20); else car = 20d;
+        if (settings.contains("SimpleProfile" + "basal")) basal = (double) settings.getFloat("SimpleProfile" + "basal", 1); else basal = 1d;
+        if (settings.contains("SimpleProfile" + "targetlow")) targetLow = (double) settings.getFloat("SimpleProfile" + "targetlow", 80); else targetLow = 80d;
+        if (settings.contains("SimpleProfile" + "targethigh"))
+            targetHigh = (double) settings.getFloat("SimpleProfile" + "targethigh", 120); else targetHigh = 120d;
         createConvertedProfile();
     }
 

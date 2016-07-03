@@ -8,8 +8,11 @@
         android:id="@+id/nav_resetdb"
         android:title="@string/nav_resetdb" />
     <item
-        android:id="@+id/nav_backup"
-        android:title="@string/nav_backup" />
+        android:id="@+id/nav_export"
+        android:title="@string/nav_export" />
+    <item
+        android:id="@+id/nav_import"
+        android:title="@string/nav_import" />
     <item
         android:id="@+id/nav_test_alarm"
         android:title="@string/nav_test_alarm" />
