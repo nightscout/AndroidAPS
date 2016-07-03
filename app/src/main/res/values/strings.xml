@@ -214,5 +214,6 @@
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
+    <string name="de_lang">German language</string>
 
 </resources>

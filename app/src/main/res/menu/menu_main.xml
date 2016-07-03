@@ -23,6 +23,9 @@
         android:id="@+id/cs_lang"
         android:title="@string/cs_lang" />
     <item
+        android:id="@+id/de_lang"
+        android:title="@string/de_lang" />
+    <item
         android:id="@+id/nav_exit"
         android:title="@string/nav_exit" />
 </menu>
