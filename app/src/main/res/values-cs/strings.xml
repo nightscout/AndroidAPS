@@ -96,7 +96,7 @@
     <string name="noprofile">Dosud nebyl načten profil z NS</string>
     <string name="ns_sync_use_absolute_summary">Používat absolutní hodnoty místo procent při nahrávání do NS</string>
     <string name="ns_sync_use_absolute_title">Použít absolutní hodnoty</string>
-    <string name="nsclient"></string>
+    <string name="nsclient">NSClient</string>
     <string name="nsprofileview_activeprofile_label">Aktivní profil:</string>
     <string name="nsprofileview_basal_label">Bazál:</string>
     <string name="nsprofileview_dia_label">Trvání inzulínu:</string>
@@ -180,7 +180,7 @@
     <string name="virtualpump_sqlerror">Chyba databáze</string>
     <string name="virtualpump_tempbasal_label">Dočasný bazál:</string>
     <string name="vitualpump_label">VIRTUÁLNÍ PUMPA</string>
-    <string name="xdrip"></string>
+    <string name="xdrip">xDrip</string>
     <string name="overview_extendedbolus_button">Kombo bolus</string>
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="nsprofileview_isf_label">Citlivost:</string>
@@ -191,4 +191,6 @@
     <string name="lowsuspend_low">Low Suspend:</string>
     <string name="careportal_newnstreatment_eventtype">Typ události</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
+    <string name="title_activity_main">AndroidAPS</string>
+    <string name="openapsma">OpenAPS MA</string>
 </resources>
