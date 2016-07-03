@@ -4,7 +4,7 @@
     <string name="apsmode_title">APS Modus</string>
     <string name="bgavailableinns">BZ verfügbar in NS</string>
     <string name="cancel">Abbrechen</string>
-    <string name="carbs">Kohlehydrahte</string>
+    <string name="carbs">Kohlehydrate</string>
     <string name="careportal">Careportal</string>
     <string name="careportal_correctionbolus">Korrekturbolus</string>
     <string name="careportal_newnstreatment_meter">Messgerät</string>
@@ -35,7 +35,7 @@
     <string name="careportal_combobolus">Combo Bolus</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
     <string name="careportal_newnstreatment_absolute_label">Absolut</string>
-    <string name="careportal_newnstreatment_carbs_label">Kohlehydrahte</string>
+    <string name="careportal_newnstreatment_carbs_label">Kohlehydrate</string>
     <string name="careportal_newnstreatment_duration_min">min</string>
     <string name="careportal_newnstreatment_insulin_label">Insulin</string>
     <string name="careportal_newnstreatment_glucosetype">Glukose Art</string>
@@ -55,8 +55,8 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_bgsource">BZ Quelle</string>
     <string name="configbuilder_loop">Loop</string>
-    <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
-    <string name="configbuilder_nsclientversion_label">NSClient version:</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout Version:</string>
+    <string name="configbuilder_nsclientversion_label">NSClient Version:</string>
     <string name="configbuilder_tempbasals">Temp Basals</string>
     <string name="delta">Delta:</string>
     <string name="duration">Dauer:</string>
@@ -88,7 +88,7 @@
     <string name="safety">Sicherheit:</string>
     <string name="send">SEND</string>
     <string name="treatments_activity_string">Aktivität:</string>
-    <string name="treatments_carbs_label_string">Kohlehydrahte:</string>
+    <string name="treatments_carbs_label_string">Kohlehydrate:</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Aktives IOB total:</string>
@@ -109,13 +109,13 @@
     <string name="unsupportedclientver">Nicht unterstützte Version von NSClient</string>
     <string name="treatments_wizard_bg_label">BZ</string>
     <string name="treatments_wizard_bolusiob_label">Bolus IOB</string>
-    <string name="treatments_wizard_carbs_label">Kohlehydrahte</string>
+    <string name="treatments_wizard_carbs_label">Kohlehydrate</string>
     <string name="treatments_wizard_correction_label">Korr</string>
-    <string name="treatments_newtreatment_carbsamount_label">Kohlehydraht Menge</string>
+    <string name="treatments_newtreatment_carbsamount_label">Kohlehydrat Menge</string>
     <string name="treatments_newtreatment_insulinamount_label">Insulin Menge</string>
     <string name="treatments">Treatments</string>
     <string name="treatmentssafety_maxbolus_title">Max erlaubter Bolus</string>
-    <string name="treatmentssafety_maxcarbs_title">Max erlaubte Kohlehydrahte</string>
+    <string name="treatmentssafety_maxcarbs_title">Max erlaubte Kohlehydrate</string>
     <string name="treatmentssafety_title">Tratments Sicherheit</string>
     <string name="tempbasals">Temp Basals</string>
     <string name="simpleprofile">Einfaches Profil</string>
@@ -157,7 +157,7 @@
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="careportal_announcement">Ankündigung</string>
     <string name="careportal_bgcheck">BZ Check</string>
-    <string name="careportal_carbscorrection">Kohlehydraht Korrektur</string>
+    <string name="careportal_carbscorrection">Kohlehydrat Korrektur</string>
     <string name="careportal_cgmsensorinsert">CGM Sensor gesetzt</string>
     <string name="careportal_insulincartridgechange">Insulin Reservoir wechsel</string>
     <string name="careportal_newnstreatment_duration_label">Dauer</string>
