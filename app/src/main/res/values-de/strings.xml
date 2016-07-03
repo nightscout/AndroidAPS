@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AndroidAPS</string>
+    <string name="alert">Alarm</string>
+    <string name="apsmode_title">APS Modus</string>
+    <string name="bgavailableinns">BZ verfügbar in NS</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="carbs">Kohlehydrahte</string>
+    <string name="careportal">CarePortal</string>
+    <string name="careportal_correctionbolus">Korrekturbolus</string>
+    <string name="careportal_newnstreatment_meter">Messgerät</string>
+    <string name="careportal_newnstreatment_notes_label">Notiz</string>
+    <string name="careportal_newnstreatment_profile_label">Profil</string>
+    <string name="careportal_newnstreatment_sensor">Sensor</string>
+    <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_pump">Pumpe</string>
+    <string name="confirmation">Konfiguration</string>
+    <string name="days">Tage</string>
+    <string name="ok">OK</string>
+    <string name="openapsma_profile_label">Profil</string>
+    <string name="profileviewer">NS Profil</string>
+    <string name="tempbasals_iob_label_string">IOB:</string>
+    <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
+    <string name="tempbasals_netinsulin_label_string">Ins:</string>
+    <string name="tempbasals_netratio_label_string">Ratio:</string>
+    <string name="tempbasals_realduration_label_string">Dur:</string>
+    <string name="title_activity_main"></string>
+    <string name="title_activity_preferences">Einstellungen</string>
+    <string name="treatmentdeliveryerror"></string>
+    <string name="virtualpump_battery_label">Batterie:</string>
+    <string name="virtualpump_resultok">OK</string>
+</resources>
