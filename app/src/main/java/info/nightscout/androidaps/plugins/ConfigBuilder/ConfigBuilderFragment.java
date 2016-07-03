@@ -616,11 +616,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     break;
                 case PluginBase.LOOP:
                     activeLoop = (LoopFragment) getTheOneEnabledInArray(pluginsInCategory);
-                    if (Config.logConfigBuilder)
-                        log.debug("Selected loop interface: " + activeLoop.getName());
-                    for (PluginBase p : pluginsInCategory) {
-                        if (!p.getName().equals(activeLoop.getName())) {
-                            p.setFragmentVisible(false);
+                    if (activeLoop != null) {
+                        if (Config.logConfigBuilder)
+                            log.debug("Selected loop interface: " + activeLoop.getName());
+                        for (PluginBase p : pluginsInCategory) {
+                            if (!p.getName().equals(activeLoop.getName())) {
+                                p.setFragmentVisible(false);
+                            }
                         }
                     }
                     break;
@@ -649,6 +651,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
     }
 
+    @Nullable
     private PluginBase getTheOneEnabledInArray(ArrayList<PluginBase> pluginsInCategory) {
         PluginBase found = null;
         for (PluginBase p : pluginsInCategory) {
@@ -661,7 +664,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             }
         }
         // If none enabled, enable first one
-        if (found == null)
+        if (found == null && pluginsInCategory.size() > 0)
             found = pluginsInCategory.get(0);
         return found;
     }
