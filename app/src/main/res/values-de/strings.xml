@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AndroidAPS</string>
-    <string name="apsmode_title">Maximale Menge von nicht Bolus </string>
+    <string name="apsmode_title">APS Modus</string>
     <string name="bgavailableinns">BZ verfügbar in NS</string>
     <string name="cancel">Abbrechen</string>
     <string name="carbs">Kohlehydrate</string>
@@ -215,6 +215,6 @@
     <string name="openapsma_targetrange_label">APS Zielbereich</string>
     <string name="openapsma_maxbasal_summary">Max U/hr die man für eine Temp Basal setzen kann</string>
     <string name="openapsma_maxiob_summary">Maximale Menge von nicht bolus IOB die OpenAPs abgeben kann</string>
-    <string name="openapsma_high_summary">Maximalwert um im Zielbereich zu bleiben.</string>
-    <string name="openapsma_low_summary">Minimalwert um im Zielbereich zu bleiben</string>
+    <string name="openapsma_high_summary">Maximalwert für deinen persönlichen Zielbereich.</string>
+    <string name="openapsma_low_summary">Minimalwert für deinen persönlichen Zielbereich.</string>
 </resources>
