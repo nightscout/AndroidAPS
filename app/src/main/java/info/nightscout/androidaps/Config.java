@@ -24,8 +24,4 @@ public class Config {
     public static final boolean logConstraintsChanges = true;
     public static final boolean logTempBasalsCut = true;
     public static final boolean logNSUpload = true;
-
-    // Developing mode only - never turn on
-    // TODO: remove fakeGlucoseData
-    public static final boolean fakeGlucoseData = false;
 }
