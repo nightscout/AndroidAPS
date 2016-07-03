@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AndroidAPS</string>
-    <string name="alert">Alarm</string>
     <string name="apsmode_title">APS Modus</string>
     <string name="bgavailableinns">BZ verfügbar in NS</string>
     <string name="cancel">Abbrechen</string>
@@ -199,4 +198,13 @@
     <string name="missing">Fehlend</string>
     <string name="enabled">Enabled</string>
     <string name="entertreatmentquestion">Eingabe neues treatment</string>
+    <string name="export_to">Einstellungen exportieren nach</string>
+    <string name="filenotfound">Datei nicht gefunden</string>
+    <string name="exported">Einstellungen exportiert</string>
+    <string name="import_from">Importiere Einstellungen von</string>
+    <string name="setting_imported">Einstellungen importiert</string>
+    <string name="nav_export">Einstellungen exportieren</string>
+    <string name="nav_import">Einstellungen importieren</string>
+    <string name="alert">Alarm</string>
+    <string name="de_lang">Deutsche Sprache</string>
 </resources>
