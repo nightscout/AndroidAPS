@@ -524,7 +524,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 prebolus.put("carbs", data.get("carbs"));
                 data.remove("carbs");
                 prebolus.put("eventType", data.get("eventType"));
-                prebolus.put("enteredBy", data.get("enteredBy"));
+                if (data.has("enteredBy")) prebolus.put("enteredBy", data.get("enteredBy"));
                 if (data.has("notes")) prebolus.put("notes", data.get("notes"));
                 long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
                 Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L);
