@@ -147,10 +147,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
             case R.id.nav_export: {
+                ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.exportSharedPreferences(this);
                 break;
             }
             case R.id.nav_import: {
+                ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.importSharedPreferences(this);
                 break;
             }
