@@ -99,7 +99,7 @@
     <string name="nsprofileview_activeprofile_label">Aktivní profil:</string>
     <string name="nsprofileview_basal_label">Bazál:</string>
     <string name="nsprofileview_dia_label">Trvání inzulínu:</string>
-    <string name="nsprofileview_ic_label">Inzlínosacharidový poměr:</string>
+    <string name="nsprofileview_ic_label">Inzulínosacharidový poměr:</string>
     <string name="nsprofileview_noprofile_text">ŽÁDNÝ PROFIL NENASTAVEN</string>
     <string name="nsprofileview_target_label">Cíl:</string>
     <string name="nsprofileview_units_label">Jednotky:</string>
