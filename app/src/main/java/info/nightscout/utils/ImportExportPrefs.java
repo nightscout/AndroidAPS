@@ -1,5 +1,6 @@
 package info.nightscout.utils;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,15 +26,17 @@ import info.nightscout.androidaps.R;
 /**
  * Created by mike on 03.07.2016.
  */
+
 public class ImportExportPrefs {
     static File path = new File(Environment.getExternalStorageDirectory().toString());
     static final File file = new File(path, MainApp.resources.getString(R.string.app_name) + "Preferences");
+
 
     //exports shared Preferences
     public static void exportSharedPreferences(final Context c) {
 
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.resources.getString(R.string.export_to) + " " + file + "?")
+                .setMessage(MainApp.resources.getString(R.string.export_to) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -48,7 +51,10 @@ public class ImportExportPrefs {
                             pw.close();
                             fw.close();
                             ToastUtils.showToastInUiThread(c, MainApp.resources.getString(R.string.exported));
-                        } catch (Exception e) {
+                        } catch (FileNotFoundException e) {
+                            ToastUtils.showToastInUiThread(c, MainApp.resources.getString(R.string.filenotfound) + " " + file);
+                            e.printStackTrace();
+                        } catch (IOException e) {
                             e.printStackTrace();
                         }
                     }
@@ -59,7 +65,7 @@ public class ImportExportPrefs {
 
     public static void importSharedPreferences(final Context c) {
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.resources.getString(R.string.import_from) + " " + file + "?")
+                .setMessage(MainApp.resources.getString(R.string.import_from) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
