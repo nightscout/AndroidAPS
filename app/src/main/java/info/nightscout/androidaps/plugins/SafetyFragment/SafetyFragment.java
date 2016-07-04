@@ -100,6 +100,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (profile == null) return absoluteRate;
         if (absoluteRate < 0) absoluteRate = 0d;
 
         Integer maxBasalMult = 4;
@@ -131,6 +132,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (profile == null) return percentRate;
         Double currentBasal = profile.getBasal(profile.secondsFromMidnight());
 
         Double absoluteRate = currentBasal * ((double) percentRate / 100);
