@@ -146,6 +146,11 @@ public class MainActivity extends AppCompatActivity {
                 recreate();
                 break;
             }
+            case R.id.bg_lang: {
+                LocaleHelper.setLocale(this, "bg");
+                recreate();
+                break;
+            }
             case R.id.nav_export: {
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.exportSharedPreferences(this);
