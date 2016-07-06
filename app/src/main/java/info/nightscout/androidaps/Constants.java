@@ -20,4 +20,6 @@ public class Constants {
     public static final Integer notificationID = 556677;
 
     public static final int hoursToKeepInDatabase = 24;
+
+    public static final long keepAliveMsecs = 30 * 60 * 1000L;
 }

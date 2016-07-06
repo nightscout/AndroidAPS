@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
+import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.tabs.*;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 import info.nightscout.utils.ImportExportPrefs;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private SlidingTabLayout mTabs;
     private ViewPager mPager;
     private static TabPageAdapter pageAdapter;
+    private static KeepAliveReceiver keepAliveReceiver;
 
     private static ArrayList<PluginBase> pluginsList = null;
 
@@ -94,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
             pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
 
             registerBus();
+            keepAliveReceiver = new KeepAliveReceiver();
+            keepAliveReceiver.setAlarm(this);
 
             configBuilderFragment.initialize();
             MainApp.setConfigBuilder(configBuilderFragment);
@@ -169,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.nav_exit:
                 log.debug("Exiting");
-                //chancelAlarmManager();
+                keepAliveReceiver.cancelAlarm(this);
 
                 //MainApp.bus().post(new StopEvent());
                 MainApp.closeDbHelper();

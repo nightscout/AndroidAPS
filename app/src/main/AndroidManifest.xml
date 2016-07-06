@@ -59,6 +59,9 @@
             </intent-filter>
         </receiver>
 
+        <!-- Receiver keepalive, scheduled every 30 min -->
+        <receiver android:name=".receivers.KeepAliveReceiver"></receiver>
+
         <!-- Service processing incomming data -->
         <service
             android:name=".Services.DataService"
