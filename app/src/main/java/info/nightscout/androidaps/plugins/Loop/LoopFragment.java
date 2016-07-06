@@ -39,6 +39,7 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 
 public class LoopFragment extends Fragment implements View.OnClickListener, PluginBase {
     private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
@@ -226,10 +227,10 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                 });
             return;
         }
-        PumpInterface pumpInterface = MainApp.getConfigBuilder().getActivePump();
+        ConfigBuilderFragment configBuilder = MainApp.getConfigBuilder();
         APSResult result = null;
 
-        if (constraintsInterface == null || pumpInterface == null || !isEnabled())
+        if (constraintsInterface == null || configBuilder == null || !isEnabled())
             return;
 
         APSInterface usedAPS = null;
@@ -274,7 +275,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
         if (constraintsInterface.isClosedModeEnabled()) {
             if (result.changeRequested) {
-                PumpEnactResult applyResult = pumpInterface.applyAPSRequest(resultAfterConstraints);
+                PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
                 if (applyResult.enacted) {
                     lastRun.setByPump = applyResult;
                     lastRun.lastEnact = lastRun.lastAPSRun;

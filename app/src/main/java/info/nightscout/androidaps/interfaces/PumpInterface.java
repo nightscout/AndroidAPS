@@ -33,7 +33,6 @@ public interface PumpInterface {
     PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes);
     PumpEnactResult cancelTempBasal();
     PumpEnactResult cancelExtendedBolus();
-    PumpEnactResult applyAPSRequest(APSResult request);
 
     // Status to be passed to NS
     JSONObject getJSONStatus();

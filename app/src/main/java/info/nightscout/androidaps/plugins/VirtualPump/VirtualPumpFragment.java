@@ -51,6 +51,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     boolean fragmentVisible = true;
     boolean visibleNow = false;
 
+    // TODO: upload pump status without Loop plugin too
+
     @Override
     public String getName() {
         return MainApp.instance().getString(R.string.virtualpump);
@@ -340,12 +342,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             log.debug("Canceling extended basal: " + result);
         updateGUI();
         return result;
-    }
-
-    @Override
-    public PumpEnactResult applyAPSRequest(APSResult request) {
-        // This should be implemented only on ConfigBuilder
-        return null;
     }
 
     @Override

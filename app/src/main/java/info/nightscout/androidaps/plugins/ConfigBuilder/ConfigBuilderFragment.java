@@ -144,6 +144,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     void setViews() {
+        // TODO: hide empty categories
         bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE));
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
@@ -365,7 +366,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * @param request
      * @return
      */
-    @Override
+
     public PumpEnactResult applyAPSRequest(APSResult request) {
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result = null;

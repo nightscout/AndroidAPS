@@ -240,7 +240,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
                     builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
                     builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PumpEnactResult applyResult = MainApp.getConfigBuilder().getActivePump().applyAPSRequest(finalLastRun.constraintsProcessed);
+                            PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
                             if (applyResult.enacted) {
                                 finalLastRun.setByPump = applyResult;
                                 finalLastRun.lastEnact = new Date();
