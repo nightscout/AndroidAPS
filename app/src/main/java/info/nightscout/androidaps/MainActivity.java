@@ -2,7 +2,9 @@ package info.nightscout.androidaps;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -101,7 +103,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
-        setUpTabs(true);
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        String lang = SP.getString("language", "en");
+        LocaleHelper.setLocale(getApplicationContext(), lang);
+        recreate();
+        try { // activity may be destroyed
+            setUpTabs(true);
+        } catch (IllegalStateException e) {
+        }
     }
 
     private void setUpTabs(boolean switchToLast) {
@@ -134,22 +143,6 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_resetdb:
                 MainApp.getDbHelper().resetDatabases();
                 break;
-            case R.id.en_lang:
-                LocaleHelper.setLocale(this, "en");
-                recreate();
-                break;
-            case R.id.cs_lang:
-                LocaleHelper.setLocale(this, "cs");
-                recreate();
-                break;
-            case R.id.de_lang:
-                LocaleHelper.setLocale(this, "de");
-                recreate();
-                break;
-            case R.id.bg_lang:
-                LocaleHelper.setLocale(this, "bg");
-                recreate();
-                break;
             case R.id.nav_export:
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.exportSharedPreferences(this);
@@ -158,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.importSharedPreferences(this);
                 break;
-            case R.id.nav_testalarm:
+            case R.id.nav_test_alarm:
                 final int REQUEST_CODE_ASK_PERMISSIONS = 2355;
                 int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW);
                 if (permission != PackageManager.PERMISSION_GRANTED) {
@@ -171,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                     );
                 }
                 Intent alarmServiceIntent = new Intent(getApplicationContext(), AlarmService.class);
-                alarmServiceIntent.putExtra("alarmText",getString(R.string.testalarm));
+                alarmServiceIntent.putExtra("alarmText", getString(R.string.nav_test_alarm));
                 getApplicationContext().startService(alarmServiceIntent);
                 break;
             case R.id.nav_exit:

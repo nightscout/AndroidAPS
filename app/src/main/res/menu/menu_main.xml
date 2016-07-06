@@ -17,21 +17,6 @@
         android:id="@+id/nav_test_alarm"
         android:title="@string/nav_test_alarm" />
     <item
-        android:id="@+id/en_lang"
-        android:title="@string/en_lang" />
-    <item
-        android:id="@+id/cs_lang"
-        android:title="@string/cs_lang" />
-    <item
-        android:id="@+id/de_lang"
-        android:title="@string/de_lang" />
-    <item
-        android:id="@+id/bg_lang"
-        android:title="@string/bg_lang" />
-    <item
-        android:id="@+id/nav_testalarm"
-        android:title="@string/testalarm" />
-    <item
         android:id="@+id/nav_exit"
         android:title="@string/nav_exit" />
 </menu>
