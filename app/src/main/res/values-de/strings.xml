@@ -60,7 +60,7 @@
     <string name="configbuilder_tempbasals">Temp Basals</string>
     <string name="delta">Delta:</string>
     <string name="duration">Dauer:</string>
-    <string name="en_lang">Englische Sprache</string>
+    <string name="en_lang">English</string>
     <string name="loop_aps_label">APS</string>
     <string name="glucose">Glukose:</string>
     <string name="nav_backup">Backup</string>
@@ -171,7 +171,7 @@
     <string name="configbuilder_treatments">Treatments</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="constraints_violation">Constraints violation</string>
-    <string name="cs_lang">Tschechische Sprache</string>
+    <string name="cs_lang">Czech</string>
     <string name="loop_setbypump_label">Gesetzt durch Pumpe</string>
     <string name="lowsuspend">Low Suspend</string>
     <string name="lowsuspend_low">Low Suspend:</string>
@@ -206,7 +206,7 @@
     <string name="nav_export">Einstellungen exportieren</string>
     <string name="nav_import">Einstellungen importieren</string>
     <string name="alert">Alarm</string>
-    <string name="de_lang">Deutsche Sprache</string>
+    <string name="de_lang">Deutsch</string>
     <string name="openapsma_apslimits_label">APS Limit</string>
     <string name="openapsma_high_title">Hoher Wert</string>
     <string name="openapsma_low_title">Niedriger Wert</string>
@@ -217,4 +217,5 @@
     <string name="openapsma_maxiob_summary">Maximale Menge von nicht bolus IOB die OpenAPs abgeben kann</string>
     <string name="openapsma_high_summary">Maximalwert für deinen persönlichen Zielbereich.</string>
     <string name="openapsma_low_summary">Minimalwert für deinen persönlichen Zielbereich.</string>
+    <string name="bg_lang">Bulgarian</string>
 </resources>

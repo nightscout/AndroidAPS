@@ -61,11 +61,11 @@
     <string name="confirmation">Потвърждение</string>
     <string name="constraintapllied">Приложено ограничение!</string>
     <string name="constraints_violation">Нарушено ограничение</string>
-    <string name="cs_lang">Чешки</string>
+    <string name="cs_lang">Czech</string>
     <string name="days">дни</string>
     <string name="delta">Изменение:</string>
     <string name="duration">Продължителност</string>
-    <string name="en_lang">Английски</string>
+    <string name="en_lang">English</string>
     <string name="entertreatmentquestion">Ново действие</string>
     <string name="glucose">КЗ:</string>
     <string name="limits_title">Лимит</string>
@@ -206,7 +206,7 @@
     <string name="export_to">Експортирай настройки до</string>
     <string name="nav_export">Exportovat nastavení</string>
     <string name="nav_import">Importovat nastavení</string>
-    <string name="de_lang">Немски</string>
+    <string name="de_lang">German</string>
     <string name="openapsma_apslimits_label">Limity APS</string>
     <string name="openapsma_high_summary">Maximální hodnota ještě v rozsahu</string>
     <string name="openapsma_high_title">Horní limit</string>
@@ -217,4 +217,5 @@
     <string name="openapsma_maxbasaliob_title">Maximální IOB z bazálů</string>
     <string name="openapsma_maxiob_summary">Maximální nebolusové IOB, které může OpenAPS použít</string>
     <string name="openapsma_targetrange_label">Cílový rozsah pro OpenAPS</string>
+    <string name="bg_lang">български</string>
 </resources>
