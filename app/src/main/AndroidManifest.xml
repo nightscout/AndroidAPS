@@ -63,9 +63,9 @@
         <service
             android:name=".Services.DataService"
             android:exported="false" />
-        <!-- Service showing alarm on screen -->
+        <!-- Service showing alert on screen -->
         <service
-            android:name=".Services.AlarmService"
+            android:name=".Services.AlertService"
             android:exported="false" />
 
         <meta-data

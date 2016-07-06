@@ -13,8 +13,8 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 
-public class AlarmService extends Service {
-    private static Logger log = LoggerFactory.getLogger(AlarmService.class);
+public class AlertService extends Service {
+    private static Logger log = LoggerFactory.getLogger(AlertService.class);
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -22,40 +22,40 @@ public class AlarmService extends Service {
             log.debug("onStartCommand");
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        long lastAlarm = preferences.getLong("lastAlarm", 0);
+        long lastAlert = preferences.getLong("lastAlert", 0);
         long currentTime = new Date().getTime();
 
         //if (!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("masterSwitch", false)) {
         //    stopSelf(startId);
-        //    log.debug("Alarm posponed - master switch disabled");
+        //    log.debug("Alert posponed - master switch disabled");
         //} else
-        //if ((currentTime - lastAlarm) < 15 * 60 * 1000) {
+        //if ((currentTime - lastAlert) < 15 * 60 * 1000) {
         //    stopSelf(startId);
-        //    log.debug("Alarm posponed");
+        //    log.debug("Alert posponed");
         //} else
         {
 
-            AlarmMessage alarm = new AlarmMessage(getApplicationContext());
+            AlertMessage alert = new AlertMessage(getApplicationContext());
 
             if (intent != null) {
-                String alarmText = intent.getStringExtra("alarmText");
-                if (alarmText != null) {
-                    alarm.setText(alarmText);
+                String alertText = intent.getStringExtra("alertText");
+                if (alertText != null) {
+                    alert.setText(alertText);
                 }
 
-                alarm.setOnDismiss(new Runnable() {
+                alert.setOnDismiss(new Runnable() {
 
                     @Override
                     public void run() {
                         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putLong("lastAlarm", new Date().getTime());
+                        editor.putLong("lastAlert", new Date().getTime());
                         editor.commit();
-                        AlarmService.this.stopSelf();
+                        AlertService.this.stopSelf();
                     }
                 });
 
-                alarm.showMessage();
+                alert.showMessage();
             }
         }
         if (Config.logFunctionCalls)

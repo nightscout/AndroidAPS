@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.PowerManager;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,12 +18,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Calendar;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 
-public class AlarmMessage {
-    private static Logger log = LoggerFactory.getLogger(AlarmMessage.class);
+public class AlertMessage {
+    private static Logger log = LoggerFactory.getLogger(AlertMessage.class);
 
     private static boolean displayed = false;
 
@@ -39,7 +37,7 @@ public class AlarmMessage {
     private static int mSoundID;
     private static int mPlayingId;
     private Runnable mOnDismiss;
-    private String mAlarmText = "Alarm";
+    private String mAlertText = "Alarm";
     PowerManager.WakeLock mWakeLock;
 
     static {
@@ -47,10 +45,10 @@ public class AlarmMessage {
         mSoundID = mSoundPool.load(MainApp.instance().getApplicationContext(), R.raw.beep_beep, 1);
     }
 
-    public AlarmMessage(Context mApplicationContext) {
+    public AlertMessage(Context mApplicationContext) {
         this.mApplicationContext = mApplicationContext;
         PowerManager powerManager = (PowerManager) mApplicationContext.getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "AlarmMessage");
+        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK | PowerManager.FULL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "AlertMessage");
     }
 
     public void showMessage() {
@@ -100,7 +98,7 @@ public class AlarmMessage {
         mFloatingTextView = new TextView(getApplicationContext());
         mLinLayout.addView(mFloatingTextView);
 
-        mFloatingTextView.setText(mAlarmText);
+        mFloatingTextView.setText(mAlertText);
         mFloatingTextView.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
         mFloatingTextView.setTextSize(24.0F);
         mFloatingTextView.setGravity(Gravity.CENTER);
@@ -119,7 +117,7 @@ public class AlarmMessage {
         mButtonDismis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlarmMessage.this.dismis();
+                AlertMessage.this.dismis();
                 if (mOnDismiss != null) {
                     mOnDismiss.run();
                 }
@@ -145,7 +143,7 @@ public class AlarmMessage {
     }
 
     public void setText(String text) {
-        mAlarmText = text;
+        mAlertText = text;
     }
 
     public void setOnDismiss(Runnable runnable) {

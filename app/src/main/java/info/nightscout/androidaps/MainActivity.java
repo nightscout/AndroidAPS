@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import info.nightscout.androidaps.Services.AlarmService;
+import info.nightscout.androidaps.Services.AlertService;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                             REQUEST_CODE_ASK_PERMISSIONS
                     );
                 }
-                Intent alarmServiceIntent = new Intent(getApplicationContext(), AlarmService.class);
+                Intent alarmServiceIntent = new Intent(getApplicationContext(), AlertService.class);
                 alarmServiceIntent.putExtra("alarmText", getString(R.string.nav_test_alarm));
                 getApplicationContext().startService(alarmServiceIntent);
                 break;
