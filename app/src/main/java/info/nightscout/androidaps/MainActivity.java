@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_main);
         if (Config.logFunctionCalls)
             log.debug("onCreate");
