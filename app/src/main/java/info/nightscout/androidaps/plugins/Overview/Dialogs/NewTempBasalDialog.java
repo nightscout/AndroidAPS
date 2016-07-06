@@ -49,7 +49,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                              Bundle savedInstanceState) {
         getDialog().setTitle(getString(R.string.overview_tempbasal_button));
 
-        View view = inflater.inflate(R.layout.overview_newtempbasal_fragment, container, false);
+        View view = inflater.inflate(R.layout.overview_newtempbasal_dialog, container, false);
         okButton = (Button) view.findViewById(R.id.overview_newtempbasal_okbutton);
         basalPercentEdit = (EditText) view.findViewById(R.id.overview_newtempbasal_basalpercentinput);
         basalAbsoluteEdit = (EditText) view.findViewById(R.id.overview_newtempbasal_basalabsoluteinput);

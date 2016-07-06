@@ -38,7 +38,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                              Bundle savedInstanceState) {
         getDialog().setTitle(getString(R.string.overview_extendedbolus_button));
 
-        View view = inflater.inflate(R.layout.overview_newextendedbolus_fragment, container, false);
+        View view = inflater.inflate(R.layout.overview_newextendedbolus_dialog, container, false);
         okButton = (Button) view.findViewById(R.id.overview_newextendedbolus_okbutton);
         insulinEdit = (EditText) view.findViewById(R.id.overview_newextendedbolus_insulin);
         h05Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_05h);

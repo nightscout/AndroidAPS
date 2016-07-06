@@ -31,7 +31,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.overview_newtreatment_fragment, null, false);
+        View view = inflater.inflate(R.layout.overview_newtreatment_dialog, null, false);
 
         deliverButton = (Button) view.findViewById(R.id.treatments_newtreatment_deliverbutton);
 

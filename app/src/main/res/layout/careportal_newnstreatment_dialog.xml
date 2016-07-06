@@ -25,13 +25,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_bg_plus"
+            android:id="@+id/careportal_newnstreatment_bg_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
         <EditText
@@ -46,13 +46,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_bg_minus"
+            android:id="@+id/careportal_newnstreatment_bg_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView
@@ -120,13 +120,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_carbs_plus"
+            android:id="@+id/careportal_newnstreatment_carbs_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
 
@@ -142,13 +142,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_carbs_minus"
+            android:id="@+id/careportal_newnstreatment_carbs_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView
@@ -180,13 +180,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_insulin_plus"
+            android:id="@+id/careportal_newnstreatment_insulin_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
 
@@ -203,13 +203,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_insulin_minus"
+            android:id="@+id/careportal_newnstreatment_insulin_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView
@@ -241,13 +241,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_split_plus"
+            android:id="@+id/careportal_newnstreatment_split_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
 
@@ -264,13 +264,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_split_minus"
+            android:id="@+id/careportal_newnstreatment_split_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView
@@ -301,13 +301,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_duration_plus"
+            android:id="@+id/careportal_newnstreatment_duration_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
 
@@ -324,13 +324,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_duration_minus"
+            android:id="@+id/careportal_newnstreatment_duration_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView
@@ -363,13 +363,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_percent_plus"
+            android:id="@+id/careportal_newnstreatment_percent_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
 
@@ -386,13 +386,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_percent_minus"
+            android:id="@+id/careportal_newnstreatment_percent_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView
@@ -423,13 +423,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_absolute_plus"
+            android:id="@+id/careportal_newnstreatment_absolute_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
 
@@ -446,13 +446,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_absolute_minus"
+            android:id="@+id/careportal_newnstreatment_absolute_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView
@@ -483,13 +483,13 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_carbtime_plus"
+            android:id="@+id/careportal_newnstreatment_carbtime_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
 
@@ -506,13 +506,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageView
-            android:id="@+id/careportal_newnstreatment_carbtime_minus"
+            android:id="@+id/careportal_newnstreatment_carbtime_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
         <TextView

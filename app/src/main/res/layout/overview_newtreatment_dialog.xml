@@ -21,13 +21,13 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/treatments_newtreatment_insulinamount_plus"
+            android:id="@+id/treatments_newtreatment_insulinamount_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
         <EditText
@@ -43,13 +43,13 @@
             android:gravity="center_horizontal" />
 
         <ImageView
-            android:id="@+id/treatments_newtreatment_insulinamount_minus"
+            android:id="@+id/treatments_newtreatment_insulinamount_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
     </LinearLayout>
 
@@ -68,13 +68,13 @@
         android:layout_gravity="center_horizontal">
 
         <ImageView
-            android:id="@+id/treatments_newtreatment_carbsamount_plus"
+            android:id="@+id/treatments_newtreatment_carbsamount_minus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_add"
+            android:src="@drawable/ic_action_minus"
             android:tint="#ffffff" />
 
         <EditText
@@ -90,13 +90,13 @@
             android:gravity="center_horizontal" />
 
         <ImageView
-            android:id="@+id/treatments_newtreatment_carbsamount_minus"
+            android:id="@+id/treatments_newtreatment_carbsamount_plus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/circle"
             android:backgroundTint="#ffffff"
-            android:src="@drawable/ic_action_minus"
+            android:src="@drawable/ic_action_add"
             android:tint="#ffffff" />
 
 

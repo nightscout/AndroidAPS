@@ -27,6 +27,8 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.*;
 
+// TODO: wizard upload top NS calculation
+// TODO: add carbtime
 public class WizardDialog extends DialogFragment implements OnClickListener {
 
     Button wizardDialogDeliverButton;
@@ -78,7 +80,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.overview_wizard_fragment, null, false);
+        View view = inflater.inflate(R.layout.overview_wizard_dialog, null, false);
 
         wizardDialogDeliverButton = (Button) view.findViewById(R.id.treatments_wizard_deliverButton);
         wizardDialogDeliverButton.setOnClickListener(this);

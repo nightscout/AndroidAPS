@@ -57,13 +57,13 @@
 
 
             <ImageView
-                android:id="@+id/overview_newtempbasal_basalpercent_plus"
+                android:id="@+id/overview_newtempbasal_basalpercent_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/circle"
                 android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_add"
+                android:src="@drawable/ic_action_minus"
                 android:tint="#ffffff"
                 android:layout_weight="0.5" />
 
@@ -81,13 +81,13 @@
                 android:gravity="center_horizontal" />
 
             <ImageView
-                android:id="@+id/overview_newtempbasal_basalpercent_minus"
+                android:id="@+id/overview_newtempbasal_basalpercent_plus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/circle"
                 android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_minus"
+                android:src="@drawable/ic_action_add"
                 android:tint="#ffffff"
                 android:layout_weight="0.5" />
 
@@ -103,13 +103,13 @@
 
 
             <ImageView
-                android:id="@+id/overview_newtempbasal_basalabsolute_plus"
+                android:id="@+id/overview_newtempbasal_basalabsolute_minus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/circle"
                 android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_add"
+                android:src="@drawable/ic_action_minus"
                 android:tint="#ffffff"
                 android:layout_weight="0.5" />
 
@@ -127,13 +127,13 @@
                 android:gravity="center_horizontal" />
 
             <ImageView
-                android:id="@+id/overview_newtempbasal_basalabsolute_minus"
+                android:id="@+id/overview_newtempbasal_basalabsolute_plus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:background="@drawable/circle"
                 android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_minus"
+                android:src="@drawable/ic_action_add"
                 android:tint="#ffffff"
                 android:layout_weight="0.5" />
 
