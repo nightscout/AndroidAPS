@@ -1,8 +1,10 @@
 package info.nightscout.androidaps;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import info.nightscout.androidaps.Services.AlarmService;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
@@ -123,44 +126,53 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
-            case R.id.nav_preferences: {
+            case R.id.nav_preferences:
                 Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
                 startActivity(i);
                 break;
-            }
             case R.id.nav_resetdb:
                 MainApp.getDbHelper().resetDatabases();
                 break;
-            case R.id.en_lang: {
+            case R.id.en_lang:
                 LocaleHelper.setLocale(this, "en");
                 recreate();
                 break;
-            }
-            case R.id.cs_lang: {
+            case R.id.cs_lang:
                 LocaleHelper.setLocale(this, "cs");
                 recreate();
                 break;
-            }
-            case R.id.de_lang: {
+            case R.id.de_lang:
                 LocaleHelper.setLocale(this, "de");
                 recreate();
                 break;
-            }
-            case R.id.bg_lang: {
+            case R.id.bg_lang:
                 LocaleHelper.setLocale(this, "bg");
                 recreate();
                 break;
-            }
-            case R.id.nav_export: {
+            case R.id.nav_export:
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.exportSharedPreferences(this);
                 break;
-            }
-            case R.id.nav_import: {
+            case R.id.nav_import:
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.importSharedPreferences(this);
                 break;
-            }
+            case R.id.nav_testalarm:
+                final int REQUEST_CODE_ASK_PERMISSIONS = 2355;
+                int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW);
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    // We don't have permission so prompt the user
+                    // On Android 6 give permission for alarming in Settings -> Apps -> Draw over other apps
+                    ActivityCompat.requestPermissions(
+                            this,
+                            new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
+                            REQUEST_CODE_ASK_PERMISSIONS
+                    );
+                }
+                Intent alarmServiceIntent = new Intent(getApplicationContext(), AlarmService.class);
+                alarmServiceIntent.putExtra("alarmText",getString(R.string.testalarm));
+                getApplicationContext().startService(alarmServiceIntent);
+                break;
             case R.id.nav_exit:
                 log.debug("Exiting");
                 //chancelAlarmManager();

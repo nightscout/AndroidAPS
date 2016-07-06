@@ -226,5 +226,7 @@
     <string name="openapsma_maxbasal_title">Max Basal</string>
     <string name="openapsma_maxbasaliob_title">Max Basal IOB</string>
     <string name="bg_lang">Bulgarian</string>
+    <string name="testalarm">Alarm test</string>
+    <string name="dismiss">DISMISS</string>
 
 </resources>
