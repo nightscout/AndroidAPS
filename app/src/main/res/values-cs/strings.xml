@@ -217,4 +217,5 @@
     <string name="openapsma_maxbasaliob_title">Maximální IOB z bazálů</string>
     <string name="openapsma_maxiob_summary">Maximální nebolusové IOB, které může OpenAPS použít</string>
     <string name="openapsma_targetrange_label">Cílový rozsah pro OpenAPS</string>
+    <string name="bg_lang">Bulgarian</string>
 </resources>

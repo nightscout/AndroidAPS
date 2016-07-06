@@ -156,8 +156,8 @@
     <string name="pumpstatusavailableinns">Pump status available in NS</string>
     <string name="manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
-    <string name="cs_lang">Czech language</string>
-    <string name="en_lang">English language</string>
+    <string name="cs_lang">Czech</string>
+    <string name="en_lang">English</string>
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
@@ -214,7 +214,7 @@
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
-    <string name="de_lang">German language</string>
+    <string name="de_lang">German</string>
     <string name="openapsma_targetrange_label">APS target BG range</string>
     <string name="openapsma_low_summary">The minimum value you consider to be in range.</string>
     <string name="openapsma_high_summary">The maximum value you consider to be in range.</string>
