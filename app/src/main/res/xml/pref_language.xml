@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:key="language"
-        android:title="@string/language">
+        android:title="@string/configbuilder_general">
 
         <ListPreference
             android:title="@string/language"

@@ -13,11 +13,13 @@
     <string-array name="languagesArray">
         <item>@string/en_lang</item>
         <item>@string/cs_lang</item>
+        <item>@string/de_lang</item>
         <item>@string/bg_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
         <item>en</item>
         <item>cs</item>
+        <item>de</item>
         <item>bg</item>
     </string-array>
 </resources>

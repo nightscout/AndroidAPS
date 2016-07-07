@@ -2,7 +2,9 @@ package info.nightscout.androidaps.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.j256.ormlite.dao.Dao;
@@ -224,7 +226,9 @@ public class DataService extends IntentService {
                 }
                 PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                 if (pump != null) {
-                    pump.setNewBasalProfile(nsProfile);
+                    SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                    if (SP.getBoolean("syncprofiletopump", false))
+                        pump.setNewBasalProfile(nsProfile);
                 } else {
                     log.error("No active pump selected");
                 }

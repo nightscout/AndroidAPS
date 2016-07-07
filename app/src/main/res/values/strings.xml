@@ -1,11 +1,8 @@
 <resources>
     <string name="app_name">AndroidAPS</string>
-    <string name="title_activity_main">AndroidAPS</string>
-
-    <string name="title_activity_preferences">Preferences</string>
     <string name="treatmentssafety_title">Tratments safety</string>
-    <string name="treatmentssafety_maxbolus_title">Max allowed bolus</string>
-    <string name="treatmentssafety_maxcarbs_title">Max allowed carbs</string>
+    <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
 
     <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
@@ -13,10 +10,9 @@
     <string name="nav_test_alarm">Test alarm</string>
     <string name="nav_resetdb">Reset databases</string>
     <string name="nav_exit">Exit</string>
-    <string name="safety_useextended_title">Use extended boluses</string>
-    <string name="safety_useextended_summary">Use extended boluses for high temps (\>200%)</string>
-    <string name="ns_sync_use_absolute_title">Use absolute values</string>
-    <string name="ns_sync_use_absolute_summary">Use absolute basal values instead of percent in upload to NS</string>
+    <string name="danar_useextended_title">Use extended boluses for >200%</string>
+    <string name="danar_bt_name_title">DanaR Bluetooth device</string>
+    <string name="ns_sync_use_absolute_title">Always use basal absolute values</string>
 
     <string name="objectives_objective_label_string">Objective:</string>
     <string name="objectives_gate_label_string">Gate:</string>
@@ -114,17 +110,11 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
-    <string name="alert">Alert</string>
     <string name="refreshfromnightscout">Do you want to refresh treatments from Nightscout</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
     <string name="safety">Safety</string>
-    <string name="limits_title">Limits</string>
-    <string name="maxbasal_title">Max basal</string>
-    <string name="maxbasal_summary">Max U/hr of Temp Basal can be set to</string>
-    <string name="maxbasaliob_title">Max basal IOB</string>
-    <string name="maxbasaliob_summary">Maximum amount of non-bolus IOB OpenAPS can deliver</string>
     <string name="lowsuspend_low_title">Low BG threshold</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
@@ -215,16 +205,10 @@
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
     <string name="de_lang">German</string>
-    <string name="openapsma_targetrange_label">APS target BG range</string>
-    <string name="openapsma_low_summary">The minimum value you consider to be in range.</string>
-    <string name="openapsma_high_summary">The maximum value you consider to be in range.</string>
-    <string name="openapsma_low_title">Low Value</string>
-    <string name="openapsma_high_title">High Value</string>
-    <string name="openapsma_apslimits_label">APS Limits</string>
+    <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
+    <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
     <string name="openapsma_maxbasal_summary">Max U/hr a Temp Basal can be set to</string>
-    <string name="openapsma_maxiob_summary">Maximum amount of non-bolus IOB OpenAPS can deliver</string>
-    <string name="openapsma_maxbasal_title">Max Basal</string>
-    <string name="openapsma_maxbasaliob_title">Max Basal IOB</string>
+    <string name="openapsma_maxiob_summary">Maximum basal IOB OpenAPS can deliver [U]</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
     <string name="language">Language</string>
@@ -233,5 +217,8 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
+    <string name="syncprofiletopump_title">Sync Nightscout profile to pump</string>
+    <string name="danar_pump_settings">DanaR pump settings</string>
+    <string name="nightscout">Nightscout</string>
 
 </resources>

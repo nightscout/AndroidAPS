@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:key="bgRange"
-        android:title="@string/openapsma_targetrange_label">
+        android:key="openaps"
+        android:title="@string/openapsma">
         <EditTextPreference
             android:defaultValue=""
             android:key="openapsma_min_bg"
             android:numeric="decimal"
-            android:summary="@string/openapsma_low_summary"
-            android:title="@string/openapsma_low_title" />
+            android:title="@string/openapsma_low_summary" />
         <EditTextPreference
             android:defaultValue=""
             android:key="openapsma_max_bg"
             android:numeric="decimal"
-            android:summary="@string/openapsma_high_summary"
-            android:title="@string/openapsma_high_title" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:key="aps_limits"
-        android:title="@string/openapsma_apslimits_label">
+            android:title="@string/openapsma_high_summary" />
 
         <EditTextPreference
             android:defaultValue="1"
             android:key="openapsma_max_basal"
             android:numeric="decimal"
-            android:summary="@string/openapsma_maxbasal_summary"
-            android:title="@string/openapsma_maxbasal_title" />
+            android:title="@string/openapsma_maxbasal_summary" />
         <EditTextPreference
             android:defaultValue="1.5"
             android:key="openapsma_max_iob"
             android:numeric="decimal"
-            android:summary="@string/openapsma_maxiob_summary"
-            android:title="@string/openapsma_maxbasaliob_title" />
+            android:title="@string/openapsma_maxiob_summary" />
     </PreferenceCategory>
 
 </PreferenceScreen>

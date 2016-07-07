@@ -3,7 +3,6 @@
     <string name="app_name">AndroidAPS</string>
     <string name="closedloop">Uzavřená smyčka</string>
     <string name="openloop">Otevřená smyčka</string>
-    <string name="alert">Výstaha</string>
     <string name="apsmode_title">Typ smyčky</string>
     <string name="avgdelta">Prům. změna</string>
     <string name="basal">Bazál</string>
@@ -68,7 +67,6 @@
     <string name="en_lang">English</string>
     <string name="entertreatmentquestion">Zadej nové ošetření</string>
     <string name="glucose">Glykémie:</string>
-    <string name="limits_title">Limity</string>
     <string name="loop">Smyčka</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
@@ -78,10 +76,6 @@
     <string name="lowsuspend_low_title">Hodnota nízké glykémie</string>
     <string name="manualenacts">Ručně spuštěno</string>
     <string name="lowsuspend_lowprojected">Předpokládaná nízká glykémie:</string>
-    <string name="maxbasal_summary">Max U/h dočasného bázálu jsou</string>
-    <string name="maxbasal_title">Max bazál</string>
-    <string name="maxbasaliob_summary">Maximální množství nebolusového IOB, které může OpenAPS používat</string>
-    <string name="maxbasaliob_title">Maximální bazální IOB</string>
     <string name="minago">min zpět</string>
     <string name="minimalduration">Minimální trvání</string>
     <string name="nav_backup">Záloha</string>
@@ -93,8 +87,7 @@
     <string name="noapsselected">ŽÁDNÉ APS NEVYBRÁNO NEBO NEVRÁTILO VÝSLEDEK</string>
     <string name="nochangerequested">Změna nepožadována</string>
     <string name="noprofile">Dosud nebyl načten profil z NS</string>
-    <string name="ns_sync_use_absolute_summary">Používat absolutní hodnoty místo procent při nahrávání do NS</string>
-    <string name="ns_sync_use_absolute_title">Použít absolutní hodnoty</string>
+    <string name="ns_sync_use_absolute_title">Vždy použít absolutní hodnoty bazálu</string>
     <string name="nsclient">NSClient</string>
     <string name="nsprofileview_activeprofile_label">Aktivní profil:</string>
     <string name="nsprofileview_basal_label">Bazál:</string>
@@ -137,8 +130,7 @@
     <string name="reason">Zdůvodnění:</string>
     <string name="refreshfromnightscout">Opravdu aktualizovat ošetření z NS</string>
     <string name="safety">Bezpečnost</string>
-    <string name="safety_useextended_summary">Použít kombo bolusy pro bazály větší než 100%</string>
-    <string name="safety_useextended_title">Použít kombo bolusy</string>
+    <string name="danar_useextended_title">Použít kombo bolusy pro >200%</string>
     <string name="setextendedbolusquestion">Spustit nový kombo bolus:</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="simpleprofile">Jednoduchý profil</string>
@@ -148,7 +140,6 @@
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_netratio_label_string">Hodn:</string>
     <string name="tempbasals_realduration_label_string">Trv:</string>
-    <string name="title_activity_preferences">Nastavení</string>
     <string name="treatmentdeliveryerror">Chyba podání bolusu</string>
     <string name="treatments">Ošetření</string>
     <string name="treatments_activity_string">Aktivita:</string>
@@ -166,8 +157,8 @@
     <string name="treatments_wizard_correction_label">Korekce</string>
     <string name="treatments_wizard_total_label">CELKEM</string>
     <string name="treatments_wizard_unit_label">U</string>
-    <string name="treatmentssafety_maxbolus_title">Max. povolený bolus</string>
-    <string name="treatmentssafety_maxcarbs_title">Max. povolené sacharidy</string>
+    <string name="treatmentssafety_maxbolus_title">Maximální povolený bolus [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Maximální povolené sacharidy [g]</string>
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
     <string name="unsupportedclientver">Nepodporovaná verze NSClient</string>
     <string name="virtualpump">Virtualní pumpa</string>
@@ -190,7 +181,6 @@
     <string name="lowsuspend_low">Low Suspend:</string>
     <string name="careportal_newnstreatment_eventtype">Typ události</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
-    <string name="title_activity_main">AndroidAPS</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
     <string name="configbuilder_nsclientversion_label">Verze NSClienta:</string>
@@ -207,16 +197,10 @@
     <string name="nav_export">Exportovat nastavení</string>
     <string name="nav_import">Importovat nastavení</string>
     <string name="de_lang">German</string>
-    <string name="openapsma_apslimits_label">Limity APS</string>
-    <string name="openapsma_high_summary">Maximální hodnota ještě v rozsahu</string>
-    <string name="openapsma_high_title">Horní limit</string>
-    <string name="openapsma_low_summary">Minimální hodnota ještě v rozsahu</string>
-    <string name="openapsma_low_title">Dolní limit</string>
+    <string name="openapsma_high_summary">Maximální hodnota glykémie ještě v rozsahu</string>
+    <string name="openapsma_low_summary">Minimální hodnota glykémie ještě v rozsahu</string>
     <string name="openapsma_maxbasal_summary">Maximální povolený bazál [U/h]</string>
-    <string name="openapsma_maxbasal_title">Maximální bazál</string>
-    <string name="openapsma_maxbasaliob_title">Maximální IOB z bazálů</string>
-    <string name="openapsma_maxiob_summary">Maximální nebolusové IOB, které může OpenAPS použít</string>
-    <string name="openapsma_targetrange_label">Cílový rozsah pro OpenAPS</string>
+    <string name="openapsma_maxiob_summary">Maximální bazální IOB [U]</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">POTVRDIT</string>
     <string name="language">Jazyk</string>
@@ -224,4 +208,8 @@
     <string name="connecting">Připojuji</string>
     <string name="danarpump">DanaR</string>
     <string name="disconnected">Odpojeno</string>
+    <string name="danar_bt_name_title">DanaR Bluetooth zařízení</string>
+    <string name="danar_pump_settings">DanaR nastavení</string>
+    <string name="syncprofiletopump_title">Synchronizovat NS profil do pumpy</string>
+    <string name="nightscout">Nightscout</string>
 </resources>
