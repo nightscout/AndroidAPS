@@ -670,17 +670,19 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     private void storeSettings() {
-        if (Config.logPrefsChange)
-            log.debug("Storing settings");
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        SharedPreferences.Editor editor = settings.edit();
+        if (pluginList != null) {
+            if (Config.logPrefsChange)
+                log.debug("Storing settings");
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            SharedPreferences.Editor editor = settings.edit();
 
-        for (PluginBase p : pluginList) {
-            editor.putBoolean("ConfigBuilder" + p.getName() + "Enabled", p.isEnabled());
-            editor.putBoolean("ConfigBuilder" + p.getName() + "Visible", p.isVisibleInTabs());
+            for (PluginBase p : pluginList) {
+                editor.putBoolean("ConfigBuilder" + p.getName() + "Enabled", p.isEnabled());
+                editor.putBoolean("ConfigBuilder" + p.getName() + "Visible", p.isVisibleInTabs());
+            }
+            editor.commit();
+            verifySelectionInCategories();
         }
-        editor.commit();
-        verifySelectionInCategories();
     }
 
     private void loadSettings() {

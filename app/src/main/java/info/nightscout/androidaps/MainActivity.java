@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LocaleHelper.onCreate(this, "en");
+        checkEula();
         setContentView(R.layout.activity_main);
         if (Config.logFunctionCalls)
             log.debug("onCreate");
@@ -196,6 +197,15 @@ public class MainActivity extends AppCompatActivity {
             // Ignore
         }
         MainApp.bus().register(this);
+    }
+
+    private void checkEula() {
+        boolean IUnderstand = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("I_understand", false);
+        if (!IUnderstand) {
+            Intent intent = new Intent(getApplicationContext(), AgreementActivity.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public static ArrayList<PluginBase> getPluginsList() {

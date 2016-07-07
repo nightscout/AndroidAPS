@@ -77,7 +77,9 @@
         <service
             android:name=".plugins.DanaR.Services.DanaRService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".AgreementActivity"></activity>
     </application>
 
 </manifest>
