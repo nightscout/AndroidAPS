@@ -95,11 +95,11 @@ public class DanaRService extends Service {
                 .setLocalOnly(true);
 
         mNotification = mNotificationCompatBuilder.build();
-        nortifManagerNotify();
+        notifyManagerNotify();
         startForeground(notifyId, mNotification);
     }
 
-    private void nortifManagerNotify() {
+    private void notifyManagerNotify() {
         mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(notifyId, mNotification);
     }
@@ -122,7 +122,7 @@ public class DanaRService extends Service {
                     .setContentText(connectionText);
 
             mNotification = mNotificationCompatBuilder.build();
-            nortifManagerNotify();
+            notifyManagerNotify();
         }
     }
 
