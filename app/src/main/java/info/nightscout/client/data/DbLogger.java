@@ -3,7 +3,6 @@ package info.nightscout.client.data;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +21,7 @@ public class DbLogger {
         Logger log = LoggerFactory.getLogger(sender);
         List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.resources.getString(R.string.nsclientnotinstalled));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.nsclientnotinstalled));
             log.error("DBADD No receivers");
         } else if (Config.logNSUpload)
             log.debug("DBADD dbAdd " + q.size() + " receivers " + data);

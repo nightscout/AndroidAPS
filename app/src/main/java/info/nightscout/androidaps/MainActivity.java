@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import info.nightscout.androidaps.Services.AlertService;
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
 import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerFragment;
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             pluginsList = new ArrayList<PluginBase>();
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.newInstance());
+            if (Config.DANAR) pluginsList.add(DanaRFragment.newInstance());
             pluginsList.add(VirtualPumpFragment.newInstance());
             if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.newInstance());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.newInstance());
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 log.debug("Exiting");
                 keepAliveReceiver.cancelAlarm(this);
 
-                //MainApp.bus().post(new StopEvent());
+                MainApp.bus().post(new EventAppExit());
                 MainApp.closeDbHelper();
                 finish();
                 System.runFinalization();

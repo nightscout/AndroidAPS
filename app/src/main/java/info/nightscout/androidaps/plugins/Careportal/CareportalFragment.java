@@ -97,7 +97,7 @@ public class CareportalFragment extends Fragment implements PluginBase, View.OnC
 
     @Override
     public String getName() {
-        return MainApp.resources.getString(R.string.careportal);
+        return MainApp.sResources.getString(R.string.careportal);
     }
 
     @Override

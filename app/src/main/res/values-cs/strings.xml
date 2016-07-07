@@ -220,4 +220,8 @@
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">POTVRDIT</string>
     <string name="language">Jazyk</string>
+    <string name="connected">Připojeno</string>
+    <string name="connecting">Připojuji</string>
+    <string name="danarpump">DanaR</string>
+    <string name="disconnected">Odpojeno</string>
 </resources>

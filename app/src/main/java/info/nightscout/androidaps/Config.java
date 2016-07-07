@@ -13,6 +13,8 @@ public class Config {
     public static final boolean OBJECTIVESENABLED = APS && true;
     public static final boolean CAREPORTALENABLED = APS && true;
 
+    public static final boolean DANAR = true;
+
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;
     public static final boolean logIncommingBG = true;

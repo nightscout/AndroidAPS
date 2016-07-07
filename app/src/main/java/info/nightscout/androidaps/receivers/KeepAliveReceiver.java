@@ -14,19 +14,24 @@ import android.os.PowerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.plugins.DanaR.Services.DanaRService;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
 
     @Override
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(Context context, Intent rIntent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
 
         log.debug("KeepAlive received");
-        // TODO: Start service here
+        if (Config.DANAR) {
+            Intent intent = new Intent(context, DanaRService.class);
+            context.startService(intent);
+        }
 
         wl.release();
     }

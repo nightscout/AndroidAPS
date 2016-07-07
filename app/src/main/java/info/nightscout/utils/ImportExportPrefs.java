@@ -29,7 +29,7 @@ import info.nightscout.androidaps.R;
 
 public class ImportExportPrefs {
     static File path = new File(Environment.getExternalStorageDirectory().toString());
-    static final File file = new File(path, MainApp.resources.getString(R.string.app_name) + "Preferences");
+    static final File file = new File(path, MainApp.sResources.getString(R.string.app_name) + "Preferences");
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -55,7 +55,7 @@ public class ImportExportPrefs {
     public static void exportSharedPreferences(final Context c) {
 
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.resources.getString(R.string.export_to) + " " + file + " ?")
+                .setMessage(MainApp.sResources.getString(R.string.export_to) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -69,9 +69,9 @@ public class ImportExportPrefs {
                             }
                             pw.close();
                             fw.close();
-                            ToastUtils.showToastInUiThread(c, MainApp.resources.getString(R.string.exported));
+                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.exported));
                         } catch (FileNotFoundException e) {
-                            ToastUtils.showToastInUiThread(c, MainApp.resources.getString(R.string.filenotfound) + " " + file);
+                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.filenotfound) + " " + file);
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -84,7 +84,7 @@ public class ImportExportPrefs {
 
     public static void importSharedPreferences(final Context c) {
         new AlertDialog.Builder(c)
-                .setMessage(MainApp.resources.getString(R.string.import_from) + " " + file + " ?")
+                .setMessage(MainApp.sResources.getString(R.string.import_from) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
 
@@ -109,9 +109,9 @@ public class ImportExportPrefs {
                             }
                             reader.close();
                             editor.commit();
-                            ToastUtils.showToastInUiThread(c, MainApp.resources.getString(R.string.setting_imported));
+                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.setting_imported));
                         } catch (FileNotFoundException e) {
-                            ToastUtils.showToastInUiThread(c, MainApp.resources.getString(R.string.filenotfound) + " " + file);
+                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.filenotfound) + " " + file);
                             e.printStackTrace();
                         } catch (IOException e) {
                             e.printStackTrace();

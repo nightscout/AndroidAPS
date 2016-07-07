@@ -106,7 +106,7 @@ public class AlertMessage {
 
         mButtonDismis = new Button(getApplicationContext());
 
-        mButtonDismis.setText(MainApp.resources.getString(R.string.dismiss));
+        mButtonDismis.setText(MainApp.sResources.getString(R.string.dismiss));
         mButtonDismis.setTextSize(20.0F);
         mButtonDismis.setTextAlignment(Button.TEXT_ALIGNMENT_CENTER);
         mButtonDismis.setGravity(Gravity.CENTER);

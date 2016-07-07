@@ -387,8 +387,8 @@ public class OverviewFragment extends Fragment implements PluginBase {
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
             if (MainApp.getConfigBuilder().isClosedModeEnabled())
-                apsModeView.setText(MainApp.resources.getString(R.string.closedloop));
-            else apsModeView.setText(MainApp.resources.getString(R.string.openloop));
+                apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
+            else apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
         } else {
             apsModeView.setVisibility(View.GONE);
         }

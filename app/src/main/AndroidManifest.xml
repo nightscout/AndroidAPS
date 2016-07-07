@@ -27,8 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".PreferencesActivity"></activity>
+        <activity android:name=".PreferencesActivity" />
 
         <!-- Receiver from NSClient -->
         <receiver
@@ -60,7 +59,7 @@
         </receiver>
 
         <!-- Receiver keepalive, scheduled every 30 min -->
-        <receiver android:name=".receivers.KeepAliveReceiver"></receiver>
+        <receiver android:name=".receivers.KeepAliveReceiver" />
 
         <!-- Service processing incomming data -->
         <service
@@ -74,6 +73,11 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
+
+        <service
+            android:name=".plugins.DanaR.Services.DanaRService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>

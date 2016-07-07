@@ -21,10 +21,10 @@ public class MainApp  extends Application {
 
     private static Bus sBus;
     private static MainApp sInstance;
-    public static Resources resources;
+    public static Resources sResources;
 
-    private static DatabaseHelper databaseHelper = null;
-    private static ConfigBuilderFragment configBuilder = null;
+    private static DatabaseHelper sDatabaseHelper = null;
+    private static ConfigBuilderFragment sConfigBuilder = null;
 
     @Override
     public void onCreate() {
@@ -33,7 +33,7 @@ public class MainApp  extends Application {
 
         sBus = new Bus(ThreadEnforcer.ANY);
         sInstance = this;
-        resources = getResources();
+        sResources = getResources();
     }
 
     public static Bus bus() {
@@ -44,30 +44,30 @@ public class MainApp  extends Application {
     }
 
     public static DatabaseHelper getDbHelper() {
-        if (databaseHelper == null) {
-            databaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
+        if (sDatabaseHelper == null) {
+            sDatabaseHelper = OpenHelperManager.getHelper(sInstance, DatabaseHelper.class);
         }
-        return databaseHelper;
+        return sDatabaseHelper;
     }
 
     public static void closeDbHelper() {
-        if (databaseHelper != null) {
-            databaseHelper.close();
-            databaseHelper = null;
+        if (sDatabaseHelper != null) {
+            sDatabaseHelper.close();
+            sDatabaseHelper = null;
         }
     }
 
     public static void setConfigBuilder(ConfigBuilderFragment cb) {
-        configBuilder = cb;
+        sConfigBuilder = cb;
     }
 
     public static ConfigBuilderFragment getConfigBuilder() {
-        return configBuilder;
+        return sConfigBuilder;
     }
 
     @Override
     public void onTerminate() {
         super.onTerminate();
-        databaseHelper.close();
+        sDatabaseHelper.close();
     }
 }

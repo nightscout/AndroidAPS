@@ -38,7 +38,6 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 
 public class LoopFragment extends Fragment implements View.OnClickListener, PluginBase {
@@ -289,7 +288,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                 NotificationCompat.Builder builder =
                         new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
                 builder.setSmallIcon(R.drawable.notification_icon)
-                        .setContentTitle(MainApp.resources.getString(R.string.openloop_newsuggestion))
+                        .setContentTitle(MainApp.sResources.getString(R.string.openloop_newsuggestion))
                         .setContentText(resultAfterConstraints.toString())
                         .setAutoCancel(true)
                         .setPriority(Notification.PRIORITY_HIGH)

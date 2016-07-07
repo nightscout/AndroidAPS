@@ -229,4 +229,9 @@
     <string name="dismiss">DISMISS</string>
     <string name="language">Language</string>
 
+    <string name="danarpump">DanaR</string>
+    <string name="connecting">Connecting</string>
+    <string name="connected">Connected</string>
+    <string name="disconnected">Disconnected</string>
+
 </resources>

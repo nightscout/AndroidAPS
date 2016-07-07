@@ -29,6 +29,7 @@ import info.nightscout.utils.*;
 
 // TODO: wizard upload top NS calculation
 // TODO: add carbtime
+// TODO: add profile selection
 public class WizardDialog extends DialogFragment implements OnClickListener {
 
     Button wizardDialogDeliverButton;
@@ -181,7 +182,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.resources.getString(R.string.noprofile));
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
             return;
         }
 
