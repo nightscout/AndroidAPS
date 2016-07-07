@@ -26,4 +26,9 @@ public class Config {
     public static final boolean logConstraintsChanges = true;
     public static final boolean logTempBasalsCut = true;
     public static final boolean logNSUpload = true;
+
+    // DanaR specific
+    public static final boolean logDanaBTComm = true;
+    public static final boolean logDanaMessageDetail = true;
+    public static final boolean logDanaSerialEngine = true;
 }

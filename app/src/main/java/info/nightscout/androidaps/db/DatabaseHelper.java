@@ -52,6 +52,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
+            TableUtils.createTableIfNotExists(connectionSource, HistoryRecord.class);
         } catch (SQLException e) {
             log.error(DatabaseHelper.class.getName(), "Can't create database", e);
             throw new RuntimeException(e);
@@ -65,6 +66,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TempBasal.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
+            TableUtils.dropTable(connectionSource, HistoryRecord.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             log.error(DatabaseHelper.class.getName(), "Can't drop databases", e);
@@ -93,6 +95,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
         getWritableDatabase().delete("Treatments", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
+
+        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "History"));
+        getWritableDatabase().delete("History", "recordDate" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "History"));
     }
 
     public void resetDatabases() {
@@ -100,9 +106,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TempBasal.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
+            TableUtils.dropTable(connectionSource, HistoryRecord.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
+            TableUtils.createTableIfNotExists(connectionSource, HistoryRecord.class);
             MainApp.bus().post(new EventNewBG());
             MainApp.bus().post(new EventTreatmentChange());
             MainApp.bus().post(new EventTempBasalChange());
@@ -130,9 +138,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao<BgReading, Long> getDaoBgReadings() throws SQLException {
-        //SQLiteDatabase db = getReadableDatabase();
-        //log.debug("BgReadings size: " + DatabaseUtils.queryNumEntries(db, "BgReadings"));
         return getDao(BgReading.class);
+    }
+
+    public Dao<HistoryRecord, String> getDaoHistory() throws SQLException {
+        return getDao(HistoryRecord.class);
     }
 
     /*
