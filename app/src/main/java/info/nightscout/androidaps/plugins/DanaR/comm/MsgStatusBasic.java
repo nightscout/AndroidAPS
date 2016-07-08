@@ -17,7 +17,7 @@ public class MsgStatusBasic extends DanaRMessage {
         boolean pumpSuspended = intFromBuff(bytes, 0, 1) == 1;
         boolean calculatorEnabled = intFromBuff(bytes, 1, 1) == 1;
         double dailyTotalUnits = intFromBuff(bytes, 2, 3) / 750d;
-        int dailyMaxRate = intFromBuff(bytes, 5, 2);
+        int maxDailyTotalUnits = intFromBuff(bytes, 5, 2) / 100;
         double reservoirRemainingUnits = intFromBuff(bytes, 7, 3) / 750d;
         boolean bolusBlocked = intFromBuff(bytes, 10, 1) == 1;
         double currentBasal = intFromBuff(bytes, 11, 2) / 100d;
@@ -29,7 +29,7 @@ public class MsgStatusBasic extends DanaRMessage {
         DanaRFragment.getDanaRPump().pumpSuspended = pumpSuspended;
         DanaRFragment.getDanaRPump().calculatorEnabled = calculatorEnabled;
         DanaRFragment.getDanaRPump().dailyTotalUnits = dailyTotalUnits;
-        DanaRFragment.getDanaRPump().dailyMaxRate = dailyMaxRate;
+        DanaRFragment.getDanaRPump().maxDailyTotalUnits = maxDailyTotalUnits;
         DanaRFragment.getDanaRPump().reservoirRemainingUnits = reservoirRemainingUnits;
         DanaRFragment.getDanaRPump().bolusBlocked = bolusBlocked;
         DanaRFragment.getDanaRPump().currentBasal = currentBasal;
@@ -42,7 +42,7 @@ public class MsgStatusBasic extends DanaRMessage {
             log.debug("Pump suspended: " + pumpSuspended);
             log.debug("Calculator enabled: " + calculatorEnabled);
             log.debug("Daily total units: " + dailyTotalUnits);
-            log.debug("Daily max rate: " + dailyMaxRate);
+            log.debug("Max daily total units: " + maxDailyTotalUnits);
             log.debug("Reservoir remaining units: " + reservoirRemainingUnits);
             log.debug("Bolus blocked: " + bolusBlocked);
             log.debug("Current basal: " + currentBasal);
