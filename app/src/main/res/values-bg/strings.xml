@@ -88,7 +88,7 @@
     <string name="nav_preferences">Опции</string>
     <string name="nav_refreshtreatments">Обнови събития от NS</string>
     <string name="nav_resetdb">Нулирай базата данни</string>
-    <string name="nav_test_alarm">Тест на аларми</string>
+    <string name="nav_test_alert">Тест на аларми</string>
     <string name="noapsselected">Не е избран APS или  </string>
     <string name="nochangerequested">Не се изискват промени</string>
     <string name="noprofile">Не е зареден профил от NS</string>

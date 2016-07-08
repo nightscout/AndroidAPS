@@ -7,7 +7,7 @@
     <string name="nav_preferences">Preferences</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
     <string name="nav_backup">Backup</string>
-    <string name="nav_test_alarm">Test alarm</string>
+    <string name="nav_test_alert">Test alarm</string>
     <string name="nav_resetdb">Reset databases</string>
     <string name="nav_exit">Exit</string>
     <string name="danar_useextended_title">Use extended boluses for >200%</string>

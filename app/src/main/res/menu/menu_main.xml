@@ -15,7 +15,7 @@
         android:title="@string/nav_import" />
     <item
         android:id="@+id/nav_test_alarm"
-        android:title="@string/nav_test_alarm" />
+        android:title="@string/nav_test_alert" />
     <item
         android:id="@+id/nav_exit"
         android:title="@string/nav_exit" />

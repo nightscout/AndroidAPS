@@ -148,7 +148,7 @@
     <string name="noprofile">Bisher noch kein Profil von NS geladen</string>
     <string name="nochangerequested">No change requested</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
-    <string name="nav_test_alarm">Test Alarm</string>
+    <string name="nav_test_alert">Test Alarm</string>
     <string name="avgdelta">Avg. delta:</string>
     <string name="bolusconstraintapplied">Bolus constraint applied</string>
     <string name="careportal_announcement">Ankündigung</string>

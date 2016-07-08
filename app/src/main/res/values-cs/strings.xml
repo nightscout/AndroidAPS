@@ -83,7 +83,7 @@
     <string name="nav_preferences">Nastavení</string>
     <string name="nav_refreshtreatments">Aktualizuj ošetření z NS</string>
     <string name="nav_resetdb">Inicializuj databáze</string>
-    <string name="nav_test_alarm">Test alarmu</string>
+    <string name="nav_test_alert">Test alarmu</string>
     <string name="noapsselected">ŽÁDNÉ APS NEVYBRÁNO NEBO NEVRÁTILO VÝSLEDEK</string>
     <string name="nochangerequested">Změna nepožadována</string>
     <string name="noprofile">Dosud nebyl načten profil z NS</string>
