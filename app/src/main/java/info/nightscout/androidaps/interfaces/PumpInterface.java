@@ -15,9 +15,6 @@ public interface PumpInterface {
     boolean isTempBasalInProgress();
     boolean isExtendedBoluslInProgress();
 
-    Integer getBatteryPercent();
-    Integer getReservoirValue();
-
     // Upload to pump new basal profile
     void setNewBasalProfile(NSProfile profile);
 

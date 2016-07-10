@@ -88,12 +88,6 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
     }
 
     @Override
-    public APSResult applyBasalConstraints(APSResult result) {
-        result.rate = Math.min(applyBasalConstraints(result.rate), result.rate);
-        return result;
-    }
-
-    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         Double origAbsoluteRate = absoluteRate;
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
@@ -163,8 +157,8 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
         }
 
         Integer percentRateAfterConst = new Double(absoluteRate / currentBasal * 100).intValue();
-        if (percentRateAfterConst < 100) Round.ceilTo(absoluteRate, 10d).intValue();
-        else  Round.floorTo(absoluteRate, 10d).intValue();
+        if (percentRateAfterConst < 100) percentRateAfterConst = Round.ceilTo((double) percentRateAfterConst, 10d).intValue();
+        else  percentRateAfterConst = Round.floorTo((double) percentRateAfterConst, 10d).intValue();
 
         if (Config.logConstraintsChanges && origPercentRate != Constants.basalPercentOnlyForCheckLimit)
             log.debug("Recalculated percent rate " + percentRate + "% to " + percentRateAfterConst + "%");

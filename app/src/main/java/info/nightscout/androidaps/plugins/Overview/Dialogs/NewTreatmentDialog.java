@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.*;
@@ -27,6 +29,15 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
     PlusMinusEditText editCarbs;
     PlusMinusEditText editInsulin;
+
+    Handler mHandler;
+    public static HandlerThread mHandlerThread;
+
+    public NewTreatmentDialog() {
+        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+        mHandlerThread.start();
+        this.mHandler = new Handler(mHandlerThread.getLooper());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,7 +77,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
                     confirmMessage += getString(R.string.bolus) + ": " + insulinAfterConstraints + "U";
                     confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-                    if (insulinAfterConstraints - insulin  != 0 || carbsAfterConstraints != carbs)
+                    if (insulinAfterConstraints - insulin != 0 || carbsAfterConstraints != carbs)
                         confirmMessage += "\n" + getString(R.string.constraintapllied);
 
                     final Double finalInsulinAfterConstraints = insulinAfterConstraints;
@@ -78,15 +89,20 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-                                PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
-                                if (!result.success) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
-                                    builder.setMessage(result.comment);
-                                    builder.setPositiveButton(getContext().getString(R.string.ok), null);
-                                    builder.show();
-                                }
+                                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                                mHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
+                                        if (!result.success) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                                            builder.setMessage(result.comment);
+                                            builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                                            builder.show();
+                                        }
+                                    }
+                                });
                             }
                         }
                     });

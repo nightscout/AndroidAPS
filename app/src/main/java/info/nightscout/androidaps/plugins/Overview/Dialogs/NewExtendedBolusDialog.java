@@ -2,6 +2,9 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -33,6 +36,15 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
 
     PlusMinusEditText editInsulin;
 
+    Handler mHandler;
+    public static HandlerThread mHandlerThread;
+
+    public NewExtendedBolusDialog() {
+        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+        mHandlerThread.start();
+        this.mHandler = new Handler(mHandlerThread.getLooper());
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,7 +60,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         h40Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_4h);
 
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
-        editInsulin = new PlusMinusEditText(view, R.id.overview_newextendedbolus_insulin, R.id.overview_newextendedbolus_insulin_plus, R.id.overview_newextendedbolus_insulin_minus, 0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false);
+        editInsulin = new PlusMinusEditText(view, R.id.overview_newextendedbolus_insulin, R.id.overview_newextendedbolus_insulin_plus, R.id.overview_newextendedbolus_insulin_minus, 0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
 
         okButton.setOnClickListener(this);
         return view;
@@ -71,7 +83,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     Double insulinAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
                     confirmMessage += " " + insulinAfterConstraint + " U  ";
                     confirmMessage += getString(R.string.duration) + " " + durationInMinutes + "min ?";
-                    if (insulinAfterConstraint != insulin)
+                    if (insulinAfterConstraint - insulin != 0d)
                         confirmMessage += "\n" + getString(R.string.constraintapllied);
                     insulin = insulinAfterConstraint;
 
@@ -83,15 +95,20 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-                            PumpEnactResult result = pump.setExtendedBolus(finalInsulin, finalDurationInMinutes);
-                            if (!result.success) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
-                                builder.setMessage(result.comment);
-                                builder.setPositiveButton(getContext().getString(R.string.ok), null);
-                                builder.show();
-                            }
+                            final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    PumpEnactResult result = pump.setExtendedBolus(finalInsulin, finalDurationInMinutes);
+                                    if (!result.success) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                                        builder.setMessage(result.comment);
+                                        builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                                        builder.show();
+                                    }
+                                }
+                            });
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);
@@ -103,4 +120,5 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                 }
         }
     }
+
 }

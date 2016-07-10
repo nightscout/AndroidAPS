@@ -456,11 +456,6 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public APSResult applyBasalConstraints(APSResult result) {
-        return result;
-    }
-
-    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         return absoluteRate;
     }

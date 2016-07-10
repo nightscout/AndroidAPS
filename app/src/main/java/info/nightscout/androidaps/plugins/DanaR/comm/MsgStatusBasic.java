@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 
+
 public class MsgStatusBasic extends DanaRMessage {
     private static Logger log = LoggerFactory.getLogger(MsgStatusBasic.class);
 

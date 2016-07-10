@@ -1,7 +1,9 @@
 package info.nightscout.androidaps.plugins.TempBasals;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.*;
@@ -24,14 +26,16 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
@@ -55,6 +59,8 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
     private List<TempBasal> tempBasals;
     private List<TempBasal> extendedBoluses;
+
+    private boolean useExtendedBoluses = false;
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
@@ -129,10 +135,10 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             // Update ended
             checkForExpiredExtended();
             checkForExpiredTemps();
-
         } catch (SQLException e) {
             log.debug(e.getMessage(), e);
             tempBasals = new ArrayList<TempBasal>();
+            extendedBoluses = new ArrayList<TempBasal>();
         }
     }
 
@@ -208,7 +214,13 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             IobTotal calc = t.iobCalc(now);
             total.plus(calc);
         }
-
+        if (useExtendedBoluses) {
+            for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
+                TempBasal t = extendedBoluses.get(pos);
+                IobTotal calc = t.iobCalc(now);
+                total.plus(calc);
+            }
+        }
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
     }
@@ -234,10 +246,10 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 
-        List<TempBasal> tempBasals;
+        List<TempBasal> tempBasalList;
 
-        RecyclerViewAdapter(List<TempBasal> tempBasals) {
-            this.tempBasals = tempBasals;
+        RecyclerViewAdapter(List<TempBasal> tempBasalList) {
+            this.tempBasalList = tempBasalList;
         }
 
         @Override
@@ -251,9 +263,9 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
             DateFormat enddf = DateFormat.getTimeInstance(DateFormat.SHORT);
-            TempBasal tempBasal = tempBasals.get(position);
+            TempBasal tempBasal = tempBasalList.get(position);
             if (tempBasal.timeEnd != null) {
-                holder.date.setText(df.format(tempBasal.timeStart) + " - " + enddf.format(tempBasals.get(position).timeEnd));
+                holder.date.setText(df.format(tempBasal.timeStart) + " - " + enddf.format(tempBasalList.get(position).timeEnd));
             } else {
                 holder.date.setText(df.format(tempBasal.timeStart));
             }
@@ -270,6 +282,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             holder.iob.setText(formatNumber2decimalplaces.format(iob.basaliob) + " U");
             holder.netInsulin.setText(formatNumber2decimalplaces.format(iob.netInsulin) + " U");
             holder.netRatio.setText(formatNumber2decimalplaces.format(iob.netRatio) + " U/h");
+            holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
             if (tempBasal.isInProgress())
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
             else if (tempBasal.timeEnd == null)
@@ -282,7 +295,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
         @Override
         public int getItemCount() {
-            return tempBasals.size();
+            return tempBasalList.size();
         }
 
         @Override
@@ -300,6 +313,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             TextView netRatio;
             TextView netInsulin;
             TextView iob;
+            TextView extendedFlag;
             LinearLayout dateLinearLayout;
 
             TempBasalsViewHolder(View itemView) {
@@ -313,6 +327,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
                 netRatio = (TextView) itemView.findViewById(R.id.tempbasals_netratio);
                 netInsulin = (TextView) itemView.findViewById(R.id.tempbasals_netinsulin);
                 iob = (TextView) itemView.findViewById(R.id.tempbasals_iob);
+                extendedFlag = (TextView) itemView.findViewById(R.id.tempbasals_extendedflag);
                 dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.tempbasals_datelinearlayout);
             }
         }
@@ -320,6 +335,8 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
     public TempBasalsFragment() {
         super();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
         registerBus();
         initializeData();
         updateGUI();
@@ -345,7 +362,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tempBasals);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(getMergedList());
         recyclerView.setAdapter(adapter);
 
         tempBasalTotalView = (TextView) view.findViewById(R.id.tempbasals_totaltempiob);
@@ -362,8 +379,33 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         MainApp.bus().register(this);
     }
 
+    List<TempBasal> getMergedList() {
+        if (useExtendedBoluses) {
+            List<TempBasal> merged = new ArrayList<TempBasal>();
+            merged.addAll(tempBasals);
+            merged.addAll(extendedBoluses);
+
+            class CustomComparator implements Comparator<TempBasal> {
+                public int compare(TempBasal object1, TempBasal object2) {
+                    return (int) (object2.timeIndex - object1.timeIndex);
+                }
+            }
+            Collections.sort(merged, new CustomComparator());
+            return merged;
+        } else {
+            return tempBasals;
+        }
+    }
+
+
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
+        initializeData();
+    }
+
+    public void onStatusEvent(final EventPreferenceChange s) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
         initializeData();
     }
 
@@ -373,7 +415,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(tempBasals), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(getMergedList()), false);
                     if (lastCalculation != null) {
                         String totalText = formatNumber2decimalplaces.format(lastCalculation.basaliob) + "U";
                         tempBasalTotalView.setText(totalText);

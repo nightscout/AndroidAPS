@@ -15,8 +15,6 @@ public interface ConstraintsInterface {
 
     boolean isAMAModeEnabled();
 
-    APSResult applyBasalConstraints(APSResult request);
-
     Double applyBasalConstraints(Double absoluteRate);
 
     Integer applyBasalConstraints(Integer percentRate);

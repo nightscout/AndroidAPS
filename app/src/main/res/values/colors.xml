@@ -20,4 +20,6 @@
     <color name="colorAffectingIOB">#830400</color>
     <color name="colorNotEnded">#190084</color>
 
+    <color name="colorPumpLabel">#FF478EFF</color>
+
 </resources>

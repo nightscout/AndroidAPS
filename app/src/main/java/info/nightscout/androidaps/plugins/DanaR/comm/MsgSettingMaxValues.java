@@ -20,12 +20,12 @@ public class MsgSettingMaxValues extends DanaRMessage {
     public void handleMessage(byte[] bytes) {
         DanaRFragment.getDanaRPump().maxBolus = intFromBuff(bytes, 0, 2) / 100d;
         DanaRFragment.getDanaRPump().maxBasal = intFromBuff(bytes, 2, 2) / 100d;
-        DanaRFragment.getDanaRPump().dailyMax = intFromBuff(bytes, 4, 2) / 100d;
+        DanaRFragment.getDanaRPump().maxDailyTotalUnits = intFromBuff(bytes, 4, 2) / 100;
 
         if (Config.logDanaMessageDetail) {
             log.debug("Max bolus: " + DanaRFragment.getDanaRPump().maxBolus);
             log.debug("Max basal: " + DanaRFragment.getDanaRPump().maxBasal);
-            log.debug("Max daily max: " + DanaRFragment.getDanaRPump().dailyMax);
+            log.debug("Total daily max units: " + DanaRFragment.getDanaRPump().maxDailyTotalUnits);
         }
     }
 

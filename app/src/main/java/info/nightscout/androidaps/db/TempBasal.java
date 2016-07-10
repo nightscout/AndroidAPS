@@ -70,10 +70,14 @@ public class TempBasal {
             Double basalRate = profile.getBasal(profile.secondsFromMidnight(time));
             Double tempBolusSize = 0.05;
 
-            if (this.isAbsolute) {
-                netBasalRate = this.absolute - basalRate;
+            if (isExtended) {
+                netBasalRate = this.absolute;
             } else {
-                netBasalRate = (this.percent - 100) / 100d * basalRate;
+                if (this.isAbsolute) {
+                    netBasalRate = this.absolute - basalRate;
+                } else {
+                    netBasalRate = (this.percent - 100) / 100d * basalRate;
+                }
             }
 
             result.netRatio = netBasalRate;

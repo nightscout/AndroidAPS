@@ -263,7 +263,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
         // check rate for constrais
         APSResult resultAfterConstraints = result.clone();
-        constraintsInterface.applyBasalConstraints(resultAfterConstraints);
+        resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
 
         if (lastRun == null) lastRun = new LastRun();
         lastRun.request = result;
@@ -332,7 +332,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                         requestView.setText(lastRun.request != null ? lastRun.request.toString() : "");
                         constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toString() : "");
                         setByPumpView.setText(lastRun.setByPump != null ? lastRun.setByPump.toString() : "");
-                        sourceView.setText(lastRun.source != null ? lastRun.source.toString() : "");
+                        sourceView.setText(lastRun.source != null ? lastRun.source : "");
                         lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
                         lastEnactView.setText(lastRun.lastEnact != null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");
                     }

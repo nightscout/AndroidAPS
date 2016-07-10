@@ -26,7 +26,6 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
@@ -36,7 +35,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     Double defaultBasalValue = 0.2d;
 
     Integer batteryPercent = 50;
-    Integer resevoirInUnits = 50;
+    Integer reservoirInUnits = 50;
 
     TextView basaBasalRateView;
     TextView tempBasalView;
@@ -129,16 +128,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     @Override
     public boolean isExtendedBoluslInProgress() {
         return getExtendedBolus() != null;
-    }
-
-    @Override
-    public Integer getBatteryPercent() {
-        return batteryPercent;
-    }
-
-    @Override
-    public Integer getReservoirValue() {
-        return resevoirInUnits;
     }
 
     @Override
@@ -361,7 +350,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
             pump.put("battery", battery);
             pump.put("status", status);
-            pump.put("reservoir", getReservoirValue());
+            pump.put("reservoir", reservoirInUnits);
             pump.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
         }
@@ -394,7 +383,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
                     basaBasalRateView.setText(getBaseBasalRate() + "U");
                     if (isTempBasalInProgress()) {
-                        //tempBasalView.setText(tempBasal.toString());
                         tempBasalView.setText(getTempBasal().toString());
                     } else {
                         tempBasalView.setText("");
@@ -404,8 +392,8 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
                     } else {
                         extendedBolusView.setText("");
                     }
-                    batteryView.setText(getBatteryPercent() + "%");
-                    reservoirView.setText(getReservoirValue() + "U");
+                    batteryView.setText(batteryPercent + "%");
+                    reservoirView.setText(reservoirInUnits + "U");
                 }
             });
     }

@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 
 public class MsgSetExtendedBolusStart extends DanaRMessage {
-    private static Logger log = LoggerFactory.getLogger(MsgBolusStart.class);
+    private static Logger log = LoggerFactory.getLogger(MsgSetExtendedBolusStart.class);
 
     public MsgSetExtendedBolusStart() {
         SetCommand(0x0407);
@@ -17,7 +17,7 @@ public class MsgSetExtendedBolusStart extends DanaRMessage {
         AddParamInt((int) (amount * 100));
         AddParamByte(halfhours);
         if (Config.logDanaMessageDetail)
-            log.debug("Set extended bolus start: " + amount + " halfhours " + halfhours);
+            log.debug("Set extended bolus start: " + (((int) (amount * 100)) / 100d) + "U halfhours: " + (int) halfhours);
     }
 
     @Override

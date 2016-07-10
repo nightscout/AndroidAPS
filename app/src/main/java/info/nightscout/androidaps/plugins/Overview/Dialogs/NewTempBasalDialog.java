@@ -2,6 +2,8 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -43,6 +45,15 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
 
     PlusMinusEditText basalPercentPM;
     PlusMinusEditText basalAbsolutePM;
+
+    Handler mHandler;
+    public static HandlerThread mHandlerThread;
+
+    public NewTempBasalDialog() {
+        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+        mHandlerThread.start();
+        this.mHandler = new Handler(mHandlerThread.getLooper());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,20 +130,26 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
-                            PumpEnactResult result;
-                            if (setAsPercent) {
-                                result = pump.setTempBasalPercent(finalBasalPercent, finalDurationInMinutes);
-                            } else {
-                                result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes);
-                            }
-                            if (!result.success) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
-                                builder.setMessage(result.comment);
-                                builder.setPositiveButton(getContext().getString(R.string.ok), null);
-                                builder.show();
-                            }
+                            final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    PumpEnactResult result;
+                                    if (setAsPercent) {
+                                        result = pump.setTempBasalPercent(finalBasalPercent, finalDurationInMinutes);
+                                    } else {
+                                        result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes);
+                                    }
+                                    if (!result.success) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                                        builder.setMessage(result.comment);
+                                        builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                                        builder.show();
+                                    }
+                                }
+                            });
+
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);

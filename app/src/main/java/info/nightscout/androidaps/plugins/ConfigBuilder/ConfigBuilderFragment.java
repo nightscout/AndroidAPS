@@ -166,7 +166,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS));
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
-        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.CONSTRAINTS));
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class));
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
         generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.GENERAL));
@@ -235,16 +235,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public Integer getBatteryPercent() {
-        return activePump.getBatteryPercent();
-    }
-
-    @Override
-    public Integer getReservoirValue() {
-        return activePump.getReservoirValue();
-    }
-
-    @Override
     public void setNewBasalProfile(NSProfile profile) {
         activePump.setNewBasalProfile(profile);
     }
@@ -309,7 +299,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         Double rateAfterConstraints = applyBasalConstraints(absoluteRate);
         PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
-        if (result.enacted) {
+        if (result.enacted && result.success) {
             uploadTempBasalStartAbsolute(result.absolute, result.duration);
             MainApp.bus().post(new EventTempBasalChange());
         }
@@ -327,7 +317,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         Integer percentAfterConstraints = applyBasalConstraints(percent);
         PumpEnactResult result = activePump.setTempBasalPercent(percentAfterConstraints, durationInMinutes);
-        if (result.enacted) {
+        if (result.enacted && result.success) {
             uploadTempBasalStartPercent(result.percent, result.duration);
             MainApp.bus().post(new EventTempBasalChange());
         }
@@ -338,7 +328,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         Double rateAfterConstraints = applyBolusConstraints(insulin);
         PumpEnactResult result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
-        if (result.enacted) {
+        if (result.enacted && result.success) {
             uploadExtendedBolus(result.bolusDelivered, result.duration);
             MainApp.bus().post(new EventTreatmentChange());
         }
@@ -348,7 +338,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public PumpEnactResult cancelTempBasal() {
         PumpEnactResult result = activePump.cancelTempBasal();
-        if (result.enacted) {
+        if (result.enacted && result.success) {
             uploadTempBasalEnd();
             MainApp.bus().post(new EventTempBasalChange());
         }
@@ -366,7 +356,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * @param request
      * @return
      */
-
+    // TODO: logging all actions in configbuilder
     public PumpEnactResult applyAPSRequest(APSResult request) {
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result = null;
@@ -386,9 +376,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 result.comment = "Basal set correctly";
                 result.success = true;
             }
-        } else if (isTempBasalInProgress() && request.rate == getTempBasalAbsoluteRate()) {
+        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.05) {
             result = new PumpEnactResult();
-            result.absolute = request.rate;
+            result.absolute = getTempBasalAbsoluteRate();
             result.duration = activePump.getTempBasal().getPlannedRemainingMinutes();
             result.enacted = false;
             result.comment = "Temp basal set correctly";
@@ -780,24 +770,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public APSResult applyBasalConstraints(APSResult result) {
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
-        for (PluginBase p : constraintsPlugins) {
-            ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
-            constrain.applyBasalConstraints(result);
-        }
-        return result;
-    }
-
-    @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         Double rateAfterConstrain = absoluteRate;
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(rateAfterConstrain), rateAfterConstrain);
+            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(absoluteRate), rateAfterConstrain);
         }
         return rateAfterConstrain;
     }
@@ -809,7 +788,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(rateAfterConstrain), rateAfterConstrain);
+            rateAfterConstrain = Math.min(constrain.applyBasalConstraints(percentRate), rateAfterConstrain);
         }
         return rateAfterConstrain;
     }
@@ -821,7 +800,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulinAfterConstrain), insulinAfterConstrain);
+            insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulin), insulinAfterConstrain);
         }
         return insulinAfterConstrain;
     }
@@ -833,7 +812,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbsAfterConstrain), carbsAfterConstrain);
+            carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbs), carbsAfterConstrain);
         }
         return carbsAfterConstrain;
     }
@@ -845,7 +824,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled()) continue;
-            maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIobAfterConstrain), maxIobAfterConstrain);
+            maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIob), maxIobAfterConstrain);
         }
         return maxIobAfterConstrain;
     }

@@ -43,6 +43,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.plugins.DanaR.comm.*;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
+import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.ToastUtils;
 
@@ -85,7 +86,7 @@ public class DanaConnection {
         mHandlerThread = new HandlerThread(DanaConnection.class.getSimpleName());
         mHandlerThread.start();
 
-        this.mHandler = new Handler(mHandlerThread.getLooper());
+        mHandler = new Handler(mHandlerThread.getLooper());
 
         getSelectedPump();
         this.mBus = bus;
@@ -167,6 +168,10 @@ public class DanaConnection {
                 timeToConnectTimeSoFar = (System.currentTimeMillis() - startTime) / 1000;
                 mBus.post(new EventDanaRConnectionStatus(true, false, connectionAttemptCount));
                 connectBT();
+                if (isConnected()) {
+                    mBus.post(new EventDanaRConnectionStatus(false, true, 0));
+                    break;
+                }
                 if (Config.logDanaBTComm)
                     log.debug("connectIfNotConnected waiting " + timeToConnectTimeSoFar + "s attempts:" + connectionAttemptCount + " caller:" + callerName);
                 connectionAttemptCount++;
@@ -180,6 +185,7 @@ public class DanaConnection {
             }
             if (Config.logDanaBTComm)
                 log.debug("connectIfNotConnected took " + timeToConnectTimeSoFar + "s attempts:" + connectionAttemptCount);
+            pingStatus();
         } else {
             mBus.post(new EventDanaRConnectionStatus(false, true, 0));
         }
@@ -222,11 +228,6 @@ public class DanaConnection {
                 mRfcommSocket = null;
             }
         }
-
-        if (isConnected()) {
-            mBus.post(new EventDanaRConnectionStatus(false, true, 0));
-            pingStatus();
-        }
     }
 
     public void scheduleDisconnection() {
@@ -243,11 +244,16 @@ public class DanaConnection {
         if (scheduledDisconnection != null)
             scheduledDisconnection.cancel(false);
         Runnable task = new DisconnectRunnable();
-        scheduledDisconnection = worker.schedule(task, 3, TimeUnit.SECONDS);
+        final int sec = 3;
+        scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
+        //if (Config.logDanaBTComm)
+        //    log.debug("Disconnection scheduled in " + sec + "secs");
     }
 
     public void disconnect(String from) {
         if (mRfcommSocket.isConnected()) {
+            if (Config.logDanaBTComm)
+                log.debug("Disconnecting " + from);
             try {
                 mInputStream.close();
             } catch (Exception e) {
@@ -263,8 +269,6 @@ public class DanaConnection {
             } catch (Exception e) {
                 log.debug(e.getMessage());
             }
-            if (Config.logDanaBTComm)
-                log.debug("Disconnecting " + from);
         } else {
             if (Config.logDanaBTComm)
                 log.debug("Already disconnected " + from);
@@ -283,10 +287,10 @@ public class DanaConnection {
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
 
 
+            mSerialEngine.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
+            mSerialEngine.sendMessage(exStatusMsg);
             mSerialEngine.sendMessage(statusMsg);
             mSerialEngine.sendMessage(statusBasicMsg);
-            mSerialEngine.sendMessage(tempStatusMsg);
-            mSerialEngine.sendMessage(exStatusMsg);
 
             if (danaRPump.isNewPump) {
                 mSerialEngine.sendMessage(new MsgSettingShippingInfo());
@@ -316,117 +320,47 @@ public class DanaConnection {
                 pingStatus();
                 return;
             }
-/* TODO
-            statusEvent.timeLastSync = statusEvent.time;
 
-            if (statusEvent.tempBasalInProgress) {
-                try {
-
-                    Dao<TempBasal, Long> daoTempBasals = MainApp.getDbHelper().getDaoTempBasals();
-
-                    TempBasal tempBasal = new TempBasal();
-                    tempBasal.duration = statusEvent.tempBasalTotalSec / 60;
-                    tempBasal.percent = statusEvent.tempBasalRatio;
-                    tempBasal.timeStart = statusEvent.tempBasalStart;
-                    tempBasal.timeEnd = null;
-                    tempBasal.baseRatio = (int) (statusEvent.currentBasal * 100);
-                    tempBasal.tempRatio = (int) (statusEvent.currentBasal * 100 * statusEvent.tempBasalRatio / 100d);
-                    tempBasal.isExtended = false;
-//                   log.debug("TempBasal in progress record "+tempBasal);
-                    daoTempBasals.createOrUpdate(tempBasal);
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
-            } else {
-                try {
-                    Dao<TempBasal, Long> daoTempBasals = MainApp.getDbHelper().getDaoTempBasals();
-                    TempBasal tempBasalLast = getTempBasalLast(daoTempBasals, false);
-                    if (tempBasalLast != null) {
-//                        log.debug("tempBasalLast " + tempBasalLast);
-                        if (tempBasalLast.timeEnd == null || tempBasalLast.timeEnd.getTime() > new Date().getTime()) {
-                            tempBasalLast.timeEnd = new Date();
-                            if (tempBasalLast.timeEnd.getTime() > tempBasalLast.getPlannedTimeEnd().getTime()) {
-                                tempBasalLast.timeEnd = tempBasalLast.getPlannedTimeEnd();
-                            }
-//                            log.debug("tempBasalLast updated to " + tempBasalLast);
-                            daoTempBasals.update(tempBasalLast);
-                        }
-                    }
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
+            Date now = new Date();
+            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime()) {
+                mSerialEngine.sendMessage(new MsgSettingShippingInfo());
+                mSerialEngine.sendMessage(new MsgSettingActiveProfile());
+                //0x3203
+                mSerialEngine.sendMessage(new MsgSettingBasal());
+                //0x3201
+                mSerialEngine.sendMessage(new MsgSettingMaxValues());
+                mSerialEngine.sendMessage(new MsgSettingGlucose());
+                mSerialEngine.sendMessage(new MsgSettingPumpTime());
+                mSerialEngine.sendMessage(new MsgSettingActiveProfile());
+                mSerialEngine.sendMessage(new MsgSettingProfileRatios());
+                danaRPump.lastSettingsRead = now;
             }
 
-            if (statusEvent.isExtendedInProgress) {
-                try {
-
-                    Dao<TempBasal, Long> daoTempBasals = MainApp.getDbHelper().getDaoTempBasals();
-
-                    TempBasal tempBasal = new TempBasal();
-                    tempBasal.duration = statusEvent.extendedBolusMinutes;
-                    tempBasal.percent = (int) ((statusEvent.extendedBolusAbsoluteRate + statusEvent.currentBasal) / statusEvent.currentBasal * 100);
-                    tempBasal.timeStart = statusEvent.extendedBolusStart;
-                    tempBasal.timeEnd = null;
-                    tempBasal.baseRatio = (int) (statusEvent.currentBasal * 100);
-                    tempBasal.tempRatio = (int) (statusEvent.extendedBolusAbsoluteRate * 100 + statusEvent.currentBasal * 100);
-                    tempBasal.isExtended = true;
-//                    log.debug("TempBasal Extended in progress record "+tempBasal);
-                    daoTempBasals.createOrUpdate(tempBasal);
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
-            } else {
-                try {
-                    Dao<TempBasal, Long> daoTempBasals = MainApp.getDbHelper().getDaoTempBasals();
-                    TempBasal tempBasalLast = getTempBasalLast(daoTempBasals, true);
-                    if (tempBasalLast != null) {
-                        log.debug("tempBasalLast Extended " + tempBasalLast);
-                        if (tempBasalLast.timeEnd == null || tempBasalLast.timeEnd.getTime() > new Date().getTime()) {
-                            tempBasalLast.timeEnd = new Date();
-                            if (tempBasalLast.timeEnd.getTime() > tempBasalLast.getPlannedTimeEnd().getTime()) {
-                                tempBasalLast.timeEnd = tempBasalLast.getPlannedTimeEnd();
-                            }
-//                            log.debug("tempBasalLast Extended updated to " + tempBasalLast);
-                            daoTempBasals.update(tempBasalLast);
-                        }
-                    }
-                } catch (SQLException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-
-            synchronized (this) {
-                this.notify();
-            }
-            mBus.post(statusEvent);
-*/
+            danaRPump.lastConnection = now;
+            mBus.post(new EventDanaRNewStatus());
         } catch (Exception e) {
             log.error("err", e);
         }
     }
 
     public void tempBasal(int percent, int durationInHours) {
-        MsgSetTempBasalStart msg = new MsgSetTempBasalStart(percent, durationInHours);
-        mSerialEngine.sendMessage(msg);
-        pingStatus();
+        mSerialEngine.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
+        mSerialEngine.sendMessage(new MsgStatusTempBasal());
     }
 
     public void tempBasalStop() {
-        MsgSetTempBasalStop msg = new MsgSetTempBasalStop();
-        mSerialEngine.sendMessage(msg);
-        pingStatus();
+        mSerialEngine.sendMessage(new MsgSetTempBasalStop());
+        mSerialEngine.sendMessage(new MsgStatusTempBasal());
     }
 
-    public void extendedBolus(double rate, int durationInHalfHours) {
-        MsgSetExtendedBolusStart msgStartExt = new MsgSetExtendedBolusStart(rate / 2 * durationInHalfHours, (byte) (durationInHalfHours & 0xFF));
-        mSerialEngine.sendMessage(msgStartExt);
-        pingStatus();
+    public void extendedBolus(double insulin, int durationInHalfHours) {
+        mSerialEngine.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
+        mSerialEngine.sendMessage(new MsgStatusBolusExtended());
     }
 
     public void extendedBolusStop() {
-        MsgSetExtendedBolusStop msg = new MsgSetExtendedBolusStop();
-        mSerialEngine.sendMessage(msg);
-        pingStatus();
+        mSerialEngine.sendMessage(new MsgSetExtendedBolusStop());
+        mSerialEngine.sendMessage(new MsgStatusBolusExtended());
     }
 
     public void stop() {
@@ -489,7 +423,6 @@ public class DanaConnection {
 
     public void updateBasalsInPump(final NSProfile profile) {
         double[] basal = buildDanaRProfileRecord(profile);
-        connectIfNotConnected("updateBasalsInPump");
         MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
         mSerialEngine.sendMessage(msgSet);
         MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
