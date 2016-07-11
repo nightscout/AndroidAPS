@@ -40,8 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_lastrun_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_gravity="center_horizontal" />
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/openapsma_lastrun"
@@ -62,15 +61,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_inputparameters_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_gravity="center_horizontal" />
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_glucosestatus_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:id="@+id/openapsma_glucosestatus"
@@ -84,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_currenttemp_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:id="@+id/openapsma_currenttemp"
@@ -98,7 +96,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_iobdata_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:id="@+id/openapsma_iobdata"
@@ -112,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_profile_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:id="@+id/openapsma_profile"
@@ -126,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_mealdata_label"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_gravity="center_horizontal" />
+                    android:layout_marginLeft="5dp" />
 
                 <TextView
                     android:id="@+id/openapsma_mealdata"
@@ -148,8 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_result_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_gravity="center_horizontal" />
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/openapsma_result"
@@ -172,8 +169,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/openapsma_request_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:layout_gravity="center_horizontal" />
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
                     android:id="@+id/openapsma_request"

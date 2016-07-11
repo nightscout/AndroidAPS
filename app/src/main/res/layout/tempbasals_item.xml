@@ -16,11 +16,22 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/tempbasals_datelinearlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
-            android:orientation="horizontal"
-            android:id="@+id/tempbasals_datelinearlayout">
+            android:orientation="horizontal">
+
+
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="{fa-clock-o}"
+                android:textColor="@color/cardItemLabel" />
 
             <TextView
                 android:id="@+id/tempbasals_date"
@@ -29,7 +40,7 @@
                 android:paddingLeft="10dp"
                 android:text="1.1.2000 18:00"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardObjectiveText" />
+                android:textColor="@color/cardItemLabel" />
 
             <TextView
                 android:id="@+id/tempbasals_absolute"
@@ -38,7 +49,7 @@
                 android:paddingLeft="10dp"
                 android:text="0.25 U"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardObjectiveText" />
+                android:textColor="@color/cardItemLabel" />
 
             <TextView
                 android:id="@+id/tempbasals_percent"
@@ -47,7 +58,7 @@
                 android:paddingLeft="10dp"
                 android:text="150%"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardObjectiveText" />
+                android:textColor="@color/cardItemLabel" />
 
             <TextView
                 android:id="@+id/tempbasals_duration"
@@ -56,17 +67,17 @@
                 android:paddingLeft="10dp"
                 android:text="30 min"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardObjectiveText" />
+                android:textColor="@color/cardItemLabel" />
 
             <TextView
+                android:id="@+id/tempbasals_extendedflag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="E"
-                android:id="@+id/tempbasals_extendedflag"
-                android:textColor="@color/colorSetExtendedButton"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:paddingRight="5dp" />
+                android:paddingRight="5dp"
+                android:text="E"
+                android:textColor="@color/colorSetExtendedButton" />
 
 
         </LinearLayout>
@@ -81,19 +92,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
+                android:paddingLeft="10dp"
                 android:paddingRight="5dp"
                 android:text="@string/tempbasals_realduration_label_string"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:paddingLeft="10dp" />
+
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/tempbasals_realduration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingRight="10dp"
                 android:text="10 min"
-                android:paddingRight="10dp" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tempbasals_netratio_label"
@@ -102,16 +114,16 @@
                 android:layout_gravity="top"
                 android:paddingRight="5dp"
                 android:text="@string/tempbasals_netratio_label_string"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/tempbasals_netratio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingRight="10dp"
                 android:text="0.05 U/h"
-                android:paddingRight="10dp" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tempbasals_netinsulin_label"
@@ -120,22 +132,23 @@
                 android:layout_gravity="top"
                 android:paddingRight="5dp"
                 android:text="@string/tempbasals_netinsulin_label_string"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/tempbasals_netinsulin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:paddingRight="10dp"
                 android:text="0.05 U"
-                android:paddingRight="10dp" />
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tempbasals_iob_label"
                 android:layout_width="wrap_content"
@@ -144,8 +157,7 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
                 android:text="@string/tempbasals_iob_label_string"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/tempbasals_iob"
@@ -153,7 +165,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="30dp"
-                android:text="0.12 U" />
+                android:text="0.12 U"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

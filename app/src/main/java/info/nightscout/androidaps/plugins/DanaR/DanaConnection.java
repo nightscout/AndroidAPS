@@ -178,7 +178,7 @@ public class DanaConnection {
 
                 if (timeToConnectTimeSoFar / 60 > 15 || connectionAttemptCount > 180) {
                     Intent alarmServiceIntent = new Intent(MainApp.instance().getApplicationContext(), AlertService.class);
-                    alarmServiceIntent.putExtra("alarmText", MainApp.sResources.getString(R.string.connectionerror)); //TODO: hardcoded string
+                    alarmServiceIntent.putExtra("alarmText", MainApp.sResources.getString(R.string.connectionerror));
                     MainApp.instance().getApplicationContext().startService(alarmServiceIntent);
                 }
                 waitMsec(1000);

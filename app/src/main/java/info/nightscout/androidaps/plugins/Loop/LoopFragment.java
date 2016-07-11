@@ -329,9 +329,9 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                 @Override
                 public void run() {
                     if (lastRun != null) {
-                        requestView.setText(lastRun.request != null ? lastRun.request.toString() : "");
-                        constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toString() : "");
-                        setByPumpView.setText(lastRun.setByPump != null ? lastRun.setByPump.toString() : "");
+                        requestView.setText(lastRun.request != null ? lastRun.request.toSpanned() : "");
+                        constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toSpanned() : "");
+                        setByPumpView.setText(lastRun.setByPump != null ? lastRun.setByPump.toSpanned() : "");
                         sourceView.setText(lastRun.source != null ? lastRun.source : "");
                         lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
                         lastEnactView.setText(lastRun.lastEnact != null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");

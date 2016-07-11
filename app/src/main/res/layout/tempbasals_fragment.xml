@@ -5,31 +5,31 @@
     tools:context="info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:paddingBottom="10dp"
             android:paddingTop="10dp">
 
             <TextView
+                android:id="@+id/tempbasals_iobtotal_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:text="@string/tempbasals_iobtotal_label_string"
-                android:id="@+id/tempbasals_iobtotal_label"
                 android:paddingLeft="10dp"
+                android:text="@string/tempbasals_iobtotal_label_string"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tempbasals_totaltempiob"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tempbasals_totaltempiob"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
         </LinearLayout>
 

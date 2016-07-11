@@ -61,10 +61,12 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ListView bgsourceListView;
     ListView pumpListView;
     ListView loopListView;
+    TextView loopLabel;
     ListView treatmentsListView;
     ListView tempsListView;
     ListView profileListView;
     ListView apsListView;
+    TextView apsLabel;
     ListView constraintsListView;
     ListView generalListView;
     TextView nsclientVerView;
@@ -94,6 +96,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public Integer nsClientVersionCode = 0;
 
     ArrayList<PluginBase> pluginList;
+
+    // TODO: sorting
 
     public ConfigBuilderFragment() {
         super();
@@ -126,10 +130,12 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         bgsourceListView = (ListView) view.findViewById(R.id.configbuilder_bgsourcelistview);
         pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
         loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
+        loopLabel = (TextView) view.findViewById(R.id.configbuilder_looplabel);
         treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
         tempsListView = (ListView) view.findViewById(R.id.configbuilder_tempslistview);
         profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
         apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
+        apsLabel = (TextView) view.findViewById(R.id.configbuilder_apslabel);
         constraintsListView = (ListView) view.findViewById(R.id.configbuilder_constraintslistview);
         generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
         nsclientVerView = (TextView) view.findViewById(R.id.configbuilder_nsclientversion);
@@ -144,7 +150,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     void setViews() {
-        // TODO: hide empty categories
         bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
@@ -154,6 +159,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.LOOP), PluginBase.LOOP);
         loopListView.setAdapter(loopDataAdapter);
         setListViewHeightBasedOnChildren(loopListView);
+        if (MainActivity.getSpecificPluginsList(PluginBase.LOOP).size() == 0) loopLabel.setVisibility(View.GONE);
         treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT), PluginBase.TREATMENT);
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
@@ -166,6 +172,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS), PluginBase.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
+        if (MainActivity.getSpecificPluginsList(PluginBase.APS).size() == 0) apsLabel.setVisibility(View.GONE);
         constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class), PluginBase.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
@@ -670,7 +677,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             for (int type = 1; type < PluginBase.LAST; type++) {
                 for (PluginBase p : pluginList) {
                     String settingEnabled = "ConfigBuilder_" + type + "_" + p.getName() + "_Enabled";
-                    String settingVisible = "ConfigBuilder_" + p.getName() + "_Visible";
+                    String settingVisible = "ConfigBuilder_" + type + "_" + p.getName() + "_Visible";
                     editor.putBoolean(settingEnabled, p.isEnabled(type));
                     editor.putBoolean(settingVisible, p.isVisibleInTabs(type));
                 }
@@ -687,7 +694,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         for (int type = 1; type < PluginBase.LAST; type++) {
             for (PluginBase p : pluginList) {
                 String settingEnabled = "ConfigBuilder_" + type + "_" + p.getName() + "_Enabled";
-                String settingVisible = "ConfigBuilder_" + p.getName() + "_Visible";
+                String settingVisible = "ConfigBuilder_" + type + "_" + p.getName() + "_Visible";
                 if (SP.contains(settingEnabled))
                     p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
                 if (SP.contains("ConfigBuilder" + p.getName() + "Visible"))

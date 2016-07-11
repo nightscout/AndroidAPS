@@ -7,6 +7,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 
 /**
@@ -57,7 +59,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         public Boolean lastLow = null;
         public Boolean lastLowProjected = null;
         public Double lastMinBg = null;
-        public String lastUnits = null;
         public DatabaseHelper.GlucoseStatus lastGlucoseStatus = null;
         public Date lastAPSRun = null;
         public APSResult lastAPSResult = null;
@@ -72,7 +73,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             dest.writeInt(lastLow ? 1 : 0);
             dest.writeInt(lastLowProjected ? 1 : 0);
             dest.writeDouble(lastMinBg);
-            dest.writeString(lastUnits);
             dest.writeParcelable(lastGlucoseStatus, 0);
             dest.writeLong(lastAPSRun.getTime());
             dest.writeParcelable(lastAPSResult, 0);
@@ -92,7 +92,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             lastLow = in.readInt() == 1;
             lastLowProjected = in.readInt() == 1;
             lastMinBg = in.readDouble();
-            lastUnits = in.readString();
             lastGlucoseStatus = in.readParcelable(DatabaseHelper.GlucoseStatus.class.getClassLoader());
             lastAPSRun = new Date(in.readLong());
             lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
@@ -251,10 +250,10 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             minBgDefault = "5";
         }
 
-        double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("lowsuspend_lowthreshold", minBgDefault)), profile.getUnits());
+        double minBgMgdl = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("lowsuspend_lowthreshold", minBgDefault)), profile.getUnits());
 
-        boolean lowProjected = (glucoseStatus.glucose + 6.0 * glucoseStatus.avgdelta) < minBg;
-        boolean low = glucoseStatus.glucose < minBg;
+        boolean lowProjected = (glucoseStatus.glucose + 6.0 * glucoseStatus.avgdelta) < minBgMgdl;
+        boolean low = glucoseStatus.glucose < minBgMgdl;
 
         APSResult request = new APSResult();
         Double baseBasalRate = pump.getBaseBasalRate();
@@ -293,11 +292,10 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         }
 
         lastRun = new LastRun();
-        lastRun.lastMinBg = minBg;
+        lastRun.lastMinBg = minBgMgdl;
         lastRun.lastLow = low;
         lastRun.lastLowProjected = lowProjected;
         lastRun.lastGlucoseStatus = glucoseStatus;
-        lastRun.lastUnits = profile.getUnits();
         lastRun.lastAPSResult = request;
         lastRun.lastAPSRun = now;
         updateGUI();
@@ -310,11 +308,10 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
                 @Override
                 public void run() {
                     if (lastRun != null) {
-                        DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
-                        glucoseStatusView.setText(lastRun.lastGlucoseStatus.toString());
-                        minBgView.setText(formatNumber1decimalplaces.format(lastRun.lastMinBg) + " " + lastRun.lastUnits);
-                        resultView.setText(getString(R.string.lowsuspend_low) + " " + lastRun.lastLow + "\n" + getString(R.string.lowsuspend_lowprojected) + " " + lastRun.lastLowProjected);
-                        requestView.setText(lastRun.lastAPSResult.toString());
+                        glucoseStatusView.setText(lastRun.lastGlucoseStatus.toSpanned());
+                        minBgView.setText(DecimalFormatter.to1Decimal(lastRun.lastMinBg) + " mgdl");
+                        resultView.setText(Html.fromHtml("<b>" + getString(R.string.lowsuspend_low) + "</b>: " + lastRun.lastLow + "<br><b>" + getString(R.string.lowsuspend_lowprojected) + "</b>: " + lastRun.lastLowProjected));
+                        requestView.setText(lastRun.lastAPSResult.toSpanned());
                         lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
                     }
                 }

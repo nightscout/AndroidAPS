@@ -417,7 +417,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
                 public void run() {
                     recyclerView.swapAdapter(new RecyclerViewAdapter(getMergedList()), false);
                     if (lastCalculation != null) {
-                        String totalText = formatNumber2decimalplaces.format(lastCalculation.basaliob) + "U";
+                        String totalText = formatNumber2decimalplaces.format(lastCalculation.basaliob) + " U";
                         tempBasalTotalView.setText(totalText);
                     }
                 }

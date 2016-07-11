@@ -21,5 +21,6 @@
     <color name="colorNotEnded">#190084</color>
 
     <color name="colorPumpLabel">#FF478EFF</color>
+    <color name="cardItemLabel">#779ECB</color>
 
 </resources>

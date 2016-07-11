@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,6 +36,7 @@ import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.JSONFormatter;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 
@@ -304,13 +306,13 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
                 @Override
                 public void run() {
                     if (lastRun != null) {
-                        glucoseStatusView.setText(lastRun.lastDetermineBasalAdapterJS.getGlucoseStatusParam());
-                        currentTempView.setText(lastRun.lastDetermineBasalAdapterJS.getCurrentTempParam());
-                        iobDataView.setText(lastRun.lastDetermineBasalAdapterJS.getIobDataParam());
-                        profileView.setText(lastRun.lastDetermineBasalAdapterJS.getProfileParam());
-                        mealDataView.setText(lastRun.lastDetermineBasalAdapterJS.getMealDataParam());
-                        resultView.setText(lastRun.lastAPSResult.json.toString());
-                        requestView.setText(lastRun.lastAPSResult.toString());
+                        glucoseStatusView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getGlucoseStatusParam()));
+                        currentTempView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getCurrentTempParam()));
+                        iobDataView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getIobDataParam()));
+                        profileView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getProfileParam()));
+                        mealDataView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getMealDataParam()));
+                        resultView.setText(JSONFormatter.format(lastRun.lastAPSResult.json));
+                        requestView.setText(lastRun.lastAPSResult.toSpanned());
                         lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
                     }
                 }

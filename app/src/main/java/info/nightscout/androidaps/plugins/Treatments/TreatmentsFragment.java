@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
@@ -215,6 +216,10 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             Iob iob = treatments.get(position).iobCalc(new Date(), profile.getDia());
             holder.iob.setText(formatNumber2decimalplaces.format(iob.iobContrib) + " U");
             holder.activity.setText(formatNumber3decimalplaces.format(iob.activityContrib) + " U");
+            if (iob.iobContrib != 0)
+                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorAffectingIOB));
+            else
+                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.cardColorBackground));
         }
 
         @Override
@@ -234,6 +239,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             TextView carbs;
             TextView iob;
             TextView activity;
+            LinearLayout dateLinearLayout;
 
             TreatmentsViewHolder(View itemView) {
                 super(itemView);
@@ -243,6 +249,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 carbs = (TextView) itemView.findViewById(R.id.treatments_carbs);
                 iob = (TextView) itemView.findViewById(R.id.treatments_iob);
                 activity = (TextView) itemView.findViewById(R.id.treatments_activity);
+                dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.treatments_datelinearlayout);
             }
         }
     }
@@ -333,9 +340,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 public void run() {
                     recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
                     if (lastCalculation != null)
-                        iobTotal.setText(formatNumber2decimalplaces.format(lastCalculation.iob));
+                        iobTotal.setText(formatNumber2decimalplaces.format(lastCalculation.iob) + " U");
                     if (lastCalculation != null)
-                        activityTotal.setText(formatNumber3decimalplaces.format(lastCalculation.activity));
+                        activityTotal.setText(formatNumber3decimalplaces.format(lastCalculation.activity) + " U");
                 }
             });
     }

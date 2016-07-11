@@ -71,14 +71,14 @@
     <string name="lowsuspend_lowmessage">LOW: Temp basal 0%</string>
     <string name="lowsuspend_lowprojectedmessage">LOW PROJECTED: Temp basal 0%</string>
     <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
-    <string name="lowsuspend_low">Low Suspend:</string>
-    <string name="lowsuspend_lowprojected">Low projected:</string>
-    <string name="rate">Rate:</string>
-    <string name="duration">Duration:</string>
-    <string name="reason">Reason:</string>
-    <string name="glucose">Glucose:</string>
-    <string name="delta">Delta:</string>
-    <string name="avgdelta">Avg. delta:</string>
+    <string name="lowsuspend_low">Low Suspend</string>
+    <string name="lowsuspend_lowprojected">Low projected</string>
+    <string name="rate">Rate</string>
+    <string name="duration">Duration</string>
+    <string name="reason">Reason</string>
+    <string name="glucose">Glucose</string>
+    <string name="delta">Delta</string>
+    <string name="avgdelta">Avg. delta</string>
     <string name="minago">min ago</string>
 
     <string name="configbuilder">Config Builder</string>
@@ -236,5 +236,11 @@
     <string name="danar_valuenotsetproperly">Value not set properly</string>
     <string name="reloadprofile">Reload profile</string>
     <string name="danar_viewprofile">View profile</string>
+    <string name="tempcancel">Temp cancel</string>
+    <string name="enacted">Enacted</string>
+    <string name="comment">Comment</string>
+    <string name="success">Success</string>
+    <string name="percent">Percent</string>
+    <string name="absolute">Absolute</string>
 
 </resources>

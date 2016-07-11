@@ -63,7 +63,7 @@
     <string name="cs_lang">Czech</string>
     <string name="days">дни</string>
     <string name="delta">Изменение:</string>
-    <string name="duration">Продължителност:</string>
+    <string name="duration">Продължителност</string>
     <string name="en_lang">English</string>
     <string name="entertreatmentquestion">Въведи ново treatment:</string>
     <string name="glucose">КЗ:</string>
@@ -76,7 +76,7 @@
     <string name="lowsuspend">Low Suspend</string>
     <string name="lowsuspend_low_title">Граница за ниска КЗ</string>
     <string name="manualenacts">Manual enacts</string>
-    <string name="lowsuspend_lowprojected">Low projected:</string>
+    <string name="lowsuspend_lowprojected">Low projected</string>
     <string name="maxbasal_summary">Макс. ед./час на временен базал може да бъде до:</string>
     <string name="maxbasal_title">Макс. базал</string>
     <string name="maxbasaliob_summary">Макс. стойност на не-болус IOB зададена от OpenAPS</string>
@@ -131,8 +131,8 @@
     <string name="overview_bolus_label">Болус</string>
     <string name="profileviewer">NS профил</string>
     <string name="pumpstatusavailableinns">Статус на помпа в NS</string>
-    <string name="rate">Стойност:</string>
-    <string name="reason">Основание:</string>
+    <string name="rate">Стойност</string>
+    <string name="reason">Основание</string>
     <string name="refreshfromnightscout">Искате ли да обновите treatments от Nightscout</string>
     <string name="safety">Безопасност</string>
     <string name="safety_useextended_summary">Използвай удължен болус за високите стойности (над 200%)</string>
@@ -185,7 +185,7 @@
     <string name="lowsuspend_lowprojectedmessage">Прогнозирана ниска КЗ: Временен базал0%</string>
     <string name="lowsuspend_lowmessage">Опасно ниска КЗ: Временен базал 0%</string>
     <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
-    <string name="lowsuspend_low">Low Suspend:</string>
+    <string name="lowsuspend_low">Low Suspend</string>
     <string name="careportal_newnstreatment_eventtype">Тип събитие</string>
     <string name="careportal_newnstreatment_glucosetype">КЗ тип</string>
     <string name="title_activity_main">AndroidAPS</string>

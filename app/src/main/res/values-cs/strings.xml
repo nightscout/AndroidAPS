@@ -62,11 +62,11 @@
     <string name="constraints_violation">Mimo povolený rozsah</string>
     <string name="cs_lang">Čeština</string>
     <string name="days">dnů</string>
-    <string name="delta">Rozdíl:</string>
+    <string name="delta">Rozdíl</string>
     <string name="duration">Trvání</string>
     <string name="en_lang">English</string>
     <string name="entertreatmentquestion">Zadej nové ošetření</string>
-    <string name="glucose">Glykémie:</string>
+    <string name="glucose">Glykémie</string>
     <string name="loop">Smyčka</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
@@ -75,7 +75,7 @@
     <string name="lowsuspend">Low Suspend</string>
     <string name="lowsuspend_low_title">Hodnota nízké glykémie</string>
     <string name="manualenacts">Ručně spuštěno</string>
-    <string name="lowsuspend_lowprojected">Předpokládaná nízká glykémie:</string>
+    <string name="lowsuspend_lowprojected">Předpokládaná nízká glykémie</string>
     <string name="minago">min zpět</string>
     <string name="minimalduration">Minimální trvání</string>
     <string name="nav_backup">Záloha</string>
@@ -126,8 +126,8 @@
     <string name="overview_bolus_label">Bolus</string>
     <string name="profileviewer">NS profil</string>
     <string name="pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
-    <string name="rate">Hodnota:</string>
-    <string name="reason">Zdůvodnění:</string>
+    <string name="rate">Hodnota</string>
+    <string name="reason">Zdůvodnění</string>
     <string name="refreshfromnightscout">Opravdu aktualizovat ošetření z NS</string>
     <string name="safety">Bezpečnost</string>
     <string name="danar_useextended_title">Použít kombo bolusy pro >200%</string>
@@ -178,7 +178,7 @@
     <string name="lowsuspend_lowprojectedmessage">Předpokládaná nízká glykémie: Dočasný bazál 0%</string>
     <string name="lowsuspend_lowmessage">Nízká glykémie: Dočasný bazál 0%</string>
     <string name="lowsuspend_cancelmessage">Low Suspend: Zrušení dočasného bazálu</string>
-    <string name="lowsuspend_low">Low Suspend:</string>
+    <string name="lowsuspend_low">Low Suspend</string>
     <string name="careportal_newnstreatment_eventtype">Typ události</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="openapsma">OpenAPS MA</string>

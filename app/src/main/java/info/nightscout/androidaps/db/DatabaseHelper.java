@@ -12,6 +12,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.Spanned;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -31,6 +33,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -213,13 +216,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         @Override
         public String toString() {
-            Context context = MainApp.instance().getApplicationContext();
-            DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
-            DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+            return MainApp.sResources.getString(R.string.glucose) + " " +  DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
+                    MainApp.sResources.getString(R.string.delta) + " " + DecimalFormatter.to0Decimal(delta) + " mg/dl\n" +
+                    MainApp.sResources.getString(R.string.avgdelta) + " " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl";
+        }
 
-            return context.getString(R.string.glucose) + " " +  formatNumber0decimalplaces.format(glucose) + "\n" +
-                    context.getString(R.string.delta) + " " + formatNumber0decimalplaces.format(delta) + "\n" +
-                    context.getString(R.string.avgdelta) + " " + formatNumber2decimalplaces.format(avgdelta);
+        public Spanned toSpanned() {
+            return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.glucose) + "</b>: " +  DecimalFormatter.to0Decimal(glucose) + " mg/dl<br>" +
+                    "<b>" + MainApp.sResources.getString(R.string.delta) + "</b>: " + DecimalFormatter.to0Decimal(delta) + " mg/dl<br>" +
+                    "<b>" + MainApp.sResources.getString(R.string.avgdelta) + "</b>: " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl");
         }
 
         @Override

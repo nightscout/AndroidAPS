@@ -2,11 +2,14 @@ package info.nightscout.androidaps.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Html;
+import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.Round;
 
@@ -30,20 +33,51 @@ public class PumpEnactResult extends Object implements Parcelable {
     }
 
     public String toString() {
-        String ret = "Success: " + success;
+        String ret = MainApp.sResources.getString(R.string.success) + ": " + success;
         if (enacted) {
             if (isTempCancel) {
-                ret += "\nEnacted: " + enacted + "\nComment: " + comment + "\n" +
-                        "Temp cancel";
+                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment + "\n" +
+                        MainApp.sResources.getString(R.string.tempcancel);
             } else if (isPercent) {
-                ret += "\nEnacted: " + enacted + "\nComment: " + comment + "\nDuration: " + duration + " min\nPercent: " + percent + "%";
+                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
+                ret += "\n" + MainApp.sResources.getString(R.string.duration) + ": " + duration + " min";
+                ret += "\n" + MainApp.sResources.getString(R.string.percent) + ": " + percent + "%";
             } else {
-                ret += "\nEnacted: " + enacted + "\nComment: " + comment + "\nDuration: " + duration + " min\nAbsolute: " + absolute + " U/h";
+                ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
+                ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
+                ret += "\n" + MainApp.sResources.getString(R.string.duration) + ": " + duration + " min";
+                ret += "\n" + MainApp.sResources.getString(R.string.absolute) + ": " + absolute + " U/h";
             }
         } else {
-            ret += "\nComment: " + comment;
+            ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
         }
         return ret;
+    }
+
+    public Spanned toSpanned() {
+        String ret = "<b>" + MainApp.sResources.getString(R.string.success) + "</b>: " + success;
+        if (enacted) {
+            if (isTempCancel) {
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment +
+                        "<br>" + MainApp.sResources.getString(R.string.tempcancel);
+            } else if (isPercent) {
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.percent) + "</b>: " + percent + "%";
+            } else {
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.absolute) + "</b>: " + absolute + " U/h";
+            }
+        } else {
+            ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
+        }
+        return Html.fromHtml(ret);
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -88,11 +89,17 @@ public class OverviewFragment extends Fragment implements PluginBase {
     Handler loopHandler = new Handler();
     Runnable refreshLoop = null;
 
+    Handler mHandler;
+    public static HandlerThread mHandlerThread;
+
     public Double bgTargetLow = 80d;
     public Double bgTargetHigh = 180d;
 
     public OverviewFragment() {
         super();
+        mHandlerThread = new HandlerThread(OverviewFragment.class.getSimpleName());
+        mHandlerThread.start();
+        mHandler = new Handler(mHandlerThread.getLooper());
         registerBus();
     }
 
@@ -203,10 +210,15 @@ public class OverviewFragment extends Fragment implements PluginBase {
         cancelTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
                 if (pump.isTempBasalInProgress()) {
-                    pump.cancelTempBasal();
-                    MainApp.bus().post(new EventTempBasalChange());
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            pump.cancelTempBasal();
+                            MainApp.bus().post(new EventTempBasalChange());
+                        }
+                    });
                 }
             }
         });
@@ -240,19 +252,24 @@ public class OverviewFragment extends Fragment implements PluginBase {
                     builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
                     builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
-                            if (applyResult.enacted) {
-                                finalLastRun.setByPump = applyResult;
-                                finalLastRun.lastEnact = new Date();
-                                finalLastRun.lastOpenModeAccept = new Date();
-                                MainApp.getConfigBuilder().uploadDeviceStatus();
-                                ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
-                                if (objectivesFragment != null) {
-                                    objectivesFragment.manualEnacts++;
-                                    objectivesFragment.saveProgress();
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
+                                    if (applyResult.enacted) {
+                                        finalLastRun.setByPump = applyResult;
+                                        finalLastRun.lastEnact = new Date();
+                                        finalLastRun.lastOpenModeAccept = new Date();
+                                        MainApp.getConfigBuilder().uploadDeviceStatus();
+                                        ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
+                                        if (objectivesFragment != null) {
+                                            objectivesFragment.manualEnacts++;
+                                            objectivesFragment.saveProgress();
+                                        }
+                                    }
+                                    updateGUI();
                                 }
-                            }
-                            updateGUI();
+                            });
                         }
                     });
                     builder.setNegativeButton(getContext().getString(R.string.cancel), null);
