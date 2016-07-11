@@ -259,9 +259,9 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         double maxIob = SafeParse.stringToDouble(SP.getString("openapsma_max_iob", "1.5"));
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
         double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_min_bg", minBgDefault)), units);
-        double maxBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_max_bg", minBgDefault)), units);
-        minBg = Round.roundTo(minBg, 1d);
-        maxBg = Round.roundTo(maxBg, 1d);
+        double maxBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_max_bg", maxBgDefault)), units);
+        minBg = Round.roundTo(minBg, 0.1d);
+        maxBg = Round.roundTo(maxBg, 0.1d);
 
         TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();

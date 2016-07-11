@@ -67,7 +67,6 @@
     <string name="en_lang">English</string>
     <string name="entertreatmentquestion">Въведи ново treatment:</string>
     <string name="glucose">КЗ:</string>
-    <string name="limits_title">Лимит</string>
     <string name="loop">Loop </string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">След приложени ограничения</string>
@@ -77,10 +76,6 @@
     <string name="lowsuspend_low_title">Граница за ниска КЗ</string>
     <string name="manualenacts">Manual enacts</string>
     <string name="lowsuspend_lowprojected">Low projected</string>
-    <string name="maxbasal_summary">Макс. ед./час на временен базал може да бъде до:</string>
-    <string name="maxbasal_title">Макс. базал</string>
-    <string name="maxbasaliob_summary">Макс. стойност на не-болус IOB зададена от OpenAPS</string>
-    <string name="maxbasaliob_title">Макс. базал IOB</string>
     <string name="minimalduration">Минимална продължителност</string>
     <string name="nav_backup">Архивиране</string>
     <string name="nav_exit">Изход</string>
@@ -91,7 +86,6 @@
     <string name="noapsselected">Не е избран APS или  </string>
     <string name="nochangerequested">Не се изискват промени</string>
     <string name="noprofile">Не е зареден профил от NS</string>
-    <string name="ns_sync_use_absolute_summary">Изполване абсолютни стойности вместо % за качване в NS</string>
     <string name="ns_sync_use_absolute_title">Използване на абсолютни стойности</string>
     <string name="nsclient">NSClient</string>
     <string name="nsprofileview_activeprofile_label">Активен профил:</string>
@@ -135,8 +129,6 @@
     <string name="reason">Основание</string>
     <string name="refreshfromnightscout">Искате ли да обновите treatments от Nightscout</string>
     <string name="safety">Безопасност</string>
-    <string name="safety_useextended_summary">Използвай удължен болус за високите стойности (над 200%)</string>
-    <string name="safety_useextended_title">Използвай удължен болус</string>
     <string name="setextendedbolusquestion">Задай нов комб. болусs:</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="simpleprofile">Simple profile</string>
@@ -146,7 +138,6 @@
     <string name="tempbasals_netinsulin_label_string">Инс:</string>
     <string name="tempbasals_netratio_label_string">Коефициент:</string>
     <string name="tempbasals_realduration_label_string">Продължителност:</string>
-    <string name="title_activity_preferences">Опции</string>
     <string name="treatmentdeliveryerror">Грешка при болус</string>
     <string name="treatments">Treatments</string>
     <string name="treatments_activity_string">Активен:</string>
@@ -188,7 +179,6 @@
     <string name="lowsuspend_low">Low Suspend</string>
     <string name="careportal_newnstreatment_eventtype">Тип събитие</string>
     <string name="careportal_newnstreatment_glucosetype">КЗ тип</string>
-    <string name="title_activity_main">AndroidAPS</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
     <string name="configbuilder_nsclientversion_label">NSClient версия:</string>
@@ -205,22 +195,15 @@
     <string name="nav_export">Експорт настройки</string>
     <string name="nav_import">Импорт настройки</string>
     <string name="de_lang">Deutsch</string>
-    <string name="openapsma_apslimits_label">APS лимит</string>
     <string name="openapsma_high_summary">Максимална стойност, която е в границите</string>
-    <string name="openapsma_high_title">Горна граница</string>
     <string name="openapsma_low_summary">Минимална стойност, която е в границите</string>
-    <string name="openapsma_low_title">Долна граница</string>
     <string name="openapsma_maxbasal_summary">Макс. временен базал [Е/ч] може да бъде до</string>
-    <string name="openapsma_maxbasal_title">Максимален базал</string>
-    <string name="openapsma_maxbasaliob_title">Максимален базал IOB</string>
-    <string name="openapsma_targetrange_label">APS целева зона</string>
     <string name="bg_lang">Български</string>
     <string name="openapsma_maxiob_summary">Максимална стойност на не болус IOB, който openAPS може да зададе</string>
     <string name="minago">min ago</string>
     <string name="connected">Свързан</string>
     <string name="devicenotfound">Избраното устройство не съществува</string>
     <string name="disconnected">Прекъснат</string>
-    <string name="alert">Внимание</string>
     <string name="connecting">Свързва се</string>
     <string name="connectionerror">Грешка при свързване с помпа</string>
     <string name="danar_bt_name_title">DanaR Bluetooth устройство</string>

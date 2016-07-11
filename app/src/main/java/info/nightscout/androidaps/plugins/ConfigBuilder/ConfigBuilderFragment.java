@@ -863,6 +863,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     public static void uploadTempBasalStartPercent(Integer percent, double durationInMinutes) {
         try {
+            // TODO: upload as absolute if in settings
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", "Temp Basal");

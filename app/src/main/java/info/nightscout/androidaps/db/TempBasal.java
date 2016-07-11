@@ -184,9 +184,10 @@ public class TempBasal {
 
     public String toString() {
         DateFormat formatDateToJustTime = new SimpleDateFormat("HH:mm");
+        String extended = isExtended ? "E " : "";
 
         if (isAbsolute) {
-            return DecimalFormatter.to2Decimal(absolute) + "U/h @" +
+            return extended + DecimalFormatter.to2Decimal(absolute) + "U/h @" +
                     formatDateToJustTime.format(timeStart) +
                     " " + getRealDuration() + "/" + duration + "min";
         } else { // percent

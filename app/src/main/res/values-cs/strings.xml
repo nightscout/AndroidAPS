@@ -212,4 +212,26 @@
     <string name="danar_pump_settings">DanaR nastavení</string>
     <string name="syncprofiletopump_title">Synchronizovat NS profil do pumpy</string>
     <string name="nightscout">Nightscout</string>
+    <string name="absolute">Absolutní</string>
+    <string name="comment">Komentář</string>
+    <string name="connectionerror">Chyba připojování pumpy</string>
+    <string name="danar_dailyunits">Jednotek za den:</string>
+    <string name="danar_invalidinput">Chybná vstupní data</string>
+    <string name="danar_iob_label">IOB z pumpy:</string>
+    <string name="danar_lastbolus">Poslední bolus</string>
+    <string name="danar_valuenotsetproperly">Hodnota nenastavena správně</string>
+    <string name="danar_viewprofile">Zobrazit profil</string>
+    <string name="devicenotfound">Vybrané zařízení nenalezeno</string>
+    <string name="enacted">Provedeno</string>
+    <string name="end_user_license_agreement"></string>
+    <string name="end_user_license_agreement_i_understand">ROZUMÍM A PORVZUJI</string>
+    <string name="hoursago">h zpět</string>
+    <string name="limits_title"></string>
+    <string name="nobtadapter">Nenalezen bluetooth adaptér</string>
+    <string name="percent">Procent</string>
+    <string name="reloadprofile">Obnovit profil</string>
+    <string name="save">Uložit</string>
+    <string name="success">Úspěch</string>
+    <string name="tempcancel">Zrušit dočasný bazál</string>
+    <string name="virtualpump_lastconnection_label">Poslední spojení:</string>
 </resources>

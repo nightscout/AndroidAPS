@@ -311,7 +311,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             } else {
                 Double baseRate = getBaseBasalRate();
                 Double tempRate = baseRate * (getRealTempBasal().percent / 100d);
-                return baseRate + tempRate;
+                return tempRate;
             }
         }
         if (isExtendedBoluslInProgress() && useExtendedBoluses) {
