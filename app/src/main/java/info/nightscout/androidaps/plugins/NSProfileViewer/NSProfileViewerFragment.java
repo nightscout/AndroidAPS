@@ -19,8 +19,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -29,6 +27,7 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 
 public class NSProfileViewerFragment extends Fragment implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(NSProfileViewerFragment.class);
@@ -41,8 +40,6 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
     private static TextView isf;
     private static TextView basal;
     private static TextView target;
-
-    private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
@@ -126,7 +123,7 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
             noProfile.setVisibility(View.GONE);
         }
         units.setText(profile.getUnits());
-        dia.setText(formatNumber2decimalplaces.format(profile.getDia()) + " h");
+        dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
         activeProfile.setText(profile.getActiveProfile());
         ic.setText(profile.getIcList());
         isf.setText(profile.getIsfList());

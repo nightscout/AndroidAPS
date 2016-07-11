@@ -26,24 +26,21 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 
 public class TreatmentsFragment extends Fragment implements View.OnClickListener, PluginBase, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
@@ -57,10 +54,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     private long lastCalculationTimestamp = 0;
     private IobTotal lastCalculation;
-
-    private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
-    private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
-    private static DecimalFormat formatNumber3decimalplaces = new DecimalFormat("0.000");
 
     private List<Treatment> treatments;
 
@@ -211,11 +204,11 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 return;
             DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
             holder.date.setText(df.format(treatments.get(position).created_at));
-            holder.insulin.setText(formatNumber2decimalplaces.format(treatments.get(position).insulin) + " U");
-            holder.carbs.setText(formatNumber0decimalplaces.format(treatments.get(position).carbs) + " g");
+            holder.insulin.setText(DecimalFormatter.to2Decimal(treatments.get(position).insulin) + " U");
+            holder.carbs.setText(DecimalFormatter.to0Decimal(treatments.get(position).carbs) + " g");
             Iob iob = treatments.get(position).iobCalc(new Date(), profile.getDia());
-            holder.iob.setText(formatNumber2decimalplaces.format(iob.iobContrib) + " U");
-            holder.activity.setText(formatNumber3decimalplaces.format(iob.activityContrib) + " U");
+            holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
+            holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             if (iob.iobContrib != 0)
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorAffectingIOB));
             else
@@ -340,9 +333,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 public void run() {
                     recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
                     if (lastCalculation != null)
-                        iobTotal.setText(formatNumber2decimalplaces.format(lastCalculation.iob) + " U");
+                        iobTotal.setText(DecimalFormatter.to2Decimal(lastCalculation.iob) + " U");
                     if (lastCalculation != null)
-                        activityTotal.setText(formatNumber3decimalplaces.format(lastCalculation.activity) + " U");
+                        activityTotal.setText(DecimalFormatter.to3Decimal(lastCalculation.activity) + " U");
                 }
             });
     }

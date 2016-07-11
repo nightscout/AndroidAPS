@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.DanaR.Dialogs;
 
-import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,13 +13,13 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 
 /**
  * Created by mike on 10.07.2016.
@@ -37,8 +37,6 @@ public class ProfileViewDialog extends DialogFragment {
     private static TextView target;
 
     private static Button refreshButton;
-
-    private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
     Handler mHandler;
     static HandlerThread mHandlerThread;
@@ -96,7 +94,7 @@ public class ProfileViewDialog extends DialogFragment {
             noProfile.setVisibility(View.GONE);
         }
         units.setText(profile.getUnits());
-        dia.setText(formatNumber2decimalplaces.format(profile.getDia()) + " h");
+        dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
         activeProfile.setText(profile.getActiveProfile());
         ic.setText(profile.getIcList());
         isf.setText(profile.getIsfList());

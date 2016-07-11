@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
@@ -46,6 +45,7 @@ import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatu
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SetWarnColor;
 
@@ -709,9 +709,6 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     }
 
     private void updateGUI() {
-        final DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
-        final DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
-        final DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
         final DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT);
 
         Activity activity = getActivity();
@@ -730,13 +727,13 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                         Long agoMsec = new Date().getTime() - getDanaRPump().lastBolusTime.getTime();
                         int agoHours = (int) (agoMsec / 60d / 60d / 1000d);
                         if (agoHours < 6) // max 6h back
-                            lastBolusView.setText(formatTime.format(getDanaRPump().lastBolusTime) + " (" + formatNumber1decimalplaces.format(agoHours) + " " + getString(R.string.hoursago) + ") " + formatNumber2decimalplaces.format(getDanaRPump().lastBolusAmount) + " U");
+                            lastBolusView.setText(formatTime.format(getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getDanaRPump().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
                     }
 
-                    dailyUnitsView.setText(formatNumber0decimalplaces.format(getDanaRPump().dailyTotalUnits) + " / " + getDanaRPump().maxDailyTotalUnits + " U");
+                    dailyUnitsView.setText(DecimalFormatter.to0Decimal(getDanaRPump().dailyTotalUnits) + " / " + getDanaRPump().maxDailyTotalUnits + " U");
                     SetWarnColor.setColor(dailyUnitsView, getDanaRPump().dailyTotalUnits, getDanaRPump().maxDailyTotalUnits * 0.75d, getDanaRPump().maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("( " + (getDanaRPump().activeProfile + 1) + " )  " + formatNumber2decimalplaces.format(getBaseBasalRate()) + " U/h");
+                    basaBasalRateView.setText("( " + (getDanaRPump().activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getBaseBasalRate()) + " U/h");
                     if (isRealTempBasalInProgress()) {
                         tempBasalView.setText(getRealTempBasal().toString());
                     } else {
@@ -747,7 +744,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                     } else {
                         extendedBolusView.setText("");
                     }
-                    reservoirView.setText(formatNumber0decimalplaces.format(getDanaRPump().reservoirRemainingUnits) + " / 300 U");
+                    reservoirView.setText(DecimalFormatter.to0Decimal(getDanaRPump().reservoirRemainingUnits) + " / 300 U");
                     SetWarnColor.setColorInverse(reservoirView, getDanaRPump().reservoirRemainingUnits, 50d, 20d);
                     batteryView.setText("{fa-battery-" + (getDanaRPump().batteryRemaining / 25) + "}");
                     SetWarnColor.setColorInverse(reservoirView, getDanaRPump().batteryRemaining, 51d, 26d);

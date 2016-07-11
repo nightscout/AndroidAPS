@@ -29,7 +29,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -61,6 +60,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
 
@@ -389,7 +389,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
     }
 
     public void updateGUI() {
-        DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
@@ -437,7 +436,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             cancelTempLayout.setVisibility(View.GONE);
             setTempLayout.setVisibility(View.VISIBLE);
             Double currentBasal = pump.getBaseBasalRate();
-            runningTempView.setText(formatNumber2decimalplaces.format(currentBasal) + " U/h");
+            runningTempView.setText(DecimalFormatter.to2Decimal(currentBasal) + " U/h");
         }
 
         if (profile == null) {
@@ -486,9 +485,9 @@ public class OverviewFragment extends Fragment implements PluginBase {
         if (basalIob == null) basalIob = new IobTotal();
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        String iobtext = getString(R.string.treatments_iob_label_string) + " " + formatNumber2decimalplaces.format(iobTotal.iob) + "U ("
-                + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(bolusIob.iob) + "U "
-                + getString(R.string.basal) + ": " + formatNumber2decimalplaces.format(basalIob.basaliob) + "U)";
+        String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(iobTotal.iob) + "U ("
+                + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
         iobView.setText(iobtext);
 
         // ****** GRAPH *******

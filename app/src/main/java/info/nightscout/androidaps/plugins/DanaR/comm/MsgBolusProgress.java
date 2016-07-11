@@ -5,15 +5,13 @@ import com.squareup.otto.Bus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
+import info.nightscout.utils.DecimalFormatter;
 
 public class MsgBolusProgress extends DanaRMessage {
     private static Logger log = LoggerFactory.getLogger(MsgBolusProgress.class);
-    public static final DecimalFormat bolusNumberFormat = new DecimalFormat("0.0");
     private static Bus bus = null;
 
     private static Treatment t;
@@ -38,7 +36,7 @@ public class MsgBolusProgress extends DanaRMessage {
         Double done = (amount * 100 - progress) / 100d;
         t.insulin = done;
         EventDanaRBolusProgress bolusingEvent = EventDanaRBolusProgress.getInstance();
-        bolusingEvent.sStatus = "Delivering " + bolusNumberFormat.format(done) + "U";
+        bolusingEvent.sStatus = "Delivering " + DecimalFormatter.to1Decimal(done) + "U";
         bolusingEvent.t = t;
 
         if (Config.logDanaMessageDetail) {

@@ -7,17 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = "TempBasals")
 public class TempBasal {
@@ -187,10 +184,9 @@ public class TempBasal {
 
     public String toString() {
         DateFormat formatDateToJustTime = new SimpleDateFormat("HH:mm");
-        DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
 
         if (isAbsolute) {
-            return formatNumber2decimalplaces.format(absolute) + "U/h @" +
+            return DecimalFormatter.to2Decimal(absolute) + "U/h @" +
                     formatDateToJustTime.format(timeStart) +
                     " " + getRealDuration() + "/" + duration + "min";
         } else { // percent

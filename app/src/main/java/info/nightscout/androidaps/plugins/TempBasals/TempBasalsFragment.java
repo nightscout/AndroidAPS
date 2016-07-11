@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.*;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,9 +38,10 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.utils.DecimalFormatter;
 
 
 public class TempBasalsFragment extends Fragment implements PluginBase, TempBasalsInterface {
@@ -52,10 +54,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
 
     public long lastCalculationTimestamp = 0;
     public IobTotal lastCalculation;
-
-    private static DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
-    private static DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
-    private static DecimalFormat formatNumber3decimalplaces = new DecimalFormat("0.000");
 
     private List<TempBasal> tempBasals;
     private List<TempBasal> extendedBoluses;
@@ -269,19 +267,19 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
             } else {
                 holder.date.setText(df.format(tempBasal.timeStart));
             }
-            holder.duration.setText(formatNumber0decimalplaces.format(tempBasal.duration) + " min");
+            holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.duration) + " min");
             if (tempBasal.isAbsolute) {
-                holder.absolute.setText(formatNumber0decimalplaces.format(tempBasal.absolute) + " U/h");
+                holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.absolute) + " U/h");
                 holder.percent.setText("");
             } else {
                 holder.absolute.setText("");
-                holder.percent.setText(formatNumber0decimalplaces.format(tempBasal.percent) + "%");
+                holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percent) + "%");
             }
-            holder.realDuration.setText(formatNumber0decimalplaces.format(tempBasal.getRealDuration()) + " min");
+            holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
             IobTotal iob = tempBasal.iobCalc(new Date());
-            holder.iob.setText(formatNumber2decimalplaces.format(iob.basaliob) + " U");
-            holder.netInsulin.setText(formatNumber2decimalplaces.format(iob.netInsulin) + " U");
-            holder.netRatio.setText(formatNumber2decimalplaces.format(iob.netRatio) + " U/h");
+            holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
+            holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
+            holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
             holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
             if (tempBasal.isInProgress())
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
@@ -417,7 +415,7 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
                 public void run() {
                     recyclerView.swapAdapter(new RecyclerViewAdapter(getMergedList()), false);
                     if (lastCalculation != null) {
-                        String totalText = formatNumber2decimalplaces.format(lastCalculation.basaliob) + " U";
+                        String totalText = DecimalFormatter.to2Decimal(lastCalculation.basaliob) + " U";
                         tempBasalTotalView.setText(totalText);
                     }
                 }

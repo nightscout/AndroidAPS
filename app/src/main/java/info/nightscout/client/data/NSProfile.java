@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.TimeZone;
 
 import info.nightscout.androidaps.Constants;
+import info.nightscout.utils.DecimalFormatter;
 
 public class NSProfile {
     private JSONObject json = null;
@@ -333,9 +334,7 @@ public class NSProfile {
     }
 
     public static String toUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
-        DecimalFormat formatNumber0decimalplaces = new DecimalFormat("0");
-        DecimalFormat formatNumber1decimalplaces = new DecimalFormat("0.0");
-        if (units.equals(Constants.MGDL)) return formatNumber0decimalplaces.format(valueInMgdl);
-        else return formatNumber1decimalplaces.format(valueInMmol);
+        if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(valueInMgdl);
+        else return DecimalFormatter.to1Decimal(valueInMmol);
     }
 }

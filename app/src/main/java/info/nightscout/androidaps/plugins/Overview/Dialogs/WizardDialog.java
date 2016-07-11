@@ -8,8 +8,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.*;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -27,7 +31,11 @@ import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
-import info.nightscout.utils.*;
+import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.PlusMinusEditText;
+import info.nightscout.utils.Round;
+import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.ToastUtils;
 
 // TODO: wizard upload top NS calculation
 // TODO: add carbtime
@@ -51,9 +59,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     PlusMinusEditText editBg;
     PlusMinusEditText editCarbs;
     PlusMinusEditText editCorr;
-
-    public static final DecimalFormat numberFormat = new DecimalFormat("0.00");
-    public static final DecimalFormat intFormat = new DecimalFormat("0");
 
     Integer calculatedCarbs = 0;
     Double calculatedTotalInsulin = 0d;
@@ -222,8 +227,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                 bgDiff = lastBgValue - targetBGHigh;
             }
 
-            bg.setText(lastBg.valueToUnitsToString(units) + " ISF: " + intFormat.format(sens));
-            bgInsulin.setText(numberFormat.format(bgDiff / sens) + "U");
+            bg.setText(lastBg.valueToUnitsToString(units) + " ISF: " + DecimalFormatter.to0Decimal(sens));
+            bgInsulin.setText(DecimalFormatter.to2Decimal(bgDiff / sens) + "U");
             bgInput.removeTextChangedListener(textWatcher);
             //bgInput.setText(lastBg.valueToUnitsToString(units));
             editBg.setValue(lastBg.valueToUnits(units));
@@ -245,8 +250,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         IobTotal bolusIob = treatments.getLastCalculation();
         IobTotal basalIob = tempBasals.getLastCalculation();
 
-        bolusIobInsulin.setText("-" + numberFormat.format(bolusIob.iob) + "U");
-        basalIobInsulin.setText("-" + numberFormat.format(basalIob.basaliob) + "U");
+        bolusIobInsulin.setText("-" + DecimalFormatter.to2Decimal(bolusIob.iob) + "U");
+        basalIobInsulin.setText("-" + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U");
 
         totalInsulin.setText("");
         wizardDialogDeliverButton.setVisibility(Button.INVISIBLE);
@@ -291,14 +296,14 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
             bgDiff = c_bg - targetBGHigh;
         }
         Double insulinFromBG = (bgCheckbox.isChecked() && c_bg != 0d) ? bgDiff / sens : 0d;
-        bg.setText(c_bg + " ISF: " + intFormat.format(sens));
-        bgInsulin.setText(numberFormat.format(insulinFromBG) + "U");
+        bg.setText(c_bg + " ISF: " + DecimalFormatter.to0Decimal(sens));
+        bgInsulin.setText(DecimalFormatter.to2Decimal(insulinFromBG) + "U");
 
         // Insuling from carbs
         Double ic = profile.getIc(NSProfile.secondsFromMidnight());
         Double insulinFromCarbs = c_carbs / ic;
-        carbs.setText(intFormat.format(c_carbs) + "g IC: " + intFormat.format(ic));
-        carbsInsulin.setText(numberFormat.format(insulinFromCarbs) + "U");
+        carbs.setText(DecimalFormatter.to0Decimal(c_carbs) + "g IC: " + DecimalFormatter.to0Decimal(ic));
+        carbsInsulin.setText(DecimalFormatter.to2Decimal(insulinFromCarbs) + "U");
 
         // Insulin from IOB
         TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
@@ -310,32 +315,32 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
         Double insulingFromBolusIOB = bolusIobCheckbox.isChecked() ? -bolusIob.iob : 0d;
         Double insulingFromBasalsIOB = basalIobCheckbox.isChecked() ? -basalIob.basaliob : 0d;
-        bolusIobInsulin.setText(numberFormat.format(insulingFromBolusIOB) + "U");
-        basalIobInsulin.setText(numberFormat.format(insulingFromBasalsIOB) + "U");
+        bolusIobInsulin.setText(DecimalFormatter.to2Decimal(insulingFromBolusIOB) + "U");
+        basalIobInsulin.setText(DecimalFormatter.to2Decimal(insulingFromBasalsIOB) + "U");
 
         // Insulin from correction
         Double insulinFromCorrection = corrAfterConstraint;
-        correctionInsulin.setText(numberFormat.format(insulinFromCorrection) + "U");
+        correctionInsulin.setText(DecimalFormatter.to2Decimal(insulinFromCorrection) + "U");
 
         // Total
         calculatedTotalInsulin = insulinFromBG + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection;
 
         if (calculatedTotalInsulin < 0) {
             Double carbsEquivalent = -calculatedTotalInsulin * ic;
-            total.setText(getString(R.string.missing) + " " + intFormat.format(carbsEquivalent) + "g");
+            total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(carbsEquivalent) + "g");
             calculatedTotalInsulin = 0d;
             totalInsulin.setText("");
         } else {
             calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, 0.05d);
             total.setText("");
-            totalInsulin.setText(numberFormat.format(calculatedTotalInsulin) + "U");
+            totalInsulin.setText(DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U");
         }
 
         calculatedCarbs = c_carbs;
 
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
-            String insulinText = calculatedTotalInsulin > 0d ? (numberFormat.format(calculatedTotalInsulin) + "U") : "";
-            String carbsText = calculatedCarbs > 0d ? (intFormat.format(calculatedCarbs) + "g") : "";
+            String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U") : "";
+            String carbsText = calculatedCarbs > 0d ? (DecimalFormatter.to0Decimal(calculatedCarbs) + "g") : "";
             wizardDialogDeliverButton.setText(getString(R.string.send) + " " + insulinText + " " + carbsText);
             wizardDialogDeliverButton.setVisibility(Button.VISIBLE);
         } else {

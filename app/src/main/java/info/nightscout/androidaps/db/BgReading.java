@@ -2,24 +2,20 @@ package info.nightscout.androidaps.db;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.DataPointInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DecimalFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.client.data.NSCal;
 import info.nightscout.client.data.NSSgv;
+import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = "BgReadings")
 public class BgReading implements DataPointInterface {
     private static Logger log = LoggerFactory.getLogger(BgReading.class);
-    public static final DecimalFormat mmolFormat = new DecimalFormat("0.0");
-    public static final DecimalFormat mgdlFormat = new DecimalFormat("0");
 
     public long getTimeIndex() {
         return timeIndex;
@@ -62,8 +58,8 @@ public class BgReading implements DataPointInterface {
     }
 
     public String valueToUnitsToString(String units) {
-        if (units.equals(Constants.MGDL)) return mgdlFormat.format(value);
-        else return mmolFormat.format(value * Constants.MGDL_TO_MMOLL);
+        if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(value);
+        else return DecimalFormatter.to0Decimal(value * Constants.MGDL_TO_MMOLL);
     }
 
     @Override
