@@ -29,13 +29,13 @@ public class MsgSettingProfileRatiosAll extends DanaRMessage {
             DanaRFragment.getDanaRPump().nightCF = intFromBuff(bytes, 14, 2);
         } else {
             DanaRFragment.getDanaRPump().morningCIR = intFromBuff(bytes, 0, 2);
-            DanaRFragment.getDanaRPump().morningCF = intFromBuff(bytes, 2, 2) / 100;
+            DanaRFragment.getDanaRPump().morningCF = intFromBuff(bytes, 2, 2) / 100d;
             DanaRFragment.getDanaRPump().afternoonCIR = intFromBuff(bytes, 4, 2);
-            DanaRFragment.getDanaRPump().afternoonCF = intFromBuff(bytes, 6, 2) / 100;
+            DanaRFragment.getDanaRPump().afternoonCF = intFromBuff(bytes, 6, 2) / 100d;
             DanaRFragment.getDanaRPump().eveningCIR = intFromBuff(bytes, 8, 2);
-            DanaRFragment.getDanaRPump().eveningCF = intFromBuff(bytes, 10, 2) / 100;
+            DanaRFragment.getDanaRPump().eveningCF = intFromBuff(bytes, 10, 2) / 100d;
             DanaRFragment.getDanaRPump().nightCIR = intFromBuff(bytes, 12, 2);
-            DanaRFragment.getDanaRPump().nightCF = intFromBuff(bytes, 14, 2) / 100;
+            DanaRFragment.getDanaRPump().nightCF = intFromBuff(bytes, 14, 2) / 100d;
         }
 
         if (Config.logDanaMessageDetail) {
@@ -49,6 +49,7 @@ public class MsgSettingProfileRatiosAll extends DanaRMessage {
             log.debug("Current pump night CIR: " + DanaRFragment.getDanaRPump().nightCIR);
             log.debug("Current pump night CF: " + DanaRFragment.getDanaRPump().nightCF);
         }
-    }
 
+        DanaRFragment.getDanaRPump().createConvertedProfile();
+    }
 }

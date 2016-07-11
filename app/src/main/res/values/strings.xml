@@ -234,5 +234,7 @@
     <string name="hoursago">h ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
     <string name="danar_valuenotsetproperly">Value not set properly</string>
+    <string name="reloadprofile">Reload profile</string>
+    <string name="danar_viewprofile">View profile</string>
 
 </resources>

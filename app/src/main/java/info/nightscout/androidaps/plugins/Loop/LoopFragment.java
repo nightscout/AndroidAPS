@@ -116,27 +116,27 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled(int type) {
         return fragmentEnabled;
     }
 
     @Override
-    public boolean isVisibleInTabs() {
+    public boolean isVisibleInTabs(int type) {
         return fragmentVisible;
     }
 
     @Override
-    public boolean canBeHidden() {
+    public boolean canBeHidden(int type) {
         return true;
     }
 
     @Override
-    public void setFragmentEnabled(boolean fragmentEnabled) {
+    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
-    public void setFragmentVisible(boolean fragmentVisible) {
+    public void setFragmentVisible(int type, boolean fragmentVisible) {
         this.fragmentVisible = fragmentVisible;
     }
 
@@ -229,14 +229,14 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         ConfigBuilderFragment configBuilder = MainApp.getConfigBuilder();
         APSResult result = null;
 
-        if (constraintsInterface == null || configBuilder == null || !isEnabled())
+        if (constraintsInterface == null || configBuilder == null || !isEnabled(PluginBase.GENERAL))
             return;
 
         APSInterface usedAPS = null;
         ArrayList<PluginBase> apsPlugins = MainActivity.getSpecificPluginsList(PluginBase.APS);
         for (PluginBase p : apsPlugins) {
             APSInterface aps = (APSInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.APS)) continue;
             aps.invoke();
             result = aps.getLastAPSResult();
             if (result == null) continue;

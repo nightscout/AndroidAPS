@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.Services.DanaRService;
 
@@ -31,7 +32,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
         log.debug("KeepAlive received");
         DanaRFragment danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
-        if (Config.DANAR && danaRFragment != null && danaRFragment.isEnabled()) {
+        if (Config.DANAR && danaRFragment != null && danaRFragment.isEnabled(PluginBase.PUMP)) {
             Intent intent = new Intent(context, DanaRService.class);
             context.startService(intent);
         }

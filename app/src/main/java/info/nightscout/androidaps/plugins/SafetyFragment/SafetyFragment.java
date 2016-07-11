@@ -34,27 +34,27 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled(int type) {
         return true;
     }
 
     @Override
-    public boolean isVisibleInTabs() {
+    public boolean isVisibleInTabs(int type) {
         return false;
     }
 
     @Override
-    public boolean canBeHidden() {
+    public boolean canBeHidden(int type) {
         return true;
     }
 
     @Override
-    public void setFragmentEnabled(boolean fragmentEnabled) {
+    public void setFragmentEnabled(int tyep, boolean fragmentEnabled) {
 
     }
 
     @Override
-    public void setFragmentVisible(boolean fragmentVisible) {
+    public void setFragmentVisible(int type, boolean fragmentVisible) {
     }
 
     public static SafetyFragment newInstance() {

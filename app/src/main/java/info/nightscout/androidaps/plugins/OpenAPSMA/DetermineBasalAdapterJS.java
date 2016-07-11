@@ -278,7 +278,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
         mProfile.add("carbratio", profile.getIc(profile.secondsFromMidnight()));
-        mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(profile.secondsFromMidnight()).doubleValue(), units));
+        mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
 
         mProfile.add("current_basal", pump.getBaseBasalRate());
         mCurrentTemp.add("duration", pump.getTempBasalRemainingMinutes());

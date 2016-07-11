@@ -213,7 +213,7 @@ public class NSProfile {
         JSONObject profile = getDefaultProfile();
         if (profile != null) {
             try {
-                return getValuesList(profile.getJSONArray("carbratio"), null, new DecimalFormat("0"), "g");
+                return getValuesList(profile.getJSONArray("carbratio"), null, new DecimalFormat("0.0"), "g");
             } catch (JSONException e) {
                 e.printStackTrace();
             }

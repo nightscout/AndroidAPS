@@ -333,6 +333,7 @@ public class DanaConnection {
                 mSerialEngine.sendMessage(new MsgSettingPumpTime());
                 mSerialEngine.sendMessage(new MsgSettingActiveProfile());
                 mSerialEngine.sendMessage(new MsgSettingProfileRatios());
+                mSerialEngine.sendMessage(new MsgSettingProfileRatiosAll());
                 danaRPump.lastSettingsRead = now;
             }
 

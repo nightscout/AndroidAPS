@@ -145,31 +145,31 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     void setViews() {
         // TODO: hide empty categories
-        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE));
+        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
-        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP));
+        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP), PluginBase.PUMP);
         pumpListView.setAdapter(pumpDataAdapter);
         setListViewHeightBasedOnChildren(pumpListView);
-        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.LOOP));
+        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.LOOP), PluginBase.LOOP);
         loopListView.setAdapter(loopDataAdapter);
         setListViewHeightBasedOnChildren(loopListView);
-        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT));
+        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT), PluginBase.TREATMENT);
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
-        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TEMPBASAL));
+        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
         tempsListView.setAdapter(tempsDataAdapter);
         setListViewHeightBasedOnChildren(tempsListView);
-        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PROFILE));
+        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ProfileInterface.class), PluginBase.PROFILE);
         profileListView.setAdapter(profileDataAdapter);
         setListViewHeightBasedOnChildren(profileListView);
-        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS));
+        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS), PluginBase.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
-        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class));
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class), PluginBase.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
-        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.GENERAL));
+        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.GENERAL), PluginBase.GENERAL);
         generalListView.setAdapter(generalDataAdapter);
         setListViewHeightBasedOnChildren(generalListView);
 
@@ -189,27 +189,27 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled(int type) {
         return true;
     }
 
     @Override
-    public boolean isVisibleInTabs() {
+    public boolean isVisibleInTabs(int type) {
         return true;
     }
 
     @Override
-    public boolean canBeHidden() {
+    public boolean canBeHidden(int type) {
         return false;
     }
 
     @Override
-    public void setFragmentEnabled(boolean fragmentEnabled) {
+    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         // Always enabled
     }
 
     @Override
-    public void setFragmentVisible(boolean fragmentVisible) {
+    public void setFragmentVisible(int type, boolean fragmentVisible) {
         // Always visible
     }
 
@@ -414,12 +414,14 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     private class PluginCustomAdapter extends ArrayAdapter<PluginBase> {
 
         private ArrayList<PluginBase> pluginList;
+        final private int type;
 
         public PluginCustomAdapter(Context context, int textViewResourceId,
-                                   ArrayList<PluginBase> pluginList) {
+                                   ArrayList<PluginBase> pluginList, int type) {
             super(context, textViewResourceId, pluginList);
             this.pluginList = new ArrayList<PluginBase>();
             this.pluginList.addAll(pluginList);
+            this.type = type;
         }
 
         private class PluginViewHolder {
@@ -446,9 +448,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
-                        plugin.setFragmentEnabled(cb.isChecked());
-                        if (cb.isChecked()) plugin.setFragmentVisible(true);
-                        onEnabledCategoryChanged(plugin);
+                        plugin.setFragmentEnabled(type, cb.isChecked());
+                        if (cb.isChecked()) plugin.setFragmentVisible(type, true);
+                        onEnabledCategoryChanged(plugin, type);
                         storeSettings();
                     }
                 });
@@ -457,7 +459,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     public void onClick(View v) {
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
-                        plugin.setFragmentVisible(cb.isChecked());
+                        plugin.setFragmentVisible(type, cb.isChecked());
                         storeSettings();
                         MainApp.bus().post(new EventRefreshGui());
                     }
@@ -468,13 +470,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
             PluginBase plugin = pluginList.get(position);
             holder.name.setText(plugin.getName());
-            holder.checkboxEnabled.setChecked(plugin.isEnabled());
-            holder.checkboxVisible.setChecked(plugin.isVisibleInTabs());
+            holder.checkboxEnabled.setChecked(plugin.isEnabled(type));
+            holder.checkboxVisible.setChecked(plugin.isVisibleInTabs(type));
             holder.name.setTag(plugin);
             holder.checkboxEnabled.setTag(plugin);
             holder.checkboxVisible.setTag(plugin);
 
-            if (!plugin.canBeHidden()) {
+            if (!plugin.canBeHidden(type)) {
                 holder.checkboxEnabled.setEnabled(false);
                 holder.checkboxVisible.setEnabled(false);
             }
@@ -491,7 +493,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
             // Hide disabled profiles by default
             if (type == PluginBase.PROFILE) {
-                if (!plugin.isEnabled()) {
+                if (!plugin.isEnabled(type)) {
                     holder.checkboxVisible.setEnabled(false);
                     holder.checkboxVisible.setChecked(false);
                 } else {
@@ -530,9 +532,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         return activeLoop;
     }
 
-    void onEnabledCategoryChanged(PluginBase changedPlugin) {
+    void onEnabledCategoryChanged(PluginBase changedPlugin, int type) {
         int category = changedPlugin.getType();
-        ArrayList<PluginBase> pluginsInCategory = MainActivity.getSpecificPluginsList(category);
+        ArrayList<PluginBase> pluginsInCategory = null;
         switch (category) {
             // Multiple selection allowed
             case PluginBase.APS:
@@ -541,116 +543,115 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 break;
             // Single selection allowed
             case PluginBase.PROFILE:
-            case PluginBase.PUMP:
+                pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(ProfileInterface.class);
+                break;
             case PluginBase.BGSOURCE:
             case PluginBase.LOOP:
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
-                boolean newSelection = changedPlugin.isEnabled();
-                if (newSelection) { // new plugin selected -> disable others
-                    for (PluginBase p : pluginsInCategory) {
-                        if (p.getName().equals(changedPlugin.getName())) {
-                            // this is new selected
-                        } else {
-                            p.setFragmentEnabled(false);
-                            setViews();
-                        }
-                    }
-                } else { // enable first plugin in list
-                    pluginsInCategory.get(0).setFragmentEnabled(true);
-                }
+            case PluginBase.PUMP:
+                pluginsInCategory = MainActivity.getSpecificPluginsList(category);
                 break;
+        }
+        if (pluginsInCategory != null) {
+            boolean newSelection = changedPlugin.isEnabled(type);
+            if (newSelection) { // new plugin selected -> disable others
+                for (PluginBase p : pluginsInCategory) {
+                    if (p.getName().equals(changedPlugin.getName())) {
+                        // this is new selected
+                    } else {
+                        p.setFragmentEnabled(type, false);
+                        setViews();
+                    }
+                }
+            } else { // enable first plugin in list
+                pluginsInCategory.get(0).setFragmentEnabled(type, true);
+            }
         }
     }
 
     private void verifySelectionInCategories() {
-        for (int category : new int[]{PluginBase.GENERAL, PluginBase.APS, PluginBase.PROFILE, PluginBase.PUMP, PluginBase.LOOP, PluginBase.TEMPBASAL, PluginBase.TREATMENT, PluginBase.BGSOURCE}) {
-            ArrayList<PluginBase> pluginsInCategory = MainActivity.getSpecificPluginsList(category);
-            switch (category) {
-                // Multiple selection allowed
-                case PluginBase.APS:
-                case PluginBase.GENERAL:
-                case PluginBase.CONSTRAINTS:
-                    break;
-                // Single selection allowed
-                case PluginBase.BGSOURCE:
-                    activeBgSource = (BgSourceInterface) getTheOneEnabledInArray(pluginsInCategory);
-                    if (Config.logConfigBuilder)
-                        log.debug("Selected bgSource interface: " + ((PluginBase) activeBgSource).getName());
-                    for (PluginBase p : pluginsInCategory) {
-                        if (!p.getName().equals(((PluginBase) activeBgSource).getName())) {
-                            p.setFragmentVisible(false);
-                        }
-                    }
-                    break;
-                // Single selection allowed
-                case PluginBase.PROFILE:
-                    activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory);
-                    if (Config.logConfigBuilder)
-                        log.debug("Selected profile interface: " + ((PluginBase) activeProfile).getName());
-                    for (PluginBase p : pluginsInCategory) {
-                        if (!p.getName().equals(((PluginBase) activeProfile).getName())) {
-                            p.setFragmentVisible(false);
-                        }
-                    }
-                    break;
-                case PluginBase.PUMP:
-                    activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory);
-                    if (Config.logConfigBuilder)
-                        log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
-                    for (PluginBase p : pluginsInCategory) {
-                        if (!p.getName().equals(((PluginBase) activePump).getName())) {
-                            p.setFragmentVisible(false);
-                        }
-                    }
-                    break;
-                case PluginBase.LOOP:
-                    activeLoop = (LoopFragment) getTheOneEnabledInArray(pluginsInCategory);
-                    if (activeLoop != null) {
-                        if (Config.logConfigBuilder)
-                            log.debug("Selected loop interface: " + activeLoop.getName());
-                        for (PluginBase p : pluginsInCategory) {
-                            if (!p.getName().equals(activeLoop.getName())) {
-                                p.setFragmentVisible(false);
-                            }
-                        }
-                    }
-                    break;
-                case PluginBase.TEMPBASAL:
-                    activeTempBasals = (TempBasalsInterface) getTheOneEnabledInArray(pluginsInCategory);
-                    if (Config.logConfigBuilder)
-                        log.debug("Selected tempbasal interface: " + ((PluginBase) activeTempBasals).getName());
-                    for (PluginBase p : pluginsInCategory) {
-                        if (!p.getName().equals(((PluginBase) activeTempBasals).getName())) {
-                            p.setFragmentVisible(false);
-                        }
-                    }
-                    break;
-                case PluginBase.TREATMENT:
-                    activeTreatments = (TreatmentsInterface) getTheOneEnabledInArray(pluginsInCategory);
-                    if (Config.logConfigBuilder)
-                        log.debug("Selected treatment interface: " + ((PluginBase) activeTreatments).getName());
-                    for (PluginBase p : pluginsInCategory) {
-                        if (!p.getName().equals(((PluginBase) activeTreatments).getName())) {
-                            p.setFragmentVisible(false);
-                        }
-                    }
-                    break;
-            }
+        ArrayList<PluginBase> pluginsInCategory;
 
+        // PluginBase.PROFILE
+        pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(ProfileInterface.class);
+        activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PROFILE);
+        if (Config.logConfigBuilder)
+            log.debug("Selected profile interface: " + ((PluginBase) activeProfile).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activeProfile).getName())) {
+                p.setFragmentVisible(PluginBase.PROFILE, false);
+            }
+        }
+
+        // PluginBase.BGSOURCE
+        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE);
+        activeBgSource = (BgSourceInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.BGSOURCE);
+        if (Config.logConfigBuilder)
+            log.debug("Selected bgSource interface: " + ((PluginBase) activeBgSource).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activeBgSource).getName())) {
+                p.setFragmentVisible(PluginBase.BGSOURCE, false);
+            }
+        }
+
+        // PluginBase.PUMP
+        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.PUMP);
+        activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
+        if (Config.logConfigBuilder)
+            log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activePump).getName())) {
+                p.setFragmentVisible(PluginBase.PUMP, false);
+            }
+        }
+
+        // PluginBase.LOOP
+        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.LOOP);
+        activeLoop = (LoopFragment) getTheOneEnabledInArray(pluginsInCategory, PluginBase.LOOP);
+        if (activeLoop != null) {
+            if (Config.logConfigBuilder)
+                log.debug("Selected loop interface: " + activeLoop.getName());
+            for (PluginBase p : pluginsInCategory) {
+                if (!p.getName().equals(activeLoop.getName())) {
+                    p.setFragmentVisible(PluginBase.LOOP, false);
+                }
+            }
+        }
+
+        // PluginBase.TEMPBASAL
+        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.TEMPBASAL);
+        activeTempBasals = (TempBasalsInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.TEMPBASAL);
+        if (Config.logConfigBuilder)
+            log.debug("Selected tempbasal interface: " + ((PluginBase) activeTempBasals).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activeTempBasals).getName())) {
+                p.setFragmentVisible(PluginBase.TEMPBASAL, false);
+            }
+        }
+
+        // PluginBase.TREATMENT
+        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.TREATMENT);
+        activeTreatments = (TreatmentsInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.TREATMENT);
+        if (Config.logConfigBuilder)
+            log.debug("Selected treatment interface: " + ((PluginBase) activeTreatments).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activeTreatments).getName())) {
+                p.setFragmentVisible(PluginBase.TREATMENT, false);
+            }
         }
     }
 
     @Nullable
-    private PluginBase getTheOneEnabledInArray(ArrayList<PluginBase> pluginsInCategory) {
+    private PluginBase getTheOneEnabledInArray(ArrayList<PluginBase> pluginsInCategory, int type) {
         PluginBase found = null;
         for (PluginBase p : pluginsInCategory) {
-            if (p.isEnabled() && found == null) {
+            if (p.isEnabled(type) && found == null) {
                 found = p;
                 continue;
-            } else if (p.isEnabled()) {
+            } else if (p.isEnabled(type)) {
                 // set others disabled
-                p.setFragmentEnabled(false);
+                p.setFragmentEnabled(type, false);
             }
         }
         // If none enabled, enable first one
@@ -666,9 +667,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             SharedPreferences.Editor editor = settings.edit();
 
-            for (PluginBase p : pluginList) {
-                editor.putBoolean("ConfigBuilder" + p.getName() + "Enabled", p.isEnabled());
-                editor.putBoolean("ConfigBuilder" + p.getName() + "Visible", p.isVisibleInTabs());
+            for (int type = 1; type < PluginBase.LAST; type++) {
+                for (PluginBase p : pluginList) {
+                    String settingEnabled = "ConfigBuilder_" + type + "_" + p.getName() + "_Enabled";
+                    String settingVisible = "ConfigBuilder_" + p.getName() + "_Visible";
+                    editor.putBoolean(settingEnabled, p.isEnabled(type));
+                    editor.putBoolean(settingVisible, p.isVisibleInTabs(type));
+                }
             }
             editor.commit();
             verifySelectionInCategories();
@@ -678,12 +683,16 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     private void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        for (PluginBase p : pluginList) {
-            if (settings.contains("ConfigBuilder" + p.getName() + "Enabled"))
-                p.setFragmentEnabled(settings.getBoolean("ConfigBuilder" + p.getName() + "Enabled", true));
-            if (settings.contains("ConfigBuilder" + p.getName() + "Visible"))
-                p.setFragmentVisible(settings.getBoolean("ConfigBuilder" + p.getName() + "Visible", true));
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        for (int type = 1; type < PluginBase.LAST; type++) {
+            for (PluginBase p : pluginList) {
+                String settingEnabled = "ConfigBuilder_" + type + "_" + p.getName() + "_Enabled";
+                String settingVisible = "ConfigBuilder_" + p.getName() + "_Visible";
+                if (SP.contains(settingEnabled))
+                    p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
+                if (SP.contains("ConfigBuilder" + p.getName() + "Visible"))
+                    p.setFragmentVisible(type, SP.getBoolean(settingVisible, true));
+            }
         }
         verifySelectionInCategories();
     }
@@ -724,7 +733,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             result = result && constrain.isLoopEnabled();
         }
         return result;
@@ -737,7 +746,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             result = result && constrain.isClosedModeEnabled();
         }
         return result;
@@ -750,7 +759,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             result = result && constrain.isAutosensModeEnabled();
         }
         return result;
@@ -763,7 +772,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             result = result && constrain.isAMAModeEnabled();
         }
         return result;
@@ -775,7 +784,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             rateAfterConstrain = Math.min(constrain.applyBasalConstraints(absoluteRate), rateAfterConstrain);
         }
         return rateAfterConstrain;
@@ -787,7 +796,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             rateAfterConstrain = Math.min(constrain.applyBasalConstraints(percentRate), rateAfterConstrain);
         }
         return rateAfterConstrain;
@@ -799,7 +808,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             insulinAfterConstrain = Math.min(constrain.applyBolusConstraints(insulin), insulinAfterConstrain);
         }
         return insulinAfterConstrain;
@@ -811,7 +820,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             carbsAfterConstrain = Math.min(constrain.applyCarbsConstraints(carbs), carbsAfterConstrain);
         }
         return carbsAfterConstrain;
@@ -823,7 +832,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
-            if (!p.isEnabled()) continue;
+            if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
             maxIobAfterConstrain = Math.min(constrain.applyMaxIOBConstraints(maxIob), maxIobAfterConstrain);
         }
         return maxIobAfterConstrain;

@@ -107,27 +107,27 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean isEnabled(int type) {
         return fragmentEnabled;
     }
 
     @Override
-    public boolean isVisibleInTabs() {
+    public boolean isVisibleInTabs(int type) {
         return fragmentVisible;
     }
 
     @Override
-    public boolean canBeHidden() {
+    public boolean canBeHidden(int type) {
         return true;
     }
 
     @Override
-    public void setFragmentVisible(boolean fragmentVisible) {
+    public void setFragmentVisible(int type, boolean fragmentVisible) {
         this.fragmentVisible = fragmentVisible;
     }
 
     @Override
-    public void setFragmentEnabled(boolean fragmentEnabled) {
+    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         this.fragmentEnabled = fragmentEnabled;
     }
 
@@ -214,7 +214,7 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
 
-        if (!isEnabled()) {
+        if (!isEnabled(PluginBase.APS)) {
             updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_disabled));

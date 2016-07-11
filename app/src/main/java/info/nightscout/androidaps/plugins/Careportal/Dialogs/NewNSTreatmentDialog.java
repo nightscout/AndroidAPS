@@ -327,6 +327,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     break;
                 case R.id.careportal_announcement:
                     data.put("eventType", "Announcement");
+                    data.put("isAnnouncement", true);
                     break;
                 case R.id.careportal_cgmsensorinsert:
                     data.put("eventType", "Sensor Change");

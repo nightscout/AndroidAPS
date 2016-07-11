@@ -15,13 +15,14 @@ public interface PluginBase {
     int CONSTRAINTS = 7;
     int LOOP = 8;
     int BGSOURCE = 9;
+    int LAST = 10; // keep always highest number
 
     public int getType();
 
     String getName();
-    boolean isEnabled();
-    boolean isVisibleInTabs();
-    boolean canBeHidden();
-    void setFragmentEnabled(boolean fragmentEnabled);
-    void setFragmentVisible(boolean fragmentVisible);
+    boolean isEnabled(int type);
+    boolean isVisibleInTabs(int type);
+    boolean canBeHidden(int type);
+    void setFragmentEnabled(int type, boolean fragmentEnabled);
+    void setFragmentVisible(int type, boolean fragmentVisible);
 }

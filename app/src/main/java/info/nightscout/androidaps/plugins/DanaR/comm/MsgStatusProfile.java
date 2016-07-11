@@ -21,13 +21,13 @@ public class MsgStatusProfile extends DanaRMessage {
         if (DanaRFragment.getDanaRPump().units == DanaRPump.UNITS_MGDL) {
             DanaRFragment.getDanaRPump().currentCIR = intFromBuff(bytes, 0, 2);
             DanaRFragment.getDanaRPump().currentCF = intFromBuff(bytes, 2, 2);
-            DanaRFragment.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100;
+            DanaRFragment.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100d;
             DanaRFragment.getDanaRPump().currentTarget = intFromBuff(bytes, 6, 2);
         } else {
             DanaRFragment.getDanaRPump().currentCIR = intFromBuff(bytes, 0, 2);
-            DanaRFragment.getDanaRPump().currentCF = intFromBuff(bytes, 2, 2) / 100;
-            DanaRFragment.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100;
-            DanaRFragment.getDanaRPump().currentTarget = intFromBuff(bytes, 6, 2) / 100;
+            DanaRFragment.getDanaRPump().currentCF = intFromBuff(bytes, 2, 2) / 100d;
+            DanaRFragment.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100d;
+            DanaRFragment.getDanaRPump().currentTarget = intFromBuff(bytes, 6, 2) / 100d;
        }
 
         if (Config.logDanaMessageDetail) {

@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -35,18 +38,18 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
-import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStop;
+import info.nightscout.androidaps.plugins.DanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SetWarnColor;
 
-public class DanaRFragment extends Fragment implements PluginBase, PumpInterface, ConstraintsInterface {
+public class DanaRFragment extends Fragment implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
 
     Handler mHandler;
@@ -56,12 +59,15 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     private static DanaRPump sDanaRPump = new DanaRPump();
     private static boolean useExtendedBoluses = false;
 
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
+    boolean fragmentPumpEnabled = true;
+    boolean fragmentProfileEnabled = true;
+    boolean fragmentPumpVisible = true;
     boolean visibleNow = false;
 
     Handler loopHandler = new Handler();
     Runnable refreshLoop = null;
+
+    NSProfile convertedProfile = null;
 
     TextView lastConnectionView;
     TextView btConnectionView;
@@ -73,6 +79,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     TextView batteryView;
     TextView reservoirView;
     TextView iobView;
+    Button viewProfileButton;
 
     public static DanaConnection getDanaConnection() {
         return sDanaConnection;
@@ -148,6 +155,16 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         batteryView = (TextView) view.findViewById(R.id.danar_battery);
         reservoirView = (TextView) view.findViewById(R.id.danar_reservoir);
         iobView = (TextView) view.findViewById(R.id.danar_iob);
+        viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
+
+        viewProfileButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                ProfileViewDialog profileViewDialog = new ProfileViewDialog();
+                profileViewDialog.show(manager, "ProfileViewDialog");
+            }
+        });
 
         btConnectionView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,28 +242,35 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     }
 
     @Override
-    public boolean isEnabled() {
-        return fragmentEnabled;
+    public boolean isEnabled(int type) {
+        if (type == PluginBase.PROFILE) return fragmentProfileEnabled;
+        else if (type == PluginBase.PUMP) return fragmentPumpEnabled;
+        else if (type == PluginBase.CONSTRAINTS) return fragmentPumpEnabled;
+        return false;
     }
 
     @Override
-    public boolean isVisibleInTabs() {
-        return fragmentVisible;
+    public boolean isVisibleInTabs(int type) {
+        if (type == PluginBase.PROFILE || type == PluginBase.CONSTRAINTS) return false;
+        else if (type == PluginBase.PUMP) return fragmentPumpVisible;
+        return false;
     }
 
     @Override
-    public boolean canBeHidden() {
+    public boolean canBeHidden(int type) {
         return true;
     }
 
     @Override
-    public void setFragmentEnabled(boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
-    }
+    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+        if (type == PluginBase.PROFILE) this.fragmentProfileEnabled = fragmentEnabled;
+        else if (type == PluginBase.PUMP) this.fragmentPumpEnabled = fragmentEnabled;
+     }
 
     @Override
-    public void setFragmentVisible(boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+    public void setFragmentVisible(int type, boolean fragmentVisible) {
+        if (type == PluginBase.PUMP)
+            this.fragmentPumpVisible = fragmentVisible;
     }
 
     // Pump interface
@@ -801,6 +825,15 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     @Override
     public Double applyMaxIOBConstraints(Double maxIob) {
         return maxIob;
+    }
+
+    @Nullable
+    @Override
+    public NSProfile getProfile() {
+        DanaRPump pump = getDanaRPump();
+        if (pump.lastSettingsRead.getTime() == 0)
+            return null; // no info now
+        return pump.convertedProfile;
     }
 
     // TODO: daily total constraint
