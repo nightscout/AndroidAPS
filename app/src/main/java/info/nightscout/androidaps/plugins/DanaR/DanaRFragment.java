@@ -508,6 +508,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             }
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Extended bolus set ok");
+            result.absolute = result.absolute + getBaseBasalRate();
             return result;
         }
         // We should never end here

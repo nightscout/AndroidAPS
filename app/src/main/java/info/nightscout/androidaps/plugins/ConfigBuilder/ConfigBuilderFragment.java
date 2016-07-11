@@ -159,7 +159,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.LOOP), PluginBase.LOOP);
         loopListView.setAdapter(loopDataAdapter);
         setListViewHeightBasedOnChildren(loopListView);
-        if (MainActivity.getSpecificPluginsList(PluginBase.LOOP).size() == 0) loopLabel.setVisibility(View.GONE);
+        if (MainActivity.getSpecificPluginsList(PluginBase.LOOP).size() == 0)
+            loopLabel.setVisibility(View.GONE);
         treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT), PluginBase.TREATMENT);
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
@@ -172,7 +173,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS), PluginBase.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
-        if (MainActivity.getSpecificPluginsList(PluginBase.APS).size() == 0) apsLabel.setVisibility(View.GONE);
+        if (MainActivity.getSpecificPluginsList(PluginBase.APS).size() == 0)
+            apsLabel.setVisibility(View.GONE);
         constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class), PluginBase.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
@@ -307,7 +309,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         Double rateAfterConstraints = applyBasalConstraints(absoluteRate);
         PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
         if (result.enacted && result.success) {
-            uploadTempBasalStartAbsolute(result.absolute, result.duration);
+            if (result.isPercent) {
+                uploadTempBasalStartPercent(result.percent, result.duration);
+            } else {
+                uploadTempBasalStartAbsolute(result.absolute, result.duration);
+            }
             MainApp.bus().post(new EventTempBasalChange());
         }
         return result;
@@ -366,16 +372,12 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     // TODO: logging all actions in configbuilder
     public PumpEnactResult applyAPSRequest(APSResult request) {
         request.rate = applyBasalConstraints(request.rate);
-        PumpEnactResult result = null;
+        PumpEnactResult result;
 
         if (request.rate == getBaseBasalRate()) {
             if (isTempBasalInProgress()) {
                 result = cancelTempBasal();
-                if (result.enacted) {
-                    uploadTempBasalEnd();
-                    MainApp.bus().post(new EventTempBasalChange());
-                }
-            } else {
+             } else {
                 result = new PumpEnactResult();
                 result.absolute = request.rate;
                 result.duration = 0;
@@ -392,14 +394,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             result.success = true;
         } else {
             result = setTempBasalAbsolute(request.rate, request.duration);
-            if (result.enacted) {
-                if (result.isPercent) {
-                    uploadTempBasalStartPercent(result.percent, result.duration);
-                } else {
-                    uploadTempBasalStartAbsolute(result.absolute, result.duration);
-                }
-                MainApp.bus().post(new EventTempBasalChange());
-            }
         }
         return result;
     }

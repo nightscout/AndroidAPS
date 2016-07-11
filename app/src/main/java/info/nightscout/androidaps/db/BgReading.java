@@ -59,7 +59,7 @@ public class BgReading implements DataPointInterface {
 
     public String valueToUnitsToString(String units) {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(value);
-        else return DecimalFormatter.to0Decimal(value * Constants.MGDL_TO_MMOLL);
+        else return DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL);
     }
 
     @Override
