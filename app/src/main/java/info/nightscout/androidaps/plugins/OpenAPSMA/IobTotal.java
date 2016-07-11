@@ -45,7 +45,7 @@ public class IobTotal {
         result.iob = bolusIOB.iob;
         result.activity = bolusIOB.activity;
         result.bolussnooze = bolusIOB.bolussnooze;
-        result.basaliob = basalIob.iob;
+        result.basaliob = basalIob.basaliob;
         result.netbasalinsulin = basalIob.netbasalinsulin;
         result.hightempinsulin = basalIob.hightempinsulin;
         return result;
