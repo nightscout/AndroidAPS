@@ -374,7 +374,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result;
 
-        if (request.rate == getBaseBasalRate()) {
+        if (Math.abs(request.rate - getBaseBasalRate()) < 0.1) {
             if (isTempBasalInProgress()) {
                 result = cancelTempBasal();
              } else {
@@ -385,7 +385,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 result.comment = "Basal set correctly";
                 result.success = true;
             }
-        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.05) {
+        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.1) {
             result = new PumpEnactResult();
             result.absolute = getTempBasalAbsoluteRate();
             result.duration = activePump.getTempBasal().getPlannedRemainingMinutes();
@@ -863,23 +863,29 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     public static void uploadTempBasalStartPercent(Integer percent, double durationInMinutes) {
         try {
-            // TODO: upload as absolute if in settings
-            Context context = MainApp.instance().getApplicationContext();
-            JSONObject data = new JSONObject();
-            data.put("eventType", "Temp Basal");
-            data.put("duration", durationInMinutes);
-            data.put("percent", percent - 100);
-            data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-            Bundle bundle = new Bundle();
-            bundle.putString("action", "dbAdd");
-            bundle.putString("collection", "treatments");
-            bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
+            if (useAbsolute) {
+                double absolute = MainApp.getConfigBuilder().getActivePump().getBaseBasalRate() * percent / 100d;
+                uploadTempBasalStartAbsolute(absolute, durationInMinutes);
+            } else {
+                Context context = MainApp.instance().getApplicationContext();
+                JSONObject data = new JSONObject();
+                data.put("eventType", "Temp Basal");
+                data.put("duration", durationInMinutes);
+                data.put("percent", percent - 100);
+                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+                Bundle bundle = new Bundle();
+                bundle.putString("action", "dbAdd");
+                bundle.putString("collection", "treatments");
+                bundle.putString("data", data.toString());
+                Intent intent = new Intent(Intents.ACTION_DATABASE);
+                intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                context.sendBroadcast(intent);
+                DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
+            }
         } catch (JSONException e) {
         }
     }
