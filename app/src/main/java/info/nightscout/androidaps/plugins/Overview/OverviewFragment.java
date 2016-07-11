@@ -534,7 +534,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
             TempBasal tb = MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date(time));
             if (tb != null)
-                basalArray.add(new BarDataPoint(time, tb.tempBasalConvertedToAbsolute(), true));
+                basalArray.add(new BarDataPoint(time, tb.tempBasalConvertedToAbsolute(new Date(time)), true));
             else
                 basalArray.add(new BarDataPoint(time, profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
         }

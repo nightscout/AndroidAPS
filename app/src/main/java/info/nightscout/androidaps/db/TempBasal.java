@@ -148,12 +148,18 @@ public class TempBasal {
         return isInProgress(new Date());
     }
 
-    public double tempBasalConvertedToAbsolute() {
-        if (isAbsolute) return absolute;
-        else {
+    public double tempBasalConvertedToAbsolute(Date time) {
+        if (isExtended) {
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            double absval = profile.getBasal(NSProfile.secondsFromMidnight()) * percent / 100;
+            double absval = profile.getBasal(NSProfile.secondsFromMidnight(time)) + absolute;
             return absval;
+        } else {
+            if (isAbsolute) return absolute;
+            else {
+                NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+                double absval = profile.getBasal(NSProfile.secondsFromMidnight(time)) * percent / 100;
+                return absval;
+            }
         }
     }
 
