@@ -17,17 +17,18 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
@@ -282,8 +283,8 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
             }
         } else if (isTempBasalInProgress && tempBasalRate == 0d) {
             request.changeRequested = true;
-            request.rate = baseBasalRate;
-            request.duration = 30;
+            request.rate = 0;
+            request.duration = 0;
             request.reason = MainApp.instance().getString(R.string.lowsuspend_cancelmessage);
         } else {
             request.changeRequested = false;
@@ -309,7 +310,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
                     if (lastRun != null) {
                         glucoseStatusView.setText(lastRun.lastGlucoseStatus.toSpanned());
                         minBgView.setText(DecimalFormatter.to1Decimal(lastRun.lastMinBg) + " mgdl");
-                        resultView.setText(Html.fromHtml("<b>" + getString(R.string.lowsuspend_low) + "</b>: " + lastRun.lastLow + "<br><b>" + getString(R.string.lowsuspend_lowprojected) + "</b>: " + lastRun.lastLowProjected));
+                        resultView.setText(Html.fromHtml("<b>" + getString(R.string.lowsuspend_low) + "</b>: " + lastRun.lastLow + "<br></b>" + getString(R.string.lowsuspend_lowprojected) + "</b>: " + lastRun.lastLowProjected));
                         requestView.setText(lastRun.lastAPSResult.toSpanned());
                         lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
                     }

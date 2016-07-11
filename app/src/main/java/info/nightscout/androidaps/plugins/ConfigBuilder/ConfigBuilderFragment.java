@@ -374,7 +374,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result;
 
-        if (Math.abs(request.rate - getBaseBasalRate()) < 0.1) {
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - getBaseBasalRate()) < 0.1) {
             if (isTempBasalInProgress()) {
                 result = cancelTempBasal();
              } else {
