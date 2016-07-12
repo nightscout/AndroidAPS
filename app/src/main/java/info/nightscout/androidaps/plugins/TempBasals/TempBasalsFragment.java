@@ -230,9 +230,6 @@ public class TempBasalsFragment extends Fragment implements PluginBase, TempBasa
         for (TempBasal t : tempBasals) {
             if (t.isInProgress(time)) return t;
         }
-        if (useExtendedBoluses) {
-            return getExtendedBolus(time);
-        }
         return null;
     }
 

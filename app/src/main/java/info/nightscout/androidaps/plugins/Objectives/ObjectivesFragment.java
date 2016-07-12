@@ -27,12 +27,14 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 
 public class ObjectivesFragment extends Fragment implements View.OnClickListener, PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
@@ -60,7 +62,8 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        LoopFragment loopFragment = (LoopFragment) MainActivity.getSpecificPlugin(LoopFragment.class);
+        return fragmentVisible && loopFragment != null && loopFragment.isVisibleInTabs(type);
     }
 
     @Override

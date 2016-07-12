@@ -264,6 +264,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
+    public TempBasal getTempBasal(Date time) {
+        return activePump.getTempBasal(time);
+    }
+
+    @Override
     public TempBasal getTempBasal() {
         return activePump.getTempBasal();
     }

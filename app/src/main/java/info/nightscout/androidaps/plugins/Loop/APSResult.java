@@ -24,19 +24,23 @@ public class APSResult implements Parcelable {
     @Override
     public String toString() {
         if (changeRequested)
-            return MainApp.sResources.getString(R.string.rate) + " " + DecimalFormatter.to2Decimal(rate) + " U/h\n" +
-                    MainApp.sResources.getString(R.string.duration) + " " + DecimalFormatter.to0Decimal(duration) + " min\n" +
-                    MainApp.sResources.getString(R.string.reason) + " " + reason;
+            return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h\n" +
+                    MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
+                    MainApp.sResources.getString(R.string.reason) + ": " + reason;
         else
             return MainApp.sResources.getString(R.string.nochangerequested);
     }
 
     public Spanned toSpanned() {
-        if (changeRequested)
-            return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h<br>" +
-                    "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
-                    "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason);
-        else
+        if (changeRequested) {
+            String ret = "";
+            if (rate == 0 && duration == 0) ret = MainApp.sResources.getString(R.string.canceltemp);
+            else
+                ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h<br>" +
+                        "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
+                        "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason;
+            return Html.fromHtml(ret);
+        } else
             return Html.fromHtml(MainApp.sResources.getString(R.string.nochangerequested));
     }
 
@@ -70,7 +74,8 @@ public class APSResult implements Parcelable {
         changeRequested = in.readInt() == 1;
     }
 
-    public APSResult() {}
+    public APSResult() {
+    }
 
     public APSResult clone() {
         APSResult newResult = new APSResult();

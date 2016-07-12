@@ -267,7 +267,14 @@ public class OverviewFragment extends Fragment implements PluginBase {
                                             objectivesFragment.saveProgress();
                                         }
                                     }
-                                    updateGUI();
+                                    Activity activity = getActivity();
+                                    if (activity != null)
+                                        activity.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                updateGUI();
+                                            }
+                                        });
                                 }
                             });
                         }
@@ -532,7 +539,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         long now = new Date().getTime();
         List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
         for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
-            TempBasal tb = MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date(time));
+            TempBasal tb = MainApp.getConfigBuilder().getActivePump().getTempBasal(new Date(time));
             if (tb != null)
                 basalArray.add(new BarDataPoint(time, tb.tempBasalConvertedToAbsolute(new Date(time)), true));
             else

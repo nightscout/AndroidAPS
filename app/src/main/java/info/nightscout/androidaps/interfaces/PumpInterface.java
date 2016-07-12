@@ -2,6 +2,8 @@ package info.nightscout.androidaps.interfaces;
 
 import org.json.JSONObject;
 
+import java.util.Date;
+
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
@@ -21,6 +23,7 @@ public interface PumpInterface {
     double getBaseBasalRate(); // base basal rate, not temp basal
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();
+    TempBasal getTempBasal(Date time);
     TempBasal getTempBasal();
     TempBasal getExtendedBolus();
 

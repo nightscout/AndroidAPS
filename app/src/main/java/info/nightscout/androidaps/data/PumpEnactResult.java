@@ -38,7 +38,7 @@ public class PumpEnactResult extends Object implements Parcelable {
             if (isTempCancel) {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
                 ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment + "\n" +
-                        MainApp.sResources.getString(R.string.tempcancel);
+                        MainApp.sResources.getString(R.string.canceltemp);
             } else if (isPercent) {
                 ret += "\n" + MainApp.sResources.getString(R.string.enacted) + ": " + enacted;
                 ret += "\n" + MainApp.sResources.getString(R.string.comment) + ": " + comment;
@@ -62,7 +62,7 @@ public class PumpEnactResult extends Object implements Parcelable {
             if (isTempCancel) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment +
-                        "<br>" + MainApp.sResources.getString(R.string.tempcancel);
+                        "<br>" + MainApp.sResources.getString(R.string.canceltemp);
             } else if (isPercent) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;

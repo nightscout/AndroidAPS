@@ -178,6 +178,11 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
+    public TempBasal getTempBasal(Date time) {
+        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
+    }
+
+    @Override
     public PumpEnactResult deliverTreatment(Double insulin, Integer carbs) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;

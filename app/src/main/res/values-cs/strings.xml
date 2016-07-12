@@ -232,6 +232,6 @@
     <string name="reloadprofile">Obnovit profil</string>
     <string name="save">Uložit</string>
     <string name="success">Úspěch</string>
-    <string name="tempcancel">Zrušit dočasný bazál</string>
     <string name="virtualpump_lastconnection_label">Poslední spojení:</string>
+    <string name="canceltemp">Zrušit dočasný bazál</string>
 </resources>

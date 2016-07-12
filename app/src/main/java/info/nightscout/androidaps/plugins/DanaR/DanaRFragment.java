@@ -338,6 +338,14 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         return null;
     }
 
+    public TempBasal getTempBasal(Date time) {
+        TempBasal temp = MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(time);
+        if (temp != null) return temp;
+        if (useExtendedBoluses)
+            return MainApp.getConfigBuilder().getActiveTempBasals().getExtendedBolus(time);
+        return null;
+    }
+
     public TempBasal getRealTempBasal() {
         return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
     }
@@ -406,6 +414,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             result.enacted = false;
             result.percent = 100;
             result.isPercent = true;
+            result.isTempCancel = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: doTempOff OK");
             return result;
@@ -438,6 +447,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                     result.enacted = false;
                     result.duration = ((Double) getTempBasalRemainingMinutes()).intValue();
                     result.isPercent = true;
+                    result.isTempCancel = false;
                     if (Config.logPumpActions)
                         log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
                     return result;
@@ -492,6 +502,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                 result.enacted = false;
                 result.duration = getDanaRPump().extendedBolusRemainingMinutes;
                 result.isPercent = false;
+                result.isTempCancel = false;
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Correct extended already set");
                 return result;
@@ -524,6 +535,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         ConfigBuilderFragment configBuilderFragment = MainApp.getConfigBuilder();
         percent = configBuilderFragment.applyBasalConstraints(percent);
         if (percent < 0) {
+            result.isTempCancel = false;
             result.enacted = false;
             result.success = false;
             result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
@@ -534,6 +546,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         if (getDanaRPump().isTempBasalInProgress && getDanaRPump().tempBasalPercent == percent) {
             result.enacted = false;
             result.success = true;
+            result.isTempCancel = false;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             result.duration = getDanaRPump().tempBasalRemainingMin;
             result.percent = getDanaRPump().tempBasalPercent;
@@ -549,6 +562,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             result.enacted = true;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.isTempCancel = false;
             result.duration = getDanaRPump().tempBasalRemainingMin;
             result.percent = getDanaRPump().tempBasalPercent;
             result.isPercent = true;
@@ -578,6 +592,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             result.duration = getDanaRPump().extendedBolusRemainingMinutes;
             result.absolute = getDanaRPump().extendedBolusAbsoluteRate;
             result.isPercent = false;
+            result.isTempCancel = false;
             if (Config.logPumpActions)
                 log.debug("setExtendedBolus: Correct extended bolus already set");
             return result;
@@ -589,6 +604,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             result.enacted = true;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.isTempCancel = false;
             result.duration = getDanaRPump().extendedBolusRemainingMinutes;
             result.absolute = getDanaRPump().extendedBolusAbsoluteRate;
             result.bolusDelivered = getDanaRPump().extendedBolusAmount;
@@ -614,6 +630,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         result.success = true;
         result.enacted = false;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        result.isTempCancel = true;
         return result;
     }
 
@@ -623,9 +640,11 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         if (getDanaRPump().isTempBasalInProgress) {
             getDanaConnection().tempBasalStop();
             result.enacted = true;
+            result.isTempCancel = true;
         }
         if (!getDanaRPump().isTempBasalInProgress) {
             result.success = true;
+            result.isTempCancel = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("cancelRealTempBasal: OK");
@@ -633,6 +652,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         } else {
             result.success = false;
             result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+            result.isTempCancel = true;
             log.error("cancelRealTempBasal: Failed to cancel temp basal");
             return result;
         }
@@ -645,15 +665,18 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         if (getDanaRPump().isExtendedInProgress) {
             getDanaConnection().extendedBolusStop();
             result.enacted = true;
+            result.isTempCancel = true;
         }
         if (!getDanaRPump().isExtendedInProgress) {
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.isTempCancel = true;
             if (Config.logPumpActions)
                 log.debug("cancelExtendedBolus: OK");
             return result;
         } else {
             result.success = false;
+            result.isTempCancel = true;
             result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
             log.error("cancelExtendedBolus: Failed to cancel extended bolus");
             return result;
