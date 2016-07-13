@@ -172,10 +172,9 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                 mHandler.post(new Runnable() {
                                   @Override
                                   public void run() {
-                                      if (getDanaConnection() != null)
-                                          getDanaConnection().connectIfNotConnected("Connect request from GUI");
-                                      else
-                                          log.error("Connect req from GUI: getDanaConnection() is null");
+                                      if (getDanaConnection() == null)
+                                          setDanaConnection(new DanaConnection(MainApp.bus()));
+                                      getDanaConnection().connectIfNotConnected("Connect request from GUI");
                                   }
                               }
                 );
@@ -265,7 +264,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE) this.fragmentProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP) this.fragmentPumpEnabled = fragmentEnabled;
-     }
+    }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
@@ -292,10 +291,10 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
 
     @Override
     public void setNewBasalProfile(NSProfile profile) {
-        if (getDanaConnection() != null) {
-            getDanaConnection().connectIfNotConnected("setNewBasalProfile");
-            getDanaConnection().updateBasalsInPump(profile);
-        }
+        if (getDanaConnection() == null)
+            setDanaConnection(new DanaConnection(MainApp.bus()));
+        getDanaConnection().connectIfNotConnected("setNewBasalProfile");
+        getDanaConnection().updateBasalsInPump(profile);
     }
 
     @Override
@@ -670,13 +669,11 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         if (!getDanaRPump().isExtendedInProgress) {
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-            result.isTempCancel = true;
             if (Config.logPumpActions)
                 log.debug("cancelExtendedBolus: OK");
             return result;
         } else {
             result.success = false;
-            result.isTempCancel = true;
             result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
             log.error("cancelExtendedBolus: Failed to cancel extended bolus");
             return result;
