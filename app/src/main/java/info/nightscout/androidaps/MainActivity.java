@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.SafetyFragment.SafetyFragment;
 import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
+import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
@@ -100,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             if (Config.OBJECTIVESENABLED) pluginsList.add(ObjectivesFragment.newInstance());
             pluginsList.add(SourceXdripFragment.newInstance());
             pluginsList.add(SourceNSClientFragment.newInstance());
+            if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.newInstance());
             pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
 
             registerBus();

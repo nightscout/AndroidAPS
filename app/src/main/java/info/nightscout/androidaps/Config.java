@@ -13,6 +13,7 @@ public class Config {
     public static final boolean OBJECTIVESENABLED = APS && true;
 
     public static final boolean CAREPORTALENABLED = true;
+    public static final boolean SMSCOMMUNICATORENABLED = true;
 
     public static final boolean DANAR = true;
 

@@ -242,5 +242,6 @@
     <string name="percent">Percent</string>
     <string name="absolute">Absolute</string>
     <string name="canceltemp">Cancel temp basal</string>
+    <string name="smscommunicator">Sms Communicator</string>
 
 </resources>
