@@ -243,5 +243,6 @@
     <string name="absolute">Absolute</string>
     <string name="canceltemp">Cancel temp basal</string>
     <string name="smscommunicator">Sms Communicator</string>
+    <string name="mm640g">MM 640g</string>
 
 </resources>

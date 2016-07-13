@@ -17,6 +17,8 @@ public class Config {
 
     public static final boolean DANAR = true;
 
+    public static final boolean MM640G = true;
+
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;
     public static final boolean logIncommingBG = true;

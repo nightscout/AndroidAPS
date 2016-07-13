@@ -85,6 +85,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             addPreferencesFromResource(R.xml.pref_nightscout);
             if (Config.DANAR)
                 addPreferencesFromResource(R.xml.pref_danar);
+            if (Config.MM640G)
+                addPreferencesFromResource(R.xml.pref_mm640g);
             if (Config.CAREPORTALENABLED)
                 addPreferencesFromResource(R.xml.pref_careportal);
             initSummary(getPreferenceScreen());

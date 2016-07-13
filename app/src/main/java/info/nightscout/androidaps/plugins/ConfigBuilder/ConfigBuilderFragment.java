@@ -150,7 +150,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     void setViews() {
-        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE), PluginBase.BGSOURCE);
+        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(BgSourceInterface.class), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
         pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP), PluginBase.PUMP);
@@ -455,9 +455,10 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                         CheckBox cb = (CheckBox) v;
                         PluginBase plugin = (PluginBase) cb.getTag();
                         plugin.setFragmentEnabled(type, cb.isChecked());
-                        if (cb.isChecked()) plugin.setFragmentVisible(type, true);
+                        plugin.setFragmentVisible(type, cb.isChecked());
                         onEnabledCategoryChanged(plugin, type);
                         storeSettings();
+                        MainApp.bus().post(new EventRefreshGui());
                     }
                 });
 
@@ -569,12 +570,13 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                         // this is new selected
                     } else {
                         p.setFragmentEnabled(type, false);
-                        setViews();
+                        p.setFragmentVisible(type, false);
                     }
                 }
             } else { // enable first plugin in list
                 pluginsInCategory.get(0).setFragmentEnabled(type, true);
             }
+            setViews();
         }
     }
 

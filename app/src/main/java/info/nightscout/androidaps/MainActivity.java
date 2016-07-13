@@ -34,6 +34,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
+import info.nightscout.androidaps.plugins.MM640g.MM640gFragment;
 import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.newInstance());
             if (Config.DANAR) pluginsList.add(DanaRFragment.newInstance());
+            if (Config.MM640G) pluginsList.add(MM640gFragment.newInstance());
             pluginsList.add(VirtualPumpFragment.newInstance());
             if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.newInstance());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.newInstance());
