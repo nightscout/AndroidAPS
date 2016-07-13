@@ -489,7 +489,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
             int type = plugin.getType();
             // Force enabled if there is only one plugin
-            if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
+            if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE )
                 if (pluginList.size() < 2)
                     holder.checkboxEnabled.setEnabled(false);
 
@@ -552,6 +552,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(ProfileInterface.class);
                 break;
             case PluginBase.BGSOURCE:
+                pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(BgSourceInterface.class);
+                break;
             case PluginBase.LOOP:
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
@@ -591,7 +593,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
 
         // PluginBase.BGSOURCE
-        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.BGSOURCE);
+        pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(BgSourceInterface.class);
         activeBgSource = (BgSourceInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.BGSOURCE);
         if (Config.logConfigBuilder)
             log.debug("Selected bgSource interface: " + ((PluginBase) activeBgSource).getName());
