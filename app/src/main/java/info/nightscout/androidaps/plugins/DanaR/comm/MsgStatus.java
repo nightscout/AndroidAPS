@@ -20,8 +20,11 @@ public class MsgStatus extends DanaRMessage {
         DanaRFragment.getDanaRPump().isExtendedInProgress = intFromBuff(bytes, 3, 1) == 1;
         DanaRFragment.getDanaRPump().extendedBolusMinutes = intFromBuff(bytes, 4, 2);
         DanaRFragment.getDanaRPump().extendedBolusAmount = intFromBuff(bytes, 6, 2) / 100d;
-        DanaRFragment.getDanaRPump().lastBolusTime = dateTimeFromBuff(bytes, 8);
-        DanaRFragment.getDanaRPump().lastBolusAmount = intFromBuff(bytes, 13, 2) / 100d;
+        Double lastBolusAmount = intFromBuff(bytes, 13, 2) / 100d;
+        if (lastBolusAmount != 0d) {
+            DanaRFragment.getDanaRPump().lastBolusTime = dateTimeFromBuff(bytes, 8);
+            DanaRFragment.getDanaRPump().lastBolusAmount = lastBolusAmount;
+        }
         DanaRFragment.getDanaRPump().iob = intFromBuff(bytes, 15, 2) / 100d;
 
         if (Config.logDanaMessageDetail) {
