@@ -134,7 +134,7 @@ public class DanaConnection {
                 String action = intent.getAction();
                 if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                     log.debug("Device has disconnected " + device.getName());//Device has disconnected
-                    if (mDevice.getName().equals(device.getName())) {
+                    if (mDevice != null && mDevice.getName().equals(device.getName())) {
                         if (mRfcommSocket != null) {
                             try {
                                 mInputStream.close();
