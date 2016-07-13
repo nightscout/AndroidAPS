@@ -9,6 +9,8 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -50,6 +52,10 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     TextView requestView;
     TextView constraintsProcessedView;
     TextView setByPumpView;
+
+    Handler mHandler;
+    public static HandlerThread mHandlerThread;
+
 
     public class LastRun implements Parcelable {
         public APSResult request = null;
@@ -142,6 +148,9 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
     public LoopFragment() {
         super();
+        mHandlerThread = new HandlerThread(LoopFragment.class.getSimpleName());
+        mHandlerThread.start();
+        mHandler = new Handler(mHandlerThread.getLooper());
         registerBus();
     }
 
@@ -226,7 +235,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
                 });
             return;
         }
-        ConfigBuilderFragment configBuilder = MainApp.getConfigBuilder();
+        final ConfigBuilderFragment configBuilder = MainApp.getConfigBuilder();
         APSResult result = null;
 
         if (constraintsInterface == null || configBuilder == null || !isEnabled(PluginBase.GENERAL))
@@ -262,7 +271,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         }
 
         // check rate for constrais
-        APSResult resultAfterConstraints = result.clone();
+        final APSResult resultAfterConstraints = result.clone();
         resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
 
         if (lastRun == null) lastRun = new LastRun();
@@ -274,11 +283,24 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
 
         if (constraintsInterface.isClosedModeEnabled()) {
             if (result.changeRequested) {
-                PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
-                if (applyResult.enacted) {
-                    lastRun.setByPump = applyResult;
-                    lastRun.lastEnact = lastRun.lastAPSRun;
-                }
+                final PumpEnactResult waiting = new PumpEnactResult();
+                final PumpEnactResult previousResult = lastRun.setByPump;
+                waiting.queued = true;
+                lastRun.setByPump = waiting;
+                updateGUI();
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        final PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
+                        if (applyResult.enacted) {
+                            lastRun.setByPump = applyResult;
+                            lastRun.lastEnact = lastRun.lastAPSRun;
+                        } else {
+                            lastRun.setByPump = previousResult;
+                        }
+                        updateGUI();
+                    }
+                });
             } else {
                 lastRun.setByPump = null;
                 lastRun.source = null;

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
 public class PumpEnactResult extends Object implements Parcelable {
@@ -28,8 +29,10 @@ public class PumpEnactResult extends Object implements Parcelable {
     public Double bolusDelivered = 0d; // real value of delivered insulin
     public Integer carbsDelivered = 0; // real value of delivered carbs
 
-    public String log() {
-        return "Success: " + success + " Enacted: " + enacted + " Comment: " + comment + " Duration: " + duration + " Absolute: " + absolute + " Percent: " + percent + " IsPercent: " + isPercent;
+    public boolean queued = false;
+
+     public String log() {
+        return "Success: " + success + " Enacted: " + enacted + " Comment: " + comment + " Duration: " + duration + " Absolute: " + absolute + " Percent: " + percent + " IsPercent: " + isPercent + " Queued: " + queued;
     }
 
     public String toString() {
@@ -57,8 +60,10 @@ public class PumpEnactResult extends Object implements Parcelable {
     }
 
     public Spanned toSpanned() {
-        String ret = "<b>" + MainApp.sResources.getString(R.string.success) + "</b>: " + success;
-        if (enacted) {
+        String ret = MainApp.sResources.getString(R.string.success) + ": " + success;
+        if (queued) {
+            ret = MainApp.sResources.getString(R.string.waitingforpumpresult);
+        } else if (enacted) {
             if (isTempCancel) {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment +
@@ -72,7 +77,7 @@ public class PumpEnactResult extends Object implements Parcelable {
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.enacted) + "</b>: " + enacted;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
                 ret += "<br><b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + duration + " min";
-                ret += "<br><b>" + MainApp.sResources.getString(R.string.absolute) + "</b>: " + absolute + " U/h";
+                ret += "<br><b>" + MainApp.sResources.getString(R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h";
             }
         } else {
             ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
