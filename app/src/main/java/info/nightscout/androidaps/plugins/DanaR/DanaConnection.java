@@ -68,6 +68,8 @@ public class DanaConnection {
     PowerManager.WakeLock mWakeLock;
     private Treatment bolusingTreatment = null;
 
+    private static Object connectionInProgress = new Object();
+
     private DanaRFragment danaRFragment;
     private DanaRPump danaRPump;
 
@@ -77,7 +79,7 @@ public class DanaConnection {
 
     private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
-// TODO: keepalive kills active connection
+    // TODO: keepalive kills active connection
     public DanaConnection(Bus bus) {
         danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
         danaRFragment.setDanaConnection(this);
@@ -159,37 +161,39 @@ public class DanaConnection {
     }
 
     public synchronized void connectIfNotConnected(String callerName) {
-        mWakeLock.acquire();
-        long startTime = System.currentTimeMillis();
-        short connectionAttemptCount = 0;
-        if (!(isConnected())) {
-            long timeToConnectTimeSoFar = 0;
-            while (!(isConnected())) {
-                timeToConnectTimeSoFar = (System.currentTimeMillis() - startTime) / 1000;
-                mBus.post(new EventDanaRConnectionStatus(true, false, connectionAttemptCount));
-                connectBT();
-                if (isConnected()) {
-                    mBus.post(new EventDanaRConnectionStatus(false, true, 0));
-                    break;
+        synchronized (connectionInProgress) {
+            mWakeLock.acquire();
+            long startTime = System.currentTimeMillis();
+            short connectionAttemptCount = 0;
+            if (!(isConnected())) {
+                long timeToConnectTimeSoFar = 0;
+                while (!(isConnected())) {
+                    timeToConnectTimeSoFar = (System.currentTimeMillis() - startTime) / 1000;
+                    mBus.post(new EventDanaRConnectionStatus(true, false, connectionAttemptCount));
+                    connectBT();
+                    if (isConnected()) {
+                        mBus.post(new EventDanaRConnectionStatus(false, true, 0));
+                        break;
+                    }
+                    if (Config.logDanaBTComm)
+                        log.debug("connectIfNotConnected waiting " + timeToConnectTimeSoFar + "s attempts:" + connectionAttemptCount + " caller:" + callerName);
+                    connectionAttemptCount++;
+
+                    if (timeToConnectTimeSoFar / 60 > 15 || connectionAttemptCount > 180) {
+                        Intent alarmServiceIntent = new Intent(MainApp.instance().getApplicationContext(), AlertService.class);
+                        alarmServiceIntent.putExtra("alarmText", MainApp.sResources.getString(R.string.connectionerror));
+                        MainApp.instance().getApplicationContext().startService(alarmServiceIntent);
+                    }
+                    waitMsec(1000);
                 }
                 if (Config.logDanaBTComm)
-                    log.debug("connectIfNotConnected waiting " + timeToConnectTimeSoFar + "s attempts:" + connectionAttemptCount + " caller:" + callerName);
-                connectionAttemptCount++;
-
-                if (timeToConnectTimeSoFar / 60 > 15 || connectionAttemptCount > 180) {
-                    Intent alarmServiceIntent = new Intent(MainApp.instance().getApplicationContext(), AlertService.class);
-                    alarmServiceIntent.putExtra("alarmText", MainApp.sResources.getString(R.string.connectionerror));
-                    MainApp.instance().getApplicationContext().startService(alarmServiceIntent);
-                }
-                waitMsec(1000);
+                    log.debug("connectIfNotConnected took " + timeToConnectTimeSoFar + "s attempts:" + connectionAttemptCount);
+                pingStatus();
+            } else {
+                mBus.post(new EventDanaRConnectionStatus(false, true, 0));
             }
-            if (Config.logDanaBTComm)
-                log.debug("connectIfNotConnected took " + timeToConnectTimeSoFar + "s attempts:" + connectionAttemptCount);
-            pingStatus();
-        } else {
-            mBus.post(new EventDanaRConnectionStatus(false, true, 0));
+            mWakeLock.release();
         }
-        mWakeLock.release();
     }
 
     private synchronized void connectBT() {
