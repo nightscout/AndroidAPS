@@ -81,7 +81,7 @@ public class JSONFormatter {
                 ret += visit((JSONObject) object, indent);
             } else {
                 if (object instanceof String) {
-                    ret += write("\"" + (String) object + "\"", indent);
+                    ret += write("\"" + ((String) object).replace("<", "&lt;").replace(">", "&gt;") + "\"", indent);
                 } else {
                     ret += write(String.valueOf(object), indent);
                 }

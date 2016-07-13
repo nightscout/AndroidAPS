@@ -38,7 +38,7 @@ public class APSResult implements Parcelable {
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h<br>" +
                         "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
-                        "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason;
+                        "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return Html.fromHtml(ret);
         } else
             return Html.fromHtml(MainApp.sResources.getString(R.string.nochangerequested));
