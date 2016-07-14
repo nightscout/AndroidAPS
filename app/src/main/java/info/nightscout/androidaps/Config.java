@@ -31,6 +31,7 @@ public class Config {
     public static final boolean logTempBasalsCut = true;
     public static final boolean logNSUpload = true;
     public static final boolean logPumpActions = true;
+    public static final boolean logSMSComm = true;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;

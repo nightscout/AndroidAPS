@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Telephony;
 import android.support.annotation.Nullable;
+import android.telephony.SmsMessage;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -32,10 +34,13 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
+import info.nightscout.androidaps.plugins.SmsCommunicator.Events.EventNewSMS;
+import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.receivers.NSClientDataReceiver;
@@ -50,6 +55,7 @@ public class DataService extends IntentService {
 
     boolean xDripEnabled = false;
     boolean nsClientEnabled = true;
+    SmsCommunicatorFragment smsCommunicatorFragment = null;
 
     public DataService() {
         super("DataService");
@@ -68,6 +74,10 @@ public class DataService extends IntentService {
             if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceNSClientFragment.class)) {
                 xDripEnabled = false;
                 nsClientEnabled = true;
+            }
+
+            if (MainActivity.getSpecificPlugin(SmsCommunicatorFragment.class) != null) {
+                smsCommunicatorFragment = (SmsCommunicatorFragment) MainActivity.getSpecificPlugin(SmsCommunicatorFragment.class);
             }
         }
 
@@ -88,6 +98,9 @@ public class DataService extends IntentService {
                     Intents.ACTION_NEW_MBG.equals(action)
                     ) {
                 handleNewDataFromNSClient(intent);
+                NSClientDataReceiver.completeWakefulIntent(intent);
+            } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
+                handleNewSMS(intent);
                 NSClientDataReceiver.completeWakefulIntent(intent);
             }
         }
@@ -482,4 +495,11 @@ public class DataService extends IntentService {
             log.debug("REMOVE: Not stored treatment (ignoring): " + _id);
         }
     }
+
+    private void handleNewSMS(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+        MainApp.bus().post(new EventNewSMS(bundle));
+    }
+
 }

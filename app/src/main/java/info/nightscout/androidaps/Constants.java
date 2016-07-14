@@ -22,4 +22,6 @@ public class Constants {
     public static final int hoursToKeepInDatabase = 24;
 
     public static final long keepAliveMsecs = 30 * 60 * 1000L;
+
+    public static final long remoteBolusMinDistance = 15 * 60 * 1000L;
 }

@@ -746,7 +746,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                     }
                     if (getDanaRPump().lastBolusTime.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - getDanaRPump().lastBolusTime.getTime();
-                        int agoHours = (int) (agoMsec / 60d / 60d / 1000d);
+                        double agoHours = (int) (agoMsec / 60d / 60d / 1000d);
                         if (agoHours < 6) // max 6h back
                             lastBolusView.setText(formatTime.format(getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getDanaRPump().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
@@ -854,5 +854,30 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         return pump.convertedProfile;
     }
 
+    // Reply for sms communicator
+    public String shortStatus() {
+        final DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT);
+        String ret = "";
+        if (getDanaRPump().lastConnection.getTime() != 0) {
+            Long agoMsec = new Date().getTime() - getDanaRPump().lastConnection.getTime();
+            int agoMin = (int) (agoMsec / 60d / 1000d);
+            ret += "LastConn: " + agoMin + " minago\n";
+        }
+        if (getDanaRPump().lastBolusTime.getTime() != 0) {
+            Long agoMsec = new Date().getTime() - getDanaRPump().lastBolusTime.getTime();
+            long agoHours = (int) (agoMsec / 60d / 60d / 1000d);
+            ret += "LastBolus: " + DecimalFormatter.to2Decimal(getDanaRPump().lastBolusAmount) + "U @" + formatTime.format(getDanaRPump().lastBolusTime) + "\n";
+        }
+        if (isRealTempBasalInProgress()) {
+            ret += "Temp: " + getRealTempBasal().toString() + "\n";
+        }
+        if (isExtendedBoluslInProgress()) {
+            ret += "Extended: " + getExtendedBolus().toString() + "\n";
+        }
+        ret += "IOB: " + getDanaRPump().iob + "U\n";
+        ret += "Reserv: " + DecimalFormatter.to0Decimal(getDanaRPump().reservoirRemainingUnits) + "U\n";
+        ret += "Batt: " + getDanaRPump().batteryRemaining + "\n";
+        return ret;
+    }
     // TODO: daily total constraint
 }

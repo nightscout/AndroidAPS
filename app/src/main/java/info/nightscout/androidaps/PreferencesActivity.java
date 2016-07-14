@@ -49,7 +49,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (pref.getTitle().toString().toLowerCase().contains("password"))
             {
                 pref.setSummary("******");
-            } else {
+            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")){
                 pref.setSummary(editTextPref.getText());
             }
         }
@@ -75,6 +75,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_language);
+            if (Config.CAREPORTALENABLED)
+                addPreferencesFromResource(R.xml.pref_careportal);
             addPreferencesFromResource(R.xml.pref_treatments);
             if (Config.APS)
                 addPreferencesFromResource(R.xml.pref_closedmode);
@@ -87,8 +89,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_danar);
             if (Config.MM640G)
                 addPreferencesFromResource(R.xml.pref_mm640g);
-            if (Config.CAREPORTALENABLED)
-                addPreferencesFromResource(R.xml.pref_careportal);
+            if (Config.SMSCOMMUNICATORENABLED)
+                addPreferencesFromResource(R.xml.pref_smscommunicator);
             initSummary(getPreferenceScreen());
         }
 

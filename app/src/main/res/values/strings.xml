@@ -242,8 +242,15 @@
     <string name="percent">Percent</string>
     <string name="absolute">Absolute</string>
     <string name="canceltemp">Cancel temp basal</string>
-    <string name="smscommunicator">Sms Communicator</string>
+    <string name="smscommunicator">SMS Communicator</string>
     <string name="mm640g">MM 640g</string>
     <string name="waitingforpumpresult">Waiting for result</string>
+    <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string formatted="false" name="replywithcode">To deliver bolus %.2fU reply with code %s</string>
+    <string name="bolusfailed">Bolus failed</string>
+    <string formatted="false" name="bolusdelivered">Bolus %.2fU delivered successfully</string>
+    <string name="smscommunicator_remotebolusingallowed">Allow remote bolusing via SMS</string>
+    <string name="remotebolusnotallowed">Remote bolus not allowed</string>
 
 </resources>

@@ -65,6 +65,16 @@
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
+        <!-- Receive new SMS messages -->
+        <receiver
+            android:name=".plugins.SmsCommunicator.Receivers.SmsReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+            </intent-filter>
+        </receiver>
+
         <!-- Service processing incomming data -->
         <service
             android:name=".Services.DataService"
@@ -83,7 +93,8 @@
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".AgreementActivity"></activity>
+        <activity android:name=".AgreementActivity" />
+
     </application>
 
 </manifest>
