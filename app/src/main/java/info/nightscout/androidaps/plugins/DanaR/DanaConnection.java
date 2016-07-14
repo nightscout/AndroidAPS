@@ -248,7 +248,7 @@ public class DanaConnection {
         if (scheduledDisconnection != null)
             scheduledDisconnection.cancel(false);
         Runnable task = new DisconnectRunnable();
-        final int sec = 3;
+        final int sec = 5;
         scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
         //if (Config.logDanaBTComm)
         //    log.debug("Disconnection scheduled in " + sec + "secs");
