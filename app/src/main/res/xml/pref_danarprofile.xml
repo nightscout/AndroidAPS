@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="DanaRProfile"
+        android:title="@string/danarprofile">
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="danarprofile_dia"
+            android:numeric="decimal"
+            android:title="@string/danarprofile_dia" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="danarprofile_car"
+            android:numeric="decimal"
+            android:title="@string/danarprofile_car" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -257,5 +257,8 @@
     <string name="glucosetype_manual">Manual</string>
     <string name="careportal_temporarytarget">Temporary Target</string>
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
+    <string name="danarprofile">DanaR profile settings</string>
+    <string name="danarprofile_dia">DIA [h]</string>
+    <string name="danarprofile_car">Carbs absorption rate</string>
 
 </resources>

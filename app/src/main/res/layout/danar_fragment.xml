@@ -260,7 +260,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/danar_viewprofile"
-                android:id="@+id/danar_viewprofile" />
+                android:id="@+id/danar_viewprofile"
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 

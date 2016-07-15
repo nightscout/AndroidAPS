@@ -13,7 +13,9 @@ import android.preference.PreferenceManager;
 
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.BluetoothDevicePreference;
+import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.utils.LocaleHelper;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -85,8 +87,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (Config.LOWSUSPEDENABLED)
                 addPreferencesFromResource(R.xml.pref_lowsuspend);
             addPreferencesFromResource(R.xml.pref_nightscout);
-            if (Config.DANAR)
+            if (Config.DANAR) {
                 addPreferencesFromResource(R.xml.pref_danar);
+                DanaRFragment danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
+                if (danaRFragment != null && danaRFragment.isEnabled(PluginBase.PROFILE)) {
+                    addPreferencesFromResource(R.xml.pref_danarprofile);
+                }
+            }
             if (Config.MM640G)
                 addPreferencesFromResource(R.xml.pref_mm640g);
             if (Config.SMSCOMMUNICATORENABLED)

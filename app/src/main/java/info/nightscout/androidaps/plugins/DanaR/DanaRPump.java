@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.DanaR;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -8,7 +11,9 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SafeParse;
 
 /**
  * Created by mike on 04.07.2016.
@@ -86,9 +91,7 @@ public class DanaRPump {
     public double maxBolus;
     public double maxBasal;
 
-    NSProfile convertedProfile = null;
-
-    public void createConvertedProfile() {
+    public NSProfile createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();
@@ -98,10 +101,14 @@ public class DanaRPump {
 //        Evening / 17:00–21:59
 //        Night / 22:00–5:59
 
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        double dia = SafeParse.stringToDouble(SP.getString("danarprofile_dia", "3"));
+        double car = SafeParse.stringToDouble(SP.getString("danarprofile_car", "20"));
+
         try {
             json.put("defaultProfile", "" + (activeProfile + 1));
             json.put("store", store);
-            profile.put("dia", 3); // TODO: fixed DIA, maybe would be needed to have it configurable in settings
+            profile.put("dia", dia);
 
             JSONArray carbratios = new JSONArray();
             carbratios.put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCF));
@@ -111,7 +118,7 @@ public class DanaRPump {
             carbratios.put(new JSONObject().put("time", "22:00").put("timeAsSeconds", 22 * 3600).put("value", nightCF));
             profile.put("carbratio", carbratios);
 
-            profile.put("carbs_hr", 20); // TODO: fixed CAR, maybe would be needed to have it configurable in settings
+            profile.put("carbs_hr", car);
 
             JSONArray sens = new JSONArray();
             sens.put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCIR));
@@ -143,7 +150,7 @@ public class DanaRPump {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        convertedProfile = new NSProfile(json, "" + (activeProfile + 1));
+        return new NSProfile(json, "" + (activeProfile + 1));
     }
 
 }

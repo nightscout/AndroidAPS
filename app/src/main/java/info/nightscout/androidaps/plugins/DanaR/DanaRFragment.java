@@ -67,8 +67,6 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     Handler loopHandler = new Handler();
     Runnable refreshLoop = null;
 
-    NSProfile convertedProfile = null;
-
     TextView lastConnectionView;
     TextView btConnectionView;
     TextView lastBolusView;
@@ -851,7 +849,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         DanaRPump pump = getDanaRPump();
         if (pump.lastSettingsRead.getTime() == 0)
             return null; // no info now
-        return pump.convertedProfile;
+        return pump.createConvertedProfile();
     }
 
     // Reply for sms communicator
