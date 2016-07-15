@@ -19,6 +19,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -37,6 +39,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -96,6 +99,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public Integer nsClientVersionCode = 0;
 
     ArrayList<PluginBase> pluginList;
+
+    Date lastDeviceStatusUpload = new Date(0);
 
     // TODO: sorting
     // TODO: Toast and sound when command failed
@@ -571,6 +576,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             case PluginBase.APS:
             case PluginBase.GENERAL:
             case PluginBase.CONSTRAINTS:
+            case PluginBase.LOOP:
                 break;
             // Single selection allowed
             case PluginBase.PROFILE:
@@ -579,7 +585,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             case PluginBase.BGSOURCE:
                 pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(BgSourceInterface.class);
                 break;
-            case PluginBase.LOOP:
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
             case PluginBase.PUMP:
@@ -872,6 +877,20 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         return maxIobAfterConstrain;
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventNewBG ev) {
+        // Give some time to Loop
+        try {
+            Thread.sleep(120* 1000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        // if status not uploaded, upload pump status only
+        if (new Date().getTime() - lastDeviceStatusUpload.getTime() > 120 * 1000L) {
+            uploadDeviceStatus();
+        }
+    }
+
     public static void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes) {
         try {
             Context context = MainApp.instance().getApplicationContext();
@@ -972,38 +991,37 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
             LoopFragment.LastRun lastRun = LoopFragment.lastRun;
-            if (lastRun == null) return;
-            if (lastRun.lastAPSRun.getTime() < new Date().getTime() - 60 * 1000L)
-                return; // do not send if result is older than 1 min
+            if (lastRun != null && lastRun.lastAPSRun.getTime() > new Date().getTime() - 60 * 1000L) {
+                // do not send if result is older than 1 min
+                APSResult apsResult = lastRun.request;
+                apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
+                deviceStatus.suggested = apsResult.json();
 
-            APSResult apsResult = lastRun.request;
-            apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
-            deviceStatus.suggested = apsResult.json();
+                if (lastRun.request instanceof DetermineBasalResult) {
+                    DetermineBasalResult result = (DetermineBasalResult) lastRun.request;
+                    deviceStatus.iob = result.iob.json();
+                    deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                }
 
-            if (lastRun.request instanceof DetermineBasalResult) {
-                DetermineBasalResult result = (DetermineBasalResult) lastRun.request;
-                deviceStatus.iob = result.iob.json();
-                deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                if (lastRun.setByPump != null && lastRun.setByPump.enacted) { // enacted
+                    deviceStatus.enacted = lastRun.request.json();
+                    deviceStatus.enacted.put("rate", lastRun.setByPump.json().get("rate"));
+                    deviceStatus.enacted.put("duration", lastRun.setByPump.json().get("duration"));
+                    deviceStatus.enacted.put("recieved", true);
+                    JSONObject requested = new JSONObject();
+                    requested.put("duration", lastRun.request.duration);
+                    requested.put("rate", lastRun.request.rate);
+                    requested.put("temp", "absolute");
+                    deviceStatus.enacted.put("requested", requested);
+                }
             }
-
-            if (lastRun.setByPump != null && lastRun.setByPump.enacted) { // enacted
-                deviceStatus.enacted = lastRun.request.json();
-                deviceStatus.enacted.put("rate", lastRun.setByPump.json().get("rate"));
-                deviceStatus.enacted.put("duration", lastRun.setByPump.json().get("duration"));
-                deviceStatus.enacted.put("recieved", true);
-                JSONObject requested = new JSONObject();
-                requested.put("duration", lastRun.request.duration);
-                requested.put("rate", lastRun.request.rate);
-                requested.put("temp", "absolute");
-                deviceStatus.enacted.put("requested", requested);
-            }
-
             deviceStatus.device = "openaps://" + getActivePump().deviceID();
             deviceStatus.pump = getActivePump().getJSONStatus();
 
             deviceStatus.created_at = DateUtil.toISOString(new Date());
 
             deviceStatus.sendToNSClient();
+            lastDeviceStatusUpload = new Date();
         } catch (JSONException e) {
             e.printStackTrace();
         }

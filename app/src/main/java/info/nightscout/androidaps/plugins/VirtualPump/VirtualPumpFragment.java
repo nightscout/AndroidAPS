@@ -50,8 +50,6 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     boolean fragmentVisible = true;
     boolean visibleNow = false;
 
-    // TODO: upload pump status without Loop plugin too
-
     @Override
     public String getName() {
         return MainApp.instance().getString(R.string.virtualpump);
