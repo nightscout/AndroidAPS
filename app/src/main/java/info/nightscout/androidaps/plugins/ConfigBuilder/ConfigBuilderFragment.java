@@ -285,6 +285,9 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
         PumpEnactResult result = activePump.deliverTreatment(insulin, carbs);
 
+        if (Config.logCongigBuilderActions)
+            log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
+
         if (result.success) {
             Treatment t = new Treatment();
             t.insulin = result.bolusDelivered;
@@ -313,6 +316,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         Double rateAfterConstraints = applyBasalConstraints(absoluteRate);
         PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
+        if (Config.logCongigBuilderActions)
+            log.debug("setTempBasalAbsolute rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
         if (result.enacted && result.success) {
             if (result.isPercent) {
                 uploadTempBasalStartPercent(result.percent, result.duration);
@@ -335,6 +340,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         Integer percentAfterConstraints = applyBasalConstraints(percent);
         PumpEnactResult result = activePump.setTempBasalPercent(percentAfterConstraints, durationInMinutes);
+        if (Config.logCongigBuilderActions)
+            log.debug("setTempBasalPercent percent: " + percentAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
         if (result.enacted && result.success) {
             uploadTempBasalStartPercent(result.percent, result.duration);
             MainApp.bus().post(new EventTempBasalChange());
@@ -346,6 +353,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         Double rateAfterConstraints = applyBolusConstraints(insulin);
         PumpEnactResult result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
+        if (Config.logCongigBuilderActions)
+            log.debug("setExtendedBolus rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
         if (result.enacted && result.success) {
             uploadExtendedBolus(result.bolusDelivered, result.duration);
             MainApp.bus().post(new EventTreatmentChange());
@@ -356,6 +365,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public PumpEnactResult cancelTempBasal() {
         PumpEnactResult result = activePump.cancelTempBasal();
+        if (Config.logCongigBuilderActions)
+            log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
         if (result.enacted && result.success) {
             uploadTempBasalEnd();
             MainApp.bus().post(new EventTempBasalChange());
@@ -365,7 +376,10 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
     @Override
     public PumpEnactResult cancelExtendedBolus() {
-        return activePump.cancelExtendedBolus();
+        PumpEnactResult result = activePump.cancelExtendedBolus();
+        if (Config.logCongigBuilderActions)
+            log.debug("cancelExtendedBolus success: " + result.success + " enacted: " + result.enacted);
+        return result;
     }
 
     /**
@@ -374,21 +388,26 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
      * @param request
      * @return
      */
-    // TODO: logging all actions in configbuilder
     public PumpEnactResult applyAPSRequest(APSResult request) {
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result;
 
+        if (Config.logCongigBuilderActions)
+            log.debug("applyAPSRequest: " + request.toString());
         if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - getBaseBasalRate()) < 0.1) {
             if (isTempBasalInProgress()) {
+                if (Config.logCongigBuilderActions)
+                    log.debug("applyAPSRequest: cancelTempBasal()");
                 result = cancelTempBasal();
-             } else {
+            } else {
                 result = new PumpEnactResult();
                 result.absolute = request.rate;
                 result.duration = 0;
                 result.enacted = false;
                 result.comment = "Basal set correctly";
                 result.success = true;
+                if (Config.logCongigBuilderActions)
+                    log.debug("applyAPSRequest: Basal set correctly");
             }
         } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.1) {
             result = new PumpEnactResult();
@@ -397,7 +416,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             result.enacted = false;
             result.comment = "Temp basal set correctly";
             result.success = true;
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: Temp basal set correctly");
         } else {
+            if (Config.logCongigBuilderActions)
+                log.debug("applyAPSRequest: setTempBasalAbsolute()");
             result = setTempBasalAbsolute(request.rate, request.duration);
         }
         return result;
@@ -490,7 +513,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
             int type = plugin.getType();
             // Force enabled if there is only one plugin
-            if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE )
+            if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
                 if (pluginList.size() < 2)
                     holder.checkboxEnabled.setEnabled(false);
 
