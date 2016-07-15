@@ -203,4 +203,5 @@
     <string name="openapsma_low_summary">Minimalwert für deinen persönlichen Zielbereich.</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="nightscout">Nightscout</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
 </resources>

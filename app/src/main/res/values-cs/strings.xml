@@ -223,7 +223,7 @@
     <string name="danar_viewprofile">Zobrazit profil</string>
     <string name="devicenotfound">Vybrané zařízení nenalezeno</string>
     <string name="enacted">Provedeno</string>
-    <string name="end_user_license_agreement"></string>
+    <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A PORVZUJI</string>
     <string name="hoursago">h zpět</string>
     <string name="limits_title"></string>
@@ -234,4 +234,13 @@
     <string name="success">Úspěch</string>
     <string name="virtualpump_lastconnection_label">Poslední spojení:</string>
     <string name="canceltemp">Zrušit dočasný bazál</string>
+    <string name="bolusdelivered">Bolus %.2fU aplikován úspěšně</string>
+    <string name="bolusfailed">Chyba při aplikování bolusu</string>
+    <string name="remotebolusnotallowed">Vzdálený bolus není momentálně povolen</string>
+    <string name="replywithcode">K potvzení bolusu %.2fU odpověz SMS s kódem %s</string>
+    <string name="smscommunicator">SMS komunikátor</string>
+    <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
+    <string name="smscommunicator_remotebolusingallowed">Povolit posílání bolusu přes SMS</string>
+    <string name="waitingforpumpresult">Čekání na výsledek</string>
 </resources>
