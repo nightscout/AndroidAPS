@@ -79,7 +79,6 @@ public class DanaConnection {
 
     private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
-    // TODO: keepalive kills active connection
     public DanaConnection(Bus bus) {
         danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
         danaRFragment.setDanaConnection(this);

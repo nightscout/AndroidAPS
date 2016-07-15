@@ -142,11 +142,4 @@ public class DanaRService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
-    @Override
-    public void onCreate() {
-        if (Config.logFunctionCalls)
-            log.info("onCreate");
-        mHandler = new Handler(); // TODO: not needed???
-    }
 }
