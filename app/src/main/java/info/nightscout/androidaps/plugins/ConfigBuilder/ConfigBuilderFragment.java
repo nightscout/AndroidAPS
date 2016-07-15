@@ -432,14 +432,19 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         return result;
     }
 
+    @Nullable
     @Override
     public JSONObject getJSONStatus() {
-        return activePump.getJSONStatus();
+        if (activePump != null)
+            return activePump.getJSONStatus();
+        else return null;
     }
 
     @Override
     public String deviceID() {
-        return activePump.deviceID();
+        if (activePump != null)
+            return activePump.deviceID();
+        else return "Unknown";
     }
 
     /*
@@ -881,7 +886,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public void onStatusEvent(final EventNewBG ev) {
         // Give some time to Loop
         try {
-            Thread.sleep(120* 1000L);
+            Thread.sleep(120 * 1000L);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -1015,13 +1020,15 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     deviceStatus.enacted.put("requested", requested);
                 }
             }
-            deviceStatus.device = "openaps://" + getActivePump().deviceID();
-            deviceStatus.pump = getActivePump().getJSONStatus();
+            if (getActivePump() != null) {
+                deviceStatus.device = "openaps://" + getActivePump().deviceID();
+                deviceStatus.pump = getActivePump().getJSONStatus();
 
-            deviceStatus.created_at = DateUtil.toISOString(new Date());
+                deviceStatus.created_at = DateUtil.toISOString(new Date());
 
-            deviceStatus.sendToNSClient();
-            lastDeviceStatusUpload = new Date();
+                deviceStatus.sendToNSClient();
+                lastDeviceStatusUpload = new Date();
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
