@@ -5,19 +5,18 @@ package info.nightscout.androidaps;
  */
 public class Config {
     // MAIN FUCTIONALITY
-    public static final boolean APS = true;
+    public static final boolean APS = BuildConfig.APS;
     // PLUGINS
-    public static final boolean LOWSUSPEDENABLED = APS && true;
-    public static final boolean OPENAPSMAENABLED = APS && true;
-    public static final boolean LOOPENABLED = APS && true;
-    public static final boolean OBJECTIVESENABLED = APS && true;
+    public static final boolean LOWSUSPEDENABLED = APS;
+    public static final boolean OPENAPSMAENABLED = APS;
+    public static final boolean LOOPENABLED = APS;
+    public static final boolean OBJECTIVESENABLED = APS && BuildConfig.OBJECTIVES;
 
     public static final boolean CAREPORTALENABLED = true;
     public static final boolean SMSCOMMUNICATORENABLED = true;
 
-    public static final boolean DANAR = true;
-
-    public static final boolean MM640G = true;
+    public static final boolean DANAR = true && BuildConfig.PUMPDRIVERS;
+    public static final boolean MM640G = false && BuildConfig.PUMPDRIVERS;
 
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;

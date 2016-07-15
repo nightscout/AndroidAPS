@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -74,7 +75,7 @@ public class SafetyFragment extends Fragment implements PluginBase, ConstraintsI
     public boolean isClosedModeEnabled() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String mode = SP.getString("aps_mode", "open");
-        return mode.equals("closed");
+        return mode.equals("closed") && BuildConfig.CLOSEDLOOP;
     }
 
     @Override

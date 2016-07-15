@@ -32,6 +32,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    productFlavors {
+        careportal {
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "false"
+            buildConfigField "boolean", "OBJECTIVES", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
+        openloop {
+            buildConfigField "boolean", "APS", "true"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "OBJECTIVES", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
+        full {
+           buildConfigField "boolean", "APS", "true"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+           buildConfigField "boolean", "OBJECTIVES", "true"
+           buildConfigField "boolean", "CLOSEDLOOP", "true"
+        }
+        full_noobjectives {
+            buildConfigField "boolean", "APS", "true"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "OBJECTIVES", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "true"
+        }
+    }
 }
 
 dependencies {
