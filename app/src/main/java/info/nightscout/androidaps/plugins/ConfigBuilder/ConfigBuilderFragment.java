@@ -98,6 +98,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     ArrayList<PluginBase> pluginList;
 
     // TODO: sorting
+    // TODO: Toast and sound when command failed
 
     public ConfigBuilderFragment() {
         super();
