@@ -252,5 +252,10 @@
     <string formatted="false" name="bolusdelivered">Bolus %.2fU delivered successfully</string>
     <string name="smscommunicator_remotebolusingallowed">Allow remote bolusing via SMS</string>
     <string name="remotebolusnotallowed">Remote bolus not allowed</string>
+    <string name="glucosetype_finger">Finger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="glucosetype_manual">Manual</string>
+    <string name="careportal_temporarytarget">Temporary Target</string>
+    <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
 
 </resources>

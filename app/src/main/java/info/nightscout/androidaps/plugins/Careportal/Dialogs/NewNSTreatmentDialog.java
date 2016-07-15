@@ -53,6 +53,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
+import info.nightscout.utils.Translator;
 
 public class NewNSTreatmentDialog extends DialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static Logger log = LoggerFactory.getLogger(NewNSTreatmentDialog.class);
@@ -421,7 +422,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             if (data.has("eventType")) {
                 ret += getString(R.string.careportal_newnstreatment_eventtype);
                 ret += ": ";
-                ret += data.get("eventType"); // TODO: translate this too
+                ret += Translator.translate(data.getString("eventType"));
                 ret += "\n";
             }
             if (data.has("glucose")) {
@@ -433,7 +434,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             if (data.has("glucoseType")) {
                 ret += getString(R.string.careportal_newnstreatment_glucosetype);
                 ret += ": ";
-                ret += data.get("glucoseType"); // TODO: translate this too
+                ret += Translator.translate(data.getString("glucoseType"));
                 ret += "\n";
             }
             if (data.has("carbs")) {
