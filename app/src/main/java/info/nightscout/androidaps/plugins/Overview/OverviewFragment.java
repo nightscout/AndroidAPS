@@ -651,6 +651,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
+        // TODO: add treatments
     }
 
 }

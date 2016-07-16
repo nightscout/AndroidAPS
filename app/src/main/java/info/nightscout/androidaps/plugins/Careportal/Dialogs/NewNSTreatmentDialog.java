@@ -46,6 +46,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
@@ -396,7 +397,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             if (layoutPercent.getVisibility() != View.GONE)
                 data.put("percent", SafeParse.stringToDouble(percentEdit.getText().toString()));
             if (layoutAbsolute.getVisibility() != View.GONE)
-                data.put("absolute", profileSpinner.getSelectedItem().toString());
+                data.put("absolute", SafeParse.stringToDouble(absoluteEdit.getText().toString()));
             if (options.profile) data.put("profile", profileSpinner.getSelectedItem().toString());
             if (SafeParse.stringToDouble(carbTimeEdit.getText().toString()) != 0d)
                 data.put("preBolus", SafeParse.stringToDouble(carbTimeEdit.getText().toString()));
@@ -512,40 +513,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         builder.setMessage(confirmText);
         builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                sendTreatmentToNS(data);
+                ConfigBuilderFragment.uploadCareportalEntryToNS(data);
             }
         });
         builder.setNegativeButton(getContext().getString(R.string.cancel), null);
         builder.show();
     }
 
-    static void sendTreatmentToNS(JSONObject data) {
-        try {
-            if (data.has("preBolus") && data.has("carbs")) {
-                JSONObject prebolus = new JSONObject();
-                prebolus.put("carbs", data.get("carbs"));
-                data.remove("carbs");
-                prebolus.put("eventType", data.get("eventType"));
-                if (data.has("enteredBy")) prebolus.put("enteredBy", data.get("enteredBy"));
-                if (data.has("notes")) prebolus.put("notes", data.get("notes"));
-                long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
-                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L);
-                prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
-                sendTreatmentToNS(prebolus);
-            }
-            Context context = MainApp.instance().getApplicationContext();
-            Bundle bundle = new Bundle();
-            bundle.putString("action", "dbAdd");
-            bundle.putString("collection", "treatments");
-            bundle.putString("data", data.toString());
-            Intent intent = new Intent(Intents.ACTION_DATABASE);
-            intent.putExtras(bundle);
-            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-            context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString(), NewExtendedBolusDialog.class);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 }

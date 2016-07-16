@@ -31,13 +31,25 @@ public class NSProfile {
             defaultProfileName = (String) json.get("defaultProfile");
             store = json.getJSONObject("store");
             if (activeProfile != null && store.has(activeProfile)) {
-            defaultProfileName = activeProfile;
+                defaultProfileName = activeProfile;
             }
             profile = store.getJSONObject(defaultProfileName);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return profile;
+    }
 
+    public JSONObject getSpecificProfile(String profileName) {
+        JSONObject profile = null;
+        try {
+            JSONObject store = json.getJSONObject("store");
+            if (store.has(profileName)) {
+                profile = store.getJSONObject(profileName);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return profile;
     }
 
@@ -50,7 +62,7 @@ public class NSProfile {
             store = json.getJSONObject("store");
             Iterator<?> keys = store.keys();
 
-            while( keys.hasNext() ) {
+            while (keys.hasNext()) {
                 String profileName = (String) keys.next();
                 ret.add(profileName);
             }
@@ -63,7 +75,7 @@ public class NSProfile {
 
     public String log() {
         String ret = "\n";
-        for (Integer hour = 0; hour < 24; hour ++) {
+        for (Integer hour = 0; hour < 24; hour++) {
             double value = getBasal(hour * 60 * 60);
             ret += "NS basal value for " + hour + ":00 is " + value + "\n";
         }
@@ -71,13 +83,16 @@ public class NSProfile {
         return ret;
     }
 
-    public JSONObject getData () {
+    public JSONObject getData() {
         return json;
     }
 
     public Double getDia() {
+        return getDia(getDefaultProfile());
+    }
+
+    public Double getDia(JSONObject profile) {
         Double dia;
-        JSONObject profile = getDefaultProfile();
         if (profile != null) {
             try {
                 dia = profile.getDouble("dia");
@@ -89,9 +104,12 @@ public class NSProfile {
         return 3D;
     }
 
-   public Double getCarbAbsorbtionRate() {
+    public Double getCarbAbsorbtionRate() {
+        return getCarbAbsorbtionRate(getDefaultProfile());
+    }
+
+    public Double getCarbAbsorbtionRate(JSONObject profile) {
         Double carbAbsorptionRate;
-        JSONObject profile = getDefaultProfile();
         if (profile != null) {
             try {
                 carbAbsorptionRate = profile.getDouble("carbs_hr");
@@ -100,13 +118,16 @@ public class NSProfile {
                 e.printStackTrace();
             }
         }
-       return 0D;
+        return 0D;
     }
 
     // mmol or mg/dl
-   public String getUnits() {
-       String units;
-        JSONObject profile = getDefaultProfile();
+    public String getUnits() {
+        return getUnits(getDefaultProfile());
+    }
+
+    public String getUnits(JSONObject profile) {
+        String units;
         if (profile != null) {
             try {
                 units = profile.getString("units");
@@ -115,12 +136,15 @@ public class NSProfile {
                 e.printStackTrace();
             }
         }
-       return "mg/dl";
+        return "mg/dl";
     }
 
-   public TimeZone getTimeZone() {
-       TimeZone timeZone;
-        JSONObject profile = getDefaultProfile();
+    public TimeZone getTimeZone() {
+        return getTimeZone(getDefaultProfile());
+    }
+
+    public TimeZone getTimeZone(JSONObject profile) {
+        TimeZone timeZone;
         if (profile != null) {
             try {
                 return TimeZone.getTimeZone(profile.getString("timezone"));
@@ -128,13 +152,13 @@ public class NSProfile {
                 e.printStackTrace();
             }
         }
-       return TimeZone.getDefault();
+        return TimeZone.getDefault();
     }
 
     public Double getValueToTime(JSONArray array, Integer timeAsSeconds) {
         Double lastValue = null;
 
-        for(Integer index = 0; index < array.length(); index++) {
+        for (Integer index = 0; index < array.length(); index++) {
             try {
                 JSONObject o = array.getJSONObject(index);
                 Integer tas = o.getInt("timeAsSeconds");
@@ -154,7 +178,7 @@ public class NSProfile {
     public String getValuesList(JSONArray array, JSONArray array2, DecimalFormat format, String units) {
         String retValue = "";
 
-        for(Integer index = 0; index < array.length(); index++) {
+        for (Integer index = 0; index < array.length(); index++) {
             try {
                 JSONObject o = array.getJSONObject(index);
                 retValue += o.getString("time");
@@ -175,10 +199,13 @@ public class NSProfile {
     }
 
     public Double getIsf(Integer timeAsSeconds) {
-        JSONObject profile = getDefaultProfile();
+        return getIsf(getDefaultProfile(), timeAsSeconds);
+    }
+
+    public Double getIsf(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
-                return getValueToTime(profile.getJSONArray("sens"),timeAsSeconds);
+                return getValueToTime(profile.getJSONArray("sens"), timeAsSeconds);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -187,7 +214,10 @@ public class NSProfile {
     }
 
     public String getIsfList() {
-        JSONObject profile = getDefaultProfile();
+        return getIsfList(getDefaultProfile());
+    }
+
+    public String getIsfList(JSONObject profile) {
         if (profile != null) {
             try {
                 return getValuesList(profile.getJSONArray("sens"), null, new DecimalFormat("0.0"), getUnits() + "/U");
@@ -199,10 +229,13 @@ public class NSProfile {
     }
 
     public Double getIc(Integer timeAsSeconds) {
-        JSONObject profile = getDefaultProfile();
+        return getIc(getDefaultProfile(), timeAsSeconds);
+    }
+
+    public Double getIc(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
-                return getValueToTime(profile.getJSONArray("carbratio"),timeAsSeconds);
+                return getValueToTime(profile.getJSONArray("carbratio"), timeAsSeconds);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -211,7 +244,10 @@ public class NSProfile {
     }
 
     public String getIcList() {
-        JSONObject profile = getDefaultProfile();
+        return getIcList(getDefaultProfile());
+    }
+
+    public String getIcList(JSONObject profile) {
         if (profile != null) {
             try {
                 return getValuesList(profile.getJSONArray("carbratio"), null, new DecimalFormat("0.0"), "g");
@@ -223,10 +259,13 @@ public class NSProfile {
     }
 
     public Double getBasal(Integer timeAsSeconds) {
-        JSONObject profile = getDefaultProfile();
+        return getBasal(getDefaultProfile(), timeAsSeconds);
+    }
+
+    public Double getBasal(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
-                return getValueToTime(profile.getJSONArray("basal"),timeAsSeconds);
+                return getValueToTime(profile.getJSONArray("basal"), timeAsSeconds);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -235,7 +274,10 @@ public class NSProfile {
     }
 
     public String getBasalList() {
-        JSONObject profile = getDefaultProfile();
+        return getBasalList(getDefaultProfile());
+    }
+
+    public String getBasalList(JSONObject profile) {
         if (profile != null) {
             try {
                 return getValuesList(profile.getJSONArray("basal"), null, new DecimalFormat("0.00"), "U");
@@ -247,10 +289,13 @@ public class NSProfile {
     }
 
     public Double getTargetLow(Integer timeAsSeconds) {
-        JSONObject profile = getDefaultProfile();
+        return getTargetLow(getDefaultProfile(), timeAsSeconds);
+    }
+
+    public Double getTargetLow(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
-                return getValueToTime(profile.getJSONArray("target_low"),timeAsSeconds);
+                return getValueToTime(profile.getJSONArray("target_low"), timeAsSeconds);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -259,7 +304,10 @@ public class NSProfile {
     }
 
     public Double getTargetHigh(Integer timeAsSeconds) {
-        JSONObject profile = getDefaultProfile();
+        return getTargetHigh(getDefaultProfile(), timeAsSeconds);
+    }
+
+    public Double getTargetHigh(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
                 return getValueToTime(profile.getJSONArray("target_high"), timeAsSeconds);
@@ -270,11 +318,14 @@ public class NSProfile {
         return 0D;
     }
 
-     public String getTargetList() {
-        JSONObject profile = getDefaultProfile();
+    public String getTargetList() {
+        return getTargetList(getDefaultProfile());
+    }
+
+    public String getTargetList(JSONObject profile) {
         if (profile != null) {
             try {
-                return getValuesList(profile.getJSONArray("target_low"),profile.getJSONArray("target_high"), new DecimalFormat("0.0"), getUnits());
+                return getValuesList(profile.getJSONArray("target_low"), profile.getJSONArray("target_high"), new DecimalFormat("0.0"), getUnits());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -288,7 +339,7 @@ public class NSProfile {
 
     public Double getMaxDailyBasal() {
         Double max = 0d;
-        for (Integer hour = 0; hour < 24; hour ++) {
+        for (Integer hour = 0; hour < 24; hour++) {
             double value = getBasal(hour * 60 * 60);
             if (value > max) max = value;
         }

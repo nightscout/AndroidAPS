@@ -20,6 +20,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -99,10 +100,6 @@ public class Treatment {
     }
 
     public void sendToNSClient() {
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbAdd");
-        bundle.putString("collection", "treatments");
         JSONObject data = new JSONObject();
         try {
             data.put("eventType", "Meal Bolus");
@@ -113,12 +110,7 @@ public class Treatment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        bundle.putString("data", data.toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString(), Treatment.class);
+        ConfigBuilderFragment.uploadCareportalEntryToNS(data);
     }
 
     public void updateToNSClient() {

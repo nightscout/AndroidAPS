@@ -387,6 +387,7 @@ public class DanaConnection {
     }
 
     public void bolus(Double amount, Treatment t) {
+        // TODO: progress dialog
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusProgress progress = new MsgBolusProgress(MainApp.bus(), amount, t);

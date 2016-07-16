@@ -177,7 +177,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
 
     @Override
     public TempBasal getTempBasal(Date time) {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
+        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(time);
     }
 
     @Override

@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +55,7 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -282,6 +284,69 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public TempBasal getExtendedBolus() {
         return activePump.getExtendedBolus();
+    }
+
+/*
+{
+    "_id": {
+        "$oid": "5789fea07ef0c37deb388240"
+    },
+    "boluscalc": {
+        "profile": "Posunuta snidane",
+        "eventTime": "2016-07-16T09:30:14.139Z",
+        "targetBGLow": "5.6",
+        "targetBGHigh": "5.6",
+        "isf": "17",
+        "ic": "26",
+        "iob": "0.89",
+        "cob": "0",
+        "insulincob": "0",
+        "bg": "3.6",
+        "insulinbg": "-0.12",
+        "bgdiff": "-2",
+        "carbs": "42",
+        "gi": "2",
+        "insulincarbs": "1.62",
+        "othercorrection": "0",
+        "insulin": "0.6000000000000001",
+        "roundingcorrection": "-0.009999999999999898",
+        "carbsneeded": "0"
+    },
+    "enteredBy": "",
+    "eventType": "Bolus Wizard",
+    "glucose": 3.6,
+    "glucoseType": "Sensor",
+    "units": "mmol",
+    "carbs": 42,
+    "insulin": 0.6,
+    "created_at": "2016-07-16T09:30:12.783Z"
+}
+ */
+
+    public PumpEnactResult deliverTreatmentFromBolusWizard(Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+        insulin = applyBolusConstraints(insulin);
+        carbs = applyCarbsConstraints(carbs);
+
+        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs);
+
+        if (Config.logCongigBuilderActions)
+            log.debug("deliverTreatmentFromBolusWizard insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
+
+        if (result.success) {
+            Treatment t = new Treatment();
+            t.insulin = result.bolusDelivered;
+            t.carbs = (double) result.carbsDelivered;
+            t.created_at = new Date();
+            try {
+                MainApp.getDbHelper().getDaoTreatments().create(t);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            t.setTimeIndex(t.getTimeIndex());
+            uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
+            MainApp.bus().post(new EventTreatmentChange());
+        }
+        return result;
     }
 
     @Override
@@ -1033,4 +1098,53 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             e.printStackTrace();
         }
     }
+
+    public void uploadBolusWizardRecord(Treatment t, double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", "Bolus Wizard");
+            if (t.insulin != 0d) data.put("insulin", t.insulin);
+            if (t.carbs != 0d) data.put("carbs", t.carbs.intValue());
+            data.put("created_at", DateUtil.toISOString(t.created_at));
+            data.put("timeIndex", t.timeIndex);
+            if (glucose != 0d) data.put("glucose", glucose);
+            data.put("glucoseType", glucoseType);
+            data.put("boluscalc", boluscalc);
+            if (carbTime != 0) data.put("preBolus", carbTime);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        uploadCareportalEntryToNS(data);
+    }
+
+    public static void uploadCareportalEntryToNS(JSONObject data) {
+        try {
+            if (data.has("preBolus") && data.has("carbs")) {
+                JSONObject prebolus = new JSONObject();
+                prebolus.put("carbs", data.get("carbs"));
+                data.remove("carbs");
+                prebolus.put("eventType", data.get("eventType"));
+                if (data.has("enteredBy")) prebolus.put("enteredBy", data.get("enteredBy"));
+                if (data.has("notes")) prebolus.put("notes", data.get("notes"));
+                long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
+                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L);
+                prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
+                uploadCareportalEntryToNS(prebolus);
+            }
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString(), NewExtendedBolusDialog.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 }
