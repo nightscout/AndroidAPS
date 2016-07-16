@@ -47,9 +47,6 @@ import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
-// TODO: wizard upload top NS calculation
-// TODO: add carbtime
-// TODO: add profile selection
 public class WizardDialog extends DialogFragment implements OnClickListener {
 
     Button wizardDialogDeliverButton;
