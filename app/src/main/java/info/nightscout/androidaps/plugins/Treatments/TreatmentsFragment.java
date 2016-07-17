@@ -180,6 +180,12 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         return result;
     }
 
+    @Override
+    public List<Treatment> getTreatments() {
+        return treatments;
+    }
+
+
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TreatmentsViewHolder> {
 
         List<Treatment> treatments;

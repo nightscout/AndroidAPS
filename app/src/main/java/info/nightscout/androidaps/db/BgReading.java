@@ -83,4 +83,5 @@ public class BgReading implements DataPointInterface {
     public double getY() {
         return valueToUnits(units);
     }
+
 }

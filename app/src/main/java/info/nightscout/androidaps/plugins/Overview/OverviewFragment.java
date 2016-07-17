@@ -44,6 +44,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -59,6 +60,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialo
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
+import info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension.PointsWithLabelGraphSeries;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -520,6 +522,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         LineGraphSeries<DataPoint> seriesNow = null;
         PointsGraphSeries<BgReading> seriesInRage = null;
         PointsGraphSeries<BgReading> seriesOutOfRange = null;
+        PointsWithLabelGraphSeries<Treatment> seriesTreatments = null;
 
         // remove old data from graph
         bgGraph.removeAllSeries();
@@ -606,7 +609,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
             seriesOutOfRange.setColor(Color.RED);
         }
 
-
         // **** HIGH and LOW targets graph ****
         DataPoint[] lowDataPoints = new DataPoint[]{
                 new DataPoint(fromTime, lowLine),
@@ -638,6 +640,25 @@ public class OverviewFragment extends Fragment implements PluginBase {
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
 
+
+        // Treatments
+        List<Treatment> treatments = MainApp.getConfigBuilder().getActiveTreatments().getTreatments();
+        List<Treatment> filteredTreatments = new ArrayList<Treatment>();
+
+        for (int tx = 0; tx < treatments.size(); tx ++) {
+            Treatment t = treatments.get(tx);
+            if (t.getTimeIndex() < fromTime || t.getTimeIndex() > now) continue;
+            t.setYValue(bgReadingsArray);
+            filteredTreatments.add(t);
+        }
+        Treatment[] treatmentsArray = new Treatment[filteredTreatments.size()];
+        treatmentsArray = filteredTreatments.toArray(treatmentsArray);
+        if (treatmentsArray.length > 0) {
+            bgGraph.addSeries(seriesTreatments = new PointsWithLabelGraphSeries<Treatment>(treatmentsArray));
+            seriesTreatments.setShape(PointsWithLabelGraphSeries.Shape.TRIANGLE);
+            seriesTreatments.setSize(10);
+            seriesTreatments.setColor(Color.CYAN);
+        }
 
         // set manual x bounds to have nice steps
         bgGraph.getViewport().setMaxX(toTime);

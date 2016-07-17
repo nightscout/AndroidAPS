@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.db;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ResolveInfo;
-import android.os.Bundle;
-
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -16,17 +11,16 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
-import info.nightscout.client.data.DbLogger;
+import info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension.DataPointWithLabelInterface;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = "Treatments")
-public class Treatment {
+public class Treatment implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(Treatment.class);
 
     public long getTimeIndex() {
@@ -99,6 +93,39 @@ public class Treatment {
                 "}";
     }
 
+    // DataPointInterface
+    @Override
+    public double getX() {
+        return timeIndex;
+    }
+
+    // default when no sgv around available
+    private double yValue = 0;
+
+    @Override
+    public double getY() {
+        return yValue;
+    }
+
+    @Override
+    public String getLabel() {
+        String label = "";
+        if (insulin > 0) label += DecimalFormatter.to2Decimal(insulin) + "U";
+        if (carbs > 0) label += (label.equals("") ? "" : " ") + DecimalFormatter.to0Decimal(carbs) + "g";
+        return label;
+    }
+
+    public void setYValue(List<BgReading> bgReadingsArray) {
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (profile == null) return;
+        for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
+            BgReading reading = bgReadingsArray.get(r);
+            if (reading.timeIndex > timeIndex) continue;
+            yValue = NSProfile.fromMgdlToUnits(reading.value, profile.getUnits());
+            break;
+        }
+    }
+
     public void sendToNSClient() {
         JSONObject data = new JSONObject();
         try {
@@ -113,31 +140,4 @@ public class Treatment {
         ConfigBuilderFragment.uploadCareportalEntryToNS(data);
     }
 
-    public void updateToNSClient() {
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbUpdate");
-        bundle.putString("collection", "treatments");
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", "Meal Bolus");
-            data.put("insulin", insulin);
-            data.put("carbs", carbs.intValue());
-            data.put("created_at", DateUtil.toISOString(created_at));
-            data.put("timeIndex", timeIndex);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        bundle.putString("data", data.toString());
-        bundle.putString("_id", _id);
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        List<ResolveInfo> q = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-        if (q.size() < 1) {
-            log.error("DBUPDATE No receivers");
-        } else  if (Config.logNSUpload)
-            log.debug("DBUPDATE dbUpdate " + q.size() + " receivers " + _id + " " + data.toString());
-    }
-}
+ }
