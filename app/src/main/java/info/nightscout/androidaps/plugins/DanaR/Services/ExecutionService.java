@@ -229,7 +229,7 @@ public class ExecutionService extends Service {
             mSerialIOThread.disconnect("EventPreferenceChange");
     }
 
-    private void getPumpStatus() { // TODO rename after
+    private void getPumpStatus() {
         try {
             MsgStatus statusMsg = new MsgStatus();
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();

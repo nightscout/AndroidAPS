@@ -73,8 +73,6 @@ public class ProfileViewDialog extends DialogFragment {
                     @Override
                     public void run() {
                         DanaRFragment.getDanaRPump().lastSettingsRead = new Date(0);
-//                        if (DanaRFragment.getDanaConnection() == null) DanaRFragment.setDanaConnection(new DanaConnection(MainApp.bus()));
-//                        DanaRFragment.getDanaConnection().connectIfNotConnected("ProfileViewDialog");
                         DanaRFragment.doConnect("ProfileViewDialog");
                     }
                 });

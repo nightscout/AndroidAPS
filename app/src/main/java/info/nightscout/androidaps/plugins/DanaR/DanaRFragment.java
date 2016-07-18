@@ -195,13 +195,11 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
-            ToastUtils.showToastInUiThread(getContext(), "ExecutionService is disconnected"); // TODO: remove
             mBounded = false;
             mExecutionService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
-            ToastUtils.showToastInUiThread(getContext(), "ExecutionService is connected"); // TODO: remove
             log.debug("Service is connected");
             mBounded = true;
             ExecutionService.LocalBinder mLocalBinder = (ExecutionService.LocalBinder) service;
@@ -835,7 +833,6 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         if (getDanaRPump() != null) {
             if (absoluteRate > getDanaRPump().maxBasal) {
                 absoluteRate = getDanaRPump().maxBasal;
-                if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
                 if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
                     log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
             }
