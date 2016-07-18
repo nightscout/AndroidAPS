@@ -241,9 +241,9 @@ public class ExecutionService extends Service {
             mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
+            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
 
             if (danaRPump.isNewPump) {
-                mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgCheckValue());
             }
 

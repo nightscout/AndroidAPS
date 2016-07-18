@@ -68,7 +68,7 @@ public class SerialIOThread extends Thread {
                     int command = (extractedBuff[5] & 0xFF) | ((extractedBuff[4] << 8) & 0xFF00);
 
                     MessageBase message;
-                    if (processedMessage != null & processedMessage.getCommand() == command) {
+                    if (processedMessage != null && processedMessage.getCommand() == command) {
                         message = processedMessage;
                     } else {
                         // get it from hash table
