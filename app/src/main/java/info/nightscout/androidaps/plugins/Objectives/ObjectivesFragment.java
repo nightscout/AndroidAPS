@@ -62,7 +62,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        LoopFragment loopFragment = (LoopFragment) MainActivity.getSpecificPlugin(LoopFragment.class);
+        LoopFragment loopFragment = (LoopFragment) MainApp.getSpecificPlugin(LoopFragment.class);
         return fragmentVisible && loopFragment != null && loopFragment.isVisibleInTabs(type);
     }
 

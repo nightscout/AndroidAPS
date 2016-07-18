@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Telephony;
 import android.support.annotation.Nullable;
-import android.telephony.SmsMessage;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -23,9 +22,12 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -34,7 +36,6 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
@@ -43,8 +44,7 @@ import info.nightscout.androidaps.plugins.SmsCommunicator.Events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
-import info.nightscout.androidaps.receivers.NSClientDataReceiver;
-import info.nightscout.androidaps.receivers.xDripReceiver;
+import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
 import info.nightscout.utils.ToastUtils;
@@ -57,14 +57,18 @@ public class DataService extends IntentService {
     boolean nsClientEnabled = true;
     SmsCommunicatorFragment smsCommunicatorFragment = null;
 
+    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledDisconnection = null;
+
     public DataService() {
         super("DataService");
+        registerBus();
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    protected void onHandleIntent(final Intent intent) {
         if (Config.logFunctionCalls)
-            log.debug("onHandleIntent");
+            log.debug("onHandleIntent " + intent);
 
         if (MainApp.getConfigBuilder() != null) {
             if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceXdripFragment.class)) {
@@ -76,8 +80,8 @@ public class DataService extends IntentService {
                 nsClientEnabled = true;
             }
 
-            if (MainActivity.getSpecificPlugin(SmsCommunicatorFragment.class) != null) {
-                smsCommunicatorFragment = (SmsCommunicatorFragment) MainActivity.getSpecificPlugin(SmsCommunicatorFragment.class);
+            if (MainApp.getSpecificPlugin(SmsCommunicatorFragment.class) != null) {
+                smsCommunicatorFragment = (SmsCommunicatorFragment) MainApp.getSpecificPlugin(SmsCommunicatorFragment.class);
             }
         }
 
@@ -86,7 +90,6 @@ public class DataService extends IntentService {
             if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
                 if (xDripEnabled)
                     handleNewDataFromXDrip(intent);
-                xDripReceiver.completeWakefulIntent(intent);
             } else if (Intents.ACTION_NEW_PROFILE.equals(action) ||
                     Intents.ACTION_NEW_TREATMENT.equals(action) ||
                     Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
@@ -98,14 +101,16 @@ public class DataService extends IntentService {
                     Intents.ACTION_NEW_MBG.equals(action)
                     ) {
                 handleNewDataFromNSClient(intent);
-                NSClientDataReceiver.completeWakefulIntent(intent);
             } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
                 handleNewSMS(intent);
-                NSClientDataReceiver.completeWakefulIntent(intent);
             }
+            DataReceiver.completeWakefulIntent(intent);
         }
+        if (Config.logFunctionCalls)
+            log.debug("onHandleIntent exit");
     }
 
+/*
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
@@ -113,12 +118,13 @@ public class DataService extends IntentService {
         if (Config.logFunctionCalls)
             log.debug("onStartCommand");
 
-        registerBus();
         return START_STICKY;
     }
+*/
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
         MainApp.bus().unregister(this);
     }
 
@@ -163,6 +169,8 @@ public class DataService extends IntentService {
     private void handleNewDataFromNSClient(Intent intent) {
         Bundle bundles = intent.getExtras();
         if (bundles == null) return;
+        if (Config.logIncommingData)
+            log.debug("Got intent: " + intent.getAction());
 
 
         if (intent.getAction().equals(Intents.ACTION_NEW_STATUS)) {
@@ -176,7 +184,7 @@ public class DataService extends IntentService {
                     configBuilderFragment.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
                     configBuilderFragment.nsClientVersionName = bundles.getString("nsclientversionname");
                     log.debug("Got versions: NSClient: " + configBuilderFragment.nsClientVersionName + " Nightscout: " + configBuilderFragment.nightscoutVersionName);
-                    if (configBuilderFragment.nsClientVersionCode < 117)
+                    if (configBuilderFragment.nsClientVersionCode < 118)
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
                 }
             } else {
@@ -189,7 +197,7 @@ public class DataService extends IntentService {
                         JSONObject settings = statusJson.getJSONObject("settings");
                         if (settings.has("thresholds")) {
                             JSONObject thresholds = settings.getJSONObject("thresholds");
-                            OverviewFragment overviewFragment = (OverviewFragment) MainActivity.getSpecificPlugin(OverviewFragment.class);
+                            OverviewFragment overviewFragment = (OverviewFragment) MainApp.getSpecificPlugin(OverviewFragment.class);
                             if (overviewFragment != null && thresholds.has("bgTargetTop")) {
                                 overviewFragment.bgTargetHigh = thresholds.getDouble("bgTargetTop");
                             }
@@ -213,7 +221,7 @@ public class DataService extends IntentService {
                             JSONObject devicestatusJson = jsonArray.getJSONObject(0);
                             if (devicestatusJson.has("pump")) {
                                 // Objectives 0
-                                ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
+                                ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainApp.getSpecificPlugin(ObjectivesFragment.class);
                                 if (objectivesFragment != null) {
                                     objectivesFragment.pumpStatusIsAvailableInNS = true;
                                     objectivesFragment.saveProgress();
@@ -232,7 +240,6 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
-                EventNewBasalProfile event = new EventNewBasalProfile(nsProfile);
                 if (MainApp.getConfigBuilder() == null) {
                     log.error("Config builder not ready on receive profile");
                     return;
@@ -247,61 +254,27 @@ public class DataService extends IntentService {
                 }
                 if (Config.logIncommingData)
                     log.debug("Received profile: " + activeProfile + " " + profile);
-                MainApp.bus().post(event);
+                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT)) {
             try {
-                String trstring = bundles.getString("treatment");
-                JSONObject trJson = new JSONObject(trstring);
-                if (!trJson.has("insulin") && !trJson.has("carbs")) {
-                    if (Config.logIncommingData)
-                        log.debug("ADD: Uninterested treatment: " + trstring);
-                    return;
+                if (bundles.containsKey("treatment")) {
+                    String trstring = bundles.getString("treatment");
+                    handleAddedTreatment(trstring);
                 }
-
-                Treatment stored = null;
-                trJson = new JSONObject(trstring);
-                String _id = trJson.getString("_id");
-
-                if (trJson.has("timeIndex")) {
-                    if (Config.logIncommingData)
-                        log.debug("ADD: timeIndex found: " + trstring);
-                    stored = findByTimeIndex(trJson.getLong("timeIndex"));
-                } else {
-                    stored = findById(_id);
-                }
-
-                if (stored != null) {
-                    if (Config.logIncommingData)
-                        log.debug("ADD: Existing treatment: " + trstring);
-                    if (trJson.has("timeIndex")) {
-                        stored._id = _id;
-                        MainApp.getDbHelper().getDaoTreatments().update(stored);
+                if (bundles.containsKey("treatments")) {
+                    String trstring = bundles.getString("treatments");
+                    JSONArray jsonArray = new JSONArray(trstring);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject trJson = jsonArray.getJSONObject(i);
+                        String trstr = trJson.toString();
+                        handleAddedTreatment(trstr);
                     }
-                    MainApp.bus().post(new EventTreatmentChange());
-                    return;
-                } else {
-                    if (Config.logIncommingData)
-                        log.debug("ADD: New treatment: " + trstring);
-                    Treatment treatment = new Treatment();
-                    treatment._id = _id;
-                    treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
-                    treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
-                    treatment.created_at = new Date(trJson.getLong("mills"));
-                    treatment.setTimeIndex(treatment.getTimeIndex());
-                    try {
-                        MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
-                        if (Config.logIncommingData)
-                            log.debug("ADD: Stored treatment: " + treatment.log());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    MainApp.bus().post(new EventTreatmentChange());
                 }
-
+                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -310,55 +283,20 @@ public class DataService extends IntentService {
 
         if (intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
-                String trstring = bundles.getString("treatment");
-                JSONObject trJson = new JSONObject(trstring);
-                if (!trJson.has("insulin") && !trJson.has("carbs")) {
-                    if (Config.logIncommingData)
-                        log.debug("CHANGE: Uninterested treatment: " + trstring);
-                    return;
+                if (bundles.containsKey("treatment")) {
+                    String trstring = bundles.getString("treatment");
+                    handleChangedTreatment(trstring);
                 }
-                trJson = new JSONObject(trstring);
-                String _id = trJson.getString("_id");
-
-                Treatment stored;
-
-                if (trJson.has("timeIndex")) {
-                    if (Config.logIncommingData)
-                        log.debug("ADD: timeIndex found: " + trstring);
-                    stored = findByTimeIndex(trJson.getLong("timeIndex"));
-                } else {
-                    stored = findById(_id);
-                }
-
-                if (stored != null) {
-                    if (Config.logIncommingData)
-                        log.debug("CHANGE: Existing treatment: " + trstring);
-                    stored._id = _id;
-                    stored.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
-                    stored.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
-                    stored.created_at = new Date(trJson.getLong("mills"));
-                    MainApp.getDbHelper().getDaoTreatments().update(stored);
-                    MainApp.bus().post(new EventTreatmentChange());
-                } else {
-                    if (Config.logIncommingData)
-                        log.debug("CHANGE: New treatment: " + trstring);
-                    Treatment treatment = new Treatment();
-                    treatment._id = _id;
-                    treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
-                    treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
-                    //treatment.created_at = DateUtil.fromISODateString(trJson.getString("created_at"));
-                    treatment.created_at = new Date(trJson.getLong("mills"));
-                    treatment.setTimeIndex(treatment.getTimeIndex());
-                    try {
-                        MainApp.getDbHelper().getDaoTreatments().create(treatment);
-                        if (Config.logIncommingData)
-                            log.debug("CHANGE: Stored treatment: " + treatment.log());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
+                if (bundles.containsKey("treatments")) {
+                    String trstring = bundles.getString("treatments");
+                    JSONArray jsonArray = new JSONArray(trstring);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject trJson = jsonArray.getJSONObject(i);
+                        String trstr = trJson.toString();
+                        handleChangedTreatment(trstr);
                     }
-                    MainApp.bus().post(new EventTreatmentChange());
                 }
-
+                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -382,8 +320,7 @@ public class DataService extends IntentService {
                         removeTreatmentFromDb(_id);
                     }
                 }
-                MainApp.bus().post(new EventTreatmentChange());
-
+                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -430,11 +367,109 @@ public class DataService extends IntentService {
                 MainApp.bus().post(new EventNewBG());
             }
             // Objectives 0
-            ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
+            ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainApp.getSpecificPlugin(ObjectivesFragment.class);
             if (objectivesFragment != null) {
                 objectivesFragment.bgIsAvailableInNS = true;
                 objectivesFragment.saveProgress();
             }
+        }
+
+        if (intent.getAction().equals(Intents.ACTION_NEW_MBG)) {
+            log.error("Not implemented yet"); // TODO implemeng MBGS
+        }
+    }
+
+    private void handleAddedTreatment(String trstring) throws JSONException, SQLException {
+        JSONObject trJson = new JSONObject(trstring);
+        if (!trJson.has("insulin") && !trJson.has("carbs")) {
+            if (Config.logIncommingData)
+                log.debug("ADD: Uninterested treatment: " + trstring);
+            return;
+        }
+
+        Treatment stored = null;
+        trJson = new JSONObject(trstring);
+        String _id = trJson.getString("_id");
+
+        if (trJson.has("timeIndex")) {
+            if (Config.logIncommingData)
+                log.debug("ADD: timeIndex found: " + trstring);
+            stored = findByTimeIndex(trJson.getLong("timeIndex"));
+        } else {
+            stored = findById(_id);
+        }
+
+        if (stored != null) {
+            if (Config.logIncommingData)
+                log.debug("ADD: Existing treatment: " + trstring);
+            if (trJson.has("timeIndex")) {
+                stored._id = _id;
+                int updated = MainApp.getDbHelper().getDaoTreatments().update(stored);
+                if (Config.logIncommingData)
+                    log.debug("Records updated: " + updated);
+            }
+            return;
+        } else {
+            if (Config.logIncommingData)
+                log.debug("ADD: New treatment: " + trstring);
+            Treatment treatment = new Treatment();
+            treatment._id = _id;
+            treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
+            treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
+            treatment.created_at = new Date(trJson.getLong("mills"));
+            treatment.setTimeIndex(treatment.getTimeIndex());
+            try {
+                MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
+                if (Config.logIncommingData)
+                    log.debug("ADD: Stored treatment: " + treatment.log());
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void handleChangedTreatment(String trstring) throws JSONException, SQLException {
+        JSONObject trJson = new JSONObject(trstring);
+        if (!trJson.has("insulin") && !trJson.has("carbs")) {
+            if (Config.logIncommingData)
+                log.debug("CHANGE: Uninterested treatment: " + trstring);
+            return;
+        }
+        String _id = trJson.getString("_id");
+
+        Treatment stored;
+
+        if (trJson.has("timeIndex")) {
+            if (Config.logIncommingData)
+                log.debug("ADD: timeIndex found: " + trstring);
+            stored = findByTimeIndex(trJson.getLong("timeIndex"));
+        } else {
+            stored = findById(_id);
+        }
+
+        if (stored != null) {
+            if (Config.logIncommingData)
+                log.debug("CHANGE: Removing old: " + trstring);
+            removeTreatmentFromDb(_id);
+        }
+
+        if (Config.logIncommingData)
+            log.debug("CHANGE: Adding new treatment: " + trstring);
+        Treatment treatment = new Treatment();
+        treatment._id = _id;
+        treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
+        treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
+        //treatment.created_at = DateUtil.fromISODateString(trJson.getString("created_at"));
+        treatment.created_at = new Date(trJson.getLong("mills"));
+        treatment.setTimeIndex(treatment.getTimeIndex());
+        try {
+            Dao.CreateOrUpdateStatus status = MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
+            if (Config.logIncommingData)
+                log.debug("Records updated: " + status.getNumLinesChanged());
+            if (Config.logIncommingData)
+                log.debug("CHANGE: Stored treatment: " + treatment.log());
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -489,8 +524,10 @@ public class DataService extends IntentService {
         Treatment stored = findById(_id);
         if (stored != null) {
             log.debug("REMOVE: Existing treatment (removing): " + _id);
-            MainApp.getDbHelper().getDaoTreatments().delete(stored);
-            MainApp.bus().post(new EventTreatmentChange());
+            int removed = MainApp.getDbHelper().getDaoTreatments().delete(stored);
+            if (Config.logIncommingData)
+                log.debug("Records removed: " + removed);
+            scheduleTreatmentChange();
         } else {
             log.debug("REMOVE: Not stored treatment (ignoring): " + _id);
         }
@@ -501,5 +538,28 @@ public class DataService extends IntentService {
         if (bundle == null) return;
         MainApp.bus().post(new EventNewSMS(bundle));
     }
+
+    public void scheduleTreatmentChange() {
+/*
+        class DisconnectRunnable implements Runnable {
+            public void run() {
+                if (Config.logIncommingData)
+                    log.debug("Firing EventTreatmentChange");
+                MainApp.bus().post(new EventTreatmentChange());
+                scheduledDisconnection = null;
+            }
+        }
+        // prepare task for execution in 5 sec
+        // cancel waiting task to prevent sending multiple disconnections
+        if (scheduledDisconnection != null)
+            scheduledDisconnection.cancel(false);
+        Runnable task = new DisconnectRunnable();
+        final int sec = 5;
+        scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
+        log.debug("Scheduling EventTreatmentChange");
+*/
+        MainApp.bus().post(new EventTreatmentChange());
+    }
+
 
 }

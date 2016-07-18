@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.client.data.NSProfile;
@@ -48,7 +49,7 @@ public class ProfileViewDialog extends DialogFragment {
         mHandlerThread.start();
 
         mHandler = new Handler(mHandlerThread.getLooper());
-        profile = ((DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class)).getProfile();
+        profile = ((DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class)).getProfile();
     }
 
     @Override

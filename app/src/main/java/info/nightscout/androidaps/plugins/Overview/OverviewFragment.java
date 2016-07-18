@@ -263,7 +263,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
                                         finalLastRun.lastEnact = new Date();
                                         finalLastRun.lastOpenModeAccept = new Date();
                                         MainApp.getConfigBuilder().uploadDeviceStatus();
-                                        ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainActivity.getSpecificPlugin(ObjectivesFragment.class);
+                                        ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainApp.getSpecificPlugin(ObjectivesFragment.class);
                                         if (objectivesFragment != null) {
                                             objectivesFragment.manualEnacts++;
                                             objectivesFragment.saveProgress();

@@ -194,7 +194,7 @@ public class SmsCommunicatorFragment extends Fragment implements PluginBase {
                     receivedSms.processed = true;
                     break;
                 case "DANAR":
-                    DanaRFragment danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
+                    DanaRFragment danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
                     if (danaRFragment != null) reply = danaRFragment.shortStatus();
                     receivedSms.processed = true;
                     break;
@@ -225,7 +225,7 @@ public class SmsCommunicatorFragment extends Fragment implements PluginBase {
                         bolusWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder().getActivePump();
                         if (pumpInterface != null) {
-                            danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
+                            danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
                             PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.bolusdelivered), bolusWaitingForConfirmation.bolusRequested);

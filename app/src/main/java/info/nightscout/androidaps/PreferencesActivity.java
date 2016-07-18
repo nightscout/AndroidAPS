@@ -89,8 +89,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             addPreferencesFromResource(R.xml.pref_nightscout);
             if (Config.DANAR) {
                 addPreferencesFromResource(R.xml.pref_danar);
-                DanaRFragment danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
-                if (danaRFragment != null && danaRFragment.isEnabled(PluginBase.PROFILE)) {
+                DanaRFragment danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
+                if (danaRFragment.isEnabled(PluginBase.PROFILE)) {
                     addPreferencesFromResource(R.xml.pref_danarprofile);
                 }
             }

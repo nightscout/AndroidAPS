@@ -242,7 +242,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
             return;
 
         APSInterface usedAPS = null;
-        ArrayList<PluginBase> apsPlugins = MainActivity.getSpecificPluginsList(PluginBase.APS);
+        ArrayList<PluginBase> apsPlugins = MainApp.getSpecificPluginsList(PluginBase.APS);
         for (PluginBase p : apsPlugins) {
             APSInterface aps = (APSInterface) p;
             if (!p.isEnabled(PluginBase.APS)) continue;

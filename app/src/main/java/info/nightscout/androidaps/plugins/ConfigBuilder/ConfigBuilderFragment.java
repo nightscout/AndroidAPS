@@ -113,7 +113,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     public void initialize() {
-        pluginList = MainActivity.getPluginsList();
+        pluginList = MainApp.getPluginsList();
         loadSettings();
     }
 
@@ -158,35 +158,35 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     void setViews() {
-        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(BgSourceInterface.class), PluginBase.BGSOURCE);
+        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
-        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.PUMP), PluginBase.PUMP);
+        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.PUMP), PluginBase.PUMP);
         pumpListView.setAdapter(pumpDataAdapter);
         setListViewHeightBasedOnChildren(pumpListView);
-        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.LOOP), PluginBase.LOOP);
+        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.LOOP), PluginBase.LOOP);
         loopListView.setAdapter(loopDataAdapter);
         setListViewHeightBasedOnChildren(loopListView);
-        if (MainActivity.getSpecificPluginsList(PluginBase.LOOP).size() == 0)
+        if (MainApp.getSpecificPluginsList(PluginBase.LOOP).size() == 0)
             loopLabel.setVisibility(View.GONE);
-        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TREATMENT), PluginBase.TREATMENT);
+        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.TREATMENT), PluginBase.TREATMENT);
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
-        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
+        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
         tempsListView.setAdapter(tempsDataAdapter);
         setListViewHeightBasedOnChildren(tempsListView);
-        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ProfileInterface.class), PluginBase.PROFILE);
+        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(ProfileInterface.class), PluginBase.PROFILE);
         profileListView.setAdapter(profileDataAdapter);
         setListViewHeightBasedOnChildren(profileListView);
-        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.APS), PluginBase.APS);
+        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.APS), PluginBase.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
-        if (MainActivity.getSpecificPluginsList(PluginBase.APS).size() == 0)
+        if (MainApp.getSpecificPluginsList(PluginBase.APS).size() == 0)
             apsLabel.setVisibility(View.GONE);
-        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class), PluginBase.CONSTRAINTS);
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class), PluginBase.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
-        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainActivity.getSpecificPluginsList(PluginBase.GENERAL), PluginBase.GENERAL);
+        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.GENERAL), PluginBase.GENERAL);
         generalListView.setAdapter(generalDataAdapter);
         setListViewHeightBasedOnChildren(generalListView);
 
@@ -650,15 +650,15 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 break;
             // Single selection allowed
             case PluginBase.PROFILE:
-                pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(ProfileInterface.class);
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
                 break;
             case PluginBase.BGSOURCE:
-                pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(BgSourceInterface.class);
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
                 break;
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
             case PluginBase.PUMP:
-                pluginsInCategory = MainActivity.getSpecificPluginsList(category);
+                pluginsInCategory = MainApp.getSpecificPluginsList(category);
                 break;
         }
         if (pluginsInCategory != null) {
@@ -683,7 +683,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         ArrayList<PluginBase> pluginsInCategory;
 
         // PluginBase.PROFILE
-        pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(ProfileInterface.class);
+        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
         activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PROFILE);
         if (Config.logConfigBuilder)
             log.debug("Selected profile interface: " + ((PluginBase) activeProfile).getName());
@@ -694,7 +694,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
 
         // PluginBase.BGSOURCE
-        pluginsInCategory = MainActivity.getSpecificPluginsListByInterface(BgSourceInterface.class);
+        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
         activeBgSource = (BgSourceInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.BGSOURCE);
         if (Config.logConfigBuilder)
             log.debug("Selected bgSource interface: " + ((PluginBase) activeBgSource).getName());
@@ -705,7 +705,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
 
         // PluginBase.PUMP
-        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.PUMP);
+        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.PUMP);
         activePump = (PumpInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PUMP);
         if (Config.logConfigBuilder)
             log.debug("Selected pump interface: " + ((PluginBase) activePump).getName());
@@ -716,7 +716,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
 
         // PluginBase.LOOP
-        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.LOOP);
+        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.LOOP);
         activeLoop = (LoopFragment) getTheOneEnabledInArray(pluginsInCategory, PluginBase.LOOP);
         if (activeLoop != null) {
             if (Config.logConfigBuilder)
@@ -729,7 +729,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
 
         // PluginBase.TEMPBASAL
-        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.TEMPBASAL);
+        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.TEMPBASAL);
         activeTempBasals = (TempBasalsInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.TEMPBASAL);
         if (Config.logConfigBuilder)
             log.debug("Selected tempbasal interface: " + ((PluginBase) activeTempBasals).getName());
@@ -740,7 +740,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         }
 
         // PluginBase.TREATMENT
-        pluginsInCategory = MainActivity.getSpecificPluginsList(PluginBase.TREATMENT);
+        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.TREATMENT);
         activeTreatments = (TreatmentsInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.TREATMENT);
         if (Config.logConfigBuilder)
             log.debug("Selected treatment interface: " + ((PluginBase) activeTreatments).getName());
@@ -839,7 +839,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public boolean isLoopEnabled() {
         boolean result = true;
 
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -852,7 +852,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public boolean isClosedModeEnabled() {
         boolean result = true;
 
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -865,7 +865,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public boolean isAutosensModeEnabled() {
         boolean result = true;
 
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -878,7 +878,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     public boolean isAMAModeEnabled() {
         boolean result = true;
 
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -890,7 +890,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         Double rateAfterConstrain = absoluteRate;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -902,7 +902,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer rateAfterConstrain = percentRate;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -914,7 +914,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Double applyBolusConstraints(Double insulin) {
         Double insulinAfterConstrain = insulin;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -926,7 +926,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Integer applyCarbsConstraints(Integer carbs) {
         Integer carbsAfterConstrain = carbs;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;
@@ -938,7 +938,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     @Override
     public Double applyMaxIOBConstraints(Double maxIob) {
         Double maxIobAfterConstrain = maxIob;
-        ArrayList<PluginBase> constraintsPlugins = MainActivity.getSpecificPluginsListByInterface(ConstraintsInterface.class);
+        ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
             ConstraintsInterface constrain = (ConstraintsInterface) p;
             if (!p.isEnabled(PluginBase.CONSTRAINTS)) continue;

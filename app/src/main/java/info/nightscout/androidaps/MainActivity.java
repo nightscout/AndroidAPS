@@ -32,6 +32,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
 import info.nightscout.androidaps.plugins.MM640g.MM640gFragment;
@@ -61,10 +62,6 @@ public class MainActivity extends AppCompatActivity {
     private static TabPageAdapter pageAdapter;
     private static KeepAliveReceiver keepAliveReceiver;
 
-    private static ArrayList<PluginBase> pluginsList = null;
-
-    private static ConfigBuilderFragment configBuilderFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,35 +80,13 @@ public class MainActivity extends AppCompatActivity {
         }
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        registerBus();
 
-        if (pluginsList == null) {
-            pluginsList = new ArrayList<PluginBase>();
-            // Register all tabs in app here
-            pluginsList.add(OverviewFragment.newInstance());
-            if (Config.DANAR) pluginsList.add(DanaRFragment.newInstance());
-            if (Config.MM640G) pluginsList.add(MM640gFragment.newInstance());
-            pluginsList.add(VirtualPumpFragment.newInstance());
-            if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.newInstance());
-            if (Config.LOOPENABLED) pluginsList.add(LoopFragment.newInstance());
-            if (Config.LOWSUSPEDENABLED) pluginsList.add(LowSuspendFragment.newInstance());
-            if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.newInstance());
-            pluginsList.add(NSProfileViewerFragment.newInstance());
-            pluginsList.add(SimpleProfileFragment.newInstance());
-            pluginsList.add(TreatmentsFragment.newInstance());
-            pluginsList.add(TempBasalsFragment.newInstance());
-            pluginsList.add(SafetyFragment.newInstance());
-            if (Config.OBJECTIVESENABLED) pluginsList.add(ObjectivesFragment.newInstance());
-            pluginsList.add(SourceXdripFragment.newInstance());
-            pluginsList.add(SourceNSClientFragment.newInstance());
-            if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.newInstance());
-            pluginsList.add(configBuilderFragment = ConfigBuilderFragment.newInstance());
+        if (keepAliveReceiver == null) {
 
-            registerBus();
             keepAliveReceiver = new KeepAliveReceiver();
+            startService(new Intent(this, ExecutionService.class));
             keepAliveReceiver.setAlarm(this);
-
-            configBuilderFragment.initialize();
-            MainApp.setConfigBuilder(configBuilderFragment);
         }
         setUpTabs(false);
     }
@@ -130,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setUpTabs(boolean switchToLast) {
         pageAdapter = new TabPageAdapter(getSupportFragmentManager());
-        for (PluginBase f : pluginsList) {
+        for (PluginBase f : MainApp.getPluginsList()) {
             pageAdapter.registerNewFragment((Fragment) f);
         }
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -215,54 +190,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static ArrayList<PluginBase> getPluginsList() {
-        return pluginsList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsList(int type) {
-        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
-
-        if (pluginsList != null) {
-            Iterator<PluginBase> it = pluginsList.iterator();
-            while (it.hasNext()) {
-                PluginBase p = it.next();
-                if (p.getType() == type)
-                    newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    public static ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
-        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
-
-        if (pluginsList != null) {
-            Iterator<PluginBase> it = pluginsList.iterator();
-            while (it.hasNext()) {
-                PluginBase p = it.next();
-                if (p.getClass() != ConfigBuilderFragment.class && interfaceClass.isAssignableFrom(p.getClass()))
-                    newList.add(p);
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return newList;
-    }
-
-    @Nullable
-    public static PluginBase getSpecificPlugin(Class pluginClass) {
-        if (pluginsList != null) {
-            Iterator<PluginBase> it = pluginsList.iterator();
-            while (it.hasNext()) {
-                PluginBase p = it.next();
-                if (p.getClass() == pluginClass)
-                    return p;
-            }
-        } else {
-            log.error("pluginsList=null");
-        }
-        return null;
-    }
 }

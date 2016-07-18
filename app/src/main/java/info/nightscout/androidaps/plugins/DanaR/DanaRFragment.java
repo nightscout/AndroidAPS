@@ -195,6 +195,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
+            log.debug("Service is disconnected");
             mBounded = false;
             mExecutionService = null;
         }
@@ -321,6 +322,10 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
 
     @Override
     public void setNewBasalProfile(NSProfile profile) {
+        if (mExecutionService == null) {
+            log.error("setNewBasalProfile mExecutionService is null");
+            return;
+        }
         if (!mExecutionService.updateBasalsInPump(profile))
             ToastUtils.showToastInUiThread(getContext(), MainApp.sResources.getString(R.string.failedupdatebasalprofile));
     }
@@ -705,7 +710,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     }
 
     public static void doConnect(String from) {
-        mExecutionService.connect(from);
+        if (mExecutionService != null) mExecutionService.connect(from);
     }
 
     @Override

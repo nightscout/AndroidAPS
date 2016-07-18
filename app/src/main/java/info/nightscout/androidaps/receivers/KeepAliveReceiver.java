@@ -29,26 +29,6 @@ import info.nightscout.utils.ToastUtils;
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
 
-    private boolean mBounded;
-    private static ExecutionService mExecutionService;
-
-    ServiceConnection mConnection = new ServiceConnection() {
-
-        public void onServiceDisconnected(ComponentName name) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "ExecutionService is disconnected"); // TODO: remove
-            mBounded = false;
-            mExecutionService = null;
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "ExecutionService is connected"); // TODO: remove
-            log.debug("Service is connected");
-            mBounded = true;
-            ExecutionService.LocalBinder mLocalBinder = (ExecutionService.LocalBinder) service;
-            mExecutionService = mLocalBinder.getServiceInstance();
-        }
-    };
-
     @Override
     public void onReceive(Context context, Intent rIntent) {
         PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
@@ -56,12 +36,12 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         wl.acquire();
 
         log.debug("KeepAlive received");
-        DanaRFragment danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
-        if (Config.DANAR && danaRFragment != null && danaRFragment.isEnabled(PluginBase.PUMP)) {
+        final DanaRFragment danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
+        if (Config.DANAR && danaRFragment.isEnabled(PluginBase.PUMP)) {
             Thread t = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    mExecutionService.connect("KeepAlive");
+                    danaRFragment.doConnect("KeepAlive");
                 }
             });
             t.start();
@@ -80,10 +60,6 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         }
         am.cancel(pi);
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.keepAliveMsecs, pi);
-
-        // DanaR bind
-        Intent intent = new Intent(context, ExecutionService.class);
-        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void cancelAlarm(Context context) {
@@ -91,11 +67,5 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
-
-        // DanaR bind
-        if (mBounded) {
-            context.unbindService(mConnection);
-            mBounded = false;
-        }
     }
 }
