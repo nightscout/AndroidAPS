@@ -778,8 +778,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 
             for (int type = 1; type < PluginBase.LAST; type++) {
                 for (PluginBase p : pluginList) {
-                    String settingEnabled = "ConfigBuilder_" + type + "_" + p.getName() + "_Enabled";
-                    String settingVisible = "ConfigBuilder_" + type + "_" + p.getName() + "_Visible";
+                    String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
+                    String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
                     editor.putBoolean(settingEnabled, p.isEnabled(type));
                     editor.putBoolean(settingVisible, p.isVisibleInTabs(type));
                 }
@@ -795,8 +795,8 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (int type = 1; type < PluginBase.LAST; type++) {
             for (PluginBase p : pluginList) {
-                String settingEnabled = "ConfigBuilder_" + type + "_" + p.getName() + "_Enabled";
-                String settingVisible = "ConfigBuilder_" + type + "_" + p.getName() + "_Visible";
+                String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
+                String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
                 if (SP.contains(settingEnabled))
                     p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
                 if (SP.contains(settingVisible))
