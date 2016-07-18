@@ -2,10 +2,15 @@ package info.nightscout.androidaps.plugins.DanaR;
 
 
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -41,6 +46,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.DanaR.Dialogs.ProfileViewDialog;
+import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.client.data.NSProfile;
@@ -48,14 +54,17 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SetWarnColor;
+import info.nightscout.utils.ToastUtils;
 
 public class DanaRFragment extends Fragment implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
 
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
+    private Handler mHandler;
+    private static HandlerThread mHandlerThread;
 
-    private static DanaConnection sDanaConnection = null;
+    private boolean mBounded;
+    private static ExecutionService mExecutionService;
+
     private static DanaRPump sDanaRPump = new DanaRPump();
     private static boolean useExtendedBoluses = false;
 
@@ -64,8 +73,8 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     boolean fragmentPumpVisible = true;
     boolean visibleNow = false;
 
-    Handler loopHandler = new Handler();
-    Runnable refreshLoop = null;
+    private Handler loopHandler = new Handler();
+    private Runnable refreshLoop = null;
 
     TextView lastConnectionView;
     TextView btConnectionView;
@@ -79,13 +88,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     TextView iobView;
     Button viewProfileButton;
 
-    public static DanaConnection getDanaConnection() {
-        return sDanaConnection;
-    }
-
-    public static void setDanaConnection(DanaConnection con) {
-        sDanaConnection = con;
-    }
+    // TODO: password in prefs
 
     public static DanaRPump getDanaRPump() {
         return sDanaRPump;
@@ -170,9 +173,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                 mHandler.post(new Runnable() {
                                   @Override
                                   public void run() {
-                                      if (getDanaConnection() == null)
-                                          setDanaConnection(new DanaConnection(MainApp.bus()));
-                                      getDanaConnection().connectIfNotConnected("Connect request from GUI");
+                                      mExecutionService.connect("Connect request from GUI");
                                   }
                               }
                 );
@@ -183,24 +184,58 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         return view;
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        Context context = getContext();
+        Intent intent = new Intent(context, ExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    ServiceConnection mConnection = new ServiceConnection() {
+
+        public void onServiceDisconnected(ComponentName name) {
+            ToastUtils.showToastInUiThread(getContext(), "ExecutionService is disconnected"); // TODO: remove
+            mBounded = false;
+            mExecutionService = null;
+        }
+
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ToastUtils.showToastInUiThread(getContext(), "ExecutionService is connected"); // TODO: remove
+            log.debug("Service is connected");
+            mBounded = true;
+            ExecutionService.LocalBinder mLocalBinder = (ExecutionService.LocalBinder) service;
+            mExecutionService = mLocalBinder.getServiceInstance();
+        }
+    };
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mBounded) {
+            getContext().unbindService(mConnection);
+            mBounded = false;
+        }
+    }
+
+    ;
+
     @Subscribe
     public void onStatusEvent(final EventDanaRConnectionStatus c) {
         Activity activity = getActivity();
         if (activity != null) {
-            activity.runOnUiThread(new Runnable() {
-                                       @Override
-                                       public void run() {
-                                           if (c.sConnecting) {
-                                               btConnectionView.setText("{fa-bluetooth-b spin} " + c.sConnectionAttemptNo);
-                                           } else {
-                                               if (c.sConnected) {
-                                                   btConnectionView.setText("{fa-bluetooth}");
-                                               } else {
-                                                   btConnectionView.setText("{fa-bluetooth-b}");
-                                               }
-                                           }
-                                       }
-                                   }
+            activity.runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            if (c.sStatus == c.CONNECTING)
+                                btConnectionView.setText("{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s");
+                            else if (c.sStatus == c.CONNECTED)
+                                btConnectionView.setText("{fa-bluetooth}");
+                            else
+                                btConnectionView.setText("{fa-bluetooth-b}");
+                        }
+                    }
             );
         }
     }
@@ -221,8 +256,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
         if (useExtendedBoluses != previousValue && isExtendedBoluslInProgress()) {
-            getDanaConnection().connectIfNotConnected("EventPreferenceChange");
-            getDanaConnection().extendedBolusStop();
+            mExecutionService.extendedBolusStop();
         }
         updateGUI();
     }
@@ -289,10 +323,8 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
 
     @Override
     public void setNewBasalProfile(NSProfile profile) {
-        if (getDanaConnection() == null)
-            setDanaConnection(new DanaConnection(MainApp.bus()));
-        getDanaConnection().connectIfNotConnected("setNewBasalProfile");
-        getDanaConnection().updateBasalsInPump(profile);
+        if (!mExecutionService.updateBasalsInPump(profile))
+            ToastUtils.showToastInUiThread(getContext(), MainApp.sResources.getString(R.string.failedupdatebasalprofile));
     }
 
     @Override
@@ -357,13 +389,13 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         ConfigBuilderFragment configBuilderFragment = MainApp.getConfigBuilder();
         insulin = configBuilderFragment.applyBolusConstraints(insulin);
         if (insulin > 0 || carbs > 0) {
-            getDanaConnection().connectIfNotConnected("deliverTreatment");
             Treatment t = new Treatment();
             t.insulin = insulin;
-            if (insulin > 0) getDanaConnection().bolus(insulin, t);
-            if (carbs > 0) getDanaConnection().carbsEntry(carbs);
+            boolean connectionOK = false;
+            if (carbs > 0) connectionOK = mExecutionService.carbsEntry(carbs);
+            if (insulin > 0) connectionOK = mExecutionService.bolus(insulin, t);
             PumpEnactResult result = new PumpEnactResult();
-            result.success = true;
+            result.success = connectionOK;
             result.bolusDelivered = t.insulin;
             result.carbsDelivered = carbs;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -418,7 +450,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         }
 
         if (doLowTemp || doHighTemp) {
-            Integer percentRate = new Double(absoluteRate / getBaseBasalRate() * 100).intValue();
+            Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
             if (percentRate > 200) {
@@ -552,10 +584,9 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                 log.debug("setTempBasalPercent: Correct value already set");
             return result;
         }
-        getDanaConnection().connectIfNotConnected("setTempBasalPercent");
         int durationInHours = Math.max(durationInMinutes / 60, 1);
-        getDanaConnection().tempBasal(percent, durationInHours);
-        if (getDanaRPump().isTempBasalInProgress && getDanaRPump().tempBasalPercent == percent) {
+        boolean connectionOK = mExecutionService.tempBasal(percent, durationInHours);
+        if (connectionOK && getDanaRPump().isTempBasalInProgress && getDanaRPump().tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -594,10 +625,9 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                 log.debug("setExtendedBolus: Correct extended bolus already set");
             return result;
         }
-        getDanaConnection().connectIfNotConnected("setExtendedBolus");
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
-        getDanaConnection().extendedBolus(insulin, durationInHalfHours);
-        if (getDanaRPump().isExtendedInProgress && getDanaRPump().extendedBolusAmount - insulin == 0) {
+        boolean connectionOK = mExecutionService.extendedBolus(insulin, durationInHalfHours);
+        if (connectionOK && getDanaRPump().isExtendedInProgress && getDanaRPump().extendedBolusAmount - insulin == 0) {
             result.enacted = true;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -633,9 +663,8 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
 
     public PumpEnactResult cancelRealTempBasal() {
         PumpEnactResult result = new PumpEnactResult();
-        getDanaConnection().connectIfNotConnected("cancelRealTempBasal");
         if (getDanaRPump().isTempBasalInProgress) {
-            getDanaConnection().tempBasalStop();
+            mExecutionService.tempBasalStop();
             result.enacted = true;
             result.isTempCancel = true;
         }
@@ -658,9 +687,8 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
-        getDanaConnection().connectIfNotConnected("cancelExtendedBolus");
         if (getDanaRPump().isExtendedInProgress) {
-            getDanaConnection().extendedBolusStop();
+            mExecutionService.extendedBolusStop();
             result.enacted = true;
             result.isTempCancel = true;
         }
@@ -676,6 +704,10 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             log.error("cancelExtendedBolus: Failed to cancel extended bolus");
             return result;
         }
+    }
+
+    public static void doConnect(String from) {
+        mExecutionService.connect(from);
     }
 
     @Override
@@ -803,6 +835,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         if (getDanaRPump() != null) {
             if (absoluteRate > getDanaRPump().maxBasal) {
                 absoluteRate = getDanaRPump().maxBasal;
+                if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
                 if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
                     log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
             }

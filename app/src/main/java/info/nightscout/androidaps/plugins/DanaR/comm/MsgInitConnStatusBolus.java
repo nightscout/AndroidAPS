@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by mike on 28.05.2016.
  */
-public class MsgInitConnStatusBolus extends DanaRMessage{
+public class MsgInitConnStatusBolus extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBolus.class);
 
     public MsgInitConnStatusBolus() {

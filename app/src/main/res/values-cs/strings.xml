@@ -76,7 +76,7 @@
     <string name="lowsuspend_low_title">Hodnota nízké glykémie</string>
     <string name="manualenacts">Ručně spuštěno</string>
     <string name="lowsuspend_lowprojected">Předpokládaná nízká glykémie</string>
-    <string name="minago">min zpět</string>
+    <string name="minago">m zpět</string>
     <string name="minimalduration">Minimální trvání</string>
     <string name="nav_backup">Záloha</string>
     <string name="nav_exit">Ukončit</string>

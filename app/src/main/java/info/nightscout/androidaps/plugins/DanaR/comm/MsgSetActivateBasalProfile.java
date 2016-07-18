@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 
-public class MsgSetActivateBasalProfile extends DanaRMessage {
+public class MsgSetActivateBasalProfile extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSetActivateBasalProfile.class);
 
     public MsgSetActivateBasalProfile() {

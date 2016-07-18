@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
 
-public class MsgBolusStop extends DanaRMessage {
+public class MsgBolusStop extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgBolusStop.class);
     private static Treatment t;
     private static Double amount;

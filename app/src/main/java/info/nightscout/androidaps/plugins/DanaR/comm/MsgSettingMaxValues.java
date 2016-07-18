@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 /**
  * Created by mike on 05.07.2016.
  */
-public class MsgSettingMaxValues extends DanaRMessage {
+public class MsgSettingMaxValues extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSettingMaxValues.class);
 
     public MsgSettingMaxValues() {

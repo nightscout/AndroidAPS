@@ -10,7 +10,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
 import info.nightscout.utils.DecimalFormatter;
 
-public class MsgBolusProgress extends DanaRMessage {
+public class MsgBolusProgress extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgBolusProgress.class);
     private static Bus bus = null;
 

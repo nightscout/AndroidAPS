@@ -16,9 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainActivity;
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.DanaR.DanaConnection;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
@@ -75,12 +73,11 @@ public class ProfileViewDialog extends DialogFragment {
                     @Override
                     public void run() {
                         DanaRFragment.getDanaRPump().lastSettingsRead = new Date(0);
-                        if (DanaRFragment.getDanaConnection() == null) DanaRFragment.setDanaConnection(new DanaConnection(MainApp.bus()));
-                        DanaRFragment.getDanaConnection().connectIfNotConnected("ProfileViewDialog");
-                        //refreshButton.setVisibility(View.VISIBLE);
+//                        if (DanaRFragment.getDanaConnection() == null) DanaRFragment.setDanaConnection(new DanaConnection(MainApp.bus()));
+//                        DanaRFragment.getDanaConnection().connectIfNotConnected("ProfileViewDialog");
+                        DanaRFragment.doConnect("ProfileViewDialog");
                     }
                 });
-                //refreshButton.setVisibility(View.GONE);
                 dismiss();
             }
         });

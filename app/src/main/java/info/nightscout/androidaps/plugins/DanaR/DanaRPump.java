@@ -22,7 +22,7 @@ public class DanaRPump {
     public static final int UNITS_MGDL = 0;
     public static final int UNITS_MMOL = 1;
 
-    Date lastConnection = new Date(0);
+    public Date lastConnection = new Date(0);
     public Date lastSettingsRead = new Date(0);
 
     // Info

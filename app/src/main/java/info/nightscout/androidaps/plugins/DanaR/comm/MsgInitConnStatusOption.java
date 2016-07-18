@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 /**
  * Created by mike on 28.05.2016.
  */
-public class MsgInitConnStatusOption extends DanaRMessage {
+public class MsgInitConnStatusOption extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusOption.class);
 
     public MsgInitConnStatusOption() {

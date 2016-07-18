@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 
-public class MsgSetExtendedBolusStop extends DanaRMessage {
+public class MsgSetExtendedBolusStop extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSetExtendedBolusStop.class);
 
     public MsgSetExtendedBolusStop() {

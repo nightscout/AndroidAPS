@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Created by mike on 05.07.2016.
  */
-public class MsgSettingUserOptions extends DanaRMessage {
+public class MsgSettingUserOptions extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSettingShippingInfo.class);
 
     public MsgSettingUserOptions() {

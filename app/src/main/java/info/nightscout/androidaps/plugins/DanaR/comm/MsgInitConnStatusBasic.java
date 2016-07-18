@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.DanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MsgInitConnStatusBasic extends DanaRMessage {
+public class MsgInitConnStatusBasic extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBasic.class);
 
     public MsgInitConnStatusBasic() {

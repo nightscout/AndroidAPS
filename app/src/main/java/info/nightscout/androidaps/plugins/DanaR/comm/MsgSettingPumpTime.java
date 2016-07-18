@@ -8,7 +8,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 
-public class MsgSettingPumpTime extends DanaRMessage {
+public class MsgSettingPumpTime extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSettingPumpTime.class);
 
     public MsgSettingPumpTime() {

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 
 
-public class MsgStatusBasic extends DanaRMessage {
+public class MsgStatusBasic extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgStatusBasic.class);
 
     public MsgStatusBasic() {

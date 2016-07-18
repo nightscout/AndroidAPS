@@ -8,8 +8,8 @@ import java.util.HashMap;
 /**
  * Created by mike on 28.05.2016.
  */
-public class DanaRMessageNames {
-    private static Logger log = LoggerFactory.getLogger(DanaRMessageNames.class);
+public class MessageOriginalNames {
+    private static Logger log = LoggerFactory.getLogger(MessageOriginalNames.class);
 
     public static HashMap<Integer,String> messageNames;
 

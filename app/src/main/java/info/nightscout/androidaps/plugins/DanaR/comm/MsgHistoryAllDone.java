@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.DanaR.comm;
 
-public class MsgHistoryAllDone extends DanaRMessage {
+public class MsgHistoryAllDone extends MessageBase {
 
     public MsgHistoryAllDone() {
         SetCommand(0x41F1);

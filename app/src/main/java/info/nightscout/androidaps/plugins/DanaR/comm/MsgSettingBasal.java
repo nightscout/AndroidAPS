@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 /**
  * Created by mike on 05.07.2016.
  */
-public class MsgSettingBasal extends DanaRMessage {
+public class MsgSettingBasal extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSettingBasal.class);
 
     public MsgSettingBasal() {

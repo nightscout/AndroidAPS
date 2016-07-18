@@ -18,7 +18,7 @@ import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.utils.DateUtil;
 
-public class MsgOcclusion extends DanaRMessage {
+public class MsgOcclusion extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgOcclusion.class);
 
     public MsgOcclusion() {

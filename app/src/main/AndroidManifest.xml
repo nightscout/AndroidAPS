@@ -32,6 +32,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PreferencesActivity" />
+        <activity android:name=".AgreementActivity" />
 
         <!-- Receiver from NSClient -->
         <receiver
@@ -84,17 +85,14 @@
             android:name=".Services.AlertService"
             android:exported="false" />
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
-
         <service
-            android:name=".plugins.DanaR.Services.DanaRService"
+            android:name=".plugins.DanaR.Services.ExecutionService"
             android:enabled="true"
             android:exported="false" />
 
-        <activity android:name=".AgreementActivity" />
-
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
     </application>
 
 </manifest>

@@ -7,7 +7,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 
-public class MsgInitConnStatusTime extends DanaRMessage {
+public class MsgInitConnStatusTime extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusTime.class);
 
     public MsgInitConnStatusTime() {

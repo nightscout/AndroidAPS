@@ -8,14 +8,14 @@ import java.util.HashMap;
 /**
  * Created by mike on 28.05.2016.
  */
-public class DanaRMessageHashTable {
-    private static Logger log = LoggerFactory.getLogger(DanaRMessageHashTable.class);
+public class MessageHashTable {
+    private static Logger log = LoggerFactory.getLogger(MessageHashTable.class);
 
-    public static HashMap<Integer, DanaRMessage> messages = null;
+    public static HashMap<Integer, MessageBase> messages = null;
 
     static {
         if (messages == null) {
-            messages = new HashMap<Integer, DanaRMessage>();
+            messages = new HashMap<Integer, MessageBase>();
             put(new MsgBolusStop());                 // 0x0101 CMD_MEALINS_STOP
             put(new MsgBolusStart());                // 0x0102 CMD_MEALINS_START_DATA
             put(new MsgBolusProgress());             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
@@ -54,18 +54,18 @@ public class DanaRMessageHashTable {
         }
     }
 
-    public static void put(DanaRMessage message) {
+    public static void put(MessageBase message) {
         int command = message.getCommand();
-        //String name = DanaRMessageNames.getName(command);
+        //String name = MessageOriginalNames.getName(command);
         messages.put(command, message);
         //log.debug(String.format("%04x ", command) + " " + name);
     }
 
-    public static DanaRMessage findMessage(Integer command) {
+    public static MessageBase findMessage(Integer command) {
         if (messages.containsKey(command)) {
             return messages.get(command);
         } else {
-            return new DanaRMessage();
+            return new MessageBase();
         }
     }
 }

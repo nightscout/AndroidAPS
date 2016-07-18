@@ -7,8 +7,11 @@ package info.nightscout.androidaps.receivers;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.os.PowerManager;
 
 import org.slf4j.Logger;
@@ -17,12 +20,34 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
-import info.nightscout.androidaps.plugins.DanaR.Services.DanaRService;
+import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
+import info.nightscout.utils.ToastUtils;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
+
+    private boolean mBounded;
+    private static ExecutionService mExecutionService;
+
+    ServiceConnection mConnection = new ServiceConnection() {
+
+        public void onServiceDisconnected(ComponentName name) {
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "ExecutionService is disconnected"); // TODO: remove
+            mBounded = false;
+            mExecutionService = null;
+        }
+
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "ExecutionService is connected"); // TODO: remove
+            log.debug("Service is connected");
+            mBounded = true;
+            ExecutionService.LocalBinder mLocalBinder = (ExecutionService.LocalBinder) service;
+            mExecutionService = mLocalBinder.getServiceInstance();
+        }
+    };
 
     @Override
     public void onReceive(Context context, Intent rIntent) {
@@ -33,8 +58,13 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         log.debug("KeepAlive received");
         DanaRFragment danaRFragment = (DanaRFragment) MainActivity.getSpecificPlugin(DanaRFragment.class);
         if (Config.DANAR && danaRFragment != null && danaRFragment.isEnabled(PluginBase.PUMP)) {
-            Intent intent = new Intent(context, DanaRService.class);
-            context.startService(intent);
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mExecutionService.connect("KeepAlive");
+                }
+            });
+            t.start();
         }
 
         wl.release();
@@ -50,6 +80,10 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         }
         am.cancel(pi);
         am.setInexactRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), Constants.keepAliveMsecs, pi);
+
+        // DanaR bind
+        Intent intent = new Intent(context, ExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void cancelAlarm(Context context) {
@@ -57,5 +91,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         PendingIntent sender = PendingIntent.getBroadcast(context, 0, intent, 0);
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(sender);
+
+        // DanaR bind
+        if (mBounded) {
+            context.unbindService(mConnection);
+            mBounded = false;
+        }
     }
 }

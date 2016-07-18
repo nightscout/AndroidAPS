@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 import info.nightscout.androidaps.Config;
 
-public class MsgSetCarbsEntry extends DanaRMessage {
+public class MsgSetCarbsEntry extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSetCarbsEntry.class);
 
     public MsgSetCarbsEntry() {
@@ -17,7 +17,7 @@ public class MsgSetCarbsEntry extends DanaRMessage {
     public MsgSetCarbsEntry(Calendar time, int amount) {
         this();
 
-        AddParamByte((byte) DanaRRecordTypes.RECORD_TYPE_CARBO);
+        AddParamByte((byte) RecordTypes.RECORD_TYPE_CARBO);
         AddParamByte((byte) (time.get(Calendar.YEAR) % 100));
         AddParamByte((byte) (time.get(Calendar.MONTH) + 1));
         AddParamByte((byte) (time.get(Calendar.DAY_OF_MONTH)));

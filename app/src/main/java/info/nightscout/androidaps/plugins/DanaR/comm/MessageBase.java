@@ -6,14 +6,14 @@ import android.os.Build;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.Config;
-import info.nightscout.utils.CRC;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
+import info.nightscout.androidaps.Config;
+import info.nightscout.utils.CRC;
 
 /*
  *  00  01   02  03   04   05  06
@@ -21,8 +21,8 @@ import java.util.GregorianCalendar;
  *  7E  7E  len  F1  CMD  SUB data CRC CRC 2E  2E
  */
 
-public class DanaRMessage {
-    private static Logger log = LoggerFactory.getLogger(DanaRMessage.class);
+public class MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MessageBase.class);
     private byte[] buffer = new byte[512];
     private int position = 6;
 
@@ -58,7 +58,7 @@ public class DanaRMessage {
         int length = this.position - 3;
 
         this.buffer[2] = (byte) length;
-        this.buffer[3] = (byte) 0xf1;
+        this.buffer[3] = (byte) 0xF1;
 
         this.AddParamInt(CRC.getCrc16(this.buffer, 3, length));
 
@@ -69,7 +69,7 @@ public class DanaRMessage {
     }
 
     public String getMessageName() {
-        return DanaRMessageNames.getName(getCommand());
+        return MessageOriginalNames.getName(getCommand());
     }
 
     public void handleMessage(byte[] bytes) {

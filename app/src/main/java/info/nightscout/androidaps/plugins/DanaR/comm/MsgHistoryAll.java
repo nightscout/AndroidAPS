@@ -11,7 +11,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.HistoryRecord;
 
-public class MsgHistoryAll extends DanaRMessage {
+public class MsgHistoryAll extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgHistoryAll.class);
 
     public MsgHistoryAll() {
@@ -37,7 +37,7 @@ public class MsgHistoryAll extends DanaRMessage {
         historyRecord.setBytes(bytes);
 
         switch (recordCode) {
-            case DanaRRecordTypes.RECORD_TYPE_BOLUS:
+            case RecordTypes.RECORD_TYPE_BOLUS:
                 historyRecord.setRecordDate(datetime);
                 switch (0xF0 & paramByte8) {
                     case 0xA0:
@@ -59,25 +59,25 @@ public class MsgHistoryAll extends DanaRMessage {
                 historyRecord.setRecordDuration(((int) paramByte8 & 0x0F) * 60 + (int) paramByte7);
                 historyRecord.setRecordValue(value * 0.01);
                 break;
-            case DanaRRecordTypes.RECORD_TYPE_DAILY:
+            case RecordTypes.RECORD_TYPE_DAILY:
                 historyRecord.setRecordDate(date);
                 historyRecord.setRecordDailyBasal((double) ((int) paramByte5 * 0xFF + (int) paramByte6) * 0.01);
                 historyRecord.setRecordDailyBolus((double) ((int) paramByte7 * 0xFF + (int) paramByte8) / 0.01);
                 break;
-            case DanaRRecordTypes.RECORD_TYPE_PRIME:
-            case DanaRRecordTypes.RECORD_TYPE_ERROR:
-            case DanaRRecordTypes.RECORD_TYPE_REFILL:
-            case DanaRRecordTypes.RECORD_TYPE_BASALHOUR:
-            case DanaRRecordTypes.RECORD_TYPE_TB:
+            case RecordTypes.RECORD_TYPE_PRIME:
+            case RecordTypes.RECORD_TYPE_ERROR:
+            case RecordTypes.RECORD_TYPE_REFILL:
+            case RecordTypes.RECORD_TYPE_BASALHOUR:
+            case RecordTypes.RECORD_TYPE_TB:
                 historyRecord.setRecordDate(datetimewihtsec);
                 historyRecord.setRecordValue(value * 0.01);
                 break;
-            case DanaRRecordTypes.RECORD_TYPE_GLUCOSE:
-            case DanaRRecordTypes.RECORD_TYPE_CARBO:
+            case RecordTypes.RECORD_TYPE_GLUCOSE:
+            case RecordTypes.RECORD_TYPE_CARBO:
                 historyRecord.setRecordDate(datetimewihtsec);
                 historyRecord.setRecordValue(value);
                 break;
-            case DanaRRecordTypes.RECORD_TYPE_ALARM:
+            case RecordTypes.RECORD_TYPE_ALARM:
                 historyRecord.setRecordDate(datetimewihtsec);
                 String strAlarm = "None";
                 switch ((int) paramByte8) {
@@ -97,7 +97,7 @@ public class MsgHistoryAll extends DanaRMessage {
                 historyRecord.setRecordAlarm(strAlarm);
                 historyRecord.setRecordValue(value * 0.01);
                 break;
-            case DanaRRecordTypes.RECORD_TYPE_SUSPEND:
+            case RecordTypes.RECORD_TYPE_SUSPEND:
                 historyRecord.setRecordDate(datetimewihtsec);
                 String strRecordValue = "Off";
                 if ((int) paramByte8 == 79)

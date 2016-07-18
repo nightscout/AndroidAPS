@@ -16,7 +16,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 
-public class MsgStatusTempBasal extends DanaRMessage {
+public class MsgStatusTempBasal extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgStatusTempBasal.class);
 
     public MsgStatusTempBasal() {

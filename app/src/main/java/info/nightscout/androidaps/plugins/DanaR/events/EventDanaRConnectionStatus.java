@@ -1,19 +1,15 @@
 package info.nightscout.androidaps.plugins.DanaR.events;
 
 public class EventDanaRConnectionStatus {
-    public boolean sConnecting = false;
-    public boolean sConnected = false;
-    public int sConnectionAttemptNo =0;
+    public static final int CONNECTING = 0;
+    public static final int CONNECTED = 1;
+    public static final int DISCONNECTED = 2;
 
-    public EventDanaRConnectionStatus(boolean connecting, boolean connected, int connectionAttemptNo) {
-        sConnecting = connecting;
-        sConnected = connected;
+    public int sStatus = DISCONNECTED;
+    public int sSecondsElapsed = 0;
 
-        if(connectionAttemptNo!=0)
-            sConnectionAttemptNo = connectionAttemptNo;
-    }
-
-    public EventDanaRConnectionStatus() {
-
+    public EventDanaRConnectionStatus(int status, int secondsElapsed) {
+        sStatus = status;
+        sSecondsElapsed = secondsElapsed;
     }
 }

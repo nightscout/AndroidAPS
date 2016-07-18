@@ -8,7 +8,7 @@ import info.nightscout.androidaps.Config;
 /**
  * Created by mike on 30.06.2016.
  */
-public class MsgCheckValue extends DanaRMessage {
+public class MsgCheckValue extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgCheckValue.class);
 
     public MsgCheckValue() {

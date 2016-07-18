@@ -15,7 +15,7 @@ import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
  *  THIS IS BROKEN IN PUMP... SENDING ONLY 1 PROFILE
  *
  */
-public class MsgSettingBasalProfileAll extends DanaRMessage {
+public class MsgSettingBasalProfileAll extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSettingBasalProfileAll.class);
 
     public MsgSettingBasalProfileAll() {

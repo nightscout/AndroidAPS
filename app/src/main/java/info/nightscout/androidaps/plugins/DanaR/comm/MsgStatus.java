@@ -3,12 +3,10 @@ package info.nightscout.androidaps.plugins.DanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 
-public class MsgStatus extends DanaRMessage {
+public class MsgStatus extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgStatus.class);
 
     public MsgStatus() {

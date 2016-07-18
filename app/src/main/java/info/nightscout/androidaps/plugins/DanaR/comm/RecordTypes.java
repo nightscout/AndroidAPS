@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.DanaR.comm;
 /**
  * Created by mike on 28.05.2016.
  */
-public class DanaRRecordTypes {
+public class RecordTypes {
     public static final byte RECORD_TYPE_BOLUS =      (byte) 0x01;
     public static final byte RECORD_TYPE_DAILY =      (byte) 0x02;
     public static final byte RECORD_TYPE_PRIME =      (byte) 0x03;
