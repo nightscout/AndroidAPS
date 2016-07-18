@@ -799,7 +799,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 String settingVisible = "ConfigBuilder_" + type + "_" + p.getName() + "_Visible";
                 if (SP.contains(settingEnabled))
                     p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
-                if (SP.contains("ConfigBuilder" + p.getName() + "Visible"))
+                if (SP.contains(settingVisible))
                     p.setFragmentVisible(type, SP.getBoolean(settingVisible, true));
             }
         }

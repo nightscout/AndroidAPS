@@ -108,7 +108,7 @@ public class ExecutionService extends Service {
         danaRPump = danaRFragment.getDanaRPump();
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "DanaConnection");
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ExecutionService");
     }
 
     public class LocalBinder extends Binder {
@@ -141,7 +141,6 @@ public class ExecutionService extends Service {
     public void onStatusEvent(EventAppExit event) {
         if (Config.logFunctionCalls)
             log.debug("EventAppExit received");
-        // TODO: mDanaConnection.stop();
 
         if (mSerialIOThread != null)
             mSerialIOThread.disconnect("Application exit");
@@ -295,6 +294,7 @@ public class ExecutionService extends Service {
         connect("tempBasal");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
+        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
         return true;
     }
@@ -303,6 +303,7 @@ public class ExecutionService extends Service {
         connect("tempBasalStop");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
         return true;
     }
@@ -311,6 +312,7 @@ public class ExecutionService extends Service {
         connect("extendedBolus");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
+        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
         return true;
     }
@@ -319,6 +321,7 @@ public class ExecutionService extends Service {
         connect("extendedBolusStop");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
+        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
         return true;
     }

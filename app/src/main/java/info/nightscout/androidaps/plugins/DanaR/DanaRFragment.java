@@ -38,6 +38,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -102,6 +103,9 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
 
         this.mHandler = new Handler(mHandlerThread.getLooper());
         registerBus();
+        Context context = MainApp.instance().getApplicationContext();
+        Intent intent = new Intent(context, ExecutionService.class);
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
     public static DanaRFragment newInstance() {
@@ -184,6 +188,12 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         return view;
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventAppExit e) {
+        MainApp.instance().getApplicationContext().unbindService(mConnection);
+    }
+
+/*
     @Override
     public void onStart() {
         super.onStart();
@@ -191,6 +201,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         Intent intent = new Intent(context, ExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
+*/
 
     ServiceConnection mConnection = new ServiceConnection() {
 
@@ -208,6 +219,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         }
     };
 
+/*
     @Override
     public void onStop() {
         super.onStop();
@@ -216,8 +228,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             mBounded = false;
         }
     }
-
-    ;
+*/
 
     @Subscribe
     public void onStatusEvent(final EventDanaRConnectionStatus c) {
