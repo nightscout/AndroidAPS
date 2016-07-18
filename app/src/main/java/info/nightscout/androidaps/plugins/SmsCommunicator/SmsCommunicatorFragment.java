@@ -186,10 +186,18 @@ public class SmsCommunicatorFragment extends Fragment implements PluginBase {
 
         if (splited.length > 0) {
             switch (splited[0].toUpperCase()) {
-                case "RNSC":
+                case "RT":
                     Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                    MainApp.getDbHelper().resetTreatments();
                     MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                     List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
+                    reply = "RT " + q.size() + " receivers";
+                    receivedSms.processed = true;
+                    break;
+                case "RNSC":
+                    restartNSClient = new Intent(Intents.ACTION_RESTART);
+                    MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                    q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
                     reply = "RNSC " + q.size() + " receivers";
                     receivedSms.processed = true;
                     break;
