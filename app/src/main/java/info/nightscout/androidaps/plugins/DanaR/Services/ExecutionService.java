@@ -340,6 +340,7 @@ public class ExecutionService extends Service {
             waitMsec(100);
         }
         bolusingTreatment = null;
+        waitMsec(200);
         getPumpStatus();
         return true;
     }
@@ -368,6 +369,7 @@ public class ExecutionService extends Service {
         Calendar time = Calendar.getInstance();
         MsgSetCarbsEntry msg = new MsgSetCarbsEntry(time, amount);
         mSerialIOThread.sendMessage(msg);
+        waitMsec(200);
         return true;
     }
 
