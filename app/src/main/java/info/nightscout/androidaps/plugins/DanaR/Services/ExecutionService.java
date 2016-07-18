@@ -377,8 +377,10 @@ public class ExecutionService extends Service {
         double[] basal = buildDanaRProfileRecord(profile);
         MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
         mSerialIOThread.sendMessage(msgSet);
+        waitMsec(200);
         MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
         mSerialIOThread.sendMessage(msgActivate);
+        waitMsec(200);
         getPumpStatus();
         return true;
     }
