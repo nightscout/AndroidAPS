@@ -1,16 +1,13 @@
 package info.nightscout.androidaps;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,34 +19,13 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import info.nightscout.androidaps.Services.AlertService;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
-import info.nightscout.androidaps.plugins.Loop.LoopFragment;
-import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
-import info.nightscout.androidaps.plugins.MM640g.MM640gFragment;
-import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerFragment;
-import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
-import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
-import info.nightscout.androidaps.plugins.SafetyFragment.SafetyFragment;
-import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
-import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
-import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
-import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
-import info.nightscout.androidaps.tabs.*;
-import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.androidaps.tabs.SlidingTabLayout;
+import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 
@@ -141,22 +117,22 @@ public class MainActivity extends AppCompatActivity {
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.importSharedPreferences(this);
                 break;
-            case R.id.nav_test_alarm:
-                final int REQUEST_CODE_ASK_PERMISSIONS = 2355;
-                int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW);
-                if (permission != PackageManager.PERMISSION_GRANTED) {
-                    // We don't have permission so prompt the user
-                    // On Android 6 give permission for alarming in Settings -> Apps -> Draw over other apps
-                    ActivityCompat.requestPermissions(
-                            this,
-                            new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
-                            REQUEST_CODE_ASK_PERMISSIONS
-                    );
-                }
-                Intent alertServiceIntent = new Intent(getApplicationContext(), AlertService.class);
-                alertServiceIntent.putExtra("alertText", getString(R.string.nav_test_alert));
-                getApplicationContext().startService(alertServiceIntent);
-                break;
+//            case R.id.nav_test_alarm:
+//                final int REQUEST_CODE_ASK_PERMISSIONS = 2355;
+//                int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW);
+//                if (permission != PackageManager.PERMISSION_GRANTED) {
+//                    // We don't have permission so prompt the user
+//                    // On Android 6 give permission for alarming in Settings -> Apps -> Draw over other apps
+//                    ActivityCompat.requestPermissions(
+//                            this,
+//                            new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
+//                            REQUEST_CODE_ASK_PERMISSIONS
+//                    );
+//                }
+//                Intent alertServiceIntent = new Intent(getApplicationContext(), AlertService.class);
+//                alertServiceIntent.putExtra("alertText", getString(R.string.nav_test_alert));
+//                getApplicationContext().startService(alertServiceIntent);
+//                break;
             case R.id.nav_exit:
                 log.debug("Exiting");
                 keepAliveReceiver.cancelAlarm(this);

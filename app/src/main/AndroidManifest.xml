@@ -65,9 +65,6 @@
             android:name=".Services.DataService"
             android:exported="false" />
         <!-- Service showing alert on screen -->
-        <service
-            android:name=".Services.AlertService"
-            android:exported="false" />
 
         <service
             android:name=".plugins.DanaR.Services.ExecutionService"
