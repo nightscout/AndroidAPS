@@ -188,6 +188,7 @@ public class ExecutionService extends Service {
                 MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.CONNECTED, 0));
                 getPumpStatus();
             } else {
+                MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.DISCONNECTED, 0));
                 log.error("Pump connection timed out");
             }
             mWakeLock.release();
