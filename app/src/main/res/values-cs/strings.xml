@@ -248,4 +248,8 @@
     <string name="glucosetype_finger">Glukoměr</string>
     <string name="glucosetype_manual">Jiný</string>
     <string name="glucosetype_sensor">Senzor</string>
+    <string name="danarprofile">DanaR profil</string>
+    <string name="danarprofile_car">Rychlost absorbce sacharidů</string>
+    <string name="danarprofile_dia">Rychlost inzulínu[h]</string>
+    <string name="failedupdatebasalprofile">Chyba při nastavení dočasného bazálu</string>
 </resources>
