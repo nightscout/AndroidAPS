@@ -36,6 +36,16 @@ public class MessageHashTable {
             put(new MsgOcclusion());                 // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
             put(new MsgPCCommStart());               // 0x3001 CMD_CONNECT
             put(new MsgPCCommStop());                // 0x3002 CMD_DISCONNECT
+            put(new MsgHistoryBolus());              // 0x3101 CMD_HISTORY_MEAL_INS
+            put(new MsgHistoryDailyInsulin());       // 0x3102 CMD_HISTORY_DAY_INS
+            put(new MsgHistoryGlucose());            // 0x3104 CMD_HISTORY_GLUCOSE
+            put(new MsgHistoryAlarm());              // 0x3105 CMD_HISTORY_ALARM
+            put(new MsgHistoryError());              // 0x3106 CMD_HISTORY_ERROR
+            put(new MsgHistoryCarbo());              // 0x3107 CMD_HISTORY_CARBOHY
+            put(new MsgHistoryRefill());             // 0x3108 CMD_HISTORY_REFILL
+            put(new MsgHistorySuspend());            // 0x3109 CMD_HISTORY_SUSPEND
+            put(new MsgHistoryBasalHour());          // 0x310A CMD_HISTORY_BASAL_HOUR
+            put(new MsgHistoryDone());               // 0x31F1 CMD_HISTORY_DONT_USED
             put(new MsgSettingBasal());              // 0x3202 CMD_SETTING_V_BASAL_INS_I
             put(new MsgSettingProfileRatios());      // 0x3204 CMD_SETTING_V_CCC_I
             put(new MsgSettingMaxValues());          // 0x3205 CMD_SETTING_V_MAX_VALUE_I
@@ -48,8 +58,10 @@ public class MessageHashTable {
             put(new MsgSettingProfileRatiosAll());   // 0x320D CMD_SETTING_V_CIR_CF_VALUE
             put(new MsgSetBasalProfile());           // 0x3306 CMD_SETTING_BASAL_PROFILE_S
             put(new MsgSetActivateBasalProfile());   // 0x330C CMD_SETTING_PROFILE_NUMBER_S
-            put(new MsgHistoryAll());                // 0x41F2 CMD_HISTORY_ALL
             put(new MsgHistoryAllDone());            // 0x41F1 CMD_HISTORY_ALL_DONE
+            put(new MsgHistoryAll());                // 0x41F2 CMD_HISTORY_ALL
+            put(new MsgHistoryNewDone());            // 0x42F1 CMD_HISTORY_NEW_DONE
+            put(new MsgHistoryNew());                // 0x42F2 CMD_HISTORY_NEW
             put(new MsgCheckValue());                // 0xF0F1 CMD_PUMP_CHECK_VALUE
         }
     }

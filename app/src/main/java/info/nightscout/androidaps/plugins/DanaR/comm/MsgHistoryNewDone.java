@@ -5,12 +5,15 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 
-public class MsgHistoryAllDone extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgHistoryAllDone.class);
+/**
+ * Created by mike on 20.07.2016.
+ */
+public class MsgHistoryNewDone extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgHistoryNewDone.class);
     public static boolean received = false;
 
-    public MsgHistoryAllDone() {
-        SetCommand(0x41F1);
+    public MsgHistoryNewDone() {
+        SetCommand(0x42F1);
         received = false;
     }
 
@@ -18,6 +21,6 @@ public class MsgHistoryAllDone extends MessageBase {
     public void handleMessage(byte[] bytes) {
         received = true;
         if (Config.logDanaMessageDetail)
-            log.debug("History all done received");
+            log.debug("History new done received");
     }
 }

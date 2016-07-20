@@ -48,7 +48,7 @@ public class MessageOriginalNames {
         messageNames.put(0x050d, "CMD_HISPAGE_TB");
 
         messageNames.put(0x3201, "CMD_SETTING_V_MEAL_INS_I");
-        messageNames.put(0x3202, "CMD_SETTING_V_Based_INS_I");
+        messageNames.put(0x3202, "CMD_SETTING_V_BASAL_INS_I");
         messageNames.put(0x3203, "CMD_SETTING_V_MEAL_SETTING_I");
         messageNames.put(0x3204, "CMD_SETTING_V_CCC_I");
         messageNames.put(0x3205, "CMD_SETTING_V_MAX_VALUE_I");
