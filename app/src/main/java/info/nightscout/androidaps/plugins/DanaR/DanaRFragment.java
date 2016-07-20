@@ -627,7 +627,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         insulin = Round.roundTo(insulin, 0.1d);
 
         PumpEnactResult result = new PumpEnactResult();
-        if (getDanaRPump().isExtendedInProgress && getDanaRPump().extendedBolusAmount - insulin == 0d) {
+        if (getDanaRPump().isExtendedInProgress && Math.abs(getDanaRPump().extendedBolusAmount - insulin) < 0.1d) {
             result.enacted = false;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -641,7 +641,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         }
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         boolean connectionOK = mExecutionService.extendedBolus(insulin, durationInHalfHours);
-        if (connectionOK && getDanaRPump().isExtendedInProgress && getDanaRPump().extendedBolusAmount - insulin == 0) {
+        if (connectionOK && getDanaRPump().isExtendedInProgress && Math.abs(getDanaRPump().extendedBolusAmount - insulin) < 0.1d) {
             result.enacted = true;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
