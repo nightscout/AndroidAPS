@@ -51,4 +51,7 @@ public class DateUtil {
     public static String toISOString(Date date) {
         return toISOString(date, FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
     }
+    public static String toISOString(long date) {
+        return toISOString(new Date(date), FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
+    }
 }
