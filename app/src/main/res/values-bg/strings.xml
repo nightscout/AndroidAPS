@@ -220,7 +220,7 @@
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="bolusdelivered">Болус %.2fU беше доставен успешно</string>
+    <string formatted="false" name="bolusdelivered">Болус %.2fU беше доставен успешно</string>
     <string name="bolusfailed">Болусът не е доставен</string>
     <string name="canceltemp">Откажи временен базал</string>
     <string name="virtualpump_lastconnection_label">Последно свързване:</string>
@@ -229,7 +229,7 @@
     <string name="smscommunicator_allowednumbers">Позволени телефонни номера</string>
     <string name="smscommunicator_remotebolusingallowed">Разреши болус чрез SMS</string>
     <string name="success">Успех</string>
-    <string name="replywithcode">За да доставите болус %.2fU отговорете с код  %s</string>
+    <string formatted="false" name="replywithcode">За да доставите болус %.2fU отговорете с код  %s</string>
     <string name="remotebolusnotallowed">Отдалечен болус не е разрешен</string>
     <string name="reloadprofile">Обнови профила</string>
     <string name="percent">Процент</string>
