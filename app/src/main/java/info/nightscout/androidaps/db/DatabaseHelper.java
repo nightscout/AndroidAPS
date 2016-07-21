@@ -38,6 +38,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
+    public static final String DATABASE_BGREADINGS = "BgReadings";
+    public static final String DATABASE_TEMPBASALS = "TempBasals";
+    public static final String DATABASE_TREATMENTS = "Treatments";
+    public static final String DATABASE_DANARHISTORY = "DanaRHistory";
 
     private static final int DATABASE_VERSION = 2;
 
@@ -53,7 +57,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
-            TableUtils.createTableIfNotExists(connectionSource, HistoryRecord.class);
+            TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
         } catch (SQLException e) {
             log.error(DatabaseHelper.class.getName(), "Can't create database", e);
             throw new RuntimeException(e);
@@ -67,7 +71,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TempBasal.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
-            TableUtils.dropTable(connectionSource, HistoryRecord.class, true);
+            TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             log.error(DatabaseHelper.class.getName(), "Can't drop databases", e);
@@ -85,21 +89,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void cleanUpDatabases() {
         // TODO: call it somewhere
-        log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "BgReadings"));
+        log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
         getWritableDatabase().delete("BgReadings", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "BgReadings"));
+        log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
 
-        log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "TempBasals"));
+        log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPBASALS));
         getWritableDatabase().delete("TempBasals", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "TempBasals"));
+        log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPBASALS));
 
-        log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
+        log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
         getWritableDatabase().delete("Treatments", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "Treatments"));
+        log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
 
-        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "History"));
-        getWritableDatabase().delete("History", "recordDate" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "History"));
+        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
+        getWritableDatabase().delete("History", "recordDate" + " < '" + (new Date().getTime() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
+        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
     }
 
     public void resetDatabases() {
@@ -107,11 +111,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TempBasal.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
-            TableUtils.dropTable(connectionSource, HistoryRecord.class, true);
+            TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
-            TableUtils.createTableIfNotExists(connectionSource, HistoryRecord.class);
+            TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
             MainApp.bus().post(new EventNewBG());
             MainApp.bus().post(new EventTreatmentChange());
             MainApp.bus().post(new EventTempBasalChange());
@@ -142,8 +146,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(BgReading.class);
     }
 
-    public Dao<HistoryRecord, String> getDaoHistory() throws SQLException {
-        return getDao(HistoryRecord.class);
+    public Dao<DanaRHistoryRecord, String> getDaoHistory() throws SQLException {
+        return getDao(DanaRHistoryRecord.class);
     }
 
     /*

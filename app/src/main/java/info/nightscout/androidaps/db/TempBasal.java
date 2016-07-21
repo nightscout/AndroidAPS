@@ -16,7 +16,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
-@DatabaseTable(tableName = "TempBasals")
+@DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPBASALS)
 public class TempBasal {
     private static Logger log = LoggerFactory.getLogger(TempBasal.class);
 

@@ -5,8 +5,8 @@ import com.j256.ormlite.table.DatabaseTable;
 
 import java.util.Date;
 
-@DatabaseTable(tableName = "History")
-public class HistoryRecord {
+@DatabaseTable(tableName = DatabaseHelper.DATABASE_DANARHISTORY)
+public class DanaRHistoryRecord {
 
     @DatabaseField(useGetSet = true)
     private String _id;
@@ -41,7 +41,7 @@ public class HistoryRecord {
     @DatabaseField(useGetSet = true)
     private String recordAlarm;
 
-    public HistoryRecord() {
+    public DanaRHistoryRecord() {
         this.recordDate = 0;
         this.recordValue = 0.0;
         this.bolusType = "None";

@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.HistoryRecord;
+import info.nightscout.androidaps.db.DanaRHistoryRecord;
 
 public class MsgHistoryAll extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgHistoryAll.class);
@@ -31,54 +31,54 @@ public class MsgHistoryAll extends MessageBase {
         byte paramByte8 = (byte) intFromBuff(bytes, 7, 1);
         double value = (double) intFromBuff(bytes, 8, 2);
 
-        HistoryRecord historyRecord = new HistoryRecord();
+        DanaRHistoryRecord danaRHistoryRecord = new DanaRHistoryRecord();
 
-        historyRecord.setRecordCode(recordCode);
-        historyRecord.setBytes(bytes);
+        danaRHistoryRecord.setRecordCode(recordCode);
+        danaRHistoryRecord.setBytes(bytes);
 
         switch (recordCode) {
             case RecordTypes.RECORD_TYPE_BOLUS:
-                historyRecord.setRecordDate(datetime);
+                danaRHistoryRecord.setRecordDate(datetime);
                 switch (0xF0 & paramByte8) {
                     case 0xA0:
-                        historyRecord.setBolusType("DS");
+                        danaRHistoryRecord.setBolusType("DS");
                         break;
                     case 0xC0:
-                        historyRecord.setBolusType("E");
+                        danaRHistoryRecord.setBolusType("E");
                         break;
                     case 0x80:
-                        historyRecord.setBolusType("S");
+                        danaRHistoryRecord.setBolusType("S");
                         break;
                     case 0x90:
-                        historyRecord.setBolusType("DE");
+                        danaRHistoryRecord.setBolusType("DE");
                         break;
                     default:
-                        historyRecord.setBolusType("None");
+                        danaRHistoryRecord.setBolusType("None");
                         break;
                 }
-                historyRecord.setRecordDuration(((int) paramByte8 & 0x0F) * 60 + (int) paramByte7);
-                historyRecord.setRecordValue(value * 0.01);
+                danaRHistoryRecord.setRecordDuration(((int) paramByte8 & 0x0F) * 60 + (int) paramByte7);
+                danaRHistoryRecord.setRecordValue(value * 0.01);
                 break;
             case RecordTypes.RECORD_TYPE_DAILY:
-                historyRecord.setRecordDate(date);
-                historyRecord.setRecordDailyBasal((double) ((int) paramByte5 * 0xFF + (int) paramByte6) * 0.01);
-                historyRecord.setRecordDailyBolus((double) ((int) paramByte7 * 0xFF + (int) paramByte8) / 0.01);
+                danaRHistoryRecord.setRecordDate(date);
+                danaRHistoryRecord.setRecordDailyBasal((double) ((int) paramByte5 * 0xFF + (int) paramByte6) * 0.01);
+                danaRHistoryRecord.setRecordDailyBolus((double) ((int) paramByte7 * 0xFF + (int) paramByte8) / 0.01);
                 break;
             case RecordTypes.RECORD_TYPE_PRIME:
             case RecordTypes.RECORD_TYPE_ERROR:
             case RecordTypes.RECORD_TYPE_REFILL:
             case RecordTypes.RECORD_TYPE_BASALHOUR:
             case RecordTypes.RECORD_TYPE_TB:
-                historyRecord.setRecordDate(datetimewihtsec);
-                historyRecord.setRecordValue(value * 0.01);
+                danaRHistoryRecord.setRecordDate(datetimewihtsec);
+                danaRHistoryRecord.setRecordValue(value * 0.01);
                 break;
             case RecordTypes.RECORD_TYPE_GLUCOSE:
             case RecordTypes.RECORD_TYPE_CARBO:
-                historyRecord.setRecordDate(datetimewihtsec);
-                historyRecord.setRecordValue(value);
+                danaRHistoryRecord.setRecordDate(datetimewihtsec);
+                danaRHistoryRecord.setRecordValue(value);
                 break;
             case RecordTypes.RECORD_TYPE_ALARM:
-                historyRecord.setRecordDate(datetimewihtsec);
+                danaRHistoryRecord.setRecordDate(datetimewihtsec);
                 String strAlarm = "None";
                 switch ((int) paramByte8) {
                     case 67:
@@ -94,21 +94,21 @@ public class MsgHistoryAll extends MessageBase {
                         strAlarm = "Shutdown";
                         break;
                 }
-                historyRecord.setRecordAlarm(strAlarm);
-                historyRecord.setRecordValue(value * 0.01);
+                danaRHistoryRecord.setRecordAlarm(strAlarm);
+                danaRHistoryRecord.setRecordValue(value * 0.01);
                 break;
             case RecordTypes.RECORD_TYPE_SUSPEND:
-                historyRecord.setRecordDate(datetimewihtsec);
+                danaRHistoryRecord.setRecordDate(datetimewihtsec);
                 String strRecordValue = "Off";
                 if ((int) paramByte8 == 79)
                     strRecordValue = "On";
-                historyRecord.setStringRecordValue(strRecordValue);
+                danaRHistoryRecord.setStringRecordValue(strRecordValue);
                 break;
         }
 
         try {
-            Dao<HistoryRecord, String> daoHistoryRecords = MainApp.getDbHelper().getDaoHistory();
-            daoHistoryRecords.createIfNotExists(historyRecord);
+            Dao<DanaRHistoryRecord, String> daoHistoryRecords = MainApp.getDbHelper().getDaoHistory();
+            daoHistoryRecords.createIfNotExists(danaRHistoryRecord);
         } catch (SQLException e) {
             log.error(e.getMessage(), e);
         }

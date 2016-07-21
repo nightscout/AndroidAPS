@@ -13,7 +13,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.client.data.NSSgv;
 import info.nightscout.utils.DecimalFormatter;
 
-@DatabaseTable(tableName = "BgReadings")
+@DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointInterface {
     private static Logger log = LoggerFactory.getLogger(BgReading.class);
 

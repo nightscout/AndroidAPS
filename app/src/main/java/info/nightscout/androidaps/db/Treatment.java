@@ -19,7 +19,7 @@ import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
-@DatabaseTable(tableName = "Treatments")
+@DatabaseTable(tableName = DatabaseHelper.DATABASE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(Treatment.class);
 
