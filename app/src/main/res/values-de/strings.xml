@@ -233,4 +233,25 @@
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_car">Carbs absorption rate</string>
     <string name="glucosetype_manual">Manuell</string>
+    <string name="danar_dailyunits">Einheiten (Tag)</string>
+    <string name="danar_invalidinput">ungültige Eingabe</string>
+    <string name="danar_valuenotsetproperly">Wert nicht korrekt gesetzt</string>
+    <string name="devicenotfound">ausgewähltes Gerät nicht gefunden</string>
+    <string name="dismiss">ABWEISEN</string>
+    <string name="enacted">Verordnet</string>
+    <string name="end_user_license_agreement">Einbenutzervereinbarung</string>
+    <string name="end_user_license_agreement_i_understand">Ich verstehe und stimme zu</string>
+    <string name="end_user_license_agreement_text">darf nicht eingestzt werden um med. Eintscheidungen zu treffen</string>
+    <string name="failedupdatebasalprofile">Fehler beim aktualisieren der Basalrate</string>
+    <string name="hoursago">vor h </string>
+    <string name="smscommunicator">SMS Kommunikator</string>
+    <string name="smscommunicator_allowednumbers">erlaubte TElefonnummern</string>
+    <string name="smscommunicator_remotebolusingallowed">Fernboli via SMS zulassen</string>
+    <string name="syncprofiletopump_title">Nightscout Profil zur Pumpe synchronisieren</string>
+    <string name="waitingforpumpresult">auf Pumpenergebnis warten</string>
+    <string name="bolusdelivered">Bolus abgegeben</string>
+    <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
+    <string name="remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
+    <string formatted="false" name="replywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
+    <string name="limits_title"></string>
 </resources>
