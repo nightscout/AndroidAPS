@@ -30,7 +30,7 @@ public class MessageOriginalNames {
         messageNames.put(0x3109, "CMD_HISTORY_SUSPEND");
         messageNames.put(0x310a, "CMD_HISTORY_BASAL_HOUR");
         messageNames.put(0x310b, "CMD_HISTORY_TB");
-        messageNames.put(0x31f1, "CMD_HISTORY_DONT_USED");
+        messageNames.put(0x31f1, "CMD_HISTORY_STOP");
         messageNames.put(0x31f2, "CMD_HISTORY_LAST_T_R");
         messageNames.put(0x31f3, "CMD_HISTORY_LAST_T_S");
 

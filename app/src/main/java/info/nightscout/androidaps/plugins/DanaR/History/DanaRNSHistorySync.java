@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.plugins.DanaR.History;
 
-import com.j256.ormlite.dao.Dao;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Calendar;
+import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -24,21 +22,23 @@ import info.nightscout.utils.ToastUtils;
  * Created by mike on 20.07.2016.
  */
 
-public class NSHistorySync {
-    private static Logger log = LoggerFactory.getLogger(NSHistorySync.class);
-    private Dao<DanaRHistoryRecord, String> daoHistoryRecords;
+public class DanaRNSHistorySync {
+    private static Logger log = LoggerFactory.getLogger(DanaRNSHistorySync.class);
+    private List<DanaRHistoryRecord> historyRecords;
 
-    public final int SYNC_BOLUS = 0b00000001;
-    public final int SYNC_ERROR = 0b00000010;
-    public final int SYNC_REFILL = 0b00000100;
-    public final int SYNC_GLUCOSE = 0b00001000;
-    public final int SYNC_CARBO = 0b00010000;
-    public final int SYNC_ALARM = 0b00100000;
-    public final int SYNC_BASALOURS = 0b01000000;
-    public final int SYNC_ALL = 0b11111111;
+    public final static int SYNC_BOLUS = 0b00000001;
+    public final static int SYNC_ERROR = 0b00000010;
+    public final static int SYNC_REFILL = 0b00000100;
+    public final static int SYNC_GLUCOSE = 0b00001000;
+    public final static int SYNC_CARBO = 0b00010000;
+    public final static int SYNC_ALARM = 0b00100000;
+    public final static int SYNC_BASALHOURS = 0b01000000;
+    public final static int SYNC_ALL = 0b11111111;
 
-    public NSHistorySync(Dao<DanaRHistoryRecord, String> daoHistoryRecords) {
-        this.daoHistoryRecords = daoHistoryRecords;
+    public final static String DANARSIGNATURE = "DANARMESSAGE";
+
+    public DanaRNSHistorySync(List<DanaRHistoryRecord> historyRecords) {
+        this.historyRecords = historyRecords;
     }
 
 
@@ -51,12 +51,12 @@ public class NSHistorySync {
                 return;
             }
             Calendar cal = Calendar.getInstance();
-            long records = daoHistoryRecords.countOf();
+            long records = historyRecords.size();
             long processing = 0;
             long uploaded = 0;
             log.debug("Database contains " + records + " records");
             EventDanaRSyncStatus ev = new EventDanaRSyncStatus();
-            for (DanaRHistoryRecord record : daoHistoryRecords) {
+            for (DanaRHistoryRecord record : historyRecords) {
                 processing++;
                 if (record.get_id() != null) continue;
                 //log.debug(record.getBytes());
@@ -68,7 +68,7 @@ public class NSHistorySync {
                         switch (record.getBolusType()) {
                             case "S":
                                 log.debug("Syncing standard bolus record " + record.getRecordValue() + "U " + DateUtil.toISOString(record.getRecordDate()));
-                                nsrec.put("DANARMESSAGE", record.getBytes());
+                                nsrec.put(DANARSIGNATURE, record.getBytes());
                                 nsrec.put("eventType", "Meal Bolus");
                                 nsrec.put("insulin", record.getRecordValue());
                                 nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
@@ -80,7 +80,7 @@ public class NSHistorySync {
                             case "E":
                                 if (record.getRecordDuration() > 0) {
                                     log.debug("Syncing extended bolus record " + record.getRecordValue() + "U " + DateUtil.toISOString(record.getRecordDate()));
-                                    nsrec.put("DANARMESSAGE", record.getBytes());
+                                    nsrec.put(DANARSIGNATURE, record.getBytes());
                                     nsrec.put("eventType", "Combo Bolus");
                                     nsrec.put("insulin", 0);
                                     nsrec.put("duration", record.getRecordDuration());
@@ -100,7 +100,7 @@ public class NSHistorySync {
                                 break;
                             case "DS":
                                 log.debug("Syncing dual(S) bolus record " + record.getRecordValue() + "U " + DateUtil.toISOString(record.getRecordDate()));
-                                nsrec.put("DANARMESSAGE", record.getBytes());
+                                nsrec.put(DANARSIGNATURE, record.getBytes());
                                 nsrec.put("eventType", "Combo Bolus");
                                 nsrec.put("insulin", record.getRecordValue());
                                 nsrec.put("splitNow", 100);
@@ -113,7 +113,7 @@ public class NSHistorySync {
                                 break;
                             case "DE":
                                 log.debug("Syncing dual(E) bolus record " + record.getRecordValue() + "U " + DateUtil.toISOString(record.getRecordDate()));
-                                nsrec.put("DANARMESSAGE", record.getBytes());
+                                nsrec.put(DANARSIGNATURE, record.getBytes());
                                 nsrec.put("eventType", "Combo Bolus");
                                 nsrec.put("duration", record.getRecordDuration());
                                 nsrec.put("relative", record.getRecordValue() / record.getRecordDuration() * 60);
@@ -135,7 +135,7 @@ public class NSHistorySync {
                     case RecordTypes.RECORD_TYPE_ERROR:
                         if ((what & SYNC_ERROR) == 0) break;
                         log.debug("Syncing error record " + DateUtil.toISOString(record.getRecordDate()));
-                        nsrec.put("DANARMESSAGE", record.getBytes());
+                        nsrec.put(DANARSIGNATURE, record.getBytes());
                         nsrec.put("eventType", "Note");
                         nsrec.put("notes", "Error");
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
@@ -147,7 +147,7 @@ public class NSHistorySync {
                     case RecordTypes.RECORD_TYPE_REFILL:
                         if ((what & SYNC_REFILL) == 0) break;
                         log.debug("Syncing refill record " + record.getRecordValue() + " " + DateUtil.toISOString(record.getRecordDate()));
-                        nsrec.put("DANARMESSAGE", record.getBytes());
+                        nsrec.put(DANARSIGNATURE, record.getBytes());
                         nsrec.put("eventType", "Insulin Change");
                         nsrec.put("notes", "Refill " + record.getRecordValue() + "U");
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
@@ -157,9 +157,9 @@ public class NSHistorySync {
                         ev.message += "refill";
                         break;
                     case RecordTypes.RECORD_TYPE_BASALHOUR:
-                        if ((what & SYNC_BASALOURS) == 0) break;
+                        if ((what & SYNC_BASALHOURS) == 0) break;
                         log.debug("Syncing basal hour record " + record.getRecordValue() + " " + DateUtil.toISOString(record.getRecordDate()));
-                        nsrec.put("DANARMESSAGE", record.getBytes());
+                        nsrec.put(DANARSIGNATURE, record.getBytes());
                         nsrec.put("eventType", "Temp Basal");
                         nsrec.put("absolute", record.getRecordValue());
                         nsrec.put("duration", 60);
@@ -175,7 +175,7 @@ public class NSHistorySync {
                     case RecordTypes.RECORD_TYPE_GLUCOSE:
                         if ((what & SYNC_GLUCOSE) == 0) break;
                         log.debug("Syncing glucose record " + record.getRecordValue() + " " + DateUtil.toISOString(record.getRecordDate()));
-                        nsrec.put("DANARMESSAGE", record.getBytes());
+                        nsrec.put(DANARSIGNATURE, record.getBytes());
                         nsrec.put("eventType", "BG Check");
                         nsrec.put("glucose", NSProfile.fromMgdlToUnits(record.getRecordValue(), profile.getUnits()));
                         nsrec.put("glucoseType", "Finger");
@@ -188,7 +188,7 @@ public class NSHistorySync {
                     case RecordTypes.RECORD_TYPE_CARBO:
                         if ((what & SYNC_CARBO) == 0) break;
                         log.debug("Syncing carbo record " + record.getRecordValue() + "g " + DateUtil.toISOString(record.getRecordDate()));
-                        nsrec.put("DANARMESSAGE", record.getBytes());
+                        nsrec.put(DANARSIGNATURE, record.getBytes());
                         nsrec.put("eventType", "Meal Bolus");
                         nsrec.put("carbs", record.getRecordValue());
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
@@ -200,7 +200,7 @@ public class NSHistorySync {
                     case RecordTypes.RECORD_TYPE_ALARM:
                         if ((what & SYNC_ALARM) == 0) break;
                         log.debug("Syncing alarm record " + record.getRecordAlarm() + " " + DateUtil.toISOString(record.getRecordDate()));
-                        nsrec.put("DANARMESSAGE", record.getBytes());
+                        nsrec.put(DANARSIGNATURE, record.getBytes());
                         nsrec.put("eventType", "Note");
                         nsrec.put("notes", "Alarm: " + record.getRecordAlarm());
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
@@ -223,7 +223,7 @@ public class NSHistorySync {
             ev.message = "Total " + uploaded + " records uploaded";
             MainApp.bus().post(ev);
 
-        } catch (JSONException | SQLException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

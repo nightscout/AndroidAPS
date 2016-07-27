@@ -12,7 +12,7 @@ public class MsgHistoryDone extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgHistoryDone.class);
     public static boolean received = false;
 
-    MsgHistoryDone() {
+    public MsgHistoryDone() {
         SetCommand(0x31F1);
         received = false;
     }

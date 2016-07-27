@@ -35,10 +35,23 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.DanaR.SerialIOThread;
+import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusProgress;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusStart;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusStop;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgCheckValue;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryAlarm;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryBasalHour;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryBolus;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryCarbo;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryDailyInsulin;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryDone;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryError;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryGlucose;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryRefill;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistorySuspend;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgPCCommStart;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgPCCommStop;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetActivateBasalProfile;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetBasalProfile;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetCarbsEntry;
@@ -58,6 +71,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgStatus;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgStatusBasic;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgStatusTempBasal;
+import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
@@ -371,6 +385,51 @@ public class ExecutionService extends Service {
         MsgSetCarbsEntry msg = new MsgSetCarbsEntry(time, amount);
         mSerialIOThread.sendMessage(msg);
         waitMsec(200);
+        return true;
+    }
+
+    public boolean loadHistory(byte type) {
+        connect("loadHistory");
+        if (!isConnected()) return false;
+        MessageBase msg = null;
+        switch (type) {
+            case RecordTypes.RECORD_TYPE_ALARM:
+                msg = new MsgHistoryAlarm();
+                break;
+            case RecordTypes.RECORD_TYPE_BASALHOUR:
+                msg = new MsgHistoryBasalHour();
+                break;
+            case RecordTypes.RECORD_TYPE_BOLUS:
+                msg = new MsgHistoryBolus();
+                break;
+            case RecordTypes.RECORD_TYPE_CARBO:
+                msg = new MsgHistoryCarbo();
+                break;
+            case RecordTypes.RECORD_TYPE_DAILY:
+                msg = new MsgHistoryDailyInsulin();
+                break;
+            case RecordTypes.RECORD_TYPE_ERROR:
+                msg = new MsgHistoryError();
+                break;
+            case RecordTypes.RECORD_TYPE_GLUCOSE:
+                msg = new MsgHistoryGlucose();
+                break;
+            case RecordTypes.RECORD_TYPE_REFILL:
+                msg = new MsgHistoryRefill();
+                break;
+            case RecordTypes.RECORD_TYPE_SUSPEND:
+                msg = new MsgHistorySuspend();
+                break;
+        }
+        MsgHistoryDone done = new MsgHistoryDone();
+        mSerialIOThread.sendMessage(new MsgPCCommStart());
+        waitMsec(400);
+        mSerialIOThread.sendMessage(msg);
+        while (!done.received && mRfcommSocket.isConnected()) {
+            waitMsec(100);
+        }
+        waitMsec(200);
+        mSerialIOThread.sendMessage(new MsgPCCommStop());
         return true;
     }
 

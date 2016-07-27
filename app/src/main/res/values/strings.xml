@@ -247,9 +247,9 @@
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string formatted="false" name="replywithcode">To deliver bolus %.2fU reply with code %s</string>
+    <string name="replywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
     <string name="bolusfailed">Bolus failed</string>
-    <string formatted="false" name="bolusdelivered">Bolus %.2fU delivered successfully</string>
+    <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="smscommunicator_remotebolusingallowed">Allow remote bolusing via SMS</string>
     <string name="remotebolusnotallowed">Remote bolus not allowed</string>
     <string name="glucosetype_finger">Finger</string>
@@ -261,5 +261,7 @@
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_car">Carbs absorption rate</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
+    <string name="danar_history">History</string>
+    <string name="danar_historyreload">Reload</string>
 
 </resources>

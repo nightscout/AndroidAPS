@@ -252,15 +252,22 @@
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/danar_viewprofile"
                 android:id="@+id/danar_viewprofile"
+                android:layout_weight="1" />
+
+           <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/danar_history"
+                android:id="@+id/danar_history"
                 android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>

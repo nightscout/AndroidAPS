@@ -31,12 +31,14 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.SmsCommunicator.Events.EventNewSMS;
@@ -380,6 +382,7 @@ public class DataService extends IntentService {
 
     private void handleAddedTreatment(String trstring) throws JSONException, SQLException {
         JSONObject trJson = new JSONObject(trstring);
+        handleDanaRHistoryRecords(trJson); // update record _id in history
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("ADD: Uninterested treatment: " + trstring);
@@ -429,6 +432,7 @@ public class DataService extends IntentService {
 
     private void handleChangedTreatment(String trstring) throws JSONException, SQLException {
         JSONObject trJson = new JSONObject(trstring);
+        handleDanaRHistoryRecords(trJson); // update record _id in history
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("CHANGE: Uninterested treatment: " + trstring);
@@ -469,6 +473,30 @@ public class DataService extends IntentService {
                 log.debug("CHANGE: Stored treatment: " + treatment.log());
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void handleDanaRHistoryRecords(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.has(DanaRNSHistorySync.DANARSIGNATURE)) {
+            Dao<DanaRHistoryRecord, String> daoHistoryRecords = MainApp.getDbHelper().getDaoDanaRHistory();
+            QueryBuilder<DanaRHistoryRecord, String> queryBuilder = daoHistoryRecords.queryBuilder();
+            Where where = queryBuilder.where();
+            where.ge("bytes", trJson.get(DanaRNSHistorySync.DANARSIGNATURE));
+            PreparedQuery<DanaRHistoryRecord> preparedQuery = queryBuilder.prepare();
+            List<DanaRHistoryRecord> list = daoHistoryRecords.query(preparedQuery);
+            if (list.size() == 0) {
+                // Record does not exists. Ignore
+            } else if (list.size() == 1) {
+                DanaRHistoryRecord record = list.get(0);
+                if (record.get_id() == null || record.get_id() != trJson.getString("_id")) {
+                    if (Config.logIncommingData)
+                        log.debug("Updating _id in DanaR history database: " + trJson.getString("_id"));
+                    record.set_id(trJson.getString("_id"));
+                    daoHistoryRecords.update(record);
+                } else {
+                    // already set
+                }
+            }
         }
     }
 

@@ -39,6 +39,7 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
+
                 <!-- Receiver from NSClient -->
                 <action android:name="info.nightscout.client.NEW_TREATMENT" />
                 <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
@@ -74,6 +75,8 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
+
+        <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity"></activity>
     </application>
 
 </manifest>

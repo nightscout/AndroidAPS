@@ -43,7 +43,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_TREATMENTS = "Treatments";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -101,9 +101,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         getWritableDatabase().delete("Treatments", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
 
-        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
+        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "DanaRHistory"));
         getWritableDatabase().delete("History", "recordDate" + " < '" + (new Date().getTime() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
-        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
+        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "DanaRHistory"));
     }
 
     public void resetDatabases() {
@@ -116,9 +116,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
-            MainApp.bus().post(new EventNewBG());
-            MainApp.bus().post(new EventTreatmentChange());
-            MainApp.bus().post(new EventTempBasalChange());
+//            MainApp.bus().post(new EventNewBG());
+//            MainApp.bus().post(new EventTreatmentChange());
+//            MainApp.bus().post(new EventTempBasalChange());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -146,7 +146,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(BgReading.class);
     }
 
-    public Dao<DanaRHistoryRecord, String> getDaoHistory() throws SQLException {
+    public Dao<DanaRHistoryRecord, String> getDaoDanaRHistory() throws SQLException {
         return getDao(DanaRHistoryRecord.class);
     }
 

@@ -47,6 +47,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.DanaR.Dialogs.ProfileViewDialog;
+import info.nightscout.androidaps.plugins.DanaR.History.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
@@ -88,6 +89,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     TextView reservoirView;
     TextView iobView;
     Button viewProfileButton;
+    Button historyButton;
 
     // TODO: password in prefs
 
@@ -161,6 +163,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         reservoirView = (TextView) view.findViewById(R.id.danar_reservoir);
         iobView = (TextView) view.findViewById(R.id.danar_iob);
         viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
+        historyButton = (Button) view.findViewById(R.id.danar_history);
 
         viewProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,6 +171,13 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                 FragmentManager manager = getFragmentManager();
                 ProfileViewDialog profileViewDialog = new ProfileViewDialog();
                 profileViewDialog.show(manager, "ProfileViewDialog");
+            }
+        });
+
+       historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
             }
         });
 
@@ -812,7 +822,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                     reservoirView.setText(DecimalFormatter.to0Decimal(getDanaRPump().reservoirRemainingUnits) + " / 300 U");
                     SetWarnColor.setColorInverse(reservoirView, getDanaRPump().reservoirRemainingUnits, 50d, 20d);
                     batteryView.setText("{fa-battery-" + (getDanaRPump().batteryRemaining / 25) + "}");
-                    SetWarnColor.setColorInverse(reservoirView, getDanaRPump().batteryRemaining, 51d, 26d);
+                    SetWarnColor.setColorInverse(batteryView, getDanaRPump().batteryRemaining, 51d, 26d);
                     iobView.setText(getDanaRPump().iob + " U");
                 }
             });
