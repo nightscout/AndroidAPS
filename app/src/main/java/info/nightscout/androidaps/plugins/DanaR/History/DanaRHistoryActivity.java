@@ -160,15 +160,15 @@ public class DanaRHistoryActivity extends Activity {
         // Types
 
         ArrayList<TypeList> typeList = new ArrayList<>();
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ALARM, "Alarms"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, "Basal Hours"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BOLUS, "Bolus"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_CARBO, "Carbohydrates"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_DAILY, "Daily insulin"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ERROR, "Errors"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, "Glucose"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, "Refill"));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, "Suspend"));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ALARM, getString(R.string.danar_history_alarm)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BASALHOUR, getString(R.string.danar_history_basalhours)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BOLUS, getString(R.string.danar_history_bolus)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_CARBO, getString(R.string.danar_history_carbohydrates)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_DAILY, getString(R.string.danar_history_dailyinsulin)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ERROR, getString(R.string.danar_history_errors)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, getString(R.string.danar_history_glucose)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, getString(R.string.danar_history_refill)));
+        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, getString(R.string.danar_history_syspend)));
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<TypeList>(this,
                 android.R.layout.simple_spinner_item, typeList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -434,13 +434,13 @@ public class DanaRHistoryActivity extends Activity {
                     @Override
                     public void run() {
                         if (c.sStatus == c.CONNECTING) {
-                            statusView.setText("Connecting for " + c.sSecondsElapsed + "s");
+                            statusView.setText(String.format(getString(R.string.danar_history_connectingfor), c.sSecondsElapsed));
                             log.debug("EventDanaRConnectionStatus: " + "Connecting for " + c.sSecondsElapsed + "s");
                         } else if (c.sStatus == c.CONNECTED) {
-                            statusView.setText("Connected");
+                            statusView.setText(MainApp.sResources.getString(R.string.connected));
                             log.debug("EventDanaRConnectionStatus: Connected");
                         } else {
-                            statusView.setText("Disconnected");
+                            statusView.setText(MainApp.sResources.getString(R.string.disconnected));
                             log.debug("EventDanaRConnectionStatus: Disconnected");
                         }
                     }

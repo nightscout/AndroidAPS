@@ -234,10 +234,10 @@
     <string name="success">Úspěch</string>
     <string name="virtualpump_lastconnection_label">Poslední spojení:</string>
     <string name="canceltemp">Zrušit dočasný bazál</string>
-    <string formatted="false" name="bolusdelivered">Bolus %.2fU aplikován úspěšně</string>
+    <string name="bolusdelivered" formatted="false">Bolus %.2fU aplikován úspěšně</string>
     <string name="bolusfailed">Chyba při aplikování bolusu</string>
     <string name="remotebolusnotallowed">Vzdálený bolus není momentálně povolen</string>
-    <string formatted="false" name="replywithcode">K potvzení bolusu %.2fU odpověz SMS s kódem %s</string>
+    <string name="replywithcode" formatted="false">K potvzení bolusu %.2fU odpověz SMS s kódem %s</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
@@ -252,4 +252,28 @@
     <string name="danarprofile_car">Rychlost absorbce sacharidů</string>
     <string name="danarprofile_dia">Rychlost inzulínu[h]</string>
     <string name="failedupdatebasalprofile">Chyba při nastavení dočasného bazálu</string>
+    <string name="danar_alarm">alarm</string>
+    <string name="danar_basalhour">hodinový bazál</string>
+    <string name="danar_carbohydrate">sacharidy</string>
+    <string name="danar_debolus">DE bolus</string>
+    <string name="danar_dsbolus">DS bolus</string>
+    <string name="danar_ebolus">E bolus</string>
+    <string name="danar_error">chyba</string>
+    <string name="danar_glucose">glykémie</string>
+    <string name="danar_history">Historie</string>
+    <string name="danar_history_alarm">Alarmy</string>
+    <string name="danar_history_basalhours">Hodinvé bazály</string>
+    <string name="danar_history_bolus">Bolusy</string>
+    <string name="danar_history_carbohydrates">Sacharidy</string>
+    <string name="danar_history_connectingfor" formatted="false">Připojování %d sec</string>
+    <string name="danar_history_dailyinsulin">Denní inzulín</string>
+    <string name="danar_history_errors">Chyby</string>
+    <string name="danar_history_glucose">Glykémie</string>
+    <string name="danar_history_refill">Plnění</string>
+    <string name="danar_history_syspend">Vypnutí</string>
+    <string name="danar_historyreload">Načíst</string>
+    <string name="danar_refill">plnění</string>
+    <string name="danar_sbolus">S bolus</string>
+    <string name="danar_totaluploaded" formatted="false">Celkem nahráno %d záznamů</string>
+    <string name="uploading">Nahrávám</string>
 </resources>

@@ -263,5 +263,27 @@
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
     <string name="danar_history">History</string>
     <string name="danar_historyreload">Reload</string>
+    <string name="uploading">Uploading</string>
+    <string name="danar_ebolus">E bolus</string>
+    <string name="danar_dsbolus">DS bolus</string>
+    <string name="danar_debolus">DE bolus</string>
+    <string name="danar_error">error</string>
+    <string name="danar_refill">refill</string>
+    <string name="danar_basalhour">basal hour</string>
+    <string name="danar_glucose">glucose</string>
+    <string name="danar_carbohydrate">carbohydrate</string>
+    <string name="danar_alarm">alarm</string>
+    <string name="danar_totaluploaded" formatted="false">Total %d records uploaded</string>
+    <string name="danar_sbolus">S bolus</string>
+    <string name="danar_history_alarm">Alarms</string>
+    <string name="danar_history_basalhours">Basal Hours</string>
+    <string name="danar_history_bolus">Boluses</string>
+    <string name="danar_history_carbohydrates">Carbohydrates</string>
+    <string name="danar_history_dailyinsulin">Daily insulin</string>
+    <string name="danar_history_errors">Errors</string>
+    <string name="danar_history_glucose">Glucose</string>
+    <string name="danar_history_refill">Refill</string>
+    <string name="danar_history_syspend">Suspend</string>
+    <string name="danar_history_connectingfor" formatted="false">Connecting for %d s</string>
 
 </resources>

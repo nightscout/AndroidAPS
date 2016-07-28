@@ -61,7 +61,7 @@ public class DanaRNSHistorySync {
                 if (record.get_id() != null) continue;
                 //log.debug(record.getBytes());
                 JSONObject nsrec = new JSONObject();
-                ev.message = "Uploading " + processing + "/" + records + " "; // TODO: translations
+                ev.message = MainApp.sResources.getString(R.string.uploading) + " " + processing + "/" + records + " "; // TODO: translations
                 switch (record.getRecordCode()) {
                     case RecordTypes.RECORD_TYPE_BOLUS:
                         if ((what & SYNC_BOLUS) == 0) break;
@@ -75,7 +75,7 @@ public class DanaRNSHistorySync {
                                 nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                                 ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
-                                ev.message += "S bolus";
+                                ev.message += MainApp.sResources.getString(R.string.danar_sbolus);
                                 break;
                             case "E":
                                 if (record.getRecordDuration() > 0) {
@@ -93,7 +93,7 @@ public class DanaRNSHistorySync {
                                     nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                                     ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                                     uploaded++;
-                                    ev.message += "E bolus";
+                                    ev.message += MainApp.sResources.getString(R.string.danar_ebolus);
                                 } else {
                                     log.debug("NOT Syncing extended bolus record " + record.getRecordValue() + "U " + DateUtil.toISOString(record.getRecordDate()) + " zero duration");
                                 }
@@ -109,7 +109,7 @@ public class DanaRNSHistorySync {
                                 nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                                 ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
-                                ev.message += "DS bolus";
+                                ev.message += MainApp.sResources.getString(R.string.danar_dsbolus);
                                 break;
                             case "DE":
                                 log.debug("Syncing dual(E) bolus record " + record.getRecordValue() + "U " + DateUtil.toISOString(record.getRecordDate()));
@@ -125,7 +125,7 @@ public class DanaRNSHistorySync {
                                 nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                                 ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
-                                ev.message += "DE bolus";
+                                ev.message += MainApp.sResources.getString(R.string.danar_debolus);
                                 break;
                             default:
                                 log.debug("Unknown bolus record");
@@ -142,7 +142,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                         ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
-                        ev.message += "error";
+                        ev.message += MainApp.sResources.getString(R.string.danar_error);
                         break;
                     case RecordTypes.RECORD_TYPE_REFILL:
                         if ((what & SYNC_REFILL) == 0) break;
@@ -154,7 +154,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                         ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
-                        ev.message += "refill";
+                        ev.message += MainApp.sResources.getString(R.string.danar_refill);
                         break;
                     case RecordTypes.RECORD_TYPE_BASALHOUR:
                         if ((what & SYNC_BASALHOURS) == 0) break;
@@ -167,7 +167,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                         ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
-                        ev.message += "basal hour";
+                        ev.message += MainApp.sResources.getString(R.string.danar_basalhour);
                         break;
                     case RecordTypes.RECORD_TYPE_TB:
                         //log.debug("Ignoring TB record " + record.getBytes() + " " + DateUtil.toISOString(record.getRecordDate()));
@@ -183,7 +183,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                         ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
-                        ev.message += "glucose";
+                        ev.message += MainApp.sResources.getString(R.string.danar_glucose);
                         break;
                     case RecordTypes.RECORD_TYPE_CARBO:
                         if ((what & SYNC_CARBO) == 0) break;
@@ -195,7 +195,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                         ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
-                        ev.message += "carbo";
+                        ev.message += MainApp.sResources.getString(R.string.danar_carbohydrate);
                         break;
                     case RecordTypes.RECORD_TYPE_ALARM:
                         if ((what & SYNC_ALARM) == 0) break;
@@ -207,7 +207,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
                         ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
-                        ev.message += "alarm";
+                        ev.message += MainApp.sResources.getString(R.string.danar_alarm);
                         break;
                     case RecordTypes.RECORD_TYPE_SUSPEND: // TODO: this too
                     case RecordTypes.RECORD_TYPE_DAILY:
@@ -220,7 +220,7 @@ public class DanaRNSHistorySync {
                 }
                 MainApp.bus().post(ev);
             }
-            ev.message = "Total " + uploaded + " records uploaded";
+            ev.message = String.format(MainApp.sResources.getString(R.string.danar_totaluploaded), uploaded);
             MainApp.bus().post(ev);
 
         } catch (JSONException e) {
