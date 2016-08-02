@@ -4,7 +4,6 @@ package info.nightscout.androidaps.plugins.ConfigBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ResolveInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -28,12 +27,9 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
@@ -231,8 +227,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     public static ConfigBuilderFragment newInstance() {
-        ConfigBuilderFragment fragment = new ConfigBuilderFragment();
-        return fragment;
+        return new ConfigBuilderFragment();
     }
 
 
@@ -757,7 +752,6 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
         for (PluginBase p : pluginsInCategory) {
             if (p.isEnabled(type) && found == null) {
                 found = p;
-                continue;
             } else if (p.isEnabled(type)) {
                 // set others disabled
                 p.setFragmentEnabled(type, false);
@@ -784,7 +778,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                     editor.putBoolean(settingVisible, p.isVisibleInTabs(type));
                 }
             }
-            editor.commit();
+            editor.apply();
             verifySelectionInCategories();
         }
     }
@@ -980,6 +974,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1009,6 +1004,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
                 DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
             }
         } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1029,6 +1025,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -1054,6 +1051,7 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
         } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
