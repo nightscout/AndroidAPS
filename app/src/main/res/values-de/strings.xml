@@ -253,5 +253,4 @@
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
     <string formatted="false" name="replywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
-    <string name="limits_title"></string>
 </resources>

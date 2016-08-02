@@ -226,7 +226,6 @@
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_i_understand">ROZUMÍM A PORVZUJI</string>
     <string name="hoursago">h zpět</string>
-    <string name="limits_title"></string>
     <string name="nobtadapter">Nenalezen bluetooth adaptér</string>
     <string name="percent">Procent</string>
     <string name="reloadprofile">Obnovit profil</string>
@@ -276,4 +275,8 @@
     <string name="danar_sbolus">S bolus</string>
     <string name="danar_totaluploaded" formatted="false">Celkem nahráno %d záznamů</string>
     <string name="uploading">Nahrávám</string>
+    <string name="pumpbusy">Pumpa je zaneprázdněna</string>
+    <string name="wrongpumppassword">Špatné heslo k pumpě</string>
+    <string name="mm640g"></string>
+    <string name="danar_password">Heslo k pumpě (pouze verze 2016)</string>
 </resources>

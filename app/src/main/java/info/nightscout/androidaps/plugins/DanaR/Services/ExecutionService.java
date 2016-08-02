@@ -76,6 +76,7 @@ import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class ExecutionService extends Service {
@@ -175,6 +176,10 @@ public class ExecutionService extends Service {
     }
 
     public void connect(String from) {
+        if (danaRPump.isNewPump && danaRPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
+            return;
+        }
         if (isConnected()) {
             if (Config.logDanaBTComm)
                 log.debug("already connected from:" + from);
@@ -182,6 +187,7 @@ public class ExecutionService extends Service {
         }
         final long maxConnectionTime = 5 * 60 * 1000L; // 5 min
         synchronized (connectionInProgress) {
+log.debug("entering connection whie loop");
             connectionInProgress = true;
             mWakeLock.acquire();
             getBTSocketForSelectedPump();
@@ -258,6 +264,7 @@ public class ExecutionService extends Service {
             mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
             mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
+            waitMsec(100);
             mSerialIOThread.sendMessage(statusBasicMsg);
             mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
 

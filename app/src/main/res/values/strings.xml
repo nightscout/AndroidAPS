@@ -285,5 +285,8 @@
     <string name="danar_history_refill">Refill</string>
     <string name="danar_history_syspend">Suspend</string>
     <string name="danar_history_connectingfor" formatted="false">Connecting for %d s</string>
+    <string name="danar_password">Pump password (2016 pump only)</string>
+    <string name="wrongpumppassword">Wrong pump password!</string>
+    <string name="pumpbusy">Pump is busy</string>
 
 </resources>

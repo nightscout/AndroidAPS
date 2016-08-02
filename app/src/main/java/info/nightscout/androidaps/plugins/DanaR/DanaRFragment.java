@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.DanaR;
 
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
@@ -30,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -55,6 +57,7 @@ import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.SetWarnColor;
 import info.nightscout.utils.ToastUtils;
 
@@ -64,7 +67,6 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
 
-    private boolean mBounded;
     private static ExecutionService mExecutionService;
 
     private static DanaRPump sDanaRPump = new DanaRPump();
@@ -73,7 +75,6 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     boolean fragmentPumpEnabled = true;
     boolean fragmentProfileEnabled = true;
     boolean fragmentPumpVisible = true;
-    boolean visibleNow = false;
 
     private Handler loopHandler = new Handler();
     private Runnable refreshLoop = null;
@@ -100,6 +101,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     public DanaRFragment() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
+
         mHandlerThread = new HandlerThread(DanaRFragment.class.getSimpleName());
         mHandlerThread.start();
 
@@ -111,8 +113,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     }
 
     public static DanaRFragment newInstance() {
-        DanaRFragment fragment = new DanaRFragment();
-        return fragment;
+        return new DanaRFragment();
     }
 
     private void registerBus() {
@@ -131,20 +132,11 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             refreshLoop = new Runnable() {
                 @Override
                 public void run() {
-                    if (visibleNow) {
-                        Activity activity = getActivity();
-                        if (activity != null)
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateGUI();
-                                }
-                            });
-                    }
-                    loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+                    updateGUI();
+                    loopHandler.postDelayed(refreshLoop, 60 * 1000L);
                 }
             };
-            loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+            loopHandler.postDelayed(refreshLoop, 60 * 1000L);
         }
     }
 
@@ -174,7 +166,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             }
         });
 
-       historyButton.setOnClickListener(new View.OnClickListener() {
+        historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
@@ -217,13 +209,11 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
 
         public void onServiceDisconnected(ComponentName name) {
             log.debug("Service is disconnected");
-            mBounded = false;
             mExecutionService = null;
         }
 
         public void onServiceConnected(ComponentName name, IBinder service) {
             log.debug("Service is connected");
-            mBounded = true;
             ExecutionService.LocalBinder mLocalBinder = (ExecutionService.LocalBinder) service;
             mExecutionService = mLocalBinder.getServiceInstance();
         }
@@ -735,13 +725,11 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     }
 
     public static boolean isConnected() {
-        if (mExecutionService != null) return mExecutionService.isConnected();
-        return false;
+        return mExecutionService != null && mExecutionService.isConnected();
     }
 
     public static boolean isConnecting() {
-        if (mExecutionService != null) return mExecutionService.isConnecting();
-        return false;
+        return mExecutionService != null && mExecutionService.isConnecting();
     }
 
     @Override
@@ -770,6 +758,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             pump.put("reservoir", (int) getDanaRPump().reservoirRemainingUnits);
             pump.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
+            e.printStackTrace();
         }
         return pump;
     }
@@ -781,24 +770,13 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
 
 
     // GUI functions
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            visibleNow = true;
-            updateGUI();
-        } else
-            visibleNow = false;
-
-    }
-
     private void updateGUI() {
         final DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT);
 
         Activity activity = getActivity();
-        if (activity != null && visibleNow && basaBasalRateView != null)
+        if (activity != null && basaBasalRateView != null)
             activity.runOnUiThread(new Runnable() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
 
@@ -863,6 +841,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         return true;
     }
 
+    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         double origAbsoluteRate = absoluteRate;
@@ -876,16 +855,18 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         return absoluteRate;
     }
 
+    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
         if (percentRate < 0) percentRate = 0;
         if (percentRate > 200) percentRate = 200;
-        if (percentRate != origPercentRate && Config.logConstraintsChanges && origPercentRate != Constants.basalPercentOnlyForCheckLimit)
+        if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
             log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
         return percentRate;
     }
 
+    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Double applyBolusConstraints(Double insulin) {
         double origInsulin = insulin;

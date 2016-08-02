@@ -30,7 +30,7 @@ public class DanaRPump {
     public Date shippingDate = new Date(0);
     public String shippingCountry = "";
     public boolean isNewPump = false;
-    public int accessCode = -1;
+    public int password = -1;
     public Date pumpTime = new Date(0);
 
     // Status

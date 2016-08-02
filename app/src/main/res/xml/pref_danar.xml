@@ -8,6 +8,11 @@
             android:dialogTitle="@string/danar_bt_name_title"
             android:key="danar_bt_name"
             android:title="@string/danar_bt_name_title" />
+        <EditTextPreference
+            android:title="@string/danar_password"
+            android:key="danar_password"
+            android:inputType="numberPassword">
+        </EditTextPreference>
         <SwitchPreference
             android:defaultValue="false"
             android:key="danar_useextended"

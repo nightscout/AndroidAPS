@@ -28,10 +28,10 @@ public class MsgInitConnStatusOption extends MessageBase {
         int h = intFromBuff(bytes, 7, 1);
         int i = intFromBuff(bytes, 8, 1);
         if (bytes.length >= 21) {
-            DanaRFragment.getDanaRPump().accessCode = intFromBuff(bytes, 9, 2) ^ 0x3463;
+            DanaRFragment.getDanaRPump().password = intFromBuff(bytes, 9, 2) ^ 0x3463;
             DanaRFragment.getDanaRPump().isNewPump = true;
             if (Config.logDanaMessageDetail)
-                log.debug("Pump password: " + DanaRFragment.getDanaRPump().accessCode);
+                log.debug("Pump password: " + DanaRFragment.getDanaRPump().password);
         }
     }
 

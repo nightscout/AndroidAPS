@@ -177,6 +177,10 @@ public class DanaRHistoryActivity extends Activity {
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (mExecutionService.isConnected() || mExecutionService.isConnecting()) {
+                    ToastUtils.showToastInUiThread(getApplicationContext(), getString(R.string.pumpbusy));
+                    return;
+                }
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
