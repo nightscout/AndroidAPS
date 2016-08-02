@@ -11,8 +11,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
@@ -57,7 +55,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     public static HandlerThread mHandlerThread;
 
 
-    public class LastRun implements Parcelable {
+    public class LastRun {
         public APSResult request = null;
         public APSResult constraintsProcessed = null;
         public PumpEnactResult setByPump = null;
@@ -65,46 +63,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         public Date lastAPSRun = null;
         public Date lastEnact = null;
         public Date lastOpenModeAccept = null;
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelable(request, 0);
-            dest.writeParcelable(constraintsProcessed, 0);
-            dest.writeParcelable(setByPump, 0);
-            dest.writeString(source);
-            dest.writeLong(lastAPSRun.getTime());
-            dest.writeLong(lastEnact != null ? lastEnact.getTime() : 0l);
-            dest.writeLong(lastOpenModeAccept != null ? lastOpenModeAccept.getTime() : 0l);
-        }
-
-        public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
-            public LastRun createFromParcel(Parcel in) {
-                return new LastRun(in);
-            }
-
-            public LastRun[] newArray(int size) {
-                return new LastRun[size];
-            }
-        };
-
-        private LastRun(Parcel in) {
-            request = in.readParcelable(APSResult.class.getClassLoader());
-            constraintsProcessed = in.readParcelable(APSResult.class.getClassLoader());
-            setByPump = in.readParcelable(PumpEnactResult.class.getClassLoader());
-            source = in.readString();
-            lastAPSRun = new Date(in.readLong());
-            lastEnact = new Date(in.readLong());
-            lastOpenModeAccept = new Date(in.readLong());
-        }
-
-        public LastRun() {
-        }
-    }
+     }
 
     static public LastRun lastRun = null;
 
@@ -160,11 +119,6 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.loop_fragment, container, false);
@@ -178,17 +132,8 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         runNowButton = (Button) view.findViewById(R.id.loop_run);
         runNowButton.setOnClickListener(this);
 
-        //if (savedInstanceState != null) {
-        //    lastRun = savedInstanceState.getParcelable("lastrun");
-        //}
         updateGUI();
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("lastrun", lastRun);
     }
 
     private void registerBus() {
@@ -238,7 +183,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         final ConfigBuilderFragment configBuilder = MainApp.getConfigBuilder();
         APSResult result = null;
 
-        if (constraintsInterface == null || configBuilder == null || !isEnabled(PluginBase.GENERAL))
+        if (configBuilder == null || !isEnabled(PluginBase.GENERAL))
             return;
 
         APSInterface usedAPS = null;
