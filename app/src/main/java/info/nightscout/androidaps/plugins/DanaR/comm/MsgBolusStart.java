@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
 
 public class MsgBolusStart extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgBolusStart.class);
@@ -14,6 +15,12 @@ public class MsgBolusStart extends MessageBase {
 
     public MsgBolusStart(double amount) {
         this();
+
+        // HARDCODED LIMIT
+        amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
+        if (amount < 0) amount = 0d;
+        if (amount > 10) amount = 10d;
+
         AddParamInt((int) (amount * 100));
     }
 

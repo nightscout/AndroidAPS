@@ -15,6 +15,12 @@ public class MsgSetTempBasalStart extends MessageBase {
     public MsgSetTempBasalStart(int percent, int durationInHours) {
         this();
 
+        //HARDCODED LIMITS
+        if (percent < 0) percent = 0;
+        if (percent > 200) percent = 200;
+        if (durationInHours < 1) durationInHours = 1;
+        if (durationInHours > 24) durationInHours = 24;
+
         AddParamByte((byte) (percent & 255));
         AddParamByte((byte) (durationInHours & 255));
 
