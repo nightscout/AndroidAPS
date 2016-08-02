@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Overview;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -87,7 +88,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
     Button setExtenedButton;
     Button acceptTempButton;
 
-    boolean visibleNow = false;
     Handler loopHandler = new Handler();
     Runnable refreshLoop = null;
 
@@ -141,8 +141,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
     }
 
     public static OverviewFragment newInstance() {
-        OverviewFragment fragment = new OverviewFragment();
-        return fragment;
+        return new OverviewFragment();
     }
 
     @Override
@@ -152,20 +151,11 @@ public class OverviewFragment extends Fragment implements PluginBase {
             refreshLoop = new Runnable() {
                 @Override
                 public void run() {
-                    if (visibleNow) {
-                        Activity activity = getActivity();
-                        if (activity != null)
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateGUI();
-                                }
-                            });
-                    }
-                    loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+                    updateGUIIfVisible();
+                    loopHandler.postDelayed(refreshLoop, 60 * 1000L);
                 }
             };
-            loopHandler.postDelayed(refreshLoop, 60 * 1000l);
+            loopHandler.postDelayed(refreshLoop, 60 * 1000L);
         }
     }
 
@@ -247,7 +237,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             @Override
             public void onClick(View view) {
                 MainApp.getConfigBuilder().getActiveLoop().invoke(false);
-                final LoopFragment.LastRun finalLastRun = MainApp.getConfigBuilder().getActiveLoop().lastRun;
+                final LoopFragment.LastRun finalLastRun = LoopFragment.lastRun;
                 if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(getContext().getString(R.string.confirmation));
@@ -269,14 +259,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
                                             objectivesFragment.saveProgress();
                                         }
                                     }
-                                    Activity activity = getActivity();
-                                    if (activity != null)
-                                        activity.runOnUiThread(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                updateGUI();
-                                            }
-                                        });
+                                    updateGUIIfVisible();
                                 }
                             });
                         }
@@ -303,76 +286,35 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                }
-            });
-        else
-            log.debug("EventPreferenceChange: Activity is null");
+        updateGUIIfVisible();
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                }
-            });
-        else
-            log.debug("EventRefreshGui: Activity is null");
+        updateGUIIfVisible();
     }
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                }
-            });
-        else
-            log.debug("EventTreatmentChange: Activity is null");
+        updateGUIIfVisible();
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                }
-            });
-        else
-            log.debug("EventTempBasalChange: Activity is null");
+        updateGUIIfVisible();
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                }
-            });
-        else
-            log.debug("EventNewBG: Activity is null");
+        updateGUIIfVisible();
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOpenLoop ev) {
+        updateGUIIfVisible();
+    }
+
+    private void updateGUIIfVisible() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
@@ -381,22 +323,9 @@ public class OverviewFragment extends Fragment implements PluginBase {
                     updateGUI();
                 }
             });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            updateGUI();
-            visibleNow = true;
-        } else {
-            visibleNow = false;
-        }
-    }
-
+    @SuppressLint("SetTextI18n")
     public void updateGUI() {
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
@@ -408,7 +337,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             return;
 
         // open loop mode
-        final LoopFragment.LastRun finalLastRun = MainApp.getConfigBuilder().getActiveLoop().lastRun;
+        final LoopFragment.LastRun finalLastRun = LoopFragment.lastRun;
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
             if (MainApp.getConfigBuilder().isClosedModeEnabled())
@@ -418,8 +347,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             apsModeView.setVisibility(View.GONE);
         }
 
-        boolean showAcceptButton = true;
-        showAcceptButton = showAcceptButton && !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
+        boolean  showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
         showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
         showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
         showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
@@ -465,7 +393,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         String units = profile.getUnits();
 
         // **** BG value ****
-        if (profile != null && lastBG != null && bgView != null) {
+        if (lastBG != null && bgView != null) {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
             if (glucoseStatus != null)
@@ -511,7 +439,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         int hoursToFetch = 6;
         long toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
-        long fromTime = toTime - hoursToFetch * 60 * 60 * 1000l;
+        long fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
 
         Double lowLine = NSProfile.fromMgdlToUnits(bgTargetLow, units);
         Double highLine = NSProfile.fromMgdlToUnits(bgTargetHigh, units);
@@ -645,7 +573,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         List<Treatment> treatments = MainApp.getConfigBuilder().getActiveTreatments().getTreatments();
         List<Treatment> filteredTreatments = new ArrayList<Treatment>();
 
-        for (int tx = 0; tx < treatments.size(); tx ++) {
+        for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
             if (t.getTimeIndex() < fromTime || t.getTimeIndex() > now) continue;
             t.setYValue(bgReadingsArray);
@@ -672,7 +600,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
-        // TODO: add treatments
     }
 
 }
