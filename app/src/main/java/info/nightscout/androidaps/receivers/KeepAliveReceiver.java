@@ -17,6 +17,8 @@ import android.os.PowerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
@@ -38,13 +40,15 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         log.debug("KeepAlive received");
         final DanaRFragment danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
         if (Config.DANAR && danaRFragment.isEnabled(PluginBase.PUMP)) {
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    danaRFragment.doConnect("KeepAlive"); // TODO: only if if last conn > 30 min
-                }
-            });
-            t.start();
+            if (danaRFragment.getDanaRPump().lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime() && !danaRFragment.isConnected() && !danaRFragment.isConnecting()) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        danaRFragment.doConnect("KeepAlive"); // TODO: only if if last conn > 30 min
+                    }
+                });
+                t.start();
+            }
         }
 
         wl.release();

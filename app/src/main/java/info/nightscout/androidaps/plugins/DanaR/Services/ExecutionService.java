@@ -94,7 +94,7 @@ public class ExecutionService extends Service {
     private DanaRPump danaRPump;
     private Treatment bolusingTreatment = null;
 
-    private static Object connectionInProgress = new Object();
+    private static Boolean connectionInProgress = false;
 
     private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
@@ -166,8 +166,12 @@ public class ExecutionService extends Service {
             log.debug("EventAppExit finished");
     }
 
-    private boolean isConnected() {
+    public boolean isConnected() {
         return mRfcommSocket != null && mRfcommSocket.isConnected();
+    }
+
+    public boolean isConnecting() {
+        return connectionInProgress;
     }
 
     public void connect(String from) {
@@ -178,6 +182,7 @@ public class ExecutionService extends Service {
         }
         final long maxConnectionTime = 5 * 60 * 1000L; // 5 min
         synchronized (connectionInProgress) {
+            connectionInProgress = true;
             mWakeLock.acquire();
             getBTSocketForSelectedPump();
             if (mRfcommSocket == null || mBTDevice == null)
@@ -205,6 +210,7 @@ public class ExecutionService extends Service {
                 MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.DISCONNECTED, 0));
                 log.error("Pump connection timed out");
             }
+            connectionInProgress = false;
             mWakeLock.release();
         }
     }

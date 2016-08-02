@@ -734,6 +734,16 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         if (mExecutionService != null) mExecutionService.connect(from);
     }
 
+    public static boolean isConnected() {
+        if (mExecutionService != null) return mExecutionService.isConnected();
+        return false;
+    }
+
+    public static boolean isConnecting() {
+        if (mExecutionService != null) return mExecutionService.isConnecting();
+        return false;
+    }
+
     @Override
     public JSONObject getJSONStatus() {
         JSONObject pump = new JSONObject();
