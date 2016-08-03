@@ -71,7 +71,7 @@
     <string name="lowsuspend_lowmessage">LOW: Temp basal 0%</string>
     <string name="lowsuspend_lowprojectedmessage">LOW PROJECTED: Temp basal 0%</string>
     <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
-    <string name="lowsuspend_low">Low Suspend</string>
+    <string name="lowsuspend_low">Low</string>
     <string name="lowsuspend_lowprojected">Low projected</string>
     <string name="rate">Rate</string>
     <string name="duration">Duration</string>

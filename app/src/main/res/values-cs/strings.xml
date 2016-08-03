@@ -178,7 +178,7 @@
     <string name="lowsuspend_lowprojectedmessage">Předpokládaná nízká glykémie: Dočasný bazál 0%</string>
     <string name="lowsuspend_lowmessage">Nízká glykémie: Dočasný bazál 0%</string>
     <string name="lowsuspend_cancelmessage">Low Suspend: Zrušení dočasného bazálu</string>
-    <string name="lowsuspend_low">Low Suspend</string>
+    <string name="lowsuspend_low">Nízká glykémie</string>
     <string name="careportal_newnstreatment_eventtype">Typ události</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="openapsma">OpenAPS MA</string>

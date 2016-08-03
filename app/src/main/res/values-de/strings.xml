@@ -170,7 +170,7 @@
     <string name="cs_lang">Czech</string>
     <string name="loop_setbypump_label">Gesetzt durch Pumpe</string>
     <string name="lowsuspend">Low Suspend</string>
-    <string name="lowsuspend_low">Low Suspend</string>
+    <string name="lowsuspend_low">Low</string>
     <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="loop_constraintsprocessed_label">After processed constraints</string>

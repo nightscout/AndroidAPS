@@ -44,6 +44,8 @@ import info.nightscout.utils.SafeParse;
  * else no change
  */
 
+// TODO: replace algorithm and name
+
 public class LowSuspendFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(LowSuspendFragment.class);
 
@@ -55,50 +57,13 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     TextView requestView;
 
     // last values
-    class LastRun implements Parcelable {
+    class LastRun {
         public Boolean lastLow = null;
         public Boolean lastLowProjected = null;
         public Double lastMinBg = null;
         public DatabaseHelper.GlucoseStatus lastGlucoseStatus = null;
         public Date lastAPSRun = null;
         public APSResult lastAPSResult = null;
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeInt(lastLow ? 1 : 0);
-            dest.writeInt(lastLowProjected ? 1 : 0);
-            dest.writeDouble(lastMinBg);
-            dest.writeParcelable(lastGlucoseStatus, 0);
-            dest.writeLong(lastAPSRun.getTime());
-            dest.writeParcelable(lastAPSResult, 0);
-        }
-
-        public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
-            public LastRun createFromParcel(Parcel in) {
-                return new LastRun(in);
-            }
-
-            public LastRun[] newArray(int size) {
-                return new LastRun[size];
-            }
-        };
-
-        private LastRun(Parcel in) {
-            lastLow = in.readInt() == 1;
-            lastLowProjected = in.readInt() == 1;
-            lastMinBg = in.readDouble();
-            lastGlucoseStatus = in.readParcelable(DatabaseHelper.GlucoseStatus.class.getClassLoader());
-            lastAPSRun = new Date(in.readLong());
-            lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
-        }
-
-        public LastRun() {
-        }
     }
 
     static LastRun lastRun = null;
@@ -161,8 +126,7 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
     }
 
     public static LowSuspendFragment newInstance() {
-        LowSuspendFragment fragment = new LowSuspendFragment();
-        return fragment;
+        return new LowSuspendFragment();
     }
 
     @Override
@@ -178,17 +142,8 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         resultView = (TextView) view.findViewById(R.id.lowsuspend_result);
         requestView = (TextView) view.findViewById(R.id.lowsuspend_request);
 
-//        if (savedInstanceState != null) {
-//            lastRun = savedInstanceState.getParcelable("lastrun");
-//        }
         updateGUI();
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable("lastrun", lastRun);
     }
 
     private void registerBus() {
@@ -256,12 +211,11 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
         boolean low = glucoseStatus.glucose < minBgMgdl;
 
         APSResult request = new APSResult();
-        Double baseBasalRate = pump.getBaseBasalRate();
         boolean isTempBasalInProgress = pump.isTempBasalInProgress();
         Double tempBasalRate = pump.getTempBasalAbsoluteRate();
         Date now = new Date();
 
-        if (low && !lowProjected) {
+        if (low && lowProjected) {
             if (!isTempBasalInProgress || tempBasalRate != 0d) {
                 request.changeRequested = true;
                 request.rate = 0d;
@@ -316,8 +270,6 @@ public class LowSuspendFragment extends Fragment implements View.OnClickListener
                     }
                 }
             });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 
     void updateResultGUI(final String text) {
