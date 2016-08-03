@@ -96,6 +96,7 @@ public class ExecutionService extends Service {
     private Treatment bolusingTreatment = null;
 
     private static Boolean connectionInProgress = false;
+    private static final Object connectionLock = new Object();
 
     private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
 
@@ -186,8 +187,8 @@ public class ExecutionService extends Service {
             return;
         }
         final long maxConnectionTime = 5 * 60 * 1000L; // 5 min
-        synchronized (connectionInProgress) {
-log.debug("entering connection whie loop");
+        synchronized (connectionLock) {
+            //log.debug("entering connection while loop");
             connectionInProgress = true;
             mWakeLock.acquire();
             getBTSocketForSelectedPump();
