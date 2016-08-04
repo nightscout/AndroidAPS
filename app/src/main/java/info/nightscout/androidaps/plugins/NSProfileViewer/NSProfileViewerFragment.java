@@ -111,8 +111,7 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
     }
 
     public static NSProfileViewerFragment newInstance() {
-        NSProfileViewerFragment fragment = new NSProfileViewerFragment();
-        return fragment;
+        return new NSProfileViewerFragment();
     }
 
     private void setContent() {
@@ -161,7 +160,7 @@ public class NSProfileViewerFragment extends Fragment implements PluginBase, Pro
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("profile", profile.getData().toString());
         editor.putString("activeProfile", profile.getActiveProfile());
-        editor.commit();
+        editor.apply();
         if (Config.logPrefsChange)
             log.debug("Storing profile");
     }
