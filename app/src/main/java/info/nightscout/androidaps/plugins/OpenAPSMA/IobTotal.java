@@ -64,12 +64,10 @@ public class IobTotal {
     public JSONObject json() {
         JSONObject json = new JSONObject();
         try {
-            json.put("iob", iob);
-            json.put("bolussnooze", bolussnooze);
-            json.put("basaliob", iob);
+            json.put("iob", iob + basaliob);
+            json.put("basaliob", basaliob);
             json.put("activity", activity);
-            json.put("hightempinsulin", hightempinsulin);
-            json.put("netbasalinsulin", netbasalinsulin);
+            json.put("time", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
             e.printStackTrace();
         }

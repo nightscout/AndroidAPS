@@ -415,14 +415,13 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         // iob
         MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
-        IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
         if (bolusIob == null) bolusIob = new IobTotal();
         MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
-        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation();
+        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
         if (basalIob == null) basalIob = new IobTotal();
-        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(iobTotal.iob) + "U ("
+        String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
         iobView.setText(iobtext);
@@ -454,6 +453,20 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         // remove old data from graph
         bgGraph.removeAllSeries();
+
+        // **** HIGH and LOW targets graph ****
+        DataPoint[] lowDataPoints = new DataPoint[]{
+                new DataPoint(fromTime, lowLine),
+                new DataPoint(toTime, lowLine)
+        };
+        DataPoint[] highDataPoints = new DataPoint[]{
+                new DataPoint(fromTime, highLine),
+                new DataPoint(toTime, highLine)
+        };
+        bgGraph.addSeries(seriesLow = new LineGraphSeries<DataPoint>(lowDataPoints));
+        seriesLow.setColor(Color.RED);
+        bgGraph.addSeries(seriesHigh = new LineGraphSeries<DataPoint>(highDataPoints));
+        seriesHigh.setColor(Color.RED);
 
         // **** TEMP BASALS graph ****
         class BarDataPoint extends DataPoint {
@@ -536,20 +549,6 @@ public class OverviewFragment extends Fragment implements PluginBase {
             seriesOutOfRange.setSize(5);
             seriesOutOfRange.setColor(Color.RED);
         }
-
-        // **** HIGH and LOW targets graph ****
-        DataPoint[] lowDataPoints = new DataPoint[]{
-                new DataPoint(fromTime, lowLine),
-                new DataPoint(toTime, lowLine)
-        };
-        DataPoint[] highDataPoints = new DataPoint[]{
-                new DataPoint(fromTime, highLine),
-                new DataPoint(toTime, highLine)
-        };
-        bgGraph.addSeries(seriesLow = new LineGraphSeries<DataPoint>(lowDataPoints));
-        seriesLow.setColor(Color.RED);
-        bgGraph.addSeries(seriesHigh = new LineGraphSeries<DataPoint>(highDataPoints));
-        seriesHigh.setColor(Color.RED);
 
         // **** NOW line ****
         DataPoint[] nowPoints = new DataPoint[]{
