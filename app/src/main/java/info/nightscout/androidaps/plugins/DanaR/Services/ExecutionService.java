@@ -26,7 +26,6 @@ import java.util.Set;
 import java.util.UUID;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Treatment;
@@ -73,6 +72,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
+import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.client.data.NSProfile;
@@ -181,10 +181,10 @@ public class ExecutionService extends Service {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
             return;
         }
-        if (isConnected()) {
+        while (isConnected() || isConnecting()) {
             if (Config.logDanaBTComm)
-                log.debug("already connected from:" + from);
-            return;
+                log.debug("already connected from: " + from);
+            waitMsec(3000);
         }
         final long maxConnectionTime = 5 * 60 * 1000L; // 5 min
         synchronized (connectionLock) {
@@ -199,7 +199,7 @@ public class ExecutionService extends Service {
                 long secondsElapsed = (new Date().getTime() - startTime) / 1000L;
                 MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.CONNECTING, (int) secondsElapsed));
                 if (Config.logDanaBTComm)
-                    log.debug("connect waiting " + secondsElapsed + "sec from:" + from);
+                    log.debug("connect waiting " + secondsElapsed + "sec from: " + from);
                 try {
                     mRfcommSocket.connect();
                 } catch (IOException e) {
@@ -265,7 +265,6 @@ public class ExecutionService extends Service {
             mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
             mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
-            waitMsec(100);
             mSerialIOThread.sendMessage(statusBasicMsg);
             mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
 
@@ -323,7 +322,6 @@ public class ExecutionService extends Service {
         connect("tempBasal");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
-        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
         return true;
     }
@@ -332,7 +330,6 @@ public class ExecutionService extends Service {
         connect("tempBasalStop");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
-        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
         return true;
     }
@@ -341,7 +338,6 @@ public class ExecutionService extends Service {
         connect("extendedBolus");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
-        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
         return true;
     }
@@ -350,46 +346,49 @@ public class ExecutionService extends Service {
         connect("extendedBolusStop");
         if (!isConnected()) return false;
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
-        waitMsec(200);
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
         return true;
     }
 
     public boolean bolus(Double amount, Treatment t) {
-        connect("bolus");
-        if (!isConnected()) return false;
-        // TODO: progress dialog
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusProgress progress = new MsgBolusProgress(MainApp.bus(), amount, t);
         MsgBolusStop stop = new MsgBolusStop(MainApp.bus(), amount, t);
 
-        mSerialIOThread.sendMessage(start);
+        connect("bolus");
+        if (!isConnected()) return false;
+
+        MainApp.bus().post(new EventDanaRBolusStart());
+
+        if (!stop.stopped) {
+            mSerialIOThread.sendMessage(start);
+        } else {
+            t.insulin = 0d;
+            return false;
+        }
         while (!stop.stopped && !start.failed) {
             waitMsec(100);
         }
         bolusingTreatment = null;
-        waitMsec(200);
         getPumpStatus();
         return true;
     }
 
     public void bolusStop() {
-        Treatment lastBolusingTreatment = bolusingTreatment;
         if (Config.logDanaBTComm)
             log.debug("bolusStop >>>>> @ " + (bolusingTreatment == null ? "" : bolusingTreatment.insulin));
         MsgBolusStop stop = new MsgBolusStop();
         stop.forced = true;
-        mSerialIOThread.sendMessage(stop);
-        while (!stop.stopped) {
+        if (isConnected()) {
             mSerialIOThread.sendMessage(stop);
-            waitMsec(200);
+            while (!stop.stopped) {
+                mSerialIOThread.sendMessage(stop);
+                waitMsec(200);
+            }
+        } else {
+            stop.stopped = true;
         }
-        // and update ns status to last amount
-        waitMsec(60000);
-        EventDanaRBolusProgress be = EventDanaRBolusProgress.getInstance();
-        be.sStatus = "";
-        MainApp.bus().post(be);
     }
 
     public boolean carbsEntry(int amount) {
@@ -398,7 +397,6 @@ public class ExecutionService extends Service {
         Calendar time = Calendar.getInstance();
         MsgSetCarbsEntry msg = new MsgSetCarbsEntry(time, amount);
         mSerialIOThread.sendMessage(msg);
-        waitMsec(200);
         return true;
     }
 
@@ -453,10 +451,8 @@ public class ExecutionService extends Service {
         double[] basal = buildDanaRProfileRecord(profile);
         MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
         mSerialIOThread.sendMessage(msgSet);
-        waitMsec(200);
         MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
         mSerialIOThread.sendMessage(msgActivate);
-        waitMsec(200);
         getPumpStatus();
         return true;
     }

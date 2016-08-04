@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interfaces;
 
+import android.content.Context;
+
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -27,7 +29,8 @@ public interface PumpInterface {
     TempBasal getTempBasal();
     TempBasal getExtendedBolus();
 
-    PumpEnactResult deliverTreatment(Double insulin, Integer carbs);
+    PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context);
+    void stopBolusDelivering();
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
     PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes);
     PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes);

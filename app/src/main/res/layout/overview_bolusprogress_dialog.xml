@@ -1,0 +1,50 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/overview_bolusprogress_status"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_bolusprogress_stoppressed"
+            android:id="@+id/overview_bolusprogress_stoppressed"
+            android:layout_gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold"
+            android:textColor="#fd0101"
+            android:layout_marginTop="20dp"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/overview_bolusprogress_progressbar"
+            android:layout_height="20dp"
+            android:layout_width="match_parent"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:minHeight="3dp"
+            android:maxHeight="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/overview_bolusprogress_stop"
+            android:id="@+id/overview_bolusprogress_stop"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp" />
+
+    </LinearLayout>
+</FrameLayout>

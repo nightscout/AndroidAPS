@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.MM640g;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -164,8 +165,13 @@ public class MM640gFragment extends Fragment implements PluginBase, PumpInterfac
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs) {
+    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
         return new PumpEnactResult();
+    }
+
+    @Override
+    public void stopBolusDelivering() {
+
     }
 
     @Override

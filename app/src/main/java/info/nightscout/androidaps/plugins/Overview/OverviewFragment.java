@@ -185,7 +185,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
-                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
+                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog(getContext());
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
             }
         });
@@ -194,7 +194,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
-                WizardDialog wizardDialog = new WizardDialog();
+                WizardDialog wizardDialog = new WizardDialog(getContext());
                 wizardDialog.show(manager, "WizardDialog");
             }
         });

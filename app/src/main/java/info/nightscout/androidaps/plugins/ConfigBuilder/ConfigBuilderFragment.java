@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,10 +49,12 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
@@ -318,11 +322,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
 }
  */
 
-    public PumpEnactResult deliverTreatmentFromBolusWizard(Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+    public PumpEnactResult deliverTreatmentFromBolusWizard(Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
-        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs);
+        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
 
         if (Config.logCongigBuilderActions)
             log.debug("deliverTreatmentFromBolusWizard insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
@@ -345,11 +349,21 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs) {
+    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
-        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs);
+        BolusProgressDialog bolusProgressDialog = null;
+        if (context != null) {
+            bolusProgressDialog = new BolusProgressDialog(insulin);
+            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+        }
+
+        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
+
+        if (bolusProgressDialog != null) {
+            bolusProgressDialog.dismiss();
+        }
 
         if (Config.logCongigBuilderActions)
             log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
@@ -369,6 +383,11 @@ public class ConfigBuilderFragment extends Fragment implements PluginBase, PumpI
             MainApp.bus().post(new EventTreatmentChange());
         }
         return result;
+    }
+
+    @Override
+    public void stopBolusDelivering() {
+        activePump.stopBolusDelivering();
     }
 
     /**

@@ -288,5 +288,12 @@
     <string name="danar_password">Pump password (2016 pump only)</string>
     <string name="wrongpumppassword">Wrong pump password!</string>
     <string name="pumpbusy">Pump is busy</string>
+    <string name="overview_bolusprogress_delivered">Delivered</string>
+    <string name="overview_bolusprogress_stoped">Stopped</string>
+    <string name="overview_bolusiprogress_occlusion">Occlusion</string>
+    <string name="overview_bolusprogress_stop">Stop</string>
+    <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
+    <string name="waitingforpump">Waiting for pump</string>
+    <string name="overview_bolusprogress_goingtodeliver"  formatted="false">Going to deliver %.2fU</string>
 
 </resources>

@@ -170,6 +170,10 @@ public class SerialIOThread extends Thread {
             }
         }
 
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+        }
         if (!message.received) {
             log.warn("Reply not received " + message.getMessageName());
         }

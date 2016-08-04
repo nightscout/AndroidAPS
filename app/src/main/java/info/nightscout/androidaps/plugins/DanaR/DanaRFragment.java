@@ -57,7 +57,6 @@ import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
-import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.SetWarnColor;
 import info.nightscout.utils.ToastUtils;
 
@@ -190,6 +189,7 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
         return view;
     }
 
+    @SuppressWarnings("UnusedParameters")
     @Subscribe
     public void onStatusEvent(final EventAppExit e) {
         MainApp.instance().getApplicationContext().unbindService(mConnection);
@@ -238,9 +238,9 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
                     new Runnable() {
                         @Override
                         public void run() {
-                            if (c.sStatus == c.CONNECTING)
+                            if (c.sStatus == EventDanaRConnectionStatus.CONNECTING)
                                 btConnectionView.setText("{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s");
-                            else if (c.sStatus == c.CONNECTED)
+                            else if (c.sStatus == EventDanaRConnectionStatus.CONNECTED)
                                 btConnectionView.setText("{fa-bluetooth}");
                             else
                                 btConnectionView.setText("{fa-bluetooth-b}");
@@ -399,12 +399,11 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs) {
+    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
         ConfigBuilderFragment configBuilderFragment = MainApp.getConfigBuilder();
         insulin = configBuilderFragment.applyBolusConstraints(insulin);
         if (insulin > 0 || carbs > 0) {
             Treatment t = new Treatment();
-            t.insulin = insulin;
             boolean connectionOK = false;
             if (carbs > 0) connectionOK = mExecutionService.carbsEntry(carbs);
             if (insulin > 0) connectionOK = mExecutionService.bolus(insulin, t);
@@ -425,6 +424,15 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
             log.error("deliverTreatment: Invalid input");
             return result;
         }
+    }
+
+    @Override
+    public void stopBolusDelivering() {
+        if (mExecutionService == null) {
+            log.error("stopBolusDelivering mExecutionService is null");
+            return;
+        }
+        mExecutionService.bolusStop();
     }
 
     // This is called from APS

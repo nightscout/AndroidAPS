@@ -17,8 +17,9 @@ import info.nightscout.client.data.DbLogger;
 
 public class EventDanaRBolusProgress {
     private static Logger log = LoggerFactory.getLogger(EventDanaRBolusProgress.class);
-    public String sStatus = "";
+    public String status = "";
     public Treatment t = null;
+    public int percent = 0;
     private static EventDanaRBolusProgress eventDanaRBolusProgress = null;
 
      public EventDanaRBolusProgress() {
@@ -29,27 +30,6 @@ public class EventDanaRBolusProgress {
             eventDanaRBolusProgress = new EventDanaRBolusProgress();
         }
         return eventDanaRBolusProgress;
-    }
-
-    public void sendToNSClient() {
-        if (t == null || t._id == null || t._id.equals("")) return;
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbUpdate");
-        bundle.putString("collection", "treatments");
-        JSONObject data = new JSONObject();
-        try {
-            data.put("status", sStatus);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        bundle.putString("data", data.toString());
-        bundle.putString("_id", t._id);
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString(), EventDanaRBolusProgress.class);
     }
 
 }

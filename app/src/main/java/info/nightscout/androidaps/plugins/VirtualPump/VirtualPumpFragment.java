@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.VirtualPump;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -181,7 +182,7 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs) {
+    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.bolusDelivered = insulin;
@@ -192,6 +193,11 @@ public class VirtualPumpFragment extends Fragment implements PluginBase, PumpInt
             log.debug("Delivering treatment insulin: " + insulin + "U carbs: " + carbs + "g " + result);
         updateGUI();
         return result;
+    }
+
+    @Override
+    public void stopBolusDelivering() {
+
     }
 
     @Override

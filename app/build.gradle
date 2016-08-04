@@ -46,10 +46,10 @@ android {
             buildConfigField "boolean", "CLOSEDLOOP", "false"
         }
         full {
-           buildConfigField "boolean", "APS", "true"
+            buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
-           buildConfigField "boolean", "OBJECTIVES", "true"
-           buildConfigField "boolean", "CLOSEDLOOP", "true"
+            buildConfigField "boolean", "OBJECTIVES", "true"
+            buildConfigField "boolean", "CLOSEDLOOP", "true"
         }
         full_noobjectives {
             buildConfigField "boolean", "APS", "true"

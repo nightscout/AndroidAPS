@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,10 +78,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     Handler mHandler;
     public static HandlerThread mHandlerThread;
 
-    public WizardDialog() {
+    Context parentContext;
+
+    public WizardDialog(Context context) {
         mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper());
+        parentContext = context;
     }
 
     final private TextWatcher textWatcher = new TextWatcher() {
@@ -193,6 +197,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                                     @Override
                                     public void run() {
                                         PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
+                                                parentContext,
                                                 finalInsulinAfterConstraints,
                                                 finalCarbsAfterConstraints,
                                                 SafeParse.stringToDouble(bgInput.getText().toString()),

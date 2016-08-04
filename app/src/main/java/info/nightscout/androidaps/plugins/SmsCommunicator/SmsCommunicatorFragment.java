@@ -234,7 +234,7 @@ public class SmsCommunicatorFragment extends Fragment implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder().getActivePump();
                         if (pumpInterface != null) {
                             danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
-                            PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0);
+                            PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0, null);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.bolusdelivered), bolusWaitingForConfirmation.bolusRequested);
                                 if (danaRFragment != null) reply += "\n" + danaRFragment.shortStatus();

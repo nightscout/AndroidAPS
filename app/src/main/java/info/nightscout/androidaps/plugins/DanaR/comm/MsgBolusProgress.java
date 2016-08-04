@@ -36,8 +36,9 @@ public class MsgBolusProgress extends MessageBase {
         Double done = (amount * 100 - progress) / 100d;
         t.insulin = done;
         EventDanaRBolusProgress bolusingEvent = EventDanaRBolusProgress.getInstance();
-        bolusingEvent.sStatus = "Delivering " + DecimalFormatter.to1Decimal(done) + "U";
+        bolusingEvent.status = "Delivering " + DecimalFormatter.to1Decimal(done) + "U";
         bolusingEvent.t = t;
+        bolusingEvent.percent = Math.min((int) (done / amount * 100), 100);
 
         if (Config.logDanaMessageDetail) {
             log.debug("Bolus remaining: " + progress + " delivered: " + done);

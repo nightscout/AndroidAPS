@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -33,10 +35,13 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     Handler mHandler;
     public static HandlerThread mHandlerThread;
 
-    public NewTreatmentDialog() {
-        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+    Context parentContext;
+
+    public NewTreatmentDialog(Context context) {
+        mHandlerThread = new HandlerThread(NewTreatmentDialog.class.getSimpleName());
         mHandlerThread.start();
         this.mHandler = new Handler(mHandlerThread.getLooper());
+        parentContext = context;
     }
 
     @Override
@@ -93,12 +98,12 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints);
+                                        PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints, parentContext);
                                         if (!result.success) {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
                                             builder.setMessage(result.comment);
-                                            builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                             builder.show();
                                         }
                                     }

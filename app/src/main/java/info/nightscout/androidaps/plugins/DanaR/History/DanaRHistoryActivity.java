@@ -432,7 +432,6 @@ public class DanaRHistoryActivity extends Activity {
 
     @Subscribe
     public void onStatusEvent(final EventDanaRConnectionStatus c) {
-        log.debug("EventDanaRConnectionStatus: " + c.sStatus);
         runOnUiThread(
                 new Runnable() {
                     @Override

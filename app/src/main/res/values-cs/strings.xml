@@ -65,7 +65,7 @@
     <string name="delta">Rozdíl</string>
     <string name="duration">Trvání</string>
     <string name="en_lang">English</string>
-    <string name="entertreatmentquestion">Zadej nové ošetření</string>
+    <string name="entertreatmentquestion">Aplikovat bolus</string>
     <string name="glucose">Glykémie</string>
     <string name="loop">Smyčka</string>
     <string name="loop_aps_label">APS</string>
@@ -279,4 +279,11 @@
     <string name="wrongpumppassword">Špatné heslo k pumpě</string>
     <string name="mm640g"></string>
     <string name="danar_password">Heslo k pumpě (pouze verze 2016)</string>
+    <string name="overview_bolusiprogress_occlusion">Okluze</string>
+    <string name="overview_bolusprogress_delivered">Podáno</string>
+    <string name="overview_bolusprogress_stop">Stop</string>
+    <string name="overview_bolusprogress_stoped">Zastaveno</string>
+    <string name="overview_bolusprogress_stoppressed">STISKNUTO STOP</string>
+    <string name="waitingforpump">Čekání na pumpu</string>
+    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Podávání %.2fU inzulínu</string>
 </resources>
