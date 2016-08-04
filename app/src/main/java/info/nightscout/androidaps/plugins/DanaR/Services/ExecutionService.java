@@ -183,7 +183,7 @@ public class ExecutionService extends Service {
         }
         while (isConnected() || isConnecting()) {
             if (Config.logDanaBTComm)
-                log.debug("already connected from: " + from);
+                log.debug("already connected/connecting from: " + from);
             waitMsec(3000);
         }
         final long maxConnectionTime = 5 * 60 * 1000L; // 5 min
@@ -205,15 +205,20 @@ public class ExecutionService extends Service {
                 } catch (IOException e) {
                 }
                 waitMsec(1000);
-            }
-            if (isConnected()) {
-                if (mSerialIOThread != null) {
-                    mSerialIOThread.disconnect("Recreate SerialIOThread");
+
+                if (isConnected()) {
+                    if (mSerialIOThread != null) {
+                        mSerialIOThread.disconnect("Recreate SerialIOThread");
+                    }
+                    mSerialIOThread = new SerialIOThread(mRfcommSocket);
+                    MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.CONNECTED, 0));
+                    if (!getPumpStatus()) {
+                        mSerialIOThread.disconnect("getPumpStatus failed");
+                        waitMsec(3000);
+                    }
                 }
-                mSerialIOThread = new SerialIOThread(mRfcommSocket);
-                MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.CONNECTED, 0));
-                getPumpStatus();
-            } else {
+            }
+            if (!isConnected()) {
                 MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.DISCONNECTED, 0));
                 log.error("Pump connection timed out");
             }
@@ -254,7 +259,7 @@ public class ExecutionService extends Service {
             mSerialIOThread.disconnect("EventPreferenceChange");
     }
 
-    private void getPumpStatus() {
+    private boolean getPumpStatus() {
         try {
             MsgStatus statusMsg = new MsgStatus();
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
@@ -291,8 +296,7 @@ public class ExecutionService extends Service {
             if (!statusMsg.received || !statusBasicMsg.received || !tempStatusMsg.received || !exStatusMsg.received) {
                 waitMsec(10 * 1000);
                 log.debug("getPumpStatus failed");
-                connect("getPumpStatus fail");
-                return;
+                return false;
             }
 
             Date now = new Date();
@@ -314,8 +318,9 @@ public class ExecutionService extends Service {
             danaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
         } catch (Exception e) {
-            log.error("err", e);
+            e.printStackTrace();
         }
+        return true;
     }
 
     public boolean tempBasal(int percent, int durationInHours) {
