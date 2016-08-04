@@ -44,7 +44,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        danaRFragment.doConnect("KeepAlive"); // TODO: only if if last conn > 30 min
+                        danaRFragment.doConnect("KeepAlive");
                     }
                 });
                 t.start();

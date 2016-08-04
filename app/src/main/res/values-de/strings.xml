@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">AndroidAPS</string>
     <string name="apsmode_title">APS Modus</string>
-    <string name="bgavailableinns">BZ verfügbar in NS</string>
+    <string name="objectives_bgavailableinns">BZ verfügbar in NS</string>
     <string name="cancel">Abbrechen</string>
     <string name="carbs">Kohlehydrate</string>
     <string name="careportal">Careportal</string>
@@ -121,7 +121,7 @@
     <string name="setbasalquestion">Akzeptiere neue temp Basalrate:</string>
     <string name="danar_useextended_title">Benutze extended Bolus für hohe temps (\>200%)></string>
     <string name="refreshfromnightscout">Möchtest du die Treatments von Nightscout abrufen</string>
-    <string name="pumpstatusavailableinns">Pumpen Status verfügbar in NS</string>
+    <string name="objectives_pumpstatusavailableinns">Pumpen Status verfügbar in NS</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="overview_newtempbasal_basal_label">Basal Wert</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
@@ -179,10 +179,10 @@
     <string name="lowsuspend_lowmessage">LOW: Temp basal 0%</string>
     <string name="lowsuspend_lowprojected">Low projected</string>
     <string name="lowsuspend_lowprojectedmessage">LOW PROJECTED: Temp basal 0%</string>
-    <string name="manualenacts">Manual enacts</string>
+    <string name="objectives_manualenacts">Manual enacts</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
     <string name="nav_resetdb">Reset Datenbanken</string>
-    <string name="minimalduration">Minimale Dauer</string>
+    <string name="objectives_minimalduration">Minimale Dauer</string>
     <string name="minago">min ago</string>
     <string name="nav_refreshtreatments">Erneure treatments von NS</string>
     <string name="nav_exit">Exit</string>

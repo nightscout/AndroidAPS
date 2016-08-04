@@ -101,7 +101,7 @@
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_general">General</string>
     <string name="days">days</string>
-    <string name="minimalduration">Minimal duration</string>
+    <string name="objectives_minimalduration">Minimal duration</string>
     <string name="configbuilder_constraints">Constraints</string>
 
     <string name="loop">Loop</string>
@@ -142,9 +142,9 @@
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
-    <string name="bgavailableinns">BG available in NS</string>
-    <string name="pumpstatusavailableinns">Pump status available in NS</string>
-    <string name="manualenacts">Manual enacts</string>
+    <string name="objectives_bgavailableinns">BG available in NS</string>
+    <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
+    <string name="objectives_manualenacts">Manual enacts</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="cs_lang">Czech</string>
     <string name="en_lang">English</string>
@@ -295,5 +295,18 @@
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
     <string name="waitingforpump">Waiting for pump</string>
     <string name="overview_bolusprogress_goingtodeliver"  formatted="false">Going to deliver %.2fU</string>
+    <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
+    <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
+    <string name="objectives_1_objective">Starting on an open loop</string>
+    <string name="objectives_1_gate">Run in Open Loop mode for a few days, and manually enact lots of temp basals</string>
+    <string name="objectives_2_objective">Understanding your open loop, including its temp basal recommendations</string>
+    <string name="objectives_2_gate">Based on that experience, decide what max basal should be, and set it on the pump and preferences</string>
+    <string name="objectives_3_objective">Starting to close the loop with Low Glucose Suspend</string>
+    <string name="objectives_3_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events</string>
+    <string name="objectives_4_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
+    <string name="objectives_4_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
+    <string name="objectives_5_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
+    <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
+    <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
 
 </resources>

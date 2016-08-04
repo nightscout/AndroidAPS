@@ -6,7 +6,7 @@
     <string name="apsmode_title">Typ smyčky</string>
     <string name="avgdelta">Prům. změna</string>
     <string name="basal">Bazál</string>
-    <string name="bgavailableinns">Glykémie dostupná v NS</string>
+    <string name="objectives_bgavailableinns">Glykémie dostupná v NS</string>
     <string name="bolus">Bolus</string>
     <string name="bolusconstraintapplied">Aplikováno omezení bolusu</string>
     <string name="cancel">Zrušit</string>
@@ -74,10 +74,10 @@
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="lowsuspend">Low Suspend</string>
     <string name="lowsuspend_low_title">Hodnota nízké glykémie</string>
-    <string name="manualenacts">Ručně spuštěno</string>
+    <string name="objectives_manualenacts">Ručně spuštěno</string>
     <string name="lowsuspend_lowprojected">Předpokládaná nízká glykémie</string>
     <string name="minago">m zpět</string>
-    <string name="minimalduration">Minimální trvání</string>
+    <string name="objectives_minimalduration">Minimální trvání</string>
     <string name="nav_backup">Záloha</string>
     <string name="nav_exit">Ukončit</string>
     <string name="nav_preferences">Nastavení</string>
@@ -125,7 +125,7 @@
     <string name="overview_newtempbasal_percent_label">% (100% = současný)</string>
     <string name="overview_bolus_label">Bolus</string>
     <string name="profileviewer">NS profil</string>
-    <string name="pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
+    <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="rate">Hodnota</string>
     <string name="reason">Zdůvodnění</string>
     <string name="refreshfromnightscout">Opravdu aktualizovat ošetření z NS</string>
@@ -277,7 +277,7 @@
     <string name="uploading">Nahrávám</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="wrongpumppassword">Špatné heslo k pumpě</string>
-    <string name="mm640g"></string>
+    <string name="mm640g">MM 640g</string>
     <string name="danar_password">Heslo k pumpě (pouze verze 2016)</string>
     <string name="overview_bolusiprogress_occlusion">Okluze</string>
     <string name="overview_bolusprogress_delivered">Podáno</string>
@@ -286,4 +286,17 @@
     <string name="overview_bolusprogress_stoppressed">STISKNUTO STOP</string>
     <string name="waitingforpump">Čekání na pumpu</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Podávání %.2fU inzulínu</string>
+    <string name="objectives_0_gate">Zkontrolovat, zda jsou glykémie a údaje z pumpy viditelné v Nightscoutu</string>
+    <string name="objectives_0_objective">Nastavit vizualizaci a monitoring, analyzovat bazály a koeficienty</string>
+    <string name="objectives_1_gate">Provozovat několik dní otevřenou smyčku a ručně potrvrzovat doporučené dočasné bazály</string>
+    <string name="objectives_1_objective">Začít s otevřenou smyčkou</string>
+    <string name="objectives_2_gate">Na základě předchozích zkušeností rozhodnout, jaký je třeba maximální bazál a nastavit ho v pumpě a v aplikaci</string>
+    <string name="objectives_2_objective">Porozumět otevřené smyčce a doporučeným dočasným bazálům</string>
+    <string name="objectives_3_gate">Spustit uzavřenou smyčku s max IOB = 0 na několik dní s minimem nutných korekcí na nízkou glykémii </string>
+    <string name="objectives_3_objective">Začít uzavřenou smyčku pouze s hlídáním nizké glykémie</string>
+    <string name="objectives_4_gate">Provozovat smyčku několik dní s alespoň jednou nocí bez alarmů na nízkou glykémii</string>
+    <string name="objectives_4_objective">Zapnout uzavřenou smyčku, zvyšovat max IOB nad 0 a snižovat cílovou glykémii</string>
+    <string name="objectives_5_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
+    <string name="objectives_5_objective">Upravit bazály a koeficinty, když bude potřeba a povolit automatickou detekci citlivosti na inzulín</string>
+    <string name="objectives_6_objective">Povolit další fukce pro běžné používání jako AMA</string>
 </resources>

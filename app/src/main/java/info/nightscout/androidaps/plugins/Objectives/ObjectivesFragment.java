@@ -27,13 +27,11 @@ import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 
 public class ObjectivesFragment extends Fragment implements View.OnClickListener, PluginBase, ConstraintsInterface {
@@ -41,7 +39,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
-    CheckBox enableFake; // TODO: remove faking
+    CheckBox enableFake;
 
     boolean fragmentVisible = true;
 
@@ -133,11 +131,11 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         switch (objNum) {
             case 0:
                 return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS,
-                        getString(R.string.bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
-                                + " " + getString(R.string.pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS));
+                        getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
+                                + " " + getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS));
             case 1:
                 return new RequirementResult(manualEnacts >= manualEnactsNeeded,
-                        getString(R.string.manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
+                        getString(R.string.objectives_manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
             case 2:
                 return new RequirementResult(true, "");
             default:
@@ -151,43 +149,43 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     private void initializeData() {
         objectives = new ArrayList<>();
         objectives.add(new Objective(0,
-                "Setting up visualization and monitoring, and analyzing basals and ratios",
-                "Verify that BG is available in Nightscout, and pump insulin data is being uploaded",
+                MainApp.sResources.getString(R.string.objectives_0_objective),
+                MainApp.sResources.getString(R.string.objectives_0_gate),
                 new Date(0, 0, 0),
                 1, // 1 day
                 new Date(0, 0, 0)));
         objectives.add(new Objective(1,
-                "Starting on an open loop",
-                "Run in Open Loop mode for a few days, and manually enact lots of temp basals",
+                MainApp.sResources.getString(R.string.objectives_1_objective),
+                MainApp.sResources.getString(R.string.objectives_1_gate),
                 new Date(0, 0, 0),
                 7, // 7 days
                 new Date(0, 0, 0)));
         objectives.add(new Objective(2,
-                "Understanding your open loop, including its temp basal recommendations",
-                "Based on that experience, decide what max basal should be, and set it on the pump and preferences",
+                MainApp.sResources.getString(R.string.objectives_2_objective),
+                MainApp.sResources.getString(R.string.objectives_2_gate),
                 new Date(0, 0, 0),
                 0, // 0 days
                 new Date(0, 0, 0)));
         objectives.add(new Objective(3,
-                "Starting to close the loop with Low Glucose Suspend",
-                "Run in closed loop with max IOB = 0 for a few days without too many LGS events",
+                MainApp.sResources.getString(R.string.objectives_3_objective),
+                MainApp.sResources.getString(R.string.objectives_3_gate),
                 new Date(0, 0, 0),
                 5, // 5 days
                 new Date(0, 0, 0)));
         objectives.add(new Objective(4,
-                "Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets",
-                "Run for a few days, and at least one night with no low BG alarms, before dropping BG",
+                MainApp.sResources.getString(R.string.objectives_4_objective),
+                MainApp.sResources.getString(R.string.objectives_4_gate),
                 new Date(0, 0, 0),
                 1,
                 new Date(0, 0, 0)));
         objectives.add(new Objective(5,
-                "Adjust basals and ratios if needed, and then enable auto-sens",
-                "1 week successful daytime looping with regular carb entry",
+                MainApp.sResources.getString(R.string.objectives_5_objective),
+                MainApp.sResources.getString(R.string.objectives_5_gate),
                 new Date(0, 0, 0),
                 7,
                 new Date(0, 0, 0)));
         objectives.add(new Objective(6,
-                "Enabling additional features for daytime use, such as advanced meal assist",
+                MainApp.sResources.getString(R.string.objectives_6_objective),
                 "",
                 new Date(0, 0, 0),
                 1,
@@ -205,7 +203,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         editor.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
         editor.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
         editor.putInt("Objectives" + "manualEnacts", manualEnacts);
-        editor.commit();
+        editor.apply();
         if (Config.logPrefsChange)
             log.debug("Objectives stored");
     }
@@ -246,7 +244,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
             holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(o.objective);
             holder.gate.setText(o.gate);
-            holder.duration.setText(context.getString(R.string.minimalduration) + " " + o.durationInDays + " " + context.getString(R.string.days));
+            holder.duration.setText(context.getString(R.string.objectives_minimalduration) + " " + o.durationInDays + " " + context.getString(R.string.days));
             holder.progress.setText(requirementsMet.comment);
             holder.started.setText(o.started.toLocaleString());
             holder.accomplished.setText(o.accomplished.toLocaleString());
@@ -360,8 +358,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     }
 
     public static ObjectivesFragment newInstance() {
-        ObjectivesFragment fragment = new ObjectivesFragment();
-        return fragment;
+        return new ObjectivesFragment();
     }
 
     @Override
@@ -384,6 +381,21 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                 updateGUI();
             }
         });
+
+        // Add correct translations to array after app is initialized
+        objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
+        objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
+        objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
+        objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
+        objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
+        objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
+        objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
+        objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
+        objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
+        objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
+        objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
+        objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
+        objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
         updateGUI();
 
         return view;

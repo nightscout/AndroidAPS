@@ -75,7 +75,7 @@ public class MainApp  extends Application {
             pluginsList.add(TreatmentsFragment.newInstance());
             pluginsList.add(TempBasalsFragment.newInstance());
             pluginsList.add(SafetyFragment.newInstance());
-            if (Config.OBJECTIVESENABLED) pluginsList.add(ObjectivesFragment.newInstance());
+            if (Config.APS) pluginsList.add(ObjectivesFragment.newInstance());
             pluginsList.add(SourceXdripFragment.newInstance());
             pluginsList.add(SourceNSClientFragment.newInstance());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.newInstance());

@@ -10,7 +10,6 @@ public class Config {
     public static final boolean LOWSUSPEDENABLED = APS;
     public static final boolean OPENAPSMAENABLED = APS;
     public static final boolean LOOPENABLED = APS;
-    public static final boolean OBJECTIVESENABLED = APS && BuildConfig.OBJECTIVES;
 
     public static final boolean CAREPORTALENABLED = true;
     public static final boolean SMSCOMMUNICATORENABLED = true;

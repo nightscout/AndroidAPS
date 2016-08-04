@@ -91,8 +91,6 @@ public class DanaRFragment extends Fragment implements PluginBase, PumpInterface
     Button viewProfileButton;
     Button historyButton;
 
-    // TODO: password in prefs
-
     public static DanaRPump getDanaRPump() {
         return sDanaRPump;
     }
