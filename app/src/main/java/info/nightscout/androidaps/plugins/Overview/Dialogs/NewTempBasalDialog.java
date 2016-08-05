@@ -130,7 +130,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                            final PumpInterface pump = MainApp.getConfigBuilder();
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {

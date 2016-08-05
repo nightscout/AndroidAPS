@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 
 /**
@@ -18,7 +18,7 @@ public class MsgSettingBasal extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPump pump = DanaRFragment.getDanaRPump();
+        DanaRPump pump = DanaRPlugin.getDanaRPump();
         if (pump.pumpProfiles == null) pump.pumpProfiles = new double[4][];
         pump.pumpProfiles[pump.activeProfile] = new double[24];
         for (int index = 0; index < 24; index++) {
@@ -29,7 +29,7 @@ public class MsgSettingBasal extends MessageBase {
 
         if (Config.logDanaMessageDetail)
             for (int index = 0; index < 24; index++) {
-                log.debug("Basal " + String.format("%02d", index) + "h: " + DanaRFragment.getDanaRPump().pumpProfiles[DanaRFragment.getDanaRPump().activeProfile][index]);
+                log.debug("Basal " + String.format("%02d", index) + "h: " + DanaRPlugin.getDanaRPump().pumpProfiles[DanaRPlugin.getDanaRPump().activeProfile][index]);
             }
     }
 }

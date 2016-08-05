@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 
 /**
@@ -18,27 +18,27 @@ public class MsgSettingProfileRatios extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        if (DanaRFragment.getDanaRPump().units == DanaRPump.UNITS_MGDL) {
-            DanaRFragment.getDanaRPump().currentCIR = intFromBuff(bytes, 0, 2);
-            DanaRFragment.getDanaRPump().currentCF = intFromBuff(bytes, 2, 2);
-            DanaRFragment.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100d;
-            DanaRFragment.getDanaRPump().currentTarget = intFromBuff(bytes, 6, 2);
-            DanaRFragment.getDanaRPump().currentAIDR = intFromBuff(bytes, 8, 1);
+        if (DanaRPlugin.getDanaRPump().units == DanaRPump.UNITS_MGDL) {
+            DanaRPlugin.getDanaRPump().currentCIR = intFromBuff(bytes, 0, 2);
+            DanaRPlugin.getDanaRPump().currentCF = intFromBuff(bytes, 2, 2);
+            DanaRPlugin.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100d;
+            DanaRPlugin.getDanaRPump().currentTarget = intFromBuff(bytes, 6, 2);
+            DanaRPlugin.getDanaRPump().currentAIDR = intFromBuff(bytes, 8, 1);
         } else {
-            DanaRFragment.getDanaRPump().currentCIR = intFromBuff(bytes, 0, 2);
-            DanaRFragment.getDanaRPump().currentCF = intFromBuff(bytes, 2, 2) / 100d;
-            DanaRFragment.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100d;
-            DanaRFragment.getDanaRPump().currentTarget = intFromBuff(bytes, 6, 2) / 100d;
-            DanaRFragment.getDanaRPump().currentAIDR = intFromBuff(bytes, 8, 1);
+            DanaRPlugin.getDanaRPump().currentCIR = intFromBuff(bytes, 0, 2);
+            DanaRPlugin.getDanaRPump().currentCF = intFromBuff(bytes, 2, 2) / 100d;
+            DanaRPlugin.getDanaRPump().currentAI = intFromBuff(bytes, 4, 2) / 100d;
+            DanaRPlugin.getDanaRPump().currentTarget = intFromBuff(bytes, 6, 2) / 100d;
+            DanaRPlugin.getDanaRPump().currentAIDR = intFromBuff(bytes, 8, 1);
         }
 
         if (Config.logDanaMessageDetail) {
-            log.debug("Pump units (saved): " + (DanaRFragment.getDanaRPump().units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));
-            log.debug("Current pump CIR: " + DanaRFragment.getDanaRPump().currentCIR);
-            log.debug("Current pump CF: " + DanaRFragment.getDanaRPump().currentCF);
-            log.debug("Current pump AI: " + DanaRFragment.getDanaRPump().currentAI);
-            log.debug("Current pump target: " + DanaRFragment.getDanaRPump().currentTarget);
-            log.debug("Current pump AIDR: " + DanaRFragment.getDanaRPump().currentAIDR);
+            log.debug("Pump units (saved): " + (DanaRPlugin.getDanaRPump().units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));
+            log.debug("Current pump CIR: " + DanaRPlugin.getDanaRPump().currentCIR);
+            log.debug("Current pump CF: " + DanaRPlugin.getDanaRPump().currentCF);
+            log.debug("Current pump AI: " + DanaRPlugin.getDanaRPump().currentAI);
+            log.debug("Current pump target: " + DanaRPlugin.getDanaRPump().currentTarget);
+            log.debug("Current pump AIDR: " + DanaRPlugin.getDanaRPump().currentAIDR);
         }
     }
 }

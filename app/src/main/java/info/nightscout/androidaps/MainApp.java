@@ -9,11 +9,18 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
-import info.nightscout.androidaps.plugins.LowSuspend.LowSuspendFragment;
 import info.nightscout.androidaps.plugins.MM640g.MM640gFragment;
 import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerFragment;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
@@ -28,17 +35,9 @@ import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import io.fabric.sdk.android.Fabric;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 
 
-public class MainApp  extends Application {
+public class MainApp extends Application {
     private static Logger log = LoggerFactory.getLogger(MainApp.class);
 
     private static Bus sBus;
@@ -46,7 +45,7 @@ public class MainApp  extends Application {
     public static Resources sResources;
 
     private static DatabaseHelper sDatabaseHelper = null;
-    private static ConfigBuilderFragment sConfigBuilder = null;
+    private static ConfigBuilderPlugin sConfigBuilder = null;
 
     private static ArrayList<PluginBase> pluginsList = null;
 
@@ -60,26 +59,26 @@ public class MainApp  extends Application {
         sResources = getResources();
 
         if (pluginsList == null) {
-            pluginsList = new ArrayList<PluginBase>();
+            pluginsList = new ArrayList<>();
             // Register all tabs in app here
-            pluginsList.add(OverviewFragment.newInstance());
-            if (Config.DANAR) pluginsList.add(DanaRFragment.newInstance());
-            if (Config.MM640G) pluginsList.add(MM640gFragment.newInstance());
-            pluginsList.add(VirtualPumpFragment.newInstance());
-            if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.newInstance());
-            if (Config.LOOPENABLED) pluginsList.add(LoopFragment.newInstance());
-            if (Config.LOWSUSPEDENABLED) pluginsList.add(LowSuspendFragment.newInstance());
-            if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.newInstance());
-            pluginsList.add(NSProfileViewerFragment.newInstance());
-            pluginsList.add(SimpleProfileFragment.newInstance());
-            pluginsList.add(TreatmentsFragment.newInstance());
-            pluginsList.add(TempBasalsFragment.newInstance());
-            pluginsList.add(SafetyFragment.newInstance());
-            if (Config.APS) pluginsList.add(ObjectivesFragment.newInstance());
-            pluginsList.add(SourceXdripFragment.newInstance());
-            pluginsList.add(SourceNSClientFragment.newInstance());
-            if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.newInstance());
-            pluginsList.add(sConfigBuilder = ConfigBuilderFragment.newInstance());
+            pluginsList.add(OverviewFragment.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
+            if (Config.MM640G) pluginsList.add(MM640gFragment.getPlugin());
+            pluginsList.add(VirtualPumpFragment.getPlugin());
+            if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.getPlugin());
+            if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
+            if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
+            pluginsList.add(NSProfileViewerFragment.getPlugin());
+            pluginsList.add(SimpleProfileFragment.getPlugin());
+            pluginsList.add(TreatmentsFragment.getPlugin());
+            pluginsList.add(TempBasalsFragment.getPlugin());
+            pluginsList.add(SafetyFragment.getPlugin());
+            if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
+            pluginsList.add(SourceXdripFragment.getPlugin());
+            pluginsList.add(SourceNSClientFragment.getPlugin());
+            if (Config.SMSCOMMUNICATORENABLED)
+                pluginsList.add(SmsCommunicatorFragment.getPlugin());
+            pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
 
             MainApp.getConfigBuilder().initialize();
         }
@@ -88,6 +87,7 @@ public class MainApp  extends Application {
     public static Bus bus() {
         return sBus;
     }
+
     public static MainApp instance() {
         return sInstance;
     }
@@ -106,11 +106,7 @@ public class MainApp  extends Application {
         }
     }
 
-    public static void setConfigBuilder(ConfigBuilderFragment cb) {
-        sConfigBuilder = cb;
-    }
-
-    public static ConfigBuilderFragment getConfigBuilder() {
+    public static ConfigBuilderPlugin getConfigBuilder() {
         return sConfigBuilder;
     }
 
@@ -119,12 +115,10 @@ public class MainApp  extends Application {
     }
 
     public static ArrayList<PluginBase> getSpecificPluginsList(int type) {
-        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
+        ArrayList<PluginBase> newList = new ArrayList<>();
 
         if (pluginsList != null) {
-            Iterator<PluginBase> it = pluginsList.iterator();
-            while (it.hasNext()) {
-                PluginBase p = it.next();
+            for (PluginBase p : pluginsList) {
                 if (p.getType() == type)
                     newList.add(p);
             }
@@ -135,13 +129,11 @@ public class MainApp  extends Application {
     }
 
     public static ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
-        ArrayList<PluginBase> newList = new ArrayList<PluginBase>();
+        ArrayList<PluginBase> newList = new ArrayList<>();
 
         if (pluginsList != null) {
-            Iterator<PluginBase> it = pluginsList.iterator();
-            while (it.hasNext()) {
-                PluginBase p = it.next();
-                if (p.getClass() != ConfigBuilderFragment.class && interfaceClass.isAssignableFrom(p.getClass()))
+            for (PluginBase p : pluginsList) {
+                if (p.getClass() != ConfigBuilderPlugin.class && interfaceClass.isAssignableFrom(p.getClass()))
                     newList.add(p);
             }
         } else {
@@ -153,9 +145,7 @@ public class MainApp  extends Application {
     @Nullable
     public static PluginBase getSpecificPlugin(Class pluginClass) {
         if (pluginsList != null) {
-            Iterator<PluginBase> it = pluginsList.iterator();
-            while (it.hasNext()) {
-                PluginBase p = it.next();
+            for (PluginBase p : pluginsList) {
                 if (p.getClass() == pluginClass)
                     return p;
             }

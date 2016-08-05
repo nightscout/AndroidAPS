@@ -2,17 +2,8 @@ package info.nightscout.androidaps.plugins.Loop;
 
 
 import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.TaskStackBuilder;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,24 +15,20 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Date;
-
-import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventRefreshOpenLoop;
-import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
+import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 
-public class LoopFragment extends Fragment implements View.OnClickListener, PluginBase {
+public class LoopFragment extends Fragment implements View.OnClickListener, FragmentBase {
     private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
+
+    private static LoopPlugin loopPlugin = new LoopPlugin();
+
+    public static LoopPlugin getPlugin() {
+        return loopPlugin;
+    }
 
     Button runNowButton;
     TextView lastRunView;
@@ -51,72 +38,6 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     TextView constraintsProcessedView;
     TextView setByPumpView;
 
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
-
-
-    public class LastRun {
-        public APSResult request = null;
-        public APSResult constraintsProcessed = null;
-        public PumpEnactResult setByPump = null;
-        public String source = null;
-        public Date lastAPSRun = null;
-        public Date lastEnact = null;
-        public Date lastOpenModeAccept = null;
-     }
-
-    static public LastRun lastRun = null;
-
-    private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
-
-    @Override
-    public int getType() {
-        return PluginBase.LOOP;
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.loop);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
-    }
-
-    public LoopFragment() {
-        super();
-        mHandlerThread = new HandlerThread(LoopFragment.class.getSimpleName());
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
-        registerBus();
-    }
-
-    public static LoopFragment newInstance() {
-        LoopFragment fragment = new LoopFragment();
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,12 +57,15 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
         return view;
     }
 
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         MainApp.bus().register(this);
     }
 
@@ -149,145 +73,30 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loop_run:
-                invoke(true);
+                loopPlugin.invoke(true);
                 break;
         }
 
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
-        invoke(true);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        invoke(true);
-    }
-
-    public void invoke(boolean allowNotification) {
-        ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
-        if (!constraintsInterface.isLoopEnabled()) {
-            clearGUI();
-            final Activity activity = getActivity();
-            if (activity != null)
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        lastRunView.setText(activity.getString(R.string.loopdisabled));
-                    }
-                });
-            return;
-        }
-        final ConfigBuilderFragment configBuilder = MainApp.getConfigBuilder();
-        APSResult result = null;
-
-        if (configBuilder == null || !isEnabled(PluginBase.GENERAL))
-            return;
-
-        APSInterface usedAPS = null;
-        ArrayList<PluginBase> apsPlugins = MainApp.getSpecificPluginsList(PluginBase.APS);
-        for (PluginBase p : apsPlugins) {
-            APSInterface aps = (APSInterface) p;
-            if (!p.isEnabled(PluginBase.APS)) continue;
-            aps.invoke();
-            result = aps.getLastAPSResult();
-            if (result == null) continue;
-            if (result.changeRequested) {
-                // APS plugin is requesting change, stop processing
-                usedAPS = aps;
-                break;
-            }
-        }
-
-        // Check if we have any result
-        if (result == null) {
-            clearGUI();
-            final Activity activity = getActivity();
-            if (activity != null)
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        lastRunView.setText(activity.getString(R.string.noapsselected));
-                    }
-                });
-            return;
-        }
-
-        // check rate for constrais
-        final APSResult resultAfterConstraints = result.clone();
-        resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
-
-        if (lastRun == null) lastRun = new LastRun();
-        lastRun.request = result;
-        lastRun.constraintsProcessed = resultAfterConstraints;
-        lastRun.lastAPSRun = new Date();
-        lastRun.source = usedAPS != null ? ((PluginBase) usedAPS).getName() : "";
-        lastRun.setByPump = null;
-
-        if (constraintsInterface.isClosedModeEnabled()) {
-            if (result.changeRequested) {
-                final PumpEnactResult waiting = new PumpEnactResult();
-                final PumpEnactResult previousResult = lastRun.setByPump;
-                waiting.queued = true;
-                lastRun.setByPump = waiting;
-                updateGUI();
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        final PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
-                        if (applyResult.enacted) {
-                            lastRun.setByPump = applyResult;
-                            lastRun.lastEnact = lastRun.lastAPSRun;
-                        } else {
-                            lastRun.setByPump = previousResult;
-                        }
-                        updateGUI();
-                    }
-                });
-            } else {
-                lastRun.setByPump = null;
-                lastRun.source = null;
-            }
-        } else {
-            if (result.changeRequested && allowNotification) {
-                NotificationCompat.Builder builder =
-                        new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
-                builder.setSmallIcon(R.drawable.notification_icon)
-                        .setContentTitle(MainApp.sResources.getString(R.string.openloop_newsuggestion))
-                        .setContentText(resultAfterConstraints.toString())
-                        .setAutoCancel(true)
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setCategory(Notification.CATEGORY_ALARM)
-                        .setVisibility(Notification.VISIBILITY_PUBLIC);
-
-                // Creates an explicit intent for an Activity in your app
-                Intent resultIntent = new Intent(MainApp.instance().getApplicationContext(), MainActivity.class);
-
-                // The stack builder object will contain an artificial back stack for the
-                // started Activity.
-                // This ensures that navigating backward from the Activity leads out of
-                // your application to the Home screen.
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(MainApp.instance().getApplicationContext());
-                stackBuilder.addParentStack(MainActivity.class);
-                // Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.setContentIntent(resultPendingIntent);
-                builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-                NotificationManager mNotificationManager =
-                        (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
-                // mId allows you to update the notification later on.
-                mNotificationManager.notify(Constants.notificationID, builder.build());
-                MainApp.bus().post(new EventRefreshOpenLoop());
-            }
-        }
-
+    public void onStatusEvent(final EventLoopUpdateGui ev) {
         updateGUI();
-        MainApp.getConfigBuilder().uploadDeviceStatus();
     }
+
+    @Subscribe
+    public void onStatusEvent(final EventLoopSetLastRunGui ev) {
+        clearGUI();
+        final Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    lastRunView.setText(ev.text);
+                }
+            });
+    }
+
 
     void updateGUI() {
         Activity activity = getActivity();
@@ -295,13 +104,13 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Plug
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (lastRun != null) {
-                        requestView.setText(lastRun.request != null ? lastRun.request.toSpanned() : "");
-                        constraintsProcessedView.setText(lastRun.constraintsProcessed != null ? lastRun.constraintsProcessed.toSpanned() : "");
-                        setByPumpView.setText(lastRun.setByPump != null ? lastRun.setByPump.toSpanned() : "");
-                        sourceView.setText(lastRun.source != null ? lastRun.source : "");
-                        lastRunView.setText(lastRun.lastAPSRun != null && lastRun.lastAPSRun.getTime() != 0 ? lastRun.lastAPSRun.toLocaleString() : "");
-                        lastEnactView.setText(lastRun.lastEnact != null && lastRun.lastEnact.getTime() != 0 ? lastRun.lastEnact.toLocaleString() : "");
+                    if (loopPlugin.lastRun != null) {
+                        requestView.setText(loopPlugin.lastRun.request != null ? loopPlugin.lastRun.request.toSpanned() : "");
+                        constraintsProcessedView.setText(loopPlugin.lastRun.constraintsProcessed != null ? loopPlugin.lastRun.constraintsProcessed.toSpanned() : "");
+                        setByPumpView.setText(loopPlugin.lastRun.setByPump != null ? loopPlugin.lastRun.setByPump.toSpanned() : "");
+                        sourceView.setText(loopPlugin.lastRun.source != null ? loopPlugin.lastRun.source : "");
+                        lastRunView.setText(loopPlugin.lastRun.lastAPSRun != null && loopPlugin.lastRun.lastAPSRun.getTime() != 0 ? loopPlugin.lastRun.lastAPSRun.toLocaleString() : "");
+                        lastEnactView.setText(loopPlugin.lastRun.lastEnact != null && loopPlugin.lastRun.lastEnact.getTime() != 0 ? loopPlugin.lastRun.lastEnact.toLocaleString() : "");
                     }
                 }
             });

@@ -19,6 +19,7 @@ import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -49,7 +50,7 @@ public class ProfileViewDialog extends DialogFragment {
         mHandlerThread.start();
 
         mHandler = new Handler(mHandlerThread.getLooper());
-        profile = ((DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class)).getProfile();
+        profile = ((DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class)).getProfile();
     }
 
     @Override
@@ -73,8 +74,8 @@ public class ProfileViewDialog extends DialogFragment {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        DanaRFragment.getDanaRPump().lastSettingsRead = new Date(0);
-                        DanaRFragment.doConnect("ProfileViewDialog");
+                        DanaRPlugin.getDanaRPump().lastSettingsRead = new Date(0);
+                        DanaRPlugin.doConnect("ProfileViewDialog");
                     }
                 });
                 dismiss();

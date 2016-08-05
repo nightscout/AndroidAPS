@@ -1,0 +1,264 @@
+package info.nightscout.androidaps.plugins.Objectives;
+
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+
+/**
+ * Created by mike on 05.08.2016.
+ */
+public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
+    private static Logger log = LoggerFactory.getLogger(ObjectivesPlugin.class);
+
+    public List<Objective> objectives;
+
+    boolean fragmentVisible = true;
+
+    public ObjectivesPlugin() {
+        initializeData();
+        loadProgress();
+        MainApp.bus().register(this);
+    }
+
+    @Override
+    public String getFragmentClass() {
+        return ObjectivesFragment.class.getName();
+    }
+
+    @Override
+    public int getType() {
+        return PluginBase.CONSTRAINTS;
+    }
+
+    @Override
+    public String getName() {
+        return MainApp.instance().getString(R.string.objectives);
+    }
+
+    @Override
+    public boolean isEnabled(int type) {
+        return true;
+    }
+
+    @Override
+    public boolean isVisibleInTabs(int type) {
+        LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+        return fragmentVisible && loopPlugin != null && loopPlugin.isVisibleInTabs(type);
+    }
+
+    @Override
+    public boolean canBeHidden(int type) {
+        return true;
+    }
+
+    @Override
+    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
+    }
+
+    @Override
+    public void setFragmentVisible(int type, boolean fragmentVisible) {
+        this.fragmentVisible = fragmentVisible;
+    }
+
+    public class Objective {
+        Integer num;
+        String objective;
+        String gate;
+        Date started;
+        Integer durationInDays;
+        Date accomplished;
+
+        Objective(Integer num, String objective, String gate, Date started, Integer durationInDays, Date accomplished) {
+            this.num = num;
+            this.objective = objective;
+            this.gate = gate;
+            this.started = started;
+            this.durationInDays = durationInDays;
+            this.accomplished = accomplished;
+        }
+    }
+
+    // Objective 0
+    public boolean bgIsAvailableInNS = false;
+    public boolean pumpStatusIsAvailableInNS = false;
+    // Objective 1
+    public Integer manualEnacts = 0;
+    public final Integer manualEnactsNeeded = 20;
+
+    public class RequirementResult {
+        boolean done = false;
+        String comment = "";
+
+        public RequirementResult(boolean done, String comment) {
+            this.done = done;
+            this.comment = comment;
+        }
+    }
+
+    private String yesOrNo(boolean yes) {
+        if (yes) return "☺";
+        else return "---";
+    }
+
+    public RequirementResult requirementsMet(Integer objNum) {
+        switch (objNum) {
+            case 0:
+                return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS,
+                        MainApp.sResources.getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
+                                + " " + MainApp.sResources.getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS));
+            case 1:
+                return new RequirementResult(manualEnacts >= manualEnactsNeeded,
+                        MainApp.sResources.getString(R.string.objectives_manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
+            case 2:
+                return new RequirementResult(true, "");
+            default:
+                return new RequirementResult(false, "");
+        }
+    }
+
+
+    private void initializeData() {
+        objectives = new ArrayList<>();
+        objectives.add(new Objective(0,
+                MainApp.sResources.getString(R.string.objectives_0_objective),
+                MainApp.sResources.getString(R.string.objectives_0_gate),
+                new Date(0, 0, 0),
+                1, // 1 day
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(1,
+                MainApp.sResources.getString(R.string.objectives_1_objective),
+                MainApp.sResources.getString(R.string.objectives_1_gate),
+                new Date(0, 0, 0),
+                7, // 7 days
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(2,
+                MainApp.sResources.getString(R.string.objectives_2_objective),
+                MainApp.sResources.getString(R.string.objectives_2_gate),
+                new Date(0, 0, 0),
+                0, // 0 days
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(3,
+                MainApp.sResources.getString(R.string.objectives_3_objective),
+                MainApp.sResources.getString(R.string.objectives_3_gate),
+                new Date(0, 0, 0),
+                5, // 5 days
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(4,
+                MainApp.sResources.getString(R.string.objectives_4_objective),
+                MainApp.sResources.getString(R.string.objectives_4_gate),
+                new Date(0, 0, 0),
+                1,
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(5,
+                MainApp.sResources.getString(R.string.objectives_5_objective),
+                MainApp.sResources.getString(R.string.objectives_5_gate),
+                new Date(0, 0, 0),
+                7,
+                new Date(0, 0, 0)));
+        objectives.add(new Objective(6,
+                MainApp.sResources.getString(R.string.objectives_6_objective),
+                "",
+                new Date(0, 0, 0),
+                1,
+                new Date(0, 0, 0)));
+    }
+
+    public void saveProgress() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        SharedPreferences.Editor editor = settings.edit();
+        for (int num = 0; num < objectives.size(); num++) {
+            Objective o = objectives.get(num);
+            editor.putLong("Objectives" + num + "started", o.started.getTime());
+            editor.putLong("Objectives" + num + "accomplished", o.accomplished.getTime());
+        }
+        editor.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
+        editor.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
+        editor.putInt("Objectives" + "manualEnacts", manualEnacts);
+        editor.apply();
+        if (Config.logPrefsChange)
+            log.debug("Objectives stored");
+    }
+
+    void loadProgress() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        for (int num = 0; num < objectives.size(); num++) {
+            Objective o = objectives.get(num);
+            o.started = new Date(settings.getLong("Objectives" + num + "started", 0));
+            o.accomplished = new Date(settings.getLong("Objectives" + num + "accomplished", 0));
+        }
+        bgIsAvailableInNS = settings.getBoolean("Objectives" + "bgIsAvailableInNS", false);
+        pumpStatusIsAvailableInNS = settings.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
+        manualEnacts = settings.getInt("Objectives" + "manualEnacts", 0);
+        if (Config.logPrefsChange)
+            log.debug("Objectives loaded");
+    }
+
+    /**
+     * Constraints interface
+     **/
+    @Override
+    public boolean isLoopEnabled() {
+        return objectives.get(1).started.getTime() > 0;
+    }
+
+    @Override
+    public boolean isClosedModeEnabled() {
+        return objectives.get(3).started.getTime() > 0;
+    }
+
+    @Override
+    public boolean isAutosensModeEnabled() {
+        return objectives.get(5).started.getTime() > 0;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        return objectives.get(6).started.getTime() > 0;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        if (objectives.get(4).started.getTime() > 0)
+            return maxIob;
+        else {
+            if (Config.logConstraintsChanges)
+                log.debug("Limiting maxIOB " + maxIob + " to " + 0 + "U");
+            return 0d;
+        }
+    }
+
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
+        return absoluteRate;
+    }
+
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        return percentRate;
+    }
+
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        return insulin;
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        return carbs;
+    }
+
+
+}

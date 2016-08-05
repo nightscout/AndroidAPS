@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 
 
 /**
@@ -18,14 +18,14 @@ public class MsgSettingMaxValues extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRFragment.getDanaRPump().maxBolus = intFromBuff(bytes, 0, 2) / 100d;
-        DanaRFragment.getDanaRPump().maxBasal = intFromBuff(bytes, 2, 2) / 100d;
-        DanaRFragment.getDanaRPump().maxDailyTotalUnits = intFromBuff(bytes, 4, 2) / 100;
+        DanaRPlugin.getDanaRPump().maxBolus = intFromBuff(bytes, 0, 2) / 100d;
+        DanaRPlugin.getDanaRPump().maxBasal = intFromBuff(bytes, 2, 2) / 100d;
+        DanaRPlugin.getDanaRPump().maxDailyTotalUnits = intFromBuff(bytes, 4, 2) / 100;
 
         if (Config.logDanaMessageDetail) {
-            log.debug("Max bolus: " + DanaRFragment.getDanaRPump().maxBolus);
-            log.debug("Max basal: " + DanaRFragment.getDanaRPump().maxBasal);
-            log.debug("Total daily max units: " + DanaRFragment.getDanaRPump().maxDailyTotalUnits);
+            log.debug("Max bolus: " + DanaRPlugin.getDanaRPump().maxBolus);
+            log.debug("Max basal: " + DanaRPlugin.getDanaRPump().maxBasal);
+            log.debug("Total daily max units: " + DanaRPlugin.getDanaRPump().maxDailyTotalUnits);
         }
     }
 

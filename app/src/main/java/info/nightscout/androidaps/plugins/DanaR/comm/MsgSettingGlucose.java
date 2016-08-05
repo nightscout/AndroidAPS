@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 
 /**
@@ -18,12 +18,12 @@ public class MsgSettingGlucose extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRFragment.getDanaRPump().units = intFromBuff(bytes, 0, 1);
-        DanaRFragment.getDanaRPump().easyBasalMode = intFromBuff(bytes, 1, 1);
+        DanaRPlugin.getDanaRPump().units = intFromBuff(bytes, 0, 1);
+        DanaRPlugin.getDanaRPump().easyBasalMode = intFromBuff(bytes, 1, 1);
 
         if (Config.logDanaMessageDetail) {
-            log.debug("Pump units: " + (DanaRFragment.getDanaRPump().units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));
-            log.debug("Easy basal mode: " + DanaRFragment.getDanaRPump().easyBasalMode);
+            log.debug("Pump units: " + (DanaRPlugin.getDanaRPump().units == DanaRPump.UNITS_MGDL ? "MGDL" : "MMOL"));
+            log.debug("Easy basal mode: " + DanaRPlugin.getDanaRPump().easyBasalMode);
         }
     }
 }

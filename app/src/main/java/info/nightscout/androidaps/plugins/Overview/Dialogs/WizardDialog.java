@@ -39,6 +39,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -192,7 +193,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                final ConfigBuilderFragment pump = MainApp.getConfigBuilder();
+                                final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
@@ -227,7 +228,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     }
 
     private void initDialog() {
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
 
         if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));

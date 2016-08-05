@@ -68,11 +68,6 @@
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
     <string name="openapsma_minbg_label">Low target</string>
-    <string name="lowsuspend_lowmessage">LOW: Temp basal 0%</string>
-    <string name="lowsuspend_lowprojectedmessage">LOW PROJECTED: Temp basal 0%</string>
-    <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
-    <string name="lowsuspend_low">Low</string>
-    <string name="lowsuspend_lowprojected">Low projected</string>
     <string name="rate">Rate</string>
     <string name="duration">Duration</string>
     <string name="reason">Reason</string>
@@ -82,7 +77,6 @@
     <string name="minago">m ago</string>
 
     <string name="configbuilder">Config Builder</string>
-    <string name="lowsuspend">Low Suspend</string>
     <string name="objectives">Objectives</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="overview">Overview</string>
@@ -115,7 +109,6 @@
     <string name="cancel">Cancel</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
     <string name="safety">Safety</string>
-    <string name="lowsuspend_low_title">Low BG threshold</string>
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>

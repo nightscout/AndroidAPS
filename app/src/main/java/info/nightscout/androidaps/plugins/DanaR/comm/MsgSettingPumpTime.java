@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 
 public class MsgSettingPumpTime extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSettingPumpTime.class);
@@ -29,6 +29,6 @@ public class MsgSettingPumpTime extends MessageBase {
         if (Config.logDanaMessageDetail)
             log.debug("Pump time: " + time);
 
-        DanaRFragment.getDanaRPump().pumpTime = time;
+        DanaRPlugin.getDanaRPump().pumpTime = time;
     }
 }

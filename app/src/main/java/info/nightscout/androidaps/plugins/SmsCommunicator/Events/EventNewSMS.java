@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.SmsCommunicator.Events;
+package info.nightscout.androidaps.plugins.SmsCommunicator.events;
 
 import android.os.Bundle;
 

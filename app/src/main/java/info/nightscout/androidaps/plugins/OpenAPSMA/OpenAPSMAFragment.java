@@ -1,11 +1,7 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,35 +9,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.squareup.otto.Subscribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.util.Date;
-
-import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.interfaces.APSInterface;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
-import info.nightscout.client.data.NSProfile;
-import info.nightscout.utils.DateUtil;
+import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateGui;
+import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateResultGui;
 import info.nightscout.utils.JSONFormatter;
-import info.nightscout.utils.Round;
-import info.nightscout.utils.SafeParse;
 
-public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, PluginBase, APSInterface {
+public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, FragmentBase {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAFragment.class);
+
+    private static OpenAPSMAPlugin openAPSMAPlugin = new OpenAPSMAPlugin();
+
+    public static OpenAPSMAPlugin getPlugin() {
+        return openAPSMAPlugin;
+    }
 
     Button run;
     TextView lastRunView;
@@ -52,107 +39,6 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
     TextView mealDataView;
     TextView resultView;
     TextView requestView;
-
-    // last values
-    class LastRun implements Parcelable {
-        DetermineBasalAdapterJS lastDetermineBasalAdapterJS = null;
-        Date lastAPSRun = null;
-        DetermineBasalResult lastAPSResult = null;
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeParcelable(lastDetermineBasalAdapterJS, 0);
-            dest.writeParcelable(lastAPSResult, 0);
-            dest.writeLong(lastAPSRun.getTime());
-            dest.writeParcelable(lastAPSResult, 0);
-        }
-
-        public final Parcelable.Creator<LastRun> CREATOR = new Parcelable.Creator<LastRun>() {
-            public LastRun createFromParcel(Parcel in) {
-                return new LastRun(in);
-            }
-
-            public LastRun[] newArray(int size) {
-                return new LastRun[size];
-            }
-        };
-
-        private LastRun(Parcel in) {
-            lastDetermineBasalAdapterJS = in.readParcelable(DetermineBasalAdapterJS.class.getClassLoader());
-            lastAPSResult = in.readParcelable(DetermineBasalResult.class.getClassLoader());
-            lastAPSRun = new Date(in.readLong());
-            lastAPSResult = in.readParcelable(APSResult.class.getClassLoader());
-        }
-
-        public LastRun() {
-        }
-    }
-
-    LastRun lastRun = null;
-
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = true;
-
-    public OpenAPSMAFragment() {
-        super();
-        registerBus();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.openapsma);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.APS;
-    }
-
-    @Override
-    public APSResult getLastAPSResult() {
-        if (lastRun == null) return null;
-        return lastRun.lastAPSResult;
-    }
-
-    @Override
-    public Date getLastAPSRun() {
-        return lastRun.lastAPSRun;
-    }
-
-    public static OpenAPSMAFragment newInstance() {
-        OpenAPSMAFragment fragment = new OpenAPSMAFragment();
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -170,133 +56,40 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
         resultView = (TextView) view.findViewById(R.id.openapsma_result);
         requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
-//        if (savedInstanceState != null) {
-//            lastRun = savedInstanceState.getParcelable("lastrun");
-//        }
         updateGUI();
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //outState.putParcelable("lastrun", lastRun);
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                invoke();
+                openAPSMAPlugin.invoke();
                 break;
         }
 
     }
 
     @Override
-    public void invoke() {
-        DetermineBasalAdapterJS determineBasalAdapterJS = null;
-        try {
-            determineBasalAdapterJS = new DetermineBasalAdapterJS(new ScriptReader(MainApp.instance().getBaseContext()));
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            return;
-        }
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
 
-        DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
+    }
 
-        if (!isEnabled(PluginBase.APS)) {
-            updateResultGUI(MainApp.instance().getString(R.string.openapsma_disabled));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_disabled));
-            return;
-        }
-
-        if (glucoseStatus == null) {
-            updateResultGUI(MainApp.instance().getString(R.string.openapsma_noglucosedata));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
-            return;
-        }
-
-        if (profile == null) {
-            updateResultGUI(MainApp.instance().getString(R.string.openapsma_noprofile));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
-            return;
-        }
-
-        if (pump == null) {
-            updateResultGUI(getString(R.string.openapsma_nopump));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
-            return;
-        }
-
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        String units = profile.getUnits();
-
-        String maxBgDefault = "180";
-        String minBgDefault = "100";
-        if (!units.equals(Constants.MGDL)) {
-            maxBgDefault = "10";
-            minBgDefault = "5";
-        }
-
-        Date now = new Date();
-
-        double maxIob = SafeParse.stringToDouble(SP.getString("openapsma_max_iob", "1.5"));
-        double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
-        double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_min_bg", minBgDefault)), units);
-        double maxBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_max_bg", maxBgDefault)), units);
-        minBg = Round.roundTo(minBg, 0.1d);
-        maxBg = Round.roundTo(maxBg, 0.1d);
-
-        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOB();
-        tempBasals.updateTotalIOB();
-        IobTotal bolusIob = treatments.getLastCalculation();
-        IobTotal basalIob = tempBasals.getLastCalculation();
-
-        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
-
-        TreatmentsFragment.MealData mealData = treatments.getMealData();
-
-        maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
-
-        determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, pump, iobTotal, glucoseStatus, mealData);
-
-
-        DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
-        determineBasalResult.iob = iobTotal;
-
-        determineBasalAdapterJS.release();
-
-        try {
-            determineBasalResult.json.put("timestamp", DateUtil.toISOString(now));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-        lastRun = new LastRun();
-        lastRun.lastDetermineBasalAdapterJS = determineBasalAdapterJS;
-        lastRun.lastAPSResult = determineBasalResult;
-        lastRun.lastAPSRun = now;
+    @Subscribe
+    public void onStatusEvent(final EventOpenAPSMAUpdateGui ev) {
         updateGUI();
+    }
 
-        //deviceStatus.suggested = determineBasalResult.json;
+    @Subscribe
+    public void onStatusEvent(final EventOpenAPSMAUpdateResultGui ev) {
+        updateResultGUI(ev.text);
     }
 
     void updateGUI() {
@@ -305,15 +98,15 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (lastRun != null) {
-                        glucoseStatusView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getGlucoseStatusParam()));
-                        currentTempView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getCurrentTempParam()));
-                        iobDataView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getIobDataParam()));
-                        profileView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getProfileParam()));
-                        mealDataView.setText(JSONFormatter.format(lastRun.lastDetermineBasalAdapterJS.getMealDataParam()));
-                        resultView.setText(JSONFormatter.format(lastRun.lastAPSResult.json));
-                        requestView.setText(lastRun.lastAPSResult.toSpanned());
-                        lastRunView.setText(lastRun.lastAPSRun.toLocaleString());
+                    if (openAPSMAPlugin.lastAPSResult != null) {
+                        glucoseStatusView.setText(JSONFormatter.format(openAPSMAPlugin.lastDetermineBasalAdapterJS.getGlucoseStatusParam()));
+                        currentTempView.setText(JSONFormatter.format(openAPSMAPlugin.lastDetermineBasalAdapterJS.getCurrentTempParam()));
+                        iobDataView.setText(JSONFormatter.format(openAPSMAPlugin.lastDetermineBasalAdapterJS.getIobDataParam()));
+                        profileView.setText(JSONFormatter.format(openAPSMAPlugin.lastDetermineBasalAdapterJS.getProfileParam()));
+                        mealDataView.setText(JSONFormatter.format(openAPSMAPlugin.lastDetermineBasalAdapterJS.getMealDataParam()));
+                        resultView.setText(JSONFormatter.format(openAPSMAPlugin.lastAPSResult.json));
+                        requestView.setText(openAPSMAPlugin.lastAPSResult.toSpanned());
+                        lastRunView.setText(openAPSMAPlugin.lastAPSRun.toLocaleString());
                     }
                 }
             });

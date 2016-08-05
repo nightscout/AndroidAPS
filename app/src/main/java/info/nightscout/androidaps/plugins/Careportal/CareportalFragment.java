@@ -10,10 +10,17 @@ import android.view.ViewGroup;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 
-public class CareportalFragment extends Fragment implements PluginBase, View.OnClickListener {
+public class CareportalFragment extends Fragment implements FragmentBase, View.OnClickListener {
+
+    static CareportalPlugin careportalPlugin = new CareportalPlugin();
+
+    static public CareportalPlugin getPlugin() {
+        return careportalPlugin;
+    }
 
     public class OptionsToShow {
         public int eventType;
@@ -72,58 +79,6 @@ public class CareportalFragment extends Fragment implements PluginBase, View.OnC
     final OptionsToShow tempbasalend = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend, true, false, false, false, false, false, false, false, false);
     final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
     final OptionsToShow openapsoffline = new OptionsToShow(R.id.careportal_openapsoffline, R.string.careportal_openapsoffline, false, false, false, false, true, false, false, false, false);
-
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
-
-    public CareportalFragment() {
-        // Required empty public constructor
-    }
-
-    public static CareportalFragment newInstance() {
-        CareportalFragment fragment = new CareportalFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.GENERAL;
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.sResources.getString(R.string.careportal);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

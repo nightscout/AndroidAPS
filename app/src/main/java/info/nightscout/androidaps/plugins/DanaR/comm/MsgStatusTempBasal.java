@@ -9,11 +9,10 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 
 public class MsgStatusTempBasal extends MessageBase {
@@ -31,11 +30,11 @@ public class MsgStatusTempBasal extends MessageBase {
         int tempBasalRemainingMin = (tempBasalTotalSec - tempBasalRunningSeconds) / 60;
         Date tempBasalStart = isTempBasalInProgress ? getDateFromTempBasalSecAgo(tempBasalRunningSeconds) : new Date(0);
 
-        DanaRFragment.getDanaRPump().isTempBasalInProgress = isTempBasalInProgress;
-        DanaRFragment.getDanaRPump().tempBasalPercent = tempBasalPercent;
-        DanaRFragment.getDanaRPump().tempBasalRemainingMin = tempBasalRemainingMin;
-        DanaRFragment.getDanaRPump().tempBasalTotalSec = tempBasalTotalSec;
-        DanaRFragment.getDanaRPump().tempBasalStart = tempBasalStart;
+        DanaRPlugin.getDanaRPump().isTempBasalInProgress = isTempBasalInProgress;
+        DanaRPlugin.getDanaRPump().tempBasalPercent = tempBasalPercent;
+        DanaRPlugin.getDanaRPump().tempBasalRemainingMin = tempBasalRemainingMin;
+        DanaRPlugin.getDanaRPump().tempBasalTotalSec = tempBasalTotalSec;
+        DanaRPlugin.getDanaRPump().tempBasalStart = tempBasalStart;
 
         updateTempBasalInDB();
 
@@ -54,14 +53,14 @@ public class MsgStatusTempBasal extends MessageBase {
     }
 
     public static void updateTempBasalInDB() {
-        DanaRFragment danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
-        DanaRPump danaRPump = danaRFragment.getDanaRPump();
+        DanaRPlugin DanaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+        DanaRPump danaRPump = DanaRPlugin.getDanaRPump();
         Date now = new Date();
 
         try {
 
-            if (danaRFragment.isRealTempBasalInProgress()) {
-                TempBasal tempBasal = danaRFragment.getRealTempBasal();
+            if (DanaRPlugin.isRealTempBasalInProgress()) {
+                TempBasal tempBasal = DanaRPlugin.getRealTempBasal();
                 if (danaRPump.isTempBasalInProgress) {
                     if (tempBasal.percent != danaRPump.tempBasalPercent) {
                         // Close current temp basal

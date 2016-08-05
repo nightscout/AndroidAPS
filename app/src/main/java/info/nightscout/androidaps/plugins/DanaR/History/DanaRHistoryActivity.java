@@ -40,7 +40,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
@@ -68,7 +68,7 @@ public class DanaRHistoryActivity extends Activity {
     LinearLayoutManager llm;
 
     static byte showingType = RecordTypes.RECORD_TYPE_ALARM;
-    List<DanaRHistoryRecord> historyList = new ArrayList<DanaRHistoryRecord>();
+    List<DanaRHistoryRecord> historyList = new ArrayList<>();
 
     public static class TypeList {
         public byte type;
@@ -169,7 +169,7 @@ public class DanaRHistoryActivity extends Activity {
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, getString(R.string.danar_history_glucose)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, getString(R.string.danar_history_refill)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, getString(R.string.danar_history_syspend)));
-        ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<TypeList>(this,
+        ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, typeList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         historyTypeSpinner.setAdapter(spinnerAdapter);
@@ -215,7 +215,6 @@ public class DanaRHistoryActivity extends Activity {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        TypeList selected = (TypeList) historyTypeSpinner.getSelectedItem();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -252,12 +251,10 @@ public class DanaRHistoryActivity extends Activity {
                 clearCardView();
             }
         });
-        ConfigBuilderFragment configBuilderFragment = MainApp.getConfigBuilder();
-        profile = configBuilderFragment.getActiveProfile().getProfile();
+        profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
         if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
             finish();
-            return;
         }
     }
 
@@ -272,8 +269,7 @@ public class DanaRHistoryActivity extends Activity {
         @Override
         public HistoryViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.danar_history_item, viewGroup, false);
-            HistoryViewHolder tempBasalsViewHolder = new HistoryViewHolder(v);
-            return tempBasalsViewHolder;
+            return new HistoryViewHolder(v);
         }
 
         @Override
@@ -398,7 +394,7 @@ public class DanaRHistoryActivity extends Activity {
             historyList = dao.query(preparedQuery);
         } catch (SQLException e) {
             e.printStackTrace();
-            historyList = new ArrayList<DanaRHistoryRecord>();
+            historyList = new ArrayList<>();
         }
         runOnUiThread(new Runnable() {
             @Override
@@ -409,7 +405,7 @@ public class DanaRHistoryActivity extends Activity {
     }
 
     private void clearCardView() {
-        historyList = new ArrayList<DanaRHistoryRecord>();
+        historyList = new ArrayList<>();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -436,10 +432,10 @@ public class DanaRHistoryActivity extends Activity {
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (c.sStatus == c.CONNECTING) {
+                        if (c.sStatus == EventDanaRConnectionStatus.CONNECTING) {
                             statusView.setText(String.format(getString(R.string.danar_history_connectingfor), c.sSecondsElapsed));
                             log.debug("EventDanaRConnectionStatus: " + "Connecting for " + c.sSecondsElapsed + "s");
-                        } else if (c.sStatus == c.CONNECTED) {
+                        } else if (c.sStatus == EventDanaRConnectionStatus.CONNECTED) {
                             statusView.setText(MainApp.sResources.getString(R.string.connected));
                             log.debug("EventDanaRConnectionStatus: Connected");
                         } else {

@@ -38,10 +38,12 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
-import info.nightscout.androidaps.plugins.SmsCommunicator.Events.EventNewSMS;
+import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
@@ -178,14 +180,14 @@ public class DataService extends IntentService {
             if (Config.logIncommingData)
                 log.debug("Received status: " + bundles);
             if (bundles.containsKey("nsclientversioncode")) {
-                ConfigBuilderFragment configBuilderFragment = MainApp.getConfigBuilder();
-                if (configBuilderFragment != null) {
-                    configBuilderFragment.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
-                    configBuilderFragment.nightscoutVersionName = bundles.getString("nightscoutversionname");
-                    configBuilderFragment.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
-                    configBuilderFragment.nsClientVersionName = bundles.getString("nsclientversionname");
-                    log.debug("Got versions: NSClient: " + configBuilderFragment.nsClientVersionName + " Nightscout: " + configBuilderFragment.nightscoutVersionName);
-                    if (configBuilderFragment.nsClientVersionCode < 118)
+                ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
+                if (configBuilder != null) {
+                    configBuilder.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
+                    configBuilder.nightscoutVersionName = bundles.getString("nightscoutversionname");
+                    configBuilder.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
+                    configBuilder.nsClientVersionName = bundles.getString("nsclientversionname");
+                    log.debug("Got versions: NSClient: " + configBuilder.nsClientVersionName + " Nightscout: " + configBuilder.nightscoutVersionName);
+                    if (configBuilder.nsClientVersionCode < 118)
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
                 }
             } else {
@@ -222,10 +224,10 @@ public class DataService extends IntentService {
                             JSONObject devicestatusJson = jsonArray.getJSONObject(0);
                             if (devicestatusJson.has("pump")) {
                                 // Objectives 0
-                                ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainApp.getSpecificPlugin(ObjectivesFragment.class);
-                                if (objectivesFragment != null) {
-                                    objectivesFragment.pumpStatusIsAvailableInNS = true;
-                                    objectivesFragment.saveProgress();
+                                ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                if (objectivesPlugin != null) {
+                                    objectivesPlugin.pumpStatusIsAvailableInNS = true;
+                                    objectivesPlugin.saveProgress();
                                 }
                             }
                         }
@@ -245,7 +247,7 @@ public class DataService extends IntentService {
                     log.error("Config builder not ready on receive profile");
                     return;
                 }
-                PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null) {
                     SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                     if (SP.getBoolean("syncprofiletopump", false))
@@ -368,10 +370,10 @@ public class DataService extends IntentService {
                 MainApp.bus().post(new EventNewBG());
             }
             // Objectives 0
-            ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainApp.getSpecificPlugin(ObjectivesFragment.class);
-            if (objectivesFragment != null) {
-                objectivesFragment.bgIsAvailableInNS = true;
-                objectivesFragment.saveProgress();
+            ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+            if (objectivesPlugin != null) {
+                objectivesPlugin.bgIsAvailableInNS = true;
+                objectivesPlugin.saveProgress();
             }
         }
 

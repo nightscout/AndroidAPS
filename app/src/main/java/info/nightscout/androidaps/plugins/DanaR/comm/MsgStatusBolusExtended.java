@@ -9,11 +9,10 @@ import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 
 public class MsgStatusBolusExtended extends MessageBase {
@@ -36,13 +35,13 @@ public class MsgStatusBolusExtended extends MessageBase {
         Date extendedBolusStart = isExtendedInProgress ? getDateFromSecAgo(extendedBolusSoFarInSecs) : new Date(0);
         int extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes;
 
-        DanaRFragment.getDanaRPump().isExtendedInProgress = isExtendedInProgress;
-        DanaRFragment.getDanaRPump().extendedBolusMinutes = extendedBolusMinutes;
-        DanaRFragment.getDanaRPump().extendedBolusAmount = extendedBolusAmount;
-        DanaRFragment.getDanaRPump().extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes;
-        DanaRFragment.getDanaRPump().extendedBolusAbsoluteRate = extendedBolusAbsoluteRate;
-        DanaRFragment.getDanaRPump().extendedBolusStart = extendedBolusStart;
-        DanaRFragment.getDanaRPump().extendedBolusRemainingMinutes = extendedBolusRemainingMinutes;
+        DanaRPlugin.getDanaRPump().isExtendedInProgress = isExtendedInProgress;
+        DanaRPlugin.getDanaRPump().extendedBolusMinutes = extendedBolusMinutes;
+        DanaRPlugin.getDanaRPump().extendedBolusAmount = extendedBolusAmount;
+        DanaRPlugin.getDanaRPump().extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes;
+        DanaRPlugin.getDanaRPump().extendedBolusAbsoluteRate = extendedBolusAbsoluteRate;
+        DanaRPlugin.getDanaRPump().extendedBolusStart = extendedBolusStart;
+        DanaRPlugin.getDanaRPump().extendedBolusRemainingMinutes = extendedBolusRemainingMinutes;
 
         updateExtendedBolusInDB();
 
@@ -63,14 +62,14 @@ public class MsgStatusBolusExtended extends MessageBase {
     }
 
     public static void updateExtendedBolusInDB() {
-        DanaRFragment danaRFragment = (DanaRFragment) MainApp.getSpecificPlugin(DanaRFragment.class);
-        DanaRPump danaRPump = danaRFragment.getDanaRPump();
+        DanaRPlugin DanaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+        DanaRPump danaRPump = DanaRPlugin.getDanaRPump();
         Date now = new Date();
 
         try {
 
-            if (danaRFragment.isExtendedBoluslInProgress()) {
-                TempBasal extendedBolus = danaRFragment.getExtendedBolus();
+            if (DanaRPlugin.isExtendedBoluslInProgress()) {
+                TempBasal extendedBolus = DanaRPlugin.getExtendedBolus();
                 if (danaRPump.isExtendedInProgress) {
                     if (extendedBolus.absolute != danaRPump.extendedBolusAbsoluteRate) {
                         // Close current extended

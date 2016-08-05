@@ -4,16 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 
 
 /**
  * Created by mike on 05.07.2016.
- *
- *
- *  THIS IS BROKEN IN PUMP... SENDING ONLY 1 PROFILE
- *
+ * <p/>
+ * <p/>
+ * THIS IS BROKEN IN PUMP... SENDING ONLY 1 PROFILE
  */
 public class MsgSettingBasalProfileAll extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSettingBasalProfileAll.class);
@@ -23,8 +22,8 @@ public class MsgSettingBasalProfileAll extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPump pump = DanaRFragment.getDanaRPump();
-        if (DanaRFragment.getDanaRPump().basal48Enable) {
+        DanaRPump pump = DanaRPlugin.getDanaRPump();
+        if (DanaRPlugin.getDanaRPump().basal48Enable) {
             pump.pumpProfiles = new double[4][];
             for (int profile = 0; profile < 4; profile++) {
                 int position = intFromBuff(bytes, 107 * profile, 1);
@@ -51,10 +50,10 @@ public class MsgSettingBasalProfileAll extends MessageBase {
         }
 
         if (Config.logDanaMessageDetail) {
-            if (DanaRFragment.getDanaRPump().basal48Enable) {
+            if (DanaRPlugin.getDanaRPump().basal48Enable) {
                 for (int profile = 0; profile < 4; profile++) {
                     for (int index = 0; index < 24; index++) {
-                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + DanaRFragment.getDanaRPump().pumpProfiles[profile][index]);
+                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + DanaRPlugin.getDanaRPump().pumpProfiles[profile][index]);
                     }
                 }
             } else {
@@ -63,7 +62,7 @@ public class MsgSettingBasalProfileAll extends MessageBase {
                         log.debug("Basal profile " + profile + ": " +
                                 String.format("%02d", (index / 2)) +
                                 ":" + String.format("%02d", (index % 2) * 30) + " : " +
-                                DanaRFragment.getDanaRPump().pumpProfiles[profile][index]);
+                                DanaRPlugin.getDanaRPump().pumpProfiles[profile][index]);
                     }
                 }
             }

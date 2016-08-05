@@ -80,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpTabs(boolean switchToLast) {
-        pageAdapter = new TabPageAdapter(getSupportFragmentManager());
-        for (PluginBase f : MainApp.getPluginsList()) {
-            pageAdapter.registerNewFragment((Fragment) f);
+        pageAdapter = new TabPageAdapter(getSupportFragmentManager(), this);
+        for (PluginBase p : MainApp.getPluginsList()) {
+            pageAdapter.registerNewFragment(p);
         }
         mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(pageAdapter);

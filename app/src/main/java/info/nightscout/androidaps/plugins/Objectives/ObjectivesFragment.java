@@ -2,9 +2,7 @@ package info.nightscout.androidaps.plugins.Objectives;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,66 +15,28 @@ import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.otto.Subscribe;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.Loop.LoopFragment;
+import info.nightscout.androidaps.interfaces.FragmentBase;
 
-public class ObjectivesFragment extends Fragment implements View.OnClickListener, PluginBase, ConstraintsInterface {
+public class ObjectivesFragment extends Fragment implements View.OnClickListener, FragmentBase {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
+
+    private static ObjectivesPlugin objectivesPlugin = new ObjectivesPlugin();
+
+    public static ObjectivesPlugin getPlugin() {
+        return objectivesPlugin;
+    }
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
     CheckBox enableFake;
-
-    boolean fragmentVisible = true;
-
-    @Override
-    public int getType() {
-        return PluginBase.CONSTRAINTS;
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.objectives);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        LoopFragment loopFragment = (LoopFragment) MainApp.getSpecificPlugin(LoopFragment.class);
-        return fragmentVisible && loopFragment != null && loopFragment.isVisibleInTabs(type);
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
-    }
 
     @Override
     public void onClick(View v) {
@@ -87,146 +47,11 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    class Objective {
-        Integer num;
-        String objective;
-        String gate;
-        Date started;
-        Integer durationInDays;
-        Date accomplished;
-
-        Objective(Integer num, String objective, String gate, Date started, Integer durationInDays, Date accomplished) {
-            this.num = num;
-            this.objective = objective;
-            this.gate = gate;
-            this.started = started;
-            this.durationInDays = durationInDays;
-            this.accomplished = accomplished;
-        }
-    }
-
-    // Objective 0
-    public boolean bgIsAvailableInNS = false;
-    public boolean pumpStatusIsAvailableInNS = false;
-    // Objective 1
-    public Integer manualEnacts = 0;
-    public final Integer manualEnactsNeeded = 20;
-
-    class RequirementResult {
-        boolean done = false;
-        String comment = "";
-
-        public RequirementResult(boolean done, String comment) {
-            this.done = done;
-            this.comment = comment;
-        }
-    }
-
-    private String yesOrNo(boolean yes) {
-        if (yes) return "☺";
-        else return "---";
-    }
-
-    private RequirementResult requirementsMet(Integer objNum) {
-        switch (objNum) {
-            case 0:
-                return new RequirementResult(bgIsAvailableInNS && pumpStatusIsAvailableInNS,
-                        getString(R.string.objectives_bgavailableinns) + ": " + yesOrNo(bgIsAvailableInNS)
-                                + " " + getString(R.string.objectives_pumpstatusavailableinns) + ": " + yesOrNo(pumpStatusIsAvailableInNS));
-            case 1:
-                return new RequirementResult(manualEnacts >= manualEnactsNeeded,
-                        getString(R.string.objectives_manualenacts) + ": " + manualEnacts + "/" + manualEnactsNeeded);
-            case 2:
-                return new RequirementResult(true, "");
-            default:
-                return new RequirementResult(false, "");
-        }
-    }
-
-
-    private List<Objective> objectives;
-
-    private void initializeData() {
-        objectives = new ArrayList<>();
-        objectives.add(new Objective(0,
-                MainApp.sResources.getString(R.string.objectives_0_objective),
-                MainApp.sResources.getString(R.string.objectives_0_gate),
-                new Date(0, 0, 0),
-                1, // 1 day
-                new Date(0, 0, 0)));
-        objectives.add(new Objective(1,
-                MainApp.sResources.getString(R.string.objectives_1_objective),
-                MainApp.sResources.getString(R.string.objectives_1_gate),
-                new Date(0, 0, 0),
-                7, // 7 days
-                new Date(0, 0, 0)));
-        objectives.add(new Objective(2,
-                MainApp.sResources.getString(R.string.objectives_2_objective),
-                MainApp.sResources.getString(R.string.objectives_2_gate),
-                new Date(0, 0, 0),
-                0, // 0 days
-                new Date(0, 0, 0)));
-        objectives.add(new Objective(3,
-                MainApp.sResources.getString(R.string.objectives_3_objective),
-                MainApp.sResources.getString(R.string.objectives_3_gate),
-                new Date(0, 0, 0),
-                5, // 5 days
-                new Date(0, 0, 0)));
-        objectives.add(new Objective(4,
-                MainApp.sResources.getString(R.string.objectives_4_objective),
-                MainApp.sResources.getString(R.string.objectives_4_gate),
-                new Date(0, 0, 0),
-                1,
-                new Date(0, 0, 0)));
-        objectives.add(new Objective(5,
-                MainApp.sResources.getString(R.string.objectives_5_objective),
-                MainApp.sResources.getString(R.string.objectives_5_gate),
-                new Date(0, 0, 0),
-                7,
-                new Date(0, 0, 0)));
-        objectives.add(new Objective(6,
-                MainApp.sResources.getString(R.string.objectives_6_objective),
-                "",
-                new Date(0, 0, 0),
-                1,
-                new Date(0, 0, 0)));
-    }
-
-    public void saveProgress() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        SharedPreferences.Editor editor = settings.edit();
-        for (int num = 0; num < objectives.size(); num++) {
-            Objective o = objectives.get(num);
-            editor.putLong("Objectives" + num + "started", o.started.getTime());
-            editor.putLong("Objectives" + num + "accomplished", o.accomplished.getTime());
-        }
-        editor.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
-        editor.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
-        editor.putInt("Objectives" + "manualEnacts", manualEnacts);
-        editor.apply();
-        if (Config.logPrefsChange)
-            log.debug("Objectives stored");
-    }
-
-    void loadProgress() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        for (int num = 0; num < objectives.size(); num++) {
-            Objective o = objectives.get(num);
-            o.started = new Date(settings.getLong("Objectives" + num + "started", 0));
-            o.accomplished = new Date(settings.getLong("Objectives" + num + "accomplished", 0));
-        }
-        bgIsAvailableInNS = settings.getBoolean("Objectives" + "bgIsAvailableInNS", false);
-        pumpStatusIsAvailableInNS = settings.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
-        manualEnacts = settings.getInt("Objectives" + "manualEnacts", 0);
-        if (Config.logPrefsChange)
-            log.debug("Objectives loaded");
-    }
-
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ObjectiveViewHolder> {
 
-        List<Objective> objectives;
+        List<ObjectivesPlugin.Objective> objectives;
 
-        RecyclerViewAdapter(List<Objective> objectives) {
+        RecyclerViewAdapter(List<ObjectivesPlugin.Objective> objectives) {
             this.objectives = objectives;
         }
 
@@ -238,8 +63,8 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
 
         @Override
         public void onBindViewHolder(ObjectiveViewHolder holder, int position) {
-            Objective o = objectives.get(position);
-            RequirementResult requirementsMet = requirementsMet(position);
+            ObjectivesPlugin.Objective o = objectives.get(position);
+            ObjectivesPlugin.RequirementResult requirementsMet = objectivesPlugin.requirementsMet(position);
             Context context = MainApp.instance().getApplicationContext();
             holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(o.objective);
@@ -254,19 +79,19 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
 
             holder.startButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Objective o = (Objective) v.getTag();
+                    ObjectivesPlugin.Objective o = (ObjectivesPlugin.Objective) v.getTag();
                     o.started = new Date();
                     updateGUI();
-                    saveProgress();
+                    objectivesPlugin.saveProgress();
                 }
             });
             holder.verifyButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Objective o = (Objective) v.getTag();
-                    if (requirementsMet(o.num).done || enableFake.isChecked()) {
+                    ObjectivesPlugin.Objective o = (ObjectivesPlugin.Objective) v.getTag();
+                    if (objectivesPlugin.requirementsMet(o.num).done || enableFake.isChecked()) {
                         o.accomplished = new Date();
                         updateGUI();
-                        saveProgress();
+                        objectivesPlugin.saveProgress();
                     }
                 }
             });
@@ -350,22 +175,6 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    public ObjectivesFragment() {
-        super();
-        initializeData();
-        loadProgress();
-        registerBus();
-    }
-
-    public static ObjectivesFragment newInstance() {
-        return new ObjectivesFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -383,45 +192,22 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         });
 
         // Add correct translations to array after app is initialized
-        objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
-        objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
-        objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
-        objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
-        objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
-        objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
-        objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
-        objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
-        objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
-        objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
-        objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
-        objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
-        objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
+        objectivesPlugin.objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
+        objectivesPlugin.objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
+        objectivesPlugin.objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
+        objectivesPlugin.objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
+        objectivesPlugin.objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
+        objectivesPlugin.objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
+        objectivesPlugin.objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
+        objectivesPlugin.objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
+        objectivesPlugin.objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
+        objectivesPlugin.objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
+        objectivesPlugin.objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
+        objectivesPlugin.objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
+        objectivesPlugin.objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
         updateGUI();
 
         return view;
-    }
-
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
-        MainApp.bus().register(this);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI();
-                }
-            });
-        else
-            log.debug("EventNewBG: Activity is null");
     }
 
     void updateGUI() {
@@ -430,64 +216,22 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(objectives);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(objectivesPlugin.objectives);
                     recyclerView.setAdapter(adapter);
                 }
             });
     }
 
-    /**
-     * Constraints interface
-     **/
     @Override
-    public boolean isLoopEnabled() {
-        return objectives.get(1).started.getTime() > 0;
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
     }
 
     @Override
-    public boolean isClosedModeEnabled() {
-        return objectives.get(3).started.getTime() > 0;
-    }
-
-    @Override
-    public boolean isAutosensModeEnabled() {
-        return objectives.get(5).started.getTime() > 0;
-    }
-
-    @Override
-    public boolean isAMAModeEnabled() {
-        return objectives.get(6).started.getTime() > 0;
-    }
-
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        if (objectives.get(4).started.getTime() > 0)
-            return maxIob;
-        else {
-            if (Config.logConstraintsChanges)
-                log.debug("Limiting maxIOB " + maxIob + " to " + 0 + "U");
-            return 0d;
-        }
-    }
-
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        return absoluteRate;
-    }
-
-    @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        return percentRate;
-    }
-
-    @Override
-    public Double applyBolusConstraints(Double insulin) {
-        return insulin;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        return carbs;
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
     }
 
 }

@@ -17,7 +17,8 @@ public interface PluginBase {
     int BGSOURCE = 9;
     int LAST = 10; // keep always highest number
 
-    public int getType();
+    int getType();
+    String getFragmentClass();
 
     String getName();
     boolean isEnabled(int type);

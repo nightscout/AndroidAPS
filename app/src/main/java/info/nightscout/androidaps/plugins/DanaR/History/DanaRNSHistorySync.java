@@ -11,7 +11,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
 import info.nightscout.client.data.NSProfile;
@@ -44,8 +44,8 @@ public class DanaRNSHistorySync {
 
     public void sync(int what) {
         try {
-            ConfigBuilderFragment configBuilderFragment = MainApp.getConfigBuilder();
-            NSProfile profile = configBuilderFragment.getActiveProfile().getProfile();
+            ConfigBuilderPlugin ConfigBuilderPlugin = MainApp.getConfigBuilder();
+            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
             if (profile == null) {
                 ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
                 return;
@@ -73,7 +73,7 @@ public class DanaRNSHistorySync {
                                 nsrec.put("insulin", record.getRecordValue());
                                 nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                                 nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                                ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                                ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
                                 ev.message += MainApp.sResources.getString(R.string.danar_sbolus);
                                 break;
@@ -91,7 +91,7 @@ public class DanaRNSHistorySync {
                                     cal.add(Calendar.MINUTE, -1 * record.getRecordDuration());
                                     nsrec.put("created_at", DateUtil.toISOString(cal.getTime()));
                                     nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                                    ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                                    ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                                     uploaded++;
                                     ev.message += MainApp.sResources.getString(R.string.danar_ebolus);
                                 } else {
@@ -107,7 +107,7 @@ public class DanaRNSHistorySync {
                                 nsrec.put("splitExt", 0);
                                 nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                                 nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                                ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                                ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
                                 ev.message += MainApp.sResources.getString(R.string.danar_dsbolus);
                                 break;
@@ -123,7 +123,7 @@ public class DanaRNSHistorySync {
                                 cal.add(Calendar.MINUTE, -1 * record.getRecordDuration());
                                 nsrec.put("created_at", DateUtil.toISOString(cal.getTime()));
                                 nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                                ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                                ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
                                 ev.message += MainApp.sResources.getString(R.string.danar_debolus);
                                 break;
@@ -140,7 +140,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("notes", "Error");
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                        ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                        ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_error);
                         break;
@@ -152,7 +152,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("notes", "Refill " + record.getRecordValue() + "U");
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                        ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                        ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_refill);
                         break;
@@ -165,7 +165,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("duration", 60);
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                        ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                        ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_basalhour);
                         break;
@@ -181,7 +181,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("glucoseType", "Finger");
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                        ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                        ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_glucose);
                         break;
@@ -193,7 +193,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("carbs", record.getRecordValue());
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                        ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                        ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_carbohydrate);
                         break;
@@ -205,7 +205,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("notes", "Alarm: " + record.getRecordAlarm());
                         nsrec.put("created_at", DateUtil.toISOString(record.getRecordDate()));
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
-                        ConfigBuilderFragment.uploadCareportalEntryToNS(nsrec);
+                        ConfigBuilderPlugin.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_alarm);
                         break;

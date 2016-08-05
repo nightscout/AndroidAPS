@@ -36,14 +36,24 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
+import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.plugins.Treatments.events.EventTreatmentsUpdateGui;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
-public class TreatmentsFragment extends Fragment implements View.OnClickListener, PluginBase, TreatmentsInterface {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener, FragmentBase {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
+
+    private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();
+
+    public static TreatmentsPlugin getPlugin() {
+        return treatmentsPlugin;
+    }
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -51,140 +61,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     TextView iobTotal;
     TextView activityTotal;
     Button refreshFromNS;
-
-    private long lastCalculationTimestamp = 0;
-    private IobTotal lastCalculation;
-
-    private List<Treatment> treatments;
-
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
-    boolean visibleNow = false;
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.treatments);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return fragmentEnabled;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return true;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.TREATMENT;
-    }
-
-    private void initializeData() {
-        try {
-            Dao<Treatment, Long> dao = MainApp.getDbHelper().getDaoTreatments();
-            QueryBuilder<Treatment, Long> queryBuilder = dao.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.limit(30l);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            treatments = dao.query(preparedQuery);
-        } catch (SQLException e) {
-            log.debug(e.getMessage(), e);
-            treatments = new ArrayList<Treatment>();
-        }
-    }
-
-    /*
-     * Recalculate IOB if value is older than 1 minute
-     */
-    public void updateTotalIOBIfNeeded() {
-        if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
-            return;
-        updateTotalIOB();
-    }
-
-    @Override
-    public IobTotal getLastCalculation() {
-        return lastCalculation;
-    }
-
-    @Override
-    public void updateTotalIOB() {
-        IobTotal total = new IobTotal();
-
-        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
-            return;
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null) {
-            lastCalculation = total;
-            return;
-        }
-
-        Double dia = profile.getDia();
-
-        Date now = new Date();
-        for (Integer pos = 0; pos < treatments.size(); pos++) {
-            Treatment t = treatments.get(pos);
-            Iob tIOB = t.iobCalc(now, dia);
-            total.iob += tIOB.iobContrib;
-            total.activity += tIOB.activityContrib;
-            Iob bIOB = t.iobCalc(now, dia / 2);
-            total.bolussnooze += bIOB.iobContrib;
-        }
-
-        lastCalculationTimestamp = new Date().getTime();
-        lastCalculation = total;
-    }
-
-    public class MealData {
-        public double boluses = 0d;
-        public double carbs = 0d;
-    }
-
-    @Override
-    public MealData getMealData() {
-        MealData result = new MealData();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null)
-            return result;
-
-        for (Treatment treatment : treatments) {
-            long now = new Date().getTime();
-            long dia_ago = now - (new Double(profile.getDia() * 60 * 60 * 1000l)).longValue();
-            long t = treatment.created_at.getTime();
-            if (t > dia_ago && t <= now) {
-                if (treatment.carbs >= 1) {
-                    result.carbs += treatment.carbs;
-                }
-                if (treatment.insulin >= 0.1) {
-                    result.boluses += treatment.insulin;
-                }
-            }
-        }
-        return result;
-    }
-
-    @Override
-    public List<Treatment> getTreatments() {
-        return treatments;
-    }
-
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TreatmentsViewHolder> {
 
@@ -253,23 +129,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    public TreatmentsFragment() {
-        super();
-        registerBus();
-        initializeData();
-        updateGUI();
-    }
-
-    public static TreatmentsFragment newInstance() {
-        TreatmentsFragment fragment = new TreatmentsFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -280,7 +139,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(treatments);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.treatments);
         recyclerView.setAdapter(adapter);
 
         iobTotal = (TextView) view.findViewById(R.id.treatments_iobtotal);
@@ -303,7 +162,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetTreatments();
-                        initializeData();
+                        treatmentsPlugin.initializeData();
                         updateGUI();
                         Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                         MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
@@ -316,45 +175,41 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         MainApp.bus().register(this);
     }
 
     @Subscribe
+    public void onStatusEvent(final EventTreatmentsUpdateGui ev) {
+        updateGUI();
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        initializeData();
         updateGUI();
     }
 
     public void updateGUI() {
         Activity activity = getActivity();
-        if (visibleNow && activity != null && recyclerView != null)
+        if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(treatments), false);
-                    if (lastCalculation != null)
-                        iobTotal.setText(DecimalFormatter.to2Decimal(lastCalculation.iob) + " U");
-                    if (lastCalculation != null)
-                        activityTotal.setText(DecimalFormatter.to3Decimal(lastCalculation.activity) + " U");
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.treatments), false);
+                    if (TreatmentsPlugin.lastCalculation != null)
+                        iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.lastCalculation.iob) + " U");
+                    if (TreatmentsPlugin.lastCalculation != null)
+                        activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.lastCalculation.activity) + " U");
                 }
             });
     }
 
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-
-        if (isVisibleToUser) {
-            visibleNow = true;
-            updateTotalIOBIfNeeded();
-            updateGUI();
-        } else
-            visibleNow = false;
-    }
 }

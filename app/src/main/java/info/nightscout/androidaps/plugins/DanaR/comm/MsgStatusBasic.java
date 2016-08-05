@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 
 
 public class MsgStatusBasic extends MessageBase {
@@ -27,17 +27,17 @@ public class MsgStatusBasic extends MessageBase {
         boolean isTempBasalInProgress = intFromBuff(bytes, 15, 1) == 1;
         int batteryRemaining = intFromBuff(bytes, 20, 1);
 
-        DanaRFragment.getDanaRPump().pumpSuspended = pumpSuspended;
-        DanaRFragment.getDanaRPump().calculatorEnabled = calculatorEnabled;
-        DanaRFragment.getDanaRPump().dailyTotalUnits = dailyTotalUnits;
-        DanaRFragment.getDanaRPump().maxDailyTotalUnits = maxDailyTotalUnits;
-        DanaRFragment.getDanaRPump().reservoirRemainingUnits = reservoirRemainingUnits;
-        DanaRFragment.getDanaRPump().bolusBlocked = bolusBlocked;
-        DanaRFragment.getDanaRPump().currentBasal = currentBasal;
-        DanaRFragment.getDanaRPump().tempBasalPercent = tempBasalPercent;
-        DanaRFragment.getDanaRPump().isExtendedInProgress = isExtendedInProgress;
-        DanaRFragment.getDanaRPump().isTempBasalInProgress = isTempBasalInProgress;
-        DanaRFragment.getDanaRPump().batteryRemaining = batteryRemaining;
+        DanaRPlugin.getDanaRPump().pumpSuspended = pumpSuspended;
+        DanaRPlugin.getDanaRPump().calculatorEnabled = calculatorEnabled;
+        DanaRPlugin.getDanaRPump().dailyTotalUnits = dailyTotalUnits;
+        DanaRPlugin.getDanaRPump().maxDailyTotalUnits = maxDailyTotalUnits;
+        DanaRPlugin.getDanaRPump().reservoirRemainingUnits = reservoirRemainingUnits;
+        DanaRPlugin.getDanaRPump().bolusBlocked = bolusBlocked;
+        DanaRPlugin.getDanaRPump().currentBasal = currentBasal;
+        DanaRPlugin.getDanaRPump().tempBasalPercent = tempBasalPercent;
+        DanaRPlugin.getDanaRPump().isExtendedInProgress = isExtendedInProgress;
+        DanaRPlugin.getDanaRPump().isTempBasalInProgress = isTempBasalInProgress;
+        DanaRPlugin.getDanaRPump().batteryRemaining = batteryRemaining;
 
         if (Config.logDanaMessageDetail) {
             log.debug("Pump suspended: " + pumpSuspended);

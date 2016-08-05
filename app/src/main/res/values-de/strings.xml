@@ -249,7 +249,6 @@
     <string name="smscommunicator_remotebolusingallowed">Fernboli via SMS zulassen</string>
     <string name="syncprofiletopump_title">Nightscout Profil zur Pumpe synchronisieren</string>
     <string name="waitingforpumpresult">auf Pumpenergebnis warten</string>
-    <string name="bolusdelivered">Bolus abgegeben</string>
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
     <string formatted="false" name="replywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>

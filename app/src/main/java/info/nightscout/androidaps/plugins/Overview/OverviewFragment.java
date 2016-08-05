@@ -38,7 +38,6 @@ import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -52,10 +51,9 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventRefreshOpenLoop;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.Loop.LoopFragment;
-import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
@@ -67,8 +65,14 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
 
-public class OverviewFragment extends Fragment implements PluginBase {
+public class OverviewFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
+
+    private static OverviewPlugin overviewPlugin = new OverviewPlugin();
+
+    public static OverviewPlugin getPlugin() {
+        return overviewPlugin;
+    }
 
     TextView bgView;
     TextView timeAgoView;
@@ -88,56 +92,22 @@ public class OverviewFragment extends Fragment implements PluginBase {
     Button setExtenedButton;
     Button acceptTempButton;
 
-    Handler loopHandler = new Handler();
-    Runnable refreshLoop = null;
+    private static Handler sLoopHandler = new Handler();
+    private static Runnable sRefreshLoop = null;
 
-    Handler mHandler;
-    public static HandlerThread mHandlerThread;
+    private static Handler sHandler;
+    private static HandlerThread sHandlerThread;
 
     public Double bgTargetLow = 80d;
     public Double bgTargetHigh = 180d;
 
     public OverviewFragment() {
         super();
-        mHandlerThread = new HandlerThread(OverviewFragment.class.getSimpleName());
-        mHandlerThread.start();
-        mHandler = new Handler(mHandlerThread.getLooper());
-        registerBus();
-    }
-
-    @Override
-    public String getName() {
-        return MainApp.instance().getString(R.string.overview);
-    }
-
-    @Override
-    public boolean isEnabled(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean isVisibleInTabs(int type) {
-        return true;
-    }
-
-    @Override
-    public boolean canBeHidden(int type) {
-        return false;
-    }
-
-    @Override
-    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        // Always enabled
-    }
-
-    @Override
-    public void setFragmentVisible(int type, boolean fragmentVisible) {
-        // Always visible
-    }
-
-    @Override
-    public int getType() {
-        return PluginBase.GENERAL;
+        if (sHandlerThread == null) {
+            sHandlerThread = new HandlerThread(OverviewFragment.class.getSimpleName());
+            sHandlerThread.start();
+            sHandler = new Handler(sHandlerThread.getLooper());
+        }
     }
 
     public static OverviewFragment newInstance() {
@@ -147,15 +117,15 @@ public class OverviewFragment extends Fragment implements PluginBase {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (refreshLoop == null) {
-            refreshLoop = new Runnable() {
+        if (sRefreshLoop == null) {
+            sRefreshLoop = new Runnable() {
                 @Override
                 public void run() {
                     updateGUIIfVisible();
-                    loopHandler.postDelayed(refreshLoop, 60 * 1000L);
+                    sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
                 }
             };
-            loopHandler.postDelayed(refreshLoop, 60 * 1000L);
+            sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
         }
     }
 
@@ -202,9 +172,9 @@ public class OverviewFragment extends Fragment implements PluginBase {
         cancelTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                final PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump.isTempBasalInProgress()) {
-                    mHandler.post(new Runnable() {
+                    sHandler.post(new Runnable() {
                         @Override
                         public void run() {
                             pump.cancelTempBasal();
@@ -237,14 +207,14 @@ public class OverviewFragment extends Fragment implements PluginBase {
             @Override
             public void onClick(View view) {
                 MainApp.getConfigBuilder().getActiveLoop().invoke(false);
-                final LoopFragment.LastRun finalLastRun = LoopFragment.lastRun;
+                final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
                 if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(getContext().getString(R.string.confirmation));
                     builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
                     builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            mHandler.post(new Runnable() {
+                            sHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
@@ -253,10 +223,10 @@ public class OverviewFragment extends Fragment implements PluginBase {
                                         finalLastRun.lastEnact = new Date();
                                         finalLastRun.lastOpenModeAccept = new Date();
                                         MainApp.getConfigBuilder().uploadDeviceStatus();
-                                        ObjectivesFragment objectivesFragment = (ObjectivesFragment) MainApp.getSpecificPlugin(ObjectivesFragment.class);
-                                        if (objectivesFragment != null) {
-                                            objectivesFragment.manualEnacts++;
-                                            objectivesFragment.saveProgress();
+                                        ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                        if (objectivesPlugin != null) {
+                                            objectivesPlugin.manualEnacts++;
+                                            objectivesPlugin.saveProgress();
                                         }
                                     }
                                     updateGUIIfVisible();
@@ -275,12 +245,15 @@ public class OverviewFragment extends Fragment implements PluginBase {
         return view;
     }
 
-    private void registerBus() {
-        try {
-            MainApp.bus().unregister(this);
-        } catch (RuntimeException x) {
-            // Ignore
-        }
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         MainApp.bus().register(this);
     }
 
@@ -337,7 +310,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             return;
 
         // open loop mode
-        final LoopFragment.LastRun finalLastRun = LoopFragment.lastRun;
+        final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
             if (MainApp.getConfigBuilder().isClosedModeEnabled())
@@ -347,7 +320,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
             apsModeView.setVisibility(View.GONE);
         }
 
-        boolean  showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
+        boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
         showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
         showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
         showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
@@ -361,7 +334,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
 
         // **** Temp button ****
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        PumpInterface pump = MainApp.getConfigBuilder();
 
         if (pump.isTempBasalInProgress()) {
             TempBasal activeTemp = pump.getTempBasal();
@@ -483,7 +456,7 @@ public class OverviewFragment extends Fragment implements PluginBase {
         long now = new Date().getTime();
         List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
         for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
-            TempBasal tb = MainApp.getConfigBuilder().getActivePump().getTempBasal(new Date(time));
+            TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
             if (tb != null)
                 basalArray.add(new BarDataPoint(time, tb.tempBasalConvertedToAbsolute(new Date(time)), true));
             else
