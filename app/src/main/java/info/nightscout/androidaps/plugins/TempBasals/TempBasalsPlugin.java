@@ -52,7 +52,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
         initializeData();
-        MainApp.bus().post(new EventTempBasalsUpdateGui());
+        MainApp.bus().register(this);
     }
 
     @Override
