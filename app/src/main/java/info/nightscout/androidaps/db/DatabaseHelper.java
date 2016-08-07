@@ -28,9 +28,6 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
@@ -218,13 +215,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
         @Override
         public String toString() {
-            return MainApp.sResources.getString(R.string.glucose) + " " +  DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
+            return MainApp.sResources.getString(R.string.glucose) + " " + DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
                     MainApp.sResources.getString(R.string.delta) + " " + DecimalFormatter.to0Decimal(delta) + " mg/dl\n" +
                     MainApp.sResources.getString(R.string.avgdelta) + " " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl";
         }
 
         public Spanned toSpanned() {
-            return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.glucose) + "</b>: " +  DecimalFormatter.to0Decimal(glucose) + " mg/dl<br>" +
+            return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.glucose) + "</b>: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl<br>" +
                     "<b>" + MainApp.sResources.getString(R.string.delta) + "</b>: " + DecimalFormatter.to0Decimal(delta) + " mg/dl<br>" +
                     "<b>" + MainApp.sResources.getString(R.string.avgdelta) + "</b>: " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl");
         }
@@ -240,6 +237,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             dest.writeDouble(delta);
             dest.writeDouble(glucose);
         }
+
         public final Parcelable.Creator<GlucoseStatus> CREATOR = new Parcelable.Creator<GlucoseStatus>() {
             public GlucoseStatus createFromParcel(Parcel in) {
                 return new GlucoseStatus(in);
@@ -256,7 +254,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             glucose = in.readDouble();
         }
 
-        public GlucoseStatus() {}
+        public GlucoseStatus() {
+        }
 
         public GlucoseStatus(Double glucose, Double delta, Double avgdelta) {
             this.glucose = glucose;

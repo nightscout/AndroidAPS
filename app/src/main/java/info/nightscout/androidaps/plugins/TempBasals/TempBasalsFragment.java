@@ -24,9 +24,9 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.TempBasals.events.EventTempBasalsUpdateGui;
 import info.nightscout.utils.DecimalFormatter;
 
 
@@ -163,9 +163,8 @@ public class TempBasalsFragment extends Fragment implements FragmentBase {
         MainApp.bus().register(this);
     }
 
-
     @Subscribe
-    public void onStatusEvent(final EventTempBasalsUpdateGui s) {
+    public void onStatusEvent(final EventTempBasalChange ev) {
         updateGUI();
     }
 

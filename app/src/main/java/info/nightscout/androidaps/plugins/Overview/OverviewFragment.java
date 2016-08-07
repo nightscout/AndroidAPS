@@ -48,11 +48,11 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
-import info.nightscout.androidaps.events.EventRefreshOpenLoop;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
@@ -92,8 +92,8 @@ public class OverviewFragment extends Fragment {
     Button setExtenedButton;
     Button acceptTempButton;
 
-    private static Handler sLoopHandler = new Handler();
-    private static Runnable sRefreshLoop = null;
+    Handler sLoopHandler = new Handler();
+    Runnable sRefreshLoop = null;
 
     private static Handler sHandler;
     private static HandlerThread sHandlerThread;
@@ -112,21 +112,6 @@ public class OverviewFragment extends Fragment {
 
     public static OverviewFragment newInstance() {
         return new OverviewFragment();
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (sRefreshLoop == null) {
-            sRefreshLoop = new Runnable() {
-                @Override
-                public void run() {
-                    updateGUIIfVisible();
-                    sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
-                }
-            };
-            sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
-        }
     }
 
     @Override
@@ -217,6 +202,7 @@ public class OverviewFragment extends Fragment {
                             sHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
+                                    acceptTempLayout.setVisibility(View.GONE);
                                     PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
                                     if (applyResult.enacted) {
                                         finalLastRun.setByPump = applyResult;
@@ -249,12 +235,21 @@ public class OverviewFragment extends Fragment {
     public void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
+        sLoopHandler.removeCallbacksAndMessages(null);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        sRefreshLoop = new Runnable() {
+            @Override
+            public void run() {
+                updateGUIIfVisible();
+                sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
+            }
+        };
+        sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
     }
 
     @Subscribe
@@ -283,7 +278,7 @@ public class OverviewFragment extends Fragment {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshOpenLoop ev) {
+    public void onStatusEvent(final EventNewOpenLoopNotification ev) {
         updateGUIIfVisible();
     }
 

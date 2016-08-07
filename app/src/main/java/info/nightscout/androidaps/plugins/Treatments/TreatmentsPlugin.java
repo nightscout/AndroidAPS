@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Treatments;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +17,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.Treatments.events.EventTreatmentsUpdateGui;
 import info.nightscout.client.data.NSProfile;
 
 /**
@@ -79,7 +80,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public TreatmentsPlugin() {
         MainApp.bus().register(this);
         initializeData();
-        MainApp.bus().post(new EventTreatmentsUpdateGui());
     }
 
     public void initializeData() {
@@ -171,5 +171,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         return treatments;
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventTreatmentChange ev) {
+        initializeData();
+        updateTotalIOB();
+    }
 
 }

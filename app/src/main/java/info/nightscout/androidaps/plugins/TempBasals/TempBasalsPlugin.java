@@ -29,7 +29,6 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.TempBasals.events.EventTempBasalsUpdateGui;
 
 /**
  * Created by mike on 05.08.2016.

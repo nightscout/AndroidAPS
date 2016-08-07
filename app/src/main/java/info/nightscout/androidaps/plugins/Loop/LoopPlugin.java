@@ -12,16 +12,18 @@ import android.support.v7.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventRefreshOpenLoop;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -29,11 +31,14 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
+import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class LoopPlugin implements PluginBase {
+    private static Logger log = LoggerFactory.getLogger(LoopPlugin.class);
+
     private static Handler sHandler;
     private static HandlerThread sHandlerThread;
 
@@ -112,101 +117,108 @@ public class LoopPlugin implements PluginBase {
     }
 
     public void invoke(boolean allowNotification) {
-        ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
-        if (!constraintsInterface.isLoopEnabled()) {
-            MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopdisabled)));
-            return;
-        }
-        final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
-        APSResult result = null;
+        try {
+            if (Config.logFunctionCalls)
+                log.debug("invoke");
+            ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
+            if (!constraintsInterface.isLoopEnabled()) {
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopdisabled)));
+                return;
+            }
+            final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
+            APSResult result = null;
 
-        if (configBuilder == null || !isEnabled(PluginBase.GENERAL))
-            return;
+            if (configBuilder == null || !isEnabled(PluginBase.GENERAL))
+                return;
 
-        APSInterface usedAPS = configBuilder.getActiveAPS();
-        if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS)) {
-            usedAPS.invoke();
-            result = usedAPS.getLastAPSResult();
-        }
+            APSInterface usedAPS = configBuilder.getActiveAPS();
+            if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS)) {
+                usedAPS.invoke();
+                result = usedAPS.getLastAPSResult();
+            }
 
-        // Check if we have any result
-        if (result == null) {
-            MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noapsselected)));
-            return;
-        }
+            // Check if we have any result
+            if (result == null) {
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noapsselected)));
+                return;
+            }
 
-        // check rate for constrais
-        final APSResult resultAfterConstraints = result.clone();
-        resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
+            // check rate for constrais
+            final APSResult resultAfterConstraints = result.clone();
+            resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
 
-        if (lastRun == null) lastRun = new LastRun();
-        lastRun.request = result;
-        lastRun.constraintsProcessed = resultAfterConstraints;
-        lastRun.lastAPSRun = new Date();
-        lastRun.source = ((PluginBase) usedAPS).getName();
-        lastRun.setByPump = null;
+            if (lastRun == null) lastRun = new LastRun();
+            lastRun.request = result;
+            lastRun.constraintsProcessed = resultAfterConstraints;
+            lastRun.lastAPSRun = new Date();
+            lastRun.source = ((PluginBase) usedAPS).getName();
+            lastRun.setByPump = null;
 
-        if (constraintsInterface.isClosedModeEnabled()) {
-            if (result.changeRequested) {
-                final PumpEnactResult waiting = new PumpEnactResult();
-                final PumpEnactResult previousResult = lastRun.setByPump;
-                waiting.queued = true;
-                lastRun.setByPump = waiting;
-                MainApp.bus().post(new EventLoopUpdateGui());
-                sHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        final PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
-                        if (applyResult.enacted) {
-                            lastRun.setByPump = applyResult;
-                            lastRun.lastEnact = lastRun.lastAPSRun;
-                        } else {
-                            lastRun.setByPump = previousResult;
+            if (constraintsInterface.isClosedModeEnabled()) {
+                if (result.changeRequested) {
+                    final PumpEnactResult waiting = new PumpEnactResult();
+                    final PumpEnactResult previousResult = lastRun.setByPump;
+                    waiting.queued = true;
+                    lastRun.setByPump = waiting;
+                    MainApp.bus().post(new EventLoopUpdateGui());
+                    sHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            final PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
+                            if (applyResult.enacted) {
+                                lastRun.setByPump = applyResult;
+                                lastRun.lastEnact = lastRun.lastAPSRun;
+                            } else {
+                                lastRun.setByPump = previousResult;
+                            }
+                            MainApp.bus().post(new EventLoopUpdateGui());
                         }
-                        MainApp.bus().post(new EventLoopUpdateGui());
-                    }
-                });
+                    });
+                } else {
+                    lastRun.setByPump = null;
+                    lastRun.source = null;
+                }
             } else {
-                lastRun.setByPump = null;
-                lastRun.source = null;
-            }
-        } else {
-            if (result.changeRequested && allowNotification) {
-                NotificationCompat.Builder builder =
-                        new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
-                builder.setSmallIcon(R.drawable.notification_icon)
-                        .setContentTitle(MainApp.sResources.getString(R.string.openloop_newsuggestion))
-                        .setContentText(resultAfterConstraints.toString())
-                        .setAutoCancel(true)
-                        .setPriority(Notification.PRIORITY_HIGH)
-                        .setCategory(Notification.CATEGORY_ALARM)
-                        .setVisibility(Notification.VISIBILITY_PUBLIC);
+                if (result.changeRequested && allowNotification) {
+                    NotificationCompat.Builder builder =
+                            new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
+                    builder.setSmallIcon(R.drawable.notification_icon)
+                            .setContentTitle(MainApp.sResources.getString(R.string.openloop_newsuggestion))
+                            .setContentText(resultAfterConstraints.toString())
+                            .setAutoCancel(true)
+                            .setPriority(Notification.PRIORITY_HIGH)
+                            .setCategory(Notification.CATEGORY_ALARM)
+                            .setVisibility(Notification.VISIBILITY_PUBLIC);
 
-                // Creates an explicit intent for an Activity in your app
-                Intent resultIntent = new Intent(MainApp.instance().getApplicationContext(), MainActivity.class);
+                    // Creates an explicit intent for an Activity in your app
+                    Intent resultIntent = new Intent(MainApp.instance().getApplicationContext(), MainActivity.class);
 
-                // The stack builder object will contain an artificial back stack for the
-                // started Activity.
-                // This ensures that navigating backward from the Activity leads out of
-                // your application to the Home screen.
-                TaskStackBuilder stackBuilder = TaskStackBuilder.create(MainApp.instance().getApplicationContext());
-                stackBuilder.addParentStack(MainActivity.class);
-                // Adds the Intent that starts the Activity to the top of the stack
-                stackBuilder.addNextIntent(resultIntent);
-                PendingIntent resultPendingIntent =
-                        stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.setContentIntent(resultPendingIntent);
-                builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
-                NotificationManager mNotificationManager =
-                        (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
-                // mId allows you to update the notification later on.
-                mNotificationManager.notify(Constants.notificationID, builder.build());
-                MainApp.bus().post(new EventRefreshOpenLoop());
+                    // The stack builder object will contain an artificial back stack for the
+                    // started Activity.
+                    // This ensures that navigating backward from the Activity leads out of
+                    // your application to the Home screen.
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(MainApp.instance().getApplicationContext());
+                    stackBuilder.addParentStack(MainActivity.class);
+                    // Adds the Intent that starts the Activity to the top of the stack
+                    stackBuilder.addNextIntent(resultIntent);
+                    PendingIntent resultPendingIntent =
+                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                    builder.setContentIntent(resultPendingIntent);
+                    builder.setVibrate(new long[]{1000, 1000, 1000, 1000, 1000});
+                    NotificationManager mNotificationManager =
+                            (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+                    // mId allows you to update the notification later on.
+                    mNotificationManager.notify(Constants.notificationID, builder.build());
+                    MainApp.bus().post(new EventNewOpenLoopNotification());
+                }
             }
+
+            MainApp.bus().post(new EventLoopUpdateGui());
+            MainApp.getConfigBuilder().uploadDeviceStatus();
+        } finally {
+            if (Config.logFunctionCalls)
+                log.debug("invoke end");
         }
-
-        MainApp.bus().post(new EventLoopUpdateGui());
-        MainApp.getConfigBuilder().uploadDeviceStatus();
     }
 
 }

@@ -16,17 +16,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,12 +32,6 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
-import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.Treatments.events.EventTreatmentsUpdateGui;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -185,10 +174,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTreatmentsUpdateGui ev) {
         updateGUI();
     }
 

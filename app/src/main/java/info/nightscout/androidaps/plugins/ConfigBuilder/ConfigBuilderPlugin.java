@@ -655,16 +655,22 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        // Give some time to Loop
-        try {
-            Thread.sleep(120 * 1000L);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        // if status not uploaded, upload pump status only
-        if (new Date().getTime() - lastDeviceStatusUpload.getTime() > 120 * 1000L) {
-            uploadDeviceStatus();
-        }
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Give some time to Loop
+                try {
+                    Thread.sleep(120 * 1000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                // if status not uploaded, upload pump status only
+                if (new Date().getTime() - lastDeviceStatusUpload.getTime() > 120 * 1000L) {
+                    uploadDeviceStatus();
+                }
+            }
+        });
+        t.start();
     }
 
     public void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes) {

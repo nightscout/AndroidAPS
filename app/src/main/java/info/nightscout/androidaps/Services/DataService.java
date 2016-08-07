@@ -107,10 +107,10 @@ public class DataService extends IntentService {
             } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
                 handleNewSMS(intent);
             }
-            DataReceiver.completeWakefulIntent(intent);
         }
         if (Config.logFunctionCalls)
-            log.debug("onHandleIntent exit");
+            log.debug("onHandleIntent exit " + intent);
+        DataReceiver.completeWakefulIntent(intent);
     }
 
 /*
