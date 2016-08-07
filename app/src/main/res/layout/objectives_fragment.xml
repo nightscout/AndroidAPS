@@ -13,8 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Enable fake time and progress"
-            android:id="@+id/objectives_fake"
-            android:visibility="gone" />
+            android:id="@+id/objectives_fake" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/objectives_recyclerview"

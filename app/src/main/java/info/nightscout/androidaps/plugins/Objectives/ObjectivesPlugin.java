@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.utils.SafeParse;
 
 /**
  * Created by mike on 05.08.2016.
@@ -196,12 +197,12 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
-            o.started = new Date(settings.getLong("Objectives" + num + "started", 0));
-            o.accomplished = new Date(settings.getLong("Objectives" + num + "accomplished", 0));
+            o.started = new Date(SafeParse.stringToLong(settings.getString("Objectives" + num + "started", "0")));
+            o.accomplished = new Date(SafeParse.stringToLong(settings.getString("Objectives" + num + "accomplished", "0")));
         }
         bgIsAvailableInNS = settings.getBoolean("Objectives" + "bgIsAvailableInNS", false);
         pumpStatusIsAvailableInNS = settings.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
-        manualEnacts = settings.getInt("Objectives" + "manualEnacts", 0);
+        manualEnacts = SafeParse.stringToInt(settings.getString("Objectives" + "manualEnacts", "0"));
         if (Config.logPrefsChange)
             log.debug("Objectives loaded");
     }

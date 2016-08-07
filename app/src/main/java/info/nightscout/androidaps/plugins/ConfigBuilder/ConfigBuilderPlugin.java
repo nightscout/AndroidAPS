@@ -188,11 +188,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         // PluginBase.APS
         pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
         activeAPS = (APSInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.APS);
-        if (Config.logConfigBuilder)
-            log.debug("Selected APS interface: " + ((PluginBase) activeAPS).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeAPS).getName())) {
-                p.setFragmentVisible(PluginBase.APS, false);
+        if (activeAPS != null) {
+            if (Config.logConfigBuilder)
+                log.debug("Selected APS interface: " + ((PluginBase) activeAPS).getName());
+            for (PluginBase p : pluginsInCategory) {
+                if (!p.getName().equals(((PluginBase) activeAPS).getName())) {
+                    p.setFragmentVisible(PluginBase.APS, false);
+                }
             }
         }
 

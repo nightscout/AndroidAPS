@@ -23,4 +23,14 @@ public class SafeParse {
         }
         return result;
     }
+
+   public static Long stringToLong(String input) {
+        Long result = 0L;
+        input = input.replace(",", ".");
+        try {
+            result = Long.parseLong(input);
+        } catch (Exception e) {
+        }
+        return result;
+    }
 }
