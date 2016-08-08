@@ -301,5 +301,6 @@
     <string name="objectives_5_objective">Adjust basals and ratios if needed, and then enable auto-sens</string>
     <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
+    <string name="youareonallowedlimit">You reached allowed limit</string>
 
 </resources>

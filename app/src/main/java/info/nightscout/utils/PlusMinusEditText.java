@@ -17,6 +17,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+
 /**
  * Created by mike on 28.06.2016.
  */
@@ -109,13 +112,21 @@ public class PlusMinusEditText implements View.OnKeyListener,
 
     private void inc() {
         value += step;
-        if (value > maxValue) value = maxValue;
+        if (value > maxValue) {
+            value = maxValue;
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.youareonallowedlimit));
+            stopUpdating();
+        }
         updateEditText();
     }
 
     private void dec() {
         value -= step;
-        if (value < minValue) value = minValue;
+        if (value < minValue) {
+            value = minValue;
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.youareonallowedlimit));
+            stopUpdating();
+        }
         updateEditText();
     }
 
@@ -137,8 +148,10 @@ public class PlusMinusEditText implements View.OnKeyListener,
     }
 
     private void stopUpdating() {
-        mUpdater.shutdownNow();
-        mUpdater = null;
+        if (mUpdater != null) {
+            mUpdater.shutdownNow();
+            mUpdater = null;
+        }
     }
 
     @Override

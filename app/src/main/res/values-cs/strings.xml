@@ -299,4 +299,5 @@
     <string name="objectives_5_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
     <string name="objectives_5_objective">Upravit bazály a koeficinty, když bude potřeba a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_6_objective">Povolit další fukce pro běžné používání jako AMA</string>
+    <string name="youareonallowedlimit">Dosaženo limitu</string>
 </resources>

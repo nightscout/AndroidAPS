@@ -27,7 +27,7 @@ public class ToastUtils {
         playSound(ctx, soundID);
     }
 
-    public static void playSound(final Context ctx, final int soundID) {
+    private static void playSound(final Context ctx, final int soundID) {
         final MediaPlayer soundMP = MediaPlayer.create(ctx, soundID);
         soundMP.start();
         soundMP.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
