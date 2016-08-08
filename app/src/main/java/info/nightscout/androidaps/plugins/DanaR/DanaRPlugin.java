@@ -240,8 +240,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (insulin > 0 || carbs > 0) {
             Treatment t = new Treatment();
             boolean connectionOK = false;
-            if (carbs > 0) connectionOK = sExecutionService.carbsEntry(carbs);
-            if (insulin > 0) connectionOK = sExecutionService.bolus(insulin, t);
+            if (insulin > 0) connectionOK = sExecutionService.bolus(insulin, carbs, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;

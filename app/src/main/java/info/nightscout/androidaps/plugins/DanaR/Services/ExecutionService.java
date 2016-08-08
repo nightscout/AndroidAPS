@@ -355,7 +355,7 @@ public class ExecutionService extends Service {
         return true;
     }
 
-    public boolean bolus(Double amount, Treatment t) {
+    public boolean bolus(Double amount, int carbs, Treatment t) {
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusProgress progress = new MsgBolusProgress(MainApp.bus(), amount, t);
@@ -364,6 +364,10 @@ public class ExecutionService extends Service {
         connect("bolus");
         if (!isConnected()) return false;
 
+        if (carbs > 0) {
+            Calendar time = Calendar.getInstance();
+            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(time, carbs));
+        }
         MainApp.bus().post(new EventDanaRBolusStart());
 
         if (!stop.stopped) {
