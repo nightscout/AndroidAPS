@@ -338,7 +338,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
-        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
+        PumpEnactResult result = deliverTreatment(insulin, carbs, context);
 
         if (Config.logCongigBuilderActions)
             log.debug("deliverTreatmentFromBolusWizard insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
