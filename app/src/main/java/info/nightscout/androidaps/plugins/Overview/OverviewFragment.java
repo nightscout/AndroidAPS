@@ -202,7 +202,7 @@ public class OverviewFragment extends Fragment {
                             sHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    acceptTempLayout.setVisibility(View.GONE);
+                                    hideTempRecommendation();
                                     PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
                                     if (applyResult.enacted) {
                                         finalLastRun.setByPump = applyResult;
@@ -280,6 +280,17 @@ public class OverviewFragment extends Fragment {
     @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
         updateGUIIfVisible();
+    }
+
+    private void hideTempRecommendation() {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    acceptTempLayout.setVisibility(View.GONE);
+                }
+            });
     }
 
     private void updateGUIIfVisible() {

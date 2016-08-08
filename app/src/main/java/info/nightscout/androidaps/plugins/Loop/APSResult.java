@@ -23,11 +23,14 @@ public class APSResult implements Parcelable {
 
     @Override
     public String toString() {
-        if (changeRequested)
-            return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h\n" +
-                    MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
-                    MainApp.sResources.getString(R.string.reason) + ": " + reason;
-        else
+        if (changeRequested) {
+            if (rate == 0 && duration == 0)
+                return MainApp.sResources.getString(R.string.canceltemp);
+            else
+                return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h\n" +
+                        MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
+                        MainApp.sResources.getString(R.string.reason) + ": " + reason;
+        } else
             return MainApp.sResources.getString(R.string.nochangerequested);
     }
 
