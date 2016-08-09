@@ -475,8 +475,8 @@ public class OverviewFragment extends Fragment {
             @Override
             public int get(DataPoint data) {
                 BarDataPoint point = (BarDataPoint) data;
-                if (point.isTempBasal) return Color.CYAN;
-                else return Color.BLUE;
+                if (point.isTempBasal) return Color.BLUE;
+                else return Color.CYAN;
             }
         });
 

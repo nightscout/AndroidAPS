@@ -203,6 +203,7 @@ public class ExecutionService extends Service {
                 try {
                     mRfcommSocket.connect();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
                 waitMsec(1000);
 
