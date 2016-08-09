@@ -263,6 +263,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
                         double maxBasal,
                         double minBg,
                         double maxBg,
+                        double targetBg,
                         PumpInterface pump,
                         IobTotal iobData,
                         DatabaseHelper.GlucoseStatus glucoseStatus,
@@ -278,6 +279,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
         mProfile.add("max_basal", maxBasal);
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
+        mProfile.add("target_bg", targetBg);
         mProfile.add("carbratio", profile.getIc(profile.secondsFromMidnight()));
         mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
 

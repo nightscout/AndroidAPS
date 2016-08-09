@@ -15,6 +15,12 @@
             android:title="@string/openapsma_high_summary" />
 
         <EditTextPreference
+            android:defaultValue=""
+            android:key="openapsma_target_bg"
+            android:numeric="decimal"
+            android:title="@string/openapsma_target_bg" />
+
+        <EditTextPreference
             android:defaultValue="1"
             android:key="openapsma_max_basal"
             android:numeric="decimal"

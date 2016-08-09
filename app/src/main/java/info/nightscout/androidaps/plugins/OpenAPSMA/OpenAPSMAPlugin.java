@@ -141,9 +141,11 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         String maxBgDefault = "180";
         String minBgDefault = "100";
+        String targetBgDefault = "150";
         if (!units.equals(Constants.MGDL)) {
             maxBgDefault = "10";
             minBgDefault = "5";
+            targetBgDefault = "7";
         }
 
         Date now = new Date();
@@ -152,6 +154,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
         double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_min_bg", minBgDefault)), units);
         double maxBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_max_bg", maxBgDefault)), units);
+        double targetBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_target_bg", targetBgDefault)), units);
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
 
@@ -168,7 +171,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
-        determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, pump, iobTotal, glucoseStatus, mealData);
+        determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
 
 
         DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();

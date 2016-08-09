@@ -300,4 +300,5 @@
     <string name="objectives_5_objective">Upravit bazály a koeficinty, když bude potřeba a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_6_objective">Povolit další fukce pro běžné používání jako AMA</string>
     <string name="youareonallowedlimit">Dosaženo limitu</string>
+    <string name="openapsma_target_bg">Cílová hodnota pro výpočty</string>
 </resources>
