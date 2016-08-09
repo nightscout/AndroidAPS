@@ -41,16 +41,15 @@
             <intent-filter>
 
                 <!-- Receiver from NSClient -->
+                <action android:name="info.nightscout.client.NEW_SGV" />
                 <action android:name="info.nightscout.client.NEW_TREATMENT" />
                 <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
                 <action android:name="info.nightscout.client.REMOVED_TREATMENT" />
                 <action android:name="info.nightscout.client.NEW_PROFILE" />
-                <action android:name="info.nightscout.client.NEW_SGV" />
                 <action android:name="info.nightscout.client.NEW_STATUS" />
                 <action android:name="info.nightscout.client.NEW_MBG" />
                 <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
                 <action android:name="info.nightscout.client.NEW_CAL" />
-                <action android:name="info.nightscout.client.NEW_STATUS" />
                 <!-- Receive new SMS messages -->
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->

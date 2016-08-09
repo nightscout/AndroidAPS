@@ -458,15 +458,18 @@ public class OverviewFragment extends Fragment {
         }
 
         Double maxAllowedBasal = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
+        Double maxBasalValueFound = 0d;
 
         long now = new Date().getTime();
         List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
         for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
             TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
+            Double basal = 0d;
             if (tb != null)
-                basalArray.add(new BarDataPoint(time, tb.tempBasalConvertedToAbsolute(new Date(time)), true));
+                basalArray.add(new BarDataPoint(time, basal = tb.tempBasalConvertedToAbsolute(new Date(time)), true));
             else
-                basalArray.add(new BarDataPoint(time, profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
+                basalArray.add(new BarDataPoint(time, basal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
+            maxBasalValueFound = Math.max(maxBasalValueFound, basal);
         }
         BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
         basal = basalArray.toArray(basal);
@@ -479,13 +482,6 @@ public class OverviewFragment extends Fragment {
                 else return Color.CYAN;
             }
         });
-
-        // set second scale
-        bgGraph.getSecondScale().addSeries(basalsSeries);
-        bgGraph.getSecondScale().setMinY(0);
-        bgGraph.getSecondScale().setMaxY(maxAllowedBasal * 4);
-        bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
-
 
         // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
@@ -578,6 +574,14 @@ public class OverviewFragment extends Fragment {
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
+
+        // set second scale
+        bgGraph.getSecondScale().addSeries(basalsSeries);
+        bgGraph.getSecondScale().setMinY(0);
+        bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
+        bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
+
+
     }
 
 }

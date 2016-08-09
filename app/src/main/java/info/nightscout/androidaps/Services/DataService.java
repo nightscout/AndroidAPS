@@ -217,6 +217,18 @@ public class DataService extends IntentService {
         if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
             if (nsClientEnabled) {
                 try {
+                    if (bundles.containsKey("devicestatus")) {
+                        String devicestatusesstring = bundles.getString("devicestatus");
+                        JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
+                        if (devicestatusJson.has("pump")) {
+                            // Objectives 0
+                            ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                            if (objectivesPlugin != null) {
+                                objectivesPlugin.pumpStatusIsAvailableInNS = true;
+                                objectivesPlugin.saveProgress();
+                            }
+                        }
+                    }
                     if (bundles.containsKey("devicestatuses")) {
                         String devicestatusesstring = bundles.getString("devicestatuses");
                         JSONArray jsonArray = new JSONArray(devicestatusesstring);
