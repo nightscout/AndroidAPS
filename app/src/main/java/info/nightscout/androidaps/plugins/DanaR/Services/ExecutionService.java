@@ -203,7 +203,11 @@ public class ExecutionService extends Service {
                 try {
                     mRfcommSocket.connect();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    //e.printStackTrace();
+                    if (e.getMessage().contains("socket closed")) {
+                        e.printStackTrace();
+                        break;
+                    }
                 }
                 waitMsec(1000);
 
