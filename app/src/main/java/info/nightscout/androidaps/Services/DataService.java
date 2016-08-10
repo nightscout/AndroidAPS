@@ -41,10 +41,10 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
+import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
-import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
+import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
@@ -56,10 +56,6 @@ public class DataService extends IntentService {
 
     boolean xDripEnabled = false;
     boolean nsClientEnabled = true;
-    SmsCommunicatorFragment smsCommunicatorFragment = null;
-
-    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledDisconnection = null;
 
     public DataService() {
         super("DataService");
@@ -72,17 +68,13 @@ public class DataService extends IntentService {
             log.debug("onHandleIntent " + intent);
 
         if (MainApp.getConfigBuilder() != null) {
-            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceXdripFragment.class)) {
+            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
                 xDripEnabled = true;
                 nsClientEnabled = false;
             }
-            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceNSClientFragment.class)) {
+            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
                 xDripEnabled = false;
                 nsClientEnabled = true;
-            }
-
-            if (MainApp.getSpecificPlugin(SmsCommunicatorFragment.class) != null) {
-                smsCommunicatorFragment = (SmsCommunicatorFragment) MainApp.getSpecificPlugin(SmsCommunicatorFragment.class);
             }
         }
 
@@ -219,11 +211,8 @@ public class DataService extends IntentService {
                         JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
                         if (devicestatusJson.has("pump")) {
                             // Objectives 0
-                            ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                            if (objectivesPlugin != null) {
-                                objectivesPlugin.pumpStatusIsAvailableInNS = true;
-                                objectivesPlugin.saveProgress();
-                            }
+                            ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
+                            ObjectivesPlugin.saveProgress();
                         }
                     }
                     if (bundles.containsKey("devicestatuses")) {
@@ -233,11 +222,8 @@ public class DataService extends IntentService {
                             JSONObject devicestatusJson = jsonArray.getJSONObject(0);
                             if (devicestatusJson.has("pump")) {
                                 // Objectives 0
-                                ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                                if (objectivesPlugin != null) {
-                                    objectivesPlugin.pumpStatusIsAvailableInNS = true;
-                                    objectivesPlugin.saveProgress();
-                                }
+                                ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
+                                ObjectivesPlugin.saveProgress();
                             }
                         }
                     }
@@ -575,24 +561,6 @@ public class DataService extends IntentService {
     }
 
     public void scheduleTreatmentChange() {
-/*
-        class DisconnectRunnable implements Runnable {
-            public void run() {
-                if (Config.logIncommingData)
-                    log.debug("Firing EventTreatmentChange");
-                MainApp.bus().post(new EventTreatmentChange());
-                scheduledDisconnection = null;
-            }
-        }
-        // prepare task for execution in 5 sec
-        // cancel waiting task to prevent sending multiple disconnections
-        if (scheduledDisconnection != null)
-            scheduledDisconnection.cancel(false);
-        Runnable task = new DisconnectRunnable();
-        final int sec = 5;
-        scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
-        log.debug("Scheduling EventTreatmentChange");
-*/
         MainApp.bus().post(new EventTreatmentChange());
     }
 
