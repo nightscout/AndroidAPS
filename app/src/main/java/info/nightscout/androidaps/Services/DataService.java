@@ -67,15 +67,13 @@ public class DataService extends IntentService {
         if (Config.logFunctionCalls)
             log.debug("onHandleIntent " + intent);
 
-        if (MainApp.getConfigBuilder() != null) {
-            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
-                xDripEnabled = true;
-                nsClientEnabled = false;
-            }
-            if (MainApp.getConfigBuilder().getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
-                xDripEnabled = false;
-                nsClientEnabled = true;
-            }
+        if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
+            xDripEnabled = true;
+            nsClientEnabled = false;
+        }
+        if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
+            xDripEnabled = false;
+            nsClientEnabled = true;
         }
 
         if (intent != null) {
@@ -142,7 +140,7 @@ public class DataService extends IntentService {
         bgReading.timeIndex = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
 
-        if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+        if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
             if (Config.logIncommingBG)
                 log.debug("Ignoring old XDRIPREC BG " + bgReading.toString());
             return;
@@ -152,7 +150,7 @@ public class DataService extends IntentService {
             log.debug("XDRIPREC BG " + bgReading.toString());
 
         try {
-            MainApp.instance().getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -170,16 +168,13 @@ public class DataService extends IntentService {
             if (Config.logIncommingData)
                 log.debug("Received status: " + bundles);
             if (bundles.containsKey("nsclientversioncode")) {
-                ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
-                if (configBuilder != null) {
-                    configBuilder.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
-                    configBuilder.nightscoutVersionName = bundles.getString("nightscoutversionname");
-                    configBuilder.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
-                    configBuilder.nsClientVersionName = bundles.getString("nsclientversionname");
-                    log.debug("Got versions: NSClient: " + configBuilder.nsClientVersionName + " Nightscout: " + configBuilder.nightscoutVersionName);
-                    if (configBuilder.nsClientVersionCode < 118)
-                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
-                }
+                ConfigBuilderPlugin.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
+                ConfigBuilderPlugin.nightscoutVersionName = bundles.getString("nightscoutversionname");
+                ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
+                ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
+                log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
+                if (ConfigBuilderPlugin.nsClientVersionCode < 118)
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
             } else {
                 ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
             }
@@ -404,7 +399,6 @@ public class DataService extends IntentService {
                 if (Config.logIncommingData)
                     log.debug("Records updated: " + updated);
             }
-            return;
         } else {
             if (Config.logIncommingData)
                 log.debug("ADD: New treatment: " + trstring);
