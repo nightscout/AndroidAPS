@@ -243,6 +243,7 @@
     <string name="replywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
     <string name="bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
+    <string name="bolusdelivering" formatted="false">Delivering %.2fU</string>
     <string name="smscommunicator_remotebolusingallowed">Allow remote bolusing via SMS</string>
     <string name="remotebolusnotallowed">Remote bolus not allowed</string>
     <string name="glucosetype_finger">Finger</string>

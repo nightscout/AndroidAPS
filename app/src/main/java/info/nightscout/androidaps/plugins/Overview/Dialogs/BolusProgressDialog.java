@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusProgress;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 
@@ -80,7 +80,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     }
 
     @Subscribe
-    public void onStatusEvent(final EventDanaRBolusProgress ev) {
+    public void onStatusEvent(final EventOverviewBolusProgress ev) {
         Activity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(new Runnable() {

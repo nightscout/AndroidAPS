@@ -17,6 +17,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.VirtualPump.events.EventVirtualPumpUpdateGui;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -143,6 +144,32 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.bolusDelivered = insulin;
         result.carbsDelivered = carbs;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+
+        Double delivering = 0d;
+
+        while (delivering < insulin) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+            }
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+            bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivering);
+            bolusingEvent.percent = Math.min((int) (delivering / insulin * 100), 100);
+            MainApp.bus().post(bolusingEvent);
+            delivering += 0.1d;
+        }
+        try {
+            Thread.sleep(200);
+        } catch (InterruptedException e) {
+        }
+        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+        bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), insulin);
+        bolusingEvent.percent = 100;
+        MainApp.bus().post(bolusingEvent);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
 
         if (Config.logPumpComm)
             log.debug("Delivering treatment insulin: " + insulin + "U carbs: " + carbs + "g " + result);
