@@ -379,11 +379,8 @@ public class DataService extends IntentService {
                 MainApp.bus().post(new EventNewBG());
             }
             // Objectives 0
-            ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-            if (objectivesPlugin != null) {
-                objectivesPlugin.bgIsAvailableInNS = true;
-                objectivesPlugin.saveProgress();
-            }
+            ObjectivesPlugin.bgIsAvailableInNS = true;
+            ObjectivesPlugin.saveProgress();
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_MBG)) {

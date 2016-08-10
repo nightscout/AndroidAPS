@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(ObjectivesPlugin.class);
 
-    public List<Objective> objectives;
+    public static List<Objective> objectives;
 
     boolean fragmentVisible = true;
 
@@ -92,11 +92,11 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     // Objective 0
-    public boolean bgIsAvailableInNS = false;
-    public boolean pumpStatusIsAvailableInNS = false;
+    public static boolean bgIsAvailableInNS = false;
+    public static boolean pumpStatusIsAvailableInNS = false;
     // Objective 1
-    public Integer manualEnacts = 0;
-    public final Integer manualEnactsNeeded = 20;
+    public static Integer manualEnacts = 0;
+    public static final Integer manualEnactsNeeded = 20;
 
     public class RequirementResult {
         boolean done = false;
@@ -176,7 +176,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 new Date(0, 0, 0)));
     }
 
-    public void saveProgress() {
+    public static void saveProgress() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         for (int num = 0; num < objectives.size(); num++) {
