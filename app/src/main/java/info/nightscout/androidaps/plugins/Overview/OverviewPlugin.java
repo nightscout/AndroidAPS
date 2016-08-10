@@ -9,6 +9,9 @@ import info.nightscout.androidaps.interfaces.PluginBase;
  */
 public class OverviewPlugin implements PluginBase {
 
+    public static Double bgTargetLow = 80d;
+    public static Double bgTargetHigh = 180d;
+
     @Override
     public String getFragmentClass() {
         return OverviewFragment.class.getName();

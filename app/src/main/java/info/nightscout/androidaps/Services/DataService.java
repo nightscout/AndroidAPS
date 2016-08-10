@@ -37,14 +37,12 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
-import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
+import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.receivers.DataReceiver;
@@ -200,12 +198,11 @@ public class DataService extends IntentService {
                         JSONObject settings = statusJson.getJSONObject("settings");
                         if (settings.has("thresholds")) {
                             JSONObject thresholds = settings.getJSONObject("thresholds");
-                            OverviewFragment overviewFragment = (OverviewFragment) MainApp.getSpecificPlugin(OverviewFragment.class);
-                            if (overviewFragment != null && thresholds.has("bgTargetTop")) {
-                                overviewFragment.bgTargetHigh = thresholds.getDouble("bgTargetTop");
+                            if (thresholds.has("bgTargetTop")) {
+                                OverviewPlugin.bgTargetHigh = thresholds.getDouble("bgTargetTop");
                             }
-                            if (overviewFragment != null && thresholds.has("bgTargetBottom")) {
-                                overviewFragment.bgTargetLow = thresholds.getDouble("bgTargetBottom");
+                            if (thresholds.has("bgTargetBottom")) {
+                                OverviewPlugin.bgTargetLow = thresholds.getDouble("bgTargetBottom");
                             }
                         }
                     }

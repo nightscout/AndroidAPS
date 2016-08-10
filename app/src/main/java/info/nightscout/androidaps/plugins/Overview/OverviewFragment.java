@@ -98,9 +98,6 @@ public class OverviewFragment extends Fragment {
     private static Handler sHandler;
     private static HandlerThread sHandlerThread;
 
-    public Double bgTargetLow = 80d;
-    public Double bgTargetHigh = 180d;
-
     public OverviewFragment() {
         super();
         if (sHandlerThread == null) {
@@ -419,8 +416,8 @@ public class OverviewFragment extends Fragment {
         long toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
         long fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
 
-        Double lowLine = NSProfile.fromMgdlToUnits(bgTargetLow, units);
-        Double highLine = NSProfile.fromMgdlToUnits(bgTargetHigh, units);
+        Double lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+        Double highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
 
         BarGraphSeries<DataPoint> basalsSeries = null;
         LineGraphSeries<DataPoint> seriesLow = null;
