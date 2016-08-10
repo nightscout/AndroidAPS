@@ -59,7 +59,7 @@ public class LoopPlugin implements PluginBase {
 
     public LoopPlugin() {
         if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(LoopFragment.class.getSimpleName());
+            sHandlerThread = new HandlerThread(LoopPlugin.class.getSimpleName());
             sHandlerThread.start();
             sHandler = new Handler(sHandlerThread.getLooper());
         }

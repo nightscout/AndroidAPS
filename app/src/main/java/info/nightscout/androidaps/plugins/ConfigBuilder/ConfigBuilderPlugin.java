@@ -39,7 +39,6 @@ import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
-import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
@@ -690,7 +689,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -719,7 +718,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 intent.putExtras(bundle);
                 intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
                 context.sendBroadcast(intent);
-                DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
+                DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -741,7 +740,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -767,7 +766,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderFragment.class);
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -199,7 +199,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         bolusWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
-                            danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRFragment.class);
+                            danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
                             PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0, null);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.bolusdelivered), bolusWaitingForConfirmation.bolusRequested);
