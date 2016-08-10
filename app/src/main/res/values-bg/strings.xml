@@ -129,7 +129,7 @@
     <string name="reason">Основание</string>
     <string name="refreshfromnightscout">Искате ли да обновите treatments от Nightscout</string>
     <string name="safety">Безопасност</string>
-    <string name="setextendedbolusquestion">Задай нов комб. болусs:</string>
+    <string name="setextendedbolusquestion">Задай нов удължен болусs:</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="simpleprofile">Simple profile</string>
     <string name="tempbasals">Временен базал</string>
@@ -155,8 +155,8 @@
     <string name="treatments_wizard_correction_label">Корекция</string>
     <string name="treatments_wizard_total_label">ОБЩО</string>
     <string name="treatments_wizard_unit_label">Ед.</string>
-    <string name="treatmentssafety_maxbolus_title">Макс. възможен болус</string>
-    <string name="treatmentssafety_maxcarbs_title">Макс. възможни въглехидрати</string>
+    <string name="treatmentssafety_maxbolus_title">Макс. лимит на болус</string>
+    <string name="treatmentssafety_maxcarbs_title">Макс. лимит на въглехидрати</string>
     <string name="treatmentssafety_title">Tratments safety</string>
     <string name="unsupportedclientver">Неподържана версия на NSClient</string>
     <string name="virtualpump">Виртуална помпа</string>
@@ -197,9 +197,9 @@
     <string name="de_lang">Deutsch</string>
     <string name="openapsma_high_summary">Макс. стойност, която е в границите</string>
     <string name="openapsma_low_summary">Мин. стойност, която е в границите</string>
-    <string name="openapsma_maxbasal_summary">Макс. временен базал [Е/ч] може да бъде до</string>
+    <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
     <string name="bg_lang">Български</string>
-    <string name="openapsma_maxiob_summary">Максимална стойност на не болус IOB, който openAPS може да зададе</string>
+    <string name="openapsma_maxiob_summary">Макс. лимит на не болус IOB, който подаван от openAPS </string>
     <string name="minago">min ago</string>
     <string name="connected">Свързан</string>
     <string name="devicenotfound">Избраното устройство не съществува</string>
@@ -216,11 +216,11 @@
     <string name="syncprofiletopump_title">Синхронизирай помпата с профила в Nightscout</string>
     <string name="nobtadapter">Няма bluetooth адаптер</string>
     <string name="nightscout">Nightscout</string>
-    <string name="dismiss">DISMISS</string>
+    <string name="dismiss">ПРЕКРАТИ</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="bolusdelivered" formatted="false">Болус %.2fU беше доставен успешно</string>
+    <string name="bolusdelivered" formatted="false">Болус %.2fU беше подаден успешно</string>
     <string name="bolusfailed">Болусът не е доставен</string>
     <string name="canceltemp">Откажи временен базал</string>
     <string name="virtualpump_lastconnection_label">Последно свързване:</string>
@@ -248,5 +248,42 @@
     <string name="careportal_temporarytargetcancel">Отакажи временна цел</string>
     <string name="comment">Коментар</string>
     <string name="absolute">Абсолютна</string>
+    <string name="overview_bolusiprogress_occlusion">Запушване</string>
+    <string name="overview_bolusprogress_delivered">Доставено</string>
+    <string name="overview_bolusprogress_goingtodeliver">Подаване на %.2fU Е инсулин</string>
+    <string name="overview_bolusprogress_stop">Стоп</string>
+    <string name="overview_bolusprogress_stoped">Спрян</string>
+    <string name="overview_bolusprogress_stoppressed">НАТИСНАТ СТОП</string>
+    <string name="openapsma_target_bg">КЗ цел за изчисления</string>
+    <string name="pumpbusy">Помпата е заета</string>
+    <string name="waitingforpump">Изчаква за помпа</string>
+    <string name="wrongpumppassword">Грешна парола за помпата!</string>
+    <string name="youareonallowedlimit">Достигнахте лимита</string>
+    <string name="danar_alarm">аларма</string>
+    <string name="danar_basalhour">базален по часове</string>
+    <string name="danar_carbohydrate">въглехидрати</string>
+    <string name="danar_error">грешка</string>
+    <string name="danar_glucose">кръвна захар</string>
+    <string name="danar_history">История</string>
+    <string name="danar_history_alarm">Аларма</string>
+    <string name="danar_history_basalhours">Базален по часове</string>
+    <string name="danar_history_bolus">Болуси</string>
+    <string name="danar_history_carbohydrates">Въглехидрати</string>
+    <string name="danar_history_connectingfor">Свъзва се за %d сек.</string>
+    <string name="danar_history_dailyinsulin">Инсулин за деня</string>
+    <string name="danar_history_errors">Грешки</string>
+    <string name="danar_history_glucose">Кръвна захар</string>
+    <string name="danar_history_refill">Пълнене</string>
+    <string name="danar_history_syspend">Прекъсване</string>
+    <string name="danar_historyreload">Презареждане</string>
+    <string name="danar_iob_label">IOB на помпата</string>
+    <string name="danar_password">Парола за помпа след 2016г</string>
+    <string name="danar_refill">пълнене</string>
+    <string name="danar_totaluploaded">Общо %d записа са изпратени</string>
+    <string name="enacted">Приложено</string>
+    <string name="danar_sbolus"></string>
+    <string name="failedupdatebasalprofile">Не може да се обнови базалния профил</string>
+    <string name="hoursago">ч. преди</string>
+    <string name="objectives_0_gate"></string>
 </resources>
 
