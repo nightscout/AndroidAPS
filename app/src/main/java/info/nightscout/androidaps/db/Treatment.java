@@ -42,10 +42,10 @@ public class Treatment implements DataPointWithLabelInterface {
     public Date created_at;
 
     @DatabaseField
-    public Double insulin;
+    public Double insulin = 0d;
 
     @DatabaseField
-    public Double carbs;
+    public Double carbs = 0d;
 
     public void copyFrom(Treatment t) {
         this._id = t._id;
