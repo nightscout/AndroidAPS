@@ -15,6 +15,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -110,6 +111,20 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         }
     };
 
+    final AdapterView.OnItemSelectedListener onItemSelectedListener = new AdapterView.OnItemSelectedListener() {
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            calculateInsulin();
+            wizardDialogDeliverButton.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> parent) {
+            ToastUtils.showToastInUiThread(getContext(), MainApp.sResources.getString(R.string.noprofileselected));
+            wizardDialogDeliverButton.setVisibility(View.GONE);
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -148,6 +163,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         bgCheckbox.setOnCheckedChangeListener(onCheckedChangeListener);
         basalIobCheckbox.setOnCheckedChangeListener(onCheckedChangeListener);
         bolusIobCheckbox.setOnCheckedChangeListener(onCheckedChangeListener);
+        profileSpinner.setOnItemSelectedListener(onItemSelectedListener);
 
         Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
         Double maxCorrection = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);

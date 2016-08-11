@@ -304,5 +304,6 @@
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="openapsma_target_bg">Target value for calculations</string>
+    <string name="noprofileselected">No profile seselcted</string>
 
 </resources>
