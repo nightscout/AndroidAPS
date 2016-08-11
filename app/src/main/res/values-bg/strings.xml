@@ -65,7 +65,7 @@
     <string name="delta">Изменение:</string>
     <string name="duration">Време</string>
     <string name="en_lang">English</string>
-    <string name="entertreatmentquestion">Въведи ново treatment:</string>
+    <string name="entertreatmentquestion">Enter new treatment:</string>
     <string name="glucose">КЗ:</string>
     <string name="loop">Loop </string>
     <string name="loop_aps_label">APS</string>
@@ -74,6 +74,8 @@
     <string name="loopdisabled">Loop отказан от ограниченията</string>
     <string name="lowsuspend">Low Suspend</string>
     <string name="lowsuspend_low_title">Граница за ниска КЗ</string>
+    <string name="objectives_manualenacts">Manual enacts</string>
+    <string name="lowsuspend_lowprojected">Low projected</string>
     <string name="objectives_minimalduration">Минимална продължителност</string>
     <string name="nav_backup">Архивиране</string>
     <string name="nav_exit">Изход</string>
@@ -119,6 +121,7 @@
     <string name="overview">Преглед</string>
     <string name="overview_calculator_label">Калкулатор</string>
     <string name="overview_newtempbasal_basal_label">Базална стойност</string>
+    <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="overview_bolus_label">Болус</string>
     <string name="profileviewer">NS профил</string>
     <string name="objectives_pumpstatusavailableinns">Статус на помпа в NS</string>
@@ -154,6 +157,7 @@
     <string name="treatments_wizard_unit_label">Ед.</string>
     <string name="treatmentssafety_maxbolus_title">Макс. лимит на болус</string>
     <string name="treatmentssafety_maxcarbs_title">Макс. лимит на въглехидрати</string>
+    <string name="treatmentssafety_title">Tratments safety</string>
     <string name="unsupportedclientver">Неподържана версия на NSClient</string>
     <string name="virtualpump">Виртуална помпа</string>
     <string name="virtualpump_basebasalrate_label">Базова базална стойност:</string>
@@ -195,7 +199,7 @@
     <string name="openapsma_low_summary">Мин. стойност, която е в границите</string>
     <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
     <string name="bg_lang">Български</string>
-    <string name="openapsma_maxiob_summary">Макс. лимит на не болус IOB, който подаван от openAPS </string>
+    <string name="openapsma_maxiob_summary">Макс. лимит на не болус IOB подаван от openAPS</string>
     <string name="minago">min ago</string>
     <string name="connected">Свързан</string>
     <string name="devicenotfound">Избраното устройство не съществува</string>
@@ -225,7 +229,7 @@
     <string name="smscommunicator_allowednumbers">Позволени телефонни номера</string>
     <string name="smscommunicator_remotebolusingallowed">Разреши болус чрез SMS</string>
     <string name="success">Успех</string>
-    <string name="replywithcode" formatted="false">За да доставите болус %.2fU отговорете с код %s</string>
+    <string name="replywithcode" formatted="false">За да доставите болус %.2fU отговорете с код  %s</string>
     <string name="remotebolusnotallowed">Отдалечен болус не е разрешен</string>
     <string name="reloadprofile">Обнови профила</string>
     <string name="percent">Процент</string>
@@ -261,7 +265,7 @@
     <string name="danar_error">грешка</string>
     <string name="danar_glucose">кръвна захар</string>
     <string name="danar_history">История</string>
-    <string name="danar_history_alarm">Аларма</string>
+    <string name="danar_history_alarm">Аларми</string>
     <string name="danar_history_basalhours">Базален по часове</string>
     <string name="danar_history_bolus">Болуси</string>
     <string name="danar_history_carbohydrates">Въглехидрати</string>
@@ -277,7 +281,25 @@
     <string name="danar_refill">пълнене</string>
     <string name="danar_totaluploaded" formatted="false">Общо %d записа са изпратени</string>
     <string name="enacted">Приложено</string>
+    <string name="danar_sbolus">S bolus</string>
     <string name="failedupdatebasalprofile">Не може да се обнови базалния профил</string>
     <string name="hoursago">ч. преди</string>
+    <string name="objectives_0_gate">Потвърдете, че КЗ и данните от помпата са достъпни в Nightscout</string>
+    <string name="danar_debolus">DE bolus</string>
+    <string name="danar_dsbolus">DS bolus</string>
+    <string name="danar_ebolus">E bolus</string>
+    <string name="mm640g">MM 640g</string>
+    <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
+    <string name="objectives_1_gate">Стартиране в Open loop режим за няколко дни и ръчно прилагане на много временни базали</string>
+    <string name="objectives_1_objective">Стартиране на Open Loop </string>
+    <string name="objectives_2_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
+    <string name="objectives_2_objective">Разбиране на вашият open loop режим, включително препоръчваните временни базали</string>
+    <string name="objectives_3_gate">Стартиране на Closed loop с макс. IOB=0 без твърде много събития тип Low suspend</string>
+    <string name="objectives_6_objective">Активиране на допълнителни функции за дневно използване, включително и advanced meal assist </string>
+    <string name="objectives_3_objective">Стартиране на Close loop в режим Low Suspend</string>
+    <string name="objectives_4_gate">Стартирайте за няколко дни и поне една нощ без аларми за ниска КЗ</string>
+    <string name="objectives_4_objective">Настройване на Closed Loop, повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
+    <string name="objectives_5_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
+    <string name="objectives_5_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
+    <string name="uploading">Uploading</string>
 </resources>
-
