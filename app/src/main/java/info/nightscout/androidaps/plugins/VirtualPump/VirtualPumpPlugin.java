@@ -333,10 +333,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         try {
             battery.put("percent", batteryPercent);
             status.put("status", "normal");
-            if (isTempBasalInProgress()) {
-                status.put("tempbasalpct", getTempBasal().percent);
-                status.put("tempbasalstart", DateUtil.toISOString(getTempBasal().timeStart));
-                status.put("tempbasalremainmin", getTempBasal().getPlannedRemainingMinutes());
+            TempBasal tb;
+            if ((tb = getTempBasal()) != null) {
+                status.put("tempbasalpct", tb.percent);
+                status.put("tempbasalstart", DateUtil.toISOString(tb.timeStart));
+                status.put("tempbasalremainmin", tb.getPlannedRemainingMinutes());
             }
             status.put("timestamp", DateUtil.toISOString(new Date()));
 
