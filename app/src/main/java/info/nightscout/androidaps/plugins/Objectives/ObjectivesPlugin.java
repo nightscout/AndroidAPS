@@ -196,12 +196,20 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
-            o.started = new Date(settings.getLong("Objectives" + num + "started", 0));
-            o.accomplished = new Date(settings.getLong("Objectives" + num + "accomplished", 0));
+            try {
+                o.started = new Date(settings.getLong("Objectives" + num + "started", 0));
+                o.accomplished = new Date(settings.getLong("Objectives" + num + "accomplished", 0));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         bgIsAvailableInNS = settings.getBoolean("Objectives" + "bgIsAvailableInNS", false);
         pumpStatusIsAvailableInNS = settings.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
-        manualEnacts = settings.getInt("Objectives" + "manualEnacts", 0);
+        try {
+            manualEnacts = settings.getInt("Objectives" + "manualEnacts", 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (Config.logPrefsChange)
             log.debug("Objectives loaded");
     }

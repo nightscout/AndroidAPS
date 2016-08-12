@@ -175,7 +175,7 @@ public class ExecutionService extends Service {
     }
 
     public void connect(String from) {
-        if (danaRPump.isNewPump && danaRPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
+        if (danaRPump.password != -1 && danaRPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
             return;
         }
