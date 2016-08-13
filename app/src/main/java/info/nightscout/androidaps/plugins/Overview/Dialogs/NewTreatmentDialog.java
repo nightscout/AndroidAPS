@@ -38,7 +38,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     Handler mHandler;
     public static HandlerThread mHandlerThread;
 
-    Context parentContext;
+    Context parentContext = null;
 
     public NewTreatmentDialog(Context context) {
         mHandlerThread = new HandlerThread(NewTreatmentDialog.class.getSimpleName());

@@ -30,9 +30,13 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     TextView stopPressedView;
     ProgressBar progressBar;
 
-    double amount;
+    static double amount;
 
     boolean started = false;
+
+    public BolusProgressDialog() {
+        super();
+    }
 
     public BolusProgressDialog(double amount) {
         this.amount = amount;
