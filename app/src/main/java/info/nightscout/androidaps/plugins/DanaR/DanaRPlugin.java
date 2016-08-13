@@ -576,6 +576,9 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public JSONObject getJSONStatus() {
+        if (getDanaRPump().lastConnection.getTime() + 5 * 60 * 1000L < new Date().getTime()) {
+            return null;
+        }
         JSONObject pump = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();
@@ -583,7 +586,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         try {
             battery.put("percent", getDanaRPump().batteryRemaining);
             status.put("status", "normal");
-            status.put("timestamp", DateUtil.toISOString(new Date()));
+            status.put("timestamp", DateUtil.toISOString(getDanaRPump().lastConnection));
             if (isTempBasalInProgress()) {
                 extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", DateUtil.toISOString(getTempBasal().timeStart));
