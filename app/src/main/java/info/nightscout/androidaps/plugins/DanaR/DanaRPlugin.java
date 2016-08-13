@@ -119,7 +119,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isEnabled(int type) {
-        if (type == PluginBase.PROFILE) return fragmentProfileEnabled;
+        if (type == PluginBase.PROFILE) return fragmentProfileEnabled && fragmentPumpEnabled;
         else if (type == PluginBase.PUMP) return fragmentPumpEnabled;
         else if (type == PluginBase.CONSTRAINTS) return fragmentPumpEnabled;
         return false;
