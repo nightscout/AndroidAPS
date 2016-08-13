@@ -62,7 +62,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     private FragmentActivity context;
 
-    private CareportalFragment.OptionsToShow options;
+    private static CareportalFragment.OptionsToShow options;
 
     NSProfile profile;
     String units;
