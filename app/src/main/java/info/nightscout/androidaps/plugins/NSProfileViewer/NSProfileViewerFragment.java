@@ -13,7 +13,7 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.androidaps.plugins.NSProfileViewer.events.EventNSProfileViewerUpdateGui;
+import info.nightscout.androidaps.plugins.NSProfileViewer.events.EventNSProfileViewerUpdateGUI;
 import info.nightscout.utils.DecimalFormatter;
 
 public class NSProfileViewerFragment extends Fragment implements FragmentBase {
@@ -63,7 +63,7 @@ public class NSProfileViewerFragment extends Fragment implements FragmentBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNSProfileViewerUpdateGui ev) {
+    public void onStatusEvent(final EventNSProfileViewerUpdateGUI ev) {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
