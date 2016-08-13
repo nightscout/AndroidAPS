@@ -9,11 +9,29 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <CheckBox
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enable fake time and progress"
-            android:id="@+id/objectives_fake" />
+            android:id="@+id/objectives_fake_layout"
+            android:visibility="gone">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enable fake time and progress"
+                android:id="@+id/objectives_fake" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset"
+                android:id="@+id/objectives_reset"
+                android:textColor="#fef900"
+                android:gravity="right"
+                android:layout_weight="0.5"
+                android:layout_marginRight="10dp" />
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/objectives_recyclerview"
