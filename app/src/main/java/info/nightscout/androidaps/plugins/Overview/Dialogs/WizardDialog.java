@@ -83,7 +83,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     Context parentContext;
 
     public WizardDialog(Context context) {
-        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+        mHandlerThread = new HandlerThread(WizardDialog.class.getSimpleName());
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper());
         parentContext = context;

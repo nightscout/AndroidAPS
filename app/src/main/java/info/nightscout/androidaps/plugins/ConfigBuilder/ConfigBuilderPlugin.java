@@ -337,7 +337,17 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
-        PumpEnactResult result = deliverTreatment(insulin, carbs, context);
+        BolusProgressDialog bolusProgressDialog = null;
+        if (context != null) {
+            bolusProgressDialog = new BolusProgressDialog(insulin);
+            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+        }
+
+        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
+
+        if (bolusProgressDialog != null) {
+            bolusProgressDialog.dismiss();
+        }
 
         if (Config.logCongigBuilderActions)
             log.debug("deliverTreatmentFromBolusWizard insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
