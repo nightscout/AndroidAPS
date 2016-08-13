@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -70,8 +71,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     static Date lastDeviceStatusUpload = new Date(0);
 
+    PowerManager.WakeLock mWakeLock;
+
     public ConfigBuilderPlugin() {
         MainApp.bus().register(this);
+        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "DanaConnection");;
     }
 
     @Override
@@ -334,6 +339,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public PumpEnactResult deliverTreatmentFromBolusWizard(Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+        mWakeLock.acquire();
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
@@ -366,11 +372,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
             MainApp.bus().post(new EventTreatmentChange());
         }
+        mWakeLock.release();
         return result;
     }
 
     @Override
     public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
+        mWakeLock.acquire();
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
@@ -403,6 +411,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             t.sendToNSClient();
             MainApp.bus().post(new EventTreatmentChange());
         }
+        mWakeLock.release();
         return result;
     }
 
