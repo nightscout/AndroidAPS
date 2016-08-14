@@ -390,8 +390,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
 
-        if (bolusProgressDialog != null) {
-            bolusProgressDialog.dismiss();
+        bolusProgressDialog.bolusEnded = true;
+
+        if (bolusProgressDialog != null && bolusProgressDialog.running) {
+            try {
+                bolusProgressDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace(); // TODO: handle this better
+            }
         }
 
         if (Config.logCongigBuilderActions)

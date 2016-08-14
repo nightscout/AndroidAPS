@@ -31,6 +31,8 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     ProgressBar progressBar;
 
     static double amount;
+    public static boolean bolusEnded = false;
+    public static boolean running = true;
 
     boolean started = false;
 
@@ -40,6 +42,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
 
     public BolusProgressDialog(double amount) {
         this.amount = amount;
+        bolusEnded = false;
     }
 
     @Override
@@ -63,12 +66,15 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        running = true;
+        if (bolusEnded) dismiss();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
+        running = false;
     }
 
     @Override
