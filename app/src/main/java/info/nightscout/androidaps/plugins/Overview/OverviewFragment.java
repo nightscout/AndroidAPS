@@ -137,7 +137,7 @@ public class OverviewFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
-                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog(getContext());
+                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
             }
         });

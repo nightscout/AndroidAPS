@@ -258,7 +258,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
         ArrayList<CharSequence> profileList;
         profileList = profile.getProfileList();
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(parentContext,
+        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
                 android.R.layout.simple_spinner_item, profileList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         profileSpinner.setAdapter(adapter);
