@@ -382,6 +382,7 @@ public class ExecutionService extends Service {
         while (!stop.stopped && !start.failed) {
             waitMsec(100);
         }
+        waitMsec(300);
         bolusingTreatment = null;
         getPumpStatus();
         return true;
