@@ -178,7 +178,7 @@ public class DanaRHistoryActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (mExecutionService.isConnected() || mExecutionService.isConnecting()) {
-                    ToastUtils.showToastInUiThread(getApplicationContext(), getString(R.string.pumpbusy));
+                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.pumpbusy));
                     return;
                 }
                 mHandler.post(new Runnable() {
