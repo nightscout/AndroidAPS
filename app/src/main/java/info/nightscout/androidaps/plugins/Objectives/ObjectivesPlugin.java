@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.utils.SafeParse;
 
 /**
  * Created by mike on 05.08.2016.
@@ -130,78 +131,88 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
 
-    private void initializeData() {
+    public void initializeData() {
         objectives = new ArrayList<>();
         objectives.add(new Objective(0,
                 MainApp.sResources.getString(R.string.objectives_0_objective),
                 MainApp.sResources.getString(R.string.objectives_0_gate),
-                new Date(0, 0, 0),
+                new Date(0),
                 1, // 1 day
-                new Date(0, 0, 0)));
+                new Date(0)));
         objectives.add(new Objective(1,
                 MainApp.sResources.getString(R.string.objectives_1_objective),
                 MainApp.sResources.getString(R.string.objectives_1_gate),
-                new Date(0, 0, 0),
+                new Date(0),
                 7, // 7 days
-                new Date(0, 0, 0)));
+                new Date(0)));
         objectives.add(new Objective(2,
                 MainApp.sResources.getString(R.string.objectives_2_objective),
                 MainApp.sResources.getString(R.string.objectives_2_gate),
-                new Date(0, 0, 0),
+                new Date(0),
                 0, // 0 days
-                new Date(0, 0, 0)));
+                new Date(0)));
         objectives.add(new Objective(3,
                 MainApp.sResources.getString(R.string.objectives_3_objective),
                 MainApp.sResources.getString(R.string.objectives_3_gate),
-                new Date(0, 0, 0),
+                new Date(0),
                 5, // 5 days
-                new Date(0, 0, 0)));
+                new Date(0)));
         objectives.add(new Objective(4,
                 MainApp.sResources.getString(R.string.objectives_4_objective),
                 MainApp.sResources.getString(R.string.objectives_4_gate),
-                new Date(0, 0, 0),
+                new Date(0),
                 1,
-                new Date(0, 0, 0)));
+                new Date(0)));
         objectives.add(new Objective(5,
                 MainApp.sResources.getString(R.string.objectives_5_objective),
                 MainApp.sResources.getString(R.string.objectives_5_gate),
-                new Date(0, 0, 0),
+                new Date(0),
                 7,
-                new Date(0, 0, 0)));
+                new Date(0)));
         objectives.add(new Objective(6,
                 MainApp.sResources.getString(R.string.objectives_6_objective),
                 "",
-                new Date(0, 0, 0),
+                new Date(0),
                 1,
-                new Date(0, 0, 0)));
+                new Date(0)));
     }
 
     public static void saveProgress() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        SharedPreferences.Editor editor = settings.edit();
-        for (int num = 0; num < objectives.size(); num++) {
-            Objective o = objectives.get(num);
-            editor.putLong("Objectives" + num + "started", o.started.getTime());
-            editor.putLong("Objectives" + num + "accomplished", o.accomplished.getTime());
+        if (objectives != null) {
+            SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            SharedPreferences.Editor editor = settings.edit();
+            for (int num = 0; num < objectives.size(); num++) {
+                Objective o = objectives.get(num);
+                editor.putString("Objectives" + num + "started", Long.toString(o.started.getTime()));
+                editor.putString("Objectives" + num + "accomplished", Long.toString(o.accomplished.getTime()));
+            }
+            editor.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
+            editor.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
+            editor.putString("Objectives" + "manualEnacts", Integer.toString(manualEnacts));
+            editor.apply();
+            if (Config.logPrefsChange)
+                log.debug("Objectives stored");
         }
-        editor.putBoolean("Objectives" + "bgIsAvailableInNS", bgIsAvailableInNS);
-        editor.putBoolean("Objectives" + "pumpStatusIsAvailableInNS", pumpStatusIsAvailableInNS);
-        editor.putInt("Objectives" + "manualEnacts", manualEnacts);
-        editor.apply();
-        if (Config.logPrefsChange)
-            log.debug("Objectives stored");
     }
 
     void loadProgress() {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
-            o.started = new Date(settings.getLong("Objectives" + num + "started", 0));
-            o.accomplished = new Date(settings.getLong("Objectives" + num + "accomplished", 0));
+            try {
+                o.started = new Date(SafeParse.stringToLong(settings.getString("Objectives" + num + "started", "0")));
+                o.accomplished = new Date(SafeParse.stringToLong(settings.getString("Objectives" + num + "accomplished", "0")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         bgIsAvailableInNS = settings.getBoolean("Objectives" + "bgIsAvailableInNS", false);
         pumpStatusIsAvailableInNS = settings.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
-        manualEnacts = settings.getInt("Objectives" + "manualEnacts", 0);
+        try {
+            manualEnacts = SafeParse.stringToInt(settings.getString("Objectives" + "manualEnacts", "0"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (Config.logPrefsChange)
             log.debug("Objectives loaded");
     }

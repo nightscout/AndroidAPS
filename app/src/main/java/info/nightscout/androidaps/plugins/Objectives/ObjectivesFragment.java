@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,8 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     RecyclerView recyclerView;
     LinearLayoutManager llm;
     CheckBox enableFake;
+    LinearLayout fake_layout;
+    TextView reset;
 
     @Override
     public void onClick(View v) {
@@ -82,7 +85,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                     ObjectivesPlugin.Objective o = (ObjectivesPlugin.Objective) v.getTag();
                     o.started = new Date();
                     updateGUI();
-                    objectivesPlugin.saveProgress();
+                    ObjectivesPlugin.saveProgress();
                 }
             });
             holder.verifyButton.setOnClickListener(new View.OnClickListener() {
@@ -91,7 +94,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                     if (objectivesPlugin.requirementsMet(o.num).done || enableFake.isChecked()) {
                         o.accomplished = new Date();
                         updateGUI();
-                        objectivesPlugin.saveProgress();
+                        ObjectivesPlugin.saveProgress();
                     }
                 }
             });
@@ -185,8 +188,17 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
         enableFake = (CheckBox) view.findViewById(R.id.objectives_fake);
+        fake_layout = (LinearLayout) view.findViewById(R.id.objectives_fake_layout);
+        reset = (TextView) view.findViewById(R.id.objectives_reset);
         enableFake.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                updateGUI();
+            }
+        });
+        reset.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                objectivesPlugin.initializeData();
+                objectivesPlugin.saveProgress();
                 updateGUI();
             }
         });
@@ -216,7 +228,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(objectivesPlugin.objectives);
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(ObjectivesPlugin.objectives);
                     recyclerView.setAdapter(adapter);
                 }
             });

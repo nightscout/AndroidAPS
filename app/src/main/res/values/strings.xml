@@ -279,7 +279,7 @@
     <string name="danar_history_refill">Refill</string>
     <string name="danar_history_syspend">Suspend</string>
     <string name="danar_history_connectingfor" formatted="false">Connecting for %d s</string>
-    <string name="danar_password">Pump password (2016 pump only)</string>
+    <string name="danar_password">Pump password</string>
     <string name="wrongpumppassword">Wrong pump password!</string>
     <string name="pumpbusy">Pump is busy</string>
     <string name="overview_bolusprogress_delivered">Delivered</string>
@@ -304,6 +304,6 @@
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="openapsma_target_bg">Target value for calculations</string>
-    <string name="noprofileselected">No profile seselcted</string>
+    <string name="noprofileselected">No profile selected</string>
 
 </resources>

@@ -139,7 +139,7 @@ public class DanaRPump {
                 } else {
                     time = df.format(h) + ":00";
                 }
-                basals.put(new JSONObject().put("time", time).put("timeAsSeconds", h * basalIncrement).put("value", pumpProfiles[activeProfile][h]));
+                  basals.put(new JSONObject().put("time", time).put("timeAsSeconds", h * basalIncrement).put("value", pumpProfiles[activeProfile][h]));
             }
             profile.put("basal", basals);
 
@@ -149,6 +149,8 @@ public class DanaRPump {
             store.put("" + (activeProfile + 1), profile);
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            return null;
         }
         return new NSProfile(json, "" + (activeProfile + 1));
     }

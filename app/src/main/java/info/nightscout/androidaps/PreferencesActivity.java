@@ -89,7 +89,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (Config.DANAR) {
                 addPreferencesFromResource(R.xml.pref_danar);
                 DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                if (danaRPlugin.isEnabled(PluginBase.PROFILE)) {
+                if (danaRPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danarprofile);
                 }
             }

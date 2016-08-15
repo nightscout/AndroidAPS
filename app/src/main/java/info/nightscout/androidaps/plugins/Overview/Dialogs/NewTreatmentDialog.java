@@ -38,13 +38,10 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     Handler mHandler;
     public static HandlerThread mHandlerThread;
 
-    Context parentContext;
-
-    public NewTreatmentDialog(Context context) {
+    public NewTreatmentDialog() {
         mHandlerThread = new HandlerThread(NewTreatmentDialog.class.getSimpleName());
         mHandlerThread.start();
         this.mHandler = new Handler(mHandlerThread.getLooper());
-        parentContext = context;
     }
 
     @Override
@@ -91,7 +88,9 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                     final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    final Context context = getContext();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -101,9 +100,9 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints, parentContext);
+                                        PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints, context);
                                         if (!result.success) {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                             builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
                                             builder.setMessage(result.comment);
                                             builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);

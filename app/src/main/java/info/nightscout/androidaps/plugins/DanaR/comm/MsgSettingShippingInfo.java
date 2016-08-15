@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.DanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 
@@ -20,6 +22,9 @@ public class MsgSettingShippingInfo extends MessageBase {
         DanaRPlugin.getDanaRPump().serialNumber = stringFromBuff(bytes, 0, 10);
         DanaRPlugin.getDanaRPump().shippingDate = dateFromBuff(bytes, 10);
         DanaRPlugin.getDanaRPump().shippingCountry = asciiStringFromBuff(bytes, 13, 3);
+        if (DanaRPlugin.getDanaRPump().shippingDate.getTime() > new Date(116, 4, 1).getTime()) {
+            DanaRPlugin.getDanaRPump().isNewPump = true;
+        }
         if (Config.logDanaMessageDetail) {
             log.debug("Serial number: " + DanaRPlugin.getDanaRPump().serialNumber);
             log.debug("Shipping date: " + DanaRPlugin.getDanaRPump().shippingDate);

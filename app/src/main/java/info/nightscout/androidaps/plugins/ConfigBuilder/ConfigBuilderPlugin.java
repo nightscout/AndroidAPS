@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -70,8 +71,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     static Date lastDeviceStatusUpload = new Date(0);
 
+    PowerManager.WakeLock mWakeLock;
+
     public ConfigBuilderPlugin() {
         MainApp.bus().register(this);
+        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");;
     }
 
     @Override
@@ -334,13 +339,27 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public PumpEnactResult deliverTreatmentFromBolusWizard(Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+        mWakeLock.acquire();
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
-        PumpEnactResult result = deliverTreatment(insulin, carbs, context);
+        BolusProgressDialog bolusProgressDialog = null;
+        if (context != null) {
+            bolusProgressDialog = new BolusProgressDialog(insulin);
+            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+        }
 
-        if (Config.logCongigBuilderActions)
-            log.debug("deliverTreatmentFromBolusWizard insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
+        PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
+
+        bolusProgressDialog.bolusEnded = true;
+
+        if (bolusProgressDialog != null && bolusProgressDialog.running) {
+            try {
+                bolusProgressDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace(); // TODO: handle this better
+            }
+        }
 
         if (result.success) {
             Treatment t = new Treatment();
@@ -356,11 +375,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
             MainApp.bus().post(new EventTreatmentChange());
         }
+        mWakeLock.release();
         return result;
     }
 
     @Override
     public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
+        mWakeLock.acquire();
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
 
@@ -372,8 +393,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
 
-        if (bolusProgressDialog != null) {
-            bolusProgressDialog.dismiss();
+        bolusProgressDialog.bolusEnded = true;
+
+        if (bolusProgressDialog != null && bolusProgressDialog.running) {
+            try {
+                bolusProgressDialog.dismiss();
+            } catch (Exception e) {
+                e.printStackTrace(); // TODO: handle this better
+            }
         }
 
         if (Config.logCongigBuilderActions)
@@ -393,6 +420,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             t.sendToNSClient();
             MainApp.bus().post(new EventTreatmentChange());
         }
+        mWakeLock.release();
         return result;
     }
 

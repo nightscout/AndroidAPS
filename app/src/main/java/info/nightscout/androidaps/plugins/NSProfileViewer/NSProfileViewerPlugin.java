@@ -19,7 +19,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.NSProfileViewer.events.EventNSProfileViewerUpdateGui;
+import info.nightscout.androidaps.plugins.NSProfileViewer.events.EventNSProfileViewerUpdateGUI;
 import info.nightscout.client.data.NSProfile;
 
 /**
@@ -83,7 +83,7 @@ public class NSProfileViewerPlugin implements PluginBase, ProfileInterface {
     public void onStatusEvent(final EventNewBasalProfile ev) {
         profile = new NSProfile(ev.newNSProfile.getData(), ev.newNSProfile.getActiveProfile());
         storeNSProfile();
-        MainApp.bus().post(new EventNSProfileViewerUpdateGui());
+        MainApp.bus().post(new EventNSProfileViewerUpdateGUI());
     }
 
     private void storeNSProfile() {

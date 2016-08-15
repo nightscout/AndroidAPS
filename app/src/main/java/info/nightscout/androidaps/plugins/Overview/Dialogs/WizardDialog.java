@@ -82,10 +82,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
     Context parentContext;
 
-    public WizardDialog(Context context) {
-        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+    public WizardDialog() {
+        mHandlerThread = new HandlerThread(WizardDialog.class.getSimpleName());
         mHandlerThread.start();
         mHandler = new Handler(mHandlerThread.getLooper());
+    }
+
+
+    public WizardDialog(Context context) {
+        this();
         parentContext = context;
     }
 
@@ -120,7 +125,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
         @Override
         public void onNothingSelected(AdapterView<?> parent) {
-            ToastUtils.showToastInUiThread(getContext(), MainApp.sResources.getString(R.string.noprofileselected));
+            ToastUtils.showToastInUiThread(parentContext, MainApp.sResources.getString(R.string.noprofileselected));
             wizardDialogDeliverButton.setVisibility(View.GONE);
         }
     };
@@ -192,10 +197,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || carbsAfterConstraints != calculatedCarbs) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                        AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                        builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
                         builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));
-                        builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                         builder.show();
                         return;
                     }
@@ -203,8 +208,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                     final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle(getContext().getString(R.string.confirmation));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                    builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
@@ -223,10 +228,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                                                 boluscalcJSON
                                         );
                                         if (!result.success) {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
                                             builder.setMessage(result.comment);
-                                            builder.setPositiveButton(getContext().getString(R.string.ok), null);
+                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                             builder.show();
                                         }
                                     }

@@ -119,7 +119,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isEnabled(int type) {
-        if (type == PluginBase.PROFILE) return fragmentProfileEnabled;
+        if (type == PluginBase.PROFILE) return fragmentProfileEnabled && fragmentPumpEnabled;
         else if (type == PluginBase.PUMP) return fragmentPumpEnabled;
         else if (type == PluginBase.CONSTRAINTS) return fragmentPumpEnabled;
         return false;
@@ -240,7 +240,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (insulin > 0 || carbs > 0) {
             Treatment t = new Treatment();
             boolean connectionOK = false;
-            if (insulin > 0) connectionOK = sExecutionService.bolus(insulin, carbs, t);
+            if (insulin > 0 || carbs > 0) connectionOK = sExecutionService.bolus(insulin, carbs, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -576,6 +576,9 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public JSONObject getJSONStatus() {
+        if (getDanaRPump().lastConnection.getTime() + 5 * 60 * 1000L < new Date().getTime()) {
+            return null;
+        }
         JSONObject pump = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();
@@ -583,7 +586,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         try {
             battery.put("percent", getDanaRPump().batteryRemaining);
             status.put("status", "normal");
-            status.put("timestamp", DateUtil.toISOString(new Date()));
+            status.put("timestamp", DateUtil.toISOString(getDanaRPump().lastConnection));
             if (isTempBasalInProgress()) {
                 extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", DateUtil.toISOString(getTempBasal().timeStart));
