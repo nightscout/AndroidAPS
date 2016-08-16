@@ -44,7 +44,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public String getFragmentClass() {
-        return SimpleProfilePlugin.class.getName();
+        return SimpleProfileFragment.class.getName();
     }
 
     @Override
