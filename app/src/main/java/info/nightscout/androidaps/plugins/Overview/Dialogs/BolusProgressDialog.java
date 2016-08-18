@@ -146,13 +146,18 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                BolusProgressDialog.bolusEnded = true;
                 Activity activity = getActivity();
                 if (activity != null) {
                     activity.runOnUiThread(
                             new Runnable() {
                                 @Override
                                 public void run() {
-                                    dismiss();
+                                    try {
+                                        dismiss();
+                                    } catch (Exception e) {
+                                        e.printStackTrace(); // TODO: do this better way
+                                    }
                                 }
                             });
                 }
