@@ -32,10 +32,6 @@ import info.nightscout.utils.LocaleHelper;
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
-    private Toolbar toolbar;
-    private SlidingTabLayout mTabs;
-    private ViewPager mPager;
-    private static TabPageAdapter pageAdapter;
     private static KeepAliveReceiver keepAliveReceiver;
 
     @Override
@@ -50,16 +46,15 @@ public class MainActivity extends AppCompatActivity {
 
         // show version in toolbar
         try {
-            setTitle(getString(R.string.app_name) + " v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
+            setTitle(getString(R.string.app_name) + " " + getPackageManager().getPackageInfo(getPackageName(), 0).versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         registerBus();
 
         if (keepAliveReceiver == null) {
-
             keepAliveReceiver = new KeepAliveReceiver();
             startService(new Intent(this, ExecutionService.class));
             keepAliveReceiver.setAlarm(this);
@@ -76,17 +71,18 @@ public class MainActivity extends AppCompatActivity {
         try { // activity may be destroyed
             setUpTabs(true);
         } catch (IllegalStateException e) {
+            e.printStackTrace();
         }
     }
 
     private void setUpTabs(boolean switchToLast) {
-        pageAdapter = new TabPageAdapter(getSupportFragmentManager(), this);
+        TabPageAdapter pageAdapter = new TabPageAdapter(getSupportFragmentManager(), this);
         for (PluginBase p : MainApp.getPluginsList()) {
             pageAdapter.registerNewFragment(p);
         }
-        mPager = (ViewPager) findViewById(R.id.pager);
+        ViewPager mPager = (ViewPager) findViewById(R.id.pager);
         mPager.setAdapter(pageAdapter);
-        mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
+        SlidingTabLayout mTabs = (SlidingTabLayout) findViewById(R.id.tabs);
         mTabs.setViewPager(mPager);
         if (switchToLast)
             mPager.setCurrentItem(pageAdapter.getCount() - 1, false);
