@@ -247,6 +247,7 @@ public class OverviewFragment extends Fragment {
             }
         };
         sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
+        updateGUIIfVisible();
     }
 
     @Subscribe
