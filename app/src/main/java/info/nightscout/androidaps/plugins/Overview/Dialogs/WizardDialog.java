@@ -26,6 +26,8 @@ import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class WizardDialog extends DialogFragment implements OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(WizardDialog.class);
 
     Button wizardDialogDeliverButton;
     TextView correctionInput;
@@ -208,40 +211,44 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                     final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
-                    builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                    builder.setMessage(confirmMessage);
-                    builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
-                                final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
-                                mHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
-                                                parentContext,
-                                                finalInsulinAfterConstraints,
-                                                finalCarbsAfterConstraints,
-                                                SafeParse.stringToDouble(bgInput.getText().toString()),
-                                                "Manual",
-                                                SafeParse.stringToInt(carbTimeEdit.getText().toString()),
-                                                boluscalcJSON
-                                        );
-                                        if (!result.success) {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
-                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            builder.setMessage(result.comment);
-                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                            builder.show();
+                    if (parentContext != null) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
+                        builder.setMessage(confirmMessage);
+                        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
+                                    final ConfigBuilderPlugin pump = MainApp.getConfigBuilder();
+                                    mHandler.post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
+                                                    parentContext,
+                                                    finalInsulinAfterConstraints,
+                                                    finalCarbsAfterConstraints,
+                                                    SafeParse.stringToDouble(bgInput.getText().toString()),
+                                                    "Manual",
+                                                    SafeParse.stringToInt(carbTimeEdit.getText().toString()),
+                                                    boluscalcJSON
+                                            );
+                                            if (!result.success) {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
+                                                builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                builder.setMessage(result.comment);
+                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                                builder.show();
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
-                        }
-                    });
-                    builder.setNegativeButton(getString(R.string.cancel), null);
-                    builder.show();
-                    dismiss();
+                        });
+                        builder.setNegativeButton(getString(R.string.cancel), null);
+                        builder.show();
+                        dismiss();
+                    } else {
+                        log.error("parentContext == null");
+                    }
                 }
                 break;
         }
