@@ -33,6 +33,11 @@ android {
         }
     }
     productFlavors {
+        danarcontrol {
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
         careportal {
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
