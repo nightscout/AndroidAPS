@@ -187,7 +187,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
-        enableFake = (CheckBox) view.findViewById(R.id.objectives_fake);
+        enableFake =  (CheckBox) view.findViewById(R.id.objectives_fake);
         fake_layout = (LinearLayout) view.findViewById(R.id.objectives_fake_layout);
         reset = (TextView) view.findViewById(R.id.objectives_reset);
         enableFake.setOnClickListener(new View.OnClickListener() {
