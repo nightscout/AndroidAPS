@@ -23,8 +23,8 @@ android {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1010
-        versionName "1.0.10"
+        versionCode 1011
+        versionName "1.0.11"
     }
     buildTypes {
         release {
@@ -33,6 +33,11 @@ android {
         }
     }
     productFlavors {
+        danarcontrol {
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
         careportal {
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"

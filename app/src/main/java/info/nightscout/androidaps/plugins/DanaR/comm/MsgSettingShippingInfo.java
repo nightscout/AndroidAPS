@@ -24,7 +24,8 @@ public class MsgSettingShippingInfo extends MessageBase {
         DanaRPlugin.getDanaRPump().shippingCountry = asciiStringFromBuff(bytes, 13, 3);
         if (DanaRPlugin.getDanaRPump().shippingDate.getTime() > new Date(116, 4, 1).getTime()) {
             DanaRPlugin.getDanaRPump().isNewPump = true;
-        }
+        } else
+            DanaRPlugin.getDanaRPump().isNewPump = false;
         if (Config.logDanaMessageDetail) {
             log.debug("Serial number: " + DanaRPlugin.getDanaRPump().serialNumber);
             log.debug("Shipping date: " + DanaRPlugin.getDanaRPump().shippingDate);

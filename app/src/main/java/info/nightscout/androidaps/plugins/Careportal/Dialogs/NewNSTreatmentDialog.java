@@ -301,7 +301,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     @Override
     public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
-        eventTime.setYear(year);
+        eventTime.setYear(year - 1900);
         eventTime.setMonth(monthOfYear);
         eventTime.setDate(dayOfMonth);
         DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);

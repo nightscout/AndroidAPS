@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -226,11 +227,16 @@ public class SmsCommunicatorPlugin implements PluginBase {
                 bolusWaitingForConfirmation = null;
                 newSms.processed = true;
             }
-            smsManager.sendTextMessage(newSms.phoneNumber, null, newSms.text, null, null);
+            smsManager.sendTextMessage(newSms.phoneNumber, null, stripAccents(newSms.text), null, null);
             messages.add(newSms);
         }
         MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
     }
 
-
+    public static String stripAccents(String s)
+    {
+        s = Normalizer.normalize(s, Normalizer.Form.NFD);
+        s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+        return s;
+    }
 }
