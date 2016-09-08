@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -125,7 +126,8 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                     final Double finalBasal = basalAbsolute;
                     final int finalDurationInMinutes = durationInMinutes;
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    final Context context = getContext();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
                     builder.setMessage(confirmMessage);
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -141,7 +143,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                         result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes);
                                     }
                                     if (!result.success) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                         builder.setTitle(getContext().getString(R.string.treatmentdeliveryerror));
                                         builder.setMessage(result.comment);
                                         builder.setPositiveButton(getContext().getString(R.string.ok), null);
