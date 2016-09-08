@@ -177,6 +177,13 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
         // Fix bug determine basal
         if (determineBasalResult.rate == 0d && determineBasalResult.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress()) determineBasalResult.changeRequested = false;
+        // limit requests on openloop mode
+        if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
+            if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResult.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRate()) < 0.1)
+                determineBasalResult.changeRequested = false;
+            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResult.rate - MainApp.getConfigBuilder().getBaseBasalRate()) < 0.1)
+                determineBasalResult.changeRequested = false;
+        }
 
         determineBasalResult.iob = iobTotal;
 
