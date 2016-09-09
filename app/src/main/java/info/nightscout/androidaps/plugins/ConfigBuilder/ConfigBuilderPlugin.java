@@ -150,12 +150,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (int type = 1; type < PluginBase.LAST; type++) {
             for (PluginBase p : pluginList) {
-                String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
-                String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
-                if (SP.contains(settingEnabled))
-                    p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
-                if (SP.contains(settingVisible))
-                    p.setFragmentVisible(type, SP.getBoolean(settingVisible, true));
+                try {
+                    String settingEnabled = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Enabled";
+                    String settingVisible = "ConfigBuilder_" + type + "_" + p.getClass().getSimpleName() + "_Visible";
+                    if (SP.contains(settingEnabled))
+                        p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
+                    if (SP.contains(settingVisible))
+                        p.setFragmentVisible(type, SP.getBoolean(settingVisible, true));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         verifySelectionInCategories();

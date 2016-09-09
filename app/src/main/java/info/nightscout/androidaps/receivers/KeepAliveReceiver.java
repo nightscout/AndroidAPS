@@ -40,7 +40,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
         log.debug("KeepAlive received");
         final DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-        if (Config.DANAR && danaRPlugin.isEnabled(PluginBase.PUMP)) {
+        if (danaRPlugin != null && Config.DANAR && danaRPlugin.isEnabled(PluginBase.PUMP)) {
             if (danaRPlugin.getDanaRPump().lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime() && !danaRPlugin.isConnected() && !danaRPlugin.isConnecting()) {
                 Thread t = new Thread(new Runnable() {
                     @Override
