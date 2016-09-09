@@ -64,8 +64,8 @@ public class MainApp extends Application {
             pluginsList.add(OverviewFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.MM640G) pluginsList.add(MM640gFragment.getPlugin());
-            pluginsList.add(VirtualPumpFragment.getPlugin());
             if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.getPlugin());
+            pluginsList.add(VirtualPumpFragment.getPlugin());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
             if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
             pluginsList.add(NSProfileViewerFragment.getPlugin());

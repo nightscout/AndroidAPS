@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -144,11 +144,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:id="@+id/careportal_newnstreatment_carbs_plus"
@@ -204,7 +205,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -265,7 +266,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -325,7 +326,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -387,7 +388,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -447,7 +448,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -507,7 +508,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="100dp"
+                    android:width="80dp"
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
@@ -590,7 +591,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="85dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:padding="10dp"
@@ -599,7 +600,7 @@
 
                 <Button
                     android:id="@+id/careportal_newnstreatment_eventdate"
-                    android:layout_width="wrap_content"
+                    android:layout_width="106dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:width="150dp"
