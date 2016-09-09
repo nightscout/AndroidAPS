@@ -364,7 +364,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         if (result.success) {
             Treatment t = new Treatment();
             t.insulin = result.bolusDelivered;
-            t.carbs = (double) result.carbsDelivered;
+            if (carbTime == 0)
+                t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
             t.created_at = new Date();
             try {
                 MainApp.getDbHelper().getDaoTreatments().create(t);
@@ -372,6 +373,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 e.printStackTrace();
             }
             t.setTimeIndex(t.getTimeIndex());
+            t.carbs = (double) result.carbsDelivered;
             uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
             MainApp.bus().post(new EventTreatmentChange());
         }
