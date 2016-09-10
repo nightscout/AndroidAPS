@@ -24,12 +24,12 @@
     <string name="careportal_insulincartridgechange">Замяна резервоар</string>
     <string name="careportal_mealbolus">Болус за осн. хранене</string>
     <string name="careportal_newnstreatment_absolute_label">Абсолютна</string>
-    <string name="careportal_newnstreatment_carbs_label">Въглехидрати</string>
-    <string name="careportal_newnstreatment_carbtime_label">Време за ВХ</string>
+    <string name="careportal_newnstreatment_carbs_label">ВХ</string>
+    <string name="careportal_newnstreatment_carbtime_label">ВХ след</string>
     <string name="careportal_newnstreatment_duration_label">Продължителност</string>
     <string name="careportal_newnstreatment_duration_min">min</string>
     <string name="careportal_newnstreatment_enteredby_title">Въведено от</string>
-    <string name="careportal_newnstreatment_eventtime_label">Време на събитието</string>
+    <string name="careportal_newnstreatment_eventtime_label">Време</string>
     <string name="careportal_newnstreatment_insulin_label">Инсулин</string>
     <string name="careportal_newnstreatment_meter">Глюкомер</string>
     <string name="careportal_newnstreatment_notes_label">Бележки</string>
@@ -66,7 +66,7 @@
     <string name="duration">Време</string>
     <string name="en_lang">English</string>
     <string name="entertreatmentquestion">Enter new treatment:</string>
-    <string name="glucose">КЗ:</string>
+    <string name="glucose">КЗ</string>
     <string name="loop">Loop </string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">След приложени ограничения</string>
@@ -91,7 +91,7 @@
     <string name="nsprofileview_activeprofile_label">Активен профил:</string>
     <string name="nsprofileview_basal_label">Базални стойности:</string>
     <string name="nsprofileview_dia_label">DIA (Време на действие на инсулина):</string>
-    <string name="nsprofileview_ic_label">IC (Инсулин/въглехидрати):</string>
+    <string name="nsprofileview_ic_label">IC (Инсулин/въглехидр.):</string>
     <string name="nsprofileview_noprofile_text">НЕ Е ЗАДАДЕН ПРОФИЛ</string>
     <string name="nsprofileview_target_label">Целeва КЗ:</string>
     <string name="nsprofileview_units_label">Единици:</string>
@@ -141,7 +141,7 @@
     <string name="treatmentdeliveryerror">Грешка при болус</string>
     <string name="treatments">Treatments</string>
     <string name="treatments_activity_string">Активен:</string>
-    <string name="treatments_carbs_label_string">Въглехидр.:</string>
+    <string name="treatments_carbs_label_string">ВХ:</string>
     <string name="treatments_insulin_label_string">Инсулин:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Общо активен IOB:</string>
@@ -149,9 +149,9 @@
     <string name="treatments_newtreatment_carbsamount_label">Количество въглехидрати</string>
     <string name="treatments_newtreatment_insulinamount_label">Количество инсулин</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
-    <string name="treatments_wizard_bg_label">Кръвна захар</string>
+    <string name="treatments_wizard_bg_label">КЗ</string>
     <string name="treatments_wizard_bolusiob_label">Болус IOB</string>
-    <string name="treatments_wizard_carbs_label">Въглехидрати</string>
+    <string name="treatments_wizard_carbs_label">ВХ</string>
     <string name="treatments_wizard_correction_label">Корекция</string>
     <string name="treatments_wizard_total_label">ОБЩО</string>
     <string name="treatments_wizard_unit_label">Ед.</string>
@@ -302,4 +302,7 @@
     <string name="objectives_5_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
     <string name="objectives_5_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
     <string name="uploading">Uploading</string>
+    <string name="bolusdelivering">Подава  %.2fU</string>
+    <string name="es_lang">Español</string>
+    <string name="noprofileselected">Не е избран профил</string>
 </resources>
