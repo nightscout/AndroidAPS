@@ -24,8 +24,8 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.utils.SafeParse;
@@ -153,24 +153,64 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
         if (splited.length > 0) {
             switch (splited[0].toUpperCase()) {
-                case "RT":
-                    Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                    MainApp.getDbHelper().resetTreatments();
-                    MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-                    List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-                    reply = "RT " + q.size() + " receivers";
-                    receivedSms.processed = true;
+                case "LOOP":
+                    switch (splited[1].toUpperCase()) {
+                        case "STOP":
+                            LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                            if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
+                                loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
+                                reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled);
+                            }
+                            receivedSms.processed = true;
+                            break;
+                        case "START":
+                            loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                            if (loopPlugin != null && !loopPlugin.isEnabled(PluginBase.LOOP)) {
+                                loopPlugin.setFragmentEnabled(PluginBase.LOOP, true);
+                                reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeenenabled);
+                            }
+                            receivedSms.processed = true;
+                            break;
+                        case "STATUS":
+                            loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                            if (loopPlugin != null) {
+                                if (loopPlugin.isEnabled(PluginBase.LOOP)) {
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loopisenabled);
+                                } else {
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loopisdisabled);
+                                }
+                            }
+                            receivedSms.processed = true;
+                            break;
+                    }
                     break;
-                case "RNSC":
-                    restartNSClient = new Intent(Intents.ACTION_RESTART);
-                    MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-                    q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-                    reply = "RNSC " + q.size() + " receivers";
-                    receivedSms.processed = true;
+                case "TREATMENTS":
+                    switch (splited[1].toUpperCase()) {
+                        case "REFRESH":
+                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                            MainApp.getDbHelper().resetTreatments();
+                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                            List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
+                            reply = "TERATMENTS REFRESH " + q.size() + " receivers";
+                            receivedSms.processed = true;
+                            break;
+                    }
+                    break;
+                case "NSCLIENT":
+                    switch (splited[1].toUpperCase()) {
+                        case "RESTART":
+                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                            List<ResolveInfo>q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
+                            reply = "NSCLIENT RESTART " + q.size() + " receivers";
+                            receivedSms.processed = true;
+                            break;
+                    }
                     break;
                 case "DANAR":
                     DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                    if (danaRPlugin != null) reply = danaRPlugin.shortStatus();
+                    if (danaRPlugin != null && danaRPlugin.isEnabled(PluginBase.PUMP))
+                        reply = danaRPlugin.shortStatus();
                     receivedSms.processed = true;
                     break;
                 case "BOLUS":
@@ -233,8 +273,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
         MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
     }
 
-    public static String stripAccents(String s)
-    {
+    public static String stripAccents(String s) {
         s = Normalizer.normalize(s, Normalizer.Form.NFD);
         s = s.replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
         return s;

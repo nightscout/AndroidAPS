@@ -148,8 +148,7 @@
                     android:gravity="center_horizontal"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:visibility="gone" />
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <ImageView
                     android:id="@+id/careportal_newnstreatment_carbs_plus"

@@ -302,4 +302,8 @@
     <string name="youareonallowedlimit">Dosaženo limitu</string>
     <string name="openapsma_target_bg">Cílová hodnota pro výpočty</string>
     <string name="bolusdelivering" formatted="false">Aplikováno %.2fU</string>
+    <string name="smscommunicator_loophasbeendisabled">Smyčka byla zakázána</string>
+    <string name="smscommunicator_loophasbeenenabled">Smyčka byla povolena</string>
+    <string name="smscommunicator_loopisdisabled">Smyčka je zakázána</string>
+    <string name="smscommunicator_loopisenabled">Smyčka je povolena</string>
 </resources>

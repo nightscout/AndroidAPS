@@ -306,5 +306,9 @@
     <string name="youareonallowedlimit">You reached allowed limit</string>
     <string name="openapsma_target_bg">Target value for calculations</string>
     <string name="noprofileselected">No profile selected</string>
+    <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
+    <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
+    <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
+    <string name="smscommunicator_loopisenabled">Loop is enabled</string>
 
 </resources>
