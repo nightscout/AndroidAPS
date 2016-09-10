@@ -134,17 +134,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         layoutCarbTime = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_carbtime_layout);
         layoutProfile = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_profile_layout);
 
-        showOrHide(layoutBg, options.bg);
-        showOrHide(layoutBgSource, options.bg);
-        showOrHide(layoutInsulin, options.insulin);
-        showOrHide(layoutCarbs, options.carbs);
-        showOrHide(layoutSplit, options.split);
-        showOrHide(layoutDuration, options.duration);
-        showOrHide(layoutPercent, options.percent);
-        showOrHide(layoutAbsolute, options.absolute);
-        showOrHide(layoutCarbTime, options.prebolus);
-        showOrHide(layoutProfile, options.profile);
-
         bgUnitsView = (TextView) view.findViewById(R.id.careportal_newnstreatment_bgunits);
         meterRadioButton = (RadioButton) view.findViewById(R.id.careportal_newnstreatment_meter);
         sensorRadioButton = (RadioButton) view.findViewById(R.id.careportal_newnstreatment_sensor);
@@ -168,6 +157,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
+                layoutPercent.setVisibility(View.VISIBLE);
                 layoutAbsolute.setVisibility(View.GONE);
             }
         });
@@ -186,6 +176,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
                 layoutPercent.setVisibility(View.GONE);
+                layoutAbsolute.setVisibility(View.VISIBLE);
             }
         });
         durationeEdit = (EditText) view.findViewById(R.id.careportal_newnstreatment_durationinput);
@@ -262,6 +253,17 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editAbsolute = new PlusMinusEditText(view, R.id.careportal_newnstreatment_absoluteinput, R.id.careportal_newnstreatment_absolute_plus, R.id.careportal_newnstreatment_absolute_minus, 0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true);
 
         editCarbTime = new PlusMinusEditText(view, R.id.careportal_newnstreatment_carbtimeinput, R.id.careportal_newnstreatment_carbtime_plus, R.id.careportal_newnstreatment_carbtime_minus, 0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
+
+        showOrHide(layoutBg, options.bg);
+        showOrHide(layoutBgSource, options.bg);
+        showOrHide(layoutInsulin, options.insulin);
+        showOrHide(layoutCarbs, options.carbs);
+        showOrHide(layoutSplit, options.split);
+        showOrHide(layoutDuration, options.duration);
+        showOrHide(layoutPercent, options.percent);
+        showOrHide(layoutAbsolute, options.absolute);
+        showOrHide(layoutCarbTime, options.prebolus);
+        showOrHide(layoutProfile, options.profile);
 
         return view;
     }
