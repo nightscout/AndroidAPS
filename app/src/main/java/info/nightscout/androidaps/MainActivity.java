@@ -54,6 +54,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         registerBus();
 
+        try {
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+            getSupportActionBar().setIcon(R.mipmap.ic_launcher);
+        } catch (NullPointerException e) {
+            // no action
+        }
+
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
             startService(new Intent(this, ExecutionService.class));
