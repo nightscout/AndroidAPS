@@ -221,6 +221,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 android.R.layout.simple_spinner_item, profileList);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         profileSpinner.setAdapter(adapter);
+        if (profile != null) {
+            // set selected to actual profile
+            for (int p = 0; p < profileList.size(); p++) {
+                if (profileList.get(p).equals(profile.getActiveProfile()))
+                    profileSpinner.setSelection(p);
+            }
+        }
 
         bgUnitsView.setText(units);
 
