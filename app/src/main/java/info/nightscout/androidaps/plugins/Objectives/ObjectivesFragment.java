@@ -112,7 +112,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                 holder.progressLayout.setVisibility(View.GONE);
                 holder.verifyLayout.setVisibility(View.GONE);
                 holder.started.setVisibility(View.GONE);
-            } else if (o.started.getTime() > 0 && !enableFake.isChecked() && o.accomplished.getTime() == 0 && o.started.getTime() + o.durationInDays * 24 * 60 * 60 * 1000 > now && !requirementsMet.done) {
+            } else if (o.started.getTime() > 0 && !enableFake.isChecked() && o.accomplished.getTime() == 0 && !(o.started.getTime() + o.durationInDays * 24 * 60 * 60 * 1000 < now && requirementsMet.done)) {
                 // Phase 2: started, waiting for duration and met requirements
                 holder.startButton.setEnabled(false);
                 holder.verifyLayout.setVisibility(View.GONE);

@@ -126,7 +126,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
             case 2:
                 return new RequirementResult(true, "");
             default:
-                return new RequirementResult(false, "");
+                return new RequirementResult(true, "");
         }
     }
 
