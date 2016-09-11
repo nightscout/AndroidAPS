@@ -39,7 +39,7 @@
     <string name="tempbasals_iobtotal_label_string">IOB Total:</string>
     <string name="treatments_newtreatment_insulinamount_label">Insulina [U]</string>
     <string name="treatments_newtreatment_carbsamount_label">Carbohidratos [g]</string>
-    <string name="treatments_wizard_bg_label">BG</string>
+    <string name="treatments_wizard_bg_label">Glucosa en sangre</string>
     <string name="treatments_wizard_carbs_label">Hidratos Carbono</string>
     <string name="treatments_wizard_correction_label">Corrección</string>
     <string name="treatments_wizard_unit_label">U</string>
@@ -165,14 +165,14 @@
 
     <string name="careportal_newnstreatment_eventtype">Tipo de evento</string>
     <string name="careportal_newnstreatment_other">Otro</string>
-    <string name="careportal_newnstreatment_meter">Metro</string>
+    <string name="careportal_newnstreatment_meter">Medidor</string>
     <string name="careportal_newnstreatment_sensor">Sensor</string>
     <string name="careportal_newnstreatment_carbs_label">Hidratos Carbono</string>
     <string name="careportal_newnstreatment_insulin_label">Insulina</string>
     <string name="careportal_newnstreatment_carbtime_label">Tiempo absorción</string>
     <string name="careportal_newnstreatment_split_label">Dividir</string>
     <string name="careportal_newnstreatment_duration_label">Duración</string>
-    <string name="careportal_newnstreatment_percent_label">Porcentaje</string>
+    <string name="careportal_newnstreatment_percent_label">Dosis</string>
     <string name="careportal_newnstreatment_absolute_label">Absoluto</string>
     <string name="careportal_newnstreatment_duration_min">min</string>
     <string name="careportal_newnstreatment_notes_label">Notas</string>
@@ -186,7 +186,7 @@
     <string name="configbuilder_nsclientversion_label">NSClient versión:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
     <string name="send">ENVIAR</string>
-    <string name="missing">Desaparecido</string>
+    <string name="missing">Faltan</string>
     <string name="enabled">Habilitado</string>
     <string name="visible">Visible</string>
     <string name="up">Arriba</string>
