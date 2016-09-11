@@ -1,8 +1,12 @@
 package info.nightscout.client.data;
 
+import com.crashlytics.android.Crashlytics;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -15,6 +19,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.utils.DecimalFormatter;
 
 public class NSProfile {
+    private static Logger log = LoggerFactory.getLogger(NSProfile.class);
+
     private JSONObject json = null;
     private String activeProfile = null;
 
@@ -133,7 +139,13 @@ public class NSProfile {
                 units = profile.getString("units");
                 return units;
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Profile not found. Failing over to main JSON");
+                try {
+                    json.getString("units");
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                    Crashlytics.log("Profile failover failed too");
+                }
             }
         }
         return "mg/dl";
