@@ -272,6 +272,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     // This is called from APS
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+        // Recheck pump status if older than 30 min
+        if (getDanaRPump().lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime()) {
+            doConnect("setTempBasalAbsolute old data");
+        }
+
         PumpEnactResult result = new PumpEnactResult();
 
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
