@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
         LocaleHelper.onCreate(this, "en");
-        checkEula();
         setContentView(R.layout.activity_main);
+        checkEula();
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
