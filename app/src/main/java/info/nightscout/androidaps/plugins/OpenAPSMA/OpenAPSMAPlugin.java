@@ -1,34 +1,43 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.StringTokenizer;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgOcclusion;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateResultGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
@@ -155,6 +164,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         double minBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_min_bg", minBgDefault)), units);
         double maxBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_max_bg", maxBgDefault)), units);
         double targetBg = NSProfile.toMgdl(SafeParse.stringToDouble(SP.getString("openapsma_target_bg", targetBgDefault)), units);
+
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
 
@@ -171,12 +181,25 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
+        minBg = verifyHardLimits(minBg, "minBg", 72, 180);
+        maxBg = verifyHardLimits(maxBg, "maxBg", 100, 270);
+        targetBg = verifyHardLimits(targetBg, "targetBg", 80, 200);
+        maxIob = verifyHardLimits(maxIob, "maxIob", 0, 7);
+        maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
+
+        if (!checkOnlyHardLimits(profile.getCarbAbsorbtionRate(), "carbs_hr", 4, 100)) return;
+        if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
+        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100)) return;
+        if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900)) return;
+        if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
+
         determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
 
 
         DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
         // Fix bug determine basal
-        if (determineBasalResult.rate == 0d && determineBasalResult.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress()) determineBasalResult.changeRequested = false;
+        if (determineBasalResult.rate == 0d && determineBasalResult.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
+            determineBasalResult.changeRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
             if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResult.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRate()) < 0.1)
@@ -201,6 +224,45 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         MainApp.bus().post(new EventOpenAPSMAUpdateGui());
 
         //deviceStatus.suggested = determineBasalResult.json;
+    }
+
+    // safety checks
+    public static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+        return value.equals(verifyHardLimits(value, valueName, lowLimit, highLimit));
+    }
+
+    public static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
+        if (value < lowLimit || value > highLimit) {
+            String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), valueName);
+            log.error(msg);
+            sendErrorToNSClient(msg);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
+            value = Math.max(value, lowLimit);
+            value = Math.min(value, highLimit);
+        }
+        return value;
+    }
+
+    public static void sendErrorToNSClient(String error) {
+        Context context = MainApp.instance().getApplicationContext();
+        Bundle bundle = new Bundle();
+        bundle.putString("action", "dbAdd");
+        bundle.putString("collection", "treatments");
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", "Announcement");
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("notes", error);
+            data.put("isAnnouncement", true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bundle.putString("data", data.toString());
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString(), OpenAPSMAPlugin.class);
     }
 
 }
