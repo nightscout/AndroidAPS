@@ -597,6 +597,10 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 extended.put("TempBasalStart", getTempBasal().timeStart.toLocaleString());
                 extended.put("TempBasalRemaining", getTempBasal().getPlannedRemainingMinutes());
                 extended.put("IsExtended", getTempBasal().isExtended);
+                extended.put("BaseBasalRate", getBaseBasalRate());
+                try {
+                    extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
+                } catch (Exception e) {}
             }
             extended.put("PumpIOB", getDanaRPump().iob);
             extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
