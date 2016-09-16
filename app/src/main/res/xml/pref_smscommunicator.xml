@@ -12,8 +12,8 @@
         </EditTextPreference>
         <SwitchPreference
             android:defaultValue="false"
-            android:key="smscommunicator_remotebolusingallowed"
-            android:title="@string/smscommunicator_remotebolusingallowed" />
+            android:key="smscommunicator_remotecommandsallowed"
+            android:title="@string/smscommunicator_remotecommandsallowed" />
 
     </PreferenceCategory>
 

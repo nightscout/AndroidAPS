@@ -246,10 +246,9 @@
     <string name="hoursago">vor h </string>
     <string name="smscommunicator">SMS Kommunikator</string>
     <string name="smscommunicator_allowednumbers">erlaubte TElefonnummern</string>
-    <string name="smscommunicator_remotebolusingallowed">Fernboli via SMS zulassen</string>
     <string name="syncprofiletopump_title">Nightscout Profil zur Pumpe synchronisieren</string>
     <string name="waitingforpumpresult">auf Pumpenergebnis warten</string>
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
-    <string formatted="false" name="replywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
+    <string formatted="false" name="smscommunicator_bolusreplywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
 </resources>

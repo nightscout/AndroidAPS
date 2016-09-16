@@ -241,11 +241,11 @@
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="replywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
+    <string name="smscommunicator_bolusreplywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
     <string name="bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusdelivering" formatted="false">Delivering %.2fU</string>
-    <string name="smscommunicator_remotebolusingallowed">Allow remote bolusing via SMS</string>
+    <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
     <string name="remotebolusnotallowed">Remote bolus not allowed</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
@@ -311,5 +311,13 @@
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
     <string name="openapsma_valueoutofrange" formatted="false">Value %s is out of hard limits</string>
+    <string name="remotebasalnotallowed">Remote basal setting is not allowed</string>
+    <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
+    <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
+    <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
+    <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
+    <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
+    <string name="smscommunicator_unknowncommand">Uknonwn command or wrong reply</string>
 
 </resources>
