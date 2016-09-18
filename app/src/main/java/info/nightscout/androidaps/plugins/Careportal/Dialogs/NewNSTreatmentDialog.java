@@ -223,19 +223,19 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         bgUnitsView.setText(units);
 
         // Set BG if not old
-        BgReading lastBg = MainApp.getDbHelper().lastBg();
-        Double lastBgValue = 0d;
-        if (lastBg != null) {
-            lastBgValue = lastBg.valueToUnits(units);
-            sensorRadioButton.setChecked(true);
-        } else {
-            meterRadioButton.setChecked(true);
-        }
+//        BgReading lastBg = MainApp.getDbHelper().lastBg();
+//        Double lastBgValue = 0d;
+//        if (lastBg != null) {
+//            lastBgValue = lastBg.valueToUnits(units);
+//            sensorRadioButton.setChecked(true);
+//        } else {
+//            meterRadioButton.setChecked(true);
+//        }
 
         if (units.equals(Constants.MMOL))
-            editBg = new PlusMinusEditText(view, R.id.careportal_newnstreatment_bginput, R.id.careportal_newnstreatment_bg_plus, R.id.careportal_newnstreatment_bg_minus, lastBgValue, 0d, 40d, 0.1d, new DecimalFormat("0.0"), false);
+            editBg = new PlusMinusEditText(view, R.id.careportal_newnstreatment_bginput, R.id.careportal_newnstreatment_bg_plus, R.id.careportal_newnstreatment_bg_minus, 0d, 0d, 40d, 0.1d, new DecimalFormat("0.0"), false);
         else
-            editBg = new PlusMinusEditText(view, R.id.careportal_newnstreatment_bginput, R.id.careportal_newnstreatment_bg_plus, R.id.careportal_newnstreatment_bg_minus, lastBgValue, 0d, 500d, 1d, new DecimalFormat("0"), false);
+            editBg = new PlusMinusEditText(view, R.id.careportal_newnstreatment_bginput, R.id.careportal_newnstreatment_bg_plus, R.id.careportal_newnstreatment_bg_minus, 0d, 0d, 500d, 1d, new DecimalFormat("0"), false);
 
         Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
         editCarbs = new PlusMinusEditText(view, R.id.careportal_newnstreatment_carbsinput, R.id.careportal_newnstreatment_carbs_plus, R.id.careportal_newnstreatment_carbs_minus, 0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
