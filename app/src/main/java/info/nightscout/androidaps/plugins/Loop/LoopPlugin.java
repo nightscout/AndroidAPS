@@ -131,6 +131,9 @@ public class LoopPlugin implements PluginBase {
             if (configBuilder == null || !isEnabled(PluginBase.GENERAL))
                 return;
 
+            // Check if pump info is loaded
+            if (configBuilder.getBaseBasalRate() < 0.01d) return;
+
             APSInterface usedAPS = configBuilder.getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS)) {
                 usedAPS.invoke();
