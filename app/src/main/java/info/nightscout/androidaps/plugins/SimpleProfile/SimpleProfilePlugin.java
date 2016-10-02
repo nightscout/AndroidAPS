@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SafeParse;
 
 /**
  * Created by mike on 05.08.2016.
@@ -113,25 +114,25 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
             mmol = settings.getBoolean("SimpleProfile" + "mmol", false);
         else mmol = false;
         if (settings.contains("SimpleProfile" + "dia"))
-            dia = (double) settings.getFloat("SimpleProfile" + "dia", 3);
+            dia = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "dia", "3"));
         else dia = 3d;
         if (settings.contains("SimpleProfile" + "ic"))
-            ic = (double) settings.getFloat("SimpleProfile" + "ic", 20);
+            ic = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "ic", "20"));
         else ic = 20d;
         if (settings.contains("SimpleProfile" + "isf"))
-            isf = (double) settings.getFloat("SimpleProfile" + "isf", 200);
+            isf = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "isf", "200"));
         else isf = 200d;
         if (settings.contains("SimpleProfile" + "car"))
-            car = (double) settings.getFloat("SimpleProfile" + "car", 20);
+            car = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "car", "20"));
         else car = 20d;
         if (settings.contains("SimpleProfile" + "basal"))
-            basal = (double) settings.getFloat("SimpleProfile" + "basal", 1);
+            basal = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "basal", "1"));
         else basal = 1d;
         if (settings.contains("SimpleProfile" + "targetlow"))
-            targetLow = (double) settings.getFloat("SimpleProfile" + "targetlow", 80);
+            targetLow = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targetlow", "80"));
         else targetLow = 80d;
         if (settings.contains("SimpleProfile" + "targethigh"))
-            targetHigh = (double) settings.getFloat("SimpleProfile" + "targethigh", 120);
+            targetHigh = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targethigh", "120"));
         else targetHigh = 120d;
         createConvertedProfile();
     }
