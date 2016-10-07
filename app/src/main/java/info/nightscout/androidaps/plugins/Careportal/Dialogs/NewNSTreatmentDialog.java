@@ -408,7 +408,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 data.put("percent", SafeParse.stringToDouble(percentEdit.getText().toString()));
             if (layoutAbsolute.getVisibility() != View.GONE)
                 data.put("absolute", SafeParse.stringToDouble(absoluteEdit.getText().toString()));
-            if (options.profile) data.put("profile", profileSpinner.getSelectedItem().toString());
+            if (options.profile && profileSpinner.getSelectedItem() != null) data.put("profile", profileSpinner.getSelectedItem().toString());
             if (SafeParse.stringToDouble(carbTimeEdit.getText().toString()) != 0d)
                 data.put("preBolus", SafeParse.stringToDouble(carbTimeEdit.getText().toString()));
             if (!notesEdit.getText().toString().equals(""))
