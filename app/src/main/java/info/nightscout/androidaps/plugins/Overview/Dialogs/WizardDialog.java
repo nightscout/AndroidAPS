@@ -347,7 +347,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
             return;
         }
         Integer carbsAfterConstraint = MainApp.getConfigBuilder().applyCarbsConstraints(c_carbs);
-        if (c_carbs != carbsAfterConstraint) {
+        if (c_carbs - carbsAfterConstraint != 0) {
             carbsInput.removeTextChangedListener(textWatcher);
             carbsInput.setText("");
             carbsInput.addTextChangedListener(textWatcher);
