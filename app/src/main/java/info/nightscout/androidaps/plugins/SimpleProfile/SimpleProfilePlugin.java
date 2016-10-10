@@ -90,13 +90,13 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("SimpleProfile" + "mmol", mmol);
         editor.putBoolean("SimpleProfile" + "mgdl", mgdl);
-        editor.putFloat("SimpleProfile" + "dia", new Float(dia));
-        editor.putFloat("SimpleProfile" + "ic", new Float(ic));
-        editor.putFloat("SimpleProfile" + "isf", new Float(isf));
-        editor.putFloat("SimpleProfile" + "car", new Float(car));
-        editor.putFloat("SimpleProfile" + "basal", new Float(basal));
-        editor.putFloat("SimpleProfile" + "targetlow", new Float(targetLow));
-        editor.putFloat("SimpleProfile" + "targethigh", new Float(targetHigh));
+        editor.putString("SimpleProfile" + "dia", dia.toString());
+        editor.putString("SimpleProfile" + "ic", ic.toString());
+        editor.putString("SimpleProfile" + "isf", isf.toString());
+        editor.putString("SimpleProfile" + "car", car.toString());
+        editor.putString("SimpleProfile" + "basal", basal.toString());
+        editor.putString("SimpleProfile" + "targetlow", targetLow.toString());
+        editor.putString("SimpleProfile" + "targethigh", targetHigh.toString());
 
         editor.commit();
         createConvertedProfile();
@@ -108,31 +108,67 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
         if (settings.contains("SimpleProfile" + "mgdl"))
-            mgdl = settings.getBoolean("SimpleProfile" + "mgdl", true);
+            try {
+                mgdl = settings.getBoolean("SimpleProfile" + "mgdl", true);
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else mgdl = true;
         if (settings.contains("SimpleProfile" + "mmol"))
-            mmol = settings.getBoolean("SimpleProfile" + "mmol", false);
+            try {
+                mmol = settings.getBoolean("SimpleProfile" + "mmol", false);
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else mmol = false;
         if (settings.contains("SimpleProfile" + "dia"))
-            dia = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "dia", "3"));
+            try {
+                dia = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "dia", "3"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else dia = 3d;
         if (settings.contains("SimpleProfile" + "ic"))
-            ic = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "ic", "20"));
+            try {
+                ic = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "ic", "20"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else ic = 20d;
         if (settings.contains("SimpleProfile" + "isf"))
-            isf = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "isf", "200"));
+            try {
+                isf = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "isf", "200"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else isf = 200d;
         if (settings.contains("SimpleProfile" + "car"))
-            car = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "car", "20"));
+            try {
+                car = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "car", "20"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else car = 20d;
         if (settings.contains("SimpleProfile" + "basal"))
-            basal = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "basal", "1"));
+            try {
+                basal = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "basal", "1"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else basal = 1d;
         if (settings.contains("SimpleProfile" + "targetlow"))
-            targetLow = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targetlow", "80"));
+            try {
+                targetLow = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targetlow", "80"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else targetLow = 80d;
         if (settings.contains("SimpleProfile" + "targethigh"))
-            targetHigh = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targethigh", "120"));
+            try {
+                targetHigh = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targethigh", "120"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
         else targetHigh = 120d;
         createConvertedProfile();
     }
