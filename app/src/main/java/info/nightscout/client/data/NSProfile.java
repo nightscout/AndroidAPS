@@ -148,7 +148,7 @@ public class NSProfile {
                 }
             }
         }
-        return "mg/dl";
+        return Constants.MGDL;
     }
 
     public TimeZone getTimeZone() {
