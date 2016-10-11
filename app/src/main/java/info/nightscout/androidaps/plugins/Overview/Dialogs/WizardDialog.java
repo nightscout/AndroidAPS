@@ -45,6 +45,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.PlusMinusEditText;
@@ -356,59 +357,32 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
             return;
         }
 
+        c_bg = bgCheckbox.isChecked() ? c_bg : 0d;
 
-        // Insulin from BG
-        Double sens = profile.getIsf(specificProfile, NSProfile.secondsFromMidnight());
-        Double targetBGLow = profile.getTargetLow(specificProfile, NSProfile.secondsFromMidnight());
-        Double targetBGHigh = profile.getTargetHigh(specificProfile, NSProfile.secondsFromMidnight());
-        Double bgDiff;
-        if (c_bg <= targetBGLow) {
-            bgDiff = c_bg - targetBGLow;
-        } else {
-            bgDiff = c_bg - targetBGHigh;
-        }
-        Double insulinFromBG = (bgCheckbox.isChecked() && c_bg != 0d) ? bgDiff / sens : 0d;
-        bg.setText(c_bg + " ISF: " + DecimalFormatter.to0Decimal(sens));
-        bgInsulin.setText(DecimalFormatter.to2Decimal(insulinFromBG) + "U");
+        BolusWizard wizard = new BolusWizard();
+        wizard.doCalc(specificProfile, carbsAfterConstraint, c_bg, corrAfterConstraint, bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked());
 
-        // Insuling from carbs
-        Double ic = profile.getIc(specificProfile, NSProfile.secondsFromMidnight());
-        Double insulinFromCarbs = c_carbs / ic;
-        carbs.setText(DecimalFormatter.to0Decimal(c_carbs) + "g IC: " + DecimalFormatter.to0Decimal(ic));
-        carbsInsulin.setText(DecimalFormatter.to2Decimal(insulinFromCarbs) + "U");
+        bg.setText(c_bg + " ISF: " + DecimalFormatter.to0Decimal(wizard.sens));
+        bgInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromBG) + "U");
 
-        // Insulin from IOB
-        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOB();
-        tempBasals.updateTotalIOB();
-        IobTotal bolusIob = treatments.getLastCalculation();
-        IobTotal basalIob = tempBasals.getLastCalculation();
+        carbs.setText(DecimalFormatter.to0Decimal(c_carbs) + "g IC: " + DecimalFormatter.to0Decimal(wizard.ic));
+        carbsInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromCarbs) + "U");
 
-        Double insulingFromBolusIOB = bolusIobCheckbox.isChecked() ? -bolusIob.iob : 0d;
-        Double insulingFromBasalsIOB = basalIobCheckbox.isChecked() ? -basalIob.basaliob : 0d;
-        bolusIobInsulin.setText(DecimalFormatter.to2Decimal(insulingFromBolusIOB) + "U");
-        basalIobInsulin.setText(DecimalFormatter.to2Decimal(insulingFromBasalsIOB) + "U");
+        bolusIobInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulingFromBolusIOB) + "U");
+        basalIobInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulingFromBasalsIOB) + "U");
 
-        // Insulin from correction
-        Double insulinFromCorrection = corrAfterConstraint;
-        correctionInsulin.setText(DecimalFormatter.to2Decimal(insulinFromCorrection) + "U");
-
-        // Total
-        calculatedTotalInsulin = insulinFromBG + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection;
+        correctionInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromCorrection) + "U");
 
         if (calculatedTotalInsulin < 0) {
-            Double carbsEquivalent = -calculatedTotalInsulin * ic;
-            total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(carbsEquivalent) + "g");
-            calculatedTotalInsulin = 0d;
+            total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
             totalInsulin.setText("");
         } else {
-            calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, 0.05d);
             total.setText("");
             totalInsulin.setText(DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U");
         }
 
-        calculatedCarbs = c_carbs;
+        calculatedCarbs = carbsAfterConstraint;
+        calculatedTotalInsulin = wizard.calculatedTotalInsulin;
 
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
             String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U") : "";
@@ -423,18 +397,18 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         try {
             boluscalcJSON.put("profile", selectedAlternativeProfile);
             boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
-            boluscalcJSON.put("targetBGLow", targetBGLow);
-            boluscalcJSON.put("targetBGHigh", targetBGHigh);
-            boluscalcJSON.put("isf", sens);
-            boluscalcJSON.put("ic", ic);
-            boluscalcJSON.put("iob", -(insulingFromBolusIOB + insulingFromBasalsIOB));
+            boluscalcJSON.put("targetBGLow", wizard.targetBGLow);
+            boluscalcJSON.put("targetBGHigh", wizard.targetBGHigh);
+            boluscalcJSON.put("isf", wizard.sens);
+            boluscalcJSON.put("ic", wizard.ic);
+            boluscalcJSON.put("iob", -(wizard.insulingFromBolusIOB + wizard.insulingFromBasalsIOB));
             boluscalcJSON.put("bolusiobused", bolusIobCheckbox.isChecked());
             boluscalcJSON.put("basaliobused", basalIobCheckbox.isChecked());
             boluscalcJSON.put("bg", c_bg);
-            boluscalcJSON.put("insulinbg", insulinFromBG);
+            boluscalcJSON.put("insulinbg", wizard.insulinFromBG);
             boluscalcJSON.put("insulinbgused", bgCheckbox.isChecked());
-            boluscalcJSON.put("bgdiff", bgDiff);
-            boluscalcJSON.put("insulincarbs", insulinFromCarbs);
+            boluscalcJSON.put("bgdiff", wizard.bgDiff);
+            boluscalcJSON.put("insulincarbs", wizard.insulinFromCarbs);
             boluscalcJSON.put("carbs", c_carbs);
             boluscalcJSON.put("othercorrection", corrAfterConstraint);
             boluscalcJSON.put("insulin", calculatedTotalInsulin);
