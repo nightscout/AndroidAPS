@@ -137,11 +137,11 @@ public class NSProfile {
         if (profile != null) {
             try {
                 units = profile.getString("units");
-                return units;
+                return units.toLowerCase();
             } catch (JSONException e) {
                 log.error("Profile not found. Failing over to main JSON");
                 try {
-                    json.getString("units");
+                    return json.getString("units").toLowerCase();
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                     Crashlytics.log("Profile failover failed too");
