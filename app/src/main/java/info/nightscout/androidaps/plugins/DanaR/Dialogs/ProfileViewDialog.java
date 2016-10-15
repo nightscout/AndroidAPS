@@ -86,6 +86,12 @@ public class ProfileViewDialog extends DialogFragment {
         return layout;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
     private void setContent() {
         if (profile == null) {
             noProfile.setVisibility(View.VISIBLE);

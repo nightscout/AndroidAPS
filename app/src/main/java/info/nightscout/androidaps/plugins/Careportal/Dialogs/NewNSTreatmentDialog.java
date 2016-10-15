@@ -269,6 +269,12 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
     public void onClick(View view) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(eventTime);

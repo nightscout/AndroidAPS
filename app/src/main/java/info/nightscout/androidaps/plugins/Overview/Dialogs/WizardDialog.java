@@ -327,6 +327,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
 
    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
     private void calculateInsulin() {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profileSpinner == null || profileSpinner.getSelectedItem() == null)

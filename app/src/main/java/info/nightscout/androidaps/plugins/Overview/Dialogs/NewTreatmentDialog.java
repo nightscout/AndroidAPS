@@ -67,6 +67,12 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.treatments_newtreatment_deliverbutton:
