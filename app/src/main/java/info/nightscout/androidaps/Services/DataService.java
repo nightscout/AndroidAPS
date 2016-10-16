@@ -199,32 +199,30 @@ public class DataService extends IntentService {
             }
         }
         if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
-            if (nsClientEnabled) {
-                try {
-                    if (bundles.containsKey("devicestatus")) {
-                        String devicestatusesstring = bundles.getString("devicestatus");
-                        JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
+            try {
+                if (bundles.containsKey("devicestatus")) {
+                    String devicestatusesstring = bundles.getString("devicestatus");
+                    JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
+                    if (devicestatusJson.has("pump")) {
+                        // Objectives 0
+                        ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
+                        ObjectivesPlugin.saveProgress();
+                    }
+                }
+                if (bundles.containsKey("devicestatuses")) {
+                    String devicestatusesstring = bundles.getString("devicestatuses");
+                    JSONArray jsonArray = new JSONArray(devicestatusesstring);
+                    if (jsonArray.length() > 0) {
+                        JSONObject devicestatusJson = jsonArray.getJSONObject(0);
                         if (devicestatusJson.has("pump")) {
                             // Objectives 0
                             ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
                             ObjectivesPlugin.saveProgress();
                         }
                     }
-                    if (bundles.containsKey("devicestatuses")) {
-                        String devicestatusesstring = bundles.getString("devicestatuses");
-                        JSONArray jsonArray = new JSONArray(devicestatusesstring);
-                        if (jsonArray.length() > 0) {
-                            JSONObject devicestatusJson = jsonArray.getJSONObject(0);
-                            if (devicestatusJson.has("pump")) {
-                                // Objectives 0
-                                ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
-                                ObjectivesPlugin.saveProgress();
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
         // Handle profile
