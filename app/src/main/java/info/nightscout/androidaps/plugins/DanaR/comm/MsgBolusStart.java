@@ -19,7 +19,7 @@ public class MsgBolusStart extends MessageBase {
         // HARDCODED LIMIT
         amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
         if (amount < 0) amount = 0d;
-        if (amount > 10) amount = 10d;
+        if (amount > 17) amount = 17d;
 
         AddParamInt((int) (amount * 100));
     }
