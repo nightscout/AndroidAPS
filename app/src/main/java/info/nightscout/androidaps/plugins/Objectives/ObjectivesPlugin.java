@@ -242,7 +242,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public Double applyMaxIOBConstraints(Double maxIob) {
-        if (objectives.get(4).started.getTime() > 0)
+        if (objectives.get(4).started.getTime() > 0 || objectives.get(2).accomplished.getTime() == 0)
             return maxIob;
         else {
             if (Config.logConstraintsChanges)
