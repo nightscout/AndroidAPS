@@ -69,7 +69,8 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (getDialog() != null)
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override

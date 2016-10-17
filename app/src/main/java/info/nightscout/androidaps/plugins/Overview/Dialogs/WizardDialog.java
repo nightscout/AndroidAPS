@@ -325,12 +325,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         totalInsulin.setText("");
         wizardDialogDeliverButton.setVisibility(Button.INVISIBLE);
 
-   }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        if (getDialog() != null)
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     private void calculateInsulin() {
