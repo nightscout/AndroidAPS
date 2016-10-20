@@ -384,8 +384,6 @@ public class DeviceStatus {
     public JSONObject iob = null;
     public String created_at = null;
 
-    public JSONObject lowsuspend = null;
-
     public JSONObject mongoRecord () {
         JSONObject record = new JSONObject();
 
@@ -399,7 +397,6 @@ public class DeviceStatus {
                 if (iob != null) openaps.put("iob", iob);
                 record.put("openaps", openaps);
             }
-            if (lowsuspend != null) record.put("lowsuspend" , lowsuspend);
             if (created_at != null) record.put("created_at" , created_at);
         } catch (JSONException e) {
             e.printStackTrace();

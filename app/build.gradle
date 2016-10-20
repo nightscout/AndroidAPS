@@ -58,7 +58,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    testCompile 'junit:junit:4.12'
     compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
         transitive = true;
     }
@@ -76,4 +75,5 @@ dependencies {
     compile 'com.jjoe64:graphview:4.0.1'
     compile 'com.eclipsesource.j2v8:j2v8:3.1.6@aar'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'
+    testCompile 'junit:junit:4.12'
 }

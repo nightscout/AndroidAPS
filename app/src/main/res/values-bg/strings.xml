@@ -72,10 +72,7 @@
     <string name="loop_constraintsprocessed_label">След приложени ограничения</string>
     <string name="loop_setbypump_label">Зададено на помпата</string>
     <string name="loopdisabled">Loop отказан от ограниченията</string>
-    <string name="lowsuspend">Low Suspend</string>
-    <string name="lowsuspend_low_title">Граница за ниска КЗ</string>
     <string name="objectives_manualenacts">Manual enacts</string>
-    <string name="lowsuspend_lowprojected">Low projected</string>
     <string name="objectives_minimalduration">Минимална продължителност</string>
     <string name="nav_backup">Архивиране</string>
     <string name="nav_exit">Изход</string>
@@ -173,10 +170,6 @@
     <string name="overview_tempbasal_button">Временен базал</string>
     <string name="nsprofileview_isf_label">ISF (Инс.чувствителност):</string>
     <string name="nsclientnotinstalled">NSClient не е инсталиран. Записът е загубен!</string>
-    <string name="lowsuspend_lowprojectedmessage">Прогнозирана ниска КЗ: Временен базал 0%</string>
-    <string name="lowsuspend_lowmessage">Опасно ниска КЗ: Временен базал 0%</string>
-    <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
-    <string name="lowsuspend_low">Low Suspend</string>
     <string name="careportal_newnstreatment_eventtype">Тип събитие</string>
     <string name="careportal_newnstreatment_glucosetype">КЗ тип</string>
     <string name="openapsma">OpenAPS MA</string>

@@ -27,12 +27,18 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".PreferencesActivity" />
         <activity android:name=".AgreementActivity" />
+        <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity" />
+        <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <receiver
             android:name=".receivers.DataReceiver"
@@ -77,7 +83,6 @@
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
 
-        <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity"></activity>
     </application>
 
 </manifest>

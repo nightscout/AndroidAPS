@@ -29,7 +29,7 @@ public class NSProfile {
         this.activeProfile = activeProfile;
     }
 
-    JSONObject getDefaultProfile() {
+    public JSONObject getDefaultProfile() {
         String defaultProfileName = null;
         JSONObject store;
         JSONObject profile = null;

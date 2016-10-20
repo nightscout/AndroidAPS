@@ -71,10 +71,6 @@ public class DanaRFragment extends Fragment implements FragmentBase {
         }
     }
 
-    public static DanaRFragment newInstance() {
-        return new DanaRFragment();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

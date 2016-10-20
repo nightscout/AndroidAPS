@@ -289,7 +289,7 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
     <string name="waitingforpump">Waiting for pump</string>
-    <string name="overview_bolusprogress_goingtodeliver"  formatted="false">Going to deliver %.2fU</string>
+    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Going to deliver %.2fU</string>
     <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
     <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
     <string name="objectives_1_objective">Starting on an open loop</string>
@@ -319,5 +319,14 @@
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
     <string name="smscommunicator_unknowncommand">Uknonwn command or wrong reply</string>
+
+    <string name="quickwizard">QuickWizard</string>
+    <string name="quickwizardsettings">QuickWizard settings</string>
+    <string name="overview_editquickwizard_buttontext">Button text:</string>
+    <string name="overview_editquickwizard_carbs">Carbs:</string>
+    <string name="overview_editquickwizard_valid">Valid:</string>
+    <string name="overview_editquickwizardlistactivity_add">Add</string>
+    <string name="overview_quickwizard_item_edit_button">Edit</string>
+    <string name="overview_quickwizard_item_remove_button">Remove</string>
 
 </resources>

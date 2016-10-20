@@ -77,6 +77,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_quickwizard);
             addPreferencesFromResource(R.xml.pref_language);
             if (Config.CAREPORTALENABLED)
                 addPreferencesFromResource(R.xml.pref_careportal);

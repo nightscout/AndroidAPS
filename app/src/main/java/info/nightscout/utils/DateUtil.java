@@ -2,8 +2,12 @@ package info.nightscout.utils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
@@ -54,4 +58,27 @@ public class DateUtil {
     public static String toISOString(long date) {
         return toISOString(new Date(date), FORMAT_DATE_ISO, TimeZone.getTimeZone("UTC"));
     }
+
+    public static Date toDate(Integer seconds) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.set(Calendar.HOUR_OF_DAY, seconds / 60 / 60);
+        String a = calendar.getTime().toString();
+        calendar.set(Calendar.MINUTE, (seconds / 60) % 60);
+        String b = calendar.getTime().toString();
+        calendar.set(Calendar.SECOND, 0);
+        String c = calendar.getTime().toString();
+        return calendar.getTime();
+    }
+
+    public static int toSeconds(String hh_colon_mm) {
+        Pattern p = Pattern.compile("(\\d+):(\\d+)");
+        Matcher m = p.matcher(hh_colon_mm);
+        int retval = 0;
+
+        if (m.find()) {
+            retval = SafeParse.stringToInt(m.group(1)) * 60 * 60 + SafeParse.stringToInt(m.group(2)) * 60;
+        }
+        return retval;
+    }
+
 }

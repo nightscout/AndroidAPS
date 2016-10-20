@@ -169,16 +169,9 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="cs_lang">Czech</string>
     <string name="loop_setbypump_label">Gesetzt durch Pumpe</string>
-    <string name="lowsuspend">Low Suspend</string>
-    <string name="lowsuspend_low">Low</string>
-    <string name="lowsuspend_cancelmessage">LowSuspend: Cancel low temp</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop">Loop</string>
-    <string name="lowsuspend_low_title">Low BG threshold</string>
-    <string name="lowsuspend_lowmessage">LOW: Temp basal 0%</string>
-    <string name="lowsuspend_lowprojected">Low projected</string>
-    <string name="lowsuspend_lowprojectedmessage">LOW PROJECTED: Temp basal 0%</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
     <string name="nav_resetdb">Reset Datenbanken</string>

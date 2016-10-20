@@ -72,10 +72,7 @@
     <string name="loop_constraintsprocessed_label">Po zpracování omezení</string>
     <string name="loop_setbypump_label">Nastaveno pumpou</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
-    <string name="lowsuspend">Low Suspend</string>
-    <string name="lowsuspend_low_title">Hodnota nízké glykémie</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
-    <string name="lowsuspend_lowprojected">Předpokládaná nízká glykémie</string>
     <string name="minago">m zpět</string>
     <string name="objectives_minimalduration">Minimální trvání</string>
     <string name="nav_backup">Záloha</string>
@@ -175,10 +172,6 @@
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="nsprofileview_isf_label">Citlivost:</string>
     <string name="nsclientnotinstalled">NSClient není nainstalován. Záznam je ztracen!</string>
-    <string name="lowsuspend_lowprojectedmessage">Předpokládaná nízká glykémie: Dočasný bazál 0%</string>
-    <string name="lowsuspend_lowmessage">Nízká glykémie: Dočasný bazál 0%</string>
-    <string name="lowsuspend_cancelmessage">Low Suspend: Zrušení dočasného bazálu</string>
-    <string name="lowsuspend_low">Nízká glykémie</string>
     <string name="careportal_newnstreatment_eventtype">Typ události</string>
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -317,4 +310,13 @@
     <string name="smscommunicator_tempbasalfailed">Spuštění dočasného bazálu selhalo</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Dočasný bazál %.2fU/h na %d minut spuštěn</string>
     <string name="smscommunicator_unknowncommand">Neznámý příkaz nebo chybná odpověď</string>
+    <string name="overview_editquickwizard_buttontext">Text na tlačítku:</string>
+    <string name="overview_editquickwizard_carbs">Sacharidy:</string>
+    <string name="overview_editquickwizard_valid">Platné:</string>
+    <string name="overview_editquickwizardlistactivity_add">Přidat</string>
+    <string name="overview_quickwizard_item_edit_button">Upravit</string>
+    <string name="overview_quickwizard_item_remove_button">Odstranit</string>
+    <string name="overview_quickwizardentry"></string>
+    <string name="quickwizard">Rychlý bolus</string>
+    <string name="quickwizardsettings">Nastavení rychlých bolusů</string>
 </resources>

@@ -1,5 +1,11 @@
 package info.nightscout.androidaps.plugins.Overview;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -11,6 +17,18 @@ public class OverviewPlugin implements PluginBase {
 
     public static Double bgTargetLow = 80d;
     public static Double bgTargetHigh = 180d;
+
+    public QuickWizard quickWizard = new QuickWizard();
+
+    public OverviewPlugin() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        String storedData = preferences.getString("QuickWizard", "[]");
+        try {
+            quickWizard.setData(new JSONArray(storedData));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     public String getFragmentClass() {

@@ -132,6 +132,10 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
 
     public void initializeData() {
+        bgIsAvailableInNS = false;
+        pumpStatusIsAvailableInNS = false;
+        manualEnacts = 0;
+
         objectives = new ArrayList<>();
         objectives.add(new Objective(0,
                 MainApp.sResources.getString(R.string.objectives_0_objective),
