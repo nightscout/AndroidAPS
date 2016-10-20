@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.DanaR.comm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 
@@ -19,7 +20,7 @@ public class MsgBolusStart extends MessageBase {
         // HARDCODED LIMIT
         amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
         if (amount < 0) amount = 0d;
-        if (amount > 17) amount = 17d; // TODO: add to constraints too
+        if (amount > BuildConfig.MAXBOLUS) amount = BuildConfig.MAXBOLUS;
 
         AddParamInt((int) (amount * 100));
     }

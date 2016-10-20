@@ -177,6 +177,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         } catch (Exception e) {
             insulin = 0d;
         }
+        if (insulin > BuildConfig.MAXBOLUS) insulin = Double.valueOf(BuildConfig.MAXBOLUS);
         return insulin;
     }
 

@@ -33,25 +33,41 @@ android {
         }
     }
     productFlavors {
+        full {
+            buildConfigField "boolean", "APS", "true"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "CLOSEDLOOP", "true"
+            buildConfigField "int", "MAXBOLUS", "17"
+        }
+        fullteenage {
+            buildConfigField "boolean", "APS", "true"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "CLOSEDLOOP", "true"
+            buildConfigField "int", "MAXBOLUS", "10"
+        }
+        fullchild {
+            buildConfigField "boolean", "APS", "true"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "CLOSEDLOOP", "true"
+            buildConfigField "int", "MAXBOLUS", "5"
+        }
         danarcontrol {
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "int", "MAXBOLUS", "17"
         }
         careportal {
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
+            buildConfigField "int", "MAXBOLUS", "17"
         }
         openloop {
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
-        }
-        full {
-            buildConfigField "boolean", "APS", "true"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "CLOSEDLOOP", "true"
+            buildConfigField "int", "MAXBOLUS", "17"
         }
     }
 }
