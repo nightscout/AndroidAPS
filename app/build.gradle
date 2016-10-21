@@ -26,6 +26,9 @@ android {
         versionCode 1018
         versionName "1.0.18"
     }
+    lintOptions {
+        disable 'MissingTranslation'
+    }
     buildTypes {
         release {
             minifyEnabled false
