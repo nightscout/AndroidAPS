@@ -40,7 +40,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         super();
     }
 
-    public BolusProgressDialog(double amount) {
+    public void setInsulin(double amount) {
         this.amount = amount;
         bolusEnded = false;
     }

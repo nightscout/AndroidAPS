@@ -349,7 +349,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         BolusProgressDialog bolusProgressDialog = null;
         if (context != null) {
-            bolusProgressDialog = new BolusProgressDialog(insulin);
+            bolusProgressDialog = new BolusProgressDialog();
+            bolusProgressDialog.setInsulin(insulin);
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
         }
 
@@ -393,7 +394,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         BolusProgressDialog bolusProgressDialog = null;
         if (context != null) {
-            bolusProgressDialog = new BolusProgressDialog(insulin);
+            bolusProgressDialog = new BolusProgressDialog();
+            bolusProgressDialog.setInsulin(insulin);
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
         }
 
