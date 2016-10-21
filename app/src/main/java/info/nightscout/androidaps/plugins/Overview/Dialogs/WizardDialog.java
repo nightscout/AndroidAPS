@@ -93,8 +93,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
     }
 
 
-    public WizardDialog(Context context) {
-        this();
+    public void setContext(Context context) {
         parentContext = context;
     }
 
