@@ -84,11 +84,11 @@ public class MessageBase {
     }
 
     public int getCommand() {
-        int command = byeFromRawBuff(buffer, 5) | (byeFromRawBuff(buffer, 4) << 8);
+        int command = byteFromRawBuff(buffer, 5) | (byteFromRawBuff(buffer, 4) << 8);
         return command;
     }
 
-    public static int byeFromRawBuff(byte[] buff, int offset) {
+    public static int byteFromRawBuff(byte[] buff, int offset) {
         return buff[offset] & 0xFF;
     }
 
@@ -96,13 +96,13 @@ public class MessageBase {
         offset += 6;
         switch (length) {
             case 1:
-                return byeFromRawBuff(buff, offset);
+                return byteFromRawBuff(buff, offset);
             case 2:
-                return (byeFromRawBuff(buff, offset) << 8) + byeFromRawBuff(buff, offset + 1);
+                return (byteFromRawBuff(buff, offset) << 8) + byteFromRawBuff(buff, offset + 1);
             case 3:
-                return (byeFromRawBuff(buff, offset + 2) << 16) + (byeFromRawBuff(buff, offset + 1) << 8) + byeFromRawBuff(buff, offset);
+                return (byteFromRawBuff(buff, offset + 2) << 16) + (byteFromRawBuff(buff, offset + 1) << 8) + byteFromRawBuff(buff, offset);
             case 4:
-                return (byeFromRawBuff(buff, offset + 3) << 24) + (byeFromRawBuff(buff, offset + 2) << 16) + (byeFromRawBuff(buff, offset + 1) << 8) + byeFromRawBuff(buff, offset);
+                return (byteFromRawBuff(buff, offset + 3) << 24) + (byteFromRawBuff(buff, offset + 2) << 16) + (byteFromRawBuff(buff, offset + 1) << 8) + byteFromRawBuff(buff, offset);
         }
         return 0;
     }
