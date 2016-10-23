@@ -422,6 +422,9 @@ public class OverviewFragment extends Fragment {
         if (bgGraph == null)
             return;
 
+        if (getActivity() == null)
+            return;
+
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS) {
