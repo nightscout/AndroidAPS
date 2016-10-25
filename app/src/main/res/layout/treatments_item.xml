@@ -37,10 +37,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
-                android:text="1.1.2000 18:00"
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 android:textColor="@color/cardItemLabel"
                 android:textStyle="bold" />
+
+            <TextView
+                android:text="Meal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/treatments_mealorcorrection"
+                android:layout_weight="1"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textAlignment="textEnd"
+                android:textColor="@color/mdtp_red"
+                android:layout_marginRight="5dp" />
 
 
         </LinearLayout>
@@ -65,7 +75,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="30dp"
-                android:text="1.1 U"
                 android:textStyle="bold" />
 
             <TextView
@@ -83,7 +92,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="30dp"
-                android:text="48 g"
                 android:textStyle="bold" />
         </LinearLayout>
 
@@ -107,7 +115,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="30dp"
-                android:text="0.12 U"
                 android:textStyle="bold" />
 
             <TextView
@@ -125,7 +132,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="30dp"
-                android:text="0.002 U"
                 android:textStyle="bold" />
 
 

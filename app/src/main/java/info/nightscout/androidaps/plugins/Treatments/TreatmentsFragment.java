@@ -80,6 +80,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             Iob iob = treatments.get(position).iobCalc(new Date(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
+            holder.mealOrCorrection.setText(treatments.get(position).mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
             if (iob.iobContrib != 0)
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorAffectingIOB));
             else
@@ -103,6 +104,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             TextView carbs;
             TextView iob;
             TextView activity;
+            TextView mealOrCorrection;
             LinearLayout dateLinearLayout;
 
             TreatmentsViewHolder(View itemView) {
@@ -113,6 +115,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 carbs = (TextView) itemView.findViewById(R.id.treatments_carbs);
                 iob = (TextView) itemView.findViewById(R.id.treatments_iob);
                 activity = (TextView) itemView.findViewById(R.id.treatments_activity);
+                mealOrCorrection = (TextView) itemView.findViewById(R.id.treatments_mealorcorrection);
                 dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.treatments_datelinearlayout);
             }
         }
@@ -184,6 +187,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
     public void updateGUI() {
         Activity activity = getActivity();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (profile == null)
+            return;
         if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override

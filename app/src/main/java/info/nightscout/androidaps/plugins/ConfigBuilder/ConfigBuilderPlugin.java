@@ -372,6 +372,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             if (carbTime == 0)
                 t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
             t.created_at = new Date();
+            t.mealBolus = result.carbsDelivered > 0;
             try {
                 MainApp.getDbHelper().getDaoTreatments().create(t);
             } catch (SQLException e) {
@@ -419,6 +420,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             t.insulin = result.bolusDelivered;
             t.carbs = (double) result.carbsDelivered;
             t.created_at = new Date();
+            t.mealBolus = t.carbs > 0;
             try {
                 MainApp.getDbHelper().getDaoTreatments().create(t);
             } catch (SQLException e) {

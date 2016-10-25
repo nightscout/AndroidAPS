@@ -328,5 +328,7 @@
     <string name="overview_editquickwizardlistactivity_add">Add</string>
     <string name="overview_quickwizard_item_edit_button">Edit</string>
     <string name="overview_quickwizard_item_remove_button">Remove</string>
+    <string name="mealbolus">Meal</string>
+    <string name="correctionbous">Corr</string>
 
 </resources>

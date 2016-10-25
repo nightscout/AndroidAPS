@@ -158,7 +158,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 if (treatment.carbs >= 1) {
                     result.carbs += treatment.carbs;
                 }
-                if (treatment.insulin >= 0.1) {
+                if (treatment.insulin >= 0.1 && treatment.mealBolus) {
                     result.boluses += treatment.insulin;
                 }
             }

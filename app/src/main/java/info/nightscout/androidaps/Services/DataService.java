@@ -377,7 +377,6 @@ public class DataService extends IntentService {
         }
 
         Treatment stored = null;
-        trJson = new JSONObject(trstring);
         String _id = trJson.getString("_id");
 
         if (trJson.has("timeIndex")) {
@@ -405,6 +404,11 @@ public class DataService extends IntentService {
             treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
             treatment.created_at = new Date(trJson.getLong("mills"));
+            if (trJson.has("eventType")) {
+                treatment.mealBolus = true;
+                if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
+                if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0) treatment.mealBolus = false;
+            }
             treatment.setTimeIndex(treatment.getTimeIndex());
             try {
                 MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
@@ -450,6 +454,11 @@ public class DataService extends IntentService {
         treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
         //treatment.created_at = DateUtil.fromISODateString(trJson.getString("created_at"));
         treatment.created_at = new Date(trJson.getLong("mills"));
+        if (trJson.has("eventType")) {
+            treatment.mealBolus = true;
+            if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
+            if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0) treatment.mealBolus = false;
+        }
         treatment.setTimeIndex(treatment.getTimeIndex());
         try {
             Dao.CreateOrUpdateStatus status = MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
