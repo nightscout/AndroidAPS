@@ -23,8 +23,8 @@ android {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1018
-        versionName "1.0.18"
+        versionCode 1019
+        versionName "1.0.19"
     }
     lintOptions {
         disable 'MissingTranslation'
