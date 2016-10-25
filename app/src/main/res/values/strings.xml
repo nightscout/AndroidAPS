@@ -330,5 +330,6 @@
     <string name="overview_quickwizard_item_remove_button">Remove</string>
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
+    <string name="ko_lang">Korean</string>
 
 </resources>

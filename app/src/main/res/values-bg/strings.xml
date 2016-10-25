@@ -297,4 +297,5 @@
     <string name="bolusdelivering">Подава  %.2fU</string>
     <string name="es_lang">Español</string>
     <string name="noprofileselected">Не е избран профил</string>
+    <string name="ko_lang">Korean</string>
 </resources>

@@ -244,4 +244,5 @@
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
     <string formatted="false" name="smscommunicator_bolusreplywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
+    <string name="ko_lang">Korean</string>
 </resources>

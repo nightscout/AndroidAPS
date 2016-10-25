@@ -304,5 +304,6 @@
     <string name="youareonallowedlimit">Alcanzado el límite permitido</string>
     <string name="openapsma_target_bg">Valor objetivo para los cálculos</string>
     <string name="noprofileselected">Sin perfil seleccionado</string>
+    <string name="ko_lang">Korean</string>
 
 </resources>

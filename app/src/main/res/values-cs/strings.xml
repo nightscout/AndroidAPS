@@ -318,4 +318,7 @@
     <string name="overview_quickwizard_item_remove_button">Odstranit</string>
     <string name="quickwizard">Rychlý bolus</string>
     <string name="quickwizardsettings">Nastavení rychlých bolusů</string>
+    <string name="mealbolus">Bolus</string>
+    <string name="ko_lang">Korean</string>
+    <string name="correctionbous">Korekce</string>
 </resources>
