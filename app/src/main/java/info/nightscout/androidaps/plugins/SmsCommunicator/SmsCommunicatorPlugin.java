@@ -264,6 +264,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                 case "BOLUS":
                     if (new Date().getTime() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance) {
                         reply = MainApp.sResources.getString(R.string.remotebolusnotallowed);
+                        newSms = new Sms(receivedSms.phoneNumber, reply, new Date());
                     } else if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
                         amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
