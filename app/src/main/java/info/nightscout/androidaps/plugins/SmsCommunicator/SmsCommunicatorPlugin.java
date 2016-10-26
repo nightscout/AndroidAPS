@@ -167,6 +167,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
                                 loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled);
+                                newSms = new Sms(receivedSms.phoneNumber, reply, new Date());
                             }
                             receivedSms.processed = true;
                             break;
@@ -175,6 +176,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             if (loopPlugin != null && !loopPlugin.isEnabled(PluginBase.LOOP)) {
                                 loopPlugin.setFragmentEnabled(PluginBase.LOOP, true);
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeenenabled);
+                                newSms = new Sms(receivedSms.phoneNumber, reply, new Date());
                             }
                             receivedSms.processed = true;
                             break;
@@ -186,6 +188,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 } else {
                                     reply = MainApp.sResources.getString(R.string.smscommunicator_loopisdisabled);
                                 }
+                                newSms = new Sms(receivedSms.phoneNumber, reply, new Date());
                             }
                             receivedSms.processed = true;
                             break;
@@ -199,6 +202,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                             List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
                             reply = "TERATMENTS REFRESH " + q.size() + " receivers";
+                            newSms = new Sms(receivedSms.phoneNumber, reply, new Date());
                             receivedSms.processed = true;
                             break;
                     }
@@ -210,6 +214,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
                             List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
                             reply = "NSCLIENT RESTART " + q.size() + " receivers";
+                            newSms = new Sms(receivedSms.phoneNumber, reply, new Date());
                             receivedSms.processed = true;
                             break;
                     }
@@ -218,6 +223,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
                     if (danaRPlugin != null && danaRPlugin.isEnabled(PluginBase.PUMP))
                         reply = danaRPlugin.shortStatus();
+                        newSms = new Sms(receivedSms.phoneNumber, reply, new Date());
                     receivedSms.processed = true;
                     break;
                 case "BASAL":
