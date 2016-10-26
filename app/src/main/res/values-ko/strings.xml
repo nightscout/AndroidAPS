@@ -242,7 +242,7 @@
     <string name="waitingforpumpresult">결과 기다리는 중</string>
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">식사주입 %.2fU 을 위해 %s 코드로 답메세지를 전송하세요</string>
+    <string name="smscommunicator_bolusreplywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
     <string name="bolusfailed">식사주입 실패</string>
     <string name="bolusdelivered" formatted="false">식사주입 %.2fU 성공적으로 전송됨</string>
     <string name="bolusdelivering" formatted="false">%.2fU 주입중</string>
