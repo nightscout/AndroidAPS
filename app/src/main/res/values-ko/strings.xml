@@ -2,33 +2,33 @@
 <resources>
     <string name="app_name">AndroidAPS</string>
     <string name="treatmentssafety_title">Tratments safety</string>
-    <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
-    <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
+    <string name="treatmentssafety_maxbolus_title">최대 허용 식사인슐린 [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">최대 허용 탄수화물 [g]</string>
 
-    <string name="nav_preferences">Preferences</string>
+    <string name="nav_preferences">설</string>
     <string name="nav_refreshtreatments">Refresh treatments from NS</string>
-    <string name="nav_backup">Backup</string>
-    <string name="nav_test_alert">Test alarm</string>
-    <string name="nav_resetdb">Reset databases</string>
-    <string name="nav_exit">Exit</string>
+    <string name="nav_backup">백</string>
+    <string name="nav_test_alert">테스트 알람</string>
+    <string name="nav_resetdb">데이터베이스 초기화</string>
+    <string name="nav_exit">종료</string>
     <string name="danar_useextended_title">Use extended boluses for >200%</string>
-    <string name="danar_bt_name_title">DanaR Bluetooth device</string>
+    <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="ns_sync_use_absolute_title">Always use basal absolute values</string>
 
-    <string name="objectives_objective_label_string">Objective:</string>
+    <string name="objectives_objective_label_string">목표:</string>
     <string name="objectives_gate_label_string">Gate:</string>
-    <string name="objectives_button_start">Start</string>
-    <string name="objectives_button_verify">Verify</string>
-    <string name="nsprofileview_units_label">Units:</string>
+    <string name="objectives_button_start">시작</string>
+    <string name="objectives_button_verify">확인</string>
+    <string name="nsprofileview_units_label">단위:</string>
     <string name="nsprofileview_dia_label">DIA:</string>
-    <string name="nsprofileview_activeprofile_label">Active profile:</string>
+    <string name="nsprofileview_activeprofile_label">활성 프로파일:</string>
     <string name="nsprofileview_ic_label">IC:</string>
-    <string name="nsprofileview_isf_label">ISF:</string>
-    <string name="nsprofileview_basal_label">Basal:</string>
-    <string name="nsprofileview_target_label">Target:</string>
+    <string name="nsprofileview_isf_label">인슐린 민감도(ISF):</string>
+    <string name="nsprofileview_basal_label">기저:</string>
+    <string name="nsprofileview_target_label">목표:</string>
     <string name="nsprofileview_noprofile_text">NO PROFILE SET</string>
-    <string name="treatments_insulin_label_string">Insulin:</string>
-    <string name="treatments_carbs_label_string">Carbs:</string>
+    <string name="treatments_insulin_label_string">인슐린:</string>
+    <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_activity_string">Activity:</string>
     <string name="treatments_iobtotal_label_string">Toal IOB:</string>
@@ -332,5 +332,4 @@
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
     <string name="ko_lang">Korean</string>
-
 </resources>
