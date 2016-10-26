@@ -307,19 +307,19 @@
     <string name="youareonallowedlimit">허용된 제한값에 도달하였습니다</string>
     <string name="openapsma_target_bg">계산을 위한 목표 혈당 값</string>
     <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
-    <string name="smscommunicator_loophasbeendisabled">Loop가 중지되었습니다.</string>
-    <string name="smscommunicator_loophasbeenenabled">Loop가 실행되었습니다.</string>
-    <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
-    <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
+    <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
+    <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
+    <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
+    <string name="smscommunicator_loopisenabled">Loop is enabled</string>
     <string name="openapsma_valueoutofrange" formatted="false">값 %s 은 하드리밋(Hard Limit)를 벗어났습니다</string>
-    <string name="remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
-    <string name="smscommunicator_basalreplywithcode" formatted="false">기초주입 %.2fU/h 을 위해 %s 코드로 답메세지를 전송하세요</string>
-    <string name="smscommunicator_tempbasalset" formatted="false">%d 분 동안의 임시기초주입 %.2fU/h 이 시작되었습니다.</string>
-    <string name="smscommunicator_tempbasalfailed">임시기초주입이 실패하였습니다.</string>
-    <string name="smscommunicator_basalstopreplywithcode" formatted="false">임시기초주입을 중지하기 위해 %s 코드로 답메세지를 전송하세요</string>
-    <string name="smscommunicator_tempbasalcanceled">임시기초주입이 취소되었습니다</string>
-    <string name="smscommunicator_tempbasalcancelfailed">임시기초주입 취소가 실패하였습니다.</string>
-    <string name="smscommunicator_unknowncommand">알려지지 않은 명령이거나 잘못된 답장입니다</string>
+    <string name="remotebasalnotallowed">Remote basal setting is not allowed</string>
+    <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
+    <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
+    <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
+    <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
+    <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
+    <string name="smscommunicator_unknowncommand">Uknonwn command or wrong reply</string>
 
     <string name="quickwizard">퀵마법사</string>
     <string name="quickwizardsettings">퀵마법사 설정</string>
