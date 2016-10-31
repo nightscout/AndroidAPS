@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -21,15 +21,15 @@ public class APSResult implements Parcelable {
     public double rate;
     public int duration;
     public boolean changeRequested = false;
-    private static VirtualPumpPlugin virtualPumpPlugin = new VirtualPumpPlugin(); //ECOR % basal rate
     @Override
     public String toString() {
+        final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
         if (changeRequested) {
             if (rate == 0 && duration == 0)
                 return MainApp.sResources.getString(R.string.canceltemp);
             else
-                return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h "
-                        + "(" + DecimalFormatter.to2Decimal(rate/virtualPumpPlugin.getBaseBasalRate() *100) + "%)\n" +
+                return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
+                        "(" + DecimalFormatter.to2Decimal(rate/configBuilder.getBaseBasalRate() *100) + "%)\n" +
                         MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
                         MainApp.sResources.getString(R.string.reason) + ": " + reason;
         } else
@@ -37,13 +37,13 @@ public class APSResult implements Parcelable {
     }
 
     public Spanned toSpanned() {
+        final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
         if (changeRequested) {
             String ret = "";
             if (rate == 0 && duration == 0) ret = MainApp.sResources.getString(R.string.canceltemp);
             else
-                //ECOR Try to % basal rate
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate/virtualPumpPlugin.getBaseBasalRate() *100) + "%) <br>" +
+                        "(" + DecimalFormatter.to2Decimal(rate/configBuilder.getBaseBasalRate() *100) + "%) <br>" +
                         "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
                         "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return Html.fromHtml(ret);
