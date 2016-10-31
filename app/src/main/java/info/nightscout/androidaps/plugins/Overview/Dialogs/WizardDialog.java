@@ -378,6 +378,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         basalIobInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulingFromBasalsIOB) + "U");
 
         correctionInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromCorrection) + "U");
+        calculatedTotalInsulin = wizard.calculatedTotalInsulin;
 
         if (calculatedTotalInsulin < 0) {
             total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
@@ -388,7 +389,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         }
 
         calculatedCarbs = carbsAfterConstraint;
-        calculatedTotalInsulin = wizard.calculatedTotalInsulin;
 
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
             String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U") : "";
