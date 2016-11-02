@@ -132,6 +132,8 @@
 
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
+    <string name="disabledloop">Loop Disabled</string>
+
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
     <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
