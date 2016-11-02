@@ -430,7 +430,7 @@ public class OverviewFragment extends Fragment {
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
-            apsModeView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorCancelTempButton));
+            apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
             LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
             if(activeloop != null && activeloop.isEnabled(activeloop.getType())) {
                 if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
@@ -439,7 +439,7 @@ public class OverviewFragment extends Fragment {
                     apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
                 }
             } else {
-                apsModeView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorSetExtendedButton));
+                apsModeView.setBackgroundResource(R.drawable.loopmodedisabledborder);
                 apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
             }
         } else {
