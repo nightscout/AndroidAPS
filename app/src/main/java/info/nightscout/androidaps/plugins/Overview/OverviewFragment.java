@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -429,9 +430,18 @@ public class OverviewFragment extends Fragment {
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
-            if (MainApp.getConfigBuilder().isClosedModeEnabled())
-                apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
-            else apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
+            apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
+            LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+            if(activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+                if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+                    apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
+                } else {
+                    apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
+                }
+            } else {
+                apsModeView.setBackgroundResource(R.drawable.loopmodedisabledborder);
+                apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
+            }
         } else {
             apsModeView.setVisibility(View.GONE);
         }
