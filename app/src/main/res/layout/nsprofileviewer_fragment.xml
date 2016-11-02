@@ -1,0 +1,127 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".plugins.NSProfileViewer.NSProfileViewerFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/profileview_noprofile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_noprofile_text"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/holo_red_light"
+                android:textStyle="bold"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_activeprofile_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_activeprofile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_units_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_units"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_dia_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_dia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_ic_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_ic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_isf_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_isf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_basal_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_basal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="25dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/nsprofileview_target_label"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:layout_marginLeft="10dp" />
+
+            <TextView
+                android:id="@+id/profileview_target"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/reloadprofile"
+                android:id="@+id/profileview_reload"
+                android:layout_gravity="center_horizontal"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+</FrameLayout>

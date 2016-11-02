@@ -2,7 +2,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="info.nightscout.androidaps">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.RECEIVE_MMS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.SEND_MMS" />
+
+    <!-- To receive data from xdrip. -->
+    <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
+
     <application
+        android:name=".MainApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -13,8 +29,60 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+        <activity android:name=".PreferencesActivity" />
+        <activity android:name=".AgreementActivity" />
+        <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity" />
+        <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <receiver
+            android:name=".receivers.DataReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+
+                <!-- Receiver from NSClient -->
+                <action android:name="info.nightscout.client.NEW_SGV" />
+                <action android:name="info.nightscout.client.NEW_TREATMENT" />
+                <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
+                <action android:name="info.nightscout.client.REMOVED_TREATMENT" />
+                <action android:name="info.nightscout.client.NEW_PROFILE" />
+                <action android:name="info.nightscout.client.NEW_STATUS" />
+                <action android:name="info.nightscout.client.NEW_MBG" />
+                <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
+                <action android:name="info.nightscout.client.NEW_CAL" />
+                <!-- Receive new SMS messages -->
+                <action android:name="android.provider.Telephony.SMS_RECEIVED" />
+                <!-- Receiver from xDrip -->
+                <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
+                <!-- Auto start -->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Receiver keepalive, scheduled every 30 min -->
+        <receiver android:name=".receivers.KeepAliveReceiver" />
+
+        <!-- Service processing incomming data -->
+        <service
+            android:name=".Services.DataService"
+            android:exported="false" />
+        <!-- Service showing alert on screen -->
+
+        <service
+            android:name=".plugins.DanaR.Services.ExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
+
     </application>
 
 </manifest>

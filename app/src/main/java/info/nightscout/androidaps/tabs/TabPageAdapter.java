@@ -1,50 +1,54 @@
 package info.nightscout.androidaps.tabs;
 
-import android.os.Bundle;
+import android.content.Context;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import info.nightscout.androidaps.interfaces.PluginBase;
 
 /**
  * Created by mike on 30.05.2016.
  */
-public class TabPageAdapter extends FragmentPagerAdapter {
+public class TabPageAdapter extends FragmentStatePagerAdapter {
 
-    int registeredTabs = 0;
-    List<Fragment> fragmentList = new ArrayList<Fragment>();
+    ArrayList<PluginBase> fragmentList = new ArrayList<>();
+    ArrayList<PluginBase> visibleFragmentList = new ArrayList<>();
 
-    public TabPageAdapter(FragmentManager fm) {
+    FragmentManager fm;
+    Context context;
+
+    public TabPageAdapter(FragmentManager fm, Context context) {
         super(fm);
+        this.fm = fm;
+        this.context = context;
     }
 
     @Override
+    @Nullable
     public Fragment getItem(int position) {
-        if (position > registeredTabs)
-            return null;
-        Fragment fragment = fragmentList.get(position);
-        return fragment;
+        //Fragment fragment = (Fragment) visibleFragmentList.get(position);
+        return Fragment.instantiate(context, visibleFragmentList.get(position).getFragmentClass());
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return fragmentList.get(position).getArguments().getString("name");
+        return visibleFragmentList.get(position).getName();
     }
 
     @Override
     public int getCount() {
-        return registeredTabs;
+        return visibleFragmentList.size();
     }
 
-    public int registerNewFragment(String name, Fragment fragment) {
-        fragmentList.add(fragment);
-        Bundle args = new Bundle();
-        args.putString("name", name);
-        fragment.setArguments(args);
-        registeredTabs++;
-        notifyDataSetChanged();
-        return registeredTabs-1;
+    public void registerNewFragment(PluginBase plugin) {
+        fragmentList.add(plugin);
+        if (plugin.isVisibleInTabs(plugin.getType())) {
+            visibleFragmentList.add(plugin);
+            notifyDataSetChanged();
+        }
     }
 }

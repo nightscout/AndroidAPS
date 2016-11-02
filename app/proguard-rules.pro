@@ -15,3 +15,12 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-dontwarn android.support.**
+
+-keep class !android.support.v7.internal.view.menu.**,android.support.** {*;}
+-ignorewarnings
+-renamesourcefileattribute SourceFile
+-keepattributes SourceFile,LineNumberTable
+
+-keep public class * extends android.support.v4.** {*;}
+-keep public class * extends android.app.Fragment

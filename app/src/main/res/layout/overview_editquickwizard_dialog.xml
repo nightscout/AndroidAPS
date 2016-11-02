@@ -1,0 +1,74 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.EditQuickWizardDialog">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp">
+
+        <TextView
+            android:text="@string/overview_editquickwizard_buttontext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:ems="10"
+            android:id="@+id/overview_editquickwizard_button_edit" />
+
+        <TextView
+            android:text="@string/overview_editquickwizard_carbs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:ems="10"
+            android:id="@+id/overview_editquickwizard_carbs_edit" />
+
+        <TextView
+            android:text="@string/overview_editquickwizard_valid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/overview_editquickwizard_from_spinner"
+                android:layout_weight="1" />
+
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/overview_editquickwizard_to_spinner"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <Button
+            android:text="@string/ok"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/overview_editquickwizard_ok_button"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+</FrameLayout>

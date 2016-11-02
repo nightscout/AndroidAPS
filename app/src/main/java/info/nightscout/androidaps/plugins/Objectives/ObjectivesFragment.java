@@ -1,94 +1,133 @@
 package info.nightscout.androidaps.plugins.Objectives;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interfaces.FragmentBase;
 
-public class ObjectivesFragment extends Fragment {
+public class ObjectivesFragment extends Fragment implements View.OnClickListener, FragmentBase {
+    private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
+
+    private static ObjectivesPlugin objectivesPlugin = new ObjectivesPlugin();
+
+    public static ObjectivesPlugin getPlugin() {
+        return objectivesPlugin;
+    }
+
     RecyclerView recyclerView;
     LinearLayoutManager llm;
+    CheckBox enableFake;
+    LinearLayout fake_layout;
+    TextView reset;
 
-    private OnFragmentInteractionListener mListener;
-
-    class Objective {
-        String objective;
-        String gate;
-        Date started;
-        Integer durationInDays;
-        Date accomplished;
-
-        Objective(String objective, String gate, Date started, Integer durationInDays, Date accomplished) {
-            this.objective = objective;
-            this.gate = gate;
-            this.started = started;
-            this.durationInDays = durationInDays;
-            this.accomplished = accomplished;
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        switch (id) {
+            default:
+                break;
         }
     }
 
-    private List<Objective> objectives;
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ObjectiveViewHolder> {
 
-    private void initializeData() {
-        objectives = new ArrayList<>();
-        objectives.add(new Objective("Setting up visualization and monitoring, and analyzing basals and ratios",
-                "Verify that BG is available in Nightscout, and pump insulin data is being uploaded",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Starting on an open loop",
-                "Run in Open Loop mode for a few days, and manually enact lots of temp basals",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Understanding your open loop, including its temp basal recommendations",
-                "Based on that experience, decide what max basal should be, and set it on the pump",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Starting to close the loop with Low Glucose Suspend",
-                "Run in closed loop with max IOB = 0 for a few days without too many LGS events",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets",
-                "Run for a few days, and at least one night with no low BG alarms, before dropping BG",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Adjust basals and ratios if needed, and then enable auto-sens",
-                "1 week successful daytime looping with regular carb entry",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-        objectives.add(new Objective("Enabling additional features for daytime use, such as advanced meal assist",
-                "",
-                new Date(0, 0, 0), 1, new Date(0, 0, 0)));
-    }
+        List<ObjectivesPlugin.Objective> objectives;
 
-    public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ObjectiveViewHolder> {
-
-        List<Objective> objectives;
-
-        RecyclerViewAdapter(List<Objective> objectives) {
+        RecyclerViewAdapter(List<ObjectivesPlugin.Objective> objectives) {
             this.objectives = objectives;
         }
 
         @Override
         public ObjectiveViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.objectives_item, viewGroup, false);
-            ObjectiveViewHolder objectiveViewHolder = new ObjectiveViewHolder(v);
-            return objectiveViewHolder;
+            return new ObjectiveViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(ObjectiveViewHolder holder, int position) {
-            holder.position.setText(String.valueOf(position+1));
-            holder.objective.setText(objectives.get(position).objective);
-            holder.gate.setText(objectives.get(position).gate);
-            holder.started.setText(objectives.get(position).started.toString());
-            holder.accomplished.setText(objectives.get(position).accomplished.toString());
+            ObjectivesPlugin.Objective o = objectives.get(position);
+            ObjectivesPlugin.RequirementResult requirementsMet = objectivesPlugin.requirementsMet(position);
+            Context context = MainApp.instance().getApplicationContext();
+            holder.position.setText(String.valueOf(position + 1));
+            holder.objective.setText(o.objective);
+            holder.gate.setText(o.gate);
+            holder.duration.setText(context.getString(R.string.objectives_minimalduration) + " " + o.durationInDays + " " + context.getString(R.string.days));
+            holder.progress.setText(requirementsMet.comment);
+            holder.started.setText(o.started.toLocaleString());
+            holder.accomplished.setText(o.accomplished.toLocaleString());
+
+            holder.startButton.setTag(o);
+            holder.verifyButton.setTag(o);
+
+            holder.startButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    ObjectivesPlugin.Objective o = (ObjectivesPlugin.Objective) v.getTag();
+                    o.started = new Date();
+                    updateGUI();
+                    ObjectivesPlugin.saveProgress();
+                }
+            });
+            holder.verifyButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    ObjectivesPlugin.Objective o = (ObjectivesPlugin.Objective) v.getTag();
+                    if (objectivesPlugin.requirementsMet(o.num).done || enableFake.isChecked()) {
+                        o.accomplished = new Date();
+                        updateGUI();
+                        ObjectivesPlugin.saveProgress();
+                    }
+                }
+            });
+
+            Long now = new Date().getTime();
+            if (position > 0 && objectives.get(position - 1).accomplished.getTime() == 0) {
+                // Phase 0: previous not completed
+                holder.startedLayout.setVisibility(View.GONE);
+                holder.durationLayout.setVisibility(View.GONE);
+                holder.progressLayout.setVisibility(View.GONE);
+                holder.verifyLayout.setVisibility(View.GONE);
+            } else if (o.started.getTime() == 0) {
+                // Phase 1: not started
+                holder.durationLayout.setVisibility(View.GONE);
+                holder.progressLayout.setVisibility(View.GONE);
+                holder.verifyLayout.setVisibility(View.GONE);
+                holder.started.setVisibility(View.GONE);
+            } else if (o.started.getTime() > 0 && !enableFake.isChecked() && o.accomplished.getTime() == 0 && !(o.started.getTime() + o.durationInDays * 24 * 60 * 60 * 1000 < now && requirementsMet.done)) {
+                // Phase 2: started, waiting for duration and met requirements
+                holder.startButton.setEnabled(false);
+                holder.verifyLayout.setVisibility(View.GONE);
+            } else if (o.accomplished.getTime() == 0) {
+                // Phase 3: started, after duration, requirements met
+                holder.startButton.setEnabled(false);
+                holder.accomplished.setVisibility(View.INVISIBLE);
+            } else {
+                // Phase 4: verified
+                holder.gateLayout.setVisibility(View.GONE);
+                holder.startedLayout.setVisibility(View.GONE);
+                holder.durationLayout.setVisibility(View.GONE);
+                holder.progressLayout.setVisibility(View.GONE);
+                holder.verifyButton.setVisibility(View.INVISIBLE);
+            }
         }
 
         @Override
@@ -101,94 +140,110 @@ public class ObjectivesFragment extends Fragment {
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        public static class ObjectiveViewHolder extends RecyclerView.ViewHolder {
+        public class ObjectiveViewHolder extends RecyclerView.ViewHolder {
             CardView cv;
             TextView position;
             TextView objective;
+            LinearLayout gateLayout;
             TextView gate;
+            TextView duration;
+            LinearLayout durationLayout;
+            TextView progress;
+            LinearLayout progressLayout;
             TextView started;
+            Button startButton;
+            LinearLayout startedLayout;
             TextView accomplished;
+            Button verifyButton;
+            LinearLayout verifyLayout;
 
             ObjectiveViewHolder(View itemView) {
                 super(itemView);
                 cv = (CardView) itemView.findViewById(R.id.objectives_cardview);
                 position = (TextView) itemView.findViewById(R.id.objectives_position);
                 objective = (TextView) itemView.findViewById(R.id.objectives_objective);
+                durationLayout = (LinearLayout) itemView.findViewById(R.id.objectives_duration_linearlayout);
+                duration = (TextView) itemView.findViewById(R.id.objectives_duration);
+                progressLayout = (LinearLayout) itemView.findViewById(R.id.objectives_progresslayout);
+                progress = (TextView) itemView.findViewById(R.id.objectives_progress);
+                gateLayout = (LinearLayout) itemView.findViewById(R.id.objectives_gate_linearlayout);
                 gate = (TextView) itemView.findViewById(R.id.objectives_gate);
+                startedLayout = (LinearLayout) itemView.findViewById(R.id.objectives_start_linearlayout);
                 started = (TextView) itemView.findViewById(R.id.objectives_started);
+                startButton = (Button) itemView.findViewById(R.id.objectives_start);
+                verifyLayout = (LinearLayout) itemView.findViewById(R.id.objectives_verify_linearlayout);
                 accomplished = (TextView) itemView.findViewById(R.id.objectives_accomplished);
+                verifyButton = (Button) itemView.findViewById(R.id.objectives_verify);
             }
         }
-    }
-
-    public ObjectivesFragment() {
-        super();
-        initializeData();
-    }
-
-    public static ObjectivesFragment newInstance() {
-        ObjectivesFragment fragment = new ObjectivesFragment();
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_objectives, container, false);
+        View view = inflater.inflate(R.layout.objectives_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.objectives_recyclerview);
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
+        enableFake =  (CheckBox) view.findViewById(R.id.objectives_fake);
+        fake_layout = (LinearLayout) view.findViewById(R.id.objectives_fake_layout);
+        reset = (TextView) view.findViewById(R.id.objectives_reset);
+        enableFake.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                updateGUI();
+            }
+        });
+        reset.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                objectivesPlugin.initializeData();
+                objectivesPlugin.saveProgress();
+                updateGUI();
+            }
+        });
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(objectives);
-        recyclerView.setAdapter(adapter);
+        // Add correct translations to array after app is initialized
+        objectivesPlugin.objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
+        objectivesPlugin.objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
+        objectivesPlugin.objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
+        objectivesPlugin.objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
+        objectivesPlugin.objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
+        objectivesPlugin.objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
+        objectivesPlugin.objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
+        objectivesPlugin.objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
+        objectivesPlugin.objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
+        objectivesPlugin.objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
+        objectivesPlugin.objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
+        objectivesPlugin.objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
+        objectivesPlugin.objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
+        updateGUI();
 
         return view;
     }
 
-    /*
-        // TODO: Rename method, update argument and hook method into UI event
-        public void onButtonPressed(Uri uri) {
-            if (mListener != null) {
-                mListener.onFragmentInteraction(uri);
-            }
-        }
-    */
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+    void updateGUI() {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(ObjectivesPlugin.objectives);
+                    recyclerView.setAdapter(adapter);
+                }
+            });
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(String param);
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
     }
+
 }

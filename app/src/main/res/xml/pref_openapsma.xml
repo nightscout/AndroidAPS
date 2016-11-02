@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="openaps"
+        android:title="@string/openapsma">
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="openapsma_min_bg"
+            android:numeric="decimal"
+            android:title="@string/openapsma_low_summary" />
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="openapsma_max_bg"
+            android:numeric="decimal"
+            android:title="@string/openapsma_high_summary" />
+
+        <EditTextPreference
+            android:defaultValue=""
+            android:key="openapsma_target_bg"
+            android:numeric="decimal"
+            android:title="@string/openapsma_target_bg" />
+
+        <EditTextPreference
+            android:defaultValue="1"
+            android:key="openapsma_max_basal"
+            android:numeric="decimal"
+            android:title="@string/openapsma_maxbasal_summary" />
+        <EditTextPreference
+            android:defaultValue="1.5"
+            android:key="openapsma_max_iob"
+            android:numeric="decimal"
+            android:title="@string/openapsma_maxiob_summary" />
+    </PreferenceCategory>
+
+</PreferenceScreen>
