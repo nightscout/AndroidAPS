@@ -321,4 +321,5 @@
     <string name="mealbolus">Bolus</string>
     <string name="ko_lang">Korean</string>
     <string name="correctionbous">Korekce</string>
+    <string name="actions">Akce</string>
 </resources>

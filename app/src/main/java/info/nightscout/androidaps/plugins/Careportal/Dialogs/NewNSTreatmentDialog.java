@@ -40,12 +40,16 @@ import java.util.Calendar;
 import java.util.Date;
 
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
@@ -62,7 +66,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     private FragmentActivity context;
 
-    private static CareportalFragment.OptionsToShow options;
+    private static OptionsToShow options;
 
     NSProfile profile;
     String units;
@@ -107,7 +111,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     Date eventTime;
 
-    public void setOptions(CareportalFragment.OptionsToShow options) {
+    public void setOptions(OptionsToShow options) {
         this.options = options;
     }
 
@@ -532,6 +536,26 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                if (options.executeProfileSwitch) {
+                    if (data.has("profile")) {
+                        try {
+                            String profile = data.getString("profile");
+                            NSProfile nsProfile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+                            nsProfile.setActiveProfile(profile);
+                            PumpInterface pump = MainApp.getConfigBuilder();
+                            if (pump != null) {
+                                pump.setNewBasalProfile(nsProfile);
+                                log.debug("Setting new profile: " + profile);
+                                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
+                            } else {
+                                log.error("No active pump selected");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
         });
         builder.setNegativeButton(getContext().getString(R.string.cancel), null);

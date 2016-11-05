@@ -349,6 +349,19 @@ public class NSProfile {
         return activeProfile;
     }
 
+    public void setActiveProfile(String newProfile) {
+        try {
+            JSONObject store = json.getJSONObject("store");
+            if (newProfile != null && store.has(newProfile)) {
+                activeProfile = newProfile;
+            } else {
+                log.error("Attempt to set wrong active profile");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Double getMaxDailyBasal() {
         Double max = 0d;
         for (Integer hour = 0; hour < 24; hour++) {
