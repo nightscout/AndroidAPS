@@ -333,5 +333,6 @@
     <string name="mealbolus">Meal</string>
     <string name="correctionbous">Corr</string>
     <string name="ko_lang">Korean</string>
+    <string name="actions">Actions</string>
 
 </resources>

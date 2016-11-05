@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -62,6 +63,7 @@ public class MainApp extends Application {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.getPlugin());
+            pluginsList.add(ActionsFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.MM640G) pluginsList.add(MM640gFragment.getPlugin());
             if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.getPlugin());
