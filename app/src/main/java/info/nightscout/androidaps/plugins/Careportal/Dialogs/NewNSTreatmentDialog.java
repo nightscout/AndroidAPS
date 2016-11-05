@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
@@ -102,8 +104,21 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     Date eventTime;
 
+    private static Handler sHandler;
+    private static HandlerThread sHandlerThread;
+
+
     public void setOptions(OptionsToShow options) {
         this.options = options;
+    }
+
+    public NewNSTreatmentDialog() {
+        super();
+        if (sHandlerThread == null) {
+            sHandlerThread = new HandlerThread(NewNSTreatmentDialog.class.getSimpleName());
+            sHandlerThread.start();
+            sHandler = new Handler(sHandlerThread.getLooper());
+        }
     }
 
     @Override
@@ -529,22 +544,26 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                 if (options.executeProfileSwitch) {
                     if (data.has("profile")) {
-                        try {
-                            String profile = data.getString("profile");
-                            NSProfile nsProfile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-                            nsProfile.setActiveProfile(profile);
-                            PumpInterface pump = MainApp.getConfigBuilder();
-                            if (pump != null) {
-                                pump.setNewBasalProfile(nsProfile);
-                                log.debug("Setting new profile: " + profile);
-                                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
-                            } else {
-                                log.error("No active pump selected");
+                        sHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    String profile = data.getString("profile");
+                                    NSProfile nsProfile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+                                    nsProfile.setActiveProfile(profile);
+                                    PumpInterface pump = MainApp.getConfigBuilder();
+                                    if (pump != null) {
+                                        pump.setNewBasalProfile(nsProfile);
+                                        log.debug("Setting new profile: " + profile);
+                                        MainApp.bus().post(new EventNewBasalProfile(nsProfile));
+                                    } else {
+                                        log.error("No active pump selected");
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                             }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        });
                     }
                 }
             }
