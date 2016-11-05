@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Overview.Dialogs;
+package info.nightscout.androidaps.plugins.Actions.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;

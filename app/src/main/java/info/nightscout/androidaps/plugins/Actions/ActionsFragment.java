@@ -10,9 +10,10 @@ import android.view.ViewGroup;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
+import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +35,8 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
         View view = inflater.inflate(R.layout.actions_fragment, container, false);
 
         view.findViewById(R.id.actions_profileswitch).setOnClickListener(this);
+        view.findViewById(R.id.actions_extendedbolus).setOnClickListener(this);
+        view.findViewById(R.id.actions_settempbasal).setOnClickListener(this);
 
         return view;
     }
@@ -41,17 +44,22 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
     @Override
     public void onClick(View view) {
         FragmentManager manager = getFragmentManager();
-        NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
         switch (view.getId()) {
             case R.id.actions_profileswitch:
+                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
                 final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch);
+                newDialog.show(manager, "NewNSTreatmentDialog");
                 break;
-            default:
-                newDialog = null;
+            case R.id.actions_extendedbolus:
+                NewExtendedBolusDialog newExtendedDialog = new NewExtendedBolusDialog();
+                newExtendedDialog.show(manager, "NewExtendedDialog");
+               break;
+            case R.id.actions_settempbasal:
+                NewTempBasalDialog newTempDialog = new NewTempBasalDialog();
+                newTempDialog.show(manager, "NewTempDialog");
+               break;
         }
-        if (newDialog != null)
-            newDialog.show(manager, "NewNSTreatmentDialog");
     }
 }

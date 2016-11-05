@@ -11,7 +11,6 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,8 +59,6 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.NewExtendedBolusDialog;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension.PointsWithLabelGraphSeries;
@@ -70,7 +67,6 @@ import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
-import info.nightscout.utils.SafeParse;
 
 
 public class OverviewFragment extends Fragment {
@@ -91,14 +87,11 @@ public class OverviewFragment extends Fragment {
     GraphView bgGraph;
 
     LinearLayout cancelTempLayout;
-    LinearLayout setTempLayout;
     LinearLayout acceptTempLayout;
     LinearLayout quickWizardLayout;
     Button cancelTempButton;
     Button treatmentButton;
     Button wizardButton;
-    Button setTempButton;
-    Button setExtenedButton;
     Button acceptTempButton;
     Button quickWizardButton;
 
@@ -131,10 +124,7 @@ public class OverviewFragment extends Fragment {
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
         wizardButton = (Button) view.findViewById(R.id.overview_wizard);
-        setExtenedButton = (Button) view.findViewById(R.id.overview_extendedbolus);
-        setTempButton = (Button) view.findViewById(R.id.overview_settempbasal);
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
-        setTempLayout = (LinearLayout) view.findViewById(R.id.overview_settemplayout);
         cancelTempLayout = (LinearLayout) view.findViewById(R.id.overview_canceltemplayout);
         acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
@@ -183,23 +173,6 @@ public class OverviewFragment extends Fragment {
             }
         });
 
-        setTempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager manager = getFragmentManager();
-                NewTempBasalDialog newTempDialog = new NewTempBasalDialog();
-                newTempDialog.show(manager, "NewTempDialog");
-            }
-        });
-
-        setExtenedButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager manager = getFragmentManager();
-                NewExtendedBolusDialog newExtendedDialog = new NewExtendedBolusDialog();
-                newExtendedDialog.show(manager, "NewExtendedDialog");
-            }
-        });
 
         acceptTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -465,26 +438,20 @@ public class OverviewFragment extends Fragment {
         if (pump.isTempBasalInProgress()) {
             TempBasal activeTemp = pump.getTempBasal();
             cancelTempLayout.setVisibility(View.VISIBLE);
-            setTempLayout.setVisibility(View.GONE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
             runningTempView.setText(activeTemp.toString());
         } else {
             cancelTempLayout.setVisibility(View.GONE);
-            setTempLayout.setVisibility(View.VISIBLE);
             Double currentBasal = pump.getBaseBasalRate();
             runningTempView.setText(DecimalFormatter.to2Decimal(currentBasal) + " U/h");
         }
 
         if (profile == null) {
             // disable all treatment buttons because we are not able to check constraints without profile
-            setExtenedButton.setVisibility(View.INVISIBLE);
-            setTempLayout.setVisibility(View.INVISIBLE);
             wizardButton.setVisibility(View.INVISIBLE);
             treatmentButton.setVisibility(View.INVISIBLE);
             return;
         } else {
-            setExtenedButton.setVisibility(View.VISIBLE);
-            setTempLayout.setVisibility(View.VISIBLE);
             wizardButton.setVisibility(View.VISIBLE);
             treatmentButton.setVisibility(View.VISIBLE);
         }
