@@ -53,6 +53,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -404,7 +405,7 @@ public class OverviewFragment extends Fragment {
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
-            LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+            final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
             if(activeloop != null && activeloop.isEnabled(activeloop.getType())) {
                 if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
@@ -415,6 +416,28 @@ public class OverviewFragment extends Fragment {
                 apsModeView.setBackgroundResource(R.drawable.loopmodedisabledborder);
                 apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
             }
+
+
+            apsModeView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if (activeloop == null){
+                        log.error("no active loop?");
+                        return true;
+                    } else if (activeloop.isEnabled(PluginBase.LOOP)){
+                        activeloop.setFragmentEnabled(PluginBase.LOOP, false);
+                        activeloop.setFragmentVisible(PluginBase.LOOP, false);
+                    } else {
+                        activeloop.setFragmentEnabled(PluginBase.LOOP, true);
+                        activeloop.setFragmentVisible(PluginBase.LOOP, true);
+                    }
+                    MainApp.getConfigBuilder().storeSettings();
+                    MainApp.bus().post(new EventRefreshGui(false));
+                    return true;
+                }
+            });
+            apsModeView.setLongClickable(true);
+
         } else {
             apsModeView.setVisibility(View.GONE);
         }
