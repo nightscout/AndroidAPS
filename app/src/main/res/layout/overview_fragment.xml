@@ -137,39 +137,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/overview_settemplayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/overview_settempbasal"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_weight="0.5"
-                    android:text="@string/overview_tempbasal_button"
-                    android:textColor="@color/colorSetTempButton" />
-
-                <Button
-                    android:id="@+id/overview_extendedbolus"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_weight="0.5"
-                    android:text="@string/overview_extendedbolus_button"
-                    android:textColor="@color/colorSetExtendedButton" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">

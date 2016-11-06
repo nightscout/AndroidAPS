@@ -202,7 +202,7 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                     }
                     if (DanaRPlugin.getDanaRPump().lastBolusTime.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - DanaRPlugin.getDanaRPump().lastBolusTime.getTime();
-                        double agoHours = (int) (agoMsec / 60d / 60d / 1000d);
+                        double agoHours =  agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
                             lastBolusView.setText(formatTime.format(DanaRPlugin.getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(danaRPlugin.getDanaRPump().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
