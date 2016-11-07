@@ -37,7 +37,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
             recreate();
-            MainApp.bus().post(new EventRefreshGui());
+            MainApp.bus().post(new EventRefreshGui(true));
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }

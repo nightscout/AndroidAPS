@@ -178,7 +178,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                         plugin.setFragmentVisible(type, cb.isChecked());
                         onEnabledCategoryChanged(plugin, type);
                         configBuilderPlugin.storeSettings();
-                        MainApp.bus().post(new EventRefreshGui());
+                        MainApp.bus().post(new EventRefreshGui(true));
                     }
                 });
 
@@ -188,7 +188,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                         PluginBase plugin = (PluginBase) cb.getTag();
                         plugin.setFragmentVisible(type, cb.isChecked());
                         configBuilderPlugin.storeSettings();
-                        MainApp.bus().post(new EventRefreshGui());
+                        MainApp.bus().post(new EventRefreshGui(true));
                     }
                 });
             } else {
