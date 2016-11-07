@@ -97,6 +97,7 @@ public class TempBasal {
 
                     Iob aIOB = tempBolusPart.iobCalc(time, profile.getDia());
                     result.basaliob += aIOB.iobContrib;
+                    result.activity += aIOB.activityContrib;
                     Double dia_ago = time.getTime() - profile.getDia() * 60 * 60 * 1000;
                     if (date > dia_ago && date <= time.getTime()) {
                         result.netbasalinsulin += tempBolusPart.insulin;
