@@ -462,7 +462,7 @@ public class OverviewFragment extends Fragment {
             TempBasal activeTemp = pump.getTempBasal();
             cancelTempLayout.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
-            runningTempView.setText(activeTemp.toString());
+            runningTempView.setText(activeTemp.toString() + "\n(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h" + ")");
         } else {
             cancelTempLayout.setVisibility(View.GONE);
             Double currentBasal = pump.getBaseBasalRate();
