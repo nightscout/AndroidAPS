@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         LocaleHelper.setLocale(getApplicationContext(), lang);
         recreate();
         try { // activity may be destroyed
-            setUpTabs(true);
+            setUpTabs(ev.isSwitchToLast());
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
