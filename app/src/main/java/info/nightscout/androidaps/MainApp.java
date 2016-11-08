@@ -54,6 +54,9 @@ public class MainApp extends Application {
     public void onCreate() {
         super.onCreate();
         Fabric.with(this, new Crashlytics());
+        Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
+        log.info("Version: " + BuildConfig.VERSION_NAME);
+        log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
         sBus = new Bus(ThreadEnforcer.ANY);
         sInstance = this;

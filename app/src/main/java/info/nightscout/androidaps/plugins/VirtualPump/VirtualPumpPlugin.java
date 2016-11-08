@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.Date;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -330,9 +331,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         JSONObject pump = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();
+        JSONObject extended = new JSONObject();
         try {
             battery.put("percent", batteryPercent);
             status.put("status", "normal");
+            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             TempBasal tb;
             if ((tb = getTempBasal()) != null) {
                 status.put("tempbasalpct", tb.percent);
@@ -343,6 +346,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
             pump.put("battery", battery);
             pump.put("status", status);
+            pump.put("extended", extended);
             pump.put("reservoir", reservoirInUnits);
             pump.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
