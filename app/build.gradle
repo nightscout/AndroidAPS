@@ -14,6 +14,26 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+def generateGitBuild = { ->
+
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append('"')
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--always'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        return "NoGitSystemAvailable";
+    }
+    stringBuilder.append('-')
+    stringBuilder.append((new Date()).format('yyyy.MM.dd'))
+    stringBuilder.append('"')
+    return stringBuilder.toString()
+}
 
 android {
     compileSdkVersion 23
@@ -25,6 +45,7 @@ android {
         targetSdkVersion 23
         versionCode 1020
         versionName "1.0.20"
+        buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
     lintOptions {
         disable 'MissingTranslation'

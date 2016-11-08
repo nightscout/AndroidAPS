@@ -20,6 +20,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.Objects;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -592,6 +593,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             battery.put("percent", getDanaRPump().batteryRemaining);
             status.put("status", "normal");
             status.put("timestamp", DateUtil.toISOString(getDanaRPump().lastConnection));
+            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             extended.put("PumpIOB", getDanaRPump().iob);
             extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
             extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
