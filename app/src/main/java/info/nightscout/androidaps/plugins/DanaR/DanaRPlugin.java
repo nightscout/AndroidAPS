@@ -592,19 +592,19 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             battery.put("percent", getDanaRPump().batteryRemaining);
             status.put("status", "normal");
             status.put("timestamp", DateUtil.toISOString(getDanaRPump().lastConnection));
+            extended.put("PumpIOB", getDanaRPump().iob);
+            extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
+            extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
             if (isTempBasalInProgress()) {
                 extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", getTempBasal().timeStart.toLocaleString());
                 extended.put("TempBasalRemaining", getTempBasal().getPlannedRemainingMinutes());
                 extended.put("IsExtended", getTempBasal().isExtended);
-                extended.put("BaseBasalRate", getBaseBasalRate());
                 try {
                     extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
                 } catch (Exception e) {}
             }
-            extended.put("PumpIOB", getDanaRPump().iob);
-            extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
-            extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
+            extended.put("BaseBasalRate", getBaseBasalRate());
 
             pump.put("battery", battery);
             pump.put("status", status);
