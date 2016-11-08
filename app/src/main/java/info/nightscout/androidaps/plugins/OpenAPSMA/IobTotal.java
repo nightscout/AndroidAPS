@@ -64,7 +64,7 @@ public class IobTotal {
     public JSONObject json() {
         JSONObject json = new JSONObject();
         try {
-            json.put("iob", iob + basaliob);
+            json.put("iob", iob);
             json.put("basaliob", basaliob);
             json.put("activity", activity);
             json.put("time", DateUtil.toISOString(new Date()));
