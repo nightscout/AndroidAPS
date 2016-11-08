@@ -281,8 +281,6 @@ public class DanaRHistoryActivity extends Activity {
             holder.stringvalue.setText(record.getStringRecordValue());
             holder.bolustype.setText(record.getBolusType());
             holder.duration.setText(DecimalFormatter.to0Decimal(record.getRecordDuration()));
-            holder.dailybasal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + "U");
-            holder.dailybolus.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + "U");
             holder.alarm.setText(record.getRecordAlarm());
             switch (showingType) {
                 case RecordTypes.RECORD_TYPE_ALARM:
@@ -293,6 +291,7 @@ public class DanaRHistoryActivity extends Activity {
                     holder.duration.setVisibility(View.GONE);
                     holder.dailybasal.setVisibility(View.GONE);
                     holder.dailybolus.setVisibility(View.GONE);
+                    holder.dailytotal.setVisibility(View.GONE);
                     holder.alarm.setVisibility(View.VISIBLE);
                     break;
                 case RecordTypes.RECORD_TYPE_BOLUS:
@@ -303,9 +302,15 @@ public class DanaRHistoryActivity extends Activity {
                     holder.duration.setVisibility(View.VISIBLE);
                     holder.dailybasal.setVisibility(View.GONE);
                     holder.dailybolus.setVisibility(View.GONE);
+                    holder.dailytotal.setVisibility(View.GONE);
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_DAILY:
+                    df = DateFormat.getDateInstance(DateFormat.SHORT);
+                    holder.dailybasal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + "U");
+                    holder.dailybolus.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + "U");
+                    holder.dailytotal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()+ record.getRecordDailyBasal()) + "U");
+                    holder.time.setText(df.format(new Date(record.getRecordDate())));
                     holder.time.setVisibility(View.VISIBLE);
                     holder.value.setVisibility(View.GONE);
                     holder.stringvalue.setVisibility(View.GONE);
@@ -313,6 +318,7 @@ public class DanaRHistoryActivity extends Activity {
                     holder.duration.setVisibility(View.GONE);
                     holder.dailybasal.setVisibility(View.VISIBLE);
                     holder.dailybolus.setVisibility(View.VISIBLE);
+                    holder.dailytotal.setVisibility(View.VISIBLE);
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_GLUCOSE:
@@ -331,6 +337,7 @@ public class DanaRHistoryActivity extends Activity {
                     holder.duration.setVisibility(View.GONE);
                     holder.dailybasal.setVisibility(View.GONE);
                     holder.dailybolus.setVisibility(View.GONE);
+                    holder.dailytotal.setVisibility(View.GONE);
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_SUSPEND:
@@ -341,6 +348,7 @@ public class DanaRHistoryActivity extends Activity {
                     holder.duration.setVisibility(View.GONE);
                     holder.dailybasal.setVisibility(View.GONE);
                     holder.dailybolus.setVisibility(View.GONE);
+                    holder.dailytotal.setVisibility(View.GONE);
                     holder.alarm.setVisibility(View.GONE);
                     break;
             }
@@ -365,6 +373,7 @@ public class DanaRHistoryActivity extends Activity {
             TextView duration;
             TextView dailybasal;
             TextView dailybolus;
+            TextView dailytotal;
             TextView alarm;
 
             HistoryViewHolder(View itemView) {
@@ -377,6 +386,7 @@ public class DanaRHistoryActivity extends Activity {
                 duration = (TextView) itemView.findViewById(R.id.danar_history_duration);
                 dailybasal = (TextView) itemView.findViewById(R.id.danar_history_dailybasal);
                 dailybolus = (TextView) itemView.findViewById(R.id.danar_history_dailybolus);
+                dailytotal = (TextView) itemView.findViewById(R.id.danar_history_dailytotal);
                 alarm = (TextView) itemView.findViewById(R.id.danar_history_alarm);
             }
         }
