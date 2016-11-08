@@ -1,5 +1,6 @@
 package info.nightscout.androidaps;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -110,7 +112,17 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 break;
             case R.id.nav_resetdb:
-                MainApp.getDbHelper().resetDatabases();
+                new AlertDialog.Builder(getApplicationContext())
+                        .setTitle(R.string.nav_resetdb)
+                        .setMessage(R.string.reset_db_confirm)
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override public void onClick(DialogInterface dialog, int which) {
+                                MainApp.getDbHelper().resetDatabases();
+                            }
+                        })
+                        .create()
+                        .show();
                 break;
             case R.id.nav_export:
                 ImportExportPrefs.verifyStoragePermissions(this);
