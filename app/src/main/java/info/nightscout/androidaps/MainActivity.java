@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(i);
                 break;
             case R.id.nav_resetdb:
-                new AlertDialog.Builder(getApplicationContext())
+                new AlertDialog.Builder(this)
                         .setTitle(R.string.nav_resetdb)
                         .setMessage(R.string.reset_db_confirm)
                         .setNegativeButton(android.R.string.cancel, null)
