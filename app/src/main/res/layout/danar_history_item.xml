@@ -73,6 +73,14 @@
             android:gravity="right" />
 
         <TextView
+            android:id="@+id/danar_history_dailytotal"
+            android:layout_width="56dp"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:gravity="right"
+            android:visibility="gone"/>
+
+        <TextView
             android:id="@+id/danar_history_alarm"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
