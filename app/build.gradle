@@ -27,7 +27,7 @@ def generateGitBuild = { ->
         String commitObject = stdout.toString().trim()
         stringBuilder.append(commitObject)
     } catch (ignored) {
-        return "NoGitSystemAvailable";
+        stringBuilder.append('NoGitSystemAvailable')
     }
     stringBuilder.append('-')
     stringBuilder.append((new Date()).format('yyyy.MM.dd'))
