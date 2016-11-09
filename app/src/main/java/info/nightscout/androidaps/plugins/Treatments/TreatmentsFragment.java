@@ -3,7 +3,9 @@ package info.nightscout.androidaps.plugins.Treatments;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -34,6 +36,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.ToastUtils;
 
 public class TreatmentsFragment extends Fragment implements View.OnClickListener, FragmentBase {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
@@ -148,21 +151,26 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                builder.setTitle(this.getContext().getString(R.string.confirmation));
-                builder.setMessage(this.getContext().getString(R.string.refreshfromnightscout));
-                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        MainApp.getDbHelper().resetTreatments();
-                        treatmentsPlugin.initializeData();
-                        updateGUI();
-                        Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                        MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-                    }
-                });
-                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
-                builder.show();
-
+                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getContext());
+                boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
+                if(nsUploadOnly){
+                    ToastUtils.showToastInUiThread(getContext(),this.getContext().getString(R.string.ns_upload_only_enabled));
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    builder.setTitle(this.getContext().getString(R.string.confirmation));
+                    builder.setMessage(this.getContext().getString(R.string.refreshfromnightscout));
+                    builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            MainApp.getDbHelper().resetTreatments();
+                            treatmentsPlugin.initializeData();
+                            updateGUI();
+                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                        }
+                    });
+                    builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                    builder.show();
+                }
                 break;
         }
     }

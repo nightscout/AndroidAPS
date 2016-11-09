@@ -338,5 +338,5 @@
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected.</string>
-
+    <string name="ns_upload_only_enabled">Please deactivate "NS upload only" to use this feature.</string>
 </resources>

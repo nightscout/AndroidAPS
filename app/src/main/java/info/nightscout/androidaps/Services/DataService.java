@@ -76,7 +76,6 @@ public class DataService extends IntentService {
         }
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-
         boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
 
         if (intent != null) {
