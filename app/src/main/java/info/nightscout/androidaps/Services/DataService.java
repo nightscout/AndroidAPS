@@ -39,6 +39,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
@@ -75,6 +76,8 @@ public class DataService extends IntentService {
             nsClientEnabled = true;
         }
 
+        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfileViewerPlugin.class);
+
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
 
@@ -92,6 +95,9 @@ public class DataService extends IntentService {
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
+            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action)){
+                // always handle Profili if NSProfile is enabled without looking at nsUploadOnly
+                handleNewDataFromNSClient(intent);
             } else if (!nsUploadOnly &&
                     (Intents.ACTION_NEW_PROFILE.equals(action) ||
                             Intents.ACTION_NEW_TREATMENT.equals(action) ||
