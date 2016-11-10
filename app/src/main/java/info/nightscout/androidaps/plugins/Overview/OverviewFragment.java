@@ -84,6 +84,8 @@ public class OverviewFragment extends Fragment {
     TextView timeAgoView;
     TextView deltaView;
     TextView runningTempView;
+    TextView baseBasalView;
+    TextView activeProfileView;
     TextView iobView;
     TextView apsModeView;
     GraphView bgGraph;
@@ -120,6 +122,9 @@ public class OverviewFragment extends Fragment {
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
+        baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
+        activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
+
         iobView = (TextView) view.findViewById(R.id.overview_iob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
@@ -406,6 +411,7 @@ public class OverviewFragment extends Fragment {
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
+            apsModeView.setTextColor(Color.BLACK);
             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
             if(activeloop != null && activeloop.isEnabled(activeloop.getType())) {
                 if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
@@ -416,6 +422,8 @@ public class OverviewFragment extends Fragment {
             } else {
                 apsModeView.setBackgroundResource(R.drawable.loopmodedisabledborder);
                 apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
+                apsModeView.setTextColor(Color.WHITE);
+
             }
 
 
@@ -464,12 +472,14 @@ public class OverviewFragment extends Fragment {
             TempBasal activeTemp = pump.getTempBasal();
             cancelTempLayout.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
-            runningTempView.setText(activeTemp.toString() + "\n(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h" + ")");
+            runningTempView.setVisibility(View.VISIBLE);
+            runningTempView.setText(activeTemp.toString());
         } else {
             cancelTempLayout.setVisibility(View.GONE);
-            Double currentBasal = pump.getBaseBasalRate();
-            runningTempView.setText(DecimalFormatter.to2Decimal(currentBasal) + " U/h");
+            runningTempView.setVisibility(View.GONE);
         }
+        baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
+        activeProfileView.setText(profile.getActiveProfile());
 
         if (profile == null) {
             // disable all treatment buttons because we are not able to check constraints without profile
