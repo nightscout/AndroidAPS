@@ -39,6 +39,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
@@ -70,26 +71,42 @@ public class DataService extends IntentService {
         if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
             xDripEnabled = true;
             nsClientEnabled = false;
-        }
-        if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
         }
 
+        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfileViewerPlugin.class);
+
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
+
         if (intent != null) {
             final String action = intent.getAction();
             if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
-                if (xDripEnabled)
+                if (xDripEnabled) {
                     handleNewDataFromXDrip(intent);
-            } else if (Intents.ACTION_NEW_PROFILE.equals(action) ||
-                    Intents.ACTION_NEW_TREATMENT.equals(action) ||
-                    Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
-                    Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
-                    Intents.ACTION_NEW_SGV.equals(action) ||
-                    Intents.ACTION_NEW_STATUS.equals(action) ||
-                    Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
-                    Intents.ACTION_NEW_CAL.equals(action) ||
-                    Intents.ACTION_NEW_MBG.equals(action)
+                }
+            } else if (Intents.ACTION_NEW_SGV.equals(action)) {
+                // always handle SGV if NS-Client is the source
+                if (nsClientEnabled) {
+                    handleNewDataFromNSClient(intent);
+                }
+                // Objectives 0
+                ObjectivesPlugin.bgIsAvailableInNS = true;
+                ObjectivesPlugin.saveProgress();
+            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action)){
+                // always handle Profili if NSProfile is enabled without looking at nsUploadOnly
+                handleNewDataFromNSClient(intent);
+            } else if (!nsUploadOnly &&
+                    (Intents.ACTION_NEW_PROFILE.equals(action) ||
+                            Intents.ACTION_NEW_TREATMENT.equals(action) ||
+                            Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
+                            Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
+                            Intents.ACTION_NEW_STATUS.equals(action) ||
+                            Intents.ACTION_NEW_DEVICESTATUS.equals(action) ||
+                            Intents.ACTION_NEW_CAL.equals(action) ||
+                            Intents.ACTION_NEW_MBG.equals(action))
                     ) {
                 handleNewDataFromNSClient(intent);
             } else if (Telephony.Sms.Intents.SMS_RECEIVED_ACTION.equals(action)) {
@@ -318,48 +335,43 @@ public class DataService extends IntentService {
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_SGV)) {
-            if (nsClientEnabled) {
-                try {
-                    if (bundles.containsKey("sgv")) {
-                        String sgvstring = bundles.getString("sgv");
-                        JSONObject sgvJson = new JSONObject(sgvstring);
+            try {
+                if (bundles.containsKey("sgv")) {
+                    String sgvstring = bundles.getString("sgv");
+                    JSONObject sgvJson = new JSONObject(sgvstring);
+                    NSSgv nsSgv = new NSSgv(sgvJson);
+                    BgReading bgReading = new BgReading(nsSgv);
+                    if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                        if (Config.logIncommingData)
+                            log.debug("Ignoring old BG: " + bgReading.toString());
+                        return;
+                    }
+                    MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+                    if (Config.logIncommingData)
+                        log.debug("ADD: Stored new BG: " + bgReading.toString());
+                }
+
+                if (bundles.containsKey("sgvs")) {
+                    String sgvstring = bundles.getString("sgvs");
+                    JSONArray jsonArray = new JSONArray(sgvstring);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject sgvJson = jsonArray.getJSONObject(i);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
                         if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
                             if (Config.logIncommingData)
                                 log.debug("Ignoring old BG: " + bgReading.toString());
-                            return;
-                        }
-                        MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
-                        if (Config.logIncommingData)
-                            log.debug("ADD: Stored new BG: " + bgReading.toString());
-                    }
-
-                    if (bundles.containsKey("sgvs")) {
-                        String sgvstring = bundles.getString("sgvs");
-                        JSONArray jsonArray = new JSONArray(sgvstring);
-                        for (int i = 0; i < jsonArray.length(); i++) {
-                            JSONObject sgvJson = jsonArray.getJSONObject(i);
-                            NSSgv nsSgv = new NSSgv(sgvJson);
-                            BgReading bgReading = new BgReading(nsSgv);
-                            if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
-                                if (Config.logIncommingData)
-                                    log.debug("Ignoring old BG: " + bgReading.toString());
-                            } else {
-                                MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
-                                if (Config.logIncommingData)
-                                    log.debug("ADD: Stored new BG: " + bgReading.toString());
-                            }
+                        } else {
+                            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+                            if (Config.logIncommingData)
+                                log.debug("ADD: Stored new BG: " + bgReading.toString());
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-                MainApp.bus().post(new EventNewBG());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            // Objectives 0
-            ObjectivesPlugin.bgIsAvailableInNS = true;
-            ObjectivesPlugin.saveProgress();
+            MainApp.bus().post(new EventNewBG());
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_MBG)) {
