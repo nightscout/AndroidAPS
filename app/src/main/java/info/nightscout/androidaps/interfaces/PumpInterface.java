@@ -16,6 +16,8 @@ import info.nightscout.client.data.NSProfile;
  */
 public interface PumpInterface {
 
+    boolean isInitialized();
+
     boolean isTempBasalInProgress();
     boolean isExtendedBoluslInProgress();
 

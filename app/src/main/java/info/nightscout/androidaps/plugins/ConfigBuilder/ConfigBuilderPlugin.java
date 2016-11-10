@@ -294,10 +294,15 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     /*
-    * Pump interface
-    *
-    * Config builder return itself as a pump and check constraints before it passes command to pump driver
-    */
+        * Pump interface
+        *
+        * Config builder return itself as a pump and check constraints before it passes command to pump driver
+        */
+    @Override
+    public boolean isInitialized() {
+        return activePump.isInitialized();
+    }
+
     @Override
     public boolean isTempBasalInProgress() {
         return activePump.isTempBasalInProgress();
@@ -526,6 +531,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public PumpEnactResult applyAPSRequest(APSResult request) {
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result;
+
+        if (!isInitialized()) {
+            result = new PumpEnactResult();
+            result.comment = MainApp.sResources.getString(R.string.pumpNotInitialized);
+            result.enacted = false;
+            result.success = false;
+        }
 
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
