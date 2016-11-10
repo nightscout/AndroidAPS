@@ -87,6 +87,7 @@ public class MainApp extends Application {
 
             MainApp.getConfigBuilder().initialize();
         }
+        MainApp.getConfigBuilder().uploadAppStart();
     }
 
     public static Bus bus() {

@@ -602,11 +602,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 extended.put("TempBasalStart", getTempBasal().timeStart.toLocaleString());
                 extended.put("TempBasalRemaining", getTempBasal().getPlannedRemainingMinutes());
                 extended.put("IsExtended", getTempBasal().isExtended);
-                try {
-                    extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
-                } catch (Exception e) {}
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
+            try {
+                extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
+            } catch (Exception e) {}
 
             pump.put("battery", battery);
             pump.put("status", status);
@@ -708,7 +708,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     // Reply for sms communicator
     public String shortStatus() {
-        final DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT);
         String ret = "";
         if (getDanaRPump().lastConnection.getTime() != 0) {
             Long agoMsec = new Date().getTime() - getDanaRPump().lastConnection.getTime();
@@ -716,7 +715,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             ret += "LastConn: " + agoMin + " minago\n";
         }
         if (getDanaRPump().lastBolusTime.getTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.to2Decimal(getDanaRPump().lastBolusAmount) + "U @" + formatTime.format(getDanaRPump().lastBolusTime) + "\n";
+            ret += "LastBolus: " + DecimalFormatter.to2Decimal(getDanaRPump().lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", getDanaRPump().lastBolusTime) + "\n";
         }
         if (isRealTempBasalInProgress()) {
             ret += "Temp: " + getRealTempBasal().toString() + "\n";

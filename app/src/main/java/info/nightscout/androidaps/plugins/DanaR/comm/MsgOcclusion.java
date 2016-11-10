@@ -34,28 +34,7 @@ public class MsgOcclusion extends MessageBase {
         MsgBolusStop.stopped = true;
         bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusiprogress_occlusion);
         MainApp.bus().post(bolusingEvent);
-        sendToNSClient();
+        MainApp.getConfigBuilder().uploadDanaROcclusion();
     }
 
-    public void sendToNSClient() {
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbAdd");
-        bundle.putString("collection", "treatments");
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", "Announcement");
-            data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("notes", MainApp.sResources.getString(R.string.overview_bolusiprogress_occlusion));
-            data.put("isAnnouncement", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        bundle.putString("data", data.toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString(), MsgOcclusion.class);
-    }
 }

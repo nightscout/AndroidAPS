@@ -121,7 +121,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
             queryBuilderExt.orderBy("timeIndex", false);
             Where whereExt = queryBuilderExt.where();
             whereExt.eq("isExtended", true);
-            queryBuilderExt.limit(5L);
+            queryBuilderExt.limit(30L);
             PreparedQuery<TempBasal> preparedQueryExt = queryBuilderExt.prepare();
             extendedBoluses = dao.query(preparedQueryExt);
 

@@ -12,6 +12,7 @@ import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -421,6 +422,7 @@ public class OverviewFragment extends Fragment {
             apsModeView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                     if (activeloop == null){
                         log.error("no active loop?");
                         return true;
