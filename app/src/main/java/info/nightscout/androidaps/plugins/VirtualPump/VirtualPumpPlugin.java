@@ -336,6 +336,9 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             battery.put("percent", batteryPercent);
             status.put("status", "normal");
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            try {
+                extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
+            } catch (Exception e) {}
             TempBasal tb;
             if ((tb = getTempBasal()) != null) {
                 status.put("tempbasalpct", tb.percent);
