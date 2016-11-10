@@ -411,6 +411,7 @@ public class OverviewFragment extends Fragment {
         if (Config.APS) {
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
+            apsModeView.setTextColor(Color.BLACK);
             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
             if(activeloop != null && activeloop.isEnabled(activeloop.getType())) {
                 if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
@@ -421,6 +422,8 @@ public class OverviewFragment extends Fragment {
             } else {
                 apsModeView.setBackgroundResource(R.drawable.loopmodedisabledborder);
                 apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
+                apsModeView.setTextColor(Color.WHITE);
+
             }
 
 
