@@ -335,5 +335,6 @@
     <string name="correctionbous">Corr</string>
     <string name="ko_lang">Korean</string>
     <string name="actions">Actions</string>
+    <string name="androidaps_start">AndroidAPS started</string>
 
 </resources>
