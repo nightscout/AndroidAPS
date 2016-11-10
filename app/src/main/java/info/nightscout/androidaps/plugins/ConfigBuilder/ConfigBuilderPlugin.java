@@ -390,6 +390,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
+        return deliverTreatment(insulin, carbs, context, true);
+    }
+
+    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context, boolean createTreatment) {
         mWakeLock.acquire();
         insulin = applyBolusConstraints(insulin);
         carbs = applyCarbsConstraints(carbs);
@@ -416,7 +420,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         if (Config.logCongigBuilderActions)
             log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
 
-        if (result.success) {
+        if (result.success && createTreatment) {
             Treatment t = new Treatment();
             t.insulin = result.bolusDelivered;
             t.carbs = (double) result.carbsDelivered;
@@ -434,6 +438,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         mWakeLock.release();
         return result;
     }
+
+
 
     @Override
     public void stopBolusDelivering() {
