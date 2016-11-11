@@ -79,21 +79,21 @@ public class FillDialog extends DialogFragment implements OnClickListener {
 
         if(amount1 >0) {
             button1.setVisibility(View.VISIBLE);
-            button1.setText(DecimalFormatter.to2Decimal(amount1));
+            button1.setText(DecimalFormatter.to2Decimal(amount1) + "U");
             button1.setOnClickListener(this);
         } else {
             button1.setVisibility(View.GONE);
         }
         if(amount2 >0) {
             button2.setVisibility(View.VISIBLE);
-            button2.setText(DecimalFormatter.to2Decimal(amount2));
+            button2.setText(DecimalFormatter.to2Decimal(amount2) + "U");
             button2.setOnClickListener(this);
         } else {
             button2.setVisibility(View.GONE);
         }
         if(amount3 >0) {
             button3.setVisibility(View.VISIBLE);
-            button3.setText(DecimalFormatter.to2Decimal(amount3));
+            button3.setText(DecimalFormatter.to2Decimal(amount3) + "U");
             button3.setOnClickListener(this);
         } else {
             button3.setVisibility(View.GONE);
