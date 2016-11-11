@@ -50,12 +50,15 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
@@ -69,6 +72,7 @@ import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.ToastUtils;
 
 
 public class OverviewFragment extends Fragment {
@@ -370,6 +374,9 @@ public class OverviewFragment extends Fragment {
         updateGUIIfVisible();
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventNewBasalProfile ev) { updateGUIIfVisible(); }
+
     private void hideTempRecommendation() {
         Activity activity = getActivity();
         if (activity != null)
@@ -480,6 +487,19 @@ public class OverviewFragment extends Fragment {
         }
         baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
         activeProfileView.setText(profile.getActiveProfile());
+        activeProfileView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
+                profileswitch.executeProfileSwitch = true;
+                newDialog.setOptions(profileswitch);
+                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+                return true;
+            }
+        });
+        activeProfileView.setLongClickable(true);
 
         if (profile == null) {
             // disable all treatment buttons because we are not able to check constraints without profile
