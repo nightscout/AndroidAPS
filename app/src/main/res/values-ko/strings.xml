@@ -183,7 +183,7 @@
     <string name="careportal_newnstreatment_glucosetype">Glucose type</string>
     <string name="noprofile">아직 NS에서 프로파일을 로드하지 못했습니다.</string>
     <string name="overview_tempbasal_button">임시기초주입</string>
-    <string name="overview_extendedbolus_button">확장식사</string>
+    <string name="overview_extendedbolus_button">확장식사주입</string>
     <string name="configbuilder_nsclientversion_label">NSClient 버전:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
     <string name="send">보내기</string>
@@ -243,7 +243,7 @@
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">식사주입 %.2fU 을 실행하려면 %s 를 입력하고 답장하세요</string>
-    <string name="bolusfailed">식사주입 실패</string>
+    <string name="bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusdelivering" formatted="false">%.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
@@ -315,10 +315,10 @@
     <string name="remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">기초주입 %.2fU/h 을 실행하려면 %s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
-    <string name="smscommunicator_tempbasalfailed">임시기초주입이 실패하였습니다</string>
+    <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">임시기초주입을 중지하려면 %s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
-    <string name="smscommunicator_tempbasalcancelfailed">임시기초주입 취소가 실패하였습니다</string>
+    <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
     <string name="smscommunicator_unknowncommand">알려지지 않은 명령이거나 잘못된 답장입니다</string>
 
     <string name="quickwizard">퀵마법사</string>
