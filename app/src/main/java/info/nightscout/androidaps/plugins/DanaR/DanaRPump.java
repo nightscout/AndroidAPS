@@ -22,6 +22,8 @@ public class DanaRPump {
     public static final int UNITS_MGDL = 0;
     public static final int UNITS_MMOL = 1;
 
+    public static final String PROFILE_PREFIX = "DanaR-";
+
     public Date lastConnection = new Date(0);
     public Date lastSettingsRead = new Date(0);
 
@@ -106,7 +108,7 @@ public class DanaRPump {
         double car = SafeParse.stringToDouble(SP.getString("danarprofile_car", "20"));
 
         try {
-            json.put("defaultProfile", "" + (activeProfile + 1));
+            json.put("defaultProfile", PROFILE_PREFIX + (activeProfile + 1));
             json.put("store", store);
             profile.put("dia", dia);
 
@@ -139,20 +141,20 @@ public class DanaRPump {
                 } else {
                     time = df.format(h) + ":00";
                 }
-                  basals.put(new JSONObject().put("time", time).put("timeAsSeconds", h * basalIncrement).put("value", pumpProfiles[activeProfile][h]));
+                basals.put(new JSONObject().put("time", time).put("timeAsSeconds", h * basalIncrement).put("value", pumpProfiles[activeProfile][h]));
             }
             profile.put("basal", basals);
 
             profile.put("target_low", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", currentTarget)));
             profile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", currentTarget)));
             profile.put("units", units == UNITS_MGDL ? Constants.MGDL : Constants.MMOL);
-            store.put("" + (activeProfile + 1), profile);
+            store.put(PROFILE_PREFIX + (activeProfile + 1), profile);
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
             return null;
         }
-        return new NSProfile(json, "" + (activeProfile + 1));
+        return new NSProfile(json, PROFILE_PREFIX + (activeProfile + 1));
     }
 
 }
