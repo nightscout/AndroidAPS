@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
@@ -37,6 +38,7 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
         view.findViewById(R.id.actions_profileswitch).setOnClickListener(this);
         view.findViewById(R.id.actions_extendedbolus).setOnClickListener(this);
         view.findViewById(R.id.actions_settempbasal).setOnClickListener(this);
+        view.findViewById(R.id.actions_fill).setOnClickListener(this);
 
         return view;
     }
@@ -60,6 +62,10 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
                 NewTempBasalDialog newTempDialog = new NewTempBasalDialog();
                 newTempDialog.show(manager, "NewTempDialog");
                break;
+            case R.id.actions_fill:
+                FillDialog fillDialog = new FillDialog();
+                fillDialog.show(manager, "FillDialog");
+                break;
         }
     }
 }
