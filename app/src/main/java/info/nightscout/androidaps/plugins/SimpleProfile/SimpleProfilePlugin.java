@@ -217,7 +217,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         JSONObject profile = new JSONObject();
 
         try {
-            json.put("defaultProfile", "Profile");
+            json.put("defaultProfile", "SimpleProfile");
             json.put("store", store);
             profile.put("dia", dia);
             profile.put("carbratio", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", ic)));
@@ -227,11 +227,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
             profile.put("target_low", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetLow)));
             profile.put("target_high", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetHigh)));
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);
-            store.put("Profile", profile);
+            store.put("SimpleProfile", profile);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        convertedProfile = new NSProfile(json, null);
+        convertedProfile = new NSProfile(json, "SimpleProfile");
     }
 
     @Override
