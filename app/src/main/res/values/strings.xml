@@ -342,5 +342,4 @@
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="primefill">Prime/Fill</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
->>>>>>> ad475ace90c312fb3e535740456d8305f597f889
 </resources>
