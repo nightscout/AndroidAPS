@@ -95,6 +95,11 @@ public class MM640gPlugin implements PluginBase, PumpInterface, BgSourceInterfac
      */
 
     @Override
+    public boolean isInitialized() {
+        return false;
+    }
+
+    @Override
     public boolean isTempBasalInProgress() {
         return false;
     }

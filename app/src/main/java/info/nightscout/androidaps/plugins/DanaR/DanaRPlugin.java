@@ -150,6 +150,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             this.fragmentPumpVisible = fragmentVisible;
     }
 
+    @Override
+    public boolean isInitialized() {
+        return getDanaRPump().lastConnection.getTime() > 0;
+    }
+
     // Pump interface
     @Override
     public boolean isTempBasalInProgress() {

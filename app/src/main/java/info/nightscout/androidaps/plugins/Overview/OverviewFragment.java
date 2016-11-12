@@ -486,7 +486,10 @@ public class OverviewFragment extends Fragment {
             runningTempView.setVisibility(View.GONE);
         }
         baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
-        activeProfileView.setText(profile.getActiveProfile());
+
+        if (profile != null && profile.getActiveProfile() != null)
+            activeProfileView.setText(profile.getActiveProfile());
+
         activeProfileView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {

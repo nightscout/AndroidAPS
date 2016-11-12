@@ -78,6 +78,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public boolean isInitialized() {
+        return true;
+    }
+
+    @Override
     public boolean isTempBasalInProgress() {
         return getTempBasal() != null;
     }

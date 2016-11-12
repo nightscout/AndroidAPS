@@ -294,10 +294,15 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     /*
-    * Pump interface
-    *
-    * Config builder return itself as a pump and check constraints before it passes command to pump driver
-    */
+        * Pump interface
+        *
+        * Config builder return itself as a pump and check constraints before it passes command to pump driver
+        */
+    @Override
+    public boolean isInitialized() {
+        return activePump.isInitialized();
+    }
+
     @Override
     public boolean isTempBasalInProgress() {
         return activePump.isTempBasalInProgress();
@@ -533,9 +538,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         request.rate = applyBasalConstraints(request.rate);
         PumpEnactResult result;
 
+        if (!isInitialized()) {
+            result = new PumpEnactResult();
+            result.comment = MainApp.sResources.getString(R.string.pumpNotInitialized);
+            result.enacted = false;
+            result.success = false;
+        }
+
         if (Config.logCongigBuilderActions)
             log.debug("applyAPSRequest: " + request.toString());
-        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - getBaseBasalRate()) < 0.1) {
+        if ((request.rate == 0 && request.duration == 0) || Math.abs(request.rate - getBaseBasalRate()) < 0.05) {
             if (isTempBasalInProgress()) {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: cancelTempBasal()");
@@ -550,7 +562,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: Basal set correctly");
             }
-        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.1) {
+        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.05) {
             result = new PumpEnactResult();
             result.absolute = getTempBasalAbsoluteRate();
             result.duration = activePump.getTempBasal().getPlannedRemainingMinutes();
