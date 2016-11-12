@@ -18,6 +18,7 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.CircadianPercentageProfile.CircadianPercentageProfileFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
@@ -75,6 +76,7 @@ public class MainApp extends Application {
             if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
             pluginsList.add(NSProfileViewerFragment.getPlugin());
             pluginsList.add(SimpleProfileFragment.getPlugin());
+            pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
             pluginsList.add(TempBasalsFragment.getPlugin());
             pluginsList.add(SafetyFragment.getPlugin());
