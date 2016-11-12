@@ -333,4 +333,16 @@
     <string name="correctionbous">Corr</string>
     <string name="ko_lang">한국어</string>
     <string name="actions">액션</string>
+    <string name="androidaps_start">AndroidAPS 시작</string>
+    <string name="ns_upload_only">NS upload only (disabled sync)</string>
+    <string name="ns_upload_only_summary">NS upload only. 로컬소스(xDrip)가 선택되지 않으면 SGV에는 효력이 없습니다. NS프로파일이 사용중이라면 프로파일에는 효력이 없습니다.</string>
+    <string name="ns_upload_only_enabled">이 기능을 사용하시려면 "NS upload only"을 비활성화 하세요.</string>
+    <string name="pumpNotInitialized">펌프가 초기화 되지 않았습니다!</string>
+    <string name="primefill">Prime/Fill</string>
+    <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
+    <string name="othersettings_title">Other</string>
+    <string name="fillbolus_title">Fill/Prime standard insulin amounts.</string>
+    <string name="button1">Button 1</string>
+    <string name="button2">Button 2</string>
+    <string name="button3">Button 3</string>    
 </resources>
