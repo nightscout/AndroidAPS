@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 
 /**
@@ -36,9 +37,11 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     Double ic;
     Double isf;
     Double car;
-    Double basal;
     Double targetLow;
     Double targetHigh;
+    int percentage;
+    int timeshift;
+    double[] basebasal = new double[]{1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d};
 
     public CircadianPercentageProfilePlugin() {
         loadSettings();
@@ -97,11 +100,15 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         editor.putString(SETTINGS_PREFIX + "ic", ic.toString());
         editor.putString(SETTINGS_PREFIX + "isf", isf.toString());
         editor.putString(SETTINGS_PREFIX + "car", car.toString());
-        editor.putString(SETTINGS_PREFIX + "basal", basal.toString());
         editor.putString(SETTINGS_PREFIX + "targetlow", targetLow.toString());
         editor.putString(SETTINGS_PREFIX + "targethigh", targetHigh.toString());
+        editor.putString(SETTINGS_PREFIX + "timeshift", timeshift+"");
+        editor.putString(SETTINGS_PREFIX + "percentage", percentage+"");
 
 
+        for (int i = 0; i<24; i++) {
+            editor.putString(SETTINGS_PREFIX + "basebasal" + i, DecimalFormatter.to2Decimal(basebasal[i]));
+        }
         editor.commit();
         createConvertedProfile();
     }
@@ -153,13 +160,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
                 log.debug(e.getMessage());
             }
         else car = 20d;
-        if (settings.contains(SETTINGS_PREFIX + "basal"))
-            try {
-                basal = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "basal", "1"));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else basal = 1d;
         if (settings.contains(SETTINGS_PREFIX + "targetlow"))
             try {
                 targetLow = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "targetlow", "80"));
@@ -174,6 +174,31 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
                 log.debug(e.getMessage());
             }
         else targetHigh = 120d;
+        if (settings.contains(SETTINGS_PREFIX + "percentage"))
+            try {
+                percentage = SafeParse.stringToInt(settings.getString(SETTINGS_PREFIX + "percentage", "100"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
+        else percentage = 100;
+
+        if (settings.contains(SETTINGS_PREFIX + "timeshift"))
+            try {
+                timeshift = SafeParse.stringToInt(settings.getString(SETTINGS_PREFIX + "timeshift", "0"));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
+        else timeshift = 0;
+
+        for (int i = 0; i<24; i++){
+            try {
+                basebasal[i] = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "basebasal" + i, DecimalFormatter.to2Decimal(basebasal[i])));
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
+        }
+
+
         createConvertedProfile();
     }
 
@@ -227,7 +252,16 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             profile.put("carbratio", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", ic)));
             profile.put("carbs_hr", car);
             profile.put("sens", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", isf)));
-            profile.put("basal", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", basal)));
+
+            JSONArray basalArray = new JSONArray();
+
+            for (int i = 0; i<24; i++){
+                basalArray.put(new JSONObject().put("timeAsSeconds", ((i+timeshift)%24)*60*60).put("value", basebasal[i]*percentage/100d));
+            }
+
+            profile.put("basal", basalArray);
+
+
             profile.put("target_low", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetLow)));
             profile.put("target_high", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetHigh)));
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);

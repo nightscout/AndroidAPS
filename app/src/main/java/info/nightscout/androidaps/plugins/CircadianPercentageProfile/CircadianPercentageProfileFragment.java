@@ -36,6 +36,9 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     EditText basalView;
     EditText targetlowView;
     EditText targethighView;
+    EditText percentageView;
+    EditText timeshiftView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,9 +50,11 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         icView = (EditText) layout.findViewById(R.id.simpleprofile_ic);
         isfView = (EditText) layout.findViewById(R.id.simpleprofile_isf);
         carView = (EditText) layout.findViewById(R.id.simpleprofile_car);
-        basalView = (EditText) layout.findViewById(R.id.simpleprofile_basalrate);
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
+        percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
+        timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
+
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
         mmolView.setChecked(circadianPercentageProfilePlugin.mmol);
@@ -57,9 +62,10 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         icView.setText(circadianPercentageProfilePlugin.ic.toString());
         isfView.setText(circadianPercentageProfilePlugin.isf.toString());
         carView.setText(circadianPercentageProfilePlugin.car.toString());
-        basalView.setText(circadianPercentageProfilePlugin.basal.toString());
         targetlowView.setText(circadianPercentageProfilePlugin.targetLow.toString());
         targethighView.setText(circadianPercentageProfilePlugin.targetHigh.toString());
+        percentageView.setText("" + circadianPercentageProfilePlugin.percentage);
+        timeshiftView.setText("" + circadianPercentageProfilePlugin.timeshift);
 
         mgdlView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,9 +104,10 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 circadianPercentageProfilePlugin.ic = SafeParse.stringToDouble(icView.getText().toString());
                 circadianPercentageProfilePlugin.isf = SafeParse.stringToDouble(isfView.getText().toString());
                 circadianPercentageProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
-                circadianPercentageProfilePlugin.basal = SafeParse.stringToDouble(basalView.getText().toString());
                 circadianPercentageProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
                 circadianPercentageProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
+                circadianPercentageProfilePlugin.timeshift = SafeParse.stringToInt(timeshiftView.getText().toString());
+                circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
                 circadianPercentageProfilePlugin.storeSettings();
             }
         };
@@ -109,9 +116,11 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         icView.addTextChangedListener(textWatch);
         isfView.addTextChangedListener(textWatch);
         carView.addTextChangedListener(textWatch);
-        basalView.addTextChangedListener(textWatch);
         targetlowView.addTextChangedListener(textWatch);
         targethighView.addTextChangedListener(textWatch);
+        percentageView.addTextChangedListener(textWatch);
+        timeshiftView.addTextChangedListener(textWatch);
+
         return layout;
     }
 
