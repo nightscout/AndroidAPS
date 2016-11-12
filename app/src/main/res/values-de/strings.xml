@@ -278,4 +278,18 @@
     <string name="overview_editquickwizard_valid">Gültigkeit:</string>
     <string name="overview_editquickwizard_carbs">Kohlenhydrate</string>
     <string name="quickwizardsettings">QuickWizard Einstellungen</string>
+    <string name="actions">Aktionen</string>
+    <string name="androidaps_start">Android APS gestartet</string>
+    <string name="disabledloop">Loop deaktiviert</string>
+    <string name="fillbolus_title">Füllbolus-Standardmengen</string>
+    <string name="fillwarning">Bitte vergewissern Sie sich, dass die Menge der Spezifikation des Katheters entspricht.</string>
+    <string name="ns_upload_only">Zu NightScout nur hochladen (kein sync)</string>
+    <string name="ns_upload_only_enabled">Bitte deaktivieren Sie \"Zu NightScout nur hochladen\" um dieses Feature zu nutzen.</string>
+    <string name="ns_upload_only_summary">Zu NightScout nur hochladen. Nicht wirksam bei SGV wenn nicht eine lokale Quelle wie xDrip gewählt wird.  Nicht wirksam bei Profilen, wenn NS-Profile verwendet werden.</string>
+    <string name="othersettings_title">Andere</string>
+    <string name="overview_bolusiprogress_occlusion">Verstopfung</string>
+    <string name="overview_bolusprogress_delivered">Abgegeben</string>
+    <string name="overview_bolusprogress_goingtodeliver">%.2fU werden abgegeben werden</string>
+    <string name="primefill">Füllen</string>
+    <string name="uploading">Hochladen</string>
 </resources>
