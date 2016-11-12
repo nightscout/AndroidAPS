@@ -342,4 +342,9 @@
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="primefill">Prime/Fill</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
+    <string name="othersettings_title">Other</string>
+    <string name="fillbolus_title">Fill/Prime standard insulin amounts.</string>
+    <string name="button1">Button 1</string>
+    <string name="button2">Button 2</string>
+    <string name="button3">Button 3</string>
 </resources>
