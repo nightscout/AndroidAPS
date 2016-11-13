@@ -270,12 +270,12 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     private static String profileString(double[] values, int timeshift, int percentage){
         StringBuilder sb = new StringBuilder();
-        sb.append(0); sb.append("h: ");
+        sb.append("<b>"); sb.append(0); sb.append("h: "); sb.append("</b>");
         sb.append(DecimalFormatter.to2Decimal(values[(timeshift+0)%24]*percentage/100d));
         double prevVal = values[(timeshift+0)%24];
         for (int i = 1; i < 24; i++) {
             if(prevVal != values[(timeshift+i)%24]){
-                sb.append(", "); sb.append(i); sb.append("h: ");
+                sb.append(", ");sb.append("<b>");  sb.append(i); sb.append("h: ");sb.append("</b>");
                 sb.append(DecimalFormatter.to2Decimal(values[(timeshift+i)%24]*percentage/100d));
                 prevVal = values[(timeshift+i)%24];
             }

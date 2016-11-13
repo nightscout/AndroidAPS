@@ -4,10 +4,12 @@ package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
@@ -17,6 +19,8 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.utils.SafeParse;
 
 public class CircadianPercentageProfileFragment extends Fragment implements FragmentBase {
@@ -38,6 +42,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     EditText timeshiftView;
     TextView profileView;
     TextView baseprofileView;
+    Button profileswitchButton;
 
 
 
@@ -55,6 +60,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
         profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
         baseprofileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofileview);
+        profileswitchButton = (Button) layout.findViewById(R.id.circadianpercentageprofile_profileswitch);
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
         mmolView.setChecked(circadianPercentageProfilePlugin.mmol);
@@ -84,6 +90,17 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
                 circadianPercentageProfilePlugin.storeSettings();
                 updateProfileInfo();
+            }
+        });
+
+        profileswitchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
+                profileswitch.executeProfileSwitch = true;
+                newDialog.setOptions(profileswitch);
+                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
             }
         });
 
@@ -123,10 +140,14 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     }
 
     private void updateProfileInfo() {
-        profileView.setText("Active Profile:\n");
-        profileView.append("Basal: " + circadianPercentageProfilePlugin.basalString() + "\n");
-        profileView.append("IC: " + circadianPercentageProfilePlugin.icString() + "\n");
-        profileView.append("ISF: " + circadianPercentageProfilePlugin.isfString() + "\n");
+        StringBuilder sb = new StringBuilder();
+        sb.append("<h3>");
+        sb.append("Active Profile:");
+        sb.append("</h3>");
+        sb.append("<h4>Basal:</h4> " + circadianPercentageProfilePlugin.basalString());
+        sb.append("<h4>IC:</h4> " + circadianPercentageProfilePlugin.icString());
+        sb.append("<h4>ISF:</h4> " + circadianPercentageProfilePlugin.isfString());
+        profileView.setText(Html.fromHtml(sb.toString()));
 
         baseprofileView.setText("Base Profile:\n");
         baseprofileView.append("Basal: " + circadianPercentageProfilePlugin.baseBasalString() + "\n");
