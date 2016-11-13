@@ -77,42 +77,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="IC:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <EditText
-                    android:id="@+id/simpleprofile_ic"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="numberDecimal" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ISF:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                <EditText
-                    android:id="@+id/simpleprofile_isf"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="numberDecimal" />
-            </TableRow>
-
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:text="Absorption rate:"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
 

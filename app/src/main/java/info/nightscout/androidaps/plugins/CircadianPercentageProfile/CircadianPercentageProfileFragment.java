@@ -31,8 +31,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     EditText diaView;
     RadioButton mgdlView;
     RadioButton mmolView;
-    EditText icView;
-    EditText isfView;
     EditText carView;
     EditText targetlowView;
     EditText targethighView;
@@ -48,8 +46,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         diaView = (EditText) layout.findViewById(R.id.simpleprofile_dia);
         mgdlView = (RadioButton) layout.findViewById(R.id.simpleprofile_mgdl);
         mmolView = (RadioButton) layout.findViewById(R.id.simpleprofile_mmol);
-        icView = (EditText) layout.findViewById(R.id.simpleprofile_ic);
-        isfView = (EditText) layout.findViewById(R.id.simpleprofile_isf);
         carView = (EditText) layout.findViewById(R.id.simpleprofile_car);
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
@@ -61,8 +57,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
         mmolView.setChecked(circadianPercentageProfilePlugin.mmol);
         diaView.setText(circadianPercentageProfilePlugin.dia.toString());
-        icView.setText(circadianPercentageProfilePlugin.ic.toString());
-        isfView.setText(circadianPercentageProfilePlugin.isf.toString());
         carView.setText(circadianPercentageProfilePlugin.car.toString());
         targetlowView.setText(circadianPercentageProfilePlugin.targetLow.toString());
         targethighView.setText(circadianPercentageProfilePlugin.targetHigh.toString());
@@ -106,8 +100,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
                 circadianPercentageProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
-                circadianPercentageProfilePlugin.ic = SafeParse.stringToDouble(icView.getText().toString());
-                circadianPercentageProfilePlugin.isf = SafeParse.stringToDouble(isfView.getText().toString());
                 circadianPercentageProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
                 circadianPercentageProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
                 circadianPercentageProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
@@ -119,8 +111,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         };
 
         diaView.addTextChangedListener(textWatch);
-        icView.addTextChangedListener(textWatch);
-        isfView.addTextChangedListener(textWatch);
         carView.addTextChangedListener(textWatch);
         targetlowView.addTextChangedListener(textWatch);
         targethighView.addTextChangedListener(textWatch);
@@ -131,9 +121,15 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     }
 
     private void updateProfileInfo() {
-        profileView.setText("Basal: " + circadianPercentageProfilePlugin.basalString());
-        profileView.append("\n\n");
-        profileView.append("Base-Basal: " + circadianPercentageProfilePlugin.baseBasalString());
+        profileView.setText("Active Profile:\n");
+        profileView.append("Basal: " + circadianPercentageProfilePlugin.basalString() + "\n");
+        profileView.append("IC: " + circadianPercentageProfilePlugin.icString() + "\n");
+        profileView.append("ISF: " + circadianPercentageProfilePlugin.isfString() + "\n");
+        profileView.append("\n");
+        profileView.append("Base Profile:\n");
+        profileView.append("Basal: " + circadianPercentageProfilePlugin.baseBasalString() + "\n");
+        profileView.append("IC: " + circadianPercentageProfilePlugin.baseIcString() + "\n");
+        profileView.append("ISF: " + circadianPercentageProfilePlugin.baseIsfString() + "\n");
     }
 
 }
