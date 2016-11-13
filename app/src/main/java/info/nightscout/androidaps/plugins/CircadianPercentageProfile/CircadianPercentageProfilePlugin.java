@@ -208,9 +208,11 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             json.put("store", store);
             profile.put("dia", dia);
 
+            int offset = -(timeshift%24) + 24;
+
             JSONArray icArray = new JSONArray();
             for (int i = 0; i<24; i++){
-                icArray.put(new JSONObject().put("timeAsSeconds", ((i+timeshift)%24)*60*60).put("value", baseic[i]*percentage/100d));
+                icArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseic[(offset+i)%24]*percentage/100d));
             }
             profile.put("carbratio", icArray);
 
@@ -218,13 +220,13 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
             JSONArray isfArray = new JSONArray();
             for (int i = 0; i<24; i++){
-                isfArray.put(new JSONObject().put("timeAsSeconds", ((i+timeshift)%24)*60*60).put("value", baseisf[i]*percentage/100d));
+                isfArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseisf[(offset+i)%24]*percentage/100d));
             }
             profile.put("sens", isfArray);
 
             JSONArray basalArray = new JSONArray();
             for (int i = 0; i<24; i++){
-                basalArray.put(new JSONObject().put("timeAsSeconds", ((i+timeshift)%24)*60*60).put("value", basebasal[i]*percentage/100d));
+                basalArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", basebasal[(offset+i)%24]*percentage/100d));
             }
             profile.put("basal", basalArray);
 
