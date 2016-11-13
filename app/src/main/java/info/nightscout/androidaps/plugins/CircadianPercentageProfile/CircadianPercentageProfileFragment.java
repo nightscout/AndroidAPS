@@ -41,7 +41,9 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     EditText percentageView;
     EditText timeshiftView;
     TextView profileView;
-    TextView baseprofileView;
+    TextView baseprofileIC;
+    TextView baseprofileBasal;
+    TextView baseprofileISF;
     Button profileswitchButton;
 
 
@@ -59,7 +61,10 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
         timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
         profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
-        baseprofileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofileview);
+        baseprofileBasal = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal);
+        baseprofileIC = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofileic);
+        baseprofileISF = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofileisf);
+
         profileswitchButton = (Button) layout.findViewById(R.id.circadianpercentageprofile_profileswitch);
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
@@ -149,10 +154,9 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         sb.append("<h4>ISF:</h4> " + circadianPercentageProfilePlugin.isfString());
         profileView.setText(Html.fromHtml(sb.toString()));
 
-        baseprofileView.setText("Base Profile:\n");
-        baseprofileView.append("Basal: " + circadianPercentageProfilePlugin.baseBasalString() + "\n");
-        baseprofileView.append("IC: " + circadianPercentageProfilePlugin.baseIcString() + "\n");
-        baseprofileView.append("ISF: " + circadianPercentageProfilePlugin.baseIsfString() + "\n");
+        baseprofileBasal.setText(Html.fromHtml("<h3>Base Profile:</h3><h4>Basal: </h4>" + circadianPercentageProfilePlugin.baseBasalString()));
+        baseprofileIC.setText(Html.fromHtml("<h4>IC: </h4>" + circadianPercentageProfilePlugin.baseIcString()));
+        baseprofileISF.setText(Html.fromHtml("<h4>ISF: </h4>" + circadianPercentageProfilePlugin.baseIsfString()));
     }
 
 }

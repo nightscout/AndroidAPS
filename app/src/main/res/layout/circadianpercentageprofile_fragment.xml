@@ -95,21 +95,101 @@
                 android:layout_gravity="center_horizontal"
                 android:textColor="@color/colorProfileSwitchButton" />
 
-            <TextView
-                android:id="@+id/circadianpercentageprofile_baseprofileview"
+
+            <LinearLayout
+                android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
                 android:padding="6dp"
                 android:background="@color/cardColorBackground"
-                android:text="Profile View"
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+                android:textAppearance="?android:attr/textAppearanceSmall">
+
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/cardColorBackground"
+                    android:textAppearance="?android:attr/textAppearanceSmall">
+
+                    <TextView
+                        android:id="@+id/circadianpercentageprofile_baseprofilebasal"
+                        android:layout_height="wrap_content"
+                        android:background="@color/cardColorBackground"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_edit"
+                        android:layout_weight="0"
+                        android:layout_gravity="center_vertical"/>
+
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/cardColorBackground"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:id="@+id/circadianpercentageprofile_baseprofileic"
+                        android:layout_height="wrap_content"
+                        android:background="@color/cardColorBackground"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_edit"
+                        android:layout_weight="0"
+                        android:layout_gravity="center_vertical"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/cardColorBackground"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:id="@+id/circadianpercentageprofile_baseprofileisf"
+                        android:layout_height="wrap_content"
+                        android:background="@color/cardColorBackground"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@mipmap/ic_edit"
+                        android:layout_weight="0"
+                        android:layout_gravity="center_vertical"/>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
 
 
             <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left|top">
+                android:layout_gravity="left|top"
+                android:layout_marginLeft="6dp">
 
                 <TableRow
                     android:layout_width="match_parent"

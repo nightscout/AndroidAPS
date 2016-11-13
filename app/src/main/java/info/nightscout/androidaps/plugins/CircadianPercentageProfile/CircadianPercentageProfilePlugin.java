@@ -269,6 +269,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     }
 
     private static String profileString(double[] values, int timeshift, int percentage){
+        timeshift = -(timeshift%24) + 24;
         StringBuilder sb = new StringBuilder();
         sb.append("<b>"); sb.append(0); sb.append("h: "); sb.append("</b>");
         sb.append(DecimalFormatter.to2Decimal(values[(timeshift+0)%24]*percentage/100d));
