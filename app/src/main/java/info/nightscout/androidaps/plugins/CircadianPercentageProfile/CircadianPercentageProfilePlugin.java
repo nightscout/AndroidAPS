@@ -212,7 +212,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
             JSONArray icArray = new JSONArray();
             for (int i = 0; i<24; i++){
-                icArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseic[(offset+i)%24]*percentage/100d));
+                icArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseic[(offset+i)%24]*100d/percentage));
             }
             profile.put("carbratio", icArray);
 
@@ -220,7 +220,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
             JSONArray isfArray = new JSONArray();
             for (int i = 0; i<24; i++){
-                isfArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseisf[(offset+i)%24]*percentage/100d));
+                isfArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseisf[(offset+i)%24]*100d/percentage));
             }
             profile.put("sens", isfArray);
 
@@ -247,39 +247,39 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     }
 
     public String basalString() {
-        return profileString(basebasal, timeshift, percentage);
+        return profileString(basebasal, timeshift, percentage, true);
     }
 
     public String icString() {
-        return profileString(baseic, timeshift, percentage);
+        return profileString(baseic, timeshift, percentage, false);
     }
 
     public String isfString() {
-        return profileString(baseisf, timeshift, percentage);
+        return profileString(baseisf, timeshift, percentage, false);
     }
 
     public String baseIcString() {
-        return profileString(baseic, 0, 100);
+        return profileString(baseic, 0, 100, false);
     }
 
     public String baseIsfString() {
-        return profileString(baseisf, 0, 100);
+        return profileString(baseisf, 0, 100, false);
     }
 
     public String baseBasalString() {
-        return profileString(basebasal, 0, 100);
+        return profileString(basebasal, 0, 100, true);
     }
 
-    private static String profileString(double[] values, int timeshift, int percentage){
+    private static String profileString(double[] values, int timeshift, int percentage, boolean inc){
         timeshift = -(timeshift%24) + 24;
         StringBuilder sb = new StringBuilder();
         sb.append("<b>"); sb.append(0); sb.append("h: "); sb.append("</b>");
-        sb.append(DecimalFormatter.to2Decimal(values[(timeshift+0)%24]*percentage/100d));
+        sb.append(DecimalFormatter.to2Decimal(values[(timeshift+0)%24]*(inc?percentage/100d:100d/percentage)));
         double prevVal = values[(timeshift+0)%24];
         for (int i = 1; i < 24; i++) {
             if(prevVal != values[(timeshift+i)%24]){
                 sb.append(", ");sb.append("<b>");  sb.append(i); sb.append("h: ");sb.append("</b>");
-                sb.append(DecimalFormatter.to2Decimal(values[(timeshift+i)%24]*percentage/100d));
+                sb.append(DecimalFormatter.to2Decimal(values[(timeshift+i)%24]*(inc?percentage/100d:100d/percentage)));
                 prevVal = values[(timeshift+i)%24];
             }
         }
