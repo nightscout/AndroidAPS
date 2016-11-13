@@ -38,11 +38,11 @@
                     android:background="@drawable/pillborder"
                     android:padding="5dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="%:"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:src="@mipmap/ic_percentage"/>
 
                     <EditText
                         android:id="@+id/circadianpercentageprofile_percentage"
@@ -63,11 +63,11 @@
                     android:background="@drawable/pillborder"
                     android:padding="5dp">
 
-                    <TextView
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Time-Shift:"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:src="@mipmap/ic_time"/>
 
                     <EditText
                         android:id="@+id/circadianpercentageprofile_timeshift"
