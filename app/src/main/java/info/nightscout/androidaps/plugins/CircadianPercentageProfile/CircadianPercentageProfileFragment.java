@@ -37,6 +37,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     EditText percentageView;
     EditText timeshiftView;
     TextView profileView;
+    TextView baseprofileView;
+
 
 
     @Override
@@ -52,7 +54,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
         timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
         profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
-
+        baseprofileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofileview);
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
         mmolView.setChecked(circadianPercentageProfilePlugin.mmol);
@@ -125,11 +127,11 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         profileView.append("Basal: " + circadianPercentageProfilePlugin.basalString() + "\n");
         profileView.append("IC: " + circadianPercentageProfilePlugin.icString() + "\n");
         profileView.append("ISF: " + circadianPercentageProfilePlugin.isfString() + "\n");
-        profileView.append("\n");
-        profileView.append("Base Profile:\n");
-        profileView.append("Basal: " + circadianPercentageProfilePlugin.baseBasalString() + "\n");
-        profileView.append("IC: " + circadianPercentageProfilePlugin.baseIcString() + "\n");
-        profileView.append("ISF: " + circadianPercentageProfilePlugin.baseIsfString() + "\n");
+
+        baseprofileView.setText("Base Profile:\n");
+        baseprofileView.append("Basal: " + circadianPercentageProfilePlugin.baseBasalString() + "\n");
+        baseprofileView.append("IC: " + circadianPercentageProfilePlugin.baseIcString() + "\n");
+        baseprofileView.append("ISF: " + circadianPercentageProfilePlugin.baseIsfString() + "\n");
     }
 
 }

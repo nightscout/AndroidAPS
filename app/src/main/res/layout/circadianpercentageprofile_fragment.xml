@@ -3,172 +3,190 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".plugins.CircadianPercentageProfile.CircadianPercentageProfileFragment">
+
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Profile View"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/circadianpercentageprofile_profileview"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-            <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left|top">
+            android:orientation="vertical">
 
-            <TableRow
+            <TextView
+                android:id="@+id/circadianpercentageprofile_profileview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/cardColorBackground"
+                android:text="Profile View"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                <TextView
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal">
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Units:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/pillborder"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="%:"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <EditText
+                        android:id="@+id/circadianpercentageprofile_percentage"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:inputType="number"
+                        android:hint="Percentage factor by which the base profile will be multiplied."/>
 
 
-                <RadioButton
-                    android:id="@+id/simpleprofile_mgdl"
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:text="mgdl" />
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/pillborder"
+                    android:padding="5dp">
 
-                <RadioButton
-                    android:id="@+id/simpleprofile_mmol"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_column="3"
-                    android:text="mmol" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Time-Shift:"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            </TableRow>
+                    <EditText
+                        android:id="@+id/circadianpercentageprofile_timeshift"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:inputType="number"
+                        android:hint="Time in hours by which the profile will be shifted round robin."/>
 
-            <TableRow
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/circadianpercentageprofile_baseprofileview"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@color/cardColorBackground"
+                android:text="Profile View"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="DIA:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/simpleprofile_dia"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="numberDecimal" />
-            </TableRow>
-
-            <TableRow
+            <TableLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|top">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Absorption rate:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/simpleprofile_car"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="numberDecimal" />
-            </TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Units:"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <!--
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Basal rate:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <RadioButton
+                        android:id="@+id/simpleprofile_mgdl"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:text="mgdl" />
 
-                <EditText
-                    android:id="@+id/simpleprofile_basalrate"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="numberDecimal" />
-            </TableRow>
-            -->
+                    <RadioButton
+                        android:id="@+id/simpleprofile_mmol"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_column="3"
+                        android:text="mmol" />
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Target range:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/simpleprofile_targetlow"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="numberDecimal" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="DIA:"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/simpleprofile_targethigh"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="numberDecimal" />
-            </TableRow>
+                    <EditText
+                        android:id="@+id/simpleprofile_dia"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:inputType="numberDecimal" />
+                </TableRow>
 
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Percentage:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Absorption rate:"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                <EditText
-                    android:id="@+id/circadianpercentageprofile_percentage"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="number" />
-            </TableRow>
-            <TableRow
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                    <EditText
+                        android:id="@+id/simpleprofile_car"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:inputType="numberDecimal" />
+                </TableRow>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Time-Shift:"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <EditText
-                    android:id="@+id/circadianpercentageprofile_timeshift"
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:inputType="number" />
-            </TableRow>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Target range:"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        </TableLayout>
+                    <EditText
+                        android:id="@+id/simpleprofile_targetlow"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:inputType="numberDecimal" />
+
+                    <EditText
+                        android:id="@+id/simpleprofile_targethigh"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_column="2"
+                        android:inputType="numberDecimal" />
+                </TableRow>
+
+
+            </TableLayout>
         </LinearLayout>
     </ScrollView>
 </FrameLayout>
