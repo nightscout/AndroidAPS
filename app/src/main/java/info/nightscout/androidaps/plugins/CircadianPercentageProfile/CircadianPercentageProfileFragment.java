@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,11 +34,11 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     EditText icView;
     EditText isfView;
     EditText carView;
-    EditText basalView;
     EditText targetlowView;
     EditText targethighView;
     EditText percentageView;
     EditText timeshiftView;
+    TextView profileView;
 
 
     @Override
@@ -54,6 +55,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
         percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
         timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
+        profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
 
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
@@ -66,6 +68,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         targethighView.setText(circadianPercentageProfilePlugin.targetHigh.toString());
         percentageView.setText("" + circadianPercentageProfilePlugin.percentage);
         timeshiftView.setText("" + circadianPercentageProfilePlugin.timeshift);
+        updateProfileInfo();
 
         mgdlView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +77,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 circadianPercentageProfilePlugin.mmol = !circadianPercentageProfilePlugin.mgdl;
                 mmolView.setChecked(circadianPercentageProfilePlugin.mmol);
                 circadianPercentageProfilePlugin.storeSettings();
+                updateProfileInfo();
             }
         });
         mmolView.setOnClickListener(new View.OnClickListener() {
@@ -83,6 +87,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 circadianPercentageProfilePlugin.mgdl = !circadianPercentageProfilePlugin.mmol;
                 mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
                 circadianPercentageProfilePlugin.storeSettings();
+                updateProfileInfo();
             }
         });
 
@@ -109,6 +114,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 circadianPercentageProfilePlugin.timeshift = SafeParse.stringToInt(timeshiftView.getText().toString());
                 circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
                 circadianPercentageProfilePlugin.storeSettings();
+                updateProfileInfo();
             }
         };
 
@@ -122,6 +128,12 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         timeshiftView.addTextChangedListener(textWatch);
 
         return layout;
+    }
+
+    private void updateProfileInfo() {
+        profileView.setText("Basal: " + circadianPercentageProfilePlugin.basalString());
+        profileView.append("\n\n");
+        profileView.append("Base-Basal: " + circadianPercentageProfilePlugin.baseBasalString());
     }
 
 }

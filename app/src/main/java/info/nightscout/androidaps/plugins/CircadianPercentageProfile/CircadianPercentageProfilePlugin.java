@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.StringBuilderPrinter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.client.data.NSProfile;
@@ -20,7 +20,8 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 
 /**
- * Created by mike on 05.08.2016.
+ * Created by Adrian on 12.11.2016.
+ * Based on SimpleProfile created by mike on 05.08.2016.
  */
 public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInterface {
     public static final String SETTINGS_PREFIX = "CircadianPercentageProfile";
@@ -201,45 +202,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
         createConvertedProfile();
     }
-
-    /*
-        {
-            "_id": "576264a12771b7500d7ad184",
-            "startDate": "2016-06-16T08:35:00.000Z",
-            "defaultProfile": "Default",
-            "store": {
-                "Default": {
-                    "dia": "3",
-                    "carbratio": [{
-                        "time": "00:00",
-                        "value": "30"
-                    }],
-                    "carbs_hr": "20",
-                    "delay": "20",
-                    "sens": [{
-                        "time": "00:00",
-                        "value": "100"
-                    }],
-                    "timezone": "UTC",
-                    "basal": [{
-                        "time": "00:00",
-                        "value": "0.1"
-                    }],
-                    "target_low": [{
-                        "time": "00:00",
-                        "value": "0"
-                    }],
-                    "target_high": [{
-                        "time": "00:00",
-                        "value": "0"
-                    }],
-                    "startDate": "1970-01-01T00:00:00.000Z",
-                    "units": "mmol"
-                }
-            },
-            "created_at": "2016-06-16T08:34:41.256Z"
-        }
-        */
     void createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
@@ -275,6 +237,29 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     @Override
     public NSProfile getProfile() {
         return convertedProfile;
+    }
+
+    public String basalString(){
+        return profileString(basebasal, timeshift, percentage);
+    }
+
+    public String baseBasalString(){
+        return profileString(basebasal, 0, 100);
+    }
+
+    private static String profileString(double[] values, int timeshift, int percentage){
+        StringBuilder sb = new StringBuilder();
+        sb.append(0); sb.append("h: ");
+        sb.append(DecimalFormatter.to2Decimal(values[(timeshift+0)%24]*percentage/100d));
+        double prevVal = values[(timeshift+0)%24];
+        for (int i = 1; i < 24; i++) {
+            if(prevVal != values[(timeshift+i)%24]){
+                sb.append(", "); sb.append(i); sb.append("h: ");
+                sb.append(DecimalFormatter.to2Decimal(values[(timeshift+i)%24]*percentage/100d));
+                prevVal = values[(timeshift+i)%24];
+            }
+        }
+        return sb.toString();
     }
 
 }

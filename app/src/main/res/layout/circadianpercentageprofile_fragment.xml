@@ -7,9 +7,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
-        <TableLayout
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="Profile View"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/circadianpercentageprofile_profileview"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_gravity="left|top">
 
             <TableRow
@@ -192,5 +205,6 @@
             </TableRow>
 
         </TableLayout>
+        </LinearLayout>
     </ScrollView>
 </FrameLayout>
