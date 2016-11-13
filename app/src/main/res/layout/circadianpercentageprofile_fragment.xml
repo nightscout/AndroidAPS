@@ -124,6 +124,7 @@
                         android:layout_weight="1"/>
 
                     <ImageView
+                        android:id="@+id/circadianpercentageprofile_basaledit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_edit"
@@ -151,6 +152,7 @@
                         android:layout_weight="1"/>
 
                     <ImageView
+                        android:id="@+id/circadianpercentageprofile_icedit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_edit"
@@ -174,6 +176,7 @@
                         android:layout_weight="1"/>
 
                     <ImageView
+                        android:id="@+id/circadianpercentageprofile_isfedit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@mipmap/ic_edit"

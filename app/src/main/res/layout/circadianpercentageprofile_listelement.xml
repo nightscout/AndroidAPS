@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/cardColorBackground"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:textAppearance="?android:attr/textAppearanceSmall"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/basal_time_elem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/cardColorBackground"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <EditText
+        android:id="@+id/basal_edittext_elem"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:layout_marginLeft="15dp"/>
+
+    <ImageView
+        android:id="@+id/basal_copyprev_elem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:src="@mipmap/ic_copyprev"
+        android:layout_marginLeft="15dp"/>
+</LinearLayout>

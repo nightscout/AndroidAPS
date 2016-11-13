@@ -1,9 +1,13 @@
 package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 
 
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -14,16 +18,19 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Text;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
@@ -51,6 +58,10 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     Button profileswitchButton;
     ImageView percentageIcon;
     ImageView timeIcon;
+    ImageView basaleditIcon;
+    ImageView iceditIcon;
+    ImageView isfeditIcon;
+
 
 
 
@@ -73,6 +84,12 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         percentageIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_percentageicon);
         timeIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_timeicon);
         profileswitchButton = (Button) layout.findViewById(R.id.circadianpercentageprofile_profileswitch);
+
+        basaleditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_basaledit);
+        iceditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_icedit);
+        isfeditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_isfedit);
+
+
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
         mmolView.setChecked(circadianPercentageProfilePlugin.mmol);
@@ -153,6 +170,14 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             }
         });
 
+        basaleditIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BasalEditDialog basalEditDialog = new BasalEditDialog();
+                basalEditDialog.show(getFragmentManager(), "Edit Basal");
+            }
+        });
+
 
         TextWatcher textWatch = new TextWatcher() {
 
@@ -208,5 +233,37 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         baseprofileIC.setText(Html.fromHtml("<h4>IC: </h4>" + circadianPercentageProfilePlugin.baseIcString()));
         baseprofileISF.setText(Html.fromHtml("<h4>ISF: </h4>" + circadianPercentageProfilePlugin.baseIsfString()));
     }
+
+    private class BasalEditDialog extends DialogFragment{
+
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            getDialog().setTitle("Edit Base-Basal rates: ");
+            View view = inflater.inflate(R.layout.circadianpercentageprofile_editbasal_dialog, container, false);
+            LinearLayout list = (LinearLayout) view.findViewById(R.id.circadianpp_editbasal_listlayout);
+            for (int i = 0; i < 24; i++) {
+                View childview = inflater.inflate(R.layout.circadianpercentageprofile_listelement, container, false);
+                ((TextView)childview.findViewById(R.id.basal_time_elem)).setText((i<10?"0":"") + i + ":00: ");
+
+                if(i==0){
+                    (childview.findViewById(R.id.basal_copyprev_elem)).setVisibility(View.INVISIBLE);;
+                } else {
+                    //TODO: Add listener
+                }
+
+                //TODO: safe EditTexts in array for prev buttonaction!
+                ((TextView)childview.findViewById(R.id.basal_edittext_elem)).setText(DecimalFormatter.to2Decimal(getPlugin().basebasal[i]));
+
+                list.addView(childview);
+            }
+            getDialog().setCancelable(true);
+            return view;
+        }
+
+
+
+
+
+}
 
 }
