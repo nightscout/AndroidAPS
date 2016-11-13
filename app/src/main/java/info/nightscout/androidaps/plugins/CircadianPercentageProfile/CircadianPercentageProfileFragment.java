@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -173,8 +174,24 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         basaleditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BasalEditDialog basalEditDialog = new BasalEditDialog();
+                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().basebasal, "Edit Base-Basal:");
                 basalEditDialog.show(getFragmentManager(), "Edit Basal");
+            }
+        });
+
+        isfeditIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseisf, "Edit Base-ISF:");
+                basalEditDialog.show(getFragmentManager(), "Edit ISF");
+            }
+        });
+
+        iceditIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseic, "Edit Base-IC:");
+                basalEditDialog.show(getFragmentManager(), "Edit IC");
             }
         });
 
@@ -236,27 +253,44 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
 
     private class BasalEditDialog extends DialogFragment{
 
+        private final double[] values;
+        private final String title;
+
+        public BasalEditDialog(double[] values, String title){
+            this.values = values;
+            this.title = title;
+        }
+
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            getDialog().setTitle("Edit Base-Basal rates: ");
+            getDialog().setTitle(title);
             View view = inflater.inflate(R.layout.circadianpercentageprofile_editbasal_dialog, container, false);
             LinearLayout list = (LinearLayout) view.findViewById(R.id.circadianpp_editbasal_listlayout);
+            final EditText[] editTexts = new EditText[24];
             for (int i = 0; i < 24; i++) {
                 View childview = inflater.inflate(R.layout.circadianpercentageprofile_listelement, container, false);
                 ((TextView)childview.findViewById(R.id.basal_time_elem)).setText((i<10?"0":"") + i + ":00: ");
 
+                ImageView copyprevbutton = (ImageView)childview.findViewById(R.id.basal_copyprev_elem);
+
                 if(i==0){
-                    (childview.findViewById(R.id.basal_copyprev_elem)).setVisibility(View.INVISIBLE);;
+                    copyprevbutton.setVisibility(View.INVISIBLE);;
                 } else {
-                    //TODO: Add listener
+                    final int j = i; //needs to be final to be passed to inner class.
+                    copyprevbutton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            editTexts[j].setText(editTexts[j-1].getText());
+                        }
+                    });
                 }
 
-                //TODO: safe EditTexts in array for prev buttonaction!
-                ((TextView)childview.findViewById(R.id.basal_edittext_elem)).setText(DecimalFormatter.to2Decimal(getPlugin().basebasal[i]));
-
+                editTexts[i] =  ((EditText) childview.findViewById(R.id.basal_edittext_elem));
+                editTexts[i].setText(DecimalFormatter.to2Decimal(values[i]));
                 list.addView(childview);
             }
             getDialog().setCancelable(true);
+
             return view;
         }
 
