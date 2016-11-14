@@ -65,12 +65,12 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.circadianpercentageprofile_fragment, container, false);
-        diaView = (EditText) layout.findViewById(R.id.simpleprofile_dia);
-        mgdlView = (RadioButton) layout.findViewById(R.id.simpleprofile_mgdl);
-        mmolView = (RadioButton) layout.findViewById(R.id.simpleprofile_mmol);
-        carView = (EditText) layout.findViewById(R.id.simpleprofile_car);
-        targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
-        targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
+        diaView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_dia);
+        mgdlView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mgdl);
+        mmolView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mmol);
+        carView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_car);
+        targetlowView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targetlow);
+        targethighView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targethigh);
         percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
         timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
         profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
@@ -133,7 +133,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b)
-                    ToastUtils.showToastInUiThread(getContext(), "Time in hours by which the profile will be shifted round robin.");
+                    ToastUtils.showToastInUiThread(getContext(), getString(R.string.timeshift_hint));
 
             }
         });
@@ -142,7 +142,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             @Override
             public void onFocusChange(View view, boolean b) {
                 if(b)
-                    ToastUtils.showToastInUiThread(getContext(), "Percentage factor by which the base profile will be multiplied.");
+                    ToastUtils.showToastInUiThread(getContext(), getString(R.string.percentagefactor_hint));
             }
         });
 
@@ -169,24 +169,24 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         basaleditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().basebasal, "Edit Base-Basal:");
-                basalEditDialog.show(getFragmentManager(), "Edit Basal");
+                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().basebasal, getString(R.string.edit_base_basal));
+                basalEditDialog.show(getFragmentManager(), getString(R.string.edit_base_basal));
             }
         });
 
         isfeditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseisf, "Edit Base-ISF:");
-                basalEditDialog.show(getFragmentManager(), "Edit ISF");
+                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseisf, getString(R.string.edit_base_isf));
+                basalEditDialog.show(getFragmentManager(), getString(R.string.edit_base_isf));
             }
         });
 
         iceditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseic, "Edit Base-IC:");
-                basalEditDialog.show(getFragmentManager(), "Edit IC");
+                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseic, getString(R.string.edit_base_ic));
+                basalEditDialog.show(getFragmentManager(), getString(R.string.edit_base_ic));
             }
         });
 
@@ -234,16 +234,23 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     private void updateProfileInfo() {
         StringBuilder sb = new StringBuilder();
         sb.append("<h3>");
-        sb.append("Active Profile:");
+        sb.append(getString(R.string.nsprofileview_activeprofile_label));
         sb.append("</h3>");
-        sb.append("<h4>Basal:</h4> " + circadianPercentageProfilePlugin.basalString());
-        sb.append("<h4>IC:</h4> " + circadianPercentageProfilePlugin.icString());
-        sb.append("<h4>ISF:</h4> " + circadianPercentageProfilePlugin.isfString());
+        sb.append("<h4>");
+        sb.append(getString(R.string.nsprofileview_basal_label));
+        sb.append("</h4> " + circadianPercentageProfilePlugin.basalString());
+        sb.append("<h4>");
+        sb.append(getString(R.string.nsprofileview_ic_label));
+        sb.append("</h4> " + circadianPercentageProfilePlugin.icString());
+        sb.append("<h4>");
+        sb.append(getString(R.string.nsprofileview_isf_label));
+        sb.append("</h4> " + circadianPercentageProfilePlugin.isfString());
         profileView.setText(Html.fromHtml(sb.toString()));
 
-        baseprofileBasal.setText(Html.fromHtml("<h3>Base Profile:</h3><h4>Basal: </h4>" + circadianPercentageProfilePlugin.baseBasalString()));
-        baseprofileIC.setText(Html.fromHtml("<h4>IC: </h4>" + circadianPercentageProfilePlugin.baseIcString()));
-        baseprofileISF.setText(Html.fromHtml("<h4>ISF: </h4>" + circadianPercentageProfilePlugin.baseIsfString()));
+        baseprofileBasal.setText(Html.fromHtml("<h3>" + getString(R.string.base_profile_label) + "</h3>" +
+                "<h4>" + getString(R.string.nsprofileview_basal_label) + "</h4>" + circadianPercentageProfilePlugin.baseBasalString()));
+        baseprofileIC.setText(Html.fromHtml("<h4>" + getString(R.string.nsprofileview_ic_label) + "</h4>" + circadianPercentageProfilePlugin.baseIcString()));
+        baseprofileISF.setText(Html.fromHtml("<h4>" + getString(R.string.nsprofileview_isf_label) + "</h4>" + circadianPercentageProfilePlugin.baseIsfString()));
     }
 
     private class BasalEditDialog extends DialogFragment{
@@ -306,7 +313,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                     dismiss();
                 }
             });
-
 
             return view;
         }

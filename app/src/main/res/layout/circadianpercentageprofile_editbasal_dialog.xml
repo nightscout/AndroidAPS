@@ -6,7 +6,6 @@
     android:orientation="vertical"
     android:padding="10dp">
 
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,8 +19,6 @@
             <!-- Insert elements programmatically -->
 
         </LinearLayout>
-
-
     </ScrollView>
 
     <View
@@ -33,12 +30,12 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:orientation="horizontal"
-        android:padding="10dp"
         android:gravity="center_horizontal"
-        android:layout_gravity="center_horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <Button
             android:id="@+id/cancel_action"
@@ -47,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
             android:padding="10dp"
-            android:text="CANCEL"
+            android:text="@string/cancel"
             android:textSize="20sp" />
         <Button
             android:id="@+id/ok_button"
@@ -56,11 +53,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.3"
             android:padding="10dp"
-            android:text="OK"
+            android:text="@string/ok"
             android:textSize="20sp" />
 
 
     </LinearLayout>
-
-
 </LinearLayout>

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.client.data.NSProfile;
@@ -59,9 +60,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     @Override
     public String getName() {
-        // TODO Adrian: stringify! (omitted to prevent merge conflicts)
-        return "CPP";
-        //return MainApp.instance().getString(R.string.simpleprofile);
+        return MainApp.instance().getString(R.string.circadian_percentage_profile);
     }
 
     @Override
@@ -89,7 +88,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         this.fragmentVisible = fragmentVisible;
     }
 
-    public void storeSettings() {
+    void storeSettings() {
         if (Config.logPrefsChange)
             log.debug("Storing settings");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
@@ -100,11 +99,11 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         editor.putString(SETTINGS_PREFIX + "car", car.toString());
         editor.putString(SETTINGS_PREFIX + "targetlow", targetLow.toString());
         editor.putString(SETTINGS_PREFIX + "targethigh", targetHigh.toString());
-        editor.putString(SETTINGS_PREFIX + "timeshift", timeshift+"");
-        editor.putString(SETTINGS_PREFIX + "percentage", percentage+"");
+        editor.putString(SETTINGS_PREFIX + "timeshift", timeshift + "");
+        editor.putString(SETTINGS_PREFIX + "percentage", percentage + "");
 
 
-        for (int i = 0; i<24; i++) {
+        for (int i = 0; i < 24; i++) {
             editor.putString(SETTINGS_PREFIX + "basebasal" + i, DecimalFormatter.to2Decimal(basebasal[i]));
             editor.putString(SETTINGS_PREFIX + "baseisf" + i, DecimalFormatter.to2Decimal(baseisf[i]));
             editor.putString(SETTINGS_PREFIX + "baseic" + i, DecimalFormatter.to2Decimal(baseic[i]));
@@ -113,12 +112,12 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         createConvertedProfile();
     }
 
-    private void loadSettings() {
+    void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
-        if (settings.contains(SETTINGS_PREFIX+ "mgdl"))
+        if (settings.contains(SETTINGS_PREFIX + "mgdl"))
             try {
                 mgdl = settings.getBoolean(SETTINGS_PREFIX + "mgdl", true);
             } catch (Exception e) {
@@ -176,7 +175,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             }
         else timeshift = 0;
 
-        for (int i = 0; i<24; i++){
+        for (int i = 0; i < 24; i++) {
             try {
                 basebasal[i] = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "basebasal" + i, DecimalFormatter.to2Decimal(basebasal[i])));
             } catch (Exception e) {
@@ -197,7 +196,8 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
         createConvertedProfile();
     }
-    void createConvertedProfile() {
+
+    private void createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();
@@ -220,25 +220,25 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             json.put("store", store);
             profile.put("dia", dia);
 
-            int offset = -(timeshift%24) + 24;
+            int offset = -(timeshift % 24) + 24;
 
             JSONArray icArray = new JSONArray();
-            for (int i = 0; i<24; i++){
-                icArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseic[(offset+i)%24]*100d/percentage));
+            for (int i = 0; i < 24; i++) {
+                icArray.put(new JSONObject().put("timeAsSeconds", i * 60 * 60).put("value", baseic[(offset + i) % 24] * 100d / percentage));
             }
             profile.put("carbratio", icArray);
 
             profile.put("carbs_hr", car);
 
             JSONArray isfArray = new JSONArray();
-            for (int i = 0; i<24; i++){
-                isfArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", baseisf[(offset+i)%24]*100d/percentage));
+            for (int i = 0; i < 24; i++) {
+                isfArray.put(new JSONObject().put("timeAsSeconds", i * 60 * 60).put("value", baseisf[(offset + i) % 24] * 100d / percentage));
             }
             profile.put("sens", isfArray);
 
             JSONArray basalArray = new JSONArray();
-            for (int i = 0; i<24; i++){
-                basalArray.put(new JSONObject().put("timeAsSeconds", i*60*60).put("value", basebasal[(offset+i)%24]*percentage/100d));
+            for (int i = 0; i < 24; i++) {
+                basalArray.put(new JSONObject().put("timeAsSeconds", i * 60 * 60).put("value", basebasal[(offset + i) % 24] * percentage / 100d));
             }
             profile.put("basal", basalArray);
 
@@ -258,41 +258,47 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         return convertedProfile;
     }
 
-    public String basalString() {
+    String basalString() {
         return profileString(basebasal, timeshift, percentage, true);
     }
 
-    public String icString() {
+    String icString() {
         return profileString(baseic, timeshift, percentage, false);
     }
 
-    public String isfString() {
+    String isfString() {
         return profileString(baseisf, timeshift, percentage, false);
     }
 
-    public String baseIcString() {
+    String baseIcString() {
         return profileString(baseic, 0, 100, false);
     }
 
-    public String baseIsfString() {
+    String baseIsfString() {
         return profileString(baseisf, 0, 100, false);
     }
 
-    public String baseBasalString() {
-        return profileString(basebasal, 0, 100, true);
-    }
+    String baseBasalString() {return profileString(basebasal, 0, 100, true);}
 
-    private static String profileString(double[] values, int timeshift, int percentage, boolean inc){
-        timeshift = -(timeshift%24) + 24;
+
+    private static String profileString(double[] values, int timeshift, int percentage, boolean inc) {
+        timeshift = -(timeshift % 24) + 24;
         StringBuilder sb = new StringBuilder();
-        sb.append("<b>"); sb.append(0); sb.append("h: "); sb.append("</b>");
-        sb.append(DecimalFormatter.to2Decimal(values[(timeshift+0)%24]*(inc?percentage/100d:100d/percentage)));
-        double prevVal = values[(timeshift+0)%24];
+        sb.append("<b>");
+        sb.append(0);
+        sb.append("h: ");
+        sb.append("</b>");
+        sb.append(DecimalFormatter.to2Decimal(values[(timeshift + 0) % 24] * (inc ? percentage / 100d : 100d / percentage)));
+        double prevVal = values[(timeshift + 0) % 24];
         for (int i = 1; i < 24; i++) {
-            if(prevVal != values[(timeshift+i)%24]){
-                sb.append(", ");sb.append("<b>");  sb.append(i); sb.append("h: ");sb.append("</b>");
-                sb.append(DecimalFormatter.to2Decimal(values[(timeshift+i)%24]*(inc?percentage/100d:100d/percentage)));
-                prevVal = values[(timeshift+i)%24];
+            if (prevVal != values[(timeshift + i) % 24]) {
+                sb.append(", ");
+                sb.append("<b>");
+                sb.append(i);
+                sb.append("h: ");
+                sb.append("</b>");
+                sb.append(DecimalFormatter.to2Decimal(values[(timeshift + i) % 24] * (inc ? percentage / 100d : 100d / percentage)));
+                prevVal = values[(timeshift + i) % 24];
             }
         }
         return sb.toString();
