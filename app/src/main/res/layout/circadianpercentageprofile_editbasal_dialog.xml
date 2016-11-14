@@ -41,7 +41,7 @@
         android:layout_gravity="center_horizontal">
 
         <Button
-            android:id="@+id/fill_preset_button2"
+            android:id="@+id/cancel_action"
             style="?android:attr/buttonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
             android:text="CANCEL"
             android:textSize="20sp" />
         <Button
-            android:id="@+id/fill_preset_button3"
+            android:id="@+id/ok_button"
             style="?android:attr/buttonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

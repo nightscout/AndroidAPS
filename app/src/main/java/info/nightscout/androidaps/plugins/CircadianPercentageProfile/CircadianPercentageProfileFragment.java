@@ -1,14 +1,10 @@
 package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 
 
-import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -25,7 +21,6 @@ import android.widget.TextView;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Text;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
@@ -290,6 +285,28 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 list.addView(childview);
             }
             getDialog().setCancelable(true);
+
+            view.findViewById(R.id.ok_button).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int i = 0; i < 24; i++) {
+                        if (editTexts[i].getText().length()!= 0){
+                          values[i]= SafeParse.stringToDouble(editTexts[i].getText().toString()) ;
+                        }
+                    }
+                    updateProfileInfo();
+                    getPlugin().storeSettings();
+                    dismiss();
+                }
+            });
+
+            view.findViewById(R.id.cancel_action).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                }
+            });
+
 
             return view;
         }

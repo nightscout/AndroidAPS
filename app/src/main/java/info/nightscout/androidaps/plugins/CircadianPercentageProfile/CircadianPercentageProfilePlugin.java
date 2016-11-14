@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.StringBuilderPrinter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -41,8 +40,8 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     int percentage;
     int timeshift;
     double[] basebasal = new double[]{1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d};
-    double[] baseisf = new double[]{35d, 35d, 35d, 35.1d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d};
-    double[] baseic = new double[]{4d, 4d, 4d, 4d, 4.1d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d};
+    double[] baseisf = new double[]{35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d};
+    double[] baseic = new double[]{4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d};
 
     public CircadianPercentageProfilePlugin() {
         loadSettings();
@@ -203,8 +202,21 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();
 
+        StringBuilder stringBuilder = new StringBuilder();
+        double sum = 0d;
+        for (int i = 0; i < 24; i++) {
+            sum += basebasal[i];
+        }
+        stringBuilder.append(DecimalFormatter.to2Decimal(sum));
+        stringBuilder.append("U@");
+        stringBuilder.append(percentage);
+        stringBuilder.append("%>");
+        stringBuilder.append(timeshift);
+        stringBuilder.append("h");
+        String profileName = stringBuilder.toString();
+
         try {
-            json.put("defaultProfile", "CircadianPercentage");
+            json.put("defaultProfile", profileName);
             json.put("store", store);
             profile.put("dia", dia);
 
@@ -234,11 +246,11 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             profile.put("target_low", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetLow)));
             profile.put("target_high", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetHigh)));
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);
-            store.put("CircadianPercentage", profile);
+            store.put(profileName, profile);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        convertedProfile = new NSProfile(json, "CircadianPercentage");
+        convertedProfile = new NSProfile(json, profileName);
     }
 
     @Override
