@@ -15,9 +15,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by Adrian on 12.11.2016.
@@ -255,7 +257,21 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     @Override
     public NSProfile getProfile() {
+
+        performLimitCheck();
+
         return convertedProfile;
+    }
+
+    private void performLimitCheck() {
+        if (percentage < 10 || percentage >500){
+            String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage");
+            log.error(msg);
+            OpenAPSMAPlugin.sendErrorToNSClient(msg);
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
+            percentage = Math.max(percentage, 10);
+            percentage = Math.min(percentage, 500);
+        }
     }
 
     String basalString() {
