@@ -27,6 +27,8 @@ import info.nightscout.utils.ToastUtils;
  */
 public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInterface {
     public static final String SETTINGS_PREFIX = "CircadianPercentageProfile";
+    public static final int MIN_PERCENTAGE = 50;
+    public static final int MAX_PERCENTAGE = 200;
     private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
 
     private static boolean fragmentEnabled = true;
@@ -264,13 +266,13 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     }
 
     private void performLimitCheck() {
-        if (percentage < 10 || percentage >500){
+        if (percentage < MIN_PERCENTAGE || percentage > MAX_PERCENTAGE){
             String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage");
             log.error(msg);
             OpenAPSMAPlugin.sendErrorToNSClient(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
-            percentage = Math.max(percentage, 10);
-            percentage = Math.min(percentage, 500);
+            percentage = Math.max(percentage, MIN_PERCENTAGE);
+            percentage = Math.min(percentage, MAX_PERCENTAGE);
         }
     }
 
