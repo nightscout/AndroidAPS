@@ -57,6 +57,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     ImageView basaleditIcon;
     ImageView iceditIcon;
     ImageView isfeditIcon;
+    BasalEditDialog basalEditDialog;
 
 
 
@@ -169,7 +170,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         basaleditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().basebasal, getString(R.string.edit_base_basal));
+                basalEditDialog = new BasalEditDialog();
+                basalEditDialog.setup(getPlugin().basebasal, getString(R.string.edit_base_basal), CircadianPercentageProfileFragment.this);
                 basalEditDialog.show(getFragmentManager(), getString(R.string.edit_base_basal));
             }
         });
@@ -177,7 +179,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         isfeditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseisf, getString(R.string.edit_base_isf));
+                basalEditDialog = new BasalEditDialog();
+                basalEditDialog.setup(getPlugin().baseisf, getString(R.string.edit_base_isf), CircadianPercentageProfileFragment.this);
                 basalEditDialog.show(getFragmentManager(), getString(R.string.edit_base_isf));
             }
         });
@@ -185,7 +188,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         iceditIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                BasalEditDialog basalEditDialog = new BasalEditDialog(getPlugin().baseic, getString(R.string.edit_base_ic));
+                basalEditDialog = new BasalEditDialog();
+                basalEditDialog.setup(getPlugin().baseic, getString(R.string.edit_base_ic), CircadianPercentageProfileFragment.this);
                 basalEditDialog.show(getFragmentManager(), getString(R.string.edit_base_ic));
             }
         });
@@ -253,14 +257,25 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         baseprofileISF.setText(Html.fromHtml("<h4>" + getString(R.string.nsprofileview_isf_label) + "</h4>" + circadianPercentageProfilePlugin.baseIsfString()));
     }
 
-    private class BasalEditDialog extends DialogFragment{
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(basalEditDialog != null && basalEditDialog.isVisible()){
+            basalEditDialog.dismiss();
+        }
+        basalEditDialog = null;
+    }
 
-        private final double[] values;
-        private final String title;
+    public static class BasalEditDialog extends DialogFragment{
 
-        public BasalEditDialog(double[] values, String title){
+        private double[] values;
+        private String title;
+        private CircadianPercentageProfileFragment fragment;
+
+        public void setup(double[] values, String title, CircadianPercentageProfileFragment fragment){
             this.values = values;
             this.title = title;
+            this.fragment = fragment;
         }
 
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -301,7 +316,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                           values[i]= SafeParse.stringToDouble(editTexts[i].getText().toString()) ;
                         }
                     }
-                    updateProfileInfo();
+                    fragment.updateProfileInfo();
                     getPlugin().storeSettings();
                     dismiss();
                 }
