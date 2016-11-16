@@ -347,4 +347,18 @@
     <string name="button1">Button 1</string>
     <string name="button2">Button 2</string>
     <string name="button3">Button 3</string>
+    <string name="percentagefactor_hint">Percentage factor by which the base profile will be multiplied.</string>
+    <string name="timeshift_hint">Time in hours by which the profile will be shifted round robin.</string>
+    <string name="send_to_pump">SEND TO PUMP</string>
+    <string name="units">Units:</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="dia">DIA:</string>
+    <string name="absorption_rate">Absorption rate:</string>
+    <string name="target_range">Target range:</string>
+    <string name="edit_base_basal">Edit Base-Basal:</string>
+    <string name="edit_base_isf">Edit Base-ISF:</string>
+    <string name="edit_base_ic">Edit Base-IC:</string>
+    <string name="base_profile_label">Base Profile:</string>
+    <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
 </resources>
