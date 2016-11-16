@@ -242,6 +242,9 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         sb.append("</h3>");
         sb.append("<h4>");
         sb.append(getString(R.string.nsprofileview_basal_label));
+        sb.append( " ( ∑");
+        sb.append(DecimalFormatter.to2Decimal(circadianPercentageProfilePlugin.percentageBasalSum()));
+        sb.append("U )");
         sb.append("</h4> " + circadianPercentageProfilePlugin.basalString());
         sb.append("<h4>");
         sb.append(getString(R.string.nsprofileview_ic_label));
@@ -251,7 +254,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         sb.append("</h4> " + circadianPercentageProfilePlugin.isfString());
         profileView.setText(Html.fromHtml(sb.toString()));
 
-        baseprofileBasal.setText(Html.fromHtml("<h3>" + getString(R.string.base_profile_label) + "</h3>" +
+        baseprofileBasal.setText(Html.fromHtml("<h3>" + getString(R.string.base_profile_label) + " ( ∑" + DecimalFormatter.to2Decimal(circadianPercentageProfilePlugin.baseBasalSum()) + "U )</h3>" +
                 "<h4>" + getString(R.string.nsprofileview_basal_label) + "</h4>" + circadianPercentageProfilePlugin.baseBasalString()));
         baseprofileIC.setText(Html.fromHtml("<h4>" + getString(R.string.nsprofileview_ic_label) + "</h4>" + circadianPercentageProfilePlugin.baseIcString()));
         baseprofileISF.setText(Html.fromHtml("<h4>" + getString(R.string.nsprofileview_isf_label) + "</h4>" + circadianPercentageProfilePlugin.baseIsfString()));
