@@ -22,4 +22,7 @@ public class WearFragment implements FragmentBase {
     }
 
 
+    //TODO Adrian: setting for short/long status string
+    //TODO Adrian: resend buttons
+
 }

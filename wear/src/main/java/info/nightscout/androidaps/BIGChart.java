@@ -78,6 +78,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     private String rawString = "000 | 000 | 000";
     private String batteryString = "--";
     private String sgvString = "--";
+    private String externalStatusString = "no status";
+    private TextView statusView;
 
     @Override
     public void onCreate() {
@@ -122,8 +124,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 mDelta = (TextView) stub.findViewById(R.id.delta);
                 mRelativeLayout = (RelativeLayout) stub.findViewById(R.id.main_layout);
                 chart = (LineChartView) stub.findViewById(R.id.chart);
+                statusView = (TextView) stub.findViewById(R.id.aps_status);
                 layoutSet = true;
-                showAgoRawBatt();
+                showAgeAndStatus();
                 mRelativeLayout.measure(specW, specH);
                 mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
                         mRelativeLayout.getMeasuredHeight());
@@ -185,7 +188,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             wakeLock.acquire(50);
             final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BIGChart.this);
             mTime.setText(timeFormat.format(System.currentTimeMillis()));
-            showAgoRawBatt();
+            showAgeAndStatus();
 
             if(ageLevel()<=0) {
                 mSgv.setPaintFlags(mSgv.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
@@ -204,11 +207,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getBundleExtra("data");
-            if (bundle ==null){
-                return;
-            }
-            DataMap dataMap = DataMap.fromBundle(bundle);
-            if (layoutSet) {
+            if (layoutSet && bundle !=null) {
+                DataMap dataMap = DataMap.fromBundle(bundle);
                 wakeLock.acquire(50);
                 sgvLevel = dataMap.getLong("sgvLevel");
                 batteryLevel = dataMap.getInt("batteryLevel");
@@ -227,7 +227,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BIGChart.this);
                 mTime.setText(timeFormat.format(System.currentTimeMillis()));
 
-                showAgoRawBatt();
+                showAgeAndStatus();
 
                 String delta = dataMap.getString("delta");
 
@@ -254,20 +254,40 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 if (sharedPrefs.getBoolean("animation", false) && dataMap.getDataMapArrayList("entries") == null && (sgvString.equals("100") || sgvString.equals("5.5") || sgvString.equals("5,5"))) {
                     startAnimation();
                 }
+            }
+            //status
+            bundle = intent.getBundleExtra("status");
+            if (layoutSet && bundle != null) {
+                DataMap dataMap = DataMap.fromBundle(bundle);
+                wakeLock.acquire(50);
+                externalStatusString = dataMap.getString("externalStatusString");
 
+                showAgeAndStatus();
 
-            } else {
-                Log.d("ERROR: ", "DATA IS NOT YET SET");
+                mRelativeLayout.measure(specW, specH);
+                mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
+                        mRelativeLayout.getMeasuredHeight());
+                invalidate();
+                setColor();
             }
         }
     }
 
-    private void showAgoRawBatt() {
+    private void showAgeAndStatus() {
 
-        if( mTimestamp == null){
-            return;
+        if( mTimestamp != null){
+            mTimestamp.setText(readingAge(true));
         }
-        mTimestamp.setText(readingAge(true));
+
+        boolean showStatus = sharedPrefs.getBoolean("showExternalStatus", false);
+
+
+        if(showStatus){
+            statusView.setText(externalStatusString);
+            statusView.setVisibility(View.VISIBLE);
+        } else {
+            statusView.setVisibility(View.GONE);
+        }
     }
 
     public void setColor() {
@@ -285,7 +305,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key){
         setColor();
         if(layoutSet){
-            showAgoRawBatt();
+            showAgeAndStatus();
             mRelativeLayout.measure(specW, specH);
             mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
                     mRelativeLayout.getMeasuredHeight());
@@ -347,6 +367,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
 
     protected void setColorDark() {
         mTime.setTextColor(Color.WHITE);
+        statusView.setTextColor(Color.WHITE);
         mRelativeLayout.setBackgroundColor(Color.BLACK);
         if (sgvLevel == 1) {
             mSgv.setTextColor(Color.YELLOW);
@@ -404,6 +425,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
 
 
             mTime.setTextColor(Color.BLACK);
+            statusView.setTextColor(Color.BLACK);
             if (chart != null) {
                 highColor = Utils.COLOR_ORANGE;
                 midColor = Color.BLUE;
@@ -425,6 +447,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 mDelta.setTextColor(Color.RED);
             }
             mTimestamp.setTextColor(Color.WHITE);
+            statusView.setTextColor(Color.WHITE);
 
             mTime.setTextColor(Color.WHITE);
             if (chart != null) {

@@ -74,45 +74,67 @@ public class WearPlugin implements PluginBase {
 
     }
 
-    private void sendDataToWatch(){
-        if (isEnabled(getType())) {
-            ctx.startService(new Intent(ctx, WatchUpdaterService.class));
+    private void sendDataToWatch(boolean status, boolean basals, boolean bgValue){
+        if (isEnabled(getType())) { //only start service when this plugin is enabled
+
+            if(bgValue){
+                ctx.startService(new Intent(ctx, WatchUpdaterService.class));
+            }
+
+            if(basals){
+                //TODO send basals
+            }
+
+            if(status){
+                ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_STATUS));
+            }
+
+
         }
     }
 
 
    /* @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
+
+        //TODO Adrian: probably a high/low mark change? Send it instantly?
         sendDataToWatch();
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
-        sendDataToWatch();
+
+       //TODO Adrian: anything here that is not covered by other cases?
+       sendDataToWatch();
+    }
+
+*/
+    @Subscribe
+    public void onStatusEvent(final EventTreatmentChange ev) {
+        sendDataToWatch(true, true, false);
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
-        sendDataToWatch();
-    }*/
-
-    @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        sendDataToWatch();
+        sendDataToWatch(true, true, false);
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        sendDataToWatch();
+
+        sendDataToWatch(true, true, true);
     }
 
    /* @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
+        //TODO Adrian: Do they come through as notification cards already? update status?
         sendDataToWatch();
     }*/
 
     @Subscribe
-    public void onStatusEvent(final EventNewBasalProfile ev) { sendDataToWatch(); }
+    public void onStatusEvent(final EventNewBasalProfile ev) {
+        sendDataToWatch(false, true, false);
+    }
 
     public static boolean isEnabled() {
         return fragmentEnabled;

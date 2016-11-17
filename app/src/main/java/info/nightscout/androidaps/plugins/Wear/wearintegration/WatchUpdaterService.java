@@ -24,8 +24,12 @@ import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
@@ -102,7 +106,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 } else if (ACTION_OPEN_SETTINGS.equals(action)) {
                     sendNotification();
                 } else if (ACTION_SEND_STATUS.equals(action)) {
-                    sendStatus(intent.getStringExtra("externalStatusString"));
+                    sendStatus();
                 } else {
                     sendData();
                 }
@@ -248,8 +252,38 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
     }
 
-    private void sendStatus(String status) {
+    private void sendStatus() {
         if (googleApiClient.isConnected()) {
+
+            String status = "";
+
+            //TODO Adrian: Setting if short or medium string.
+
+            boolean shortString = true;
+
+            //Temp basal
+            PumpInterface pump = MainApp.getConfigBuilder();
+
+            if (pump.isTempBasalInProgress()) {
+                TempBasal activeTemp = pump.getTempBasal();
+                if (shortString) {
+                    status += activeTemp.toStringShort();
+                } else {
+                    status += activeTemp.toStringMedium();
+                }
+            }
+
+            //IOB
+            MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
+            IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
+            if (bolusIob == null) bolusIob = new IobTotal();
+            MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
+            IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
+            if (basalIob == null) basalIob = new IobTotal();
+            status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "("
+                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
+                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
             dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
