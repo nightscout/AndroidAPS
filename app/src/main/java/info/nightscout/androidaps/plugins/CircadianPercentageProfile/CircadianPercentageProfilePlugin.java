@@ -207,11 +207,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         JSONObject profile = new JSONObject();
 
         StringBuilder stringBuilder = new StringBuilder();
-        double sum = 0d;
-        for (int i = 0; i < 24; i++) {
-            sum += basebasal[i];
-        }
-        stringBuilder.append(DecimalFormatter.to2Decimal(sum));
+        stringBuilder.append(DecimalFormatter.to2Decimal(sum(basebasal)));
         stringBuilder.append("U@");
         stringBuilder.append(percentage);
         stringBuilder.append("%>");
@@ -297,6 +293,27 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     }
 
     String baseBasalString() {return profileString(basebasal, 0, 100, true);}
+
+    public double baseBasalSum(){
+        return sum(basebasal);
+    }
+
+    public double percentageBasalSum(){
+        double result = 0;
+        for (int i = 0; i < basebasal.length; i++) {
+            result += SafeParse.stringToDouble(DecimalFormatter.to2Decimal(basebasal[i] * percentage / 100d));
+        }
+        return result;
+    }
+
+
+    public static double sum(double values[]){
+        double result = 0;
+        for (int i = 0; i < values.length; i++) {
+            result += values[i];
+        }
+        return result;
+    }
 
 
     private static String profileString(double[] values, int timeshift, int percentage, boolean inc) {
