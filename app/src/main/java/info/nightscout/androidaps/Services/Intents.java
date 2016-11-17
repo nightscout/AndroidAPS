@@ -18,15 +18,15 @@ public interface Intents {
     String ACTION_RESTART = "info.nightscout.client.RESTART";
 
     // xDrip -> App
-    String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE";
+    String RECEIVER_PERMISSION = "info.nightscout.androidaps.permissions.RECEIVE_BG_ESTIMATE";
 
-    String ACTION_NEW_BG_ESTIMATE = "com.eveningoutpost.dexdrip.BgEstimate";
-    String EXTRA_BG_ESTIMATE = "com.eveningoutpost.dexdrip.Extras.BgEstimate";
-    String EXTRA_BG_SLOPE = "com.eveningoutpost.dexdrip.Extras.BgSlope";
-    String EXTRA_BG_SLOPE_NAME = "com.eveningoutpost.dexdrip.Extras.BgSlopeName";
-    String EXTRA_SENSOR_BATTERY = "com.eveningoutpost.dexdrip.Extras.SensorBattery";
-    String EXTRA_TIMESTAMP = "com.eveningoutpost.dexdrip.Extras.Time";
-    String EXTRA_RAW = "com.eveningoutpost.dexdrip.Extras.Raw";
+    String ACTION_NEW_BG_ESTIMATE = "info.nightscout.androidaps.BgEstimate";
+    String EXTRA_BG_ESTIMATE = "info.nightscout.androidaps.Extras.BgEstimate";
+    String EXTRA_BG_SLOPE = "info.nightscout.androidaps.Extras.BgSlope";
+    String EXTRA_BG_SLOPE_NAME = "info.nightscout.androidaps.Extras.BgSlopeName";
+    String EXTRA_SENSOR_BATTERY = "info.nightscout.androidaps.Extras.SensorBattery";
+    String EXTRA_TIMESTAMP = "info.nightscout.androidaps.Extras.Time";
+    String EXTRA_RAW = "info.nightscout.androidaps.Extras.Raw";
 
-    String ACTION_NEW_BG_ESTIMATE_NO_DATA = "com.eveningoutpost.dexdrip.BgEstimateNoData";
+    String ACTION_NEW_BG_ESTIMATE_NO_DATA = "info.nightscout.androidaps.BgEstimateNoData";
 }

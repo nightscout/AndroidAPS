@@ -97,6 +97,7 @@ android {
 }
 
 dependencies {
+    fullWearApp project(path: ':wear', configuration: 'fullRelease')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
         transitive = true;
@@ -116,4 +117,5 @@ dependencies {
     compile 'com.eclipsesource.j2v8:j2v8:3.1.6@aar'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services-wearable:7.5.0'
 }
