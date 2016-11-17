@@ -1,7 +1,10 @@
 package info.nightscout.androidaps.plugins.Wear.wearintegration;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.BatteryManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -19,6 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.ToastUtils;
 
 public class WatchUpdaterService extends WearableListenerService implements
@@ -128,6 +137,23 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     public void sendData() {
+
+        BgReading lastBG = MainApp.getDbHelper().lastBg();
+        if (lastBG != null) {
+            /**bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
+            DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+            if (glucoseStatus != null)
+                deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+            BgReading.units = profile.getUnits();**/
+
+            DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+
+            if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
+            if (wear_integration) {
+                new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(dataMapSingleBG(lastBG, glucoseStatus));
+            }
+        }
+
         /**
         BgReading bg = BgReading.last();
         if (bg != null) {
@@ -138,6 +164,59 @@ public class WatchUpdaterService extends WearableListenerService implements
         }*/
         ToastUtils.showToastInUiThread(this, "sendData()");
     }
+
+    private DataMap dataMapSingleBG(BgReading lastBG, DatabaseHelper.GlucoseStatus glucoseStatus) {
+        Double highMark = 170d; //in mg/dl TODO: dynamically read this?
+        Double lowMark = 70d;
+
+        long sgvLevel = 0l;
+        if (lastBG.value > highMark) {
+            sgvLevel = 1;
+        } else if (lastBG.value < lowMark) {
+            sgvLevel = -1;
+        }
+
+
+
+        DataMap dataMap = new DataMap();
+
+        int battery = getBatteryLevel(getApplicationContext());
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        dataMap.putString("sgvString", lastBG.valueToUnitsToString(profile.getUnits()));
+        dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
+        dataMap.putDouble("timestamp", lastBG.getTimeIndex()); //TODO: change that to long (was like that in NW)
+        dataMap.putString("delta", NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+        dataMap.putString("battery", "" + battery);
+        dataMap.putLong("sgvLevel", sgvLevel);
+        dataMap.putInt("batteryLevel", (battery>=30)?1:0);
+        dataMap.putDouble("sgvDouble", lastBG.value);
+        dataMap.putDouble("high", highMark);
+        dataMap.putDouble("low", lowMark);
+        //TODO Adrian use for status string?
+        //dataMap.putString("rawString", threeRaw((prefs.getString("units", "mgdl").equals("mgdl"))));
+        return dataMap;
+    }
+
+    private String slopeArrow(double delta) {
+        String arrow = "NONE";
+        if (delta <= (-3.5*5)) {
+            arrow = "DoubleDown";
+        } else if (delta <= (-2*5)) {
+            arrow = "SingleDown";
+        } else if (delta <= (-1*5)) {
+            arrow = "FortyFiveDown";
+        } else if (delta <= (1*5)) {
+            arrow = "Flat";
+        } else if (delta <= (2*5)) {
+            arrow = "FortyFiveUp";
+        } else if (delta <= (3.5*5)) {
+            arrow = "SingleUp";
+        } else if (delta <= (40*5)) {
+            arrow = "DoubleUp";
+        }
+        return arrow;
+    }
+
 
     private void resendData() {
         /**if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
@@ -262,5 +341,15 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+    public static int getBatteryLevel(Context context) {
+        Intent batteryIntent = context.registerReceiver(null, new IntentFilter(Intent.ACTION_BATTERY_CHANGED));
+        int level = batteryIntent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        if(level == -1 || scale == -1) {
+            return 50;
+        }
+        return (int)(((float)level / (float)scale) * 100.0f);
     }
 }

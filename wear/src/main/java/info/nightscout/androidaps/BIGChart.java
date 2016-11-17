@@ -233,8 +233,10 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
 
                 if (delta.endsWith(" mg/dl")) {
                     mDelta.setText(delta.substring(0, delta.length() - 6));
-                } else if (delta.endsWith(" mmol")) {
+                } else if (delta.endsWith(" mmol/l")||delta.endsWith(" mmol")) {
                     mDelta.setText(delta.substring(0, delta.length() - 5));
+                } else {
+                    mDelta.setText(delta);
                 }
 
                 if (chart != null) {
