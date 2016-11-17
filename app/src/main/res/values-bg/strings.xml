@@ -350,5 +350,5 @@
     <string name="ns_upload_only">NS upload only (изключва синхронизацията)</string>
     <string name="ns_upload_only_enabled">Моля изключете "NS upload only" за да използвате това.</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
-    <string name="absorption_rate">Абсолютна стойност:</string>
+    <string name="absorption_rate">Усвояване на ВХ (ч):</string>
 </resources>
