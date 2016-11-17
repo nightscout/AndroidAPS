@@ -26,9 +26,9 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.client.data.NSProfile;
-import info.nightscout.utils.ToastUtils;
+import info.nightscout.utils.DecimalFormatter;
 
 public class WatchUpdaterService extends WearableListenerService implements
         GoogleApiClient.ConnectionCallbacks,
@@ -45,9 +45,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
 
     boolean wear_integration = false;
-    boolean pebble_integration = false;
     SharedPreferences mPrefs;
-    SharedPreferences.OnSharedPreferenceChangeListener mPreferencesListener;
 
     @Override
     public void onCreate() {
@@ -60,17 +58,11 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     public void listenForChangeInSettings() {
-        mPreferencesListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-                setSettings();
-            }
-        };
-        mPrefs.registerOnSharedPreferenceChangeListener(mPreferencesListener);
+        WearPlugin.registerWatchUpdaterService(this);
     }
 
     public void setSettings() {
-        //TODO Adrian: check if wear plugin is active or better: Never call from Plugin if not enabled!
-        wear_integration = true; //mPrefs.getBoolean("wear_sync", false);
+        wear_integration = WearPlugin.isEnabled();
         if (wear_integration) {
             googleApiConnect();
         }
@@ -140,12 +132,6 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (lastBG != null) {
-            /**bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
-            DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-            if (glucoseStatus != null)
-                deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
-            BgReading.units = profile.getUnits();**/
-
             DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
 
             if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
@@ -153,16 +139,6 @@ public class WatchUpdaterService extends WearableListenerService implements
                 new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(dataMapSingleBG(lastBG, glucoseStatus));
             }
         }
-
-        /**
-        BgReading bg = BgReading.last();
-        if (bg != null) {
-            if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
-            if (wear_integration) {
-                new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(dataMap(bg, mPrefs, new BgGraphBuilder(getApplicationContext())));
-            }
-        }*/
-        ToastUtils.showToastInUiThread(this, "sendData()");
     }
 
     private DataMap dataMapSingleBG(BgReading lastBG, DatabaseHelper.GlucoseStatus glucoseStatus) {
@@ -175,17 +151,19 @@ public class WatchUpdaterService extends WearableListenerService implements
         } else if (lastBG.value < lowMark) {
             sgvLevel = -1;
         }
-
-
-
         DataMap dataMap = new DataMap();
 
         int battery = getBatteryLevel(getApplicationContext());
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(profile.getUnits()));
-        dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
         dataMap.putDouble("timestamp", lastBG.getTimeIndex()); //TODO: change that to long (was like that in NW)
-        dataMap.putString("delta", NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+        if(glucoseStatus == null) {
+            dataMap.putString("slopeArrow", "NONE" );
+            dataMap.putString("delta", "");
+        } else {
+            dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
+            dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+        }
         dataMap.putString("battery", "" + battery);
         dataMap.putLong("sgvLevel", sgvLevel);
         dataMap.putInt("batteryLevel", (battery>=30)?1:0);
@@ -195,6 +173,23 @@ public class WatchUpdaterService extends WearableListenerService implements
         //TODO Adrian use for status string?
         //dataMap.putString("rawString", threeRaw((prefs.getString("units", "mgdl").equals("mgdl"))));
         return dataMap;
+    }
+
+    private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
+        String deltastring = "";
+        if (deltaMGDL >=0){
+            deltastring += "+";
+        } else{
+            deltastring += "-";
+
+        }
+        if (units.equals(Constants.MGDL)){
+            deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
+        }
+        else {
+            deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
+        }
+        return deltastring;
     }
 
     private String slopeArrow(double delta) {
@@ -219,22 +214,24 @@ public class WatchUpdaterService extends WearableListenerService implements
 
 
     private void resendData() {
-        /**if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
-        long startTime = new Date().getTime() - (60000 * 60 * 24);
-        BgReading last_bg = BgReading.last();
-        List<BgReading> graph_bgs = BgReading.latestForGraph(60, startTime);
-        BgGraphBuilder bgGraphBuilder = new BgGraphBuilder(getApplicationContext());
+        if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
+        long startTime = System.currentTimeMillis() - (long)(60000 * 60 * 5.5);
+        BgReading last_bg = MainApp.getDbHelper().lastBg();
+
+        if (last_bg == null) return;
+
+        List<BgReading> graph_bgs =  MainApp.getDbHelper().getDataFromTime(startTime);
+        DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+
         if (!graph_bgs.isEmpty()) {
-            DataMap entries = dataMap(last_bg, mPrefs, bgGraphBuilder);
+            DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
             final ArrayList<DataMap> dataMaps = new ArrayList<>(graph_bgs.size());
             for (BgReading bg : graph_bgs) {
-                dataMaps.add(dataMap(bg, mPrefs, bgGraphBuilder));
+                dataMaps.add(dataMapSingleBG(bg, glucoseStatus));
             }
             entries.putDataMapArrayList("entries", dataMaps);
-
             new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(entries);
-        }*/
-        ToastUtils.showToastInUiThread(this, "resendData()");
+        }
     }
 
 
@@ -264,75 +261,12 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
     }
 
-    /**private DataMap dataMap(BgReading bg, SharedPreferences sPrefs, BgGraphBuilder bgGraphBuilder) {
-        Double highMark = Double.parseDouble(sPrefs.getString("highValue", "170"));
-        Double lowMark = Double.parseDouble(sPrefs.getString("lowValue", "70"));
-        DataMap dataMap = new DataMap();
-
-        int battery = BgSendQueue.getBatteryLevel(getApplicationContext());
-
-        dataMap.putString("sgvString", bgGraphBuilder.unitized_string(bg.calculated_value));
-        dataMap.putString("slopeArrow", bg.slopeArrow());
-        dataMap.putDouble("timestamp", bg.timestamp); //TODO: change that to long (was like that in NW)
-        dataMap.putString("delta", bgGraphBuilder.unitizedDeltaString(true, true));
-        dataMap.putString("battery", "" + battery);
-        dataMap.putLong("sgvLevel", sgvLevel(bg.calculated_value, sPrefs, bgGraphBuilder));
-        dataMap.putInt("batteryLevel", (battery>=30)?1:0);
-        dataMap.putDouble("sgvDouble", bg.calculated_value);
-        dataMap.putDouble("high", inMgdl(highMark, sPrefs));
-        dataMap.putDouble("low", inMgdl(lowMark, sPrefs));
-        //TODO: Add raw again
-        //dataMap.putString("rawString", threeRaw((prefs.getString("units", "mgdl").equals("mgdl"))));
-        return dataMap;
-    }
-
-
-    // TODO: Integrate these helper methods into BGGraphBuilder.
-    // TODO: clean them up  (no "if(boolean){return true; else return false;").
-    // TODO: Make the needed methods in BgGraphBuilder static.
-
-    public long sgvLevel(double sgv_double, SharedPreferences prefs, BgGraphBuilder bgGB) {
-        Double highMark = Double.parseDouble(prefs.getString("highValue", "170"));
-        Double lowMark = Double.parseDouble(prefs.getString("lowValue", "70"));
-        if(bgGB.unitized(sgv_double) >= highMark) {
-            return 1;
-        } else if (bgGB.unitized(sgv_double) >= lowMark) {
-            return 0;
-        } else {
-            return -1;
-        }
-    }
-
-    public double inMgdl(double value, SharedPreferences sPrefs) {
-        if (!doMgdl(sPrefs)) {
-            return value * Constants.MMOLL_TO_MGDL;
-        } else {
-            return value;
-        }
-
-    }
-
-    public boolean doMgdl(SharedPreferences sPrefs) {
-        String unit = sPrefs.getString("units", "mgdl");
-        if (unit.compareTo("mgdl") == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    */
-
-
-
     @Override
     public void onDestroy() {
         if (googleApiClient != null && googleApiClient.isConnected()) {
             googleApiClient.disconnect();
         }
-        if (mPrefs != null && mPreferencesListener != null) {
-            mPrefs.unregisterOnSharedPreferenceChangeListener(mPreferencesListener);
-        }
+        WearPlugin.unRegisterWatchUpdaterService();
     }
 
     @Override

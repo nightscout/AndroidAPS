@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterServi
 public class WearPlugin implements PluginBase {
 
     static boolean fragmentEnabled = true;
+    private static WatchUpdaterService watchUS;
     private final Context ctx;
 
     WearPlugin(Context ctx){
@@ -63,6 +64,9 @@ public class WearPlugin implements PluginBase {
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         WearPlugin.fragmentEnabled = fragmentEnabled;
+        if(watchUS!=null){
+            watchUS.setSettings();
+        }
     }
 
     @Override
@@ -71,7 +75,9 @@ public class WearPlugin implements PluginBase {
     }
 
     private void sendDataToWatch(){
-        ctx.startService(new Intent(ctx, WatchUpdaterService.class));
+        if (isEnabled(getType())) {
+            ctx.startService(new Intent(ctx, WatchUpdaterService.class));
+        }
     }
 
 
@@ -108,8 +114,17 @@ public class WearPlugin implements PluginBase {
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) { sendDataToWatch(); }
 
+    public static boolean isEnabled() {
+        return fragmentEnabled;
+    }
 
+    public static void registerWatchUpdaterService(WatchUpdaterService wus){
+        watchUS = wus;
+    }
 
+    public static void unRegisterWatchUpdaterService(){
+        watchUS = null;
+    }
 
 
 }
