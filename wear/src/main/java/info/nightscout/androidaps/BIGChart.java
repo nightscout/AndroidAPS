@@ -41,7 +41,7 @@ import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
- * Created by stephenblack on 12/29/14.
+ * Created by adrianLxM.
  */
 public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
@@ -64,6 +64,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public double datetime;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
+    public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout
     public View layoutView;
@@ -302,7 +303,18 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 tempWatchDataList.add(twd);
             }
         }
-        //TODO Adrian: also load temps
+        ArrayList<DataMap> basals = dataMap.getDataMapArrayList("basals");
+        if (basals != null) {
+            basalWatchDataList = new ArrayList<>();
+            for (DataMap basal : basals) {
+                BasalWatchData bwd = new BasalWatchData();
+                bwd.startTime = basal.getLong("starttime");
+                bwd.endTime = basal.getLong("endtime");
+                bwd.amount = basal.getDouble("amount");
+                //bwd.afterwards;
+                basalWatchDataList.add(bwd);
+            }
+        }
     }
 
     private void showAgeAndStatus() {
@@ -498,11 +510,6 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public void missedReadingAlert() {
         int minutes_since   = (int) Math.floor(timeSince()/(1000*60));
         if(minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
-            /*NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext())
-                    .setContentTitle("Missed BG Readings")
-                    .setVibrate(vibratePattern);
-            NotificationManager mNotifyMgr = (hNotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(missed_readings_alert_id, notification.build());*/
             ListenerService.requestData(this); // attempt endTime recover missing data
         }
     }
@@ -552,9 +559,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "5"));
             if (singleLine) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, pointSize, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, pointSize, highColor, lowColor, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

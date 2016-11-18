@@ -24,6 +24,7 @@ import lecho.lib.hellocharts.model.Viewport;
  * Created by stephenblack on 11/15/14.
  */
 public class BgGraphBuilder {
+    private ArrayList<BasalWatchData> basalWatchDataList;
     public List<TempWatchData> tempWatchDataList;
     private int timespan;
     public double end_time;
@@ -46,7 +47,7 @@ public class BgGraphBuilder {
     private List<PointValue> lowValues = new ArrayList<PointValue>();
     public Viewport viewport;
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, int aPointSize, int aMidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -60,9 +61,10 @@ public class BgGraphBuilder {
         this.highColor = aMidColor;
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
+        this.basalWatchDataList = basalWatchDataList;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -75,6 +77,7 @@ public class BgGraphBuilder {
         this.midColor = aMidColor;
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
+        this.basalWatchDataList = basalWatchDataList;
     }
 
     public LineChartData lineData() {
@@ -105,7 +108,13 @@ public class BgGraphBuilder {
             }
         }
 
-        double maxBasal = 0.8; //TODO Adrian keine Konstante!
+        double maxBasal = 0.1;
+        for (BasalWatchData bwd: basalWatchDataList) {
+            if(bwd.amount > maxBasal){
+                maxBasal = bwd.amount;
+            }
+        }
+
         double maxTemp = maxBasal;
         for (TempWatchData twd: tempWatchDataList) {
             if(twd.amount > maxTemp){
@@ -122,7 +131,31 @@ public class BgGraphBuilder {
             }
         }
 
+        lines.add(basalLine((float) minChart, factor));
+
         return lines;
+    }
+
+    private Line basalLine(float offset, double factor) {
+
+        List<PointValue> pointValues = new ArrayList<PointValue>();
+
+        for (BasalWatchData bwd: basalWatchDataList) {
+            if(bwd.endTime > start_time) {
+                long begin = (long) Math.max(start_time, bwd.startTime);
+                pointValues.add(new PointValue(fuzz(begin), offset + (float) (factor * bwd.amount)));
+                pointValues.add(new PointValue(fuzz(bwd.endTime), offset + (float) (factor * bwd.amount)));
+            }
+        }
+
+        Line basalLine = new Line(pointValues);
+        basalLine.setHasPoints(false);
+        basalLine.setColor(Color.parseColor("#00BFFF"));
+        basalLine.setPathEffect(new DashPathEffect(new float[]{4f, 3f}, 4f));
+        basalLine.setStrokeWidth(1);
+        return basalLine;
+
+
     }
 
     public Line highValuesLine() {
@@ -161,18 +194,17 @@ public class BgGraphBuilder {
 
     public Line tempValuesLine(TempWatchData twd, float offset, double factor) {
         List<PointValue> lineValues = new ArrayList<PointValue>();
-            long begin = (long) Math.max(start_time, twd.startTime);
-            lineValues.add(new PointValue(fuzz(begin), offset + (float)(factor*twd.startBasal)));
-            lineValues.add(new PointValue(fuzz(begin), offset +(float)(factor*twd.amount)));
-            lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float)(factor*twd.amount)));
-            lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float)(factor*twd.endBasal)));
-
-
-
+        long begin = (long) Math.max(start_time, twd.startTime);
+        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.startBasal)));
+        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.amount)));
+        lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.amount)));
+        lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.endBasal)));
+        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.startBasal)));
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);
         valueLine.setColor(Color.BLUE);
         valueLine.setStrokeWidth(1);
+        valueLine.setFilled(true);
         return valueLine;
     }
 
