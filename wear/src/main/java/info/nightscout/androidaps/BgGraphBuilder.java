@@ -116,9 +116,11 @@ public class BgGraphBuilder {
         double factor = (maxChart-minChart)/maxTemp;
         // in case basal is the highest, don't paint it totally at the top.
         factor = Math.min(factor, ((maxChart-minChart)/maxTemp)*(2/3d));
-
-        lines.add(tempValuesLine((float) minChart, factor));
-
+        for (TempWatchData twd: tempWatchDataList) {
+            if(twd.endTime > start_time) {
+                lines.add(tempValuesLine(twd, (float) minChart, factor));
+            }
+        }
 
         return lines;
     }
@@ -157,16 +159,15 @@ public class BgGraphBuilder {
     }
 
 
-    public Line tempValuesLine(float offset, double factor) {
+    public Line tempValuesLine(TempWatchData twd, float offset, double factor) {
         List<PointValue> lineValues = new ArrayList<PointValue>();
-
-        for (TempWatchData twd: tempWatchDataList) {
-            lineValues.add(new PointValue(fuzz(twd.startTime), offset + (float)(factor*twd.startBasal)));
-            lineValues.add(new PointValue(fuzz(twd.startTime), offset +(float)(factor*twd.amount)));
+            long begin = (long) Math.max(start_time, twd.startTime);
+            lineValues.add(new PointValue(fuzz(begin), offset + (float)(factor*twd.startBasal)));
+            lineValues.add(new PointValue(fuzz(begin), offset +(float)(factor*twd.amount)));
             lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float)(factor*twd.amount)));
             lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float)(factor*twd.endBasal)));
 
-        }
+
 
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);

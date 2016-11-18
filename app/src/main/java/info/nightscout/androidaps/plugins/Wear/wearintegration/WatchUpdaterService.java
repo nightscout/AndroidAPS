@@ -250,36 +250,38 @@ public class WatchUpdaterService extends WearableListenerService implements
         long startTime = System.currentTimeMillis() - (long)(60000 * 60 * 5.5);
 
 
+
         ArrayList<DataMap> basals = new ArrayList<>();
 
 
         //TODO: Adrian: replace fake data
         long from = startTime;
-        long to = (System.currentTimeMillis()+ startTime)/2;
+        long now = System.currentTimeMillis();
+        long to = (now + from)/2;
         double amount = 0.5;
         double afterwards = 0.8;
         basals.add(basalMap(from, to, amount, afterwards));
 
         from = to;
-        to = System.currentTimeMillis();
+        to = now;
         amount = 0.8;
         basals.add(basalMap(from, to, amount, amount));
 
 
 
         ArrayList<DataMap> temps = new ArrayList<>();
-        from = (long)(startTime + (1/8d)*(to - startTime));
+        from = (long)(startTime + (1/8d)*(now - startTime));
         double fromBasal = 0.5;
-        to = (long)(startTime + (2/8d)*(to - startTime));
+        to = (long)(startTime + (2/8d)*(now - startTime));
         double toBasal = 0.5;
         amount = 3;
         temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
 
 
-        from = (long)(startTime + (6/8d)*(to - startTime));
-        fromBasal = 0;
-        to = (long)(startTime + (7/8d)*(to - startTime));
-        toBasal = 0;
+        from = (long)(startTime + (6/8d)*(now - startTime));
+        fromBasal = 0.8;
+        to = (long)(startTime + (7/8d)*(now - startTime));
+        toBasal = 0.8;
         amount = 0;
         temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
 
