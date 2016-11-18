@@ -31,7 +31,7 @@ public class BgWatchData implements Comparable<BgWatchData>{
 
     @Override
     public int compareTo(BgWatchData that) {
-        // reverse order to get latest first
+        // reverse order endTime get latest first
         if(this.timestamp < that.timestamp) return 1;
         if(this.timestamp > that.timestamp) return  -1;
         return 0;

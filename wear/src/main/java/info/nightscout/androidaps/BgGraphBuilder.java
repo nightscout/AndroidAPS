@@ -1,6 +1,8 @@
 package info.nightscout.androidaps;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.text.format.DateFormat;
 
 import java.text.SimpleDateFormat;
@@ -22,6 +24,7 @@ import lecho.lib.hellocharts.model.Viewport;
  * Created by stephenblack on 11/15/14.
  */
 public class BgGraphBuilder {
+    public List<TempWatchData> tempWatchDataList;
     private int timespan;
     public double end_time;
     public double start_time;
@@ -43,7 +46,7 @@ public class BgGraphBuilder {
     private List<PointValue> lowValues = new ArrayList<PointValue>();
     public Viewport viewport;
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, int aPointSize, int aMidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, int aPointSize, int aMidColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -56,9 +59,10 @@ public class BgGraphBuilder {
         this.lowColor = aMidColor;
         this.highColor = aMidColor;
         this.timespan = timespan;
+        this.tempWatchDataList = tempWatchDataList;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -70,6 +74,7 @@ public class BgGraphBuilder {
         this.lowColor = aLowColor;
         this.midColor = aMidColor;
         this.timespan = timespan;
+        this.tempWatchDataList = tempWatchDataList;
     }
 
     public LineChartData lineData() {
@@ -87,6 +92,34 @@ public class BgGraphBuilder {
         lines.add(inRangeValuesLine());
         lines.add(lowValuesLine());
         lines.add(highValuesLine());
+
+        double minChart = lowMark;
+        double maxChart = highMark;
+
+        for ( BgWatchData bgd:bgDataList) {
+            if(bgd.sgv > maxChart){
+                maxChart = bgd.sgv;
+            }
+            if(bgd.sgv < minChart){
+                minChart = bgd.sgv;
+            }
+        }
+
+        double maxBasal = 0.8; //TODO Adrian keine Konstante!
+        double maxTemp = maxBasal;
+        for (TempWatchData twd: tempWatchDataList) {
+            if(twd.amount > maxTemp){
+                maxTemp = twd.amount;
+            }
+        }
+
+        double factor = (maxChart-minChart)/maxTemp;
+        // in case basal is the highest, don't paint it totally at the top.
+        factor = Math.min(factor, ((maxChart-minChart)/maxTemp)*(2/3d));
+
+        lines.add(tempValuesLine((float) minChart, factor));
+
+
         return lines;
     }
 
@@ -122,6 +155,28 @@ public class BgGraphBuilder {
         }
         return inRangeValuesLine;
     }
+
+
+    public Line tempValuesLine(float offset, double factor) {
+        List<PointValue> lineValues = new ArrayList<PointValue>();
+
+        for (TempWatchData twd: tempWatchDataList) {
+            lineValues.add(new PointValue(fuzz(twd.startTime), offset + (float)(factor*twd.startBasal)));
+            lineValues.add(new PointValue(fuzz(twd.startTime), offset +(float)(factor*twd.amount)));
+            lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float)(factor*twd.amount)));
+            lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float)(factor*twd.endBasal)));
+
+        }
+
+        Line valueLine = new Line(lineValues);
+        valueLine.setHasPoints(false);
+        valueLine.setColor(Color.BLUE);
+        valueLine.setStrokeWidth(1);
+        return valueLine;
+    }
+
+
+
 
     private void addBgReadingValues() {
         if(singleLine) {
@@ -214,7 +269,7 @@ public class BgGraphBuilder {
         SimpleDateFormat longTimeFormat = new SimpleDateFormat(is24? "HH:mm" : "h:mm a");
         xAxisValues.add(new AxisValue(fuzz(timeNow), (longTimeFormat.format(timeNow)).toCharArray()));
 
-        //Add whole hours to the axis (as long as they are more than 15 mins away from the current time)
+        //Add whole hours endTime the axis (as long as they are more than 15 mins away from the current time)
         for (int l = 0; l <= 24; l++) {
             double timestamp = endHour - (60000 * 60 * l);
             if((timestamp - timeNow < 0) && (timestamp > start_time)) {

@@ -37,7 +37,7 @@ import com.ustwo.clockwise.WatchShape;
 import java.util.ArrayList;
 import java.util.Date;
 
-import lecho.lib.hellocharts.util.Utils;
+import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -63,8 +63,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public LineChartView chart;
     public double datetime;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
+    public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public PowerManager.WakeLock wakeLock;
-    // related to manual layout
+    // related endTime manual layout
     public View layoutView;
     private final Point displaySize = new Point();
     private int specW, specH;
@@ -270,7 +271,38 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 invalidate();
                 setColor();
             }
+            //basals and temps
+            bundle = intent.getBundleExtra("basals");
+            if (layoutSet && bundle != null) {
+                DataMap dataMap = DataMap.fromBundle(bundle);
+                wakeLock.acquire(500);
+
+                loadBasalsAndTemps(dataMap);
+
+                mRelativeLayout.measure(specW, specH);
+                mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
+                        mRelativeLayout.getMeasuredHeight());
+                invalidate();
+                setColor();
+            }
         }
+    }
+
+    private void loadBasalsAndTemps(DataMap dataMap) {
+        ArrayList<DataMap> temps = dataMap.getDataMapArrayList("temps");
+        if (temps != null) {
+            tempWatchDataList = new ArrayList<>();
+            for (DataMap temp : temps) {
+                TempWatchData twd = new TempWatchData();
+                twd.startTime = temp.getLong("starttime");
+                twd.startBasal =  temp.getDouble("startBasal");
+                twd.endTime = temp.getLong("endtime");
+                twd.endBasal = temp.getDouble("endbasal");
+                twd.amount = temp.getDouble("amount");
+                tempWatchDataList.add(twd);
+            }
+        }
+        //TODO Adrian: also load temps
     }
 
     private void showAgeAndStatus() {
@@ -407,8 +439,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
             mRelativeLayout.setBackgroundColor(Color.WHITE);
             if (sgvLevel == 1) {
-                mSgv.setTextColor(Utils.COLOR_ORANGE);
-                mDelta.setTextColor(Utils.COLOR_ORANGE);
+                mSgv.setTextColor(ChartUtils.COLOR_ORANGE);
+                mDelta.setTextColor(ChartUtils.COLOR_ORANGE);
             } else if (sgvLevel == 0) {
                 mSgv.setTextColor(Color.BLACK);
                 mDelta.setTextColor(Color.BLACK);
@@ -427,7 +459,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             mTime.setTextColor(Color.BLACK);
             statusView.setTextColor(Color.BLACK);
             if (chart != null) {
-                highColor = Utils.COLOR_ORANGE;
+                highColor = ChartUtils.COLOR_ORANGE;
                 midColor = Color.BLUE;
                 lowColor = Color.RED;
                 singleLine = false;
@@ -471,7 +503,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                     .setVibrate(vibratePattern);
             NotificationManager mNotifyMgr = (hNotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
             mNotifyMgr.notify(missed_readings_alert_id, notification.build());*/
-            ListenerService.requestData(this); // attempt to recover missing data
+            ListenerService.requestData(this); // attempt endTime recover missing data
         }
     }
 
@@ -520,9 +552,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "5"));
             if (singleLine) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, pointSize, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, pointSize, midColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, pointSize, highColor, lowColor, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, pointSize, highColor, lowColor, midColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

@@ -40,12 +40,15 @@ public class WatchUpdaterService extends WearableListenerService implements
     public static final String ACTION_RESEND = WatchUpdaterService.class.getName().concat(".Resend");
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
     public static final String ACTION_SEND_STATUS = WatchUpdaterService.class.getName().concat(".SendStatus");
+    public static final String ACTION_SEND_BASALS = WatchUpdaterService.class.getName().concat(".SendBasals");
+
 
     private GoogleApiClient googleApiClient;
     public static final String WEARABLE_DATA_PATH = "/nightscout_watch_data";
     public static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
     private static final String OPEN_SETTINGS_PATH = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
+    public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
 
 
     boolean wear_integration = false;
@@ -107,6 +110,8 @@ public class WatchUpdaterService extends WearableListenerService implements
                     sendNotification();
                 } else if (ACTION_SEND_STATUS.equals(action)) {
                     sendStatus();
+                } else if (ACTION_SEND_BASALS.equals(action)) {
+                    sendBasals();
                 } else {
                     sendData();
                 }
@@ -236,6 +241,75 @@ public class WatchUpdaterService extends WearableListenerService implements
             entries.putDataMapArrayList("entries", dataMaps);
             new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(entries);
         }
+        sendBasals();
+        sendStatus();
+    }
+
+    private void sendBasals() {
+        if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
+        long startTime = System.currentTimeMillis() - (long)(60000 * 60 * 5.5);
+
+
+        ArrayList<DataMap> basals = new ArrayList<>();
+
+
+        //TODO: Adrian: replace fake data
+        long from = startTime;
+        long to = (System.currentTimeMillis()+ startTime)/2;
+        double amount = 0.5;
+        double afterwards = 0.8;
+        basals.add(basalMap(from, to, amount, afterwards));
+
+        from = to;
+        to = System.currentTimeMillis();
+        amount = 0.8;
+        basals.add(basalMap(from, to, amount, amount));
+
+
+
+        ArrayList<DataMap> temps = new ArrayList<>();
+        from = (long)(startTime + (1/8d)*(to - startTime));
+        double fromBasal = 0.5;
+        to = (long)(startTime + (2/8d)*(to - startTime));
+        double toBasal = 0.5;
+        amount = 3;
+        temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
+
+
+        from = (long)(startTime + (6/8d)*(to - startTime));
+        fromBasal = 0;
+        to = (long)(startTime + (7/8d)*(to - startTime));
+        toBasal = 0;
+        amount = 0;
+        temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
+
+
+
+
+        DataMap dm = new DataMap();
+        dm.putDataMapArrayList("basals", basals);
+        dm.putDataMapArrayList("temps", temps);
+
+        new SendToDataLayerThread(BASAL_DATA_PATH, googleApiClient).execute(dm);
+    }
+
+    private DataMap tempDatamap(long startTime, double startBasal, long to, double toBasal, double amount) {
+        DataMap dm = new DataMap();
+        dm.putLong("starttime", startTime);
+        dm.putDouble("startBasal", startBasal);
+        dm.putLong("endtime", to);
+        dm.putDouble("endbasal", toBasal);
+        dm.putDouble("amount", amount);
+        return dm;
+    }
+
+    private DataMap basalMap(long startTime, long endTime, double amount, double afterwards) {
+        DataMap dm = new DataMap();
+        dm.putLong("starttime", startTime);
+        dm.putLong("endtime", endTime);
+        dm.putDouble("amount", amount);
+        dm.putDouble("afterwards", afterwards);
+        return dm;
     }
 
 

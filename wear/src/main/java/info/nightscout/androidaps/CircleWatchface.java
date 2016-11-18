@@ -41,7 +41,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     public final float CIRCLE_WIDTH = 10f;
     public final int BIG_HAND_WIDTH = 16;
     public final int SMALL_HAND_WIDTH = 8;
-    public final int NEAR = 2; //how near do the hands have to be to activate overlapping mode
+    public final int NEAR = 2; //how near do the hands have endTime be endTime activate overlapping mode
     public final boolean ALWAYS_HIGHLIGT_SMALL = false;
 
     //variables for time
@@ -326,7 +326,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             wakeLock.acquire(30000);
             /*Preparing the layout just on every minute tick:
             *  - hopefully better battery life
-            *  - drawback: might update the minutes since last reading up to one minute late*/
+            *  - drawback: might update the minutes since last reading up endTime one minute late*/
             prepareLayout();
             prepareDrawTime();
             invalidate();  //redraw the time

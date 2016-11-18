@@ -59,7 +59,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public double datetime;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
     public PowerManager.WakeLock wakeLock;
-    // related to manual layout
+    // related endTime manual layout
     public View layoutView;
     private final Point displaySize = new Point();
     private int specW, specH;
@@ -327,7 +327,7 @@ protected abstract void setColorDark();
                         .setVibrate(vibratePattern);
             NotificationManager mNotifyMgr = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
             mNotifyMgr.notify(missed_readings_alert_id, notification.build());*/
-            ListenerService.requestData(this); // attempt to recover missing data
+            ListenerService.requestData(this); // attempt endTime recover missing data
         }
     }
 
@@ -376,9 +376,9 @@ protected abstract void setColorDark();
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "5"));
             if (singleLine) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, pointSize, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, new ArrayList<TempWatchData>(), pointSize, midColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, pointSize, highColor, lowColor, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, new ArrayList<TempWatchData>(), pointSize, highColor, lowColor, midColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

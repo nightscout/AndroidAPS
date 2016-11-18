@@ -35,8 +35,9 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.ustwo.android:clockwise-wearable:1.0.2'
     compile 'com.google.android.support:wearable:1.1.0'
     compile 'com.google.android.gms:play-services-wearable:7.3.0'
+    compile files('libs/hellocharts-library-1.5.5.jar')
 }

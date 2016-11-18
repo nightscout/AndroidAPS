@@ -26,6 +26,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
     private static final String OPEN_SETTINGS = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
+    public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
+
 
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
@@ -97,13 +99,19 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
 
-                } else if (path.equals(NEW_STATUS_PATH)){
+                } else if (path.equals(NEW_STATUS_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
                     messageIntent.putExtra("status", dataMap.toBundle());
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
-
+                } else if (path.equals(BASAL_DATA_PATH)){
+                    //TODO Adrian receive basals in Watchfaces
+                    dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
+                    Intent messageIntent = new Intent();
+                    messageIntent.setAction(Intent.ACTION_SEND);
+                    messageIntent.putExtra("basals", dataMap.toBundle());
+                    LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
