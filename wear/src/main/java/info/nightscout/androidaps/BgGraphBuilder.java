@@ -199,7 +199,6 @@ public class BgGraphBuilder {
         lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.amount)));
         lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.amount)));
         lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.endBasal)));
-        lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.startBasal)));
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);
         valueLine.setColor(Color.BLUE);

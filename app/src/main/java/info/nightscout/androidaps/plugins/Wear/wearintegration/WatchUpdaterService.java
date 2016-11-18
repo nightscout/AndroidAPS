@@ -254,30 +254,79 @@ public class WatchUpdaterService extends WearableListenerService implements
 
 
         ArrayList<DataMap> basals = new ArrayList<>();
+        ArrayList<DataMap> temps = new ArrayList<>();
+
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
 
         long beginBasalSegmentTime = startTimeWindow;
-        long endBasalSegmentTime = startTimeWindow;
-        double beginValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(beginBasalSegmentTime)));
-        double endValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(endBasalSegmentTime)));
+        long runningTime = startTimeWindow;
+
+        double beginBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(beginBasalSegmentTime)));
+        double endBasalValue = beginBasalValue;
+
+        TempBasal tb1 = MainApp.getConfigBuilder().getTempBasal(new Date(runningTime));
+        TempBasal tb2 = MainApp.getConfigBuilder().getTempBasal(new Date(runningTime));
+        double tb_before = beginBasalValue;
+        double tb_amount = beginBasalValue;
+        long tb_start = runningTime;
+
+        if(tb1 != null){
+            tb_before = beginBasalValue;
+            tb_amount = tb1.tempBasalConvertedToAbsolute(new Date(runningTime));
+            tb_start = runningTime;
+        }
 
 
-        for(;endBasalSegmentTime<now;endBasalSegmentTime+= 5*60*1000){
-            endValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(endBasalSegmentTime)));
-            if(endValue != beginValue){
+        for(;runningTime<now;runningTime+= 5*60*1000){
+
+            //basal rate
+            endBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(runningTime)));
+            if(endBasalValue != beginBasalValue){
                 //push the segment we recently left
-                basals.add(basalMap(beginBasalSegmentTime, endBasalSegmentTime, beginValue));
+                basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
 
                 //begin new Basal segment
-                beginBasalSegmentTime = endBasalSegmentTime;
-                beginValue = endValue;
+                beginBasalSegmentTime = runningTime;
+                beginBasalValue = endBasalValue;
+            }
+
+            //temps
+            tb2 = MainApp.getConfigBuilder().getTempBasal(new Date(runningTime));
+
+            if (tb1 == null && tb2 == null) {
+                //no temp stays no temp
+
+            } else if (tb1 != null && tb2 == null) {
+                //temp is over -> push it
+                temps.add(tempDatamap(tb_start, tb_before, runningTime, endBasalValue, tb_amount));
+                tb1 = null;
+
+            } else if (tb1 == null && tb2 != null) {
+                //temp begins
+                tb1 = tb2;
+                tb_start = runningTime;
+                tb_before = endBasalValue;
+                tb_amount = tb1.tempBasalConvertedToAbsolute(new Date(runningTime));
+
+            } else if (tb1 != null && tb2 != null) {
+                double currentAmount = tb2.tempBasalConvertedToAbsolute(new Date(runningTime));
+                if(currentAmount != tb_amount){
+                    temps.add(tempDatamap(tb_start, tb_before, runningTime, currentAmount, tb_amount));
+                    tb_start = runningTime;
+                    tb_before = tb_amount;
+                    tb_amount = currentAmount;
+                    tb1 = tb2;
+                }
             }
         }
-        if(beginBasalSegmentTime != endBasalSegmentTime){
+        if(beginBasalSegmentTime != runningTime){
             //push the remaining segment
-            basals.add(basalMap(beginBasalSegmentTime, endBasalSegmentTime, beginValue));
+            basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
+        }
+        if(tb1 != null){
+            temps.add(tempDatamap(tb_start, tb_before, runningTime, tb_amount, tb_amount));
         }
 
 
@@ -286,19 +335,13 @@ public class WatchUpdaterService extends WearableListenerService implements
 
 
         //TODO: Adrian: replace fake data
-        long from = startTimeWindow;
+      /*  long from = startTimeWindow;
         long to = (now + from)/2;
         double amount = 0.5;
-        //basals.add(basalMap(from, to, amount));
-
-        //from = to;
-        //to = now;
-        //amount = 0.8;
-        //basals.add(basalMap(from, to, amount));
 
 
 
-        ArrayList<DataMap> temps = new ArrayList<>();
+
         from = (long)(startTimeWindow + (1/8d)*(now - startTimeWindow));
         double fromBasal = 0.5;
         to = (long)(startTimeWindow + (2/8d)*(now - startTimeWindow));
@@ -314,7 +357,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         amount = 0;
         temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
 
-
+*/
 
 
         DataMap dm = new DataMap();

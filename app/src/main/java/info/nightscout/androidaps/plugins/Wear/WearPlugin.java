@@ -83,7 +83,6 @@ public class WearPlugin implements PluginBase {
 
             if(basals){
                 ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BASALS));
-
             }
 
             if(status){
