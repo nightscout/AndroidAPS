@@ -326,7 +326,27 @@ public class WatchUpdaterService extends WearableListenerService implements
             basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
         }
         if(tb1 != null){
-            temps.add(tempDatamap(tb_start, tb_before, runningTime, tb_amount, tb_amount));
+            tb2 = MainApp.getConfigBuilder().getTempBasal(new Date(now)); //use "now" to express current situation
+            if(tb2 == null) {
+                //express the cancelled temp by painting it down one minute early
+                temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, tb_amount, tb_amount));
+            } else {
+                //express currently running temp by painting it a bit into the future
+                double currentAmount = tb2.tempBasalConvertedToAbsolute(new Date(runningTime));
+                if(currentAmount != tb_amount){
+                    temps.add(tempDatamap(tb_start, tb_before, runningTime, tb_amount, tb_amount));
+                    temps.add(tempDatamap(runningTime, tb_amount, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
+                } else {
+                    temps.add(tempDatamap(tb_start, tb_before, runningTime + 5 * 60 * 1000, tb_amount, tb_amount));
+                }
+            }
+        } else {
+            tb2 = MainApp.getConfigBuilder().getTempBasal(new Date(now)); //use "now" to express current situation
+            if(tb2 != null) {
+                //onset at the end
+                double currentAmount = tb2.tempBasalConvertedToAbsolute(new Date(runningTime));
+                temps.add(tempDatamap(now - 1 * 60 * 1000, endBasalValue, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
+            }
         }
 
 
