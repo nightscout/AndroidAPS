@@ -329,13 +329,13 @@ public class WatchUpdaterService extends WearableListenerService implements
             tb2 = MainApp.getConfigBuilder().getTempBasal(new Date(now)); //use "now" to express current situation
             if(tb2 == null) {
                 //express the cancelled temp by painting it down one minute early
-                temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, tb_amount, tb_amount));
+                temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, endBasalValue, tb_amount));
             } else {
                 //express currently running temp by painting it a bit into the future
-                double currentAmount = tb2.tempBasalConvertedToAbsolute(new Date(runningTime));
+                double currentAmount = tb2.tempBasalConvertedToAbsolute(new Date(now));
                 if(currentAmount != tb_amount){
-                    temps.add(tempDatamap(tb_start, tb_before, runningTime, tb_amount, tb_amount));
-                    temps.add(tempDatamap(runningTime, tb_amount, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
+                    temps.add(tempDatamap(tb_start, tb_before, now, tb_amount, tb_amount));
+                    temps.add(tempDatamap(now, tb_amount, runningTime + 5 * 60 * 1000, currentAmount, currentAmount));
                 } else {
                     temps.add(tempDatamap(tb_start, tb_before, runningTime + 5 * 60 * 1000, tb_amount, tb_amount));
                 }
