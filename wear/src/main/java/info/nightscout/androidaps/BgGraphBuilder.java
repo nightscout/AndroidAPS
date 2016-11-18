@@ -124,7 +124,7 @@ public class BgGraphBuilder {
 
         double factor = (maxChart-minChart)/maxTemp;
         // in case basal is the highest, don't paint it totally at the top.
-        factor = Math.min(factor, ((maxChart-minChart)/maxTemp)*(2/3d));
+        factor = Math.min(factor, ((maxChart-minChart)/maxBasal)*(2/3d));
         for (TempWatchData twd: tempWatchDataList) {
             if(twd.endTime > start_time) {
                 lines.add(tempValuesLine(twd, (float) minChart, factor));

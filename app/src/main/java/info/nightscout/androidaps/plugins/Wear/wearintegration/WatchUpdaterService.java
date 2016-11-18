@@ -247,40 +247,69 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private void sendBasals() {
         if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
-        long startTime = System.currentTimeMillis() - (long)(60000 * 60 * 5.5);
+
+        long now = System.currentTimeMillis();
+        long startTimeWindow = now - (long)(60000 * 60 * 5.5);
 
 
 
         ArrayList<DataMap> basals = new ArrayList<>();
 
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+
+
+        long beginBasalSegmentTime = startTimeWindow;
+        long endBasalSegmentTime = startTimeWindow;
+        double beginValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(beginBasalSegmentTime)));
+        double endValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(endBasalSegmentTime)));
+
+
+        for(;endBasalSegmentTime<now;endBasalSegmentTime+= 5*60*1000){
+            endValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(endBasalSegmentTime)));
+            if(endValue != beginValue){
+                //push the segment we recently left
+                basals.add(basalMap(beginBasalSegmentTime, endBasalSegmentTime, beginValue));
+
+                //begin new Basal segment
+                beginBasalSegmentTime = endBasalSegmentTime;
+                beginValue = endValue;
+            }
+        }
+        if(beginBasalSegmentTime != endBasalSegmentTime){
+            //push the remaining segment
+            basals.add(basalMap(beginBasalSegmentTime, endBasalSegmentTime, beginValue));
+        }
+
+
+
+
+
 
         //TODO: Adrian: replace fake data
-        long from = startTime;
-        long now = System.currentTimeMillis();
+        long from = startTimeWindow;
         long to = (now + from)/2;
         double amount = 0.5;
-        double afterwards = 0.8;
-        basals.add(basalMap(from, to, amount, afterwards));
+        //basals.add(basalMap(from, to, amount));
 
-        from = to;
-        to = now;
-        amount = 0.8;
-        basals.add(basalMap(from, to, amount, amount));
+        //from = to;
+        //to = now;
+        //amount = 0.8;
+        //basals.add(basalMap(from, to, amount));
 
 
 
         ArrayList<DataMap> temps = new ArrayList<>();
-        from = (long)(startTime + (1/8d)*(now - startTime));
+        from = (long)(startTimeWindow + (1/8d)*(now - startTimeWindow));
         double fromBasal = 0.5;
-        to = (long)(startTime + (2/8d)*(now - startTime));
+        to = (long)(startTimeWindow + (2/8d)*(now - startTimeWindow));
         double toBasal = 0.5;
         amount = 3;
         temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
 
 
-        from = (long)(startTime + (6/8d)*(now - startTime));
+        from = (long)(startTimeWindow + (6/8d)*(now - startTimeWindow));
         fromBasal = 0.8;
-        to = (long)(startTime + (7/8d)*(now - startTime));
+        to = (long)(startTimeWindow + (7/8d)*(now - startTimeWindow));
         toBasal = 0.8;
         amount = 0;
         temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
@@ -305,12 +334,11 @@ public class WatchUpdaterService extends WearableListenerService implements
         return dm;
     }
 
-    private DataMap basalMap(long startTime, long endTime, double amount, double afterwards) {
+    private DataMap basalMap(long startTime, long endTime, double amount) {
         DataMap dm = new DataMap();
         dm.putLong("starttime", startTime);
         dm.putLong("endtime", endTime);
         dm.putDouble("amount", amount);
-        dm.putDouble("afterwards", afterwards);
         return dm;
     }
 

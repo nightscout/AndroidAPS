@@ -8,5 +8,4 @@ public class BasalWatchData {
     public long startTime;
     public long endTime;
     public double amount;
-    public double afterwards;
 }

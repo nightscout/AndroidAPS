@@ -311,7 +311,6 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 bwd.startTime = basal.getLong("starttime");
                 bwd.endTime = basal.getLong("endtime");
                 bwd.amount = basal.getDouble("amount");
-                //bwd.afterwards;
                 basalWatchDataList.add(bwd);
             }
         }
