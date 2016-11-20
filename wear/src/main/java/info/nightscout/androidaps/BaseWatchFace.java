@@ -267,7 +267,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 || (sharedPrefs.getBoolean("showRawNoise", true)
                         && sgvString.equals("???"));
 
-        boolean showStatus = sharedPrefs.getBoolean("showExternalStatus", false);
+        boolean showStatus = sharedPrefs.getBoolean("showExternalStatus", true);
 
         if(showRaw || showStatus){
             //use short forms
@@ -374,7 +374,7 @@ protected abstract void setColorDark();
 
     public void setupCharts() {
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
-            int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "5"));
+            int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (singleLine) {
                 bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, new ArrayList<TempWatchData>(), new ArrayList<BasalWatchData>(), pointSize, midColor, timeframe);
             } else {

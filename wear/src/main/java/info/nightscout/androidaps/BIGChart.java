@@ -322,7 +322,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             mTimestamp.setText(readingAge(true));
         }
 
-        boolean showStatus = sharedPrefs.getBoolean("showExternalStatus", false);
+        boolean showStatus = sharedPrefs.getBoolean("showExternalStatus", true);
 
 
         if(showStatus){
@@ -556,7 +556,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
 
     public void setupCharts() {
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
-            int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "5"));
+            int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (singleLine) {
                 bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, timeframe);
             } else {

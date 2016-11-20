@@ -3,6 +3,7 @@ package info.nightscout.androidaps;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
+import android.preference.PreferenceManager;
 import android.text.format.DateFormat;
 
 import java.text.SimpleDateFormat;
@@ -125,18 +126,26 @@ public class BgGraphBuilder {
         double factor = (maxChart-minChart)/maxTemp;
         // in case basal is the highest, don't paint it totally at the top.
         factor = Math.min(factor, ((maxChart-minChart)/maxBasal)*(2/3d));
+
+        boolean highlight = PreferenceManager
+                .getDefaultSharedPreferences(context)
+                .getBoolean("highlight_basals", false);
+
         for (TempWatchData twd: tempWatchDataList) {
             if(twd.endTime > start_time) {
-                lines.add(tempValuesLine(twd, (float) minChart, factor));
+                lines.add(tempValuesLine(twd, (float) minChart, factor, false, highlight?3:2));
+                if(highlight){
+                    lines.add(tempValuesLine(twd, (float) minChart, factor, true, 1));
+                }
             }
         }
 
-        lines.add(basalLine((float) minChart, factor));
+        lines.add(basalLine((float) minChart, factor, highlight));
 
         return lines;
     }
 
-    private Line basalLine(float offset, double factor) {
+    private Line basalLine(float offset, double factor, boolean highlight) {
 
         List<PointValue> pointValues = new ArrayList<PointValue>();
 
@@ -152,7 +161,7 @@ public class BgGraphBuilder {
         basalLine.setHasPoints(false);
         basalLine.setColor(Color.parseColor("#00BFFF"));
         basalLine.setPathEffect(new DashPathEffect(new float[]{4f, 3f}, 4f));
-        basalLine.setStrokeWidth(1);
+        basalLine.setStrokeWidth(highlight?2:1);
         return basalLine;
 
 
@@ -192,7 +201,7 @@ public class BgGraphBuilder {
     }
 
 
-    public Line tempValuesLine(TempWatchData twd, float offset, double factor) {
+    public Line tempValuesLine(TempWatchData twd, float offset, double factor, boolean isHighlightLine, int strokeWidth) {
         List<PointValue> lineValues = new ArrayList<PointValue>();
         long begin = (long) Math.max(start_time, twd.startTime);
         lineValues.add(new PointValue(fuzz(begin), offset + (float) (factor * twd.startBasal)));
@@ -201,9 +210,14 @@ public class BgGraphBuilder {
         lineValues.add(new PointValue(fuzz(twd.endTime), offset + (float) (factor * twd.endBasal)));
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);
-        valueLine.setColor(Color.BLUE);
-        valueLine.setStrokeWidth(1);
-        valueLine.setFilled(true);
+        if (isHighlightLine){
+            valueLine.setColor(Color.parseColor("#00BFFF"));
+            valueLine.setStrokeWidth(1);
+        }else {
+            valueLine.setColor(Color.BLUE);
+            valueLine.setStrokeWidth(strokeWidth);
+            valueLine.setFilled(true);
+        }
         return valueLine;
     }
 

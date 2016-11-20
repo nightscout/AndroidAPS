@@ -5,26 +5,9 @@
         android:key="category"
         android:selectable="false">
 
-    <CheckBoxPreference android:title="Dark"
-        android:defaultValue="true"
-        android:summary="Dark theme"
-        android:key="dark" />
-
-        <!-- TODO: reenable raw
-        <CheckBoxPreference android:title="Show Raw"
-            android:defaultValue="false"
-            android:summary="Show Raw."
-            android:key="showRaw" />
-
-        <CheckBoxPreference android:title="Show Raw on ???"
+        <CheckBoxPreference android:title="Show Loop Status"
             android:defaultValue="true"
-            android:summary="Show Raw on ???."
-            android:key="showRawNoise" />
-         -->
-
-        <CheckBoxPreference android:title="Show External Status"
-            android:defaultValue="false"
-            android:summary="Show External Staus (HAPP e.g.)."
+            android:summary="Show Loop Staus (Temps and IOB)."
             android:key="showExternalStatus" />
 
         <ListPreference
@@ -33,7 +16,17 @@
             android:summary="Chart Timeframe"
             android:entries="@array/chart_timeframe"
             android:entryValues="@array/chart_timeframe_values"
-            android:defaultValue="5" />
+            android:defaultValue="3" />
+
+        <CheckBoxPreference android:title="Highlight Basals"
+            android:defaultValue="false"
+            android:summary="Better visible basal rate and temp basals"
+            android:key="highlight_basals" />
+
+        <CheckBoxPreference android:title="Dark"
+            android:defaultValue="true"
+            android:summary="Dark theme"
+            android:key="dark" />
 
         <CheckBoxPreference android:title="Show Ago"
             android:defaultValue="true"
