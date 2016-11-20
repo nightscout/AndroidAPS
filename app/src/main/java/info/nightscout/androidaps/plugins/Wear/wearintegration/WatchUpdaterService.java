@@ -167,7 +167,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(profile.getUnits()));
         dataMap.putDouble("timestamp", lastBG.getTimeIndex()); //TODO: change that to long (was like that in NW)
         if(glucoseStatus == null) {
-            dataMap.putString("slopeArrow", "NONE" );
+            dataMap.putString("slopeArrow", "" );
             dataMap.putString("delta", "");
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
@@ -202,23 +202,21 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private String slopeArrow(double delta) {
-        String arrow = "NONE";
         if (delta <= (-3.5*5)) {
-            arrow = "DoubleDown";
+            return "\u21ca";
         } else if (delta <= (-2*5)) {
-            arrow = "SingleDown";
+            return "\u2193";
         } else if (delta <= (-1*5)) {
-            arrow = "FortyFiveDown";
+            return "\u2198";
         } else if (delta <= (1*5)) {
-            arrow = "Flat";
+            return "\u2192";
         } else if (delta <= (2*5)) {
-            arrow = "FortyFiveUp";
+            return "\u2197";
         } else if (delta <= (3.5*5)) {
-            arrow = "SingleUp";
-        } else if (delta <= (40*5)) {
-            arrow = "DoubleUp";
+            return "\u2191";
+        } else {
+            return "\u21c8";
         }
-        return arrow;
     }
 
 
