@@ -13,6 +13,21 @@
         <meta-data
                 android:name="com.google.android.gms.version"
                 android:value="@integer/google_play_services_version" />
+
+        <service
+            android:name="info.nightscout.androidaps.BIGChart"
+            android:allowEmbedded="true"
+            android:label="@string/label_xdrip_big_chart"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face"/>
+            <meta-data android:name="com.google.android.wearable.watchface.preview" android:resource="@drawable/watchface_bigchart" />
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+
         <service
             android:name="info.nightscout.androidaps.Home"
             android:allowEmbedded="true"
@@ -35,20 +50,6 @@
             <meta-data android:name="android.service.wallpaper"
                        android:resource="@xml/watch_face"/>
             <meta-data android:name="com.google.android.wearable.watchface.preview" android:resource="@drawable/watchface_dark" />
-            <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
-            </intent-filter>
-        </service>
-
-        <service
-            android:name="info.nightscout.androidaps.BIGChart"
-            android:allowEmbedded="true"
-            android:label="@string/label_xdrip_big_chart"
-            android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face"/>
-            <meta-data android:name="com.google.android.wearable.watchface.preview" android:resource="@drawable/watchface_bigchart" />
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />

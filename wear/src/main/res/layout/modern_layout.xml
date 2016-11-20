@@ -29,13 +29,13 @@
         android:text="999"
         android:layout_gravity="center" />
 
-        <TextView android:id="@+id/rawString"
+        <TextView android:id="@+id/statusString"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="x | x | x"
+            android:text="no status"
             android:layout_gravity="center"
             android:layout_marginTop="-5dp" />
 

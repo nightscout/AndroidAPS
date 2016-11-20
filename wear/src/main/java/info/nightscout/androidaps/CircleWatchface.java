@@ -63,7 +63,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
     private int sgvLevel = 0;
     private String sgvString = "999";
-    private String rawString = "x | x | x";
+    private String statusString = "no status";
 
 
     private int batteryLevel = 0;
@@ -155,12 +155,10 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             textView.setVisibility(View.INVISIBLE);
         }
 
-        textView = (TextView) myLayout.findViewById(R.id.rawString);
-        if (sharedPrefs.getBoolean("showRaw", false)||
-                (sharedPrefs.getBoolean("showRawNoise", true) && getSgvString().equals("???"))
-                ) {
+        textView = (TextView) myLayout.findViewById(R.id.statusString);
+        if (sharedPrefs.getBoolean("showExternalStatus", true)) {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(getRawString());
+            textView.setText(getStatusString());
             textView.setTextColor(getTextColor());
 
         } else {
@@ -453,12 +451,12 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         this.sgvString = sgvString;
     }
 
-    String getRawString() {
-        return rawString;
+    String getStatusString() {
+        return statusString;
     }
 
-    void setRawString(String rawString) {
-        this.rawString = rawString;
+    void setStatusString(String statusString) {
+        this.statusString = statusString;
     }
 
     public String getDelta() {
@@ -527,7 +525,6 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 Log.d("CircleWatchface", "sgv level : " + getSgvLevel());
                 setSgvString(dataMap.getString("sgvString"));
                 Log.d("CircleWatchface", "sgv string : " + getSgvString());
-                setRawString(dataMap.getString("rawString"));
                 setDelta(dataMap.getString("delta"));
                 setDatetime(dataMap.getDouble("timestamp"));
                 addToWatchSet(dataMap);
@@ -538,6 +535,17 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 if (sharedPrefs.getBoolean("animation", false) && dataMap.getDataMapArrayList("entries") == null && (getSgvString().equals("100") || getSgvString().equals("5.5") || getSgvString().equals("5,5"))) {
                     startAnimation();
                 }
+
+                prepareLayout();
+                prepareDrawTime();
+                invalidate();
+            }
+            //status
+            bundle = intent.getBundleExtra("status");
+            if (bundle != null) {
+                DataMap dataMap = DataMap.fromBundle(bundle);
+                wakeLock.acquire(50);
+                setStatusString(dataMap.getString("externalStatusString"));
 
                 prepareLayout();
                 prepareDrawTime();

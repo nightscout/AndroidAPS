@@ -58,6 +58,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public LineChartView chart;
     public double datetime;
     public ArrayList<BgWatchData> bgDataList = new ArrayList<>();
+    public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
+    public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
     public PowerManager.WakeLock wakeLock;
     // related endTime manual layout
     public View layoutView;
@@ -253,7 +255,20 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 invalidate();
                 setColor();
             }
+            //basals and temps
+            bundle = intent.getBundleExtra("basals");
+            if (layoutSet && bundle != null) {
+                DataMap dataMap = DataMap.fromBundle(bundle);
+                wakeLock.acquire(500);
 
+                loadBasalsAndTemps(dataMap);
+
+                mRelativeLayout.measure(specW, specH);
+                mRelativeLayout.layout(0, 0, mRelativeLayout.getMeasuredWidth(),
+                        mRelativeLayout.getMeasuredHeight());
+                invalidate();
+                setColor();
+            }
         }
     }
 
@@ -376,9 +391,9 @@ protected abstract void setColorDark();
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (singleLine) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, new ArrayList<TempWatchData>(), new ArrayList<BasalWatchData>(), pointSize, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, new ArrayList<TempWatchData>(), new ArrayList<BasalWatchData>(), pointSize, highColor, lowColor, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());
@@ -386,6 +401,33 @@ protected abstract void setColorDark();
             chart.setMaximumViewport(chart.getMaximumViewport());
         } else {
             ListenerService.requestData(this);
+        }
+    }
+
+    private void loadBasalsAndTemps(DataMap dataMap) {
+        ArrayList<DataMap> temps = dataMap.getDataMapArrayList("temps");
+        if (temps != null) {
+            tempWatchDataList = new ArrayList<>();
+            for (DataMap temp : temps) {
+                TempWatchData twd = new TempWatchData();
+                twd.startTime = temp.getLong("starttime");
+                twd.startBasal =  temp.getDouble("startBasal");
+                twd.endTime = temp.getLong("endtime");
+                twd.endBasal = temp.getDouble("endbasal");
+                twd.amount = temp.getDouble("amount");
+                tempWatchDataList.add(twd);
+            }
+        }
+        ArrayList<DataMap> basals = dataMap.getDataMapArrayList("basals");
+        if (basals != null) {
+            basalWatchDataList = new ArrayList<>();
+            for (DataMap basal : basals) {
+                BasalWatchData bwd = new BasalWatchData();
+                bwd.startTime = basal.getLong("starttime");
+                bwd.endTime = basal.getLong("endtime");
+                bwd.amount = basal.getDouble("amount");
+                basalWatchDataList.add(bwd);
+            }
         }
     }
 }
