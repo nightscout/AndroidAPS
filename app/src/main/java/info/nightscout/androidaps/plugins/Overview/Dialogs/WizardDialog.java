@@ -199,7 +199,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                     confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
-                    if (insulinAfterConstraints - calculatedTotalInsulin != 0 || carbsAfterConstraints != calculatedCarbs) {
+                    if (insulinAfterConstraints - calculatedTotalInsulin != 0 ||  !carbsAfterConstraints.equals(calculatedCarbs)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(parentContext);
                         builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
                         builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));

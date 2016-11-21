@@ -306,7 +306,7 @@
     <string name="overview_editquickwizard_valid">Валидно:</string>
     <string name="overview_editquickwizardlistactivity_add">Добави</string>
     <string name="overview_quickwizard_item_edit_button">Редактирай</string>
-    <string name="overview_quickwizard_item_remove_button">Прехахни</string>
+    <string name="overview_quickwizard_item_remove_button">Премахни</string>
     <string name="quickwizard">Бърз болус</string>
     <string name="quickwizardsettings">Настройки за бърз болус</string>
     <string name="remotebasalnotallowed">Не са позволени отдалечени настройки</string>
@@ -323,4 +323,32 @@
     <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
     <string name="smscommunicator_unknowncommand">Uknonwn command or wrong reply</string>
     <string name="mealbolus">Болус за хранене</string>
+    <string name="actions">Действия</string>
+    <string name="androidaps_start">Стартиран AndroidAPS</string>
+    <string name="base_profile_label">Базов профил</string>
+    <string name="button1">Бутон 1</string>
+    <string name="button2">Бутон 2</string>
+    <string name="button3">Бутон 3</string>
+    <string name="circadian_percentage_profile">Процентен профил</string>
+    <string name="send_to_pump">Изпрати към помпата</string>
+    <string name="edit_base_basal">Редактирай базални стойности</string>
+    <string name="dia">"DIA "</string>
+    <string name="edit_base_ic">Редактирай Инс./ВХ</string>
+    <string name="edit_base_isf">Редактирай Инс. чувствителност</string>
+    <string name="fillbolus_title">Fill/Prime стандарта стойност</string>
+    <string name="fillwarning">Моля, уверете се, че стойността съответсва на вашият сет! Този инсулин не се включва в IOB!</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="othersettings_title">Друго:</string>
+    <string name="percentagefactor_hint">% с който базовият профил ще бъде променен.</string>
+    <string name="primefill">Prime/Fill</string>
+    <string name="pumpNotInitialized">Помпата не е инициализирана!</string>
+    <string name="reset_db_confirm">Наистина ли искате да нулиратe базата данни?</string>
+    <string name="target_range">Целеви диапазон:</string>
+    <string name="timeshift_hint">Брой часове, с които ще бъде преместен профила!</string>
+    <string name="units">Мерни единици:</string>
+    <string name="ns_upload_only">NS upload only (изключва синхронизацията)</string>
+    <string name="ns_upload_only_enabled">Моля изключете "NS upload only" за да използвате това.</string>
+    <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
+    <string name="absorption_rate">Усвояване на ВХ (ч):</string>
 </resources>
