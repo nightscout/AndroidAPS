@@ -54,11 +54,10 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         statusView = (TextView) view.findViewById(R.id.overview_bolusprogress_status);
         stopPressedView = (TextView) view.findViewById(R.id.overview_bolusprogress_stoppressed);
         progressBar = (ProgressBar) view.findViewById(R.id.overview_bolusprogress_progressbar);
-
         stopButton.setOnClickListener(this);
         progressBar.setMax(100);
         statusView.setText(MainApp.sResources.getString(R.string.waitingforpump));
-
+        setCancelable(false);
         return view;
     }
 
