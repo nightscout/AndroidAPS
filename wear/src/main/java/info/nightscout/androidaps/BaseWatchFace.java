@@ -36,7 +36,7 @@ import java.util.Date;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
- * Created by stephenblack on 12/29/14.
+ * Created by emmablack on 12/29/14.
  */
 public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;

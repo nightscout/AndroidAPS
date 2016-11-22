@@ -15,7 +15,7 @@ import com.google.android.gms.wearable.Wearable;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by stephenblack on 12/26/14.
+ * Created by emmablack on 12/26/14.
  */
 class SendToDataLayerThread extends AsyncTask<DataMap,Void,Void> {
     private GoogleApiClient googleApiClient;

@@ -22,7 +22,7 @@ import lecho.lib.hellocharts.model.PointValue;
 import lecho.lib.hellocharts.model.Viewport;
 
 /**
- * Created by stephenblack on 11/15/14.
+ * Created by emmablack on 11/15/14.
  */
 public class BgGraphBuilder {
     private ArrayList<BasalWatchData> basalWatchDataList;

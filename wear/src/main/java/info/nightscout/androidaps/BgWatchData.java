@@ -1,7 +1,7 @@
 package info.nightscout.androidaps;
 
 /**
- * Created by stephenblack on 1/7/15.
+ * Created by emmablack on 1/7/15.
  */
 public class BgWatchData implements Comparable<BgWatchData>{
     public double sgv;
