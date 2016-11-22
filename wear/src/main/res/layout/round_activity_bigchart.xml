@@ -25,7 +25,7 @@
             <TextView
                 android:id="@+id/delta"
                 android:textSize="30sp"
-                android:text="--- mg/dl"
+                android:text="---"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#FFFFFF"
@@ -42,6 +42,17 @@
                 android:textColor="#FFFFFF"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/avgdelta"
+                android:textSize="30sp"
+                android:text="---"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:layout_gravity="bottom"
+                android:gravity="center_horizontal|bottom"
+                android:layout_marginLeft="5dp" />
 
         </LinearLayout>
 

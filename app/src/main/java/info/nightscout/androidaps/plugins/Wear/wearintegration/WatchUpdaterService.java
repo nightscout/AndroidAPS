@@ -169,9 +169,11 @@ public class WatchUpdaterService extends WearableListenerService implements
         if(glucoseStatus == null) {
             dataMap.putString("slopeArrow", "" );
             dataMap.putString("delta", "");
+            dataMap.putString("avgDelta", "");
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
             dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+            dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
         }
         dataMap.putString("battery", "" + battery);
         dataMap.putLong("sgvLevel", sgvLevel);
@@ -179,8 +181,6 @@ public class WatchUpdaterService extends WearableListenerService implements
         dataMap.putDouble("sgvDouble", lastBG.value);
         dataMap.putDouble("high", highMark);
         dataMap.putDouble("low", lowMark);
-        //TODO Adrian use for status string?
-        //dataMap.putString("rawString", threeRaw((prefs.getString("units", "mgdl").equals("mgdl"))));
         return dataMap;
     }
 

@@ -45,10 +45,8 @@ import lecho.lib.hellocharts.view.LineChartView;
  */
 public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
-    public static final long[] vibratePattern = {0,400,300,400,300,400};
-    public TextView mTime, mSgv, mTimestamp, mDelta;
+    public TextView mTime, mSgv, mTimestamp, mDelta, mAvgDelta;
     public RelativeLayout mRelativeLayout;
-    //public LinearLayout mLinearLayout;
     public long sgvLevel = 0;
     public int batteryLevel = 1;
     public int ageLevel = 1;
@@ -58,7 +56,6 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public int pointSize = 2;
     public boolean singleLine = false;
     public boolean layoutSet = false;
-    public int missed_readings_alert_id = 818;
     public BgGraphBuilder bgGraphBuilder;
     public LineChartView chart;
     public double datetime;
@@ -66,7 +63,6 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public ArrayList<TempWatchData> tempWatchDataList = new ArrayList<>();
     public ArrayList<BasalWatchData> basalWatchDataList = new ArrayList<>();
     public PowerManager.WakeLock wakeLock;
-    // related endTime manual layout
     public View layoutView;
     private final Point displaySize = new Point();
     private int specW, specH;
@@ -124,6 +120,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 mSgv = (TextView) stub.findViewById(R.id.sgv);
                 mTimestamp = (TextView) stub.findViewById(R.id.timestamp);
                 mDelta = (TextView) stub.findViewById(R.id.delta);
+                mAvgDelta = (TextView) stub.findViewById(R.id.avgdelta);
                 mRelativeLayout = (RelativeLayout) stub.findViewById(R.id.main_layout);
                 chart = (LineChartView) stub.findViewById(R.id.chart);
                 statusView = (TextView) stub.findViewById(R.id.aps_status);
@@ -241,6 +238,17 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                     mDelta.setText(delta);
                 }
 
+
+                String avgDelta = dataMap.getString("avgDelta");
+
+                if (delta.endsWith(" mg/dl")) {
+                    mAvgDelta.setText(avgDelta.substring(0, avgDelta.length() - 6));
+                } else if (avgDelta.endsWith(" mmol/l")||avgDelta.endsWith(" mmol")) {
+                    mAvgDelta.setText(avgDelta.substring(0, avgDelta.length() - 5));
+                } else {
+                    mAvgDelta.setText(avgDelta);
+                }
+
                 if (chart != null) {
                     addToWatchSet(dataMap);
                     setupCharts();
@@ -323,7 +331,13 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         }
 
         boolean showStatus = sharedPrefs.getBoolean("showExternalStatus", true);
+        boolean showAvgDelta = sharedPrefs.getBoolean("showAvgDelta", true);
 
+        if(showAvgDelta){
+            mAvgDelta.setVisibility(View.VISIBLE);
+        } else {
+            mAvgDelta.setVisibility(View.GONE);
+        }
 
         if(showStatus){
             statusView.setText(externalStatusString);

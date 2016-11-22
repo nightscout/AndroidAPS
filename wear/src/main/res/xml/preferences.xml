@@ -23,6 +23,11 @@
             android:summary="Better visible basal rate and temp basals"
             android:key="highlight_basals" />
 
+        <CheckBoxPreference android:title="Show AvgDelta"
+            android:defaultValue="true"
+            android:summary="Show the avgDelta."
+            android:key="showAvgDelta" />
+
         <CheckBoxPreference android:title="Dark"
             android:defaultValue="true"
             android:summary="Dark theme"
