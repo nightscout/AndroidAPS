@@ -70,6 +70,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     private double datetime = 0;
     private String direction = "";
     private String delta = "";
+    private String avgDelta = "";
     public TreeSet<BgWatchData> bgDataList = new TreeSet<BgWatchData>();
 
     private View layoutView;
@@ -189,15 +190,13 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             textView.setTextColor(getTextColor());
             if (sharedPrefs.getBoolean("showBigNumbers", false)) {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
-                if (delta.endsWith(" mg/dl")) {
-                    textView.setText(getDelta().substring(0, delta.length() - 6));
-                } else if (delta.endsWith(" mmol")) {
-                    textView.setText(getDelta().substring(0, delta.length() - 5));
-                }
             } else {
                 textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                textView.setText(getDelta());
             }
+            if(sharedPrefs.getBoolean("showAvgDelta", true)){
+                textView.append("  " + getAvgDelta());
+            }
+
         } else {
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)
             textView.setVisibility(View.INVISIBLE);
@@ -467,6 +466,12 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         this.delta = delta;
     }
 
+    private String getAvgDelta() {
+        return avgDelta;
+    }
+    private void setAvgDelta(String avgDelta) {
+        this.avgDelta = avgDelta;
+    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -526,6 +531,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 setSgvString(dataMap.getString("sgvString"));
                 Log.d("CircleWatchface", "sgv string : " + getSgvString());
                 setDelta(dataMap.getString("delta"));
+                setAvgDelta(dataMap.getString("avgDelta"));
                 setDatetime(dataMap.getDouble("timestamp"));
                 addToWatchSet(dataMap);
 

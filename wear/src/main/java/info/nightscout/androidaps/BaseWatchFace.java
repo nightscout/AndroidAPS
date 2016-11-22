@@ -41,7 +41,7 @@ import lecho.lib.hellocharts.view.LineChartView;
 public  abstract class BaseWatchFace extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static IntentFilter INTENT_FILTER;
     public static final long[] vibratePattern = {0,400,300,400,300,400};
-    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mDelta, mRaw, mStatus;
+    public TextView mTime, mSgv, mDirection, mTimestamp, mUploaderBattery, mDelta, mStatus;
     public RelativeLayout mRelativeLayout;
     public LinearLayout mLinearLayout;
     public long sgvLevel = 0;
@@ -70,11 +70,12 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     private MessageReceiver messageReceiver;
 
     protected SharedPreferences sharedPrefs;
-    // private String rawString = "000 | 000 | 000";
-    private String rawString = "";
     private String batteryString = "--";
     private String sgvString = "--";
     private String externalStatusString = "no status";
+    private String avgDelta = "";
+    private String delta = "";
+
 
     @Override
     public void onCreate() {
@@ -114,7 +115,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 mSgv = (TextView) stub.findViewById(R.id.sgv);
                 mDirection = (TextView) stub.findViewById(R.id.direction);
                 mTimestamp = (TextView) stub.findViewById(R.id.timestamp);
-                mRaw = (TextView) stub.findViewById(R.id.raw);
                 mStatus = (TextView) stub.findViewById(R.id.externaltstatus);
                 mUploaderBattery = (TextView) stub.findViewById(R.id.uploader_battery);
                 mDelta = (TextView) stub.findViewById(R.id.delta);
@@ -211,7 +211,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 sgvLevel = dataMap.getLong("sgvLevel");
                 batteryLevel = dataMap.getInt("batteryLevel");
                 datetime = dataMap.getDouble("timestamp");
-                rawString = dataMap.getString("rawString");
                 sgvString = dataMap.getString("sgvString");
                 batteryString = dataMap.getString("battery");
                 mSgv.setText(dataMap.getString("sgvString"));
@@ -225,10 +224,13 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
                 final java.text.DateFormat timeFormat = DateFormat.getTimeFormat(BaseWatchFace.this);
                 mTime.setText(timeFormat.format(System.currentTimeMillis()));
 
+                mDirection.setText(dataMap.getString("slopeArrow"));
+                avgDelta = dataMap.getString("avgDelta");
+                delta = dataMap.getString("delta");
+
+
                 showAgoRawBattStatus();
 
-                mDirection.setText(dataMap.getString("slopeArrow"));
-                mDelta.setText(dataMap.getString("delta"));
 
                 if (chart != null) {
                     addToWatchSet(dataMap);
@@ -274,17 +276,21 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
 
     private void showAgoRawBattStatus() {
 
-        if(mRaw == null || mTimestamp == null || mUploaderBattery == null|| mStatus == null){
+
+        boolean showAvgDelta = sharedPrefs.getBoolean("showAvgDelta", true);
+        mDelta.setText(delta);
+        if(showAvgDelta){
+            mDelta.append("  " + avgDelta);
+        }
+
+
+        if( mTimestamp == null || mUploaderBattery == null|| mStatus == null){
             return;
         }
 
-        boolean showRaw = sharedPrefs.getBoolean("showRaw", false)
-                || (sharedPrefs.getBoolean("showRawNoise", true)
-                        && sgvString.equals("???"));
-
         boolean showStatus = sharedPrefs.getBoolean("showExternalStatus", true);
 
-        if(showRaw || showStatus){
+        if(showStatus){
             //use short forms
             mTimestamp.setText(readingAge(true));
             mUploaderBattery.setText("U: " + batteryString + "%");
@@ -293,12 +299,6 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
             mUploaderBattery.setText("Uploader: " + batteryString + "%");
         }
 
-        if (showRaw) {
-            mRaw.setVisibility(View.VISIBLE);
-            mRaw.setText("R: " + rawString);
-        } else {
-            mRaw.setVisibility(View.GONE);
-        }
 
         if (showStatus) {
             mStatus.setVisibility(View.VISIBLE);
@@ -337,11 +337,6 @@ protected abstract void setColorDark();
     public void missedReadingAlert() {
         int minutes_since   = (int) Math.floor(timeSince()/(1000*60));
         if(minutes_since >= 16 && ((minutes_since - 16) % 5) == 0) {
-            /*NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext())
-                        .setContentTitle("Missed BG Readings")
-                        .setVibrate(vibratePattern);
-            NotificationManager mNotifyMgr = (NotificationManager) getApplicationContext().getSystemService(getApplicationContext().NOTIFICATION_SERVICE);
-            mNotifyMgr.notify(missed_readings_alert_id, notification.build());*/
             ListenerService.requestData(this); // attempt endTime recover missing data
         }
     }

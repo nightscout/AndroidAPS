@@ -429,12 +429,15 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if (sgvLevel == 1) {
             mSgv.setTextColor(Color.YELLOW);
             mDelta.setTextColor(Color.YELLOW);
+            mAvgDelta.setTextColor(Color.YELLOW);
         } else if (sgvLevel == 0) {
             mSgv.setTextColor(Color.WHITE);
             mDelta.setTextColor(Color.WHITE);
+            mAvgDelta.setTextColor(Color.WHITE);
         } else if (sgvLevel == -1) {
             mSgv.setTextColor(Color.RED);
             mDelta.setTextColor(Color.RED);
+            mAvgDelta.setTextColor(Color.RED);
         }
 
 
@@ -466,12 +469,15 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             if (sgvLevel == 1) {
                 mSgv.setTextColor(ChartUtils.COLOR_ORANGE);
                 mDelta.setTextColor(ChartUtils.COLOR_ORANGE);
+                mAvgDelta.setTextColor(ChartUtils.COLOR_ORANGE);
             } else if (sgvLevel == 0) {
                 mSgv.setTextColor(Color.BLACK);
                 mDelta.setTextColor(Color.BLACK);
+                mAvgDelta.setTextColor(Color.BLACK);
             } else if (sgvLevel == -1) {
                 mSgv.setTextColor(Color.RED);
                 mDelta.setTextColor(Color.RED);
+                mAvgDelta.setTextColor(Color.RED);
             }
 
             if (ageLevel == 1) {
@@ -496,12 +502,15 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             if (sgvLevel == 1) {
                 mSgv.setTextColor(Color.YELLOW);
                 mDelta.setTextColor(Color.YELLOW);
+                mAvgDelta.setTextColor(Color.YELLOW);
             } else if (sgvLevel == 0) {
                 mSgv.setTextColor(Color.WHITE);
                 mDelta.setTextColor(Color.WHITE);
+                mAvgDelta.setTextColor(Color.WHITE);
             } else if (sgvLevel == -1) {
                 mSgv.setTextColor(Color.RED);
                 mDelta.setTextColor(Color.RED);
+                mAvgDelta.setTextColor(Color.RED);
             }
             mTimestamp.setTextColor(Color.WHITE);
             statusView.setTextColor(Color.WHITE);
