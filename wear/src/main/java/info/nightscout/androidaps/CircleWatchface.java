@@ -201,7 +201,6 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)
             textView.setVisibility(View.INVISIBLE);
         }
-        //TODO: add more view elements?
 
         myLayout.measure(specW, specH);
         myLayout.layout(0, 0, myLayout.getMeasuredWidth(),
@@ -495,7 +494,6 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
 
 
             public void run() {
-                //TODO:Wakelock?
                 setIsAnimated(true);
                 for (int i = 0; i <= 8 * 1000 / 40; i++) {
                     animationStep();

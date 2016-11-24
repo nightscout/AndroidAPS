@@ -20,7 +20,20 @@
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
             android:text="Resend All Data"
-            android:textColor="@color/colorProfileSwitchButton" />
+            android:textColor="@color/colorTreatmentButton" />
+
+        <Button
+            android:id="@+id/wear_opensettings"
+            style="?android:attr/buttonStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_weight="0.5"
+            android:text="Open Settings on Wear"
+            android:textColor="@color/colorTreatmentButton" />
 
     </LinearLayout>
 

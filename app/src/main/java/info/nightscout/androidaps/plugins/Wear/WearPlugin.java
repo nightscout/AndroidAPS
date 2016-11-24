@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterServi
 public class WearPlugin implements PluginBase {
 
     static boolean fragmentEnabled = true;
-    static boolean fragmentVisible = false;
+    static boolean fragmentVisible = true;
     private static WatchUpdaterService watchUS;
     private final Context ctx;
 
@@ -94,25 +94,19 @@ public class WearPlugin implements PluginBase {
 
     void resendDataToWatch(){
         ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_RESEND));
-
     }
 
-
-   /* @Subscribe
-    public void onStatusEvent(final EventPreferenceChange ev) {
-
-        //TODO Adrian: probably a high/low mark change? Send it instantly?
-        sendDataToWatch();
+    void openSettings(){
+        ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_OPEN_SETTINGS));
     }
+
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshGui ev) {
-
-       //TODO Adrian: anything here that is not covered by other cases?
-       sendDataToWatch();
+    public void onStatusEvent(final EventPreferenceChange ev) {
+        //possibly new high or low mark
+        resendDataToWatch();
     }
 
-*/
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         sendDataToWatch(true, true, false);
@@ -125,7 +119,6 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-
         sendDataToWatch(true, true, true);
     }
 

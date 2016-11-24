@@ -30,9 +30,11 @@ import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SafeParse;
 
 public class WatchUpdaterService extends WearableListenerService implements
         GoogleApiClient.ConnectionCallbacks,
@@ -151,21 +153,38 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private DataMap dataMapSingleBG(BgReading lastBG, DatabaseHelper.GlucoseStatus glucoseStatus) {
-        Double highMark = 170d; //in mg/dl TODO: dynamically read this?
-        Double lowMark = 70d;
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+
+
+        Double lowLine = SafeParse.stringToDouble(mPrefs.getString("low_mark", "0"));
+        Double highLine = SafeParse.stringToDouble(mPrefs.getString("high_mark", "0"));
+
+        //convert to mg/dl
+        if (! profile.getUnits().equals(Constants.MGDL)){
+            lowLine *= Constants.MMOLL_TO_MGDL;
+            highLine *= Constants.MMOLL_TO_MGDL;
+
+        }
+
+        if (lowLine < 1){
+            lowLine = OverviewPlugin.bgTargetLow;
+        }
+
+        if(highLine < 1){
+            highLine = OverviewPlugin.bgTargetHigh;
+        }
 
         long sgvLevel = 0l;
-        if (lastBG.value > highMark) {
+        if (lastBG.value > highLine) {
             sgvLevel = 1;
-        } else if (lastBG.value < lowMark) {
+        } else if (lastBG.value < lowLine) {
             sgvLevel = -1;
         }
         DataMap dataMap = new DataMap();
 
         int battery = getBatteryLevel(getApplicationContext());
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(profile.getUnits()));
-        dataMap.putDouble("timestamp", lastBG.getTimeIndex()); //TODO: change that to long (was like that in NW)
+        dataMap.putDouble("timestamp", lastBG.getTimeIndex());
         if(glucoseStatus == null) {
             dataMap.putString("slopeArrow", "" );
             dataMap.putString("delta", "");
@@ -179,8 +198,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         dataMap.putLong("sgvLevel", sgvLevel);
         dataMap.putInt("batteryLevel", (battery>=30)?1:0);
         dataMap.putDouble("sgvDouble", lastBG.value);
-        dataMap.putDouble("high", highMark);
-        dataMap.putDouble("low", lowMark);
+        dataMap.putDouble("high", highLine);
+        dataMap.putDouble("low", lowLine);
         return dataMap;
     }
 
@@ -347,37 +366,6 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
         }
 
-
-
-
-
-
-        //TODO: Adrian: replace fake data
-      /*  long from = startTimeWindow;
-        long to = (now + from)/2;
-        double amount = 0.5;
-
-
-
-
-        from = (long)(startTimeWindow + (1/8d)*(now - startTimeWindow));
-        double fromBasal = 0.5;
-        to = (long)(startTimeWindow + (2/8d)*(now - startTimeWindow));
-        double toBasal = 0.5;
-        amount = 3;
-        temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
-
-
-        from = (long)(startTimeWindow + (6/8d)*(now - startTimeWindow));
-        fromBasal = 0.8;
-        to = (long)(startTimeWindow + (7/8d)*(now - startTimeWindow));
-        toBasal = 0.8;
-        amount = 0;
-        temps.add(tempDatamap(from, fromBasal, to, toBasal, amount));
-
-*/
-
-
         DataMap dm = new DataMap();
         dm.putDataMapArrayList("basals", basals);
         dm.putDataMapArrayList("temps", temps);
@@ -421,9 +409,6 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (googleApiClient.isConnected()) {
 
             String status = "";
-
-            //TODO Adrian: Setting if short or medium string.
-
             boolean shortString = true;
 
             //Temp basal

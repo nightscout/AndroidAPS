@@ -399,7 +399,6 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
 
 
             public void run() {
-                //TODO:Wakelock?
                 setIsAnimated(true);
                 for (int i = 0; i <= 8 * 1000 / 40; i++) {
                     updateRainbow();

@@ -39,13 +39,14 @@ public class WearFragment extends Fragment implements FragmentBase {
             }
         });
 
+        view.findViewById(R.id.wear_opensettings).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getPlugin(getContext()).openSettings();
+            }
+        });
 
         return view;
     }
-
-
-
-    //TODO Adrian: setting for short/long status string
-    //TODO Adrian: resend buttons
 
 }

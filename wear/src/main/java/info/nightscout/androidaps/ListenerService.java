@@ -94,7 +94,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
                 String path = event.getDataItem().getUri().getPath();
                 if (path.equals(OPEN_SETTINGS)) {
-                    //TODO: OpenSettings
                     Intent intent = new Intent(this, NWPreferences.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
@@ -106,7 +105,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     messageIntent.putExtra("status", dataMap.toBundle());
                     LocalBroadcastManager.getInstance(this).sendBroadcast(messageIntent);
                 } else if (path.equals(BASAL_DATA_PATH)){
-                    //TODO Adrian receive basals in Watchfaces
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
