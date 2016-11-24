@@ -23,6 +23,7 @@ import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterServi
 public class WearPlugin implements PluginBase {
 
     static boolean fragmentEnabled = true;
+    static boolean fragmentVisible = false;
     private static WatchUpdaterService watchUS;
     private final Context ctx;
 
@@ -43,7 +44,7 @@ public class WearPlugin implements PluginBase {
 
     @Override
     public String getName() {
-        return "WearPlugin";
+        return "Wear";
     }
 
     @Override
@@ -53,7 +54,7 @@ public class WearPlugin implements PluginBase {
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return false;
+        return fragmentVisible;
     }
 
     @Override
@@ -71,7 +72,7 @@ public class WearPlugin implements PluginBase {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-
+        WearPlugin.fragmentVisible = fragmentVisible;
     }
 
     private void sendDataToWatch(boolean status, boolean basals, boolean bgValue){
@@ -88,9 +89,12 @@ public class WearPlugin implements PluginBase {
             if(status){
                 ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_STATUS));
             }
-
-
         }
+    }
+
+    void resendDataToWatch(){
+        ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_RESEND));
+
     }
 
 
@@ -124,12 +128,6 @@ public class WearPlugin implements PluginBase {
 
         sendDataToWatch(true, true, true);
     }
-
-   /* @Subscribe
-    public void onStatusEvent(final EventNewOpenLoopNotification ev) {
-        //TODO Adrian: Do they come through as notification cards already? update status?
-        sendDataToWatch();
-    }*/
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
