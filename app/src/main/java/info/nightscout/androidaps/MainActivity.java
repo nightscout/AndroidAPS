@@ -244,14 +244,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED){
-            if(permissions.length != 0){
+        if (permissions.length != 0) {
+            if (ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED) {
                 switch (requestCode) {
                     case CASE_STORAGE:
                         //show dialog after permission is granted
                         AlertDialog.Builder alert = new AlertDialog.Builder(this);
                         alert.setMessage(R.string.alert_dialog_storage_permission_text);
-                        alert.setPositiveButton(R.string.ok,null);
+                        alert.setPositiveButton(R.string.ok, null);
                         alert.show();
                         break;
                     case CASE_SMS:
