@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity {
                         //show dialog after permission is granted
                         AlertDialog.Builder alert = new AlertDialog.Builder(this);
                         alert.setMessage(R.string.alert_dialog_storage_permission_text);
-                        alert.setPositiveButton(R.string.alert_dialog_positive_button,null);
+                        alert.setPositiveButton(R.string.ok,null);
                         alert.show();
                         break;
                     case CASE_SMS:
