@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
@@ -39,14 +41,19 @@ public class MainActivity extends AppCompatActivity {
 
     private static KeepAliveReceiver keepAliveReceiver;
 
+    static final Integer STORAGE = 0x1;
+    static final Integer SMS = 0x2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        checkPermission();
         Iconify.with(new FontAwesomeModule());
         LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_main);
         checkEula();
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, STORAGE);
+        }
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
@@ -184,52 +191,37 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void checkPermission() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            if (!checkIfAlreadyhavePermission()) {requestForSpecificPermission();}
+    @Subscribe
+    public void onStatusEvent(final EventPreferenceChange ev) {
+        SharedPreferences smssettings = PreferenceManager.getDefaultSharedPreferences(this);
+        if (smssettings.getBoolean("smscommunicator_remotecommandsallowed", false)) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+                askForPermission(Manifest.permission.RECEIVE_SMS, SMS);
+            }
         }
     }
 
-    private boolean checkIfAlreadyhavePermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            return true;
+    private void askForPermission(String permission, Integer requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         }
-        else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_SMS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        else {
-            AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-            alert.setTitle("Restart");
-            alert.setMessage("Please Restart Android APS \notherwise Android APS will not work proper!");
-            alert.setPositiveButton("OK",null);
-            alert.show();
-            return false;
-        }
-    }
-
-    public void requestForSpecificPermission(){
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_SMS, Manifest.permission.READ_SMS, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 101);
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case 101:
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    //granted
-                }
-                else {
-                    //not granted
-                }
-                break;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED){
+            switch (requestCode) {
+                case 1:
+                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                    alert.setTitle("Restart");
+                    alert.setMessage("Please Restart Android APS \notherwise Android APS will not work proper!");
+                    alert.setPositiveButton("OK",null);
+                    alert.show();
+                    break;
+                case 2:
+                    break;
+            }
         }
     }
 }
