@@ -41,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static KeepAliveReceiver keepAliveReceiver;
 
-    static final Integer CASE_STORAGE = 0x1;
-    static final Integer CASE_SMS = 0x2;
+    static final int CASE_STORAGE = 0x1;
+    static final int CASE_SMS = 0x2;
+
+    private boolean askForSMS = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -195,12 +197,36 @@ public class MainActivity extends AppCompatActivity {
     //check for sms permission if enable in prefernces
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        SharedPreferences smssettings = PreferenceManager.getDefaultSharedPreferences(this);
-        if (smssettings.getBoolean("smscommunicator_remotecommandsallowed", false)) {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                askForPermission(new String[]{Manifest.permission.RECEIVE_SMS,
-                        Manifest.permission.SEND_SMS,
-                        Manifest.permission.RECEIVE_MMS}, CASE_SMS);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+            SharedPreferences smssettings = PreferenceManager.getDefaultSharedPreferences(this);
+            synchronized (this){
+                if (smssettings.getBoolean("smscommunicator_remotecommandsallowed", false)) {
+                    setAskForSMS();
+                }
+            }
+        }
+    }
+
+    private synchronized void setAskForSMS() {
+        askForSMS = true;
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        askForSMSPermissions();
+    }
+
+    private synchronized void askForSMSPermissions(){
+        if (askForSMS) { //only when settings were changed an MainActivity resumes.
+            askForSMS = false;
+            SharedPreferences smssettings = PreferenceManager.getDefaultSharedPreferences(this);
+            if (smssettings.getBoolean("smscommunicator_remotecommandsallowed", false)) {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    askForPermission(new String[]{Manifest.permission.RECEIVE_SMS,
+                            Manifest.permission.SEND_SMS,
+                            Manifest.permission.RECEIVE_MMS}, CASE_SMS);
+                }
             }
         }
     }
@@ -221,14 +247,14 @@ public class MainActivity extends AppCompatActivity {
         if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED){
             if(permissions.length != 0){
                 switch (requestCode) {
-                    case 1:
+                    case CASE_STORAGE:
                         //show dialog after permission is granted
                         AlertDialog.Builder alert = new AlertDialog.Builder(this);
                         alert.setMessage(R.string.alert_dialog_storage_permission_text);
                         alert.setPositiveButton(R.string.alert_dialog_positive_button,null);
                         alert.show();
                         break;
-                    case 2:
+                    case CASE_SMS:
                         break;
                 }
             }
