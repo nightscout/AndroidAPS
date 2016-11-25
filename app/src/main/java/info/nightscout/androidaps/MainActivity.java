@@ -52,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         checkEula();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            askForPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, CASE_STORAGE);
+            askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, CASE_STORAGE);
         }
         if (Config.logFunctionCalls)
             log.debug("onCreate");
@@ -197,14 +198,20 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences smssettings = PreferenceManager.getDefaultSharedPreferences(this);
         if (smssettings.getBoolean("smscommunicator_remotecommandsallowed", false)) {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-                askForPermission(Manifest.permission.RECEIVE_SMS, CASE_SMS);
+                askForPermission(new String[]{Manifest.permission.RECEIVE_SMS,
+                        Manifest.permission.SEND_SMS,
+                        Manifest.permission.RECEIVE_MMS}, CASE_SMS);
             }
         }
     }
 
-    private void askForPermission(String permission, Integer requestCode) {
-        if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
+    private void askForPermission(String[] permission, Integer requestCode) {
+        boolean test = false;
+        for (int i=0; i < permission.length; i++) {
+            test = test || (ContextCompat.checkSelfPermission(this, permission[i]) != PackageManager.PERMISSION_GRANTED);
+        }
+        if (test) {
+            ActivityCompat.requestPermissions(this, permission, requestCode);
         }
     }
 
@@ -212,16 +219,18 @@ public class MainActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if(ActivityCompat.checkSelfPermission(this, permissions[0]) == PackageManager.PERMISSION_GRANTED){
-            switch (requestCode) {
-                case 1:
-                    //show dialog after permission is granted
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setMessage(R.string.alert_dialog_storage_permission_text);
-                    alert.setPositiveButton(R.string.alert_dialog_positive_button,null);
-                    alert.show();
-                    break;
-                case 2:
-                    break;
+            if(permissions.length != 0){
+                switch (requestCode) {
+                    case 1:
+                        //show dialog after permission is granted
+                        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                        alert.setMessage(R.string.alert_dialog_storage_permission_text);
+                        alert.setPositiveButton(R.string.alert_dialog_positive_button,null);
+                        alert.show();
+                        break;
+                    case 2:
+                        break;
+                }
             }
         }
     }
