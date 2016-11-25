@@ -3,7 +3,7 @@ package info.nightscout.androidaps;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 
-import com.ustwo.clockwise.WatchMode;
+import com.ustwo.clockwise.common.WatchMode;
 
 public class LargeHome extends BaseWatchFace {
 

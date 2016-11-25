@@ -18,6 +18,7 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.view.WatchViewStub;
+import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Display;
@@ -29,10 +30,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.wearable.DataMap;
-import com.ustwo.clockwise.WatchFace;
-import com.ustwo.clockwise.WatchFaceTime;
-import com.ustwo.clockwise.WatchMode;
-import com.ustwo.clockwise.WatchShape;
+import com.ustwo.clockwise.wearable.WatchFace;
+import com.ustwo.clockwise.common.WatchFaceTime;
+import com.ustwo.clockwise.common.WatchMode;
+import com.ustwo.clockwise.common.WatchShape;
+import com.ustwo.clockwise.common.util.Logr;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -134,6 +136,19 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         ListenerService.requestData(this);
         wakeLock.acquire(50);
     }
+
+    @Override
+    protected void onTapCommand(int tapType, int x, int y, long eventTime) {
+        statusView.setText("x:" + x +" y:" + y + " t:" + tapType);
+        invalidate();
+    }
+
+    @Override
+    protected WatchFaceStyle getWatchFaceStyle(){
+        return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
+    }
+
+
 
     public int ageLevel() {
         if(timeSince() <= (1000 * 60 * 12)) {

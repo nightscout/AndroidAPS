@@ -26,8 +26,8 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.google.android.gms.wearable.DataMap;
-import com.ustwo.clockwise.WatchFace;
-import com.ustwo.clockwise.WatchFaceTime;
+import com.ustwo.clockwise.wearable.WatchFace;
+import com.ustwo.clockwise.common.WatchFaceTime;
 
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -3,9 +3,11 @@ package info.nightscout.androidaps;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 
-import com.ustwo.clockwise.WatchMode;
+import com.ustwo.clockwise.common.WatchMode;
 
 import lecho.lib.hellocharts.util.ChartUtils;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 public class Home extends BaseWatchFace {
 
