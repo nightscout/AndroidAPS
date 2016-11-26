@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
 
 import java.text.SimpleDateFormat;
@@ -159,7 +160,7 @@ public class BgGraphBuilder {
 
         Line basalLine = new Line(pointValues);
         basalLine.setHasPoints(false);
-        basalLine.setColor(Color.parseColor("#00BFFF"));
+        basalLine.setColor(ContextCompat.getColor(context, R.color.basalLine_primary));
         basalLine.setPathEffect(new DashPathEffect(new float[]{4f, 3f}, 4f));
         basalLine.setStrokeWidth(highlight?2:1);
         return basalLine;
@@ -211,10 +212,10 @@ public class BgGraphBuilder {
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);
         if (isHighlightLine){
-            valueLine.setColor(Color.parseColor("#00BFFF"));
+            valueLine.setColor(ContextCompat.getColor(context, R.color.valueLine_highlight));
             valueLine.setStrokeWidth(1);
         }else {
-            valueLine.setColor(Color.BLUE);
+            valueLine.setColor(ContextCompat.getColor(context, R.color.valueLine_primary));
             valueLine.setStrokeWidth(strokeWidth);
             valueLine.setFilled(true);
         }
@@ -289,6 +290,8 @@ public class BgGraphBuilder {
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         yAxis.setValues(axisValues);
         yAxis.setHasLines(false);
+        yAxis.setLineColor(ContextCompat.getColor(context, R.color.yaxis_gridline));
+        yAxis.setTextColor(ContextCompat.getColor(context, R.color.yaxis_txt));
         return yAxis;
     }
 
@@ -329,6 +332,8 @@ public class BgGraphBuilder {
         xAxis.setValues(xAxisValues);
         xAxis.setTextSize(10);
         xAxis.setHasLines(true);
+        xAxis.setLineColor(ContextCompat.getColor(context, R.color.xaxis_gridline));
+        xAxis.setTextColor(ContextCompat.getColor(context, R.color.xaxis_txt));
         return xAxis;
     }
 

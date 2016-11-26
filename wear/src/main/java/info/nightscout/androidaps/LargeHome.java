@@ -1,6 +1,7 @@
 package info.nightscout.androidaps;
 
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 
 import com.ustwo.clockwise.common.WatchMode;
@@ -18,57 +19,55 @@ public class LargeHome extends BaseWatchFace {
 
     @Override
     protected void setColorDark(){
-        mTime.setTextColor(Color.WHITE);
-        mRelativeLayout.setBackgroundColor(Color.BLACK);
-        mLinearLayout.setBackgroundColor(Color.WHITE);
+        mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mLinearLayout));
+        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mRelativeLayout));
         if (sgvLevel == 1) {
-            mSgv.setTextColor(Color.YELLOW);
-            mDirection.setTextColor(Color.YELLOW);
-            mDelta.setTextColor(Color.YELLOW);
+            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+            mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
+            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
         } else if (sgvLevel == 0) {
-            mSgv.setTextColor(Color.WHITE);
-            mDirection.setTextColor(Color.WHITE);
-            mDelta.setTextColor(Color.WHITE);
+            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
         } else if (sgvLevel == -1) {
-            mSgv.setTextColor(Color.RED);
-            mDirection.setTextColor(Color.RED);
-            mDelta.setTextColor(Color.RED);
+            mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+            mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
+            mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor));
         }
+
         if (ageLevel == 1) {
-            mTimestamp.setTextColor(Color.BLACK);
+            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp1_home));
         } else {
-            mTimestamp.setTextColor(Color.RED);
+            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp));
         }
 
         if (batteryLevel == 1) {
-            mUploaderBattery.setTextColor(Color.BLACK);
+            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mUploaderBattery1_home));
         } else {
-            mUploaderBattery.setTextColor(Color.RED);
+            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mUploaderBattery_home));
         }
 
-        mStatus.setTextColor(Color.BLACK);
-
+        mStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mStatus_home));
     }
-
-
 
     @Override
     protected void setColorBright() {
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-            mRelativeLayout.setBackgroundColor(Color.WHITE);
-            mLinearLayout.setBackgroundColor(Color.BLACK);
+            mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mLinearLayout));
+            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mRelativeLayout));
             if (sgvLevel == 1) {
-                mSgv.setTextColor(Color.YELLOW);
-                mDirection.setTextColor(Color.YELLOW);
-                mDelta.setTextColor(Color.YELLOW);
+                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
+                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
+                mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
             } else if (sgvLevel == 0) {
-                mSgv.setTextColor(Color.BLACK);
-                mDirection.setTextColor(Color.BLACK);
-                mDelta.setTextColor(Color.BLACK);
+                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
+                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
+                mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
             } else if (sgvLevel == -1) {
-                mSgv.setTextColor(Color.RED);
-                mDirection.setTextColor(Color.RED);
-                mDelta.setTextColor(Color.RED);
+                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
+                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
+                mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
             }
 
             if (ageLevel == 1) {
