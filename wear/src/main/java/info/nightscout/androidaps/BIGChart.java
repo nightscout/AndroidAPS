@@ -80,6 +80,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     private String sgvString = "--";
     private String externalStatusString = "no status";
     private TextView statusView;
+    private long chartTapTime = 0l;
 
     @Override
     public void onCreate() {
@@ -139,8 +140,23 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
 
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
-        statusView.setText("x:" + x +" y:" + y + " t:" + tapType);
-        invalidate();
+
+        if (tapType == TAP_TYPE_TAP&&
+                x >=chart.getLeft() &&
+                x <= chart.getRight()&&
+                y >= chart.getTop() &&
+                y <= chart.getBottom()){
+            if (eventTime - chartTapTime < 800){
+                changeChartTimeframe();
+            }
+            chartTapTime = eventTime;
+        }
+    }
+
+    private void changeChartTimeframe() {
+        int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
+        timeframe = (timeframe%5) + 1;
+        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
     }
 
     @Override
