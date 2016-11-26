@@ -18,7 +18,6 @@ import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.wearable.view.WatchViewStub;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.format.DateFormat;
@@ -36,15 +35,11 @@ import com.ustwo.clockwise.wearable.WatchFace;
 import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.common.WatchMode;
 import com.ustwo.clockwise.common.WatchShape;
-import com.ustwo.clockwise.common.util.Logr;
 
 import java.util.ArrayList;
 import java.util.Date;
 
-import lecho.lib.hellocharts.util.ChartUtils;
 import lecho.lib.hellocharts.view.LineChartView;
-
-import static java.security.AccessController.getContext;
 
 /**
  * Created by adrianLxM.
@@ -461,7 +456,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     protected void setColorDark() {
         mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
         statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mRelativeLayout));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         if (sgvLevel == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
@@ -500,9 +495,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     protected void setColorBright() {
 
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-            mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mTime));
-            statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_statusView));
-            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mRelativeLayout));
+            mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_bigchart_time));
+            statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_bigchart_status));
+            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
             if (sgvLevel == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));

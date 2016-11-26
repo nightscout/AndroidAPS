@@ -212,12 +212,11 @@ public class BgGraphBuilder {
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);
         if (isHighlightLine){
-            valueLine.setColor(ContextCompat.getColor(context, R.color.valueLine_highlight));
+            valueLine.setColor(ContextCompat.getColor(context, R.color.tempbasal_highlight));
             valueLine.setStrokeWidth(1);
         }else {
-            valueLine.setColor(ContextCompat.getColor(context, R.color.valueLine_primary));
+            valueLine.setColor(ContextCompat.getColor(context, R.color.tempbasal_primary));
             valueLine.setStrokeWidth(strokeWidth);
-            valueLine.setFilled(true);
         }
         return valueLine;
     }

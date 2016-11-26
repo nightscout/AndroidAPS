@@ -21,7 +21,7 @@ public class LargeHome extends BaseWatchFace {
     protected void setColorDark(){
         mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mLinearLayout));
         mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mRelativeLayout));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         if (sgvLevel == 1) {
             mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
             mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor));
@@ -43,9 +43,9 @@ public class LargeHome extends BaseWatchFace {
         }
 
         if (batteryLevel == 1) {
-            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mUploaderBattery1_home));
+            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBattery));
         } else {
-            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mUploaderBattery_home));
+            mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBatteryEmpty));
         }
 
         mStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mStatus_home));
@@ -54,8 +54,8 @@ public class LargeHome extends BaseWatchFace {
     @Override
     protected void setColorBright() {
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
-            mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mLinearLayout));
-            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_mRelativeLayout));
+            mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_stripe_background));
+            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
             if (sgvLevel == 1) {
                 mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
                 mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));

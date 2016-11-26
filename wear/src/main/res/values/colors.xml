@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- light colors -->
-    <color name="light_mTime">@color/black</color>
-    <color name="light_statusView">@color/black</color>
-    <color name="light_mRelativeLayout">@color/grey_50</color>
-    <color name="light_mLinearLayout">@color/black</color>
+    <color name="light_bigchart_time">@color/black</color>
+    <color name="light_bigchart_status">@color/black</color>
+    <color name="light_background">@color/grey_50</color>
+    <color name="light_stripe_background">@color/black</color>
     <color name="light_mTimestamp1">@color/black</color>
     <color name="light_mTimestamp1_home">@color/grey_50</color>
     <color name="light_mTimestamp">@color/red_600</color>
@@ -12,9 +12,9 @@
     <color name="light_inter_mTimestamp">@color/grey_50</color>
     <color name="light_inter_statusView">@color/grey_50</color>
     <color name="light_inter_mRelativeLayout">@color/black</color>
-    <color name="light_mUploaderBattery1_home">@color/black</color>
-    <color name="light_mUploaderBattery_home">@color/red_600</color>
-    <color name="light_mStatus_home">@color/black</color>
+    <color name="light_uploaderBattery">@color/black</color>
+    <color name="light_uploaderBatteryEmpty">@color/red_600</color>
+    <color name="light_status_home">@color/black</color>
 
     <color name="light_highColor">@color/yellow_700</color>
     <color name="light_lowColor">@color/red_600</color>
@@ -27,13 +27,13 @@
     <!-- dark colors -->
     <color name="dark_mTime">@color/grey_50</color>
     <color name="dark_statusView">@color/grey_50</color>
-    <color name="dark_mRelativeLayout">@color/black</color>
+    <color name="dark_background">@color/black</color>
     <color name="dark_mLinearLayout">@color/grey_50</color>
     <color name="dark_mTimestamp1">@color/grey_50</color>
     <color name="dark_mTimestamp1_home">@color/black</color>
     <color name="dark_mTimestamp">@color/red_600</color>
-    <color name="dark_mUploaderBattery1_home">@color/black</color>
-    <color name="dark_mUploaderBattery_home">@color/red_600</color>
+    <color name="dark_uploaderBattery">@color/black</color>
+    <color name="dark_uploaderBatteryEmpty">@color/red_600</color>
     <color name="dark_mStatus_home">@color/black</color>
 
     <color name="dark_highColor">@color/yellow_700</color>
@@ -48,8 +48,8 @@
 
     <!-- basal colors -->
     <color name="basalLine_primary">@color/blue_300</color>
-    <color name="valueLine_highlight">@color/blue_300</color>
-    <color name="valueLine_primary">@color/blue_600</color>
+    <color name="tempbasal_highlight">@color/blue_300</color>
+    <color name="tempbasal_primary">@color/BLUE</color>
 
 
     <!-- Material Design - Color Palette -->
@@ -352,6 +352,7 @@
     <!-- Grey -->
 
     <!-- Blue Grey -->
+    <color name="BLUE">#0000FF</color>
     <color name="blue_grey_50">#ECEFF1</color>
     <color name="blue_grey_100">#CFD8DC</color>
     <color name="blue_grey_200">#B0BEC5</color>
