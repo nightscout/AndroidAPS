@@ -41,10 +41,14 @@
     <color name="dark_midColor">@color/grey_50</color>
 
     <!-- graph colors -->
-    <color name="xaxis_gridline">@color/grey_50</color>
-    <color name="xaxis_txt">@color/grey_50</color>
-    <color name="yaxis_gridline">@color/grey_50</color>
-    <color name="yaxis_txt">@color/grey_50</color>
+    <color name="xaxis_gridline_dark">@color/grey_50</color>
+    <color name="xaxis_txt_dark">@color/grey_50</color>
+    <color name="yaxis_gridline_dark">@color/grey_50</color>
+    <color name="yaxis_txt_dark">@color/grey_50</color>
+    <color name="xaxis_gridline_light">@color/black</color>
+    <color name="xaxis_txt_light">@color/black</color>
+    <color name="yaxis_gridline_light">@color/black</color>
+    <color name="yaxis_txt_light">@color/black</color>
 
     <!-- basal colors -->
     <color name="basalLine_primary">@color/blue_300</color>
