@@ -87,7 +87,7 @@ public class MainApp extends Application {
             if (Config.SMSCOMMUNICATORENABLED)
                 pluginsList.add(SmsCommunicatorFragment.getPlugin());
 
-            pluginsList.add(WearFragment.getPlugin(this));
+            if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
 
             pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
 
