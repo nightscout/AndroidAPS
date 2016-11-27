@@ -2,11 +2,14 @@ package info.nightscout.androidaps;
 
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.LayoutInflater;
 
 import com.ustwo.clockwise.common.WatchMode;
 
 public class Home extends BaseWatchFace {
+
+    private long chartTapTime = 0;
 
     @Override
     public void onCreate() {
@@ -15,6 +18,43 @@ public class Home extends BaseWatchFace {
         layoutView = inflater.inflate(R.layout.activity_home, null);
         performViewSetup();
     }
+
+    @Override
+    protected void onTapCommand(int tapType, int x, int y, long eventTime) {
+
+        if (tapType == TAP_TYPE_TAP&&
+                x >=chart.getLeft() &&
+                x <= chart.getRight()&&
+                y >= chart.getTop() &&
+                y <= chart.getBottom()){
+            if (eventTime - chartTapTime < 800){
+                changeChartTimeframe();
+            }
+            chartTapTime = eventTime;
+        }
+    }
+
+    private void changeChartTimeframe() {
+        int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
+        timeframe = (timeframe%5) + 1;
+        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
+    }
+
+    protected void onWatchModeChanged(WatchMode watchMode) {
+        if (! sharedPrefs.getBoolean("dark", true)){
+            //in bright mode: different colours if active:
+            setColor();
+        } else {
+            //TODO: Handle low bit ambient
+        }
+
+    }
+
+    @Override
+    protected WatchFaceStyle getWatchFaceStyle(){
+        return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
+    }
+
 
     protected void setColorDark() {
         mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
@@ -52,6 +92,8 @@ public class Home extends BaseWatchFace {
             highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
             lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
             midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
+            gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
+
             singleLine = false;
             pointSize = 2;
             setupCharts();
@@ -96,39 +138,13 @@ public class Home extends BaseWatchFace {
                 highColor = ContextCompat.getColor(getApplicationContext(), R.color.light_highColor);
                 lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor);
                 midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor);
+                gridColor = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
                 singleLine = false;
                 pointSize = 2;
                 setupCharts();
             }
         } else {
-            mRelativeLayout.setBackgroundColor(Color.BLACK);
-            mLinearLayout.setBackgroundColor(Color.WHITE);
-            if (sgvLevel == 1) {
-                mSgv.setTextColor(Color.YELLOW);
-                mDirection.setTextColor(Color.YELLOW);
-                mDelta.setTextColor(Color.YELLOW);
-            } else if (sgvLevel == 0) {
-                mSgv.setTextColor(Color.WHITE);
-                mDirection.setTextColor(Color.WHITE);
-                mDelta.setTextColor(Color.WHITE);
-            } else if (sgvLevel == -1) {
-                mSgv.setTextColor(Color.RED);
-                mDirection.setTextColor(Color.RED);
-                mDelta.setTextColor(Color.RED);
-            }
-            mStatus.setTextColor(Color.BLACK);
-            mUploaderBattery.setTextColor(Color.BLACK);
-            mTimestamp.setTextColor(Color.BLACK);
-
-            mTime.setTextColor(Color.WHITE);
-            if (chart != null) {
-                highColor = Color.YELLOW;
-                midColor = Color.WHITE;
-                lowColor = Color.RED;
-                singleLine = true;
-                pointSize = 2;
-                setupCharts();
-            }
+            setColorDark();
         }
     }
 }

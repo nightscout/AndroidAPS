@@ -23,6 +23,8 @@
     <color name="light_highColor_inter">@color/yellow_700</color>
     <color name="light_lowColor_inter">@color/red_600</color>
     <color name="light_midColor_inter">@color/grey_50</color>
+    <color name="light_gridColor">@color/black</color>
+
 
     <!-- dark colors -->
     <color name="dark_mTime">@color/grey_50</color>
@@ -36,19 +38,10 @@
     <color name="dark_uploaderBatteryEmpty">@color/red_600</color>
     <color name="dark_mStatus_home">@color/black</color>
 
-    <color name="dark_highColor">@color/yellow_700</color>
-    <color name="dark_lowColor">@color/red_600</color>
+    <color name="dark_highColor">@color/yellow_A200</color>
+    <color name="dark_lowColor">@color/RED</color>
     <color name="dark_midColor">@color/grey_50</color>
-
-    <!-- graph colors -->
-    <color name="xaxis_gridline_dark">@color/grey_50</color>
-    <color name="xaxis_txt_dark">@color/grey_50</color>
-    <color name="yaxis_gridline_dark">@color/grey_50</color>
-    <color name="yaxis_txt_dark">@color/grey_50</color>
-    <color name="xaxis_gridline_light">@color/black</color>
-    <color name="xaxis_txt_light">@color/black</color>
-    <color name="yaxis_gridline_light">@color/black</color>
-    <color name="yaxis_txt_light">@color/black</color>
+    <color name="dark_gridColor">@color/grey_50</color>
 
     <!-- basal colors -->
     <color name="basalLine_primary">@color/blue_300</color>
@@ -72,6 +65,7 @@
     <color name="red_A200">#FF5252</color>
     <color name="red_A400">#FF1744</color>
     <color name="red_A700">#D50000</color>
+    <color name="RED">#FF0000</color>
     <!-- Red -->
 
     <!-- Pink -->

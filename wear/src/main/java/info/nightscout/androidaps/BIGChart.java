@@ -31,6 +31,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.wearable.DataMap;
+import com.ustwo.clockwise.common.util.Logr;
 import com.ustwo.clockwise.wearable.WatchFace;
 import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.common.WatchMode;
@@ -54,6 +55,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public int highColor = Color.YELLOW;
     public int lowColor = Color.RED;
     public int midColor = Color.WHITE;
+    public int gridColour = Color.WHITE;
     public int pointSize = 2;
     public boolean singleLine = false;
     public boolean layoutSet = false;
@@ -157,6 +159,17 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         timeframe = (timeframe%5) + 1;
         sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
     }
+
+    protected void onWatchModeChanged(WatchMode watchMode) {
+        if (! sharedPrefs.getBoolean("dark", true)){
+            //in bright mode: different colours if active:
+            setColor();
+        } else {
+            //TODO: Handle low bit ambient
+        }
+
+    }
+
 
     @Override
     protected WatchFaceStyle getWatchFaceStyle(){
@@ -477,13 +490,11 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp));
         }
 
-        if (batteryLevel == 1) {
-        } else {
-        }
         if (chart != null) {
             highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
             lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
             midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
+            gridColour = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
             singleLine = false;
             pointSize = 2;
             setupCharts();
@@ -522,37 +533,13 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 highColor = ContextCompat.getColor(getApplicationContext(), R.color.light_highColor);
                 lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor);
                 midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor);
+                gridColour = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
                 singleLine = false;
                 pointSize = 2;
                 setupCharts();
             }
         } else {
-            mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_inter_mTime));
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_inter_mTimestamp));
-            statusView.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_inter_statusView));
-            mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_inter_mRelativeLayout));
-            if (sgvLevel == 1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_highColor));
-            } else if (sgvLevel == 0) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_midColor));
-            } else if (sgvLevel == -1) {
-                mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-                mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-                mAvgDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor));
-            }
-
-            if (chart != null) {
-                highColor = ContextCompat.getColor(getApplicationContext(), R.color.light_highColor_inter);
-                lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor_inter);
-                midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor_inter);
-                singleLine = true;
-                pointSize = 2;
-                setupCharts();
-            }
+            setColorDark();
         }
     }
 
@@ -608,9 +595,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (singleLine) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, gridColour, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, gridColour, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

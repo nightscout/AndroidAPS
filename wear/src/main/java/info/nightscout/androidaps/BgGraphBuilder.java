@@ -40,6 +40,7 @@ public class BgGraphBuilder {
     public int highColor;
     public int lowColor;
     public int midColor;
+    public int gridColour;
     public boolean singleLine = false;
 
     private double endHour;
@@ -49,7 +50,7 @@ public class BgGraphBuilder {
     public Viewport viewport;
 
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int gridColour, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -64,9 +65,10 @@ public class BgGraphBuilder {
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
+        this.gridColour = gridColour;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -80,6 +82,7 @@ public class BgGraphBuilder {
         this.timespan = timespan;
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
+        this.gridColour = gridColour;
     }
 
     public LineChartData lineData() {
@@ -191,7 +194,6 @@ public class BgGraphBuilder {
         inRangeValuesLine.setColor(midColor);
         if(singleLine) {
             inRangeValuesLine.setHasLines(true);
-            inRangeValuesLine.setHasLines(true);
             inRangeValuesLine.setHasPoints(false);
             inRangeValuesLine.setStrokeWidth(pointSize);
         } else {
@@ -292,15 +294,7 @@ public class BgGraphBuilder {
         List<AxisValue> axisValues = new ArrayList<AxisValue>();
         yAxis.setValues(axisValues);
         yAxis.setHasLines(false);
-        boolean themecolor = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("dark", true);
-        if (themecolor) {
-            yAxis.setLineColor(ContextCompat.getColor(context, R.color.yaxis_gridline_dark));
-            yAxis.setTextColor(ContextCompat.getColor(context, R.color.yaxis_txt_dark));
-        }
-        else {
-            yAxis.setLineColor(ContextCompat.getColor(context, R.color.yaxis_gridline_light));
-            yAxis.setTextColor(ContextCompat.getColor(context, R.color.yaxis_txt_light));
-        }
+        yAxis.setLineColor(gridColour);
         return yAxis;
     }
 
@@ -341,15 +335,9 @@ public class BgGraphBuilder {
         xAxis.setValues(xAxisValues);
         xAxis.setTextSize(10);
         xAxis.setHasLines(true);
-        boolean themecolor = PreferenceManager.getDefaultSharedPreferences(context).getBoolean("dark", true);
-        if (themecolor) {
-            xAxis.setLineColor(ContextCompat.getColor(context, R.color.xaxis_gridline_dark));
-            xAxis.setTextColor(ContextCompat.getColor(context, R.color.xaxis_txt_dark));
-        }
-        else {
-            xAxis.setLineColor(ContextCompat.getColor(context, R.color.xaxis_gridline_light));
-            xAxis.setTextColor(ContextCompat.getColor(context, R.color.xaxis_txt_light));
-        }
+        xAxis.setLineColor(gridColour);
+        xAxis.setTextColor(gridColour);
+
         return xAxis;
     }
 
