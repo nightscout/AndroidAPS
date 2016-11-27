@@ -61,7 +61,7 @@ public class BgGraphBuilder {
         this.highMark = aBgList.get(aBgList.size() - 1).high;
         this.lowMark = aBgList.get(aBgList.size() - 1).low;
         this.pointSize = aPointSize;
-        this.singleLine = true;
+        this.singleLine = false;
         this.midColor = aMidColor;
         this.lowColor = aMidColor;
         this.highColor = aMidColor;
