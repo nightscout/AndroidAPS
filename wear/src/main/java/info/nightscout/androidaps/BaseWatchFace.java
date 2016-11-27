@@ -26,6 +26,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.wearable.DataMap;
+import com.ustwo.clockwise.common.WatchMode;
 import com.ustwo.clockwise.wearable.WatchFace;
 import com.ustwo.clockwise.common.WatchFaceTime;
 import com.ustwo.clockwise.common.WatchShape;
@@ -53,8 +54,8 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     public int gridColor = Color.WHITE;
     public int basalBackgroundColor = Color.BLUE;
     public int basalCenterColor = Color.BLUE;
+    public boolean lowResMode = false;
     public int pointSize = 2;
-    public boolean singleLine = false;
     public boolean layoutSet = false;
     public int missed_readings_alert_id = 818;
     public BgGraphBuilder bgGraphBuilder;
@@ -312,15 +313,29 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 
     public void setColor() {
-        if (sharedPrefs.getBoolean("dark", true)) {
+        if(lowResMode){
+            setColorLowRes();
+        } else if (sharedPrefs.getBoolean("dark", true)) {
             setColorDark();
         } else {
             setColorBright();
         }
-
     }
 
-    
+    protected void onWatchModeChanged(WatchMode watchMode) {
+
+        if(lowResMode ^ isLowRes(watchMode)){ //if there was a change in lowResMode
+            lowResMode = isLowRes(watchMode);
+            setColor();
+        } else if (! sharedPrefs.getBoolean("dark", true)){
+            //in bright mode: different colours if active:
+            setColor();
+        }
+    }
+
+    private boolean isLowRes(WatchMode watchMode) {
+        return (watchMode == WatchMode.LOW_BIT) || (watchMode == WatchMode.LOW_BIT_BURN_IN) || (watchMode == WatchMode.LOW_BIT_BURN_IN);
+    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key){
@@ -335,6 +350,7 @@ public  abstract class BaseWatchFace extends WatchFace implements SharedPreferen
     }
 protected abstract void setColorDark();
     protected abstract void setColorBright();
+    protected abstract void setColorLowRes();
 
 
     public void missedReadingAlert() {
@@ -348,18 +364,12 @@ protected abstract void setColorDark();
 
         ArrayList<DataMap> entries = dataMap.getDataMapArrayList("entries");
         if (entries != null) {
+            bgDataList = new ArrayList<BgWatchData>();
             for (DataMap entry : entries) {
                 double sgv = entry.getDouble("sgvDouble");
                 double high = entry.getDouble("high");
                 double low = entry.getDouble("low");
                 double timestamp = entry.getDouble("timestamp");
-
-                final int size = bgDataList.size();
-                if (size > 0) {
-                    if (bgDataList.get(size - 1).timestamp == timestamp)
-                        continue; // Ignore duplicates.
-                }
-
                 bgDataList.add(new BgWatchData(sgv, high, low, timestamp));
             }
         } else {
@@ -388,7 +398,7 @@ protected abstract void setColorDark();
     public void setupCharts() {
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
-            if (singleLine) {
+            if (lowResMode) {
                 bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, gridColor, basalBackgroundColor, basalCenterColor, timeframe);
             } else {
                 bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, timeframe);

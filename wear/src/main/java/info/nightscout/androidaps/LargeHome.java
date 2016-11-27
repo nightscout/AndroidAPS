@@ -16,7 +16,6 @@ public class LargeHome extends BaseWatchFace {
         performViewSetup();
     }
 
-
     @Override
     protected void setColorDark(){
         mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mLinearLayout));
@@ -39,7 +38,7 @@ public class LargeHome extends BaseWatchFace {
         if (ageLevel == 1) {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp1_home));
         } else {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp));
+            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
         if (batteryLevel == 1) {
@@ -105,5 +104,18 @@ public class LargeHome extends BaseWatchFace {
             mStatus.setTextColor(Color.BLACK);
             mTime.setTextColor(Color.WHITE);
         }
+    }
+
+    @Override
+    protected void setColorLowRes() {
+        mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mLinearLayout));
+        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
+        mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp1_home));
+        mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBattery));
+        mStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mStatus_home));
     }
 }

@@ -52,6 +52,7 @@ public class BgGraphBuilder {
     public Viewport viewport;
 
 
+    //used for low resolution screen.
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
@@ -72,7 +73,6 @@ public class BgGraphBuilder {
         this.basalBackgroundColor = basalBackgroundColor;
     }
 
-    // TODO: use for ambient mode!
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago

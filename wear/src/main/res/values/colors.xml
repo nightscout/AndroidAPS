@@ -31,9 +31,9 @@
     <color name="dark_statusView">@color/grey_50</color>
     <color name="dark_background">@color/black</color>
     <color name="dark_mLinearLayout">@color/grey_50</color>
-    <color name="dark_mTimestamp1">@color/grey_50</color>
+    <color name="dark_Timestamp">@color/grey_50</color>
     <color name="dark_mTimestamp1_home">@color/black</color>
-    <color name="dark_mTimestamp">@color/red_600</color>
+    <color name="dark_TimestampOld">@color/red_600</color>
     <color name="dark_uploaderBattery">@color/black</color>
     <color name="dark_uploaderBatteryEmpty">@color/red_600</color>
     <color name="dark_mStatus_home">@color/black</color>
@@ -46,6 +46,8 @@
     <!-- basal colors -->
     <color name="basal_light">@color/blue_300</color>
     <color name="basal_dark">@color/BLUE</color>
+    <color name="basal_light_lowres">@color/grey_300</color>
+    <color name="basal_dark_lowres">@color/grey_500</color>
 
 
     <!-- Material Design - Color Palette -->

@@ -40,16 +40,6 @@ public class Home extends BaseWatchFace {
         sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
     }
 
-    protected void onWatchModeChanged(WatchMode watchMode) {
-        if (! sharedPrefs.getBoolean("dark", true)){
-            //in bright mode: different colours if active:
-            setColor();
-        } else {
-            //TODO: Handle low bit ambient
-        }
-
-    }
-
     @Override
     protected WatchFaceStyle getWatchFaceStyle(){
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
@@ -77,7 +67,7 @@ public class Home extends BaseWatchFace {
         if (ageLevel == 1) {
             mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp1_home));
         } else {
-            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp));
+            mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_TimestampOld));
         }
 
         if (batteryLevel == 1) {
@@ -95,10 +85,28 @@ public class Home extends BaseWatchFace {
             gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
             basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
             basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
-            singleLine = false;
             pointSize = 2;
             setupCharts();
         }
+    }
+
+    protected void setColorLowRes() {
+        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
+        mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
+        if (chart != null) {
+            highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
+            lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
+            midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
+            gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
+            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark_lowres);
+            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light_lowres);
+            pointSize = 2;
+            setupCharts();
+        }
+
     }
 
 
@@ -142,7 +150,6 @@ public class Home extends BaseWatchFace {
                 gridColor = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
                 basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
                 basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-                singleLine = false;
                 pointSize = 2;
                 setupCharts();
             }
