@@ -56,6 +56,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     public int lowColor = Color.RED;
     public int midColor = Color.WHITE;
     public int gridColour = Color.WHITE;
+    public int basalBackgroundColor = Color.BLUE;
+    public int basalCenterColor = Color.BLUE;
     public int pointSize = 2;
     public boolean singleLine = false;
     public boolean layoutSet = false;
@@ -495,6 +497,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
             lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
             midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
             gridColour = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
+            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
+            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
             singleLine = false;
             pointSize = 2;
             setupCharts();
@@ -534,6 +538,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor);
                 midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor);
                 gridColour = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
+                basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
+                basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
                 singleLine = false;
                 pointSize = 2;
                 setupCharts();
@@ -595,9 +601,9 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         if(bgDataList.size() > 0) { //Dont crash things just because we dont have values, people dont like crashy things
             int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
             if (singleLine) {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, gridColour, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, midColor, gridColour, basalBackgroundColor, basalCenterColor, timeframe);
             } else {
-                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, gridColour, timeframe);
+                bgGraphBuilder = new BgGraphBuilder(getApplicationContext(), bgDataList, tempWatchDataList, basalWatchDataList, pointSize, highColor, lowColor, midColor, gridColour, basalBackgroundColor, basalCenterColor, timeframe);
             }
 
             chart.setLineChartData(bgGraphBuilder.lineData());

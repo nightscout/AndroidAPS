@@ -93,7 +93,8 @@ public class Home extends BaseWatchFace {
             lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
             midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
             gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-
+            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
+            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
             singleLine = false;
             pointSize = 2;
             setupCharts();
@@ -139,6 +140,8 @@ public class Home extends BaseWatchFace {
                 lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor);
                 midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor);
                 gridColor = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
+                basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
+                basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
                 singleLine = false;
                 pointSize = 2;
                 setupCharts();

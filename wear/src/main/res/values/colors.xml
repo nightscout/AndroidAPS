@@ -44,9 +44,8 @@
     <color name="dark_gridColor">@color/grey_50</color>
 
     <!-- basal colors -->
-    <color name="basalLine_primary">@color/blue_300</color>
-    <color name="tempbasal_highlight">@color/blue_300</color>
-    <color name="tempbasal_primary">@color/BLUE</color>
+    <color name="basal_light">@color/blue_300</color>
+    <color name="basal_dark">@color/BLUE</color>
 
 
     <!-- Material Design - Color Palette -->

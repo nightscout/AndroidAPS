@@ -41,6 +41,8 @@ public class BgGraphBuilder {
     public int lowColor;
     public int midColor;
     public int gridColour;
+    public int basalCenterColor;
+    public int basalBackgroundColor;
     public boolean singleLine = false;
 
     private double endHour;
@@ -50,7 +52,7 @@ public class BgGraphBuilder {
     public Viewport viewport;
 
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int gridColour, int timespan) {
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -66,9 +68,12 @@ public class BgGraphBuilder {
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
         this.gridColour = gridColour;
+        this.basalCenterColor = basalCenterColor;
+        this.basalBackgroundColor = basalBackgroundColor;
     }
 
-    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int timespan) {
+    // TODO: use for ambient mode!
+    public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
         end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
         start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
@@ -83,6 +88,8 @@ public class BgGraphBuilder {
         this.tempWatchDataList = tempWatchDataList;
         this.basalWatchDataList = basalWatchDataList;
         this.gridColour = gridColour;
+        this.basalCenterColor = basalCenterColor;
+        this.basalBackgroundColor = basalBackgroundColor;
     }
 
     public LineChartData lineData() {
@@ -163,7 +170,7 @@ public class BgGraphBuilder {
 
         Line basalLine = new Line(pointValues);
         basalLine.setHasPoints(false);
-        basalLine.setColor(ContextCompat.getColor(context, R.color.basalLine_primary));
+        basalLine.setColor(basalCenterColor);
         basalLine.setPathEffect(new DashPathEffect(new float[]{4f, 3f}, 4f));
         basalLine.setStrokeWidth(highlight?2:1);
         return basalLine;
@@ -215,10 +222,10 @@ public class BgGraphBuilder {
         Line valueLine = new Line(lineValues);
         valueLine.setHasPoints(false);
         if (isHighlightLine){
-            valueLine.setColor(ContextCompat.getColor(context, R.color.tempbasal_highlight));
+            valueLine.setColor(basalCenterColor);
             valueLine.setStrokeWidth(1);
         }else {
-            valueLine.setColor(ContextCompat.getColor(context, R.color.tempbasal_primary));
+            valueLine.setColor(basalBackgroundColor);
             valueLine.setStrokeWidth(strokeWidth);
         }
         return valueLine;
