@@ -5,8 +5,9 @@ import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
 import info.nightscout.androidaps.R;
+import preference.WearPreferenceActivity;
 
-public class NWPreferences extends PreferenceActivity {
+public class NWPreferences extends WearPreferenceActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

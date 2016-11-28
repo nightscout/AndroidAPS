@@ -52,4 +52,5 @@ dependencies {
     compile files('libs/hellocharts-library-1.5.5.jar')
     compile(name:'ustwo-clockwise-debug', ext:'aar')
     compile 'com.android.support:support-v4:23.0.1'
+    compile 'me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0'
 }

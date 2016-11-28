@@ -276,6 +276,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
+        if( profile == null) return;
 
         long beginBasalSegmentTime = startTimeWindow;
         long runningTime = startTimeWindow;
