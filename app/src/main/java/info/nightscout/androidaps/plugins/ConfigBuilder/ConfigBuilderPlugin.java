@@ -738,6 +738,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             data.put("absolute", absolute);
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + absolute + "u/h " + durationInMinutes +" min"); // ECOR
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
@@ -767,6 +768,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 data.put("percent", percent - 100);
                 data.put("created_at", DateUtil.toISOString(new Date()));
                 data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + percent + "% " + durationInMinutes +" min"); // ECOR
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
                 bundle.putString("collection", "treatments");
@@ -789,6 +791,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             data.put("eventType", "Temp Basal");
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalendnote)); // ECOR
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
