@@ -78,7 +78,7 @@ public class Treatment implements DataPointWithLabelInterface {
             } else if (minAgo < end) {
                 Double x2 = (minAgo - 75) / 5;
                 result.iobContrib = this.insulin * (0.001323 * x2 * x2 - 0.054233 * x2 + 0.55556);
-                result.activityContrib = this.insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * dia - peak));
+                result.activityContrib = this.insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * 3 - peak));
             }
         }
         return result;
