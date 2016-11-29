@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showExternalStatus"
+        android:title="Show Loop Status"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="highlight_basals"
+        android:summary="Better visible basal rate and temp basals"
+        android:title="Highlight Basals"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showAvgDelta"
+        android:summary="Show the avgDelta."
+        android:title="Show AvgDelta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="dark"
+        android:summary="Dark theme"
+        android:title="Dark"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <ListPreference
+        android:defaultValue="3"
+        android:entries="@array/chart_timeframe"
+        android:entryValues="@array/chart_timeframe_values"
+        android:key="chart_timeframe"
+        android:summary="Chart Timeframe"
+        android:title="Chart Timeframe" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showAgo"
+        android:summary="Minutes since last reading. (Circle WF)"
+        android:title="Show Ago"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showDelta"
+        android:summary="Show delta. (Circle WF)"
+        android:title="Show Delta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showBG"
+        android:summary="Show BG. (Circle WF)"
+        android:title="Show BG"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="showBigNumbers"
+        android:summary="Big numbers. (Circle WF)"
+        android:title="Big Numbers"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="showRingHistory"
+        android:summary="Graphical history. (Circle WF)"
+        android:title="Ring History"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="softRingHistory"
+        android:summary="Less eyecandy. (Circle WF)"
+        android:title="Light Ring History"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="animation"
+        android:summary="Animations. (Circle WF)"
+        android:title="Animations"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+</PreferenceScreen>

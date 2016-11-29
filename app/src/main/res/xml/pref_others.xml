@@ -24,5 +24,21 @@
                 android:inputType="numberDecimal">
             </EditTextPreference>
         </PreferenceScreen>
+        <PreferenceScreen
+            android:title="Range for Visualization"
+            android:summary= "High and low mark for the charts in Overview and Smartwatch">
+            <EditTextPreference
+                android:title="LOW mark"
+                android:key="low_mark"
+                android:defaultValue="0"
+                android:inputType="number">
+            </EditTextPreference>
+            <EditTextPreference
+                android:title="HIGH mark"
+                android:key="high_mark"
+                android:defaultValue="0"
+                android:inputType="number">
+            </EditTextPreference>
+        </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>
