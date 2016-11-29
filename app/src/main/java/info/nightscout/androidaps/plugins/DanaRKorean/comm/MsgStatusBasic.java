@@ -1,0 +1,56 @@
+package info.nightscout.androidaps.plugins.DanaRKorean.comm;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+
+
+public class MsgStatusBasic extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgStatusBasic.class);
+
+    public MsgStatusBasic() {
+        SetCommand(0x020A);
+    }
+
+    public void handleMessage(byte[] bytes) {
+        boolean pumpSuspended = intFromBuff(bytes, 0, 1) == 1;
+        boolean calculatorEnabled = intFromBuff(bytes, 1, 1) == 1;
+        double dailyTotalUnits = intFromBuff(bytes, 2, 3) / 750d;
+        int maxDailyTotalUnits = intFromBuff(bytes, 5, 2) / 100;
+        double reservoirRemainingUnits = intFromBuff(bytes, 7, 3) / 750d;
+        boolean bolusBlocked = intFromBuff(bytes, 10, 1) == 1;
+        double currentBasal = intFromBuff(bytes, 11, 2) / 100d;
+        int tempBasalPercent = intFromBuff(bytes, 13, 1);
+        boolean isExtendedInProgress = intFromBuff(bytes, 14, 1) == 1;
+        boolean isTempBasalInProgress = intFromBuff(bytes, 15, 1) == 1;
+        int batteryRemaining = intFromBuff(bytes, 20, 1);
+
+        DanaRKoreanPlugin.getDanaRPump().pumpSuspended = pumpSuspended;
+        DanaRKoreanPlugin.getDanaRPump().calculatorEnabled = calculatorEnabled;
+        DanaRKoreanPlugin.getDanaRPump().dailyTotalUnits = dailyTotalUnits;
+        DanaRKoreanPlugin.getDanaRPump().maxDailyTotalUnits = maxDailyTotalUnits;
+        DanaRKoreanPlugin.getDanaRPump().reservoirRemainingUnits = reservoirRemainingUnits;
+        DanaRKoreanPlugin.getDanaRPump().bolusBlocked = bolusBlocked;
+        DanaRKoreanPlugin.getDanaRPump().currentBasal = currentBasal;
+        DanaRKoreanPlugin.getDanaRPump().tempBasalPercent = tempBasalPercent;
+        DanaRKoreanPlugin.getDanaRPump().isExtendedInProgress = isExtendedInProgress;
+        DanaRKoreanPlugin.getDanaRPump().isTempBasalInProgress = isTempBasalInProgress;
+        DanaRKoreanPlugin.getDanaRPump().batteryRemaining = batteryRemaining;
+
+        if (Config.logDanaMessageDetail) {
+            log.debug("Pump suspended: " + pumpSuspended);
+            log.debug("Calculator enabled: " + calculatorEnabled);
+            log.debug("Daily total units: " + dailyTotalUnits);
+            log.debug("Max daily total units: " + maxDailyTotalUnits);
+            log.debug("Reservoir remaining units: " + reservoirRemainingUnits);
+            log.debug("Bolus blocked: " + bolusBlocked);
+            log.debug("Current basal: " + currentBasal);
+            log.debug("Current temp basal percent: " + tempBasalPercent);
+            log.debug("Is extended bolus running: " + isExtendedInProgress);
+            log.debug("Is temp basal running: " + isTempBasalInProgress);
+        }
+    }
+}
