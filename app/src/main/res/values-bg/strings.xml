@@ -187,7 +187,7 @@
     <string name="export_to">Експортирай настройки до</string>
     <string name="nav_export">Експорт настройки</string>
     <string name="nav_import">Импорт настройки</string>
-    <string name="de_lang">Deutsch</string>
+    <string name="de_lang">German</string>
     <string name="openapsma_high_summary">Макс. стойност, която е в границите</string>
     <string name="openapsma_low_summary">Мин. стойност, която е в границите</string>
     <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
@@ -295,7 +295,7 @@
     <string name="objectives_5_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
     <string name="uploading">Uploading</string>
     <string name="bolusdelivering" formatted="false">Подава  %.2fU</string>
-    <string name="es_lang">Español</string>
+    <string name="es_lang">Spanish</string>
     <string name="noprofileselected">Не е избран профил</string>
     <string name="ko_lang">Korean</string>
     <string name="openapsma_valueoutofrange" formatted="false">%s е недопустима стойност</string>

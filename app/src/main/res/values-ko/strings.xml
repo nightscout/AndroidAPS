@@ -140,8 +140,8 @@
     <string name="objectives_pumpstatusavailableinns">NS에서 펌프상태가 확인 가능합니다.</string>
     <string name="objectives_manualenacts">수동 주입</string>
     <string name="loopdisabled">제한으로 인해 LOOP가 사용불가합니다.</string>
-    <string name="cs_lang">체코어</string>
-    <string name="en_lang">영어</string>
+    <string name="cs_lang">Czech</string>
+    <string name="en_lang">English</string>
     <string name="treatments_wizard_basaliob_label">기초주입 IOB</string>
     <string name="bolusconstraintapplied">식사주입 제한이 적용되었습니다</string>
     <string name="carbsconstraintapplied">탄수화물 제한이 적용되었습니다</string>
@@ -198,13 +198,13 @@
     <string name="filenotfound">파일을 찾을 수 없습니다</string>
     <string name="nav_export">Export 설정</string>
     <string name="nav_import">Import 설정</string>
-    <string name="de_lang">독일어</string>
-    <string name="es_lang">스페인어</string>
+    <string name="de_lang">German</string>
+    <string name="es_lang">Spanish</string>
     <string name="openapsma_low_summary">목표범위 최소 혈당값</string>
     <string name="openapsma_high_summary">목표범위 최대 혈당값</string>
     <string name="openapsma_maxbasal_summary">임시기초주입 최대량 [U/hr]</string>
     <string name="openapsma_maxiob_summary">OpenAPS가 주입할수 있는 최대 기초주입 IOB [U]</string>
-    <string name="bg_lang">불가리아어</string>
+    <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
     <string name="language">언어</string>
 

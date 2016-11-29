@@ -202,7 +202,7 @@
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
     <string name="de_lang">German</string>
-    <string name="es_lang">Español</string>
+    <string name="es_lang">Spanish</string>
     <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
     <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
     <string name="openapsma_maxbasal_summary">Max U/hr a Temp Basal can be set to</string>

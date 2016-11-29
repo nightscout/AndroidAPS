@@ -292,4 +292,5 @@
     <string name="overview_bolusprogress_goingtodeliver">%.2fU werden abgegeben werden</string>
     <string name="primefill">Füllen</string>
     <string name="uploading">Hochladen</string>
+    <string name="es_lang">Spanish</string>
 </resources>
