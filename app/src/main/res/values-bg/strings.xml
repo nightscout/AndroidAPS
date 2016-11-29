@@ -240,7 +240,7 @@
     <string name="careportal_temporarytargetcancel">Отакажи временна цел</string>
     <string name="comment">Коментар</string>
     <string name="absolute">Абсолютна</string>
-    <string name="overview_bolusiprogress_occlusion">Запушване</string>
+    <string name="occlusion">Запушване</string>
     <string name="overview_bolusprogress_delivered">Доставено</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Подаване на %.2fU Е инсулин</string>
     <string name="overview_bolusprogress_stop">Стоп</string>

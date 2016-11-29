@@ -286,7 +286,7 @@
     <string name="pumpbusy">펌프가 바쁩니다</string>
     <string name="overview_bolusprogress_delivered">주입됨</string>
     <string name="overview_bolusprogress_stoped">정지됨</string>
-    <string name="overview_bolusiprogress_occlusion">Occlusion</string>
+    <string name="occlusion">Occlusion</string>
     <string name="overview_bolusprogress_stop">정지</string>
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
     <string name="waitingforpump">펌프를 기다리고 있습니다.</string>

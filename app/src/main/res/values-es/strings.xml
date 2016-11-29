@@ -283,7 +283,7 @@
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="overview_bolusprogress_delivered">Entregado</string>
     <string name="overview_bolusprogress_stoped">Detenido</string>
-    <string name="overview_bolusiprogress_occlusion">Oclusión</string>
+    <string name="occlusion">Oclusión</string>
     <string name="overview_bolusprogress_stop">Detener</string>
     <string name="overview_bolusprogress_stoppressed">Parar pulsado</string>
     <string name="waitingforpump">Esperando bomba</string>
