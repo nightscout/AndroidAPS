@@ -3,12 +3,14 @@ package info.nightscout.androidaps.plugins.Overview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
@@ -72,6 +74,7 @@ import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 
@@ -79,6 +82,7 @@ public class OverviewFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
+    private SharedPreferences prefs;
 
     public static OverviewPlugin getPlugin() {
         return overviewPlugin;
@@ -121,6 +125,8 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
@@ -578,8 +584,16 @@ public class OverviewFragment extends Fragment {
         long toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
         long fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
 
-        Double lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
-        Double highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+        Double lowLine = SafeParse.stringToDouble(prefs.getString("low_mark", "0"));
+        Double highLine = SafeParse.stringToDouble(prefs.getString("high_mark", "0"));
+
+        if (lowLine < 1){
+            lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+        }
+
+        if(highLine < 1){
+            highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+        }
 
         BarGraphSeries<DataPoint> basalsSeries = null;
         LineGraphSeries<DataPoint> seriesLow = null;
@@ -662,6 +676,7 @@ public class OverviewFragment extends Fragment {
         }
         maxBgValue = NSProfile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
+        if(highLine > maxBgValue) maxBgValue = highLine;
         Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
 
         BgReading[] inRange = new BgReading[inRangeArray.size()];
