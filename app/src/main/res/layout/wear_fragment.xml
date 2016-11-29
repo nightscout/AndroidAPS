@@ -19,7 +19,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="Resend All Data"
+            android:text="@string/resend_all_data"
             android:textColor="@color/colorTreatmentButton" />
 
         <Button
@@ -32,7 +32,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
-            android:text="Open Settings on Wear"
+            android:text="@string/open_settings_on_wear"
             android:textColor="@color/colorTreatmentButton" />
 
     </LinearLayout>

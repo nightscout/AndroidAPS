@@ -25,16 +25,16 @@
             </EditTextPreference>
         </PreferenceScreen>
         <PreferenceScreen
-            android:title="Range for Visualization"
-            android:summary= "High and low mark for the charts in Overview and Smartwatch">
+            android:title="@string/prefs_range_title"
+            android:summary= "@string/prefs_range_summary">
             <EditTextPreference
-                android:title="LOW mark"
+                android:title="@string/low_mark"
                 android:key="low_mark"
                 android:defaultValue="0"
                 android:inputType="number">
             </EditTextPreference>
             <EditTextPreference
-                android:title="HIGH mark"
+                android:title="@string/high_mark"
                 android:key="high_mark"
                 android:defaultValue="0"
                 android:inputType="number">

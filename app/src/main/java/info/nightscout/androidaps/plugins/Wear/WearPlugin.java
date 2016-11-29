@@ -6,6 +6,7 @@ import android.content.Intent;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -44,7 +45,7 @@ public class WearPlugin implements PluginBase {
 
     @Override
     public String getName() {
-        return "Wear";
+        return ctx.getString(R.string.wear);
     }
 
     @Override
