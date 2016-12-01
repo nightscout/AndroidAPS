@@ -57,46 +57,62 @@ android {
         }
     }
     productFlavors {
+        flavorDimensions "standard", "wear"
         full {
+            dimension "standard"
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
             buildConfigField "int", "MAXBOLUS", "17"
         }
         fullteenage {
+            dimension "standard"
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
             buildConfigField "int", "MAXBOLUS", "10"
         }
         fullchild {
+            dimension "standard"
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
             buildConfigField "int", "MAXBOLUS", "5"
         }
         danarcontrol {
+            dimension "standard"
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "int", "MAXBOLUS", "17"
         }
         careportal {
+            dimension "standard"
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "int", "MAXBOLUS", "17"
         }
         openloop {
+            dimension "standard"
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
             buildConfigField "int", "MAXBOLUS", "17"
         }
+        wear {
+            dimension "wear"
+            buildConfigField "boolean", "WEAR", "true"
+        }
+        nowear {
+            dimension "wear"
+            buildConfigField "boolean", "WEAR", "false"
+        }
     }
 }
 
 dependencies {
+    wearWearApp project(path: ':wear', configuration: 'fullRelease')
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
         transitive = true;
@@ -116,4 +132,5 @@ dependencies {
     compile 'com.eclipsesource.j2v8:j2v8:3.1.6@aar'
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.1.1'
     testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services-wearable:7.5.0'
 }

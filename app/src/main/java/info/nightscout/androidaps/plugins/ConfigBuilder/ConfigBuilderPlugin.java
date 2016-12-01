@@ -38,7 +38,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.DanaR.comm.MsgOcclusion;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgError;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -922,7 +922,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     }
 
-    public void uploadDanaROcclusion() {
+    public void uploadError(String error) {
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putString("action", "dbAdd");
@@ -931,7 +931,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         try {
             data.put("eventType", "Announcement");
             data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("notes", MainApp.sResources.getString(R.string.overview_bolusiprogress_occlusion));
+            data.put("notes", error);
             data.put("isAnnouncement", true);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -941,7 +941,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString(), MsgOcclusion.class);
+        DbLogger.dbAdd(intent, data.toString(), MsgError.class);
     }
 
     public void uploadAppStart() {

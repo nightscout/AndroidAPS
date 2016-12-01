@@ -204,4 +204,25 @@ public class TempBasal {
         }
     }
 
+    public String toStringShort() {
+        String extended = isExtended ? "E" : "";
+
+        if (isAbsolute) {
+            return extended + DecimalFormatter.to2Decimal(absolute) + "U/h ";
+        } else { // percent
+            return percent + "% ";
+        }
+    }
+
+    public String toStringMedium() {
+        String extended = isExtended ? "E" : "";
+
+        if (isAbsolute) {
+            return extended + DecimalFormatter.to2Decimal(absolute) + "U/h ("
+                    + getRealDuration() + "/" + duration + ") ";
+        } else { // percent
+            return percent + "% (" + getRealDuration() + "/" + duration + ") ";
+        }
+    }
+
 }

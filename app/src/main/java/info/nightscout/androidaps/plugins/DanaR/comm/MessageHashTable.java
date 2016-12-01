@@ -33,7 +33,7 @@ public class MessageHashTable {
             put(new MsgSetTempBasalStop());          // 0x0403 CMD_PUMPSET_EXERCISE_STOP
             put(new MsgSetExtendedBolusStop());      // 0x0406 CMD_PUMPSET_EXPANS_INS_STOP
             put(new MsgSetExtendedBolusStart());     // 0x0407 CMD_PUMPSET_EXPANS_INS_S
-            put(new MsgOcclusion());                 // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
+            put(new MsgError());                 // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
             put(new MsgPCCommStart());               // 0x3001 CMD_CONNECT
             put(new MsgPCCommStop());                // 0x3002 CMD_DISCONNECT
             put(new MsgHistoryBolus());              // 0x3101 CMD_HISTORY_MEAL_INS

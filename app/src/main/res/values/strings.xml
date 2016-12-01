@@ -202,7 +202,7 @@
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
     <string name="de_lang">German</string>
-    <string name="es_lang">Español</string>
+    <string name="es_lang">Spanish</string>
     <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
     <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
     <string name="openapsma_maxbasal_summary">Max U/hr a Temp Basal can be set to</string>
@@ -289,7 +289,7 @@
     <string name="pumpbusy">Pump is busy</string>
     <string name="overview_bolusprogress_delivered">Delivered</string>
     <string name="overview_bolusprogress_stoped">Stopped</string>
-    <string name="overview_bolusiprogress_occlusion">Occlusion</string>
+    <string name="occlusion">Occlusion</string>
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
     <string name="waitingforpump">Waiting for pump</string>
@@ -364,4 +364,15 @@
     <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
     <string name="androidaps_tempbasalendnote">Basal Temp End</string>
     <string name="androidaps_tempbasalstartnote">Basal Temp Start</string>
+    <string name="prefs_range_title">Range for Visualization</string>
+    <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
+    <string name="low_mark">LOW mark</string>
+    <string name="high_mark">HIGH mark</string>
+    <string name="wear">Wear</string>
+    <string name="resend_all_data">Resend All Data</string>
+    <string name="open_settings_on_wear">Open Settings on Wear</string>
+    <string name="pumperror">Pump Error</string>
+    <string name="lowbattery">Low Battery</string>
+    <string name="pumpshutdown">Pump Shutdown</string>
+    <string name="batterydischarged">Pump Battery Discharged</string>
 </resources>
