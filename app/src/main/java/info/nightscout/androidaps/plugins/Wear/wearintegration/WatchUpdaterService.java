@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.ToastUtils;
 
 public class WatchUpdaterService extends WearableListenerService implements
         GoogleApiClient.ConnectionCallbacks,
@@ -147,14 +148,21 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
             if (wear_integration) {
-                new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(dataMapSingleBG(lastBG, glucoseStatus));
+
+                final DataMap dataMap = dataMapSingleBG(lastBG, glucoseStatus);
+                if(dataMap==null) {
+                    ToastUtils.showToastInUiThread(this,"No profile set yet");
+                    return;
+                }
+
+                new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(dataMap);
             }
         }
     }
 
     private DataMap dataMapSingleBG(BgReading lastBG, DatabaseHelper.GlucoseStatus glucoseStatus) {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-
+        if(profile == null) return null;
 
         Double lowLine = SafeParse.stringToDouble(mPrefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(mPrefs.getString("high_mark", "0"));
@@ -251,9 +259,16 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
+            if(entries==null) {
+                ToastUtils.showToastInUiThread(this,"No profile set yet?");
+                return;
+            }
             final ArrayList<DataMap> dataMaps = new ArrayList<>(graph_bgs.size());
             for (BgReading bg : graph_bgs) {
-                dataMaps.add(dataMapSingleBG(bg, glucoseStatus));
+                DataMap dataMap = dataMapSingleBG(bg, glucoseStatus);
+                if(dataMap != null) {
+                    dataMaps.add(dataMap);
+                }
             }
             entries.putDataMapArrayList("entries", dataMaps);
             new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(entries);
@@ -276,7 +291,9 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
-        if( profile == null) return;
+        if(profile==null) {
+            return;
+        }
 
         long beginBasalSegmentTime = startTimeWindow;
         long runningTime = startTimeWindow;
