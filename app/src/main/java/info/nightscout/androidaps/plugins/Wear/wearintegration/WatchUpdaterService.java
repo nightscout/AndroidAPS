@@ -140,7 +140,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
     }
 
-    public void sendData() {
+    private void sendData() {
 
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (lastBG != null) {
