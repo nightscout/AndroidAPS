@@ -260,7 +260,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
             if(entries==null) {
-                ToastUtils.showToastInUiThread(this,"No profile set yet?");
+                ToastUtils.showToastInUiThread(this, getString(R.string.noprofile));
                 return;
             }
             final ArrayList<DataMap> dataMaps = new ArrayList<>(graph_bgs.size());
