@@ -151,7 +151,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
                 final DataMap dataMap = dataMapSingleBG(lastBG, glucoseStatus);
                 if(dataMap==null) {
-                    ToastUtils.showToastInUiThread(this,"No profile set yet");
+                    ToastUtils.showToastInUiThread(this, getString(R.string.noprofile));
                     return;
                 }
 
