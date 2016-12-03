@@ -8,6 +8,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPump;
 
 /**
  * Created by mike on 05.07.2016.
@@ -20,17 +21,18 @@ public class MsgSettingShippingInfo extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRKoreanPlugin.getDanaRPump().serialNumber = stringFromBuff(bytes, 0, 10);
-        DanaRKoreanPlugin.getDanaRPump().shippingDate = dateFromBuff(bytes, 10);
-        DanaRKoreanPlugin.getDanaRPump().shippingCountry = asciiStringFromBuff(bytes, 13, 3);
-        if (DanaRKoreanPlugin.getDanaRPump().shippingDate.getTime() > new Date(116, 4, 1).getTime()) {
-            DanaRKoreanPlugin.getDanaRPump().isNewPump = true;
+        DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
+        pump.serialNumber = stringFromBuff(bytes, 0, 10);
+        pump.shippingDate = dateFromBuff(bytes, 10);
+        pump.shippingCountry = asciiStringFromBuff(bytes, 13, 3);
+        if (pump.shippingDate.getTime() > new Date(116, 4, 1).getTime()) {
+            pump.isNewPump = true;
         } else
-            DanaRKoreanPlugin.getDanaRPump().isNewPump = false;
+            pump.isNewPump = false;
         if (Config.logDanaMessageDetail) {
-            log.debug("Serial number: " + DanaRKoreanPlugin.getDanaRPump().serialNumber);
-            log.debug("Shipping date: " + DanaRKoreanPlugin.getDanaRPump().shippingDate);
-            log.debug("Shipping country: " + DanaRKoreanPlugin.getDanaRPump().shippingCountry);
+            log.debug("Serial number: " + pump.serialNumber);
+            log.debug("Shipping date: " + pump.shippingDate);
+            log.debug("Shipping country: " + pump.shippingCountry);
         }
     }
 }

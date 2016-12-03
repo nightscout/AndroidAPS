@@ -585,6 +585,10 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return sExecutionService != null && sExecutionService.isConnecting();
     }
 
+    public static void doDisconnect(String from) {
+        if (sExecutionService != null) sExecutionService.disconnect(from);
+    }
+
     @Override
     public JSONObject getJSONStatus() {
         if (getDanaRPump().lastConnection.getTime() + 5 * 60 * 1000L < new Date().getTime()) {

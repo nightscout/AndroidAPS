@@ -4,6 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 30.06.2016.
@@ -17,15 +22,22 @@ public class MsgCheckValue extends MessageBase {
 
     @Override
     public void handleMessage(byte[] bytes) {
-        int a = intFromBuff(bytes, 0, 1);
-        int b = intFromBuff(bytes, 1, 1);
-        if (a != 3 || b <= 0) {
-            // another message will follow
-        } else {
+        DanaRPump pump = DanaRPlugin.getDanaRPump();
 
+        pump.model = intFromBuff(bytes, 0, 1);
+        pump.protocol = intFromBuff(bytes, 1, 1);
+        pump.productCode = intFromBuff(bytes, 2, 1);
+        if (pump.model != DanaRPump.EXPORT_MODEL) {
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
+            ((DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class)).doDisconnect("Wrong Model");
+            log.debug("Wrong model selected");
         }
-        if (Config.logDanaMessageDetail)
-            log.debug("Response: " + String.format("%02X ", a) + String.format("%02X ", b));
+
+        if (Config.logDanaMessageDetail) {
+            log.debug("Model: " + String.format("%02X ", pump.model));
+            log.debug("Protocol: " + String.format("%02X ", pump.protocol));
+            log.debug("Product Code: " + String.format("%02X ", pump.productCode));
+        }
     }
 
 }

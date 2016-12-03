@@ -174,6 +174,11 @@ public class ExecutionService extends Service {
         return connectionInProgress;
     }
 
+    public void disconnect(String from) {
+        if (mSerialIOThread != null)
+            mSerialIOThread.disconnect(from);
+    }
+
     public void connect(String from) {
         if (danaRPump.password != -1 && danaRPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
@@ -270,11 +275,11 @@ public class ExecutionService extends Service {
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
 
 
+            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
             mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
             mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
-            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
 
             if (danaRPump.isNewPump) {
                 mSerialIOThread.sendMessage(new MsgCheckValue());

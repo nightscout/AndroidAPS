@@ -12,6 +12,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
 
 public class MsgHistoryAll extends MessageBase {

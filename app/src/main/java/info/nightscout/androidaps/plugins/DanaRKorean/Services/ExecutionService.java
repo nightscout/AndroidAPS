@@ -31,13 +31,14 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.plugins.DanaR.SerialIOThread;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPump;
+import info.nightscout.androidaps.plugins.DanaRKorean.SerialIOThread;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.*;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.SafeParse;
@@ -139,6 +140,11 @@ public class ExecutionService extends Service {
         return connectionInProgress;
     }
 
+    public void disconnect(String from) {
+        if (mSerialIOThread != null)
+            mSerialIOThread.disconnect(from);
+    }
+
     public void connect(String from) {
         if (danaRKoreanPump.password != -1 && danaRKoreanPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
@@ -229,25 +235,23 @@ public class ExecutionService extends Service {
 
     private boolean getPumpStatus() {
         try {
-            MsgStatus statusMsg = new MsgStatus();
+            //MsgStatus statusMsg = new MsgStatus();
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
 
 
+            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
             mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
             mSerialIOThread.sendMessage(exStatusMsg);
-            mSerialIOThread.sendMessage(statusMsg);
+            //mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
-            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
 
-            if (danaRKoreanPump.isNewPump) {
-                mSerialIOThread.sendMessage(new MsgCheckValue());
-            }
+            mSerialIOThread.sendMessage(new MsgCheckValue());
 
-            if (!statusMsg.received) {
-                mSerialIOThread.sendMessage(statusMsg);
-            }
+//            if (!statusMsg.received) {
+//                mSerialIOThread.sendMessage(statusMsg);
+//            }
             if (!statusBasicMsg.received) {
                 mSerialIOThread.sendMessage(statusBasicMsg);
             }
@@ -261,7 +265,7 @@ public class ExecutionService extends Service {
             }
 
             // Check we have really current status of pump
-            if (!statusMsg.received || !statusBasicMsg.received || !tempStatusMsg.received || !exStatusMsg.received) {
+            if (/*!statusMsg.received || */!statusBasicMsg.received || !tempStatusMsg.received || !exStatusMsg.received) {
                 waitMsec(10 * 1000);
                 log.debug("getPumpStatus failed");
                 return false;

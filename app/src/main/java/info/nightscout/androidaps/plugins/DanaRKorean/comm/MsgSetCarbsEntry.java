@@ -7,6 +7,7 @@ import java.util.Calendar;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 
 public class MsgSetCarbsEntry extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSetCarbsEntry.class);

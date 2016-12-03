@@ -20,10 +20,10 @@ public class MsgStatus extends MessageBase {
         DanaRKoreanPlugin.getDanaRPump().extendedBolusMinutes = intFromBuff(bytes, 4, 2);
         DanaRKoreanPlugin.getDanaRPump().extendedBolusAmount = intFromBuff(bytes, 6, 2) / 100d;
         Double lastBolusAmount = intFromBuff(bytes, 13, 2) / 100d;
-        if (lastBolusAmount != 0d) {
-            DanaRKoreanPlugin.getDanaRPump().lastBolusTime = dateTimeFromBuff(bytes, 8);
-            DanaRKoreanPlugin.getDanaRPump().lastBolusAmount = lastBolusAmount;
-        }
+//        if (lastBolusAmount != 0d) {
+//            DanaRKoreanPlugin.getDanaRPump().lastBolusTime = dateTimeFromBuff(bytes, 8);
+//            DanaRKoreanPlugin.getDanaRPump().lastBolusAmount = lastBolusAmount;
+//        }
         DanaRKoreanPlugin.getDanaRPump().iob = intFromBuff(bytes, 15, 2) / 100d;
 
         if (Config.logDanaMessageDetail) {
@@ -31,8 +31,8 @@ public class MsgStatus extends MessageBase {
             log.debug("Is extended bolus running: " + DanaRKoreanPlugin.getDanaRPump().isExtendedInProgress);
             log.debug("Extended bolus min: " + DanaRKoreanPlugin.getDanaRPump().extendedBolusMinutes);
             log.debug("Extended bolus amount: " + DanaRKoreanPlugin.getDanaRPump().extendedBolusAmount);
-            log.debug("Last bolus time: " + DanaRKoreanPlugin.getDanaRPump().lastBolusTime);
-            log.debug("Last bolus amount: " + DanaRKoreanPlugin.getDanaRPump().lastBolusAmount);
+//            log.debug("Last bolus time: " + DanaRKoreanPlugin.getDanaRPump().lastBolusTime);
+//            log.debug("Last bolus amount: " + DanaRKoreanPlugin.getDanaRPump().lastBolusAmount);
             log.debug("IOB: " + DanaRKoreanPlugin.getDanaRPump().iob);
         }
     }

@@ -32,7 +32,7 @@ public class MsgSettingBasalProfileAll extends MessageBase {
                 for (int index = 0; index < 48; index++) {
                     int basal = intFromBuff(bytes, 107 * profile + 2 * index + 1, 2);
                     if (basal < 10) basal = 0;
-                    pump.pumpProfiles[position][index] = basal / 100d;
+                    pump.pumpProfiles[position][index] = basal / 100 / 24d; // in units/day
                 }
             }
         } else {
@@ -45,7 +45,7 @@ public class MsgSettingBasalProfileAll extends MessageBase {
                     int basal = intFromBuff(bytes, 59 * profile + 2 * index + 1, 2);
                     if (basal < 10) basal = 0;
                     log.debug("position " + position + " index " + index);
-                    pump.pumpProfiles[position][index] = basal / 100d;
+                    pump.pumpProfiles[position][index] = basal / 100 / 24d; // in units/day
                 }
             }
         }

@@ -22,6 +22,11 @@ public class DanaRKoreanPump {
     public static final int UNITS_MGDL = 0;
     public static final int UNITS_MMOL = 1;
 
+    public static final int DELIVERY_PRIME = 0x01;
+    public static final int DELIVERY_STEP_BOLUS = 0x02;
+    public static final int DELIVERY_BASAL = 0x04;
+    public static final int DELIVERY_EXT_BOLUS = 0x08;
+
     public static final String PROFILE_PREFIX = "DanaR-";
 
     public Date lastConnection = new Date(0);
@@ -35,20 +40,22 @@ public class DanaRKoreanPump {
     public int password = -1;
     public Date pumpTime = new Date(0);
 
+    public static final int DOMESTIC_MODEL = 0x01;
+    public static final int EXPORT_MODEL = 0x03;
+    public int model;
+    public int protocol;
+    public int productCode;
+
     // Status
-    public boolean pumpSuspended;
-    public boolean calculatorEnabled;
     public double dailyTotalUnits;
     public int maxDailyTotalUnits;
+
+    public double bolusStep;
 
     public double iob;
 
     public double reservoirRemainingUnits;
     public int batteryRemaining;
-
-    public boolean bolusBlocked;
-    public Date lastBolusTime = new Date(0);
-    public double lastBolusAmount;
 
     public double currentBasal;
 

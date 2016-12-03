@@ -200,13 +200,13 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
                         lastConnectionView.setText(formatTime.format(DanaRKoreanPlugin.getDanaRPump().lastConnection) + " (" + agoMin + " " + MainApp.sResources.getString(R.string.minago) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
-                    if (DanaRKoreanPlugin.getDanaRPump().lastBolusTime.getTime() != 0) {
-                        Long agoMsec = new Date().getTime() - DanaRKoreanPlugin.getDanaRPump().lastBolusTime.getTime();
-                        double agoHours =  agoMsec / 60d / 60d / 1000d;
-                        if (agoHours < 6) // max 6h back
-                            lastBolusView.setText(formatTime.format(DanaRKoreanPlugin.getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(danaRKoreanPlugin.getDanaRPump().lastBolusAmount) + " U");
-                        else lastBolusView.setText("");
-                    }
+//                    if (DanaRKoreanPlugin.getDanaRPump().lastBolusTime.getTime() != 0) {
+//                        Long agoMsec = new Date().getTime() - DanaRKoreanPlugin.getDanaRPump().lastBolusTime.getTime();
+//                        double agoHours =  agoMsec / 60d / 60d / 1000d;
+//                        if (agoHours < 6) // max 6h back
+//                            lastBolusView.setText(formatTime.format(DanaRKoreanPlugin.getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(danaRKoreanPlugin.getDanaRPump().lastBolusAmount) + " U");
+//                        else lastBolusView.setText("");
+//                    }
 
                     dailyUnitsView.setText(DecimalFormatter.to0Decimal(DanaRKoreanPlugin.getDanaRPump().dailyTotalUnits) + " / " + DanaRKoreanPlugin.getDanaRPump().maxDailyTotalUnits + " U");
                     SetWarnColor.setColor(dailyUnitsView, DanaRKoreanPlugin.getDanaRPump().dailyTotalUnits, DanaRKoreanPlugin.getDanaRPump().maxDailyTotalUnits * 0.75d, DanaRKoreanPlugin.getDanaRPump().maxDailyTotalUnits * 0.9d);

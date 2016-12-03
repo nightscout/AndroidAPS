@@ -30,6 +30,8 @@ public class MsgStatusBolusExtended extends MessageBase {
 
         double extendedBolusAmount = intFromBuff(bytes, 2, 2) / 100d;
         int extendedBolusSoFarInSecs = intFromBuff(bytes, 4, 3);
+        int extendedBolusDeliveryPulse = intFromBuff(bytes, 7, 2);
+        int isEasyUIUserSleep = intFromBuff(bytes, 9, 1);
 
         int extendedBolusSoFarInMinutes = extendedBolusSoFarInSecs / 60;
         double extendedBolusAbsoluteRate = isExtendedInProgress ? extendedBolusAmount / extendedBolusMinutes * 60 : 0d;

@@ -584,6 +584,10 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         return sExecutionService != null && sExecutionService.isConnecting();
     }
 
+    public static void doDisconnect(String from) {
+        if (sExecutionService != null) sExecutionService.disconnect(from);
+    }
+
     @Override
     public JSONObject getJSONStatus() {
         if (getDanaRPump().lastConnection.getTime() + 5 * 60 * 1000L < new Date().getTime()) {
@@ -599,8 +603,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             status.put("timestamp", DateUtil.toISOString(getDanaRPump().lastConnection));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             extended.put("PumpIOB", getDanaRPump().iob);
-            extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
-            extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
+//            extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
+//            extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
             if (isTempBasalInProgress()) {
                 extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", getTempBasal().timeStart.toLocaleString());
@@ -718,9 +722,9 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " minago\n";
         }
-        if (getDanaRPump().lastBolusTime.getTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.to2Decimal(getDanaRPump().lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", getDanaRPump().lastBolusTime) + "\n";
-        }
+//        if (getDanaRPump().lastBolusTime.getTime() != 0) {
+//            ret += "LastBolus: " + DecimalFormatter.to2Decimal(getDanaRPump().lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", getDanaRPump().lastBolusTime) + "\n";
+//        }
         if (isRealTempBasalInProgress()) {
             ret += "Temp: " + getRealTempBasal().toString() + "\n";
         }

@@ -376,4 +376,5 @@
     <string name="pumpshutdown">Pump Shutdown</string>
     <string name="batterydischarged">Pump Battery Discharged</string>
     <string name="danarkoreanpump">DanaR Korean</string>
+    <string name="wrongpumpdriverselected">Wrong pump driver selected</string>
 </resources>
