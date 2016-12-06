@@ -368,7 +368,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         BolusWizard wizard = new BolusWizard();
         wizard.doCalc(specificProfile, carbsAfterConstraint, c_bg, corrAfterConstraint, bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked());
 
-        bg.setText(c_bg + " ISF: " + DecimalFormatter.to0Decimal(wizard.sens));
+        bg.setText(c_bg + " ISF: " + DecimalFormatter.to1Decimal(wizard.sens));
         bgInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromBG) + "U");
 
         carbs.setText(DecimalFormatter.to0Decimal(c_carbs) + "g IC: " + DecimalFormatter.to1Decimal(wizard.ic));
