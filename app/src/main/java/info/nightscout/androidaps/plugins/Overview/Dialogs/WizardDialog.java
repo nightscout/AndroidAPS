@@ -295,7 +295,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                 bgDiff = lastBgValue - targetBGHigh;
             }
 
-            bg.setText(lastBg.valueToUnitsToString(units) + " ISF: " + DecimalFormatter.to0Decimal(sens));
+            bg.setText(lastBg.valueToUnitsToString(units) + " ISF: " + DecimalFormatter.to1Decimal(sens));
             bgInsulin.setText(DecimalFormatter.to2Decimal(bgDiff / sens) + "U");
             bgInput.removeTextChangedListener(textWatcher);
             //bgInput.setText(lastBg.valueToUnitsToString(units));
@@ -368,10 +368,10 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         BolusWizard wizard = new BolusWizard();
         wizard.doCalc(specificProfile, carbsAfterConstraint, c_bg, corrAfterConstraint, bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked());
 
-        bg.setText(c_bg + " ISF: " + DecimalFormatter.to0Decimal(wizard.sens));
+        bg.setText(c_bg + " ISF: " + DecimalFormatter.to1Decimal(wizard.sens));
         bgInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromBG) + "U");
 
-        carbs.setText(DecimalFormatter.to0Decimal(c_carbs) + "g IC: " + DecimalFormatter.to0Decimal(wizard.ic));
+        carbs.setText(DecimalFormatter.to0Decimal(c_carbs) + "g IC: " + DecimalFormatter.to1Decimal(wizard.ic));
         carbsInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromCarbs) + "U");
 
         bolusIobInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulingFromBolusIOB) + "U");
