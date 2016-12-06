@@ -3,12 +3,16 @@ package info.nightscout.androidaps.plugins.Overview;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import com.squareup.otto.Subscribe;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 /**
  * Created by mike on 05.08.2016.
@@ -20,6 +24,8 @@ public class OverviewPlugin implements PluginBase {
 
     public QuickWizard quickWizard = new QuickWizard();
 
+    public NotificationStore notificationStore = new NotificationStore();
+
     public OverviewPlugin() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String storedData = preferences.getString("QuickWizard", "[]");
@@ -28,6 +34,7 @@ public class OverviewPlugin implements PluginBase {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        MainApp.bus().register(this);
     }
 
     @Override
@@ -70,5 +77,15 @@ public class OverviewPlugin implements PluginBase {
         return PluginBase.GENERAL;
     }
 
+
+    @Subscribe
+    public void onStatusEvent(final EventNewNotification n) {
+        notificationStore.add(n.notification);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventDismissNotification n) {
+        notificationStore.remove(n.id);
+    }
 
 }
