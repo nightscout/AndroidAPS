@@ -62,7 +62,7 @@ public class MessageOriginalNames {
         messageNames.put(0x320d, "CMD_SETTING_V_CIR_CF_VALUE");
 
         messageNames.put(0x3301, "CMD_SETTING_MEAL_INS_S");
-        messageNames.put(0x3302, "CMD_SETTING_Based_INS_S");
+        messageNames.put(0x3302, "CMD_SETTING_BASAL_INS_S");
         messageNames.put(0x3303, "CMD_SETTING_MEAL_SETTING_S");
         messageNames.put(0x3304, "CMD_SETTING_CCC_S");
         messageNames.put(0x3305, "CMD_SETTING_MAX_VALUE_S");

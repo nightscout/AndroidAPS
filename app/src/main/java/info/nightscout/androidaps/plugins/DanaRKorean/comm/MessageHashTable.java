@@ -34,7 +34,7 @@ public class MessageHashTable {
             put(new MsgSetTempBasalStop());          // 0x0403 CMD_PUMPSET_EXERCISE_STOP
             put(new MsgSetExtendedBolusStop());      // 0x0406 CMD_PUMPSET_EXPANS_INS_STOP
             put(new MsgSetExtendedBolusStart());     // 0x0407 CMD_PUMPSET_EXPANS_INS_S
-            put(new MsgError());                 // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
+            put(new MsgError());                     // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
             put(new MsgPCCommStart());               // 0x3001 CMD_CONNECT
             put(new MsgPCCommStop());                // 0x3002 CMD_DISCONNECT
             put(new MsgHistoryBolus());              // 0x3101 CMD_HISTORY_MEAL_INS
@@ -54,7 +54,7 @@ public class MessageHashTable {
             put(new MsgSettingShippingInfo());       // 0x3207 CMD_SETTING_V_SHIPPING_I
             put(new MsgSettingGlucose());            // 0x3209 CMD_SETTING_V_GLUCOSEandEASY
             put(new MsgSettingPumpTime());           // 0x320A CMD_SETTING_V_TIME_I
-            put(new MsgSetBasalProfile());           // 0x3306 CMD_SETTING_BASAL_PROFILE_S
+            put(new MsgSetSingleBasalProfile());     // 0x3302 CMD_SETTING_BASAL_INS_S
             put(new MsgHistoryAll());                // 0x41F2 CMD_HISTORY_ALL
             put(new MsgHistoryNewDone());            // 0x42F1 CMD_HISTORY_NEW_DONE
             put(new MsgHistoryNew());                // 0x42F2 CMD_HISTORY_NEW

@@ -428,10 +428,8 @@ public class ExecutionService extends Service {
         connect("updateBasalsInPump");
         if (!isConnected()) return false;
         double[] basal = buildDanaRProfileRecord(profile);
-        MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
+        MsgSetSingleBasalProfile msgSet = new MsgSetSingleBasalProfile(basal);
         mSerialIOThread.sendMessage(msgSet);
-        //MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
-        //mSerialIOThread.sendMessage(msgActivate);
         getPumpStatus();
         return true;
     }

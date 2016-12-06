@@ -6,22 +6,21 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
 
-public class MsgSetBasalProfile extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSetBasalProfile.class);
+public class MsgSetSingleBasalProfile extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgSetSingleBasalProfile.class);
 
-    public MsgSetBasalProfile() {
-        SetCommand(0x3306);
+    public MsgSetSingleBasalProfile() {
+        SetCommand(0x3302);
     }
 
     // index 0-3
-    public MsgSetBasalProfile(byte index, double[] values) {
+    public MsgSetSingleBasalProfile(double[] values) {
         this();
-        AddParamByte(index);
         for (Integer i = 0; i < 24; i++) {
             AddParamInt((int) (values[i] * 100));
         }
         if (Config.logDanaMessageDetail)
-            log.debug("Set basal profile: " + index);
+            log.debug("Set basal profile");
     }
 
     @Override
