@@ -16,7 +16,7 @@ public class MsgStatusBasic extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        double currentBasal = intFromBuff(bytes, 0, 2) / 100 / 24d; // in units/day
+        double currentBasal = intFromBuff(bytes, 0, 2) / 100;
         int batteryRemaining = intFromBuff(bytes, 2, 1);
         double reservoirRemainingUnits = intFromBuff(bytes, 3, 3) / 750d;
         double dailyTotalUnits = intFromBuff(bytes, 6, 3) / 750d;
