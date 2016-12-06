@@ -15,20 +15,6 @@ public class NotificationStore {
     public List<Notification> store = new ArrayList<Notification>();
 
     public NotificationStore() {
-        Notification sample = new Notification();
-        sample.id = 1;
-        sample.date = new Date();
-        sample.text = "Sample text";
-        sample.level = Notification.URGENT;
-        sample.validTo = new Date(new Date().getTime() + 3 * 60 * 1000L);
-        add(sample);
-        Notification sample1 = new Notification();
-        sample1.id = 2;
-        sample1.date = new Date();
-        sample1.text = "Sample text 1";
-        sample1.level = Notification.INFO;
-        sample1.validTo = new Date(new Date().getTime() + 60 * 60 * 1000L);
-        add(sample1);
     }
 
     public class NotificationComparator implements Comparator<Notification> {
