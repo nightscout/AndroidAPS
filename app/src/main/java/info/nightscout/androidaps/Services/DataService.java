@@ -96,11 +96,10 @@ public class DataService extends IntentService {
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
             } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action)){
-                // always handle Profili if NSProfile is enabled without looking at nsUploadOnly
+                // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
                 handleNewDataFromNSClient(intent);
             } else if (!nsUploadOnly &&
-                    (Intents.ACTION_NEW_PROFILE.equals(action) ||
-                            Intents.ACTION_NEW_TREATMENT.equals(action) ||
+                    (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                             Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
                             Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
                             Intents.ACTION_NEW_STATUS.equals(action) ||
