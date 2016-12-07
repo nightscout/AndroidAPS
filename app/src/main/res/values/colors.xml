@@ -24,4 +24,9 @@
     <color name="colorPumpLabel">#779ECB</color>
     <color name="cardItemLabel">#FF478EFF</color>
 
+    <color name="notificationUrgent">#ff0400</color>
+    <color name="notificationNormal">#ff5e55</color>
+    <color name="notificationLow">#ff827c</color>
+    <color name="notificationInfo">#009705</color>
+
 </resources>

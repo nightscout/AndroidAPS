@@ -22,7 +22,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     }
 
     var bg = glucose_status.glucose;
-    if (bg < 30) {  //Dexcom is in ??? mode or calibrating, do nothing. Asked @benwest for raw data in iter_glucose
+    if (bg < 38) {  //Dexcom is in ??? mode or calibrating, do nothing. Asked @benwest for raw data in iter_glucose
         rT.error = "CGM is calibrating or in ??? state";
         return rT;
     }

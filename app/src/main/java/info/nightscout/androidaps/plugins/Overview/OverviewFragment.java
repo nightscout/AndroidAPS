@@ -14,6 +14,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +38,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,6 +73,8 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -97,6 +103,9 @@ public class OverviewFragment extends Fragment {
     TextView iobView;
     TextView apsModeView;
     GraphView bgGraph;
+
+    RecyclerView notificationsView;
+    LinearLayoutManager llm;
 
     LinearLayout cancelTempLayout;
     LinearLayout acceptTempLayout;
@@ -147,6 +156,11 @@ public class OverviewFragment extends Fragment {
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
         quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizard);
         quickWizardLayout = (LinearLayout) view.findViewById(R.id.overview_quickwizardlayout);
+
+        notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
+        notificationsView.setHasFixedSize(true);
+        llm = new LinearLayoutManager(view.getContext());
+        notificationsView.setLayoutManager(llm);
 
         treatmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -383,6 +397,12 @@ public class OverviewFragment extends Fragment {
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) { updateGUIIfVisible(); }
 
+    @Subscribe
+    public void onStatusEvent(final EventNewNotification n) { updateNotifications(); }
+
+    @Subscribe
+    public void onStatusEvent(final EventDismissNotification n) { updateNotifications(); }
+
     private void hideTempRecommendation() {
         Activity activity = getActivity();
         if (activity != null)
@@ -407,6 +427,7 @@ public class OverviewFragment extends Fragment {
 
     @SuppressLint("SetTextI18n")
     public void updateGUI() {
+        updateNotifications();
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
@@ -757,5 +778,96 @@ public class OverviewFragment extends Fragment {
 
 
     }
+
+    //Notifications
+    public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.NotificationsViewHolder> {
+
+        List<Notification> notificationsList;
+
+        RecyclerViewAdapter(List<Notification> notificationsList) {
+            this.notificationsList = notificationsList;
+        }
+
+        @Override
+        public NotificationsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.overview_notification_item, viewGroup, false);
+            NotificationsViewHolder notificationsViewHolder = new NotificationsViewHolder(v);
+            return notificationsViewHolder;
+        }
+
+        @Override
+        public void onBindViewHolder(NotificationsViewHolder holder, int position) {
+            DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
+            Notification notification = notificationsList.get(position);
+            holder.dismiss.setTag(notification);
+            holder.text.setText(notification.text);
+            holder.time.setText(df.format(notification.date));
+            if (notification.level == Notification.URGENT)
+                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationUrgent));
+            else if (notification.level == Notification.NORMAL)
+                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationNormal));
+            else if (notification.level == Notification.LOW)
+                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationLow));
+            else if (notification.level == Notification.INFO)
+                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationInfo));
+        }
+
+        @Override
+        public int getItemCount() {
+            return notificationsList.size();
+        }
+
+        @Override
+        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
+        }
+
+        public static class NotificationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+            CardView cv;
+            TextView time;
+            TextView text;
+            Button dismiss;
+
+            NotificationsViewHolder(View itemView) {
+                super(itemView);
+                cv = (CardView) itemView.findViewById(R.id.notification_cardview);
+                time = (TextView) itemView.findViewById(R.id.notification_time);
+                text = (TextView) itemView.findViewById(R.id.notification_text);
+                dismiss = (Button) itemView.findViewById(R.id.notification_dismiss);
+                dismiss.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                Notification notification = (Notification) v.getTag();
+                switch (v.getId()) {
+                    case R.id.notification_dismiss:
+                        MainApp.bus().post(new EventDismissNotification(notification.id));
+                        break;
+                }
+            }
+        }
+    }
+
+    void updateNotifications() {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    NotificationStore nstore = getPlugin().notificationStore;
+                    nstore.removeExpired();
+                    if (nstore.store.size() > 0) {
+                        RecyclerViewAdapter adapter = new RecyclerViewAdapter(nstore.store);
+                        notificationsView.setAdapter(adapter);
+                        notificationsView.setVisibility(View.VISIBLE);
+                    } else {
+                        notificationsView.setVisibility(View.GONE);
+                    }
+                }
+            });
+    }
+
+
 
 }
