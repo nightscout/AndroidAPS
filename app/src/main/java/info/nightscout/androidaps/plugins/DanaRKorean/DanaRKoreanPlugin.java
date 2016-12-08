@@ -32,6 +32,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService;
@@ -61,6 +62,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
 
     private static DanaRKoreanPump sDanaRKoreanPump = new DanaRKoreanPump();
     private static boolean useExtendedBoluses = false;
+
+    private PumpDescription pumpDescription = new PumpDescription();
 
     public static DanaRKoreanPump getDanaRPump() {
         return sDanaRKoreanPump;
@@ -630,6 +633,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     @Override
     public String deviceID() {
         return getDanaRPump().serialNumber;
+    }
+
+    @Override
+    public PumpDescription getPumpDescription() {
+        return pumpDescription;
     }
 
     /**

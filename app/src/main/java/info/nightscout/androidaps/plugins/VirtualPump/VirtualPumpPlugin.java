@@ -17,6 +17,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.VirtualPump.events.EventVirtualPumpUpdateGui;
@@ -36,6 +37,8 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
+
+    PumpDescription pumpDescription = new PumpDescription();
 
     @Override
     public String getFragmentClass() {
@@ -365,6 +368,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public String deviceID() {
         return "VirtualPump";
+    }
+
+    @Override
+    public PumpDescription getPumpDescription() {
+        return pumpDescription;
     }
 
 }

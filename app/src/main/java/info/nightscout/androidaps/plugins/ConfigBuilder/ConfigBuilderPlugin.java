@@ -35,6 +35,7 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -592,6 +593,21 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         if (activePump != null)
             return activePump.deviceID();
         else return "Unknown";
+    }
+
+    @Override
+    public PumpDescription getPumpDescription() {
+        if (activePump != null)
+            return activePump.getPumpDescription();
+        else {
+            PumpDescription emptyDescription = new PumpDescription();
+            emptyDescription.isBolusCapable = false;
+            emptyDescription.isExtendedBolusCapable = false;
+            emptyDescription.isSetBasalProfileCapable = false;
+            emptyDescription.isTempBasalCapable = false;
+            emptyDescription.isRefillingCapable = false;
+            return emptyDescription;
+        }
     }
 
     /**
