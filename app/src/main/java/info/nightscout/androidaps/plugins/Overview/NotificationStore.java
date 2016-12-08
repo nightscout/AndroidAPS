@@ -54,6 +54,7 @@ public class NotificationStore {
             Notification n = get(i);
             if (n.validTo.getTime() != 0 && n.validTo.getTime() < new Date().getTime()) {
                 store.remove(i);
+                i--;
             }
         }
     }
