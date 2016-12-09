@@ -78,6 +78,25 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         Intent intent = new Intent(context, ExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
+
+        pumpDescription.isBolusCapable = true;
+        pumpDescription.bolusStep = 0.05d;
+
+        pumpDescription.isExtendedBolusCapable = true;
+        pumpDescription.extendedBolusStep = 0.1d;
+
+        pumpDescription.isTempBasalCapable = true;
+        pumpDescription.lowTempBasalStyle = PumpDescription.PERCENT;
+        pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
+        pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
+        pumpDescription.lowTempStep = 10;
+        pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
+
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.basalStep = 0.01d;
+        pumpDescription.basalMinimumRate = 0.04d;
+
+        pumpDescription.isRefillingCapable = true;
     }
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -106,6 +125,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             boolean previousValue = useExtendedBoluses;
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
+
+            pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
+            pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
+            pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
+
             if (useExtendedBoluses != previousValue && isExtendedBoluslInProgress()) {
                 sExecutionService.extendedBolusStop();
             }

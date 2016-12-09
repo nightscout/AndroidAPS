@@ -5,8 +5,9 @@ package info.nightscout.androidaps.interfaces;
  */
 
 public class PumpDescription {
-    public final int PERCENT = 0;
-    public final int ABSOLUTE = 0;
+    public static final int PERCENT = 0;
+    public static final int ABSOLUTE = 1;
+    public static final int EXTENDED = 2;
 
     public boolean isBolusCapable = true;
     public double bolusStep = 0.1d;
