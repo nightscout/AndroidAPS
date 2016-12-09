@@ -58,6 +58,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetExtendedBolusStart;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetExtendedBolusStop;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStart;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStop;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTime;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingActiveProfile;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingBasal;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingGlucose;
@@ -320,6 +321,7 @@ public class ExecutionService extends Service {
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
+                mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
                 danaRPump.lastSettingsRead = now;
             }
 
