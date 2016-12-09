@@ -5,9 +5,9 @@ package info.nightscout.androidaps.interfaces;
  */
 
 public class PumpDescription {
-    public static final int PERCENT = 0;
-    public static final int ABSOLUTE = 1;
-    public static final int EXTENDED = 2;
+    public static final int PERCENT = 1;
+    public static final int ABSOLUTE = 2;
+    public static final int EXTENDED = 4;
 
     public boolean isBolusCapable = true;
     public double bolusStep = 0.1d;
@@ -18,11 +18,16 @@ public class PumpDescription {
     public boolean isTempBasalCapable = true;
     public int lowTempBasalStyle = PERCENT;
     public int highTempBasalStyle = PERCENT;
-    public double maxHighTemp = 200;
-    public double lowTempStep = 10;
-    public int lowTempDuration = 60;
-    public double highTempStep = 10;
-    public int highTempDuration = 60;
+    public double maxHighTempPercent = 200;
+    public double maxHighTempAbsolute = 0; // zero = no limit
+    public double lowTempPercentStep = 10;
+    public double lowTempAbsoluteStep = 0.05d;
+    public int lowTempPercentDuration = 30;
+    public int lowTempAbsoluteDuration = 30;
+    public double highTempPercentStep = 10;
+    public double highTempAbsoluteStep = 0.05d;
+    public int highTempPercentDuration = 30;
+    public int highTempAbsoluteDuration = 30;
 
     public boolean isSetBasalProfileCapable = true;
     public double basalStep = 0.01d;

@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -88,11 +87,16 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.isTempBasalCapable = true;
         pumpDescription.lowTempBasalStyle = PumpDescription.PERCENT;
         pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
-        pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
-        pumpDescription.lowTempStep = 10;
-        pumpDescription.lowTempDuration = 60;
-        pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
-        pumpDescription.highTempDuration = useExtendedBoluses ? 30 : 60;
+        pumpDescription.maxHighTempPercent = 200;
+        pumpDescription.maxHighTempAbsolute = 0;
+        pumpDescription.lowTempPercentStep = 10;
+        pumpDescription.lowTempAbsoluteStep = 0;
+        pumpDescription.lowTempPercentDuration = 60;
+        pumpDescription.lowTempAbsoluteDuration = 60;
+        pumpDescription.highTempPercentStep = 10;
+        pumpDescription.highTempAbsoluteStep = 0.05d;
+        pumpDescription.highTempPercentDuration = 60;
+        pumpDescription.highTempAbsoluteDuration = 30;
 
         pumpDescription.isSetBasalProfileCapable = true;
         pumpDescription.basalStep = 0.01d;
@@ -129,9 +133,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
 
             pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
-            pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
-            pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
-            pumpDescription.highTempDuration = useExtendedBoluses ? 30 : 60;
 
             if (useExtendedBoluses != previousValue && isExtendedBoluslInProgress()) {
                 sExecutionService.extendedBolusStop();

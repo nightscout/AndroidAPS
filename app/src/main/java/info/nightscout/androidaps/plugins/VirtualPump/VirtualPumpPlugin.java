@@ -40,6 +40,34 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     PumpDescription pumpDescription = new PumpDescription();
 
+    public VirtualPumpPlugin() {
+        pumpDescription.isBolusCapable = true;
+        pumpDescription.bolusStep = 1d;
+
+        pumpDescription.isExtendedBolusCapable = true;
+        pumpDescription.extendedBolusStep = 0.2d;
+
+        pumpDescription.isTempBasalCapable = true;
+        pumpDescription.lowTempBasalStyle = PumpDescription.ABSOLUTE | PumpDescription.PERCENT;
+        pumpDescription.highTempBasalStyle = PumpDescription.ABSOLUTE | PumpDescription.PERCENT;
+        pumpDescription.maxHighTempPercent = 600;
+        pumpDescription.maxHighTempAbsolute = 10;
+        pumpDescription.lowTempPercentStep = 5;
+        pumpDescription.lowTempAbsoluteStep = 0.1;
+        pumpDescription.lowTempPercentDuration = 30;
+        pumpDescription.lowTempAbsoluteDuration = 30;
+        pumpDescription.highTempPercentStep = 10;
+        pumpDescription.highTempAbsoluteStep = 0.05d;
+        pumpDescription.highTempPercentDuration = 30;
+        pumpDescription.highTempAbsoluteDuration = 30;
+
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.basalStep = 0.01d;
+        pumpDescription.basalMinimumRate = 0.04d;
+
+        pumpDescription.isRefillingCapable = false;
+    }
+
     @Override
     public String getFragmentClass() {
         return VirtualPumpFragment.class.getName();
