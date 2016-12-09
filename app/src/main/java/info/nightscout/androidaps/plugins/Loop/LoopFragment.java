@@ -24,9 +24,12 @@ import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 public class LoopFragment extends Fragment implements View.OnClickListener, FragmentBase {
     private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
 
-    private static LoopPlugin loopPlugin = new LoopPlugin();
+    private static LoopPlugin loopPlugin;
 
     public static LoopPlugin getPlugin() {
+        if (loopPlugin == null){
+            loopPlugin = new LoopPlugin();
+        }
         return loopPlugin;
     }
 
@@ -73,7 +76,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Frag
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loop_run:
-                loopPlugin.invoke(true);
+                getPlugin().invoke(true);
                 break;
         }
 
@@ -104,13 +107,13 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Frag
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (loopPlugin.lastRun != null) {
-                        requestView.setText(loopPlugin.lastRun.request != null ? loopPlugin.lastRun.request.toSpanned() : "");
-                        constraintsProcessedView.setText(loopPlugin.lastRun.constraintsProcessed != null ? loopPlugin.lastRun.constraintsProcessed.toSpanned() : "");
-                        setByPumpView.setText(loopPlugin.lastRun.setByPump != null ? loopPlugin.lastRun.setByPump.toSpanned() : "");
-                        sourceView.setText(loopPlugin.lastRun.source != null ? loopPlugin.lastRun.source : "");
-                        lastRunView.setText(loopPlugin.lastRun.lastAPSRun != null && loopPlugin.lastRun.lastAPSRun.getTime() != 0 ? loopPlugin.lastRun.lastAPSRun.toLocaleString() : "");
-                        lastEnactView.setText(loopPlugin.lastRun.lastEnact != null && loopPlugin.lastRun.lastEnact.getTime() != 0 ? loopPlugin.lastRun.lastEnact.toLocaleString() : "");
+                    if (getPlugin().lastRun != null) {
+                        requestView.setText(getPlugin().lastRun.request != null ? getPlugin().lastRun.request.toSpanned() : "");
+                        constraintsProcessedView.setText(getPlugin().lastRun.constraintsProcessed != null ? getPlugin().lastRun.constraintsProcessed.toSpanned() : "");
+                        setByPumpView.setText(getPlugin().lastRun.setByPump != null ? getPlugin().lastRun.setByPump.toSpanned() : "");
+                        sourceView.setText(getPlugin().lastRun.source != null ? getPlugin().lastRun.source : "");
+                        lastRunView.setText(getPlugin().lastRun.lastAPSRun != null && getPlugin().lastRun.lastAPSRun.getTime() != 0 ? getPlugin().lastRun.lastAPSRun.toLocaleString() : "");
+                        lastEnactView.setText(getPlugin().lastRun.lastEnact != null && getPlugin().lastRun.lastEnact.getTime() != 0 ? getPlugin().lastRun.lastEnact.toLocaleString() : "");
                     }
                 }
             });
