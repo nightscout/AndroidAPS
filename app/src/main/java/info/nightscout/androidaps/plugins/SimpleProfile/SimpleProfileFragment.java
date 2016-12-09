@@ -8,6 +8,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
@@ -16,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.utils.SafeParse;
 
 public class SimpleProfileFragment extends Fragment implements FragmentBase {
@@ -36,6 +39,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
     EditText basalView;
     EditText targetlowView;
     EditText targethighView;
+    Button profileswitchButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,6 +54,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         basalView = (EditText) layout.findViewById(R.id.simpleprofile_basalrate);
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
+        profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
 
         mgdlView.setChecked(simpleProfilePlugin.mgdl);
         mmolView.setChecked(simpleProfilePlugin.mmol);
@@ -77,6 +82,17 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
                 simpleProfilePlugin.mgdl = !simpleProfilePlugin.mmol;
                 mgdlView.setChecked(simpleProfilePlugin.mgdl);
                 simpleProfilePlugin.storeSettings();
+            }
+        });
+
+        profileswitchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
+                profileswitch.executeProfileSwitch = true;
+                newDialog.setOptions(profileswitch);
+                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
             }
         });
 

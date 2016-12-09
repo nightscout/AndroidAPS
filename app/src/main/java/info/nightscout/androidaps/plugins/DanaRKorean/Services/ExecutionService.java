@@ -462,6 +462,7 @@ public class ExecutionService extends Service {
         double[] basal = buildDanaRProfileRecord(profile);
         MsgSetSingleBasalProfile msgSet = new MsgSetSingleBasalProfile(basal);
         mSerialIOThread.sendMessage(msgSet);
+        danaRKoreanPump.lastSettingsRead = new Date(0); // force read full settings
         getPumpStatus();
         return true;
     }

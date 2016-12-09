@@ -473,6 +473,7 @@ public class ExecutionService extends Service {
         mSerialIOThread.sendMessage(msgSet);
         MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
         mSerialIOThread.sendMessage(msgActivate);
+        danaRPump.lastSettingsRead = new Date(0); // force read full settings
         getPumpStatus();
         return true;
     }
