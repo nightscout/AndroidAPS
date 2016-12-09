@@ -79,7 +79,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
 
-        pumpDescription.isBolusCapable = true;
+        pumpDescription.isBolusCapable = true; // TODO: use description in setTempBasalAbsolute
         pumpDescription.bolusStep = 0.05d;
 
         pumpDescription.isExtendedBolusCapable = true;

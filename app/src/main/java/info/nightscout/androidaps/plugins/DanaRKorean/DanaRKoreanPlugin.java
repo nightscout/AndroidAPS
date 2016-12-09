@@ -77,6 +77,27 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         Intent intent = new Intent(context, ExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
+
+        pumpDescription.isBolusCapable = true; // TODO: use description in setTempBasalAbsolute
+        pumpDescription.bolusStep = 0.1d;
+
+        pumpDescription.isExtendedBolusCapable = true;
+        pumpDescription.extendedBolusStep = 0.1d;
+
+        pumpDescription.isTempBasalCapable = true;
+        pumpDescription.lowTempBasalStyle = PumpDescription.PERCENT;
+        pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
+        pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
+        pumpDescription.lowTempStep = 10;
+        pumpDescription.lowTempDuration = 60;
+        pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
+        pumpDescription.highTempDuration = useExtendedBoluses ? 30 : 60;
+
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.basalStep = 0.01d;
+        pumpDescription.basalMinimumRate = 0.1d;
+
+        pumpDescription.isRefillingCapable = true;
     }
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -105,6 +126,12 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             boolean previousValue = useExtendedBoluses;
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
+
+            pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
+            pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
+            pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
+            pumpDescription.highTempDuration = useExtendedBoluses ? 30 : 60;
+
             if (useExtendedBoluses != previousValue && isExtendedBoluslInProgress()) {
                 sExecutionService.extendedBolusStop();
             }
