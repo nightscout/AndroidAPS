@@ -20,7 +20,9 @@ public class PumpDescription {
     public int highTempBasalStyle = PERCENT;
     public double maxHighTemp = 200;
     public double lowTempStep = 10;
+    public int lowTempDuration = 60;
     public double highTempStep = 10;
+    public int highTempDuration = 60;
 
     public boolean isSetBasalProfileCapable = true;
     public double basalStep = 0.01d;

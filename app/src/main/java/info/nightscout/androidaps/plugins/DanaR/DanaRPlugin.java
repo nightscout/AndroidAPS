@@ -90,7 +90,9 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
         pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
         pumpDescription.lowTempStep = 10;
+        pumpDescription.lowTempDuration = 60;
         pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
+        pumpDescription.highTempDuration = useExtendedBoluses ? 30 : 60;
 
         pumpDescription.isSetBasalProfileCapable = true;
         pumpDescription.basalStep = 0.01d;
@@ -129,6 +131,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
             pumpDescription.maxHighTemp = useExtendedBoluses ? 0: 200;
             pumpDescription.highTempStep = useExtendedBoluses ? 0.05d : 10;
+            pumpDescription.highTempDuration = useExtendedBoluses ? 30 : 60;
 
             if (useExtendedBoluses != previousValue && isExtendedBoluslInProgress()) {
                 sExecutionService.extendedBolusStop();
