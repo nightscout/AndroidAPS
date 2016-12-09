@@ -16,9 +16,12 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 
 public class CareportalFragment extends Fragment implements FragmentBase, View.OnClickListener {
 
-    static CareportalPlugin careportalPlugin = new CareportalPlugin();
+    static CareportalPlugin careportalPlugin;
 
     static public CareportalPlugin getPlugin() {
+        if (careportalPlugin == null) {
+            careportalPlugin = new CareportalPlugin();
+        }
         return careportalPlugin;
     }
 

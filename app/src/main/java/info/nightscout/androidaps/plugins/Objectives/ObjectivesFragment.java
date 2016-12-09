@@ -29,9 +29,12 @@ import info.nightscout.androidaps.interfaces.FragmentBase;
 public class ObjectivesFragment extends Fragment implements View.OnClickListener, FragmentBase {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
 
-    private static ObjectivesPlugin objectivesPlugin = new ObjectivesPlugin();
+    private static ObjectivesPlugin objectivesPlugin;
 
     public static ObjectivesPlugin getPlugin() {
+        if (objectivesPlugin == null) {
+            objectivesPlugin = new ObjectivesPlugin();
+        }
         return objectivesPlugin;
     }
 
@@ -67,7 +70,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         @Override
         public void onBindViewHolder(ObjectiveViewHolder holder, int position) {
             ObjectivesPlugin.Objective o = objectives.get(position);
-            ObjectivesPlugin.RequirementResult requirementsMet = objectivesPlugin.requirementsMet(position);
+            ObjectivesPlugin.RequirementResult requirementsMet = getPlugin().requirementsMet(position);
             Context context = MainApp.instance().getApplicationContext();
             holder.position.setText(String.valueOf(position + 1));
             holder.objective.setText(o.objective);
@@ -91,7 +94,7 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
             holder.verifyButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     ObjectivesPlugin.Objective o = (ObjectivesPlugin.Objective) v.getTag();
-                    if (objectivesPlugin.requirementsMet(o.num).done || enableFake.isChecked()) {
+                    if (getPlugin().requirementsMet(o.num).done || enableFake.isChecked()) {
                         o.accomplished = new Date();
                         updateGUI();
                         ObjectivesPlugin.saveProgress();
@@ -197,26 +200,26 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
         });
         reset.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                objectivesPlugin.initializeData();
-                objectivesPlugin.saveProgress();
+                getPlugin().initializeData();
+                getPlugin().saveProgress();
                 updateGUI();
             }
         });
 
         // Add correct translations to array after app is initialized
-        objectivesPlugin.objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
-        objectivesPlugin.objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
-        objectivesPlugin.objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
-        objectivesPlugin.objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
-        objectivesPlugin.objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
-        objectivesPlugin.objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
-        objectivesPlugin.objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
-        objectivesPlugin.objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
-        objectivesPlugin.objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
-        objectivesPlugin.objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
-        objectivesPlugin.objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
-        objectivesPlugin.objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
-        objectivesPlugin.objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
+        getPlugin().objectives.get(0).objective = MainApp.sResources.getString(R.string.objectives_0_objective);
+        getPlugin().objectives.get(1).objective = MainApp.sResources.getString(R.string.objectives_1_objective);
+        getPlugin().objectives.get(2).objective = MainApp.sResources.getString(R.string.objectives_2_objective);
+        getPlugin().objectives.get(3).objective = MainApp.sResources.getString(R.string.objectives_3_objective);
+        getPlugin().objectives.get(4).objective = MainApp.sResources.getString(R.string.objectives_4_objective);
+        getPlugin().objectives.get(5).objective = MainApp.sResources.getString(R.string.objectives_5_objective);
+        getPlugin().objectives.get(6).objective = MainApp.sResources.getString(R.string.objectives_6_objective);
+        getPlugin().objectives.get(0).gate = MainApp.sResources.getString(R.string.objectives_0_gate);
+        getPlugin().objectives.get(1).gate = MainApp.sResources.getString(R.string.objectives_1_gate);
+        getPlugin().objectives.get(2).gate = MainApp.sResources.getString(R.string.objectives_2_gate);
+        getPlugin().objectives.get(3).gate = MainApp.sResources.getString(R.string.objectives_3_gate);
+        getPlugin().objectives.get(4).gate = MainApp.sResources.getString(R.string.objectives_4_gate);
+        getPlugin().objectives.get(5).gate = MainApp.sResources.getString(R.string.objectives_5_gate);
         updateGUI();
 
         return view;
