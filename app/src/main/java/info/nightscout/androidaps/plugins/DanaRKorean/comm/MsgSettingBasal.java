@@ -25,7 +25,7 @@ public class MsgSettingBasal extends MessageBase {
         for (int index = 0; index < 24; index++) {
             int basal = intFromBuff(bytes, 2 * index, 2);
             if (basal < 10) basal = 0;
-            pump.pumpProfiles[pump.activeProfile][index] = basal / 100;
+            pump.pumpProfiles[pump.activeProfile][index] = basal / 100d;
         }
 
         if (Config.logDanaMessageDetail)
