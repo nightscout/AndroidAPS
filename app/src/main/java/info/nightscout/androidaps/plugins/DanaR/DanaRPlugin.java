@@ -102,11 +102,13 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange s) {
-        boolean previousValue = useExtendedBoluses;
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
-        if (useExtendedBoluses != previousValue && isExtendedBoluslInProgress()) {
-            sExecutionService.extendedBolusStop();
+        if (isEnabled(PUMP)) {
+            boolean previousValue = useExtendedBoluses;
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
+            if (useExtendedBoluses != previousValue && isExtendedBoluslInProgress()) {
+                sExecutionService.extendedBolusStop();
+            }
         }
     }
 
