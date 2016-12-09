@@ -377,4 +377,6 @@
     <string name="danarkoreanpump">DanaR Korean</string>
     <string name="wrongpumpdriverselected">Wrong pump driver selected</string>
     <string name="basal_rate">Basal rate:</string>
+    <string name="profile_set_failed">Setting of basal profile failed</string>
+    <string name="profile_set_ok">Basal profile in pump updated</string>
 </resources>
