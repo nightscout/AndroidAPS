@@ -90,12 +90,17 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String lang = SP.getString("language", "en");
         LocaleHelper.setLocale(getApplicationContext(), lang);
-        recreate();
-        try { // activity may be destroyed
-            setUpTabs(ev.isSwitchToLast());
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recreate();
+                try { // activity may be destroyed
+                    setUpTabs(ev.isSwitchToLast());
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setUpTabs(boolean switchToLast) {

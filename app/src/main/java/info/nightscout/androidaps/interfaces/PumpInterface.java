@@ -42,4 +42,6 @@ public interface PumpInterface {
     // Status to be passed to NS
     JSONObject getJSONStatus();
     String deviceID();
+
+    PumpDescription getPumpDescription();
 }

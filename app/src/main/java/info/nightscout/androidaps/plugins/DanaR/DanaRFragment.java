@@ -38,9 +38,12 @@ import info.nightscout.utils.SetWarnColor;
 public class DanaRFragment extends Fragment implements FragmentBase {
     private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
 
-    private static DanaRPlugin danaRPlugin = new DanaRPlugin();
+    private static DanaRPlugin danaRPlugin;
 
     public static DanaRPlugin getPlugin() {
+        if(danaRPlugin==null){
+            danaRPlugin = new DanaRPlugin();
+        }
         return danaRPlugin;
     }
 
@@ -204,20 +207,20 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                         Long agoMsec = new Date().getTime() - DanaRPlugin.getDanaRPump().lastBolusTime.getTime();
                         double agoHours =  agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
-                            lastBolusView.setText(formatTime.format(DanaRPlugin.getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(danaRPlugin.getDanaRPump().lastBolusAmount) + " U");
+                            lastBolusView.setText(formatTime.format(DanaRPlugin.getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getPlugin().getDanaRPump().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
                     }
 
                     dailyUnitsView.setText(DecimalFormatter.to0Decimal(DanaRPlugin.getDanaRPump().dailyTotalUnits) + " / " + DanaRPlugin.getDanaRPump().maxDailyTotalUnits + " U");
                     SetWarnColor.setColor(dailyUnitsView, DanaRPlugin.getDanaRPump().dailyTotalUnits, DanaRPlugin.getDanaRPump().maxDailyTotalUnits * 0.75d, DanaRPlugin.getDanaRPump().maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("( " + (DanaRPlugin.getDanaRPump().activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(danaRPlugin.getBaseBasalRate()) + " U/h");
-                    if (danaRPlugin.isRealTempBasalInProgress()) {
-                        tempBasalView.setText(danaRPlugin.getRealTempBasal().toString());
+                    basaBasalRateView.setText("( " + (DanaRPlugin.getDanaRPump().activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getPlugin().getBaseBasalRate()) + " U/h");
+                    if (getPlugin().isRealTempBasalInProgress()) {
+                        tempBasalView.setText(getPlugin().getRealTempBasal().toString());
                     } else {
                         tempBasalView.setText("");
                     }
-                    if (danaRPlugin.isExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(danaRPlugin.getExtendedBolus().toString());
+                    if (getPlugin().isExtendedBoluslInProgress()) {
+                        extendedBolusView.setText(getPlugin().getExtendedBolus().toString());
                     } else {
                         extendedBolusView.setText("");
                     }

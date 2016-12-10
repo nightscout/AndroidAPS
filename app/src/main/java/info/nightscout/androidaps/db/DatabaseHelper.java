@@ -196,8 +196,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("timeIndex", true);
             Where where = queryBuilder.where();
-            where.ge("timeIndex", mills);
-            queryBuilder.where().gt("value", 38);
+            where.ge("timeIndex", mills).and().gt("value", 38);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;

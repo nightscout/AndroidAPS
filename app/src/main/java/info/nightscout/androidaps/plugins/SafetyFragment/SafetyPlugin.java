@@ -64,7 +64,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isLoopEnabled() {
-        return true;
+        return MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     /**

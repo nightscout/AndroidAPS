@@ -17,6 +17,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.VirtualPump.events.EventVirtualPumpUpdateGui;
@@ -36,6 +37,36 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
+
+    PumpDescription pumpDescription = new PumpDescription();
+
+    public VirtualPumpPlugin() {
+        pumpDescription.isBolusCapable = true;
+        pumpDescription.bolusStep = 1d;
+
+        pumpDescription.isExtendedBolusCapable = true;
+        pumpDescription.extendedBolusStep = 0.2d;
+
+        pumpDescription.isTempBasalCapable = true;
+        pumpDescription.lowTempBasalStyle = PumpDescription.ABSOLUTE | PumpDescription.PERCENT;
+        pumpDescription.highTempBasalStyle = PumpDescription.ABSOLUTE | PumpDescription.PERCENT;
+        pumpDescription.maxHighTempPercent = 600;
+        pumpDescription.maxHighTempAbsolute = 10;
+        pumpDescription.lowTempPercentStep = 5;
+        pumpDescription.lowTempAbsoluteStep = 0.1;
+        pumpDescription.lowTempPercentDuration = 30;
+        pumpDescription.lowTempAbsoluteDuration = 30;
+        pumpDescription.highTempPercentStep = 10;
+        pumpDescription.highTempAbsoluteStep = 0.05d;
+        pumpDescription.highTempPercentDuration = 30;
+        pumpDescription.highTempAbsoluteDuration = 30;
+
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.basalStep = 0.01d;
+        pumpDescription.basalMinimumRate = 0.04d;
+
+        pumpDescription.isRefillingCapable = false;
+    }
 
     @Override
     public String getFragmentClass() {
@@ -365,6 +396,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public String deviceID() {
         return "VirtualPump";
+    }
+
+    @Override
+    public PumpDescription getPumpDescription() {
+        return pumpDescription;
     }
 
 }

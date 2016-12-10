@@ -241,7 +241,6 @@
     <string name="absolute">Absolute</string>
     <string name="canceltemp">Cancel temp basal</string>
     <string name="smscommunicator">SMS Communicator</string>
-    <string name="mm640g">MM 640g</string>
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
@@ -375,4 +374,9 @@
     <string name="lowbattery">Low Battery</string>
     <string name="pumpshutdown">Pump Shutdown</string>
     <string name="batterydischarged">Pump Battery Discharged</string>
+    <string name="danarkoreanpump">DanaR Korean</string>
+    <string name="wrongpumpdriverselected">Wrong pump driver selected</string>
+    <string name="basal_rate">Basal rate:</string>
+    <string name="profile_set_failed">Setting of basal profile failed</string>
+    <string name="profile_set_ok">Basal profile in pump updated</string>
 </resources>

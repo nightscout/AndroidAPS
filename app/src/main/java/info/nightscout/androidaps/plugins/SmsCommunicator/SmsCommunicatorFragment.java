@@ -29,9 +29,13 @@ import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommuni
 public class SmsCommunicatorFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(SmsCommunicatorFragment.class);
 
-    private static SmsCommunicatorPlugin smsCommunicatorPlugin = new SmsCommunicatorPlugin();
+    private static SmsCommunicatorPlugin smsCommunicatorPlugin;
 
     public static SmsCommunicatorPlugin getPlugin() {
+
+        if(smsCommunicatorPlugin==null){
+            smsCommunicatorPlugin = new SmsCommunicatorPlugin();
+        }
         return smsCommunicatorPlugin;
     }
 
@@ -81,15 +85,15 @@ public class SmsCommunicatorFragment extends Fragment {
                             return (int) (object1.date.getTime() - object2.date.getTime());
                         }
                     }
-                    Collections.sort(smsCommunicatorPlugin.messages, new CustomComparator());
+                    Collections.sort(getPlugin().messages, new CustomComparator());
                     int messagesToShow = 40;
 
-                    int start = Math.max(0, smsCommunicatorPlugin.messages.size() - messagesToShow);
+                    int start = Math.max(0, getPlugin().messages.size() - messagesToShow);
                     DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
 
                     String logText = "";
-                    for (int x = start; x < smsCommunicatorPlugin.messages.size(); x++) {
-                        SmsCommunicatorPlugin.Sms sms = smsCommunicatorPlugin.messages.get(x);
+                    for (int x = start; x < getPlugin().messages.size(); x++) {
+                        SmsCommunicatorPlugin.Sms sms = getPlugin().messages.get(x);
                         if (sms.received) {
                             logText += df.format(sms.date) + " &lt;&lt;&lt; " + (sms.processed ? "● " : "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
                         } else if (sms.sent) {
