@@ -26,7 +26,18 @@ public class NSProfile {
 
     public NSProfile(JSONObject json, String activeProfile) {
         this.json = json;
-        this.activeProfile = activeProfile;
+        this.activeProfile = null;
+        JSONObject store;
+        try {
+            store = json.getJSONObject("store");
+            if (activeProfile != null && store.has(activeProfile)) {
+                this.activeProfile = activeProfile;
+            } else {
+                log.error("Active profile not found in store");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public JSONObject getDefaultProfile() {
@@ -346,7 +357,22 @@ public class NSProfile {
     }
 
     public String getActiveProfile() {
-        return activeProfile;
+        if (activeProfile != null)
+            return activeProfile;
+        else {
+            try {
+                JSONObject store = json.getJSONObject("store");
+                String defaultProfileName = (String) json.get("defaultProfile");
+                if (store.has(defaultProfileName)) {
+                    return defaultProfileName;
+                }
+                log.error("Default profile not found");
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public void setActiveProfile(String newProfile) {
