@@ -58,12 +58,12 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == APS && fragmentEnabled;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == APS && fragmentVisible;
     }
 
     @Override
@@ -73,12 +73,12 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == APS) this.fragmentVisible = fragmentVisible;
     }
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == APS) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override

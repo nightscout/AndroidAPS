@@ -98,12 +98,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isEnabled(int type) {
-        return true;
+        return type == GENERAL && true;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return true;
+        return type == GENERAL && true;
     }
 
     @Override
@@ -190,6 +190,22 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     public static LoopPlugin getActiveLoop() {
         return activeLoop;
+    }
+
+    public void logPluginStatus() {
+        for (PluginBase p : pluginList) {
+            log.debug(p.getName() + ":" +
+                    (p.isEnabled(1) ? " GENERAL" : "")  +
+                    (p.isEnabled(2) ? " TREATMENT" : "")  +
+                    (p.isEnabled(3) ? " TEMPBASAL" : "")  +
+                    (p.isEnabled(4) ? " PROFILE" : "")  +
+                    (p.isEnabled(5) ? " APS" : "")  +
+                    (p.isEnabled(6) ? " PUMP" : "")  +
+                    (p.isEnabled(7) ? " CONSTRAINTS" : "")  +
+                    (p.isEnabled(8) ? " LOOP" : "")  +
+                    (p.isEnabled(9) ? " BGSOURCE" : "")
+            );
+        }
     }
 
     private void verifySelectionInCategories() {

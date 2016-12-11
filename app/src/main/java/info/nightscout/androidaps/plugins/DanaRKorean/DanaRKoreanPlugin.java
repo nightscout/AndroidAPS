@@ -36,6 +36,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService;
+import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -173,8 +174,17 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        if (type == PluginBase.PROFILE) this.fragmentProfileEnabled = fragmentEnabled;
-        else if (type == PluginBase.PUMP) this.fragmentPumpEnabled = fragmentEnabled;
+        if (type == PluginBase.PROFILE)
+            this.fragmentProfileEnabled = fragmentEnabled;
+        else if (type == PluginBase.PUMP)
+            this.fragmentPumpEnabled = fragmentEnabled;
+        // if pump profile was enabled need to switch to another too
+        if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
+            setFragmentEnabled(PluginBase.PROFILE, false);
+            setFragmentVisible(PluginBase.PROFILE, false);
+            MainApp.getSpecificPlugin(NSProfileViewerPlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
+            MainApp.getSpecificPlugin(NSProfileViewerPlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
+        }
     }
 
     @Override

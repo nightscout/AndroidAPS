@@ -51,12 +51,12 @@ public class NSProfileViewerPlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == PROFILE && fragmentEnabled;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == PROFILE && fragmentVisible;
     }
 
     @Override
@@ -66,12 +66,12 @@ public class NSProfileViewerPlugin implements PluginBase, ProfileInterface {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == PROFILE) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == PROFILE) this.fragmentVisible = fragmentVisible;
     }
 
     @Override

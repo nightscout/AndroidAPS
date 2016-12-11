@@ -80,12 +80,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == PUMP && fragmentEnabled;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == PUMP && fragmentVisible;
     }
 
     @Override
@@ -95,12 +95,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == PUMP) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == PUMP) this.fragmentVisible = fragmentVisible;
     }
 
     @Override
