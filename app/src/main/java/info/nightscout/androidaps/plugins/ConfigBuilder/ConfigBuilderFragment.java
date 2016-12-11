@@ -229,6 +229,16 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                 }
             }
 
+            // Disable profile control for pump profiles if pump is not enabled
+            if (type == PluginBase.PROFILE) {
+                if (PumpInterface.class.isAssignableFrom(plugin.getClass())) {
+                    if (!plugin.isEnabled(PluginBase.PUMP)) {
+                        holder.checkboxEnabled.setEnabled(false);
+                        holder.checkboxEnabled.setChecked(false);
+                    }
+                }
+            }
+
             return convertView;
 
         }
