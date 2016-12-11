@@ -33,6 +33,13 @@ public class MsgInitConnStatusTime extends MessageBase {
             ((DanaRKoreanPlugin)MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setFragmentVisible(PluginBase.PUMP, false);
             ((DanaRPlugin)MainApp.getSpecificPlugin(DanaRPlugin.class)).setFragmentEnabled(PluginBase.PUMP, true);
             ((DanaRPlugin)MainApp.getSpecificPlugin(DanaRPlugin.class)).setFragmentVisible(PluginBase.PUMP, true);
+
+            //If profile coming from pump, switch it as well
+            if(MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PROFILE)){
+                (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).setFragmentEnabled(PluginBase.PROFILE, false);
+                (MainApp.getSpecificPlugin(DanaRPlugin.class)).setFragmentEnabled(PluginBase.PROFILE, true);
+            }
+
             MainApp.getConfigBuilder().storeSettings();
             MainApp.bus().post(new EventRefreshGui(false));
             return;
