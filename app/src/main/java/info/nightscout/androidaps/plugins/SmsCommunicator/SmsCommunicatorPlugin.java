@@ -16,12 +16,14 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
@@ -40,6 +42,8 @@ public class SmsCommunicatorPlugin implements PluginBase {
     private static boolean fragmentVisible = true;
 
     final long CONFIRM_TIMEOUT = 5 * 60 * 1000L;
+
+    List<String> allowedNumbers = new ArrayList<String>();
 
     public class Sms {
         String phoneNumber;
@@ -81,6 +85,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
     public SmsCommunicatorPlugin() {
         MainApp.bus().register(this);
+        processSettings(null);
     }
 
     @Override
@@ -124,6 +129,29 @@ public class SmsCommunicatorPlugin implements PluginBase {
     }
 
     @Subscribe
+    public void processSettings(final EventPreferenceChange ev) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        String settings = sharedPreferences.getString("smscommunicator_allowednumbers", "");
+
+        String pattern = ";";
+
+        String[] substrings = settings.split(pattern);
+        for (String number: substrings)
+        {
+            String cleaned = number.replaceAll("\\s+","");
+            allowedNumbers.add(cleaned);
+            log.debug("Found allowed number: " + cleaned);
+        }
+    }
+
+    boolean isAllowedNumber(String number) {
+        for (String num: allowedNumbers) {
+            if (num.equals(number)) return true;
+        }
+        return false;
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventNewSMS ev) {
 
         Object[] pdus = (Object[]) ev.bundle.get("pdus");
@@ -135,14 +163,13 @@ public class SmsCommunicatorPlugin implements PluginBase {
     }
 
     private void processSms(Sms receivedSms) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+
         if (!isEnabled(PluginBase.GENERAL)) {
             log.debug("Ignoring SMS. Plugin disabled.");
             return;
         }
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        String allowedNumbers = sharedPreferences.getString("smscommunicator_allowednumbers", "");
-
-        if (!allowedNumbers.contains(receivedSms.phoneNumber)) {
+        if (!isAllowedNumber(receivedSms.phoneNumber)) {
             log.debug("Ignoring SMS from: " + receivedSms.phoneNumber + ". Sender not allowed");
             return;
         }
