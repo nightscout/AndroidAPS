@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPump;
 import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 public class MsgInitConnStatusBasic extends MessageBase {
@@ -41,6 +42,8 @@ public class MsgInitConnStatusBasic extends MessageBase {
         if (pump.isEasyModeEnabled) {
             Notification notification = new Notification(Notification.EASYMODE_ENABLED, MainApp.sResources.getString(R.string.danar_disableeasymode), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.EASYMODE_ENABLED));
         }
     }
 }

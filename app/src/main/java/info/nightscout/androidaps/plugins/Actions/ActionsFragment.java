@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.Actions;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
@@ -73,27 +75,39 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
     }
 
     @Subscribe
+    public void onStatusEvent(final EventInitializationChanged ev) {
+        updateGUIIfVisible();
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
         updateGUIIfVisible();
     }
 
     void updateGUIIfVisible() {
-        if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable)
-            profileSwitch.setVisibility(View.GONE);
-        else
-            profileSwitch.setVisibility(View.VISIBLE);
-        if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable)
-            extendedBolus.setVisibility(View.GONE);
-        else
-            extendedBolus.setVisibility(View.VISIBLE);
-        if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable)
-            tempBasal.setVisibility(View.GONE);
-        else
-            tempBasal.setVisibility(View.VISIBLE);
-        if (!MainApp.getConfigBuilder().getPumpDescription().isRefillingCapable)
-            fill.setVisibility(View.GONE);
-        else
-            fill.setVisibility(View.VISIBLE);
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized())
+                        profileSwitch.setVisibility(View.GONE);
+                    else
+                        profileSwitch.setVisibility(View.VISIBLE);
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized())
+                        extendedBolus.setVisibility(View.GONE);
+                    else
+                        extendedBolus.setVisibility(View.VISIBLE);
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized())
+                        tempBasal.setVisibility(View.GONE);
+                    else
+                        tempBasal.setVisibility(View.VISIBLE);
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isRefillingCapable || !MainApp.getConfigBuilder().isInitialized())
+                        fill.setVisibility(View.GONE);
+                    else
+                        fill.setVisibility(View.VISIBLE);
+                }
+            });
     }
 
 

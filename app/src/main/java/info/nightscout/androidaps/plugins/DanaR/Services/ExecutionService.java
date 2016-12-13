@@ -30,6 +30,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
@@ -328,6 +329,7 @@ public class ExecutionService extends Service {
 
             danaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
+            MainApp.bus().post(new EventInitializationChanged());
         } catch (Exception e) {
             e.printStackTrace();
         }

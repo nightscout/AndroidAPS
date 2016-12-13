@@ -30,6 +30,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.plugins.DanaR.comm.*;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusStart;
@@ -319,6 +320,7 @@ public class ExecutionService extends Service {
 
             danaRKoreanPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
+            MainApp.bus().post(new EventInitializationChanged());
         } catch (Exception e) {
             e.printStackTrace();
         }

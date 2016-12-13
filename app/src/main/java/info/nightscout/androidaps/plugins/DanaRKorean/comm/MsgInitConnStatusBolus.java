@@ -10,6 +10,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPump;
 import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 /**
@@ -46,6 +47,8 @@ public class MsgInitConnStatusBolus extends MessageBase {
         if (!pump.isExtendedBolusEnabled) {
             Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.sResources.getString(R.string.danar_enableextendedbolus), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
         }
     }
 }

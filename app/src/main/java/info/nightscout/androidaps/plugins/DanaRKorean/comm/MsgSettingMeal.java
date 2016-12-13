@@ -9,7 +9,10 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPump;
 import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 /**
@@ -24,7 +27,7 @@ public class MsgSettingMeal extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPump pump = DanaRPlugin.getDanaRPump();
+        DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
         pump.basalStep = intFromBuff(bytes, 0, 1) / 100d;
         pump.bolusStep = intFromBuff(bytes, 1, 1) / 100d;
         boolean bolusEnabled = intFromBuff(bytes, 2, 1) == 1;
@@ -44,6 +47,8 @@ public class MsgSettingMeal extends MessageBase {
         if (pump.isConfigUD) {
             Notification notification = new Notification(Notification.UD_MODE_ENABLED, MainApp.sResources.getString(R.string.danar_switchtouhmode), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.UD_MODE_ENABLED));
         }
     }
 

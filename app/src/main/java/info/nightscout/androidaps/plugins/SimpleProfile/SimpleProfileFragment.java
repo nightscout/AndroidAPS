@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.SimpleProfile;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -12,13 +13,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.squareup.otto.Subscribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.SafeParse;
 
 public class SimpleProfileFragment extends Fragment implements FragmentBase {
@@ -55,6 +61,8 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
         profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
+
+        onStatusEvent(null);
 
         mgdlView.setChecked(simpleProfilePlugin.mgdl);
         mmolView.setChecked(simpleProfilePlugin.mmol);
@@ -129,6 +137,34 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         targetlowView.addTextChangedListener(textWatch);
         targethighView.addTextChangedListener(textWatch);
         return layout;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventInitializationChanged e) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!MainApp.getConfigBuilder().isInitialized()) {
+                        profileswitchButton.setVisibility(View.GONE);
+                    } else {
+                        profileswitchButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
     }
 
 }
