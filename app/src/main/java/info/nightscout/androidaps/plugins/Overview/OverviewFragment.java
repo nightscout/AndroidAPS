@@ -683,6 +683,13 @@ public class OverviewFragment extends Fragment {
             }
         });
 
+        // set manual x bounds to have nice steps
+        bgGraph.getViewport().setMaxX(toTime);
+        bgGraph.getViewport().setMinX(fromTime);
+        bgGraph.getViewport().setXAxisBoundsManual(true);
+        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
+        bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
+
         // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
         List<BgReading> inRangeArray = new ArrayList<BgReading>();
@@ -762,13 +769,6 @@ public class OverviewFragment extends Fragment {
             seriesTreatments.setSize(10);
             seriesTreatments.setColor(Color.CYAN);
         }
-
-        // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(toTime);
-        bgGraph.getViewport().setMinX(fromTime);
-        bgGraph.getViewport().setXAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
-        bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
         // set manual y bounds to have nice steps
         bgGraph.getViewport().setMaxY(maxBgValue);
