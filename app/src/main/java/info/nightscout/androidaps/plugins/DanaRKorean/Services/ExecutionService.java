@@ -304,7 +304,7 @@ public class ExecutionService extends Service {
             }
 
             Date now = new Date();
-            if (danaRKoreanPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime()) {
+            if (danaRKoreanPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !((DanaRKoreanPlugin)MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).isInitialized()) {
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
                 mSerialIOThread.sendMessage(new MsgSettingBasal());

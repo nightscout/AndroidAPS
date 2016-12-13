@@ -4,9 +4,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 /**
  * Created by mike on 13.12.2016.
@@ -35,6 +39,11 @@ public class MsgSettingMeal extends MessageBase {
             log.debug("Melody time: " + melodyTime);
             log.debug("Block time: " + blockTime);
             log.debug("Is Config U/d: " + pump.isConfigUD);
+        }
+
+        if (pump.isConfigUD) {
+            Notification notification = new Notification(Notification.UD_MODE_ENABLED, MainApp.sResources.getString(R.string.danar_switchtouhmode), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
         }
     }
 

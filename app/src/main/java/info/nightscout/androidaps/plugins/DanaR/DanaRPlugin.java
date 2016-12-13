@@ -37,6 +37,8 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -195,7 +197,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public boolean isInitialized() {
-        return getDanaRPump().lastConnection.getTime() > 0;
+        return getDanaRPump().lastConnection.getTime() > 0 && getDanaRPump().isExtendedBolusEnabled;
     }
 
     // Pump interface
@@ -219,6 +221,12 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public void setNewBasalProfile(NSProfile profile) {
         if (sExecutionService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
+            return;
+        }
+         if (!isInitialized()) {
+            log.error("setNewBasalProfile not initialized");
+             Notification notification = new Notification(Notification.NOT_INITIALIZED, MainApp.sResources.getString(R.string.canceledPumpNotInitialized), Notification.URGENT);
+             MainApp.bus().post(new EventNewNotification(notification));
             return;
         }
         if (!sExecutionService.updateBasalsInPump(profile))

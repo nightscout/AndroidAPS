@@ -4,8 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 /**
  * Created by mike on 28.05.2016.
@@ -34,6 +38,11 @@ public class MsgInitConnStatusBolus extends MessageBase {
             log.debug("Is Extended bolus enabled: " + pump.isExtendedBolusEnabled);
             log.debug("Bolus increment: " + pump.bolusStep);
             log.debug("Bolus max: " + pump.maxBolus);
+        }
+
+        if (!pump.isExtendedBolusEnabled) {
+            Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.sResources.getString(R.string.danar_enableextendedbolus), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
         }
     }
 }

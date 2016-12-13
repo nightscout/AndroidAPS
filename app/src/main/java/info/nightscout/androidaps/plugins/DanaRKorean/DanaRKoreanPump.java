@@ -48,6 +48,7 @@ public class DanaRKoreanPump {
 
     public boolean isConfigUD;
     public boolean isExtendedBolusEnabled;
+    public boolean isEasyModeEnabled;
 
     // Status
     public double dailyTotalUnits;

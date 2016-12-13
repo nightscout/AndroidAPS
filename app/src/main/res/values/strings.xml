@@ -340,6 +340,7 @@
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
     <string name="ns_upload_only_enabled">Please deactivate "NS upload only" to use this feature.</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
+    <string name="canceledPumpNotInitialized">Canceled. Pump not initialized!</string>
     <string name="primefill">Prime/Fill</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
     <string name="othersettings_title">Other</string>
@@ -379,4 +380,7 @@
     <string name="basal_rate">Basal rate:</string>
     <string name="profile_set_failed">Setting of basal profile failed</string>
     <string name="profile_set_ok">Basal profile in pump updated</string>
+    <string name="danar_disableeasymode">Disable EasyUI mode in pump</string>
+    <string name="danar_enableextendedbolus">Enable extended boluses on pump</string>
+    <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
 </resources>

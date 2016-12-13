@@ -14,6 +14,10 @@ public class Notification {
 
     public static final int PROFILE_SET_FAILED = 0;
     public static final int PROFILE_SET_OK = 1;
+    public static final int EASYMODE_ENABLED = 2;
+    public static final int EXTENDED_BOLUS_DISABLED = 3;
+    public static final int UD_MODE_ENABLED = 4;
+    public static final int NOT_INITIALIZED = 5;
 
     public int id;
     public Date date;
