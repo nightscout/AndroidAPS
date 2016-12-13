@@ -47,6 +47,7 @@ public class MessageHashTable {
             put(new MsgHistoryBasalHour());          // 0x310A CMD_HISTORY_BASAL_HOUR
             put(new MsgHistoryDone());               // 0x31F1 CMD_HISTORY_DONT_USED
             put(new MsgSettingBasal());              // 0x3202 CMD_SETTING_V_BASAL_INS_I
+            put(new MsgSettingMeal());               // 0x3203 CMD_SETTING_V_MEAL_SETTING_I
             put(new MsgSettingProfileRatios());      // 0x3204 CMD_SETTING_V_CCC_I
             put(new MsgSettingMaxValues());          // 0x3205 CMD_SETTING_V_MAX_VALUE_I
             put(new MsgSettingBasalProfileAll());    // 0x3206 CMD_SETTING_V_BASAL_PROFILE_ALL

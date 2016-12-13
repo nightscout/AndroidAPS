@@ -32,7 +32,6 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.plugins.DanaR.comm.*;
-import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTime;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
@@ -62,9 +61,11 @@ import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSetExtendedBolusSt
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSetSingleBasalProfile;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSetTempBasalStart;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSetTempBasalStop;
+import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSetTime;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingBasal;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingGlucose;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingMaxValues;
+import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingMeal;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingProfileRatios;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingPumpTime;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingShippingInfo;
@@ -305,7 +306,7 @@ public class ExecutionService extends Service {
             Date now = new Date();
             if (danaRKoreanPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime()) {
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
-                //0x3203
+                mSerialIOThread.sendMessage(new MsgSettingMeal());
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
                 //0x3201
                 mSerialIOThread.sendMessage(new MsgSettingMaxValues());

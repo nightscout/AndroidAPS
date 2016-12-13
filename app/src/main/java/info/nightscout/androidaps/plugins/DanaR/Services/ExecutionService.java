@@ -61,6 +61,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStop;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTime;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingActiveProfile;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingBasal;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingMeal;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingGlucose;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingMaxValues;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingProfileRatios;
@@ -312,7 +313,7 @@ public class ExecutionService extends Service {
             if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime()) {
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
-                //0x3203
+                mSerialIOThread.sendMessage(new MsgSettingMeal());
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
                 //0x3201
                 mSerialIOThread.sendMessage(new MsgSettingMaxValues());

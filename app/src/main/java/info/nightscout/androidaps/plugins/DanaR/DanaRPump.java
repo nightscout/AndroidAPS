@@ -46,6 +46,9 @@ public class DanaRPump {
     public int protocol;
     public int productCode;
 
+    public boolean isConfigUD;
+    public boolean isExtendedBolusEnabled;
+
 
     // Status
     public boolean pumpSuspended;
@@ -54,6 +57,7 @@ public class DanaRPump {
     public int maxDailyTotalUnits;
 
     public double bolusStep;
+    public double basalStep;
 
     public double iob;
 

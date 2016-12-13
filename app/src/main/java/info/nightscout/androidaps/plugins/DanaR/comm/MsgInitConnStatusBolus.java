@@ -24,20 +24,14 @@ public class MsgInitConnStatusBolus extends MessageBase {
         }
         DanaRPump pump = DanaRPlugin.getDanaRPump();
         int bolusConfig = intFromBuff(bytes, 0, 1);
-        boolean deliveryPrime = (bolusConfig & DanaRPump.DELIVERY_PRIME) != 0;
-        boolean deliveryStepBolus = (bolusConfig & DanaRPump.DELIVERY_STEP_BOLUS) != 0;
-        boolean deliveryBasal = (bolusConfig & DanaRPump.DELIVERY_BASAL) != 0;
-        boolean deliveryExtBolus = (bolusConfig & DanaRPump.DELIVERY_EXT_BOLUS) != 0;
+        pump.isExtendedBolusEnabled = (bolusConfig & 0x01) != 0;
 
         pump.bolusStep = intFromBuff(bytes, 1, 1) / 100d;
         pump.maxBolus = intFromBuff(bytes, 2, 2) / 100d;
         //int bolusRate = intFromBuff(bytes, 4, 8);
 
         if (Config.logDanaMessageDetail) {
-            log.debug("Delivery prime: " + deliveryPrime);
-            log.debug("Delivery step bolus: " + deliveryStepBolus);
-            log.debug("Delivery basal: " + deliveryBasal);
-            log.debug("Delivery ext bolus: " + deliveryExtBolus);
+            log.debug("Is Extended bolus enabled: " + pump.isExtendedBolusEnabled);
             log.debug("Bolus increment: " + pump.bolusStep);
             log.debug("Bolus max: " + pump.maxBolus);
         }

@@ -46,11 +46,15 @@ public class DanaRKoreanPump {
     public int protocol;
     public int productCode;
 
+    public boolean isConfigUD;
+    public boolean isExtendedBolusEnabled;
+
     // Status
     public double dailyTotalUnits;
     public int maxDailyTotalUnits;
 
     public double bolusStep;
+    public double basalStep;
 
     public double iob;
 
