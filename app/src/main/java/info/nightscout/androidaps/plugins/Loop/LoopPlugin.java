@@ -128,7 +128,7 @@ public class LoopPlugin implements PluginBase {
             final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
             APSResult result = null;
 
-            if (configBuilder == null || !isEnabled(PluginBase.GENERAL))
+            if (configBuilder == null || !isEnabled(PluginBase.LOOP))
                 return;
 
             // Check if pump info is loaded
