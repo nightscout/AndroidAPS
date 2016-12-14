@@ -120,7 +120,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        if (type == GENERAL) this.fragmentEnabled = fragmentVisible;
+        if (type == GENERAL) this.fragmentVisible = fragmentVisible;
     }
 
     @Subscribe
