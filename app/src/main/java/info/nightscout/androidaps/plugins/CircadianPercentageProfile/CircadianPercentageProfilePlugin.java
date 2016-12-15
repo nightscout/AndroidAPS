@@ -265,7 +265,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         if (percentage < MIN_PERCENTAGE || percentage > MAX_PERCENTAGE){
             String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage");
             log.error(msg);
-            OpenAPSMAPlugin.sendErrorToNSClient(msg);
+            MainApp.getConfigBuilder().uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
             percentage = Math.max(percentage, MIN_PERCENTAGE);
             percentage = Math.min(percentage, MAX_PERCENTAGE);
