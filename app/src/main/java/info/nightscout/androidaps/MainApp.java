@@ -70,7 +70,7 @@ public class MainApp extends Application {
             pluginsList.add(OverviewFragment.getPlugin());
             pluginsList.add(ActionsFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
+            if (Config.DANARKOREAN) pluginsList.add(DanaRKoreanFragment.getPlugin());
             if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.getPlugin());
             pluginsList.add(VirtualPumpFragment.getPlugin());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());

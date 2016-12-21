@@ -15,6 +15,7 @@ public class Config {
     public static final boolean SMSCOMMUNICATORENABLED = true;
 
     public static final boolean DANAR = true && BuildConfig.PUMPDRIVERS;
+    public static final boolean DANARKOREAN = false && BuildConfig.PUMPDRIVERS;
 
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;
