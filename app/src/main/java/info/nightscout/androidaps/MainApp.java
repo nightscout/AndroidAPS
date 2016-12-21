@@ -1,6 +1,7 @@
 package info.nightscout.androidaps;
 
 import android.app.Application;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.support.annotation.Nullable;
 
@@ -37,11 +38,13 @@ import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
+import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import io.fabric.sdk.android.Fabric;
 
 
 public class MainApp extends Application {
     private static Logger log = LoggerFactory.getLogger(MainApp.class);
+    private static KeepAliveReceiver keepAliveReceiver;
 
     private static Bus sBus;
     private static MainApp sInstance;
@@ -94,6 +97,26 @@ public class MainApp extends Application {
             MainApp.getConfigBuilder().initialize();
         }
         MainApp.getConfigBuilder().uploadAppStart();
+
+        startKeepAliveService();
+    }
+
+    private void startKeepAliveService() {
+        if (keepAliveReceiver == null) {
+            keepAliveReceiver = new KeepAliveReceiver();
+            if (Config.DANAR) {
+                startService(new Intent(this, info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService.class));
+                startService(new Intent(this, info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService.class));
+            }
+            keepAliveReceiver.setAlarm(this);
+        }
+    }
+
+
+
+    public void stopKeepAliveService(){
+        if(keepAliveReceiver!=null)
+        keepAliveReceiver.cancelAlarm(this);
     }
 
     public static Bus bus() {

@@ -39,8 +39,6 @@ import info.nightscout.utils.LocaleHelper;
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
-    private static KeepAliveReceiver keepAliveReceiver;
-
     static final int CASE_STORAGE = 0x1;
     static final int CASE_SMS = 0x2;
 
@@ -77,11 +75,7 @@ public class MainActivity extends AppCompatActivity {
             // no action
         }
 
-        if (keepAliveReceiver == null) {
-            keepAliveReceiver = new KeepAliveReceiver();
-            startService(new Intent(this, ExecutionService.class));
-            keepAliveReceiver.setAlarm(this);
-        }
+
         setUpTabs(false);
     }
 
@@ -169,8 +163,7 @@ public class MainActivity extends AppCompatActivity {
 //                break;
             case R.id.nav_exit:
                 log.debug("Exiting");
-                keepAliveReceiver.cancelAlarm(this);
-
+                MainApp.instance().stopKeepAliveService();
                 MainApp.bus().post(new EventAppExit());
                 MainApp.closeDbHelper();
                 finish();
