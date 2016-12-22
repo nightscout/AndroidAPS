@@ -57,7 +57,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public boolean isVisibleInTabs(int type) {
         LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
-        return type == CONSTRAINTS && fragmentVisible && loopPlugin != null && loopPlugin.isVisibleInTabs(type);
+        return type == CONSTRAINTS && fragmentVisible && loopPlugin != null && loopPlugin.isVisibleInTabs(LOOP);
     }
 
     @Override
