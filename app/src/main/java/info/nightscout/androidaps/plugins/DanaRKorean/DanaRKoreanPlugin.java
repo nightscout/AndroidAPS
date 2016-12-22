@@ -38,6 +38,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -225,12 +226,19 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         }
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
-            Notification notification = new Notification(Notification.NOT_INITIALIZED, MainApp.sResources.getString(R.string.canceledPumpNotInitialized), Notification.URGENT);
+            Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
             return;
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
-        if (!sExecutionService.updateBasalsInPump(profile))
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.failedupdatebasalprofile));
+        if (!sExecutionService.updateBasalsInPump(profile)) {
+            Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
+            MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+        }
     }
 
     @Override

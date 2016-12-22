@@ -17,7 +17,8 @@ public class Notification {
     public static final int EASYMODE_ENABLED = 2;
     public static final int EXTENDED_BOLUS_DISABLED = 3;
     public static final int UD_MODE_ENABLED = 4;
-    public static final int NOT_INITIALIZED = 5;
+    public static final int PROFILE_NOT_SET_NOT_INITIALIZED = 5;
+    public static final int FAILED_UDPATE_PROFILE = 6;
 
     public int id;
     public Date date;
