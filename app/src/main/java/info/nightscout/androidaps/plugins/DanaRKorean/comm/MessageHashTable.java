@@ -5,7 +5,27 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
-import info.nightscout.androidaps.plugins.DanaR.comm.*;
+import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusProgress;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusStart;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusStop;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgError;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryAlarm;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryAll;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryBolus;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryCarbo;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryDailyInsulin;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryGlucose;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryNew;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgHistoryNewDone;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgPCCommStart;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgPCCommStop;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetCarbsEntry;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetExtendedBolusStart;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetExtendedBolusStop;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetSingleBasalProfile;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStart;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStop;
 
 /**
  * Created by mike on 28.05.2016.
@@ -41,12 +61,7 @@ public class MessageHashTable {
             put(new MsgHistoryDailyInsulin());       // 0x3102 CMD_HISTORY_DAY_INS
             put(new MsgHistoryGlucose());            // 0x3104 CMD_HISTORY_GLUCOSE
             put(new MsgHistoryAlarm());              // 0x3105 CMD_HISTORY_ALARM
-            put(new MsgHistoryError());              // 0x3106 CMD_HISTORY_ERROR
             put(new MsgHistoryCarbo());              // 0x3107 CMD_HISTORY_CARBOHY
-            put(new MsgHistoryRefill());             // 0x3108 CMD_HISTORY_REFILL
-            put(new MsgHistorySuspend());            // 0x3109 CMD_HISTORY_SUSPEND
-            put(new MsgHistoryBasalHour());          // 0x310A CMD_HISTORY_BASAL_HOUR
-            put(new MsgHistoryDone());               // 0x31F1 CMD_HISTORY_DONT_USED
             put(new MsgSettingBasal());              // 0x3202 CMD_SETTING_V_BASAL_INS_I
             put(new MsgSettingMeal());               // 0x3203 CMD_SETTING_V_MEAL_SETTING_I
             put(new MsgSettingProfileRatios());      // 0x3204 CMD_SETTING_V_CCC_I

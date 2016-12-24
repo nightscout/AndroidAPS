@@ -166,10 +166,8 @@ public class DanaRHistoryActivity extends Activity {
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BOLUS, getString(R.string.danar_history_bolus)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_CARBO, getString(R.string.danar_history_carbohydrates)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_DAILY, getString(R.string.danar_history_dailyinsulin)));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ERROR, getString(R.string.danar_history_errors)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, getString(R.string.danar_history_glucose)));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, getString(R.string.danar_history_refill)));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, getString(R.string.danar_history_syspend)));
+
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, typeList);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
