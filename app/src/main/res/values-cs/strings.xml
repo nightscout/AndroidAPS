@@ -363,4 +363,13 @@
     <string name="timeshift_hint">Čas v hodinách, o který bude bazál posunutý.</string>
     <string name="units">Jednotky:</string>
     <string name="wear">Wear</string>
+    <string name="basal_rate">Bazál:</string>
+    <string name="danar_disableeasymode">Zakázat EasyUI režim v pumpě</string>
+    <string name="danar_enableextendedbolus">Povolit kombo bolusy v pumpě</string>
+    <string name="danar_switchtouhmode">Změnit režim z U/d na U/h v pumpě</string>
+    <string name="danarkoreanpump">Korejská DanaR</string>
+    <string name="profile_set_failed">Nastavení bazálního profilu selhalo</string>
+    <string name="profile_set_ok">Bazální profil aktualizován</string>
+    <string name="pumpNotInitializedProfileNotSet">Pumpa není inicializována, profil nenastaven!</string>
+    <string name="wrongpumpdriverselected">Vybrán špatný ovladač pumpy</string>
 </resources>
