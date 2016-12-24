@@ -23,6 +23,7 @@ public interface PumpInterface {
 
     // Upload to pump new basal profile
     void setNewBasalProfile(NSProfile profile);
+    boolean isThisProfileSet(NSProfile profile);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
     double getTempBasalAbsoluteRate();

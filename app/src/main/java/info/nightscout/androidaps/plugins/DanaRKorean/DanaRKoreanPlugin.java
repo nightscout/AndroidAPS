@@ -36,7 +36,7 @@ import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService;
-import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
+import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -44,7 +44,6 @@ import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
-import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
@@ -185,8 +184,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            MainApp.getSpecificPlugin(NSProfileViewerPlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
-            MainApp.getSpecificPlugin(NSProfileViewerPlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
+            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
+            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
         }
     }
 
@@ -239,6 +238,24 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
         }
+    }
+
+    @Override
+    public boolean isThisProfileSet(NSProfile profile) {
+        if (!isInitialized())
+            return false;
+        DanaRKoreanPump pump = getDanaRPump();
+        int basalValues = pump.basal48Enable ? 48 : 24;
+        int basalIncrement = pump.basal48Enable ? 30 * 60 : 60 * 60;
+        for (int h = 0; h < basalValues; h++) {
+            Double pumpValue = pump.pumpProfiles[pump.activeProfile][h];
+            Double profileValue = profile.getBasal(h * basalIncrement);
+            if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
+                log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -674,7 +691,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
 
             pump.put("battery", battery);
             pump.put("status", status);

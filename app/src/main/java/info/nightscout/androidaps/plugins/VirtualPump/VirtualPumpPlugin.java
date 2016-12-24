@@ -129,6 +129,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public boolean isThisProfileSet(NSProfile profile) {
+        return false;
+    }
+
+    @Override
     public double getBaseBasalRate() {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)

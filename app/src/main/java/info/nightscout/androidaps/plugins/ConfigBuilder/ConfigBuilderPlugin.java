@@ -46,6 +46,9 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -332,7 +335,29 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public void setNewBasalProfile(NSProfile profile) {
-        activePump.setNewBasalProfile(profile);
+        // Compare with pump limits
+        NSProfile.BasalValue[] basalValues = profile.getBasalValues();
+
+        for (int index = 0; index < basalValues.length; index++) {
+            if (basalValues[index].value < getPumpDescription().basalMinimumRate) {
+                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
+                return;
+            }
+        }
+
+        MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
+
+        if (isThisProfileSet(profile)) {
+            log.debug("Correct profile already set");
+        } else {
+            activePump.setNewBasalProfile(profile);
+        }
+    }
+
+    @Override
+    public boolean isThisProfileSet(NSProfile profile) {
+        return activePump.isThisProfileSet(profile);
     }
 
     @Override

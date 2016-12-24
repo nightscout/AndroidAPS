@@ -1,16 +1,10 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,10 +26,7 @@ import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.Loop.LoopFragment;
-import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
+import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
 
 
@@ -291,7 +282,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                 if (type == PluginBase.PUMP)
                     MainApp.getSpecificPlugin(VirtualPumpPlugin.class).setFragmentEnabled(type, true);
                 else if (type == PluginBase.PROFILE)
-                    MainApp.getSpecificPlugin(NSProfileViewerPlugin.class).setFragmentEnabled(type, true);
+                    MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(type, true);
                 else
                     pluginsInCategory.get(0).setFragmentEnabled(type, true);
             }

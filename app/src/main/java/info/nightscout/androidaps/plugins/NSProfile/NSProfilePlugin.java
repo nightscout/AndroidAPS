@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.NSProfileViewer;
+package info.nightscout.androidaps.plugins.NSProfile;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,18 +19,18 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.NSProfileViewer.events.EventNSProfileViewerUpdateGUI;
+import info.nightscout.androidaps.plugins.NSProfile.events.EventNSProfileUpdateGUI;
 import info.nightscout.client.data.NSProfile;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class NSProfileViewerPlugin implements PluginBase, ProfileInterface {
-    private static Logger log = LoggerFactory.getLogger(NSProfileViewerPlugin.class);
+public class NSProfilePlugin implements PluginBase, ProfileInterface {
+    private static Logger log = LoggerFactory.getLogger(NSProfilePlugin.class);
 
     @Override
     public String getFragmentClass() {
-        return NSProfileViewerFragment.class.getName();
+        return NSProfileFragment.class.getName();
     }
 
     static boolean fragmentEnabled = true;
@@ -38,7 +38,7 @@ public class NSProfileViewerPlugin implements PluginBase, ProfileInterface {
 
     static NSProfile profile = null;
 
-    public NSProfileViewerPlugin() {
+    public NSProfilePlugin() {
         MainApp.bus().register(this);
         loadNSProfile();
 
@@ -83,7 +83,7 @@ public class NSProfileViewerPlugin implements PluginBase, ProfileInterface {
     public void onStatusEvent(final EventNewBasalProfile ev) {
         profile = new NSProfile(ev.newNSProfile.getData(), ev.newNSProfile.getActiveProfile());
         storeNSProfile();
-        MainApp.bus().post(new EventNSProfileViewerUpdateGUI());
+        MainApp.bus().post(new EventNSProfileUpdateGUI());
     }
 
     private void storeNSProfile() {

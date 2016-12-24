@@ -372,4 +372,5 @@
     <string name="profile_set_ok">Bazální profil aktualizován</string>
     <string name="pumpNotInitializedProfileNotSet">Pumpa není inicializována, profil nenastaven!</string>
     <string name="wrongpumpdriverselected">Vybrán špatný ovladač pumpy</string>
+    <string name="basalvaluebelowminimum">Hodnota bazálu pod minimem. Nenastaveno!</string>
 </resources>
