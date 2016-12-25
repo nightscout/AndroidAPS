@@ -245,10 +245,8 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
-                if (MainApp.getConfigBuilder() == null) {
-                    log.error("Config builder not ready on receive profile");
-                    return;
-                }
+                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
+
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null) {
                     SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
@@ -260,13 +258,11 @@ public class DataService extends IntentService {
                             }
                         }
                     }
-
                 } else {
                     log.error("No active pump selected");
                 }
                 if (Config.logIncommingData)
                     log.debug("Received profile: " + activeProfile + " " + profile);
-                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

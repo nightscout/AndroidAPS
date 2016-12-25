@@ -541,7 +541,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         builder.setMessage(confirmText);
         builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                 if (options.executeProfileSwitch) {
                     if (data.has("profile")) {
                         sHandler.post(new Runnable() {
@@ -559,12 +558,15 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                     } else {
                                         log.error("No active pump selected");
                                     }
+                                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
                         });
                     }
+                } else {
+                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                 }
             }
         });
