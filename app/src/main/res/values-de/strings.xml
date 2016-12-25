@@ -214,7 +214,6 @@
     <string name="glucosetype_sensor">Sensor</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="language">Sprache</string>
-    <string name="mm640g">MM 640g</string>
     <string name="percent">Prozent</string>
     <string name="reloadprofile">Profil neuladen</string>
     <string name="save">Speichern</string>

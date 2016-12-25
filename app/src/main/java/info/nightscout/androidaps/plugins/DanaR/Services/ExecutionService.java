@@ -30,6 +30,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
@@ -58,8 +59,10 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetExtendedBolusStart;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetExtendedBolusStop;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStart;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTempBasalStop;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSetTime;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingActiveProfile;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingBasal;
+import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingMeal;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingGlucose;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingMaxValues;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgSettingProfileRatios;
@@ -174,6 +177,11 @@ public class ExecutionService extends Service {
         return connectionInProgress;
     }
 
+    public void disconnect(String from) {
+        if (mSerialIOThread != null)
+            mSerialIOThread.disconnect(from);
+    }
+
     public void connect(String from) {
         if (danaRPump.password != -1 && danaRPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
@@ -270,11 +278,11 @@ public class ExecutionService extends Service {
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
 
 
+            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
             mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
             mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
-            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
 
             if (danaRPump.isNewPump) {
                 mSerialIOThread.sendMessage(new MsgCheckValue());
@@ -303,10 +311,10 @@ public class ExecutionService extends Service {
             }
 
             Date now = new Date();
-            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime()) {
+            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !((DanaRPlugin)MainApp.getSpecificPlugin(DanaRPlugin.class)).isInitialized()) {
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
-                //0x3203
+                mSerialIOThread.sendMessage(new MsgSettingMeal());
                 mSerialIOThread.sendMessage(new MsgSettingBasal());
                 //0x3201
                 mSerialIOThread.sendMessage(new MsgSettingMaxValues());
@@ -315,11 +323,13 @@ public class ExecutionService extends Service {
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
+                mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
                 danaRPump.lastSettingsRead = now;
             }
 
             danaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
+            MainApp.bus().post(new EventInitializationChanged());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -466,6 +476,7 @@ public class ExecutionService extends Service {
         mSerialIOThread.sendMessage(msgSet);
         MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
         mSerialIOThread.sendMessage(msgActivate);
+        danaRPump.lastSettingsRead = new Date(0); // force read full settings
         getPumpStatus();
         return true;
     }

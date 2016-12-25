@@ -280,7 +280,6 @@
     <string name="danar_debolus">DE bolus</string>
     <string name="danar_dsbolus">DS bolus</string>
     <string name="danar_ebolus">E bolus</string>
-    <string name="mm640g">MM 640g</string>
     <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
     <string name="objectives_1_gate">Стартиране в Open loop режим за няколко дни и ръчно прилагане на много временни базали</string>
     <string name="objectives_1_objective">Стартиране на Open Loop </string>

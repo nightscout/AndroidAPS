@@ -69,12 +69,12 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == PROFILE && fragmentEnabled;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == PROFILE && fragmentVisible;
     }
 
     @Override
@@ -84,12 +84,12 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == PROFILE) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == PROFILE) this.fragmentVisible = fragmentVisible;
     }
 
     void storeSettings() {
@@ -265,7 +265,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         if (percentage < MIN_PERCENTAGE || percentage > MAX_PERCENTAGE){
             String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage");
             log.error(msg);
-            OpenAPSMAPlugin.sendErrorToNSClient(msg);
+            MainApp.getConfigBuilder().uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
             percentage = Math.max(percentage, MIN_PERCENTAGE);
             percentage = Math.min(percentage, MAX_PERCENTAGE);

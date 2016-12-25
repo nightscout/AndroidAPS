@@ -22,9 +22,6 @@ import org.slf4j.LoggerFactory;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -39,10 +36,9 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.NSProfileViewer.NSProfileViewerPlugin;
+import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
@@ -76,7 +72,7 @@ public class DataService extends IntentService {
             nsClientEnabled = true;
         }
 
-        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfileViewerPlugin.class);
+        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfilePlugin.class);
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
@@ -96,11 +92,10 @@ public class DataService extends IntentService {
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
             } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action)){
-                // always handle Profili if NSProfile is enabled without looking at nsUploadOnly
+                // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
                 handleNewDataFromNSClient(intent);
             } else if (!nsUploadOnly &&
-                    (Intents.ACTION_NEW_PROFILE.equals(action) ||
-                            Intents.ACTION_NEW_TREATMENT.equals(action) ||
+                    (Intents.ACTION_NEW_TREATMENT.equals(action) ||
                             Intents.ACTION_CHANGED_TREATMENT.equals(action) ||
                             Intents.ACTION_REMOVED_TREATMENT.equals(action) ||
                             Intents.ACTION_NEW_STATUS.equals(action) ||

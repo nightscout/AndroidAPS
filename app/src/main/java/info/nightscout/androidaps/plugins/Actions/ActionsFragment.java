@@ -1,14 +1,21 @@
 package info.nightscout.androidaps.plugins.Actions;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.squareup.otto.Subscribe;
+
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventInitializationChanged;
+import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
@@ -22,9 +29,15 @@ import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
 public class ActionsFragment extends Fragment implements FragmentBase, View.OnClickListener {
 
     static ActionsPlugin actionsPlugin = new ActionsPlugin();
+
     static public ActionsPlugin getPlugin() {
         return actionsPlugin;
     }
+
+    Button profileSwitch;
+    Button extendedBolus;
+    Button tempBasal;
+    Button fill;
 
     public ActionsFragment() {
     }
@@ -35,13 +48,68 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.actions_fragment, container, false);
 
-        view.findViewById(R.id.actions_profileswitch).setOnClickListener(this);
-        view.findViewById(R.id.actions_extendedbolus).setOnClickListener(this);
-        view.findViewById(R.id.actions_settempbasal).setOnClickListener(this);
-        view.findViewById(R.id.actions_fill).setOnClickListener(this);
+        profileSwitch = (Button) view.findViewById(R.id.actions_profileswitch);
+        extendedBolus = (Button) view.findViewById(R.id.actions_extendedbolus);
+        tempBasal = (Button) view.findViewById(R.id.actions_settempbasal);
+        fill = (Button) view.findViewById(R.id.actions_fill);
 
+        profileSwitch.setOnClickListener(this);
+        extendedBolus.setOnClickListener(this);
+        tempBasal.setOnClickListener(this);
+        fill.setOnClickListener(this);
+
+        updateGUIIfVisible();
         return view;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventInitializationChanged ev) {
+        updateGUIIfVisible();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventRefreshGui ev) {
+        updateGUIIfVisible();
+    }
+
+    void updateGUIIfVisible() {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized())
+                        profileSwitch.setVisibility(View.GONE);
+                    else
+                        profileSwitch.setVisibility(View.VISIBLE);
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized())
+                        extendedBolus.setVisibility(View.GONE);
+                    else
+                        extendedBolus.setVisibility(View.VISIBLE);
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized())
+                        tempBasal.setVisibility(View.GONE);
+                    else
+                        tempBasal.setVisibility(View.VISIBLE);
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isRefillingCapable || !MainApp.getConfigBuilder().isInitialized())
+                        fill.setVisibility(View.GONE);
+                    else
+                        fill.setVisibility(View.VISIBLE);
+                }
+            });
+    }
+
 
     @Override
     public void onClick(View view) {
@@ -57,11 +125,11 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
             case R.id.actions_extendedbolus:
                 NewExtendedBolusDialog newExtendedDialog = new NewExtendedBolusDialog();
                 newExtendedDialog.show(manager, "NewExtendedDialog");
-               break;
+                break;
             case R.id.actions_settempbasal:
                 NewTempBasalDialog newTempDialog = new NewTempBasalDialog();
                 newTempDialog.show(manager, "NewTempDialog");
-               break;
+                break;
             case R.id.actions_fill:
                 FillDialog fillDialog = new FillDialog();
                 fillDialog.show(manager, "FillDialog");

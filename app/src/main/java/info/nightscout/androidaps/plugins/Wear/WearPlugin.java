@@ -28,7 +28,7 @@ public class WearPlugin implements PluginBase {
     private static WatchUpdaterService watchUS;
     private final Context ctx;
 
-    WearPlugin(Context ctx){
+    WearPlugin(Context ctx) {
         this.ctx = ctx;
         MainApp.bus().register(this);
     }
@@ -50,12 +50,12 @@ public class WearPlugin implements PluginBase {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == GENERAL && fragmentEnabled;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == GENERAL && fragmentVisible;
     }
 
     @Override
@@ -65,39 +65,41 @@ public class WearPlugin implements PluginBase {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        WearPlugin.fragmentEnabled = fragmentEnabled;
-        if(watchUS!=null){
-            watchUS.setSettings();
+        if (type == GENERAL) {
+            this.fragmentEnabled = fragmentEnabled;
+            if (watchUS != null) {
+                watchUS.setSettings();
+            }
         }
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        WearPlugin.fragmentVisible = fragmentVisible;
+        if (type == GENERAL) this.fragmentVisible = fragmentVisible;
     }
 
-    private void sendDataToWatch(boolean status, boolean basals, boolean bgValue){
+    private void sendDataToWatch(boolean status, boolean basals, boolean bgValue) {
         if (isEnabled(getType())) { //only start service when this plugin is enabled
 
-            if(bgValue){
+            if (bgValue) {
                 ctx.startService(new Intent(ctx, WatchUpdaterService.class));
             }
 
-            if(basals){
+            if (basals) {
                 ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BASALS));
             }
 
-            if(status){
+            if (status) {
                 ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_STATUS));
             }
         }
     }
 
-    void resendDataToWatch(){
+    void resendDataToWatch() {
         ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_RESEND));
     }
 
-    void openSettings(){
+    void openSettings() {
         ctx.startService(new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_OPEN_SETTINGS));
     }
 
@@ -132,11 +134,11 @@ public class WearPlugin implements PluginBase {
         return fragmentEnabled;
     }
 
-    public static void registerWatchUpdaterService(WatchUpdaterService wus){
+    public static void registerWatchUpdaterService(WatchUpdaterService wus) {
         watchUS = wus;
     }
 
-    public static void unRegisterWatchUpdaterService(){
+    public static void unRegisterWatchUpdaterService() {
         watchUS = null;
     }
 

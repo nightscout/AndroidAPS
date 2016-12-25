@@ -55,6 +55,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -365,6 +366,11 @@ public class OverviewFragment extends Fragment {
     }
 
     @Subscribe
+    public void onStatusEvent(final EventInitializationChanged ev) {
+        updateGUIIfVisible();
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
         updateGUIIfVisible();
     }
@@ -486,21 +492,21 @@ public class OverviewFragment extends Fragment {
             apsModeView.setVisibility(View.GONE);
         }
 
+        // **** Temp button ****
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        PumpInterface pump = MainApp.getConfigBuilder();
+
         boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
         showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
         showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
         showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
 
-        if (showAcceptButton) {
+        if (showAcceptButton && pump.isInitialized()) {
             acceptTempLayout.setVisibility(View.VISIBLE);
             acceptTempButton.setText(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
         } else {
             acceptTempLayout.setVisibility(View.GONE);
         }
-
-        // **** Temp button ****
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        PumpInterface pump = MainApp.getConfigBuilder();
 
         if (pump.isTempBasalInProgress()) {
             TempBasal activeTemp = pump.getTempBasal();
@@ -531,7 +537,7 @@ public class OverviewFragment extends Fragment {
         });
         activeProfileView.setLongClickable(true);
 
-        if (profile == null) {
+        if (profile == null || !pump.isInitialized()) {
             // disable all treatment buttons because we are not able to check constraints without profile
             wizardButton.setVisibility(View.INVISIBLE);
             treatmentButton.setVisibility(View.INVISIBLE);
@@ -545,7 +551,7 @@ public class OverviewFragment extends Fragment {
 
         // QuickWizard button
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
-        if (quickWizardEntry != null && lastBG != null) {
+        if (quickWizardEntry != null && lastBG != null && pump.isInitialized()) {
             quickWizardLayout.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText() + " " + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
@@ -677,6 +683,13 @@ public class OverviewFragment extends Fragment {
             }
         });
 
+        // set manual x bounds to have nice steps
+        bgGraph.getViewport().setMaxX(toTime);
+        bgGraph.getViewport().setMinX(fromTime);
+        bgGraph.getViewport().setXAxisBoundsManual(true);
+        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
+        bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
+
         // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
         List<BgReading> inRangeArray = new ArrayList<BgReading>();
@@ -756,13 +769,6 @@ public class OverviewFragment extends Fragment {
             seriesTreatments.setSize(10);
             seriesTreatments.setColor(Color.CYAN);
         }
-
-        // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(toTime);
-        bgGraph.getViewport().setMinX(fromTime);
-        bgGraph.getViewport().setXAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
-        bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
         // set manual y bounds to have nice steps
         bgGraph.getViewport().setMaxY(maxBgValue);

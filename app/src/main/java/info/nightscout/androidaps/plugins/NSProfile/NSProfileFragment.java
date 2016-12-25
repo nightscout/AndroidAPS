@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.NSProfileViewer;
+package info.nightscout.androidaps.plugins.NSProfile;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -13,14 +13,14 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.androidaps.plugins.NSProfileViewer.events.EventNSProfileViewerUpdateGUI;
+import info.nightscout.androidaps.plugins.NSProfile.events.EventNSProfileUpdateGUI;
 import info.nightscout.utils.DecimalFormatter;
 
-public class NSProfileViewerFragment extends Fragment implements FragmentBase {
-    private static NSProfileViewerPlugin nsProfileViewerPlugin = new NSProfileViewerPlugin();
+public class NSProfileFragment extends Fragment implements FragmentBase {
+    private static NSProfilePlugin nsProfilePlugin = new NSProfilePlugin();
 
-    public static NSProfileViewerPlugin getPlugin() {
-        return nsProfileViewerPlugin;
+    public static NSProfilePlugin getPlugin() {
+        return nsProfilePlugin;
     }
 
     private static TextView noProfile;
@@ -63,7 +63,7 @@ public class NSProfileViewerFragment extends Fragment implements FragmentBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNSProfileViewerUpdateGUI ev) {
+    public void onStatusEvent(final EventNSProfileUpdateGUI ev) {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
@@ -75,19 +75,19 @@ public class NSProfileViewerFragment extends Fragment implements FragmentBase {
     }
 
     private void updateGUI() {
-        if (nsProfileViewerPlugin.profile == null) {
+        if (nsProfilePlugin.profile == null) {
             noProfile.setVisibility(View.VISIBLE);
             return;
         } else {
             noProfile.setVisibility(View.GONE);
         }
-        units.setText(nsProfileViewerPlugin.profile.getUnits());
-        dia.setText(DecimalFormatter.to2Decimal(nsProfileViewerPlugin.profile.getDia()) + " h");
-        activeProfile.setText(nsProfileViewerPlugin.profile.getActiveProfile());
-        ic.setText(nsProfileViewerPlugin.profile.getIcList());
-        isf.setText(nsProfileViewerPlugin.profile.getIsfList());
-        basal.setText(nsProfileViewerPlugin.profile.getBasalList());
-        target.setText(nsProfileViewerPlugin.profile.getTargetList());
+        units.setText(nsProfilePlugin.profile.getUnits());
+        dia.setText(DecimalFormatter.to2Decimal(nsProfilePlugin.profile.getDia()) + " h");
+        activeProfile.setText(nsProfilePlugin.profile.getActiveProfile());
+        ic.setText(nsProfilePlugin.profile.getIcList());
+        isf.setText(nsProfilePlugin.profile.getIsfList());
+        basal.setText(nsProfilePlugin.profile.getBasalList());
+        target.setText(nsProfilePlugin.profile.getTargetList());
     }
 
 }

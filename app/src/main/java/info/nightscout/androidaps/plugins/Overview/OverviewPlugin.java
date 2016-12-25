@@ -49,7 +49,7 @@ public class OverviewPlugin implements PluginBase {
 
     @Override
     public boolean isEnabled(int type) {
-        return true;
+        return type == GENERAL;
     }
 
     @Override
