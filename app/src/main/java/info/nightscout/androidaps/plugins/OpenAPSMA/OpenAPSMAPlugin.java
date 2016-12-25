@@ -103,6 +103,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public void invoke() {
+        lastAPSResult = null;
         DetermineBasalAdapterJS determineBasalAdapterJS = null;
         try {
             determineBasalAdapterJS = new DetermineBasalAdapterJS(new ScriptReader(MainApp.instance().getBaseContext()));
