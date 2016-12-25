@@ -376,6 +376,13 @@ public class SmsCommunicatorPlugin implements PluginBase {
         MainApp.bus().post(new EventSmsCommunicatorUpdateGui());
     }
 
+    public void sendNotificationToAllNumbers(String text) {
+        for (int i = 0; i < allowedNumbers.size(); i++) {
+            Sms sms = new Sms(allowedNumbers.get(i), text, new Date());
+            sendSMS(sms);
+        }
+    }
+
     public void sendSMSToAllNumbers(Sms sms) {
         for (int i = 0; i < allowedNumbers.size(); i++) {
             sms.phoneNumber = allowedNumbers.get(i);
