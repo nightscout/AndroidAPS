@@ -124,8 +124,9 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public void setNewBasalProfile(NSProfile profile) {
+    public int setNewBasalProfile(NSProfile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        return SUCCESS;
     }
 
     @Override

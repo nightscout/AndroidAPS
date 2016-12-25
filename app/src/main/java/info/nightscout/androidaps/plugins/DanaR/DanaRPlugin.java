@@ -218,25 +218,27 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public void setNewBasalProfile(NSProfile profile) {
+    public int setNewBasalProfile(NSProfile profile) {
         if (sExecutionService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
-            return;
+            return FAILED;
         }
         if (!isInitialized()) {
             log.error("setNewBasalProfile not initialized");
             Notification notification = new Notification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, MainApp.sResources.getString(R.string.pumpNotInitializedProfileNotSet), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
-            return;
+            return FAILED;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
         if (!sExecutionService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
+            return FAILED;
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
             MainApp.bus().post(new EventDismissNotification(Notification.FAILED_UDPATE_PROFILE));
+            return SUCCESS;
         }
     }
 
