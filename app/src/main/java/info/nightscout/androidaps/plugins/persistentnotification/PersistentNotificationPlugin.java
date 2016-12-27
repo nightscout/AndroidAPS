@@ -18,9 +18,11 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -95,21 +97,22 @@ public class PersistentNotificationPlugin implements PluginBase{
             return;
         }
 
+
+        String line1 = ctx.getString(R.string.noprofile);
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if(profile == null) return;
+
 
         BgReading lastBG = MainApp.getDbHelper().lastBg();
-        if(lastBG == null) return;
-
         DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
 
-        String line1 = lastBG.valueToUnitsToString(profile.getUnits());
-
+        if(profile != null && lastBG != null) {
+            line1 = lastBG.valueToUnitsToString(profile.getUnits());
+        }
         if (glucoseStatus != null) {
             line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
             + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
         } else {
-            line1 += " OLD DATA ";
+            // line1 += " OLD DATA ";
         }
 
         PumpInterface pump = MainApp.getConfigBuilder();
@@ -134,7 +137,7 @@ public class PersistentNotificationPlugin implements PluginBase{
         String line3 = DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h";
 
 
-        if (profile.getActiveProfile() != null)
+        if (profile != null && profile.getActiveProfile() != null)
             line3 += " - " + profile.getActiveProfile();
 
 
@@ -165,7 +168,6 @@ public class PersistentNotificationPlugin implements PluginBase{
                 (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
 
         android.app.Notification notification = builder.build();
-        notification.contentView.setImageViewResource(android.R.id.icon, R.mipmap.ic_launcher);
         mNotificationManager.notify(ONGOING_NOTIFICATION_ID, notification);
 
     }
@@ -242,6 +244,16 @@ public class PersistentNotificationPlugin implements PluginBase{
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
+        updateNotification();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventInitializationChanged ev) {
+        updateNotification();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventRefreshGui ev) {
         updateNotification();
     }
 
