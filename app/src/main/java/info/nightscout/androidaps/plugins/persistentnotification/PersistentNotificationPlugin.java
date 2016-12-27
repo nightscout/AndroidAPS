@@ -59,7 +59,7 @@ public class PersistentNotificationPlugin implements PluginBase{
 
     @Override
     public String getName() {
-        return "Persistent Notification";
+        return ctx.getString(R.string.ongoingnotificaction);
     }
 
     @Override
@@ -112,7 +112,9 @@ public class PersistentNotificationPlugin implements PluginBase{
             line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
             + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
         } else {
-            // line1 += " OLD DATA ";
+             line1 += " " +
+                     ctx.getString(R.string.old_data) +
+                     " ";
         }
 
         PumpInterface pump = MainApp.getConfigBuilder();
@@ -139,9 +141,7 @@ public class PersistentNotificationPlugin implements PluginBase{
 
         if (profile != null && profile.getActiveProfile() != null)
             line3 += " - " + profile.getActiveProfile();
-
-
-
+        
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
         builder.setOngoing(true);
@@ -183,25 +183,6 @@ public class PersistentNotificationPlugin implements PluginBase{
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
             //no visible fragment
-    }
-
-
-    private String slopeArrow(double delta) {
-        if (delta <= (-3.5*5)) {
-            return "\u21ca";
-        } else if (delta <= (-2*5)) {
-            return "\u2193";
-        } else if (delta <= (-1*5)) {
-            return "\u2198";
-        } else if (delta <= (1*5)) {
-            return "\u2192";
-        } else if (delta <= (2*5)) {
-            return "\u2197";
-        } else if (delta <= (3.5*5)) {
-            return "\u2191";
-        } else {
-            return "\u21c8";
-        }
     }
 
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
