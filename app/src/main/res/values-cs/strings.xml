@@ -374,4 +374,6 @@
     <string name="wrongpumpdriverselected">Vybrán špatný ovladač pumpy</string>
     <string name="basalvaluebelowminimum">Hodnota bazálu pod minimem. Nenastaveno!</string>
     <string name="mdi">Pera</string>
+    <string name="actualbg">Glykémie:</string>
+    <string name="lastbg">Poslední glykémie:</string>
 </resources>
