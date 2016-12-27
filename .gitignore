@@ -1,4 +1,5 @@
 *.iml
+wear/wear.iml
 .gradle
 /local.properties
 /.idea/workspace.xml
