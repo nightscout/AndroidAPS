@@ -149,7 +149,7 @@ public class DataService extends IntentService {
         BgReading bgReading = new BgReading();
 
         bgReading.value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE);
-        bgReading.slope = bundle.getDouble(Intents.EXTRA_BG_SLOPE);
+        bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
         bgReading.battery_level = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY);
         bgReading.timeIndex = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);

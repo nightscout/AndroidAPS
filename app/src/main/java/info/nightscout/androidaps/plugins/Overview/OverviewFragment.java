@@ -96,6 +96,7 @@ public class OverviewFragment extends Fragment {
     }
 
     TextView bgView;
+    TextView arrowView;
     TextView timeAgoView;
     TextView deltaView;
     TextView runningTempView;
@@ -139,6 +140,7 @@ public class OverviewFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
         bgView = (TextView) view.findViewById(R.id.overview_bg);
+        arrowView = (TextView) view.findViewById(R.id.overview_arrow);
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
@@ -566,6 +568,7 @@ public class OverviewFragment extends Fragment {
         // **** BG value ****
         if (lastBG != null && bgView != null) {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
+            arrowView.setText(lastBG.directionToSymbol());
             DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
             if (glucoseStatus != null)
                 deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
