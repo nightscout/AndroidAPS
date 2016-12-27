@@ -384,4 +384,6 @@
     <string name="danar_enableextendedbolus">Enable extended boluses on pump</string>
     <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
     <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
+    <string name="actualbg">BG:</string>
+    <string name="lastbg">Last BG:</string>
 </resources>

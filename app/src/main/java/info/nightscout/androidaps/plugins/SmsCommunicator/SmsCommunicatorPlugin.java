@@ -23,13 +23,19 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
+import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 
 /**
@@ -144,16 +150,15 @@ public class SmsCommunicatorPlugin implements PluginBase {
         String pattern = ";";
 
         String[] substrings = settings.split(pattern);
-        for (String number: substrings)
-        {
-            String cleaned = number.replaceAll("\\s+","");
+        for (String number : substrings) {
+            String cleaned = number.replaceAll("\\s+", "");
             allowedNumbers.add(cleaned);
             log.debug("Found allowed number: " + cleaned);
         }
     }
 
     boolean isAllowedNumber(String number) {
-        for (String num: allowedNumbers) {
+        for (String num : allowedNumbers) {
             if (num.equals(number)) return true;
         }
         return false;
@@ -194,6 +199,39 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
         if (splited.length > 0) {
             switch (splited[0].toUpperCase()) {
+                case "BG":
+                    BgReading actualBG = MainApp.getDbHelper().actualBg();
+                    BgReading lastBG = MainApp.getDbHelper().lastBg();
+
+                    NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+                    String units = profile.getUnits();
+
+                    Long agoMsec = new Date().getTime() - lastBG.timeIndex;
+                    int agoMin = (int) (agoMsec / 60d / 1000d);
+
+                    if (actualBG != null) {
+                        reply = MainApp.sResources.getString(R.string.actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";
+                    } else if (lastBG != null) {
+                        reply = MainApp.sResources.getString(R.string.lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + agoMin + MainApp.sResources.getString(R.string.minago) + ", ";
+                    }
+                    DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+                    if (glucoseStatus != null)
+                        reply += MainApp.sResources.getString(R.string.delta) + ": " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
+
+                    MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
+                    IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
+                    if (bolusIob == null) bolusIob = new IobTotal();
+                    MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
+                    IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
+                    if (basalIob == null) basalIob = new IobTotal();
+
+                    reply += MainApp.sResources.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                            + MainApp.sResources.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                            + MainApp.sResources.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
+
+                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                    receivedSms.processed = true;
+                    break;
                 case "LOOP":
                     switch (splited[1].toUpperCase()) {
                         case "STOP":
@@ -255,9 +293,15 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     break;
                 case "DANAR":
                     DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                    if (danaRPlugin != null && danaRPlugin.isEnabled(PluginBase.PUMP))
+                    if (danaRPlugin != null && danaRPlugin.isEnabled(PluginBase.PUMP)) {
                         reply = danaRPlugin.shortStatus();
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                    }
+                    DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+                    if (danaRKoreanPlugin != null && danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
+                        reply = danaRKoreanPlugin.shortStatus();
+                        sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                    }
                     receivedSms.processed = true;
                     break;
                 case "BASAL":
@@ -284,7 +328,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 resetWaitingMessages();
                                 sendSMS(tempBasalWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
                                 tempBasalWaitingForConfirmation.tempBasal = tempBasal;
-                             } else {
+                            } else {
                                 reply = MainApp.sResources.getString(R.string.remotebasalnotallowed);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
