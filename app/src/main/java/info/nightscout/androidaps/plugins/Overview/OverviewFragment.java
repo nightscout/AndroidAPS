@@ -450,7 +450,7 @@ public class OverviewFragment extends Fragment {
 
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-        if (Config.APS) {
+        if (Config.APS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable) {
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
             apsModeView.setTextColor(Color.BLACK);

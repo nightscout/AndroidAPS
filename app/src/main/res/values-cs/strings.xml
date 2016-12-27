@@ -373,4 +373,5 @@
     <string name="pumpNotInitializedProfileNotSet">Pumpa není inicializována, profil nenastaven!</string>
     <string name="wrongpumpdriverselected">Vybrán špatný ovladač pumpy</string>
     <string name="basalvaluebelowminimum">Hodnota bazálu pod minimem. Nenastaveno!</string>
+    <string name="mdi">Pera</string>
 </resources>

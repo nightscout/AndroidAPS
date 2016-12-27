@@ -83,12 +83,12 @@ public class LoopPlugin implements PluginBase {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == LOOP && fragmentEnabled;
+        return type == LOOP && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == LOOP && fragmentVisible;
+        return type == LOOP && fragmentVisible && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override

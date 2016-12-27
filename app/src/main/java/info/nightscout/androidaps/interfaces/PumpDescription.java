@@ -5,6 +5,7 @@ package info.nightscout.androidaps.interfaces;
  */
 
 public class PumpDescription {
+    public static final int NONE = 0;
     public static final int PERCENT = 1;
     public static final int ABSOLUTE = 2;
     public static final int EXTENDED = 4;

@@ -386,4 +386,5 @@
     <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
     <string name="actualbg">BG:</string>
     <string name="lastbg">Last BG:</string>
+    <string name="mdi">MDI</string>
 </resources>
