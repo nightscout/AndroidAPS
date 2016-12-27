@@ -33,12 +33,14 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
@@ -91,7 +93,7 @@ public class DataService extends IntentService {
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
-            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action)){
+            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action)) {
                 // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
                 handleNewDataFromNSClient(intent);
             } else if (!nsUploadOnly &&
@@ -243,21 +245,24 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
-                if (MainApp.getConfigBuilder() == null) {
-                    log.error("Config builder not ready on receive profile");
-                    return;
-                }
+                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
+
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null) {
                     SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    if (SP.getBoolean("syncprofiletopump", false))
-                        pump.setNewBasalProfile(nsProfile);
+                    if (SP.getBoolean("syncprofiletopump", false)) {
+                        if (pump.setNewBasalProfile(nsProfile) == PumpInterface.SUCCESS) {
+                            SmsCommunicatorPlugin smsCommunicatorPlugin = (SmsCommunicatorPlugin) MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
+                            if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
+                                smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
+                            }
+                        }
+                    }
                 } else {
                     log.error("No active pump selected");
                 }
                 if (Config.logIncommingData)
                     log.debug("Received profile: " + activeProfile + " " + profile);
-                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -414,7 +419,8 @@ public class DataService extends IntentService {
             if (trJson.has("eventType")) {
                 treatment.mealBolus = true;
                 if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
-                if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0) treatment.mealBolus = false;
+                if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0)
+                    treatment.mealBolus = false;
             }
             treatment.setTimeIndex(treatment.getTimeIndex());
             try {
@@ -464,7 +470,8 @@ public class DataService extends IntentService {
         if (trJson.has("eventType")) {
             treatment.mealBolus = true;
             if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
-            if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0) treatment.mealBolus = false;
+            if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0)
+                treatment.mealBolus = false;
         }
         treatment.setTimeIndex(treatment.getTimeIndex());
         try {
