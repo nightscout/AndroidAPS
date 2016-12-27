@@ -57,48 +57,42 @@ android {
         }
     }
     productFlavors {
-        flavorDimensions "standard", "wear"
-        full {
-            dimension "standard"
-            buildConfigField "boolean", "APS", "true"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "CLOSEDLOOP", "true"
+        flavorDimensions "standard", "limits",  "wear"
+        adult {
+            dimension "limits"
             buildConfigField "int", "MAXBOLUS", "17"
         }
-        fullteenage {
-            dimension "standard"
-            buildConfigField "boolean", "APS", "true"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "CLOSEDLOOP", "true"
+        teenage {
+            dimension "limits"
             buildConfigField "int", "MAXBOLUS", "10"
         }
-        fullchild {
+        child {
+            dimension "limits"
+            buildConfigField "int", "MAXBOLUS", "5"
+        }
+       full {
             dimension "standard"
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
-            buildConfigField "int", "MAXBOLUS", "5"
         }
-        danarcontrol {
+        pumpcontrol {
             dimension "standard"
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
-            buildConfigField "int", "MAXBOLUS", "17"
         }
         careportal {
             dimension "standard"
             buildConfigField "boolean", "APS", "false"
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
-            buildConfigField "int", "MAXBOLUS", "17"
         }
         openloop {
             dimension "standard"
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
-            buildConfigField "int", "MAXBOLUS", "17"
         }
         wear {
             dimension "wear"
