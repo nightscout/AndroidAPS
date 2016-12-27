@@ -42,7 +42,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     public VirtualPumpPlugin() {
         pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 1d;
+        pumpDescription.bolusStep = 0.1d;
 
         pumpDescription.isExtendedBolusCapable = true;
         pumpDescription.extendedBolusStep = 0.2d;

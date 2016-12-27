@@ -61,7 +61,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
 
         editCarbs = new PlusMinusEditText(view, R.id.treatments_newtreatment_carbsamount, R.id.treatments_newtreatment_carbsamount_plus, R.id.treatments_newtreatment_carbsamount_minus, 0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false);
-        editInsulin = new PlusMinusEditText(view, R.id.treatments_newtreatment_insulinamount, R.id.treatments_newtreatment_insulinamount_plus, R.id.treatments_newtreatment_insulinamount_minus, 0d, 0d, maxInsulin, 0.05d, new DecimalFormat("0.00"), false);
+        editInsulin = new PlusMinusEditText(view, R.id.treatments_newtreatment_insulinamount, R.id.treatments_newtreatment_insulinamount_plus, R.id.treatments_newtreatment_insulinamount_minus, 0d, 0d, maxInsulin, MainApp.getConfigBuilder().getPumpDescription().bolusStep, new DecimalFormat("0.00"), false);
 
         return view;
     }
