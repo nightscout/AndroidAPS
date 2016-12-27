@@ -58,12 +58,12 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == APS && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == APS && fragmentVisible && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -73,12 +73,12 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == APS) this.fragmentVisible = fragmentVisible;
     }
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == APS) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
@@ -103,6 +103,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
     @Override
     public void invoke() {
+        lastAPSResult = null;
         DetermineBasalAdapterJS determineBasalAdapterJS = null;
         try {
             determineBasalAdapterJS = new DetermineBasalAdapterJS(new ScriptReader(MainApp.instance().getBaseContext()));
@@ -234,34 +235,12 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (value < lowLimit || value > highLimit) {
             String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), valueName);
             log.error(msg);
-            sendErrorToNSClient(msg);
+            MainApp.getConfigBuilder().uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
             value = Math.max(value, lowLimit);
             value = Math.min(value, highLimit);
         }
         return value;
-    }
-
-    public static void sendErrorToNSClient(String error) {
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbAdd");
-        bundle.putString("collection", "treatments");
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", "Announcement");
-            data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("notes", error);
-            data.put("isAnnouncement", true);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        bundle.putString("data", data.toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString(), OpenAPSMAPlugin.class);
     }
 
 }

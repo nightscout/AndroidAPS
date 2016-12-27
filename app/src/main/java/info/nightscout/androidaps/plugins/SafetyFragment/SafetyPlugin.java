@@ -40,7 +40,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return true;
+        return type == CONSTRAINTS;
     }
 
     @Override
@@ -54,7 +54,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
-    public void setFragmentEnabled(int tyep, boolean fragmentEnabled) {
+    public void setFragmentEnabled(int type, boolean fragmentEnabled) {
 
     }
 
@@ -64,7 +64,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isLoopEnabled() {
-        return true;
+        return MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     /**

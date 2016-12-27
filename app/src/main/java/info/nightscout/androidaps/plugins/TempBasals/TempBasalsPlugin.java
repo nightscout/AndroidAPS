@@ -66,12 +66,12 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == TEMPBASAL && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == TEMPBASAL && fragmentVisible && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -81,12 +81,12 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == TEMPBASAL) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == TEMPBASAL) this.fragmentVisible = fragmentVisible;
     }
 
     @Override

@@ -26,7 +26,18 @@ public class NSProfile {
 
     public NSProfile(JSONObject json, String activeProfile) {
         this.json = json;
-        this.activeProfile = activeProfile;
+        this.activeProfile = null;
+        JSONObject store;
+        try {
+            store = json.getJSONObject("store");
+            if (activeProfile != null && store.has(activeProfile)) {
+                this.activeProfile = activeProfile;
+            } else {
+                log.error("Active profile not found in store");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public JSONObject getDefaultProfile() {
@@ -289,6 +300,34 @@ public class NSProfile {
         return getBasalList(getDefaultProfile());
     }
 
+    public class BasalValue {
+        public BasalValue(Integer timeAsSeconds, Double value) {
+            this.timeAsSeconds = timeAsSeconds;
+            this.value = value;
+        }
+
+        public Integer timeAsSeconds;
+        public Double value;
+    }
+
+    public BasalValue[] getBasalValues() {
+        try {
+            JSONArray array = getDefaultProfile().getJSONArray("basal");
+            BasalValue[] ret = new BasalValue[array.length()];
+
+            for (Integer index = 0; index < array.length(); index++) {
+                JSONObject o = array.getJSONObject(index);
+                Integer tas = o.getInt("timeAsSeconds");
+                Double value = o.getDouble("value");
+                ret[index] = new BasalValue(tas, value);
+            }
+            return ret;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new BasalValue[0];
+    }
+
     public String getBasalList(JSONObject profile) {
         if (profile != null) {
             try {
@@ -346,7 +385,22 @@ public class NSProfile {
     }
 
     public String getActiveProfile() {
-        return activeProfile;
+        if (activeProfile != null)
+            return activeProfile;
+        else {
+            try {
+                JSONObject store = json.getJSONObject("store");
+                String defaultProfileName = (String) json.get("defaultProfile");
+                if (store.has(defaultProfileName)) {
+                    return defaultProfileName;
+                }
+                log.error("Default profile not found");
+                return null;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public void setActiveProfile(String newProfile) {

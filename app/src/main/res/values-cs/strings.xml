@@ -270,7 +270,6 @@
     <string name="uploading">Nahrávám</string>
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="wrongpumppassword">Špatné heslo k pumpě</string>
-    <string name="mm640g">MM 640g</string>
     <string name="danar_password">Heslo k pumpě</string>
     <string name="occlusion">Okluze</string>
     <string name="overview_bolusprogress_delivered">Podáno</string>
@@ -364,4 +363,15 @@
     <string name="timeshift_hint">Čas v hodinách, o který bude bazál posunutý.</string>
     <string name="units">Jednotky:</string>
     <string name="wear">Wear</string>
+    <string name="basal_rate">Bazál:</string>
+    <string name="danar_disableeasymode">Zakázat EasyUI režim v pumpě</string>
+    <string name="danar_enableextendedbolus">Povolit kombo bolusy v pumpě</string>
+    <string name="danar_switchtouhmode">Změnit režim z U/d na U/h v pumpě</string>
+    <string name="danarkoreanpump">Korejská DanaR</string>
+    <string name="profile_set_failed">Nastavení bazálního profilu selhalo</string>
+    <string name="profile_set_ok">Bazální profil aktualizován</string>
+    <string name="pumpNotInitializedProfileNotSet">Pumpa není inicializována, profil nenastaven!</string>
+    <string name="wrongpumpdriverselected">Vybrán špatný ovladač pumpy</string>
+    <string name="basalvaluebelowminimum">Hodnota bazálu pod minimem. Nenastaveno!</string>
+    <string name="mdi">Pera</string>
 </resources>

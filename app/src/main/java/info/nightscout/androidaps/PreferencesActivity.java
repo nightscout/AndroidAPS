@@ -17,6 +17,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.BluetoothDevicePreference;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.utils.LocaleHelper;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -89,13 +90,12 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             addPreferencesFromResource(R.xml.pref_nightscout);
             if (Config.DANAR) {
                 DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                if (danaRPlugin.isEnabled(PluginBase.PUMP)) {
+                DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+                if (danaRPlugin.isEnabled(PluginBase.PUMP) || danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danar);
                     addPreferencesFromResource(R.xml.pref_danarprofile);
                 }
             }
-            if (Config.MM640G)
-                addPreferencesFromResource(R.xml.pref_mm640g);
             if (Config.SMSCOMMUNICATORENABLED)
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
             addPreferencesFromResource(R.xml.pref_others);

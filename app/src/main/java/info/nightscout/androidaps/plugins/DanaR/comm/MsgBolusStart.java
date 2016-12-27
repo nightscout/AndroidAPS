@@ -23,6 +23,9 @@ public class MsgBolusStart extends MessageBase {
         if (amount > BuildConfig.MAXBOLUS) amount = BuildConfig.MAXBOLUS;
 
         AddParamInt((int) (amount * 100));
+
+        if (Config.logDanaMessageDetail)
+            log.debug("Bolus start : " + amount);
     }
 
     @Override

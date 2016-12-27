@@ -51,6 +51,15 @@ public class MessageBase {
         AddParamByte((byte) (date.get(Calendar.MINUTE)));
     }
 
+    public void AddParamDateTime(Date date) {
+        AddParamByte((byte) (date.getSeconds()));
+        AddParamByte((byte) (date.getMinutes()));
+        AddParamByte((byte) (date.getHours()));
+        AddParamByte((byte) (date.getDate()));
+        AddParamByte((byte) (date.getMonth() + 1));
+        AddParamByte((byte) (date.getYear() - 100));
+    }
+
     public byte[] getRawMessageBytes() {
         this.buffer[0] = (byte) 0x7E;
         this.buffer[1] = (byte) 0x7E;

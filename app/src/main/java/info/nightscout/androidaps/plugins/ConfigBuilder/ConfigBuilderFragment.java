@@ -1,16 +1,10 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -31,9 +26,8 @@ import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.Loop.LoopFragment;
+import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
 
 
 public class ConfigBuilderFragment extends Fragment implements FragmentBase {
@@ -93,7 +87,8 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
         nsclientVerView.setText(ConfigBuilderPlugin.nsClientVersionName);
         nightscoutVerView.setText(ConfigBuilderPlugin.nightscoutVersionName);
         if (ConfigBuilderPlugin.nsClientVersionCode < 117) nsclientVerView.setTextColor(Color.RED);
-        if (ConfigBuilderPlugin.nightscoutVersionCode < 900) nightscoutVerView.setTextColor(Color.RED);
+        if (ConfigBuilderPlugin.nightscoutVersionCode < 900)
+            nightscoutVerView.setTextColor(Color.RED);
         setViews();
         return view;
     }
@@ -179,6 +174,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                         onEnabledCategoryChanged(plugin, type);
                         configBuilderPlugin.storeSettings();
                         MainApp.bus().post(new EventRefreshGui(true));
+                        getPlugin().logPluginStatus();
                     }
                 });
 
@@ -189,6 +185,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                         plugin.setFragmentVisible(type, cb.isChecked());
                         configBuilderPlugin.storeSettings();
                         MainApp.bus().post(new EventRefreshGui(true));
+                        getPlugin().logPluginStatus();
                     }
                 });
             } else {
@@ -208,11 +205,13 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                 holder.checkboxVisible.setEnabled(false);
             }
 
-            int type = plugin.getType();
-            // Force enabled if there is only one plugin
+            // Hide enabled control and force enabled plugin if there is only one plugin available
             if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
-                if (pluginList.size() < 2)
+                if (pluginList.size() < 2) {
                     holder.checkboxEnabled.setEnabled(false);
+                    plugin.setFragmentEnabled(type, true);
+                    getPlugin().storeSettings();
+                }
 
             // Constraints cannot be disabled
             if (type == PluginBase.CONSTRAINTS)
@@ -228,6 +227,16 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                 }
             }
 
+            // Disable profile control for pump profiles if pump is not enabled
+            if (type == PluginBase.PROFILE) {
+                if (PumpInterface.class.isAssignableFrom(plugin.getClass())) {
+                    if (!plugin.isEnabled(PluginBase.PUMP)) {
+                        holder.checkboxEnabled.setEnabled(false);
+                        holder.checkboxEnabled.setChecked(false);
+                    }
+                }
+            }
+
             return convertView;
 
         }
@@ -235,9 +244,8 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
     }
 
     void onEnabledCategoryChanged(PluginBase changedPlugin, int type) {
-        int category = changedPlugin.getType();
         ArrayList<PluginBase> pluginsInCategory = null;
-        switch (category) {
+        switch (type) {
             // Multiple selection allowed
             case PluginBase.GENERAL:
             case PluginBase.CONSTRAINTS:
@@ -256,7 +264,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
             case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
             case PluginBase.PUMP:
-                pluginsInCategory = MainApp.getSpecificPluginsList(category);
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(PumpInterface.class);
                 break;
         }
         if (pluginsInCategory != null) {
@@ -271,7 +279,12 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                     }
                 }
             } else { // enable first plugin in list
-                pluginsInCategory.get(0).setFragmentEnabled(type, true);
+                if (type == PluginBase.PUMP)
+                    MainApp.getSpecificPlugin(VirtualPumpPlugin.class).setFragmentEnabled(type, true);
+                else if (type == PluginBase.PROFILE)
+                    MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(type, true);
+                else
+                    pluginsInCategory.get(0).setFragmentEnabled(type, true);
             }
             setViews();
         }

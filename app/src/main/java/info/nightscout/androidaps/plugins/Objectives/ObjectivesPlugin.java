@@ -51,13 +51,13 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return true;
+        return type == CONSTRAINTS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
         LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
-        return fragmentVisible && loopPlugin != null && loopPlugin.isVisibleInTabs(type);
+        return type == CONSTRAINTS && fragmentVisible && loopPlugin != null && loopPlugin.isVisibleInTabs(LOOP);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == CONSTRAINTS) this.fragmentVisible = fragmentVisible;
     }
 
     public class Objective {

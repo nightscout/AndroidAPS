@@ -26,12 +26,12 @@ public class CareportalPlugin implements PluginBase {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == GENERAL && fragmentEnabled;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == GENERAL && fragmentVisible;
     }
 
     @Override
@@ -41,12 +41,12 @@ public class CareportalPlugin implements PluginBase {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == GENERAL) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == GENERAL) this.fragmentVisible = fragmentVisible;
     }
 
 }

@@ -33,7 +33,7 @@
                 android:text="Notification text" />
 
             <Button
-                android:text="Dismiss"
+                android:text="@string/dismiss"
                 android:layout_width="wrap_content"
                 android:layout_height="35dp"
                 android:id="@+id/notification_dismiss"

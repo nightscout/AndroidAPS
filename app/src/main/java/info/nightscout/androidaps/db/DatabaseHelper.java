@@ -40,7 +40,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_TREATMENTS = "Treatments";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
 
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -196,8 +196,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
             queryBuilder.orderBy("timeIndex", true);
             Where where = queryBuilder.where();
-            where.ge("timeIndex", mills);
-            queryBuilder.where().gt("value", 38);
+            where.ge("timeIndex", mills).and().gt("value", 38);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;

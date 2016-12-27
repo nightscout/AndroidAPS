@@ -83,12 +83,12 @@ public class LoopPlugin implements PluginBase {
 
     @Override
     public boolean isEnabled(int type) {
-        return fragmentEnabled;
+        return type == LOOP && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return fragmentVisible;
+        return type == LOOP && fragmentVisible && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
 
     @Override
@@ -98,12 +98,12 @@ public class LoopPlugin implements PluginBase {
 
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
-        this.fragmentEnabled = fragmentEnabled;
+        if (type == LOOP) this.fragmentEnabled = fragmentEnabled;
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-        this.fragmentVisible = fragmentVisible;
+        if (type == LOOP) this.fragmentVisible = fragmentVisible;
     }
 
     @Subscribe
@@ -128,7 +128,7 @@ public class LoopPlugin implements PluginBase {
             final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
             APSResult result = null;
 
-            if (configBuilder == null || !isEnabled(PluginBase.GENERAL))
+            if (configBuilder == null || !isEnabled(PluginBase.LOOP))
                 return;
 
             // Check if pump info is loaded
