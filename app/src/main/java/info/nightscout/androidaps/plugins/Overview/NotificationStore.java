@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.Overview;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,6 +15,7 @@ import java.util.List;
  */
 
 public class NotificationStore {
+    private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
     public List<Notification> store = new ArrayList<Notification>();
 
     public NotificationStore() {
@@ -29,6 +33,7 @@ public class NotificationStore {
     }
 
     public void add(Notification n) {
+        log.info("Notification received: " + n.text);
         for (int i = 0; i < store.size(); i++) {
             if (get(i).id == n.id) {
                 get(i).date = n.date;

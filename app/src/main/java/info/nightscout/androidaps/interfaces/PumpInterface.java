@@ -22,7 +22,11 @@ public interface PumpInterface {
     boolean isExtendedBoluslInProgress();
 
     // Upload to pump new basal profile
-    void setNewBasalProfile(NSProfile profile);
+    int SUCCESS = 0;
+    int FAILED = 1;
+    int NOT_NEEDED = 2;
+    int setNewBasalProfile(NSProfile profile);
+    boolean isThisProfileSet(NSProfile profile);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
     double getTempBasalAbsoluteRate();
@@ -42,4 +46,6 @@ public interface PumpInterface {
     // Status to be passed to NS
     JSONObject getJSONStatus();
     String deviceID();
+
+    PumpDescription getPumpDescription();
 }

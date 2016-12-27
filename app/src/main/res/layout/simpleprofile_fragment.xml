@@ -16,7 +16,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Units:"
+                android:text="@string/units"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
 
@@ -25,14 +25,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="2"
-                android:text="mgdl" />
+                android:text="@string/mgdl" />
 
             <RadioButton
                 android:id="@+id/simpleprofile_mmol"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_column="3"
-                android:text="mmol" />
+                android:text="@string/mmol" />
 
         </TableRow>
 
@@ -43,7 +43,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="DIA:"
+                android:text="@string/dia"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -61,7 +61,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="IC:"
+                android:text="@string/nsprofileview_ic_label"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -79,7 +79,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ISF:"
+                android:text="@string/nsprofileview_isf_label"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -97,7 +97,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Absorption rate:"
+                android:text="@string/absorption_rate"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -115,7 +115,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Basal rate:"
+                android:text="@string/basal_rate"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -133,7 +133,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Target range:"
+                android:text="@string/target_range"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -150,6 +150,22 @@
                 android:layout_column="2"
                 android:inputType="numberDecimal" />
         </TableRow>
+
+        <Button
+            android:id="@+id/simpleprofile_profileswitch"
+            style="?android:attr/buttonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:text="@string/send_to_pump"
+            android:textColor="@color/colorProfileSwitchButton" />
     </TableLayout>
+
 
 </FrameLayout>

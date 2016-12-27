@@ -380,7 +380,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         correctionInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromCorrection) + "U");
         calculatedTotalInsulin = wizard.calculatedTotalInsulin;
 
-        if (calculatedTotalInsulin < 0) {
+        if (calculatedTotalInsulin <= 0) {
             total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
             totalInsulin.setText("");
         } else {

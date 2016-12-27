@@ -33,7 +33,7 @@ public class MessageHashTable {
             put(new MsgSetTempBasalStop());          // 0x0403 CMD_PUMPSET_EXERCISE_STOP
             put(new MsgSetExtendedBolusStop());      // 0x0406 CMD_PUMPSET_EXPANS_INS_STOP
             put(new MsgSetExtendedBolusStart());     // 0x0407 CMD_PUMPSET_EXPANS_INS_S
-            put(new MsgError());                 // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
+            put(new MsgError());                     // 0x0601 CMD_PUMPOWAY_SYSTEM_STATUS
             put(new MsgPCCommStart());               // 0x3001 CMD_CONNECT
             put(new MsgPCCommStop());                // 0x3002 CMD_DISCONNECT
             put(new MsgHistoryBolus());              // 0x3101 CMD_HISTORY_MEAL_INS
@@ -47,6 +47,7 @@ public class MessageHashTable {
             put(new MsgHistoryBasalHour());          // 0x310A CMD_HISTORY_BASAL_HOUR
             put(new MsgHistoryDone());               // 0x31F1 CMD_HISTORY_DONT_USED
             put(new MsgSettingBasal());              // 0x3202 CMD_SETTING_V_BASAL_INS_I
+            put(new MsgSettingMeal());               // 0x3203 CMD_SETTING_V_MEAL_SETTING_I
             put(new MsgSettingProfileRatios());      // 0x3204 CMD_SETTING_V_CCC_I
             put(new MsgSettingMaxValues());          // 0x3205 CMD_SETTING_V_MAX_VALUE_I
             put(new MsgSettingBasalProfileAll());    // 0x3206 CMD_SETTING_V_BASAL_PROFILE_ALL
@@ -56,6 +57,7 @@ public class MessageHashTable {
             put(new MsgSettingUserOptions());        // 0x320B CMD_SETTING_V_USER_OPTIONS
             put(new MsgSettingActiveProfile());      // 0x320C CMD_SETTING_V_PROFILE_NUMBER
             put(new MsgSettingProfileRatiosAll());   // 0x320D CMD_SETTING_V_CIR_CF_VALUE
+            put(new MsgSetSingleBasalProfile());     // 0x3302 CMD_SETTING_BASAL_INS_S
             put(new MsgSetBasalProfile());           // 0x3306 CMD_SETTING_BASAL_PROFILE_S
             put(new MsgSetActivateBasalProfile());   // 0x330C CMD_SETTING_PROFILE_NUMBER_S
             put(new MsgHistoryAllDone());            // 0x41F1 CMD_HISTORY_ALL_DONE

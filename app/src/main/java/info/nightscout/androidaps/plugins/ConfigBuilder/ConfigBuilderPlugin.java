@@ -35,6 +35,7 @@ import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -45,6 +46,10 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -97,12 +102,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isEnabled(int type) {
-        return true;
+        return type == GENERAL && true;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return true;
+        return type == GENERAL && true;
     }
 
     @Override
@@ -189,6 +194,22 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     public static LoopPlugin getActiveLoop() {
         return activeLoop;
+    }
+
+    public void logPluginStatus() {
+        for (PluginBase p : pluginList) {
+            log.debug(p.getName() + ":" +
+                    (p.isEnabled(1) ? " GENERAL" : "")  +
+                    (p.isEnabled(2) ? " TREATMENT" : "")  +
+                    (p.isEnabled(3) ? " TEMPBASAL" : "")  +
+                    (p.isEnabled(4) ? " PROFILE" : "")  +
+                    (p.isEnabled(5) ? " APS" : "")  +
+                    (p.isEnabled(6) ? " PUMP" : "")  +
+                    (p.isEnabled(7) ? " CONSTRAINTS" : "")  +
+                    (p.isEnabled(8) ? " LOOP" : "")  +
+                    (p.isEnabled(9) ? " BGSOURCE" : "")
+            );
+        }
     }
 
     private void verifySelectionInCategories() {
@@ -314,8 +335,31 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void setNewBasalProfile(NSProfile profile) {
-        activePump.setNewBasalProfile(profile);
+    public int setNewBasalProfile(NSProfile profile) {
+        // Compare with pump limits
+        NSProfile.BasalValue[] basalValues = profile.getBasalValues();
+
+        for (int index = 0; index < basalValues.length; index++) {
+            if (basalValues[index].value < getPumpDescription().basalMinimumRate) {
+                Notification notification = new Notification(Notification.BASAL_VALUE_BELOW_MINIMUM, MainApp.sResources.getString(R.string.basalvaluebelowminimum), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
+                return FAILED;
+            }
+        }
+
+        MainApp.bus().post(new EventDismissNotification(Notification.BASAL_VALUE_BELOW_MINIMUM));
+
+        if (isThisProfileSet(profile)) {
+            log.debug("Correct profile already set");
+            return NOT_NEEDED;
+        } else {
+            return activePump.setNewBasalProfile(profile);
+        }
+    }
+
+    @Override
+    public boolean isThisProfileSet(NSProfile profile) {
+        return activePump.isThisProfileSet(profile);
     }
 
     @Override
@@ -592,6 +636,21 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         if (activePump != null)
             return activePump.deviceID();
         else return "Unknown";
+    }
+
+    @Override
+    public PumpDescription getPumpDescription() {
+        if (activePump != null)
+            return activePump.getPumpDescription();
+        else {
+            PumpDescription emptyDescription = new PumpDescription();
+            emptyDescription.isBolusCapable = false;
+            emptyDescription.isExtendedBolusCapable = false;
+            emptyDescription.isSetBasalProfileCapable = false;
+            emptyDescription.isTempBasalCapable = false;
+            emptyDescription.isRefillingCapable = false;
+            return emptyDescription;
+        }
     }
 
     /**

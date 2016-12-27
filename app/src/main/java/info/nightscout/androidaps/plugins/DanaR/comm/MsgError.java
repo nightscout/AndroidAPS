@@ -31,10 +31,6 @@ public class MsgError extends MessageBase {
                 break;
             case 5: // Occlusion
                 errorString = MainApp.sResources.getString(R.string.occlusion);
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                MsgBolusStop.stopped = true;
-                bolusingEvent.status = errorString;
-                MainApp.bus().post(bolusingEvent);
                 break;
             case 7: // Low Battery
                 errorString = MainApp.sResources.getString(R.string.lowbattery);
@@ -42,6 +38,13 @@ public class MsgError extends MessageBase {
             case 8: // Battery 0%
                 errorString = MainApp.sResources.getString(R.string.batterydischarged);
                 break;
+        }
+
+        if (errorCode < 8) { // bolus delivering stopped
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+            MsgBolusStop.stopped = true;
+            bolusingEvent.status = errorString;
+            MainApp.bus().post(bolusingEvent);
         }
         if (Config.logDanaMessageDetail)
             log.debug("Error detected: " + errorString);

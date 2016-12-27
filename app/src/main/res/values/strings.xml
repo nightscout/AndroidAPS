@@ -241,7 +241,6 @@
     <string name="absolute">Absolute</string>
     <string name="canceltemp">Cancel temp basal</string>
     <string name="smscommunicator">SMS Communicator</string>
-    <string name="mm640g">MM 640g</string>
     <string name="waitingforpumpresult">Waiting for result</string>
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
@@ -341,6 +340,7 @@
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
     <string name="ns_upload_only_enabled">Please deactivate "NS upload only" to use this feature.</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
+    <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
     <string name="primefill">Prime/Fill</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
     <string name="othersettings_title">Other</string>
@@ -375,4 +375,15 @@
     <string name="lowbattery">Low Battery</string>
     <string name="pumpshutdown">Pump Shutdown</string>
     <string name="batterydischarged">Pump Battery Discharged</string>
+    <string name="danarkoreanpump">DanaR Korean</string>
+    <string name="wrongpumpdriverselected">Wrong pump driver selected</string>
+    <string name="basal_rate">Basal rate:</string>
+    <string name="profile_set_failed">Setting of basal profile failed</string>
+    <string name="profile_set_ok">Basal profile in pump updated</string>
+    <string name="danar_disableeasymode">Disable EasyUI mode in pump</string>
+    <string name="danar_enableextendedbolus">Enable extended boluses on pump</string>
+    <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
+    <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
+    <string name="actualbg">BG:</string>
+    <string name="lastbg">Last BG:</string>
 </resources>

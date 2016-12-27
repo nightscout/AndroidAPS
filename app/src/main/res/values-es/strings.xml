@@ -236,7 +236,6 @@
     <string name="absolute">Absoluto</string>
     <string name="canceltemp">Cancelar basal temporal</string>
     <string name="smscommunicator">SMS Communicator</string>
-    <string name="mm640g">MM 640g</string>
     <string name="waitingforpumpresult">Esperando resultado</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>

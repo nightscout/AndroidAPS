@@ -300,6 +300,34 @@ public class NSProfile {
         return getBasalList(getDefaultProfile());
     }
 
+    public class BasalValue {
+        public BasalValue(Integer timeAsSeconds, Double value) {
+            this.timeAsSeconds = timeAsSeconds;
+            this.value = value;
+        }
+
+        public Integer timeAsSeconds;
+        public Double value;
+    }
+
+    public BasalValue[] getBasalValues() {
+        try {
+            JSONArray array = getDefaultProfile().getJSONArray("basal");
+            BasalValue[] ret = new BasalValue[array.length()];
+
+            for (Integer index = 0; index < array.length(); index++) {
+                JSONObject o = array.getJSONObject(index);
+                Integer tas = o.getInt("timeAsSeconds");
+                Double value = o.getDouble("value");
+                ret[index] = new BasalValue(tas, value);
+            }
+            return ret;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return new BasalValue[0];
+    }
+
     public String getBasalList(JSONObject profile) {
         if (profile != null) {
             try {

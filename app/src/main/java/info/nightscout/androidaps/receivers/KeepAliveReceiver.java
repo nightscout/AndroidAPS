@@ -27,6 +27,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
+import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.utils.ToastUtils;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
@@ -46,6 +47,18 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     @Override
                     public void run() {
                         danaRPlugin.doConnect("KeepAlive");
+                    }
+                });
+                t.start();
+            }
+        }
+        final DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+        if (danaRKoreanPlugin != null && Config.DANAR && danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
+            if (danaRKoreanPlugin.getDanaRPump().lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime() && !danaRKoreanPlugin.isConnected() && !danaRKoreanPlugin.isConnecting()) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        danaRKoreanPlugin.doConnect("KeepAlive");
                     }
                 });
                 t.start();

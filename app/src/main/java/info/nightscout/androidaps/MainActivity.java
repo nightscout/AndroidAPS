@@ -39,8 +39,6 @@ import info.nightscout.utils.LocaleHelper;
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
-    private static KeepAliveReceiver keepAliveReceiver;
-
     static final int CASE_STORAGE = 0x1;
     static final int CASE_SMS = 0x2;
 
@@ -77,11 +75,7 @@ public class MainActivity extends AppCompatActivity {
             // no action
         }
 
-        if (keepAliveReceiver == null) {
-            keepAliveReceiver = new KeepAliveReceiver();
-            startService(new Intent(this, ExecutionService.class));
-            keepAliveReceiver.setAlarm(this);
-        }
+
         setUpTabs(false);
     }
 
@@ -90,12 +84,17 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String lang = SP.getString("language", "en");
         LocaleHelper.setLocale(getApplicationContext(), lang);
-        recreate();
-        try { // activity may be destroyed
-            setUpTabs(ev.isSwitchToLast());
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-        }
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                recreate();
+                try { // activity may be destroyed
+                    setUpTabs(ev.isSwitchToLast());
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setUpTabs(boolean switchToLast) {
@@ -164,8 +163,7 @@ public class MainActivity extends AppCompatActivity {
 //                break;
             case R.id.nav_exit:
                 log.debug("Exiting");
-                keepAliveReceiver.cancelAlarm(this);
-
+                MainApp.instance().stopKeepAliveService();
                 MainApp.bus().post(new EventAppExit());
                 MainApp.closeDbHelper();
                 finish();
