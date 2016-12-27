@@ -14,7 +14,6 @@ public class MsgBolusStop extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgBolusStop.class);
     private static Treatment t;
     private static Double amount;
-    private static Bus bus = null;
 
     public static boolean stopped = false;
     public static boolean forced = false;
@@ -24,9 +23,8 @@ public class MsgBolusStop extends MessageBase {
         stopped = false;
     }
 
-    public MsgBolusStop(Bus bus, Double amount, Treatment t) {
+    public MsgBolusStop(Double amount, Treatment t) {
         this();
-        this.bus = bus;
         this.t = t;
         this.amount = amount;
         forced = false;
@@ -43,6 +41,6 @@ public class MsgBolusStop extends MessageBase {
         } else {
             bolusingEvent.status = MainApp.sResources.getString(R.string.overview_bolusprogress_stoped);
         }
-        bus.post(bolusingEvent);
+        MainApp.bus().post(bolusingEvent);
     }
 }

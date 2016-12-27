@@ -5,6 +5,8 @@ import com.squareup.otto.Bus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -13,27 +15,28 @@ import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProg
 
 public class MsgBolusProgress extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgBolusProgress.class);
-    private static Bus bus = null;
 
     private static Treatment t;
     private static double amount;
 
+    public static long lastReceive = 0;
     public int progress = -1;
 
     public MsgBolusProgress() {
         SetCommand(0x0202);
     }
 
-    public MsgBolusProgress(Bus bus, double amount, Treatment t) {
+    public MsgBolusProgress(double amount, Treatment t) {
         this();
         this.amount = amount;
         this.t = t;
-        this.bus = bus;
+        lastReceive = 0;
     }
 
     @Override
     public void handleMessage(byte[] bytes) {
         progress = intFromBuff(bytes, 0, 2);
+        lastReceive = new Date().getTime();
         Double done = (amount * 100 - progress) / 100d;
         t.insulin = done;
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
@@ -45,6 +48,6 @@ public class MsgBolusProgress extends MessageBase {
             log.debug("Bolus remaining: " + progress + " delivered: " + done);
         }
 
-        bus.post(bolusingEvent);
+        MainApp.bus().post(bolusingEvent);
     }
 }

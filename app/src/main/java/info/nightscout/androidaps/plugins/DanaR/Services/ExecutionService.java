@@ -371,8 +371,8 @@ public class ExecutionService extends Service {
     public boolean bolus(Double amount, int carbs, Treatment t) {
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
-        MsgBolusProgress progress = new MsgBolusProgress(MainApp.bus(), amount, t);
-        MsgBolusStop stop = new MsgBolusStop(MainApp.bus(), amount, t);
+        MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
+        MsgBolusStop stop = new MsgBolusStop(amount, t);
 
         connect("bolus");
         if (!isConnected()) return false;
@@ -391,6 +391,11 @@ public class ExecutionService extends Service {
         }
         while (!stop.stopped && !start.failed) {
             waitMsec(100);
+            if (progress.lastReceive != 0 && (new Date().getTime() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+                stop.stopped = true;
+                stop.forced = true;
+                log.debug("Communication stopped");
+            }
         }
         waitMsec(300);
         bolusingTreatment = null;
