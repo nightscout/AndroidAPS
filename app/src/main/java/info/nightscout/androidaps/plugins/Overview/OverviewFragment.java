@@ -99,6 +99,7 @@ public class OverviewFragment extends Fragment {
     TextView arrowView;
     TextView timeAgoView;
     TextView deltaView;
+    TextView avgdeltaView;
     TextView runningTempView;
     TextView baseBasalView;
     TextView activeProfileView;
@@ -143,6 +144,7 @@ public class OverviewFragment extends Fragment {
         arrowView = (TextView) view.findViewById(R.id.overview_arrow);
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
+        avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
         runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
@@ -570,8 +572,11 @@ public class OverviewFragment extends Fragment {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             arrowView.setText(lastBG.directionToSymbol());
             DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
-            if (glucoseStatus != null)
+            if (glucoseStatus != null){
                 deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                avgdeltaView.setText("øΔ " + NSProfile.toUnitsString(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+            }
+
             BgReading.units = profile.getUnits();
         } else
             return;

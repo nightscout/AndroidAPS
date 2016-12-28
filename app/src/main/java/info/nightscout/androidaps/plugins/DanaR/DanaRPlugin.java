@@ -554,11 +554,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
-        // needs to be rounded to 0.1
-        insulin = Round.roundTo(insulin, 0.1d);
+        // needs to be rounded
+        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
 
         PumpEnactResult result = new PumpEnactResult();
-        if (getDanaRPump().isExtendedInProgress && Math.abs(getDanaRPump().extendedBolusAmount - insulin) < 0.1d) {
+        if (getDanaRPump().isExtendedInProgress && Math.abs(getDanaRPump().extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = false;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -567,12 +567,12 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             result.isPercent = false;
             result.isTempCancel = false;
             if (Config.logPumpActions)
-                log.debug("setExtendedBolus: Correct extended bolus already set");
+                log.debug("setExtendedBolus: Correct extended bolus already set. Current: " + getDanaRPump().extendedBolusAmount + " Asked: " + insulin);
             return result;
         }
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
-        if (connectionOK && getDanaRPump().isExtendedInProgress && Math.abs(getDanaRPump().extendedBolusAmount - insulin) < 0.1d) {
+        if (connectionOK && getDanaRPump().isExtendedInProgress && Math.abs(getDanaRPump().extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = true;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);

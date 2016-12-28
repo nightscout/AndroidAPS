@@ -32,7 +32,7 @@
                     android:layout_gravity="top|left"
                     android:gravity="center_vertical"
                     android:text="00.0"
-                    android:textSize="80dp"
+                    android:textSize="70dp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -44,7 +44,7 @@
                     android:paddingLeft="-5dp"
                     android:paddingRight="-5dp"
                     android:text="→"
-                    android:textSize="80dp"
+                    android:textSize="60dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -89,6 +89,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <TextView
+                        android:id="@+id/overview_avgdelta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
 
                     <TextView
                         android:id="@+id/overview_activeprofile"
