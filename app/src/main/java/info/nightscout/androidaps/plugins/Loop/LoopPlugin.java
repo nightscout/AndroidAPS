@@ -168,7 +168,7 @@ public class LoopPlugin implements PluginBase {
                         @Override
                         public void run() {
                             final PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
-                            if (applyResult.enacted) {
+                            if (applyResult.enacted || applyResult.success) {
                                 lastRun.setByPump = applyResult;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
                             } else {

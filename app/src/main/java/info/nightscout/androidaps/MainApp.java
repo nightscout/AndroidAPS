@@ -39,6 +39,7 @@ import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
+import info.nightscout.androidaps.plugins.persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import io.fabric.sdk.android.Fabric;
 
@@ -93,6 +94,7 @@ public class MainApp extends Application {
                 pluginsList.add(SmsCommunicatorFragment.getPlugin());
 
             if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
+            pluginsList.add(new PersistentNotificationPlugin(this));
 
             pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
 
