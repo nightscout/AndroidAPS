@@ -387,4 +387,6 @@
     <string name="actualbg">BG:</string>
     <string name="lastbg">Last BG:</string>
     <string name="mdi">MDI</string>
+    <string name="ongoingnotificaction">Ongoing Notification</string>
+    <string name="old_data">OLD DATA</string>
 </resources>
