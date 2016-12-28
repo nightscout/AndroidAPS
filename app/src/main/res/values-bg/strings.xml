@@ -209,7 +209,7 @@
     <string name="syncprofiletopump_title">Синхронизирай помпата с профила в Nightscout</string>
     <string name="nobtadapter">Няма bluetooth адаптер</string>
     <string name="nightscout">Nightscout</string>
-    <string name="dismiss">ПРЕКРАТИ</string>
+    <string name="dismiss">Разбрах</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
@@ -275,7 +275,7 @@
     <string name="enacted">Приложено</string>
     <string name="danar_sbolus">S bolus</string>
     <string name="failedupdatebasalprofile">Не може да се обнови базалния профил</string>
-    <string name="hoursago">ч. преди</string>
+    <string name="hoursago">h ago</string>
     <string name="objectives_0_gate">Потвърдете, че КЗ и данните от помпата са достъпни в Nightscout</string>
     <string name="danar_debolus">DE bolus</string>
     <string name="danar_dsbolus">DS bolus</string>
@@ -331,7 +331,7 @@
     <string name="circadian_percentage_profile">Процентен профил</string>
     <string name="send_to_pump">Изпрати към помпата</string>
     <string name="edit_base_basal">Редактирай базални стойности</string>
-    <string name="dia">"DIA "</string>
+    <string name="dia">DIA:</string>
     <string name="edit_base_ic">Редактирай Инс./ВХ</string>
     <string name="edit_base_isf">Редактирай Инс. чувствителност</string>
     <string name="fillbolus_title">Fill/Prime стандарта стойност</string>
@@ -350,4 +350,30 @@
     <string name="ns_upload_only_enabled">Моля изключете "NS upload only" за да използвате това.</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
     <string name="absorption_rate">Усвояване на ВХ (ч):</string>
+    <string name="alert_dialog_storage_permission_text">Моля рестартирайте телефона или AndroidAPS, в противен случай информацията за грешки няма да се запише(важно за да се потвърди, че алгоритъмът работи правилно)</string>
+    <string name="androidaps_tempbasalendnote">Край на временен базал</string>
+    <string name="androidaps_tempbasalstartnote">Старт на временен базал</string>
+    <string name="basal_rate">Базал:</string>
+    <string name="basalvaluebelowminimum">Базалните стойности са под минимума. Не е зададен профил!</string>
+    <string name="batterydischarged">Батерията на помпата е изтощена</string>
+    <string name="actualbg">КЗ:</string>
+    <string name="danar_disableeasymode">Забрани EasyUI режим в помпата</string>
+    <string name="danar_enableextendedbolus">Разреши удължен болус в помпата</string>
+    <string name="danar_switchtouhmode">Промени режима от U/d на U/h в помпата</string>
+    <string name="danarkoreanpump">DanaR за Корея</string>
+    <string name="high_mark">Горна линия</string>
+    <string name="lastbg">Последна КЗ:</string>
+    <string name="low_mark">Долна линия</string>
+    <string name="lowbattery">Изтощена батерия</string>
+    <string name="open_settings_on_wear">Отвори Опции на часовника</string>
+    <string name="prefs_range_summary">Горна и долна линия на диаграмата на часовника</string>
+    <string name="prefs_range_title">Диапазон на визуализация</string>
+    <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
+    <string name="profile_set_ok">Базалният профил е обновен</string>
+    <string name="pumpNotInitializedProfileNotSet">Помпата не е инициализирана, профила не е зададен!</string>
+    <string name="pumperror">Грешка на помпата</string>
+    <string name="pumpshutdown">Помпата е изключена</string>
+    <string name="resend_all_data">Изпрати всички данни отново</string>
+    <string name="wear">Wear</string>
+    <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
 </resources>
