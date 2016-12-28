@@ -33,6 +33,7 @@ import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.SafetyFragment.SafetyFragment;
 import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
+import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
@@ -89,6 +90,7 @@ public class MainApp extends Application {
             if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
             pluginsList.add(SourceXdripFragment.getPlugin());
             pluginsList.add(SourceNSClientFragment.getPlugin());
+            pluginsList.add(SourceMM640gFragment.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED)
                 pluginsList.add(SmsCommunicatorFragment.getPlugin());
 
