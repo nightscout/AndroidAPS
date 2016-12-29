@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -19,10 +20,14 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
@@ -60,8 +65,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     BasalEditDialog basalEditDialog;
 
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,7 +88,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         basaleditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_basaledit);
         iceditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_icedit);
         isfeditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_isfedit);
-
 
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
@@ -133,7 +135,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         timeshiftView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(b)
+                if (b)
                     ToastUtils.showToastInUiThread(getContext(), getString(R.string.timeshift_hint));
 
             }
@@ -142,7 +144,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         percentageView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean b) {
-                if(b)
+                if (b)
                     ToastUtils.showToastInUiThread(getContext(), getString(R.string.percentagefactor_hint));
             }
         });
@@ -210,7 +212,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
 
-                if(SafeParse.stringToInt(percentageView.getText().toString()) == 0) {
+                if (SafeParse.stringToInt(percentageView.getText().toString()) == 0) {
                     circadianPercentageProfilePlugin.percentage = 100;
                 } else {
                     circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
@@ -232,6 +234,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         percentageView.addTextChangedListener(textWatch);
         timeshiftView.addTextChangedListener(textWatch);
 
+        onStatusEvent(null);
+
         return layout;
     }
 
@@ -242,7 +246,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         sb.append("</h3>");
         sb.append("<h4>");
         sb.append(getString(R.string.nsprofileview_basal_label));
-        sb.append( " ( ∑");
+        sb.append(" ( ∑");
         sb.append(DecimalFormatter.to2Decimal(circadianPercentageProfilePlugin.percentageBasalSum()));
         sb.append("U )");
         sb.append("</h4> " + circadianPercentageProfilePlugin.basalString());
@@ -261,21 +265,21 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     }
 
     @Override
-    public void onStop(){
+    public void onStop() {
         super.onStop();
-        if(basalEditDialog != null && basalEditDialog.isVisible()){
+        if (basalEditDialog != null && basalEditDialog.isVisible()) {
             basalEditDialog.dismiss();
         }
         basalEditDialog = null;
     }
 
-    public static class BasalEditDialog extends DialogFragment{
+    public static class BasalEditDialog extends DialogFragment {
 
         private double[] values;
         private String title;
         private CircadianPercentageProfileFragment fragment;
 
-        public void setup(double[] values, String title, CircadianPercentageProfileFragment fragment){
+        public void setup(double[] values, String title, CircadianPercentageProfileFragment fragment) {
             this.values = values;
             this.title = title;
             this.fragment = fragment;
@@ -289,23 +293,24 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             final EditText[] editTexts = new EditText[24];
             for (int i = 0; i < 24; i++) {
                 View childview = inflater.inflate(R.layout.circadianpercentageprofile_listelement, container, false);
-                ((TextView)childview.findViewById(R.id.basal_time_elem)).setText((i<10?"0":"") + i + ":00: ");
+                ((TextView) childview.findViewById(R.id.basal_time_elem)).setText((i < 10 ? "0" : "") + i + ":00: ");
 
-                ImageView copyprevbutton = (ImageView)childview.findViewById(R.id.basal_copyprev_elem);
+                ImageView copyprevbutton = (ImageView) childview.findViewById(R.id.basal_copyprev_elem);
 
-                if(i==0){
-                    copyprevbutton.setVisibility(View.INVISIBLE);;
+                if (i == 0) {
+                    copyprevbutton.setVisibility(View.INVISIBLE);
+                    ;
                 } else {
                     final int j = i; //needs to be final to be passed to inner class.
                     copyprevbutton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            editTexts[j].setText(editTexts[j-1].getText());
+                            editTexts[j].setText(editTexts[j - 1].getText());
                         }
                     });
                 }
 
-                editTexts[i] =  ((EditText) childview.findViewById(R.id.basal_edittext_elem));
+                editTexts[i] = ((EditText) childview.findViewById(R.id.basal_edittext_elem));
                 editTexts[i].setText(DecimalFormatter.to2Decimal(values[i]));
                 list.addView(childview);
             }
@@ -315,8 +320,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 @Override
                 public void onClick(View view) {
                     for (int i = 0; i < 24; i++) {
-                        if (editTexts[i].getText().length()!= 0){
-                          values[i]= SafeParse.stringToDouble(editTexts[i].getText().toString()) ;
+                        if (editTexts[i].getText().length() != 0) {
+                            values[i] = SafeParse.stringToDouble(editTexts[i].getText().toString());
                         }
                     }
                     fragment.updateProfileInfo();
@@ -334,11 +339,34 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
 
             return view;
         }
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
+        onStatusEvent(null);
+    }
 
-
-
-}
-
+    @Subscribe
+    public void onStatusEvent(final EventInitializationChanged e) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!MainApp.getConfigBuilder().isInitialized() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
+                        profileswitchButton.setVisibility(View.GONE);
+                    } else {
+                        profileswitchButton.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+    }
 }

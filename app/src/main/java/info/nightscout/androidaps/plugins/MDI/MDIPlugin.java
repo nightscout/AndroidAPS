@@ -57,7 +57,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
         pumpDescription.highTempPercentDuration = 0;
         pumpDescription.highTempAbsoluteDuration = 0;
 
-        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.isSetBasalProfileCapable = false;
         pumpDescription.basalStep = 0d;
         pumpDescription.basalMinimumRate = 0d;
 

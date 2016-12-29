@@ -136,6 +136,9 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         basalView.addTextChangedListener(textWatch);
         targetlowView.addTextChangedListener(textWatch);
         targethighView.addTextChangedListener(textWatch);
+
+        onStatusEvent(null);
+
         return layout;
     }
 
@@ -149,6 +152,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        onStatusEvent(null);
     }
 
     @Subscribe
@@ -158,7 +162,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized()) {
+                    if (!MainApp.getConfigBuilder().isInitialized() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);
