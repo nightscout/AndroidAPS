@@ -241,11 +241,11 @@
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">식사주입 %.2fU 을 실행하려면 %s 를 입력하고 답장하세요</string>
-    <string name="bolusfailed">Bolus failed</string>
+    <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusdelivering" formatted="false">%.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
-    <string name="remotebolusnotallowed">원격 식사주입 허용되지 않음</string>
+    <string name="smscommunicator_remotebolusnotallowed">원격 식사주입 허용되지 않음</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="glucosetype_manual">Manual</string>
@@ -310,7 +310,7 @@
     <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
     <string name="openapsma_valueoutofrange" formatted="false">값 %s 은 하드리밋(Hard Limit)를 벗어났습니다</string>
-    <string name="remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
+    <string name="smscommunicator_remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">기초주입 %.2fU/h 을 실행하려면 %s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
@@ -379,7 +379,7 @@
     <string name="danar_enableextendedbolus">펌프에서 확장식사기능을 활성화 하세요</string>
     <string name="danar_switchtouhmode">펌프에서 U/d에서 U/h로 모드를 변경하세요</string>
     <string name="basalvaluebelowminimum">기초주입값이 최소값 이하입니다. 프로파일이 설정되지 않습니다!</string>
-    <string name="actualbg">BG:</string>
-    <string name="lastbg">Last BG:</string>
+    <string name="sms_actualbg">BG:</string>
+    <string name="sms_lastbg">Last BG:</string>
     <string name="mdi">MDI</string>
 </resources>
