@@ -388,4 +388,6 @@
     <string name="lastbg">Last BG:</string>
     <string name="mdi">MDI</string>
     <string name="MM640g">MM640g</string>
+    <string name="ongoingnotificaction">Ongoing Notification</string>
+    <string name="old_data">OLD DATA</string>
 </resources>
