@@ -193,7 +193,6 @@
     <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
     <string name="bg_lang">Български</string>
     <string name="openapsma_maxiob_summary">Макс. лимит на не болус IOB подаван от openAPS</string>
-    <string name="minago">min ago</string>
     <string name="connected">Свързан</string>
     <string name="devicenotfound">Избраното устройство не съществува</string>
     <string name="disconnected">Прекъснат</string>

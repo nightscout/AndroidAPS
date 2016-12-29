@@ -200,7 +200,7 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                     if (DanaRPlugin.getDanaRPump().lastConnection.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - DanaRPlugin.getDanaRPump().lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);
-                        lastConnectionView.setText(formatTime.format(DanaRPlugin.getDanaRPump().lastConnection) + " (" + agoMin + " " + MainApp.sResources.getString(R.string.minago) + ")");
+                        lastConnectionView.setText(formatTime.format(DanaRPlugin.getDanaRPump().lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
                     if (DanaRPlugin.getDanaRPump().lastBolusTime.getTime() != 0) {

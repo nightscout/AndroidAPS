@@ -76,7 +76,6 @@
     <string name="glucose">Glucose</string>
     <string name="delta">Delta</string>
     <string name="avgdelta">Avg. delta</string>
-    <string name="minago">m ago</string>
 
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objectives</string>
@@ -389,4 +388,5 @@
     <string name="mdi">MDI</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
+    <string name="minago">%dmin ago</string>
 </resources>

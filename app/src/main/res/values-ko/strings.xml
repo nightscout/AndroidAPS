@@ -75,7 +75,6 @@
     <string name="glucose">혈당</string>
     <string name="delta">Delta</string>
     <string name="avgdelta">Avg. delta</string>
-    <string name="minago">분 전</string>
 
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">목표</string>

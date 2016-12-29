@@ -74,7 +74,6 @@
     <string name="glucose">Glucosa</string>
     <string name="delta">Delta</string>
     <string name="avgdelta">Avg. delta</string>
-    <string name="minago">min antes</string>
 
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objetivos</string>

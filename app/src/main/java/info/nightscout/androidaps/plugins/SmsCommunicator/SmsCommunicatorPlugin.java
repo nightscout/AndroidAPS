@@ -16,7 +16,6 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -212,7 +211,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (actualBG != null) {
                         reply = MainApp.sResources.getString(R.string.actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";
                     } else if (lastBG != null) {
-                        reply = MainApp.sResources.getString(R.string.lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + agoMin + MainApp.sResources.getString(R.string.minago) + ", ";
+                        reply = MainApp.sResources.getString(R.string.lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ", ";
                     }
                     DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
                     if (glucoseStatus != null)

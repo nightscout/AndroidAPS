@@ -73,7 +73,6 @@
     <string name="loop_setbypump_label">Nastaveno pumpou</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
-    <string name="minago">m zpět</string>
     <string name="objectives_minimalduration">Minimální trvání</string>
     <string name="nav_backup">Záloha</string>
     <string name="nav_exit">Ukončit</string>
@@ -376,4 +375,5 @@
     <string name="mdi">Pera</string>
     <string name="actualbg">Glykémie:</string>
     <string name="lastbg">Poslední glykémie:</string>
+    <string name="minago">před %d min</string>
 </resources>

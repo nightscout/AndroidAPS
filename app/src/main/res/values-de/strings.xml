@@ -176,7 +176,6 @@
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
     <string name="nav_resetdb">Reset Datenbanken</string>
     <string name="objectives_minimalduration">Minimale Dauer</string>
-    <string name="minago">min ago</string>
     <string name="nav_refreshtreatments">Erneure treatments von NS</string>
     <string name="nav_exit">Exit</string>
     <string name="missing">Fehlend</string>
