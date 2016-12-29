@@ -238,7 +238,6 @@
     <string name="absolute">Absolute</string>
     <string name="canceltemp">임시기초주입 취소하기</string>
     <string name="smscommunicator">SMS 전송</string>
-    <string name="mm640g">MM 640g</string>
     <string name="waitingforpumpresult">결과 기다리는 중</string>
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
