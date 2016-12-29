@@ -29,14 +29,14 @@
                 <TextView
                     android:id="@+id/overview_apsmode"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/loopmodeborder"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Open Loop"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/overview_activeprofile"
