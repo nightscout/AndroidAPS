@@ -395,4 +395,5 @@
     <string name="old_data">OLD DATA</string>
     <string name="minago">%dmin ago</string>
     <string name="sms_minago">%dmin ago</string>
+    <string name="localprofile">Local Profile</string>
 </resources>

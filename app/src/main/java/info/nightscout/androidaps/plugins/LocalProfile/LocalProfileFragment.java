@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.SimpleProfile;
+package info.nightscout.androidaps.plugins.LocalProfile;
 
 
 import android.app.Activity;
@@ -11,16 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -28,18 +24,16 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfilePlugin;
 import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.TimeListEdit;
 
-public class SimpleProfileFragment extends Fragment implements FragmentBase {
-    private static Logger log = LoggerFactory.getLogger(SimpleProfileFragment.class);
+public class LocalProfileFragment extends Fragment implements FragmentBase {
+    private static Logger log = LoggerFactory.getLogger(LocalProfileFragment.class);
 
-    private static SimpleProfilePlugin simpleProfilePlugin = new SimpleProfilePlugin();
+    private static LocalProfilePlugin localProfilePlugin = new LocalProfilePlugin();
 
-    public static SimpleProfilePlugin getPlugin() {
-        return simpleProfilePlugin;
+    public static LocalProfilePlugin getPlugin() {
+        return localProfilePlugin;
     }
 
     EditText diaView;
@@ -70,32 +64,32 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
 
         onStatusEvent(null);
 
-        mgdlView.setChecked(simpleProfilePlugin.mgdl);
-        mmolView.setChecked(simpleProfilePlugin.mmol);
-        diaView.setText(simpleProfilePlugin.dia.toString());
-        icView.setText(simpleProfilePlugin.ic.toString());
-        isfView.setText(simpleProfilePlugin.isf.toString());
-        carView.setText(simpleProfilePlugin.car.toString());
-        basalView.setText(simpleProfilePlugin.basal.toString());
-        targetlowView.setText(simpleProfilePlugin.targetLow.toString());
-        targethighView.setText(simpleProfilePlugin.targetHigh.toString());
+        mgdlView.setChecked(localProfilePlugin.mgdl);
+        mmolView.setChecked(localProfilePlugin.mmol);
+        diaView.setText(localProfilePlugin.dia.toString());
+        icView.setText(localProfilePlugin.ic.toString());
+        isfView.setText(localProfilePlugin.isf.toString());
+        carView.setText(localProfilePlugin.car.toString());
+        basalView.setText(localProfilePlugin.basal.toString());
+        targetlowView.setText(localProfilePlugin.targetLow.toString());
+        targethighView.setText(localProfilePlugin.targetHigh.toString());
 
         mgdlView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                simpleProfilePlugin.mgdl = mgdlView.isChecked();
-                simpleProfilePlugin.mmol = !simpleProfilePlugin.mgdl;
-                mmolView.setChecked(simpleProfilePlugin.mmol);
-                simpleProfilePlugin.storeSettings();
+                localProfilePlugin.mgdl = mgdlView.isChecked();
+                localProfilePlugin.mmol = !localProfilePlugin.mgdl;
+                mmolView.setChecked(localProfilePlugin.mmol);
+                localProfilePlugin.storeSettings();
             }
         });
         mmolView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                simpleProfilePlugin.mmol = mmolView.isChecked();
-                simpleProfilePlugin.mgdl = !simpleProfilePlugin.mmol;
-                mgdlView.setChecked(simpleProfilePlugin.mgdl);
-                simpleProfilePlugin.storeSettings();
+                localProfilePlugin.mmol = mmolView.isChecked();
+                localProfilePlugin.mgdl = !localProfilePlugin.mmol;
+                mgdlView.setChecked(localProfilePlugin.mgdl);
+                localProfilePlugin.storeSettings();
             }
         });
 
@@ -124,14 +118,14 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                simpleProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
-                simpleProfilePlugin.ic = SafeParse.stringToDouble(icView.getText().toString());
-                simpleProfilePlugin.isf = SafeParse.stringToDouble(isfView.getText().toString());
-                simpleProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
-                simpleProfilePlugin.basal = SafeParse.stringToDouble(basalView.getText().toString());
-                simpleProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
-                simpleProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
-                simpleProfilePlugin.storeSettings();
+                localProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
+                localProfilePlugin.ic = SafeParse.stringToDouble(icView.getText().toString());
+                localProfilePlugin.isf = SafeParse.stringToDouble(isfView.getText().toString());
+                localProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
+                localProfilePlugin.basal = SafeParse.stringToDouble(basalView.getText().toString());
+                localProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
+                localProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
+                localProfilePlugin.storeSettings();
             }
         };
 
