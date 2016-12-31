@@ -1,11 +1,14 @@
 package info.nightscout.utils;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -46,8 +49,9 @@ public class TimeListEdit {
     JSONArray data1;
     JSONArray data2;
     NumberFormat formatter;
+    Runnable save;
 
-    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, NumberFormat formatter) {
+    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, NumberFormat formatter, Runnable save) {
         this.context = context;
         this.view = view;
         this.resLayoutId = resLayoutId;
@@ -55,6 +59,7 @@ public class TimeListEdit {
         this.data1 = data1;
         this.data2 = data2;
         this.formatter = formatter;
+        this.save = save;
         buildView();
     }
 
@@ -67,9 +72,14 @@ public class TimeListEdit {
         TextView textlabel = new TextView(context);
         textlabel.setText(label);
         textlabel.setGravity(Gravity.LEFT);
-        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
         textlabel.setLayoutParams(llp);
+        textlabel.setBackgroundColor(MainApp.sResources.getColor(R.color.linearBlockBackground));
+        if (Build.VERSION.SDK_INT < 23)
+            textlabel.setTextAppearance(context, android.R.style.TextAppearance_Medium);
+        else
+            textlabel.setTextAppearance(android.R.style.TextAppearance_Medium);
         layout.addView(textlabel);
 
         for (int i = 0; i < itemsCount(); i++) {
@@ -188,7 +198,11 @@ public class TimeListEdit {
         if (!(itemsCount() > 0 && secondFromMidnight(itemsCount() - 1) == 23 * ONEHOURINSECONDS)) {
             ImageView imageView = new ImageView(context);
             imageView.setImageResource(R.drawable.add);
+            LinearLayout.LayoutParams illp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            illp.setMargins(0, 25, 0, 25); // llp.setMargins(left, top, right, bottom);
+            illp.gravity = Gravity.CENTER;
             layout.addView(imageView);
+            imageView.setLayoutParams(illp);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -255,13 +269,15 @@ public class TimeListEdit {
     }
 
     public double value2(int index) {
-        try {
-            JSONObject item = (JSONObject) data2.get(index);
-            if (item.has("value")) {
-                return item.getDouble("value");
+        if (data2 != null) {
+            try {
+                JSONObject item = (JSONObject) data2.get(index);
+                if (item.has("value")) {
+                    return item.getDouble("value");
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
         return 0d;
     }
@@ -278,6 +294,7 @@ public class TimeListEdit {
                 newObject2.put("value", value2);
                 data2.put(index, newObject2);
             }
+            if (save != null) save.run();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -294,6 +311,7 @@ public class TimeListEdit {
             }
             // add new object
             editItem(index, timeAsSeconds, value1, value2);
+            if (save != null) save.run();
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -304,6 +322,7 @@ public class TimeListEdit {
         data1.remove(index);
         if (data2 != null)
             data2.remove(index);
+        if (save != null) save.run();
     }
 
     void log() {

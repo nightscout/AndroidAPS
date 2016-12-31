@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/dia"
+               android:text="@string/dia"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -138,12 +138,6 @@
                 android:paddingRight="10dp"
                 android:text="@string/send_to_pump"
                 android:textColor="@color/colorProfileSwitchButton" />
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/simpleprofile_test"></LinearLayout>
 
         </LinearLayout>
     </ScrollView>

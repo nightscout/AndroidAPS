@@ -30,15 +30,17 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
 
     private static NSProfile convertedProfile = null;
 
+    final private String DEFAULTARRAY = "[{\"timeAsSeconds\":0,\"value\":0}]";
+
     boolean mgdl;
     boolean mmol;
     Double dia;
-    Double ic;
-    Double isf;
+    JSONArray ic;
+    JSONArray isf;
     Double car;
-    Double basal;
-    Double targetLow;
-    Double targetHigh;
+    JSONArray basal;
+    JSONArray targetLow;
+    JSONArray targetHigh;
 
     public LocalProfilePlugin() {
         loadSettings();
@@ -89,15 +91,15 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             log.debug("Storing settings");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean("SimpleProfile" + "mmol", mmol);
-        editor.putBoolean("SimpleProfile" + "mgdl", mgdl);
-        editor.putString("SimpleProfile" + "dia", dia.toString());
-        editor.putString("SimpleProfile" + "ic", ic.toString());
-        editor.putString("SimpleProfile" + "isf", isf.toString());
-        editor.putString("SimpleProfile" + "car", car.toString());
-        editor.putString("SimpleProfile" + "basal", basal.toString());
-        editor.putString("SimpleProfile" + "targetlow", targetLow.toString());
-        editor.putString("SimpleProfile" + "targethigh", targetHigh.toString());
+        editor.putBoolean("LocalProfile" + "mmol", mmol);
+        editor.putBoolean("LocalProfile" + "mgdl", mgdl);
+        editor.putString("LocalProfile" + "dia", dia.toString());
+        editor.putString("LocalProfile" + "ic", ic.toString());
+        editor.putString("LocalProfile" + "isf", isf.toString());
+        editor.putString("LocalProfile" + "car", car.toString());
+        editor.putString("LocalProfile" + "basal", basal.toString());
+        editor.putString("LocalProfile" + "targetlow", targetLow.toString());
+        editor.putString("LocalProfile" + "targethigh", targetHigh.toString());
 
         editor.commit();
         createConvertedProfile();
@@ -108,69 +110,124 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             log.debug("Loading stored settings");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
-        if (settings.contains("SimpleProfile" + "mgdl"))
+        if (settings.contains("LocalProfile" + "mgdl"))
             try {
-                mgdl = settings.getBoolean("SimpleProfile" + "mgdl", true);
+                mgdl = settings.getBoolean("LocalProfile" + "mgdl", false);
             } catch (Exception e) {
                 log.debug(e.getMessage());
             }
-        else mgdl = true;
-        if (settings.contains("SimpleProfile" + "mmol"))
+        else mgdl = false;
+        if (settings.contains("LocalProfile" + "mmol"))
             try {
-                mmol = settings.getBoolean("SimpleProfile" + "mmol", false);
+                mmol = settings.getBoolean("LocalProfile" + "mmol", true);
             } catch (Exception e) {
                 log.debug(e.getMessage());
             }
-        else mmol = false;
-        if (settings.contains("SimpleProfile" + "dia"))
+        else mmol = true;
+        if (settings.contains("LocalProfile" + "dia"))
             try {
-                dia = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "dia", "3"));
+                dia = SafeParse.stringToDouble(settings.getString("LocalProfile" + "dia", "3"));
             } catch (Exception e) {
                 log.debug(e.getMessage());
             }
         else dia = 3d;
-        if (settings.contains("SimpleProfile" + "ic"))
+        if (settings.contains("LocalProfile" + "ic"))
             try {
-                ic = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "ic", "20"));
+                ic = new JSONArray(settings.getString("LocalProfile" + "ic", DEFAULTARRAY));
             } catch (Exception e) {
                 log.debug(e.getMessage());
+                try {
+                    ic = new JSONArray(DEFAULTARRAY);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
-        else ic = 20d;
-        if (settings.contains("SimpleProfile" + "isf"))
+        else {
             try {
-                isf = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "isf", "200"));
+                ic = new JSONArray(DEFAULTARRAY);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (settings.contains("LocalProfile" + "isf"))
+            try {
+                isf = new JSONArray(settings.getString("LocalProfile" + "isf", DEFAULTARRAY));
             } catch (Exception e) {
                 log.debug(e.getMessage());
+                try {
+                    isf = new JSONArray(DEFAULTARRAY);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
-        else isf = 200d;
-        if (settings.contains("SimpleProfile" + "car"))
+        else {
             try {
-                car = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "car", "20"));
+                isf = new JSONArray(DEFAULTARRAY);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (settings.contains("LocalProfile" + "car"))
+            try {
+                car = SafeParse.stringToDouble(settings.getString("LocalProfile" + "car", "20"));
             } catch (Exception e) {
                 log.debug(e.getMessage());
             }
         else car = 20d;
-        if (settings.contains("SimpleProfile" + "basal"))
+        if (settings.contains("LocalProfile" + "basal"))
             try {
-                basal = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "basal", "1"));
+                basal = new JSONArray(settings.getString("LocalProfile" + "basal", DEFAULTARRAY));
             } catch (Exception e) {
                 log.debug(e.getMessage());
+                try {
+                    basal = new JSONArray(DEFAULTARRAY);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
-        else basal = 1d;
-        if (settings.contains("SimpleProfile" + "targetlow"))
+        else {
             try {
-                targetLow = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targetlow", "80"));
+                basal = new JSONArray(DEFAULTARRAY);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (settings.contains("LocalProfile" + "targetlow"))
+            try {
+                targetLow = new JSONArray(settings.getString("LocalProfile" + "targetlow", DEFAULTARRAY));
             } catch (Exception e) {
                 log.debug(e.getMessage());
+                try {
+                    targetLow = new JSONArray(DEFAULTARRAY);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
-        else targetLow = 80d;
-        if (settings.contains("SimpleProfile" + "targethigh"))
+        else {
             try {
-                targetHigh = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "targethigh", "120"));
+                targetLow = new JSONArray(DEFAULTARRAY);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        if (settings.contains("LocalProfile" + "targethigh"))
+            try {
+                targetHigh = new JSONArray(settings.getString("LocalProfile" + "targethigh", DEFAULTARRAY));
             } catch (Exception e) {
                 log.debug(e.getMessage());
+                try {
+                    targetHigh = new JSONArray(DEFAULTARRAY);
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
-        else targetHigh = 120d;
+        else {
+            try {
+                targetHigh = new JSONArray(DEFAULTARRAY);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
         createConvertedProfile();
     }
 
@@ -218,21 +275,21 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         JSONObject profile = new JSONObject();
 
         try {
-            json.put("defaultProfile", "SimpleProfile");
+            json.put("defaultProfile", "LocalProfile");
             json.put("store", store);
             profile.put("dia", dia);
-            profile.put("carbratio", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", ic)));
+            profile.put("carbratio", ic);
             profile.put("carbs_hr", car);
-            profile.put("sens", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", isf)));
-            profile.put("basal", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", basal)));
-            profile.put("target_low", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetLow)));
-            profile.put("target_high", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetHigh)));
+            profile.put("sens", isf);
+            profile.put("basal", basal);
+            profile.put("target_low", targetLow);
+            profile.put("target_high", targetHigh);
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);
-            store.put("SimpleProfile", profile);
+            store.put("LocalProfile", profile);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        convertedProfile = new NSProfile(json, "SimpleProfile");
+        convertedProfile = new NSProfile(json, "LocalProfile");
     }
 
     @Override

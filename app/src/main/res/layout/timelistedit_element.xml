@@ -11,21 +11,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/timelistedit_time"
-        />
+        android:layout_marginTop="10dp" />
 
     <EditText
         android:id="@+id/timelistedit_edit1"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/timelistedit_edit2"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:inputType="numberDecimal"/>
+        android:inputType="numberDecimal"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center" />
 
     <ImageView
         android:id="@+id/timelistedit_add"
