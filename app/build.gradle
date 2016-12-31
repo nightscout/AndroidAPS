@@ -130,4 +130,8 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:7.5.0'
     compile 'junit:junit:4.12'
     testCompile 'org.json:json:20140107'
+    testCompile 'org.mockito:mockito-core:2.+'
+    androidTestCompile 'org.mockito:mockito-core:2.+'
+    androidTestCompile "com.google.dexmaker:dexmaker:1.2"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:1.2"
 }

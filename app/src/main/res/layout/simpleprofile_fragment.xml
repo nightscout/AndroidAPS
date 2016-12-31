@@ -28,16 +28,12 @@
                     android:id="@+id/simpleprofile_mgdl"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:layout_weight="1"
                     android:text="@string/mgdl" />
 
                 <RadioButton
                     android:id="@+id/simpleprofile_mmol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_column="3"
-                    android:layout_weight="1"
                     android:text="@string/mmol" />
 
             </LinearLayout>
@@ -45,7 +41,6 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/dia"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -53,7 +48,6 @@
                 android:id="@+id/simpleprofile_dia"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
                 android:inputType="numberDecimal" />
 
             <TextView
@@ -66,7 +60,6 @@
                 android:id="@+id/simpleprofile_ic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
                 android:inputType="numberDecimal" />
 
             <TextView
@@ -79,7 +72,6 @@
                 android:id="@+id/simpleprofile_isf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
                 android:inputType="numberDecimal" />
 
             <TextView
@@ -92,7 +84,6 @@
                 android:id="@+id/simpleprofile_car"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
                 android:inputType="numberDecimal" />
 
             <TextView
@@ -105,7 +96,6 @@
                 android:id="@+id/simpleprofile_basalrate"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_column="2"
                 android:inputType="numberDecimal" />
 
             <TextView
@@ -123,16 +113,12 @@
                     android:id="@+id/simpleprofile_targetlow"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:layout_weight="1"
                     android:inputType="numberDecimal" />
 
                 <EditText
                     android:id="@+id/simpleprofile_targethigh"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
-                    android:layout_column="2"
-                    android:layout_weight="1"
                     android:inputType="numberDecimal" />
 
             </LinearLayout>
@@ -152,6 +138,13 @@
                 android:paddingRight="10dp"
                 android:text="@string/send_to_pump"
                 android:textColor="@color/colorProfileSwitchButton" />
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/simpleprofile_test"></LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 

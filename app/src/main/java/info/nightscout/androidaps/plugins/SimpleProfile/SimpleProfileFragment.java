@@ -11,12 +11,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -25,7 +29,9 @@ import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.TimeListEdit;
 
 public class SimpleProfileFragment extends Fragment implements FragmentBase {
     private static Logger log = LoggerFactory.getLogger(SimpleProfileFragment.class);
@@ -46,6 +52,8 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
     EditText targetlowView;
     EditText targethighView;
     Button profileswitchButton;
+    TimeListEdit test;
+    JSONArray data = new JSONArray();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -61,6 +69,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
         profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
+        test = new TimeListEdit(getContext(), layout, R.id.simpleprofile_test, "Test", data, "ic1", null, new DecimalFormat("0.00"));
 
         onStatusEvent(null);
 
