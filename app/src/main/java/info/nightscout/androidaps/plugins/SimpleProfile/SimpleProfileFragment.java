@@ -53,7 +53,8 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
     EditText targethighView;
     Button profileswitchButton;
     TimeListEdit test;
-    JSONArray data = new JSONArray();
+    JSONArray data1 = new JSONArray();
+    JSONArray data2 = new JSONArray();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +70,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
         profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
-        test = new TimeListEdit(getContext(), layout, R.id.simpleprofile_test, "Test", data, "ic1", null, new DecimalFormat("0.00"));
+        test = new TimeListEdit(getContext(), layout, R.id.simpleprofile_test, "Test", data1, data2, new DecimalFormat("0.00"));
 
         onStatusEvent(null);
 

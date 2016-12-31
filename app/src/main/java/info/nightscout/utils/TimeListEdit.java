@@ -35,25 +35,25 @@ import info.nightscout.androidaps.R;
 public class TimeListEdit {
     private static Logger log = LoggerFactory.getLogger(TimeListEdit.class);
 
+    final int ONEHOURINSECONDS = 60 * 60;
+
     LinearLayout layout;
 
     Context context;
     View view;
     int resLayoutId;
     String label;
-    JSONArray data;
+    JSONArray data1;
+    JSONArray data2;
     NumberFormat formatter;
-    String array1;
-    String array2;
 
-    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data, String array1, String array2, NumberFormat formatter) {
+    public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, NumberFormat formatter) {
         this.context = context;
         this.view = view;
         this.resLayoutId = resLayoutId;
         this.label = label;
-        this.data = data;
-        this.array1 = array1;
-        this.array2 = array2;
+        this.data1 = data1;
+        this.data2 = data2;
         this.formatter = formatter;
         buildView();
     }
@@ -75,16 +75,16 @@ public class TimeListEdit {
         for (int i = 0; i < itemsCount(); i++) {
             View childview = inflater.inflate(R.layout.timelistedit_element, layout, false);
             final Spinner timeSpinner = (Spinner) childview.findViewById(R.id.timelistedit_time);
-            int previous = i == 0 ? -1 * 60 * 60 : secondFromMidnight(i - 1);
-            int next = i == itemsCount() - 1 ? 24 * 60 * 60 : secondFromMidnight(i + 1);
-            if (i == 0) next = 60 * 60;
+            int previous = i == 0 ? -1 * ONEHOURINSECONDS : secondFromMidnight(i - 1);
+            int next = i == itemsCount() - 1 ? 24 * ONEHOURINSECONDS : secondFromMidnight(i + 1);
+            if (i == 0) next = ONEHOURINSECONDS;
             fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
 
             final EditText editText1 = (EditText) childview.findViewById(R.id.timelistedit_edit1);
             fillNumber(editText1, value1(i));
             final EditText editText2 = ((EditText) childview.findViewById(R.id.timelistedit_edit2));
             fillNumber(editText2, value2(i));
-            if (array2 == null) {
+            if (data2 == null) {
                 editText2.setVisibility(View.GONE);
             }
 
@@ -92,12 +92,28 @@ public class TimeListEdit {
             ImageView addbutton = (ImageView) childview.findViewById(R.id.timelistedit_add);
             ImageView removebutton = (ImageView) childview.findViewById(R.id.timelistedit_remove);
 
+            if (itemsCount() == 1 && i == 0) {
+                removebutton.setVisibility(View.GONE);
+            }
+
+            if (itemsCount() >= 24) {
+                addbutton.setVisibility(View.GONE);
+            }
 
             final int fixedPos = i;
             addbutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addItem(fixedPos, 0, 0, 0);
+                    int seconds = secondFromMidnight(fixedPos);
+                    addItem(fixedPos, seconds, 0, 0);
+                    // for here for the rest of values
+                    for (int i = fixedPos + 1; i < itemsCount(); i++) {
+                        if (secondFromMidnight(i - 1) >= secondFromMidnight(i)) {
+                            editItem(i, secondFromMidnight(i - 1) + ONEHOURINSECONDS, value1(i), value2(i));
+                        }
+                    }
+                    while (itemsCount() > 24 || secondFromMidnight(itemsCount() - 1) > 23 * ONEHOURINSECONDS)
+                        removeItem(itemsCount() - 1);
                     log();
                     buildView();
                 }
@@ -169,14 +185,14 @@ public class TimeListEdit {
             layout.addView(childview);
         }
 
-        if (!(itemsCount() > 0 && secondFromMidnight(itemsCount() - 1) == 23 * 60 * 60)) {
+        if (!(itemsCount() > 0 && secondFromMidnight(itemsCount() - 1) == 23 * ONEHOURINSECONDS)) {
             ImageView imageView = new ImageView(context);
             imageView.setImageResource(R.drawable.add);
             layout.addView(imageView);
             imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    addItem(itemsCount(), itemsCount() > 0 ? secondFromMidnight(itemsCount() - 1) + 60 * 60 : 0, 0, 0);
+                    addItem(itemsCount(), itemsCount() > 0 ? secondFromMidnight(itemsCount() - 1) + ONEHOURINSECONDS : 0, 0, 0);
                     log();
                     buildView();
                 }
@@ -190,7 +206,7 @@ public class TimeListEdit {
         ArrayList<CharSequence> timeList = new ArrayList<>();
         DateFormat df = new SimpleDateFormat("HH:mm");
         int pos = 0;
-        for (int t = previous +  60 * 60; t < next; t += 60 * 60) {
+        for (int t = previous + ONEHOURINSECONDS; t < next; t += ONEHOURINSECONDS) {
             timeList.add(df.format(DateUtil.toDate(t)));
             if (secondsFromMidnight == t) posInList = pos;
             pos++;
@@ -211,12 +227,12 @@ public class TimeListEdit {
     }
 
     public int itemsCount() {
-        return data.length();
+        return data1.length();
     }
 
     public int secondFromMidnight(int index) {
         try {
-            JSONObject item = (JSONObject) data.get(index);
+            JSONObject item = (JSONObject) data1.get(index);
             if (item.has("timeAsSeconds")) {
                 return item.getInt("timeAsSeconds");
             }
@@ -228,9 +244,9 @@ public class TimeListEdit {
 
     public double value1(int index) {
         try {
-            JSONObject item = (JSONObject) data.get(index);
-            if (item.has(array1)) {
-                return item.getDouble(array1);
+            JSONObject item = (JSONObject) data1.get(index);
+            if (item.has("value")) {
+                return item.getDouble("value");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -240,9 +256,9 @@ public class TimeListEdit {
 
     public double value2(int index) {
         try {
-            JSONObject item = (JSONObject) data.get(index);
-            if (item.has(array2)) {
-                return item.getDouble(array2);
+            JSONObject item = (JSONObject) data2.get(index);
+            if (item.has("value")) {
+                return item.getDouble("value");
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -252,12 +268,16 @@ public class TimeListEdit {
 
     public void editItem(int index, int timeAsSeconds, double value1, double value2) {
         try {
-            JSONObject newObject = new JSONObject();
-            newObject.put("timeAsSeconds", timeAsSeconds);
-            newObject.put(array1, value1);
-            if (array2 != null)
-                newObject.put(array2, value2);
-            data.put(index, newObject);
+            JSONObject newObject1 = new JSONObject();
+            newObject1.put("timeAsSeconds", timeAsSeconds);
+            newObject1.put("value", value1);
+            data1.put(index, newObject1);
+            if (data2 != null) {
+                JSONObject newObject2 = new JSONObject();
+                newObject2.put("timeAsSeconds", timeAsSeconds);
+                newObject2.put("value", value2);
+                data2.put(index, newObject2);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -267,16 +287,13 @@ public class TimeListEdit {
     public void addItem(int index, int timeAsSeconds, double value1, double value2) {
         try {
             // shift data
-            for (int i = data.length(); i > index; i--) {
-                data.put(i, data.get(i - 1));
+            for (int i = data1.length(); i > index; i--) {
+                data1.put(i, data1.get(i - 1));
+                if (data2 != null)
+                    data2.put(i, data2.get(i - 1));
             }
             // add new object
-            JSONObject newObject = new JSONObject();
-            newObject.put("timeAsSeconds", timeAsSeconds);
-            newObject.put(array1, value1);
-            if (array2 != null)
-                newObject.put(array2, value2);
-            data.put(index, newObject);
+            editItem(index, timeAsSeconds, value1, value2);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -284,14 +301,16 @@ public class TimeListEdit {
     }
 
     public void removeItem(int index) {
-        data.remove(index);
+        data1.remove(index);
+        if (data2 != null)
+            data2.remove(index);
     }
 
     void log() {
         DateFormat df = new SimpleDateFormat("HH:mm");
-        for (int i = 0; i < data.length(); i++) {
+        for (int i = 0; i < data1.length(); i++) {
             int pos = 0;
-            log.debug(i + ": " + df.format(DateUtil.toDate(secondFromMidnight(i))) + " " + array1 + ": " + value1(i) + (array2 != null ? " " + array2 + ": " + value2(i) : ""));
+            log.debug(i + ": @" + df.format(DateUtil.toDate(secondFromMidnight(i))) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
         }
     }
 }
