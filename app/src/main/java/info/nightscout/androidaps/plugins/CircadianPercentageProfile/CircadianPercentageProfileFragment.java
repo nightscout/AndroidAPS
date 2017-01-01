@@ -352,6 +352,12 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     @Override
     public void onPause() {
         super.onPause();
+
+        if (basalEditDialog != null && basalEditDialog.isVisible()) {
+            basalEditDialog.dismiss();
+        }
+        basalEditDialog = null;
+
         MainApp.bus().unregister(this);
     }
 
