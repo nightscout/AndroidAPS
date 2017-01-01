@@ -101,6 +101,7 @@ public class OverviewFragment extends Fragment {
     TextView avgdeltaView;
     TextView runningTempView;
     TextView baseBasalView;
+    LinearLayout basalLayout;
     TextView activeProfileView;
     TextView iobView;
     TextView apsModeView;
@@ -146,6 +147,7 @@ public class OverviewFragment extends Fragment {
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
         runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
+        basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
@@ -521,7 +523,13 @@ public class OverviewFragment extends Fragment {
             cancelTempLayout.setVisibility(View.GONE);
             runningTempView.setVisibility(View.GONE);
         }
-        baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
+
+        if (pump.getPumpDescription().isTempBasalCapable) {
+            basalLayout.setVisibility(View.VISIBLE);
+            baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
+        } else {
+            basalLayout.setVisibility(View.GONE);
+        }
 
         if (profile != null && profile.getActiveProfile() != null)
             activeProfileView.setText(profile.getActiveProfile());
