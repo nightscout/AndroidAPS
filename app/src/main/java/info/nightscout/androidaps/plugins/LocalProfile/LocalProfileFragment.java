@@ -25,6 +25,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.utils.SafeParse;
@@ -69,6 +70,11 @@ public class LocalProfileFragment extends Fragment implements FragmentBase {
         basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label), getPlugin().basal, null, new DecimalFormat("0.00"), save);
         targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label), getPlugin().targetLow, getPlugin().targetHigh, new DecimalFormat("0.0"), save);
         profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
+
+        PumpInterface pump = MainApp.getConfigBuilder();
+        if (!pump.getPumpDescription().isTempBasalCapable) {
+            layout.findViewById(R.id.localprofile_basal).setVisibility(View.GONE);
+        }
 
         onStatusEvent(null);
 

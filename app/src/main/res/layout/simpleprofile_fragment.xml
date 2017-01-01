@@ -89,6 +89,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/simpleprofile_basalrate_label"
                 android:text="@string/basal_rate"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 

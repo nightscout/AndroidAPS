@@ -29,6 +29,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.utils.DecimalFormatter;
@@ -55,6 +56,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     TextView profileView;
     TextView baseprofileIC;
     TextView baseprofileBasal;
+    LinearLayout baseprofileBasalLayout;
     TextView baseprofileISF;
     Button profileswitchButton;
     ImageView percentageIcon;
@@ -79,6 +81,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
         profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
         baseprofileBasal = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal);
+        baseprofileBasalLayout = (LinearLayout) layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal_layout);
         baseprofileIC = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofileic);
         baseprofileISF = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofileisf);
         percentageIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_percentageicon);
@@ -88,6 +91,11 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         basaleditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_basaledit);
         iceditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_icedit);
         isfeditIcon = (ImageView) layout.findViewById(R.id.circadianpercentageprofile_isfedit);
+
+        PumpInterface pump = MainApp.getConfigBuilder();
+        if (!pump.getPumpDescription().isTempBasalCapable) {
+            layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal_layout).setVisibility(View.GONE);
+        }
 
 
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);

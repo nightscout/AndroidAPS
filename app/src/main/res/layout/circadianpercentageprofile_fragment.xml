@@ -110,6 +110,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/cardColorBackground"
                     android:orientation="horizontal"
+                    android:id="@+id/circadianpercentageprofile_baseprofilebasal_layout"
                     android:textAppearance="?android:attr/textAppearanceSmall">
 
                     <TextView

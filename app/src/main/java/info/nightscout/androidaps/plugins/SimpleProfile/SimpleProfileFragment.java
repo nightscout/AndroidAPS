@@ -26,6 +26,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -67,6 +68,12 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
         profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
+
+        PumpInterface pump = MainApp.getConfigBuilder();
+        if (!pump.getPumpDescription().isTempBasalCapable) {
+            layout.findViewById(R.id.simpleprofile_basalrate).setVisibility(View.GONE);
+            layout.findViewById(R.id.simpleprofile_basalrate_label).setVisibility(View.GONE);
+        }
 
         onStatusEvent(null);
 
