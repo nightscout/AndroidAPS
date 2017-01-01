@@ -205,6 +205,10 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                 holder.checkboxVisible.setEnabled(false);
             }
 
+            if (!plugin.isEnabled(type)) {
+                holder.checkboxVisible.setEnabled(false);
+            }
+
             // Hide enabled control and force enabled plugin if there is only one plugin available
             if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
                 if (pluginList.size() < 2) {
