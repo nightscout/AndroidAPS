@@ -384,4 +384,5 @@
     <string name="smscommunicator_bolusdelivered">Bolus %.2fU aplikován úspěšně</string>
     <string name="ongoingnotificaction">Průběžné oznámení</string>
     <string name="old_data">ZASTARALÉ</string>
+    <string name="localprofile">Místní profil</string>
 </resources>
