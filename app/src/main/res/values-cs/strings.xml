@@ -73,7 +73,6 @@
     <string name="loop_setbypump_label">Nastaveno pumpou</string>
     <string name="loopdisabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
-    <string name="minago">m zpět</string>
     <string name="objectives_minimalduration">Minimální trvání</string>
     <string name="nav_backup">Záloha</string>
     <string name="nav_exit">Ukončit</string>
@@ -227,8 +226,8 @@
     <string name="virtualpump_lastconnection_label">Poslední spojení:</string>
     <string name="canceltemp">Zrušit dočasný bazál</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU aplikován úspěšně</string>
-    <string name="bolusfailed">Chyba při aplikování bolusu</string>
-    <string name="remotebolusnotallowed">Vzdálený bolus není momentálně povolen</string>
+    <string name="smscommunicator_bolusfailed">Chyba při aplikování bolusu</string>
+    <string name="smscommunicator_remotebolusnotallowed">Vzdálený bolus není momentálně povolen</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">K potvzení bolusu %.2fU odpověz SMS s kódem %s</string>
     <string name="smscommunicator">SMS komunikátor</string>
     <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>
@@ -301,7 +300,7 @@
     <string name="es_lang">Spanish</string>
     <string name="noprofileselected">Není vybrán žádný profil</string>
     <string name="openapsma_valueoutofrange" formatted="false">Hodnota %s je mimo přednastavený rozsah</string>
-    <string name="remotebasalnotallowed">Vzdálené posílání příkazů není povoleno</string>
+    <string name="smscommunicator_remotebasalnotallowed">Vzdálené posílání příkazů není povoleno</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">Na spuštění bazálu %.2fU/h odpověz SMS s kódem %s</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">Na ukončení bazálu odpověz SMS s kódem %s</string>
     <string name="smscommunicator_tempbasalcanceled">Dočaný bazál zastaven</string>
@@ -374,6 +373,16 @@
     <string name="wrongpumpdriverselected">Vybrán špatný ovladač pumpy</string>
     <string name="basalvaluebelowminimum">Hodnota bazálu pod minimem. Nenastaveno!</string>
     <string name="mdi">Pera</string>
-    <string name="actualbg">Glykémie:</string>
-    <string name="lastbg">Poslední glykémie:</string>
+    <string name="sms_actualbg">Glykémie:</string>
+    <string name="sms_lastbg">Poslední glykémie:</string>
+    <string name="minago">před %d min</string>
+    <string name="sms_basal">Bazál:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_delta">Rozdíl:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_minago">před %d min</string>
+    <string name="smscommunicator_bolusdelivered">Bolus %.2fU aplikován úspěšně</string>
+    <string name="ongoingnotificaction">Průběžné oznámení</string>
+    <string name="old_data">ZASTARALÉ</string>
+    <string name="localprofile">Místní profil</string>
 </resources>

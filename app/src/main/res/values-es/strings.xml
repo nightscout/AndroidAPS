@@ -74,7 +74,6 @@
     <string name="glucose">Glucosa</string>
     <string name="delta">Delta</string>
     <string name="avgdelta">Avg. delta</string>
-    <string name="minago">min antes</string>
 
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objetivos</string>
@@ -240,10 +239,10 @@
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">XXXXXXXXXX +; + YYYYYYYYYY</string>
     <string formatted="false" name="smscommunicator_bolusreplywithcode">Para entregar bolo% .2fU responder con código% s</string>
-    <string name="bolusfailed">bolo falló</string>
+    <string name="smscommunicator_bolusfailed">bolo falló</string>
     <string formatted="false" name="bolusdelivered">Bolo% .2fU entregado con éxito</string>
     <string formatted="false" name="bolusdelivering">Entregando% .2fU</string>
-    <string name="remotebolusnotallowed">Bolo remoto no permitido</string>
+    <string name="smscommunicator_remotebolusnotallowed">Bolo remoto no permitido</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="glucosetype_manual">Manual</string>
@@ -334,7 +333,7 @@
     <string name="ns_upload_only_summary">NS solo subida. No efectivo con SGV salvo que este seleccionada una fuente local como xDrip. No efectivo en perfiles usando perfiles NS</string>
     <string name="othersettings_title">Otros</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
-    <string name="remotebasalnotallowed">No permitidos ajustes basales remotos</string>
+    <string name="smscommunicator_remotebasalnotallowed">No permitidos ajustes basales remotos</string>
     <string name="reset_db_confirm">¿Realmente quiere resetear la base de datos?</string>
     <string name="smscommunicator_unknowncommand">Comando desconocido o respuesta incorrecta</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>

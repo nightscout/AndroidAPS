@@ -176,7 +176,6 @@
     <string name="carbsconstraintapplied">Carbs constraint applied</string>
     <string name="nav_resetdb">Reset Datenbanken</string>
     <string name="objectives_minimalduration">Minimale Dauer</string>
-    <string name="minago">min ago</string>
     <string name="nav_refreshtreatments">Erneure treatments von NS</string>
     <string name="nav_exit">Exit</string>
     <string name="missing">Fehlend</string>
@@ -198,7 +197,7 @@
     <string name="nightscout">Nightscout</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="absolute">Absolut</string>
-    <string name="bolusfailed">Bolus fehlgeschlagen</string>
+    <string name="smscommunicator_bolusfailed">Bolus fehlgeschlagen</string>
     <string name="canceltemp">Temp Basal abbrechen</string>
     <string name="careportal_temporarytarget">Temoräres Ziel</string>
     <string name="careportal_temporarytargetcancel">Temoräres Ziel abbrechen</string>
@@ -241,7 +240,7 @@
     <string name="syncprofiletopump_title">Nightscout Profil zur Pumpe synchronisieren</string>
     <string name="waitingforpumpresult">auf Pumpenergebnis warten</string>
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
-    <string name="remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
+    <string name="smscommunicator_remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
     <string formatted="false" name="smscommunicator_bolusreplywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
     <string name="ko_lang">Korean</string>
     <string name="youareonallowedlimit">Limit erreicht</string>

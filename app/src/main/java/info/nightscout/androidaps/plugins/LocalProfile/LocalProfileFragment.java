@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.SimpleProfile;
+package info.nightscout.androidaps.plugins.LocalProfile;
 
 
 import android.app.Activity;
@@ -16,7 +16,6 @@ import android.widget.RadioButton;
 
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,74 +27,72 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.TimeListEdit;
 
-public class SimpleProfileFragment extends Fragment implements FragmentBase {
-    private static Logger log = LoggerFactory.getLogger(SimpleProfileFragment.class);
+public class LocalProfileFragment extends Fragment implements FragmentBase {
+    private static Logger log = LoggerFactory.getLogger(LocalProfileFragment.class);
 
-    private static SimpleProfilePlugin simpleProfilePlugin = new SimpleProfilePlugin();
+    private static LocalProfilePlugin localProfilePlugin = new LocalProfilePlugin();
 
-    public static SimpleProfilePlugin getPlugin() {
-        return simpleProfilePlugin;
+    public static LocalProfilePlugin getPlugin() {
+        return localProfilePlugin;
     }
 
     EditText diaView;
     RadioButton mgdlView;
     RadioButton mmolView;
-    EditText icView;
-    EditText isfView;
+    TimeListEdit icView;
+    TimeListEdit isfView;
     EditText carView;
-    EditText basalView;
-    EditText targetlowView;
-    EditText targethighView;
+    TimeListEdit basalView;
+    TimeListEdit targetView;
     Button profileswitchButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View layout = inflater.inflate(R.layout.simpleprofile_fragment, container, false);
-        diaView = (EditText) layout.findViewById(R.id.simpleprofile_dia);
-        mgdlView = (RadioButton) layout.findViewById(R.id.simpleprofile_mgdl);
-        mmolView = (RadioButton) layout.findViewById(R.id.simpleprofile_mmol);
-        icView = (EditText) layout.findViewById(R.id.simpleprofile_ic);
-        isfView = (EditText) layout.findViewById(R.id.simpleprofile_isf);
-        carView = (EditText) layout.findViewById(R.id.simpleprofile_car);
-        basalView = (EditText) layout.findViewById(R.id.simpleprofile_basalrate);
-        targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
-        targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
-        profileswitchButton = (Button) layout.findViewById(R.id.simpleprofile_profileswitch);
+        Runnable save = new Runnable() {
+            @Override
+            public void run() {
+                localProfilePlugin.storeSettings();
+            }
+        };
+
+        View layout = inflater.inflate(R.layout.localprofile_fragment, container, false);
+        diaView = (EditText) layout.findViewById(R.id.localprofile_dia);
+        mgdlView = (RadioButton) layout.findViewById(R.id.localprofile_mgdl);
+        mmolView = (RadioButton) layout.findViewById(R.id.localprofile_mmol);
+        icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label), getPlugin().ic, null, new DecimalFormat("0.0"), save);
+        isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label), getPlugin().isf, null, new DecimalFormat("0.0"), save);
+        carView = (EditText) layout.findViewById(R.id.localprofile_car);
+        basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label), getPlugin().basal, null, new DecimalFormat("0.00"), save);
+        targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label), getPlugin().targetLow, getPlugin().targetHigh, new DecimalFormat("0.0"), save);
+        profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
 
         onStatusEvent(null);
 
-        mgdlView.setChecked(simpleProfilePlugin.mgdl);
-        mmolView.setChecked(simpleProfilePlugin.mmol);
-        diaView.setText(simpleProfilePlugin.dia.toString());
-        icView.setText(simpleProfilePlugin.ic.toString());
-        isfView.setText(simpleProfilePlugin.isf.toString());
-        carView.setText(simpleProfilePlugin.car.toString());
-        basalView.setText(simpleProfilePlugin.basal.toString());
-        targetlowView.setText(simpleProfilePlugin.targetLow.toString());
-        targethighView.setText(simpleProfilePlugin.targetHigh.toString());
+        mgdlView.setChecked(localProfilePlugin.mgdl);
+        mmolView.setChecked(localProfilePlugin.mmol);
+        diaView.setText(localProfilePlugin.dia.toString());
+        carView.setText(localProfilePlugin.car.toString());
 
         mgdlView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                simpleProfilePlugin.mgdl = mgdlView.isChecked();
-                simpleProfilePlugin.mmol = !simpleProfilePlugin.mgdl;
-                mmolView.setChecked(simpleProfilePlugin.mmol);
-                simpleProfilePlugin.storeSettings();
+                localProfilePlugin.mgdl = mgdlView.isChecked();
+                localProfilePlugin.mmol = !localProfilePlugin.mgdl;
+                mmolView.setChecked(localProfilePlugin.mmol);
+                localProfilePlugin.storeSettings();
             }
         });
         mmolView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                simpleProfilePlugin.mmol = mmolView.isChecked();
-                simpleProfilePlugin.mgdl = !simpleProfilePlugin.mmol;
-                mgdlView.setChecked(simpleProfilePlugin.mgdl);
-                simpleProfilePlugin.storeSettings();
+                localProfilePlugin.mmol = mmolView.isChecked();
+                localProfilePlugin.mgdl = !localProfilePlugin.mmol;
+                mgdlView.setChecked(localProfilePlugin.mgdl);
+                localProfilePlugin.storeSettings();
             }
         });
 
@@ -124,24 +121,14 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
             @Override
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
-                simpleProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
-                simpleProfilePlugin.ic = SafeParse.stringToDouble(icView.getText().toString());
-                simpleProfilePlugin.isf = SafeParse.stringToDouble(isfView.getText().toString());
-                simpleProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
-                simpleProfilePlugin.basal = SafeParse.stringToDouble(basalView.getText().toString());
-                simpleProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
-                simpleProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
-                simpleProfilePlugin.storeSettings();
+                localProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
+                localProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
+                localProfilePlugin.storeSettings();
             }
         };
 
         diaView.addTextChangedListener(textWatch);
-        icView.addTextChangedListener(textWatch);
-        isfView.addTextChangedListener(textWatch);
         carView.addTextChangedListener(textWatch);
-        basalView.addTextChangedListener(textWatch);
-        targetlowView.addTextChangedListener(textWatch);
-        targethighView.addTextChangedListener(textWatch);
 
         onStatusEvent(null);
 

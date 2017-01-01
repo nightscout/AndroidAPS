@@ -16,12 +16,12 @@
     <string name="careportal_announcement">Известие</string>
     <string name="careportal_bgcheck">Проверка на КЗ</string>
     <string name="careportal_carbscorrection">Корекция с въглехидр.</string>
-    <string name="careportal_cgmsensorinsert">Замяна сензор</string>
+    <string name="careportal_cgmsensorinsert">Смяна на сензор</string>
     <string name="careportal_cgmsensorstart">Рестарт на сензор</string>
     <string name="careportal_combobolus">Комбиниран болус</string>
     <string name="careportal_correctionbolus">Болус за корекция</string>
     <string name="careportal_exercise">Физ. активност</string>
-    <string name="careportal_insulincartridgechange">Замяна резервоар</string>
+    <string name="careportal_insulincartridgechange">Смяна на резервоар</string>
     <string name="careportal_mealbolus">Болус за осн. хранене</string>
     <string name="careportal_newnstreatment_absolute_label">Абсолютна</string>
     <string name="careportal_newnstreatment_carbs_label">ВХ</string>
@@ -41,7 +41,7 @@
     <string name="careportal_note">Бележка</string>
     <string name="careportal_openapsoffline">OpenAPS оффлайн</string>
     <string name="careportal_profileswitch">Смяна на профил</string>
-    <string name="careportal_pumpsitechange">Замяна сет</string>
+    <string name="careportal_pumpsitechange">Смяна на сет</string>
     <string name="careportal_question">Въпрос</string>
     <string name="careportal_snackbolus">Болус за закуска</string>
     <string name="careportal_tempbasalend">Край на временен базал</string>
@@ -193,7 +193,6 @@
     <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
     <string name="bg_lang">Български</string>
     <string name="openapsma_maxiob_summary">Макс. лимит на не болус IOB подаван от openAPS</string>
-    <string name="minago">min ago</string>
     <string name="connected">Свързан</string>
     <string name="devicenotfound">Избраното устройство не съществува</string>
     <string name="disconnected">Прекъснат</string>
@@ -214,7 +213,7 @@
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="bolusdelivered" formatted="false">Болус %.2fU беше подаден успешно</string>
-    <string name="bolusfailed">Болусът не е доставен</string>
+    <string name="smscommunicator_bolusfailed">Болусът не е доставен</string>
     <string name="canceltemp">Откажи временен базал</string>
     <string name="virtualpump_lastconnection_label">Последно свързване:</string>
     <string name="waitingforpumpresult">Изчаква резултат</string>
@@ -222,7 +221,7 @@
     <string name="smscommunicator_allowednumbers">Позволени телефонни номера</string>
     <string name="success">Успех</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">За да доставите болус %.2fU отговорете с код  %s</string>
-    <string name="remotebolusnotallowed">Отдалечен болус не е разрешен</string>
+    <string name="smscommunicator_remotebolusnotallowed">Отдалечен болус не е разрешен</string>
     <string name="reloadprofile">Обнови профила</string>
     <string name="percent">Процент</string>
     <string name="glucosetype_sensor">Сензор</string>
@@ -308,7 +307,7 @@
     <string name="overview_quickwizard_item_remove_button">Премахни</string>
     <string name="quickwizard">Бърз болус</string>
     <string name="quickwizardsettings">Настройки за бърз болус</string>
-    <string name="remotebasalnotallowed">Не са позволени отдалечени настройки</string>
+    <string name="smscommunicator_remotebasalnotallowed">Не са позволени отдалечени настройки</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
@@ -356,13 +355,13 @@
     <string name="basal_rate">Базал:</string>
     <string name="basalvaluebelowminimum">Базалните стойности са под минимума. Не е зададен профил!</string>
     <string name="batterydischarged">Батерията на помпата е изтощена</string>
-    <string name="actualbg">КЗ:</string>
+    <string name="sms_actualbg">КЗ:</string>
     <string name="danar_disableeasymode">Забрани EasyUI режим в помпата</string>
     <string name="danar_enableextendedbolus">Разреши удължен болус в помпата</string>
     <string name="danar_switchtouhmode">Промени режима от U/d на U/h в помпата</string>
     <string name="danarkoreanpump">DanaR за Корея</string>
     <string name="high_mark">Горна линия</string>
-    <string name="lastbg">Последна КЗ:</string>
+    <string name="sms_lastbg">Последна КЗ:</string>
     <string name="low_mark">Долна линия</string>
     <string name="lowbattery">Изтощена батерия</string>
     <string name="open_settings_on_wear">Отвори Опции на часовника</string>
@@ -376,4 +375,5 @@
     <string name="resend_all_data">Изпрати всички данни отново</string>
     <string name="wear">Wear</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
+     <string name="minago">преди %d м.</string>
 </resources>

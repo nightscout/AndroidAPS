@@ -16,7 +16,6 @@ import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -210,13 +209,13 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     int agoMin = (int) (agoMsec / 60d / 1000d);
 
                     if (actualBG != null) {
-                        reply = MainApp.sResources.getString(R.string.actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";
+                        reply = MainApp.sResources.getString(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";
                     } else if (lastBG != null) {
-                        reply = MainApp.sResources.getString(R.string.lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + agoMin + MainApp.sResources.getString(R.string.minago) + ", ";
+                        reply = MainApp.sResources.getString(R.string.sms_lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(MainApp.sResources.getString(R.string.sms_minago), agoMin) + ", ";
                     }
                     DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
                     if (glucoseStatus != null)
-                        reply += MainApp.sResources.getString(R.string.delta) + ": " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
+                        reply += MainApp.sResources.getString(R.string.sms_delta) + " " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
 
                     MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
                     IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
@@ -225,9 +224,9 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
                     if (basalIob == null) basalIob = new IobTotal();
 
-                    reply += MainApp.sResources.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-                            + MainApp.sResources.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                            + MainApp.sResources.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
+                    reply += MainApp.sResources.getString(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                            + MainApp.sResources.getString(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                            + MainApp.sResources.getString(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
 
                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     receivedSms.processed = true;
@@ -315,7 +314,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 resetWaitingMessages();
                                 sendSMS(cancelTempBasalWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
                             } else {
-                                reply = MainApp.sResources.getString(R.string.remotebasalnotallowed);
+                                reply = MainApp.sResources.getString(R.string.smscommunicator_remotebasalnotallowed);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                         } else {
@@ -329,7 +328,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 sendSMS(tempBasalWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
                                 tempBasalWaitingForConfirmation.tempBasal = tempBasal;
                             } else {
-                                reply = MainApp.sResources.getString(R.string.remotebasalnotallowed);
+                                reply = MainApp.sResources.getString(R.string.smscommunicator_remotebasalnotallowed);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                         }
@@ -337,7 +336,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     break;
                 case "BOLUS":
                     if (new Date().getTime() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance) {
-                        reply = MainApp.sResources.getString(R.string.remotebolusnotallowed);
+                        reply = MainApp.sResources.getString(R.string.smscommunicator_remotebolusnotallowed);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
@@ -351,7 +350,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             sendSMS(bolusWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
                             bolusWaitingForConfirmation.bolusRequested = amount;
                         } else {
-                            reply = MainApp.sResources.getString(R.string.remotebolusnotallowed);
+                            reply = MainApp.sResources.getString(R.string.smscommunicator_remotebolusnotallowed);
                             sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                         }
                     }
@@ -365,12 +364,12 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
                             PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0, null);
                             if (result.success) {
-                                reply = String.format(MainApp.sResources.getString(R.string.bolusdelivered), result.bolusDelivered);
+                                reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
                                 if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
                                 lastRemoteBolusTime = new Date();
                                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             } else {
-                                reply = MainApp.sResources.getString(R.string.bolusfailed);
+                                reply = MainApp.sResources.getString(R.string.smscommunicator_bolusfailed);
                                 if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }

@@ -82,7 +82,6 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
 
 
 public class OverviewFragment extends Fragment {
@@ -590,7 +589,7 @@ public class OverviewFragment extends Fragment {
 
         Long agoMsec = new Date().getTime() - lastBG.timeIndex;
         int agoMin = (int) (agoMsec / 60d / 1000d);
-        timeAgoView.setText(agoMin + " " + getString(R.string.minago));
+        timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
 
         // iob
         MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();

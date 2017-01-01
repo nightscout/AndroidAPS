@@ -1,0 +1,49 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:orientation="horizontal"
+    android:paddingTop="5dp"
+    android:textAppearance="?android:attr/textAppearanceSmall">
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timelistedit_time"
+        android:layout_marginTop="10dp" />
+
+    <EditText
+        android:id="@+id/timelistedit_edit1"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:inputType="numberDecimal"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center" />
+
+    <EditText
+        android:id="@+id/timelistedit_edit2"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:inputType="numberDecimal"
+        android:layout_gravity="center_horizontal"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:id="@+id/timelistedit_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/add" />
+
+    <ImageView
+        android:id="@+id/timelistedit_remove"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="15dp"
+        android:src="@drawable/remove" />
+</LinearLayout>

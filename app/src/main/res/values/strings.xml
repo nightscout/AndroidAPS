@@ -31,6 +31,7 @@
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
+    <string name="sms_iob">IOB:</string>
     <string name="treatments_activity_string">Activity:</string>
     <string name="treatments_iobtotal_label_string">Toal IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Total IOB activity:</string>
@@ -75,8 +76,8 @@
     <string name="reason">Reason</string>
     <string name="glucose">Glucose</string>
     <string name="delta">Delta</string>
+    <string name="sms_delta">Delta:</string>
     <string name="avgdelta">Avg. delta</string>
-    <string name="minago">m ago</string>
 
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">Objectives</string>
@@ -123,7 +124,9 @@
     <string name="confirmation">Confirmation</string>
     <string name="entertreatmentquestion">Enter new treatment:</string>
     <string name="bolus">Bolus</string>
+    <string name="sms_bolus">Bolus:</string>
     <string name="basal">Basal</string>
+    <string name="sms_basal">Basal:</string>
     <string name="carbs">Carbs</string>
     <string name="changeyourinput">Change your input!</string>
     <string name="setextendedbolusquestion">Set new extended bolus:</string>
@@ -245,11 +248,12 @@
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
-    <string name="bolusfailed">Bolus failed</string>
+    <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
+    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusdelivering" formatted="false">Delivering %.2fU</string>
     <string name="smscommunicator_remotecommandsallowed">Allow remote commands via SMS</string>
-    <string name="remotebolusnotallowed">Remote bolus not allowed</string>
+    <string name="smscommunicator_remotebolusnotallowed">Remote bolus not allowed</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
     <string name="glucosetype_manual">Manual</string>
@@ -314,7 +318,7 @@
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
     <string name="openapsma_valueoutofrange" formatted="false">Value %s is out of hard limits</string>
-    <string name="remotebasalnotallowed">Remote basal setting is not allowed</string>
+    <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
@@ -384,9 +388,12 @@
     <string name="danar_enableextendedbolus">Enable extended boluses on pump</string>
     <string name="danar_switchtouhmode">Change mode from U/d to U/h on pump</string>
     <string name="basalvaluebelowminimum">Basal value below minimum. Profile not set!</string>
-    <string name="actualbg">BG:</string>
-    <string name="lastbg">Last BG:</string>
+    <string name="sms_actualbg">BG:</string>
+    <string name="sms_lastbg">Last BG:</string>
     <string name="mdi">MDI</string>
     <string name="ongoingnotificaction">Ongoing Notification</string>
     <string name="old_data">OLD DATA</string>
+    <string name="minago">%dmin ago</string>
+    <string name="sms_minago">%dmin ago</string>
+    <string name="localprofile">Local Profile</string>
 </resources>
