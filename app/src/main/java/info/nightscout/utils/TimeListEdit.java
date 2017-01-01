@@ -84,23 +84,29 @@ public class TimeListEdit {
 
         for (int i = 0; i < itemsCount(); i++) {
             View childview = inflater.inflate(R.layout.timelistedit_element, layout, false);
+            childview.setId(View.generateViewId());
             final Spinner timeSpinner = (Spinner) childview.findViewById(R.id.timelistedit_time);
+            timeSpinner.setId(View.generateViewId());
             int previous = i == 0 ? -1 * ONEHOURINSECONDS : secondFromMidnight(i - 1);
             int next = i == itemsCount() - 1 ? 24 * ONEHOURINSECONDS : secondFromMidnight(i + 1);
             if (i == 0) next = ONEHOURINSECONDS;
             fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
 
             final EditText editText1 = (EditText) childview.findViewById(R.id.timelistedit_edit1);
+            editText1.setId(View.generateViewId());
             fillNumber(editText1, value1(i));
             final EditText editText2 = ((EditText) childview.findViewById(R.id.timelistedit_edit2));
             fillNumber(editText2, value2(i));
+            editText2.setId(View.generateViewId());
             if (data2 == null) {
                 editText2.setVisibility(View.GONE);
             }
 
 
             ImageView addbutton = (ImageView) childview.findViewById(R.id.timelistedit_add);
+            addbutton.setId(View.generateViewId());
             ImageView removebutton = (ImageView) childview.findViewById(R.id.timelistedit_remove);
+            removebutton.setId(View.generateViewId());
 
             if (itemsCount() == 1 && i == 0) {
                 removebutton.setVisibility(View.GONE);
