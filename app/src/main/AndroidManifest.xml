@@ -63,6 +63,8 @@
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
                 <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
+                <!-- Receiver from 640g uploader -->
+                <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
                 <!-- Auto start -->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

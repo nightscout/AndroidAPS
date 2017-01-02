@@ -29,4 +29,6 @@ public interface Intents {
     String EXTRA_RAW = "com.eveningoutpost.dexdrip.Extras.Raw";
 
     String ACTION_NEW_BG_ESTIMATE_NO_DATA = "com.eveningoutpost.dexdrip.BgEstimateNoData";
+
+    String NS_EMULATOR = "com.eveningoutpost.dexdrip.NS_EMULATOR";
 }
