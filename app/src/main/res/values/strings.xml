@@ -398,4 +398,10 @@
     <string name="minago">%dmin ago</string>
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
+    <string name="danar_stats">DanaR Stats</string>
+    <string name="danar_stats_avg">average</string>
+    <string name="danar_stats_expweight">exponentially weighted</string>
+    <string name="danar_stats_basalrate">Basalrate</string>
+    <string name="danar_stats_bolus">Bolus</string>
+    <string name="danar_stats_tdi">total daily insulin</string>
 </resources>

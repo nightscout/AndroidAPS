@@ -28,6 +28,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.DanaR.Dialogs.ProfileViewDialog;
+import info.nightscout.androidaps.plugins.DanaR.History.DanaRStatsActivity;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.DanaRKorean.History.DanaRHistoryActivity;
@@ -62,6 +63,8 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
     TextView iobView;
     Button viewProfileButton;
     Button historyButton;
+    Button statsButton;
+
 
     public DanaRKoreanFragment() {
         if (sHandlerThread == null) {
@@ -102,6 +105,8 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
         iobView = (TextView) view.findViewById(R.id.danar_iob);
         viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
         historyButton = (Button) view.findViewById(R.id.danar_history);
+        statsButton = (Button) view.findViewById(R.id.danar_stats);
+
 
         viewProfileButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +121,13 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getContext(), DanaRHistoryActivity.class));
+            }
+        });
+
+        statsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getContext(), DanaRStatsActivity.class));
             }
         });
 
