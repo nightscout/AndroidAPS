@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.MDI.MDIFragment;
 import info.nightscout.androidaps.plugins.NSProfile.NSProfileFragment;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.SafetyFragment.SafetyFragment;
@@ -83,6 +84,7 @@ public class MainApp extends Application {
             pluginsList.add(VirtualPumpFragment.getPlugin());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
+            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSAMAFragment.getPlugin());
             pluginsList.add(NSProfileFragment.getPlugin());
             pluginsList.add(SimpleProfileFragment.getPlugin());
             pluginsList.add(LocalProfileFragment.getPlugin());
