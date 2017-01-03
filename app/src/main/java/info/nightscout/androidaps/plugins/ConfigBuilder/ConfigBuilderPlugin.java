@@ -647,7 +647,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             emptyDescription.isBolusCapable = false;
             emptyDescription.isExtendedBolusCapable = false;
             emptyDescription.isSetBasalProfileCapable = false;
-            emptyDescription.isTempBasalCapable = false;
+            emptyDescription.isTempBasalCapable = true; // needs to be true before real driver is selected
             emptyDescription.isRefillingCapable = false;
             return emptyDescription;
         }
