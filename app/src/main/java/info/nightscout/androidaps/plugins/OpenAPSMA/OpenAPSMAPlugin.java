@@ -1,13 +1,9 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +14,6 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -27,10 +22,9 @@ import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateGui;
-import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateResultGui;
+import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
+import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
-import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
@@ -44,9 +38,9 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAPlugin.class);
 
     // last values
-    DetermineBasalAdapterJS lastDetermineBasalAdapterJS = null;
+    DetermineBasalAdapterMAJS lastDetermineBasalAdapterMAJS = null;
     Date lastAPSRun = null;
-    DetermineBasalResult lastAPSResult = null;
+    DetermineBasalResultMA lastAPSResult = null;
 
     boolean fragmentEnabled = false;
     boolean fragmentVisible = true;
@@ -104,9 +98,9 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     @Override
     public void invoke() {
         lastAPSResult = null;
-        DetermineBasalAdapterJS determineBasalAdapterJS = null;
+        DetermineBasalAdapterMAJS determineBasalAdapterMAJS = null;
         try {
-            determineBasalAdapterJS = new DetermineBasalAdapterJS(new ScriptReader(MainApp.instance().getBaseContext()));
+            determineBasalAdapterMAJS = new DetermineBasalAdapterMAJS(new ScriptReader(MainApp.instance().getBaseContext()));
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             return;
@@ -117,28 +111,28 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         PumpInterface pump = MainApp.getConfigBuilder();
 
         if (!isEnabled(PluginBase.APS)) {
-            MainApp.bus().post(new EventOpenAPSMAUpdateResultGui(MainApp.instance().getString(R.string.openapsma_disabled)));
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_disabled)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_disabled));
             return;
         }
 
         if (glucoseStatus == null) {
-            MainApp.bus().post(new EventOpenAPSMAUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noglucosedata)));
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noglucosedata)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
             return;
         }
 
         if (profile == null) {
-            MainApp.bus().post(new EventOpenAPSMAUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noprofile)));
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noprofile)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
             return;
         }
 
         if (pump == null) {
-            MainApp.bus().post(new EventOpenAPSMAUpdateResultGui(MainApp.instance().getString(R.string.openapsma_nopump)));
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_nopump)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
             return;
@@ -193,37 +187,37 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
-        determineBasalAdapterJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
 
 
-        DetermineBasalResult determineBasalResult = determineBasalAdapterJS.invoke();
+        DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
         // Fix bug determine basal
-        if (determineBasalResult.rate == 0d && determineBasalResult.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
-            determineBasalResult.changeRequested = false;
+        if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
+            determineBasalResultMA.changeRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
-            if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResult.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRate()) < 0.1)
-                determineBasalResult.changeRequested = false;
-            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResult.rate - MainApp.getConfigBuilder().getBaseBasalRate()) < 0.1)
-                determineBasalResult.changeRequested = false;
+            if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRate()) < 0.1)
+                determineBasalResultMA.changeRequested = false;
+            if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getBaseBasalRate()) < 0.1)
+                determineBasalResultMA.changeRequested = false;
         }
 
-        determineBasalResult.iob = iobTotal;
+        determineBasalResultMA.iob = iobTotal;
 
-        determineBasalAdapterJS.release();
+        determineBasalAdapterMAJS.release();
 
         try {
-            determineBasalResult.json.put("timestamp", DateUtil.toISOString(now));
+            determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        lastDetermineBasalAdapterJS = determineBasalAdapterJS;
-        lastAPSResult = determineBasalResult;
+        lastDetermineBasalAdapterMAJS = determineBasalAdapterMAJS;
+        lastAPSResult = determineBasalResultMA;
         lastAPSRun = now;
-        MainApp.bus().post(new EventOpenAPSMAUpdateGui());
+        MainApp.bus().post(new EventOpenAPSUpdateGui());
 
-        //deviceStatus.suggested = determineBasalResult.json;
+        //deviceStatus.suggested = determineBasalResultMA.json;
     }
 
     // safety checks

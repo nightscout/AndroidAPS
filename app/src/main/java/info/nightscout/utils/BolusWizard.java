@@ -3,7 +3,6 @@ package info.nightscout.utils;
 import org.json.JSONObject;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;

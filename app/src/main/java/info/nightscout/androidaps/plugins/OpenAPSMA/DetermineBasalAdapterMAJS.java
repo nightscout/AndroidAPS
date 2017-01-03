@@ -19,12 +19,11 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.client.data.NSProfile;
 
-public class DetermineBasalAdapterJS implements Parcelable {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterJS.class);
+public class DetermineBasalAdapterMAJS implements Parcelable {
+    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterMAJS.class);
 
 
     private ScriptReader mScriptReader = null;
@@ -51,7 +50,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
      *   Parcelable implementation
      *   result string for display only
      **/
-    protected DetermineBasalAdapterJS(Parcel in) {
+    protected DetermineBasalAdapterMAJS(Parcel in) {
         storedCurrentTemp = in.readString();
         storedIobData = in.readString();
         storedGlucoseStatus = in.readString();
@@ -73,15 +72,15 @@ public class DetermineBasalAdapterJS implements Parcelable {
         return 0;
     }
 
-    public static final Creator<DetermineBasalAdapterJS> CREATOR = new Creator<DetermineBasalAdapterJS>() {
+    public static final Creator<DetermineBasalAdapterMAJS> CREATOR = new Creator<DetermineBasalAdapterMAJS>() {
         @Override
-        public DetermineBasalAdapterJS createFromParcel(Parcel in) {
-            return new DetermineBasalAdapterJS(in);
+        public DetermineBasalAdapterMAJS createFromParcel(Parcel in) {
+            return new DetermineBasalAdapterMAJS(in);
         }
 
         @Override
-        public DetermineBasalAdapterJS[] newArray(int size) {
-            return new DetermineBasalAdapterJS[size];
+        public DetermineBasalAdapterMAJS[] newArray(int size) {
+            return new DetermineBasalAdapterMAJS[size];
         }
     };
 
@@ -89,7 +88,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
      *  Main code
      */
 
-    public DetermineBasalAdapterJS(ScriptReader scriptReader) throws IOException {
+    public DetermineBasalAdapterMAJS(ScriptReader scriptReader) throws IOException {
         mV8rt = V8.createV8Runtime();
         mScriptReader = scriptReader;
 
@@ -143,7 +142,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
         mV8rt.add(PARAM_meal_data, mMealData);
     }
 
-    public DetermineBasalResult invoke() {
+    public DetermineBasalResultMA invoke() {
         mV8rt.executeVoidScript(
                 "console.error(\"determine_basal(\"+\n" +
                         "JSON.stringify(" + PARAM_glucoseStatus + ")+ \", \" +\n" +
@@ -170,9 +169,9 @@ public class DetermineBasalAdapterJS implements Parcelable {
 
         V8Object v8ObjectReuslt = mV8rt.getObject("rT");
 
-        DetermineBasalResult result = null;
+        DetermineBasalResultMA result = null;
         try {
-            result = new DetermineBasalResult(v8ObjectReuslt, new JSONObject(ret));
+            result = new DetermineBasalResultMA(v8ObjectReuslt, new JSONObject(ret));
         } catch (JSONException e) {
             e.printStackTrace();
         }

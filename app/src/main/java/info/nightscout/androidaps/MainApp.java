@@ -82,7 +82,7 @@ public class MainApp extends Application {
             pluginsList.add(MDIFragment.getPlugin());
             pluginsList.add(VirtualPumpFragment.getPlugin());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
-            if (Config.OPENAPSMAENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
+            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
             pluginsList.add(NSProfileFragment.getPlugin());
             pluginsList.add(SimpleProfileFragment.getPlugin());
             pluginsList.add(LocalProfileFragment.getPlugin());

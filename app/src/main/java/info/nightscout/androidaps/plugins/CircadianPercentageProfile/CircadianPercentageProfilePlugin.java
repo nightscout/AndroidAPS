@@ -15,7 +15,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;

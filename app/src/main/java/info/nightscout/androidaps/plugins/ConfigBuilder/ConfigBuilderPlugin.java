@@ -43,13 +43,12 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgError;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
+import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -901,8 +900,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
                 deviceStatus.suggested = apsResult.json();
 
-                if (lastRun.request instanceof DetermineBasalResult) {
-                    DetermineBasalResult result = (DetermineBasalResult) lastRun.request;
+                if (lastRun.request instanceof DetermineBasalResultMA) {
+                    DetermineBasalResultMA result = (DetermineBasalResultMA) lastRun.request;
                     deviceStatus.iob = result.iob.json();
                     deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
                 }

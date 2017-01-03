@@ -4,7 +4,6 @@ import java.util.List;
 
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
