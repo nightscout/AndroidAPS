@@ -23,7 +23,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.client.data.NSProfile;
 
-public class DetermineBasalAdapterAMAJS implements Parcelable {
+public class DetermineBasalAdapterAMAJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterAMAJS.class);
 
 
@@ -46,44 +46,6 @@ public class DetermineBasalAdapterAMAJS implements Parcelable {
     private String storedGlucoseStatus = null;
     private String storedProfile = null;
     private String storedMeal_data = null;
-
-    /**
-     *   Parcelable implementation
-     *   result string for display only
-     **/
-    protected DetermineBasalAdapterAMAJS(Parcel in) {
-        storedCurrentTemp = in.readString();
-        storedIobData = in.readString();
-        storedGlucoseStatus = in.readString();
-        storedProfile = in.readString();
-        storedMeal_data = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(storedCurrentTemp);
-        dest.writeString(storedIobData);
-        dest.writeString(storedGlucoseStatus);
-        dest.writeString(storedProfile);
-        dest.writeString(storedMeal_data);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<DetermineBasalAdapterAMAJS> CREATOR = new Creator<DetermineBasalAdapterAMAJS>() {
-        @Override
-        public DetermineBasalAdapterAMAJS createFromParcel(Parcel in) {
-            return new DetermineBasalAdapterAMAJS(in);
-        }
-
-        @Override
-        public DetermineBasalAdapterAMAJS[] newArray(int size) {
-            return new DetermineBasalAdapterAMAJS[size];
-        }
-    };
 
     /**
      *  Main code
@@ -177,7 +139,6 @@ public class DetermineBasalAdapterAMAJS implements Parcelable {
             e.printStackTrace();
         }
 
-        // Store input params for Parcelable
         storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
         storedIobData = mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");");
         storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
