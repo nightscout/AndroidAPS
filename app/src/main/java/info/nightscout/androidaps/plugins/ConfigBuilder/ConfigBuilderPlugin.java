@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgError;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
@@ -902,6 +903,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
                 if (lastRun.request instanceof DetermineBasalResultMA) {
                     DetermineBasalResultMA result = (DetermineBasalResultMA) lastRun.request;
+                    deviceStatus.iob = result.iob.json();
+                    deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                }
+
+                if (lastRun.request instanceof DetermineBasalResultAMA) {
+                    DetermineBasalResultAMA result = (DetermineBasalResultAMA) lastRun.request;
                     deviceStatus.iob = result.iob.json();
                     deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
                 }
