@@ -23,7 +23,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +34,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
@@ -76,8 +76,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
             if (profile == null)
                 return;
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
-            holder.date.setText(df.format(treatments.get(position).created_at));
+            holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).created_at));
             holder.insulin.setText(DecimalFormatter.to2Decimal(treatments.get(position).insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(treatments.get(position).carbs) + " g");
             Iob iob = treatments.get(position).iobCalc(new Date(), profile.getDia());

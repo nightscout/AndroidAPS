@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,6 +46,7 @@ import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatu
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
@@ -273,9 +273,8 @@ public class DanaRHistoryActivity extends Activity {
 
         @Override
         public void onBindViewHolder(HistoryViewHolder holder, int position) {
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
             DanaRHistoryRecord record = historyList.get(position);
-            holder.time.setText(df.format(new Date(record.getRecordDate())));
+            holder.time.setText(DateUtil.dateAndTimeString(record.getRecordDate()));
             holder.value.setText(DecimalFormatter.to2Decimal(record.getRecordValue()));
             holder.stringvalue.setText(record.getStringRecordValue());
             holder.bolustype.setText(record.getBolusType());
@@ -305,11 +304,10 @@ public class DanaRHistoryActivity extends Activity {
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_DAILY:
-                    df = DateFormat.getDateInstance(DateFormat.SHORT);
                     holder.dailybasal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + "U");
                     holder.dailybolus.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + "U");
                     holder.dailytotal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()+ record.getRecordDailyBasal()) + "U");
-                    holder.time.setText(df.format(new Date(record.getRecordDate())));
+                    holder.time.setText(DateUtil.dateString(record.getRecordDate()));
                     holder.time.setVisibility(View.VISIBLE);
                     holder.value.setVisibility(View.GONE);
                     holder.stringvalue.setVisibility(View.GONE);

@@ -20,7 +20,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
@@ -32,6 +31,7 @@ import info.nightscout.androidaps.plugins.DanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.DanaRKorean.History.DanaRHistoryActivity;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
 
@@ -185,7 +185,6 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
 
     // GUI functions
     private void updateGUI() {
-        final DateFormat formatTime = DateFormat.getTimeInstance(DateFormat.SHORT);
 
         Activity activity = getActivity();
         if (activity != null && basaBasalRateView != null)
@@ -197,7 +196,7 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
                     if (DanaRKoreanPlugin.getDanaRPump().lastConnection.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - DanaRKoreanPlugin.getDanaRPump().lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);
-                        lastConnectionView.setText(formatTime.format(DanaRKoreanPlugin.getDanaRPump().lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
+                        lastConnectionView.setText(DateUtil.dateString(DanaRKoreanPlugin.getDanaRPump().lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
 //                    if (DanaRKoreanPlugin.getDanaRPump().lastBolusTime.getTime() != 0) {

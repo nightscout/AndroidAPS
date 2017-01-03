@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Overview;
+package info.nightscout.androidaps.plugins.Overview.graphExtensions;
 
 import android.content.Context;
 

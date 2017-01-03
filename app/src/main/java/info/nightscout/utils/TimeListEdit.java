@@ -23,9 +23,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.MainApp;
@@ -224,10 +222,9 @@ public class TimeListEdit {
     public void fillSpinner(Spinner spinner, int secondsFromMidnight, int previous, int next) {
         int posInList = 0;
         ArrayList<CharSequence> timeList = new ArrayList<>();
-        DateFormat df = new SimpleDateFormat("HH:mm");
         int pos = 0;
         for (int t = previous + ONEHOURINSECONDS; t < next; t += ONEHOURINSECONDS) {
-            timeList.add(df.format(DateUtil.toDate(t)));
+            timeList.add(DateUtil.timeString(DateUtil.toDate(t)));
             if (secondsFromMidnight == t) posInList = pos;
             pos++;
         }
@@ -332,10 +329,9 @@ public class TimeListEdit {
     }
 
     void log() {
-        DateFormat df = new SimpleDateFormat("HH:mm");
         for (int i = 0; i < data1.length(); i++) {
             int pos = 0;
-            log.debug(i + ": @" + df.format(DateUtil.toDate(secondFromMidnight(i))) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
+            log.debug(i + ": @" + DateUtil.timeString(DateUtil.toDate(secondFromMidnight(i))) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
         }
     }
 }
