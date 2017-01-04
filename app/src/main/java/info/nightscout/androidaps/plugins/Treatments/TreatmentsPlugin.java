@@ -142,22 +142,9 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public MealData getMealData() {
         MealData result = new MealData();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null)
-            return result;
 
         for (Treatment treatment : treatments) {
-            long now = new Date().getTime();
-            long dia_ago = now - (new Double(profile.getDia() * 60 * 60 * 1000l)).longValue();
-            long t = treatment.created_at.getTime();
-            if (t > dia_ago && t <= now) {
-                if (treatment.carbs >= 1) {
-                    result.carbs += treatment.carbs;
-                }
-                if (treatment.insulin >= 0.1 && treatment.mealBolus) {
-                    result.boluses += treatment.insulin;
-                }
-            }
+            result.addTreatment(treatment);
         }
         return result;
     }
