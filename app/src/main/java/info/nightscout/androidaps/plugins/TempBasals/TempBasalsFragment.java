@@ -26,7 +26,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.utils.DecimalFormatter;
 
 

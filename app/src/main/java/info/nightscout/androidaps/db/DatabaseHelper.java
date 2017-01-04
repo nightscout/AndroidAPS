@@ -3,11 +3,7 @@ package info.nightscout.androidaps.db;
 import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.text.Html;
-import android.text.Spanned;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -27,9 +23,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.data.GlucoseStatus;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -209,43 +203,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /*
      * Returns glucose_status for openAPS or null if no actual data available
      */
-    public static class GlucoseStatus {
-        public double glucose = 0d;
-        public double delta = 0d;
-        public double avgdelta = 0d;
-        public double short_avgdelta = 0d; // TODO: add calculation for AMA
-        public double long_avgdelta = 0d; // TODO: add calculation for AMA
-
-        @Override
-        public String toString() {
-            return MainApp.sResources.getString(R.string.glucose) + " " + DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
-                    MainApp.sResources.getString(R.string.delta) + " " + DecimalFormatter.to0Decimal(delta) + " mg/dl\n" +
-                    MainApp.sResources.getString(R.string.avgdelta) + " " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl";
-        }
-
-        public Spanned toSpanned() {
-            return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.glucose) + "</b>: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl<br>" +
-                    "<b>" + MainApp.sResources.getString(R.string.delta) + "</b>: " + DecimalFormatter.to0Decimal(delta) + " mg/dl<br>" +
-                    "<b>" + MainApp.sResources.getString(R.string.avgdelta) + "</b>: " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl");
-        }
-
-        public GlucoseStatus() {
-        }
-
-        public GlucoseStatus(Double glucose, Double delta, Double avgdelta) {
-            this.glucose = glucose;
-            this.delta = delta;
-            this.avgdelta = avgdelta;
-        }
-
-        public GlucoseStatus round() {
-            this.glucose = Round.roundTo(this.glucose, 0.1);
-            this.delta = Round.roundTo(this.delta, 0.01);
-            this.avgdelta = Round.roundTo(this.avgdelta, 0.01);
-            return this;
-        }
-    }
-
     @Nullable
     public GlucoseStatus getGlucoseStatusData() {
         GlucoseStatus result = new GlucoseStatus();

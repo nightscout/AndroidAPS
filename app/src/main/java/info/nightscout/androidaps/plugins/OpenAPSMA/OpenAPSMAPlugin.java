@@ -14,7 +14,8 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -106,7 +107,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
 

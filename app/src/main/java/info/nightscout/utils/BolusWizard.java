@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.client.data.NSProfile;
 
 /**

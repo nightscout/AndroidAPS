@@ -25,11 +25,11 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.client.data.NSProfile;
@@ -144,7 +144,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (lastBG != null) {
-            DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
 
             if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
             if (wear_integration) {
@@ -160,7 +160,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
     }
 
-    private DataMap dataMapSingleBG(BgReading lastBG, DatabaseHelper.GlucoseStatus glucoseStatus) {
+    private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if(profile == null) return null;
 
@@ -255,7 +255,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         if (last_bg == null) return;
 
         List<BgReading> graph_bgs =  MainApp.getDbHelper().getDataFromTime(startTime);
-        DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);
