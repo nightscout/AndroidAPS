@@ -34,21 +34,24 @@ public class DetermineBasalAdapterAMAJS {
     private V8Object mIobData;
     private V8Object mMealData;
     private V8Object mCurrentTemp;
+    private V8Object mAutosensData = null;
 
     private final String PARAM_currentTemp = "currentTemp";
     private final String PARAM_iobData = "iobData";
     private final String PARAM_glucoseStatus = "glucose_status";
     private final String PARAM_profile = "profile";
     private final String PARAM_meal_data = "meal_data";
+    private final String PARAM_autosens_data = "autosens_data";
 
     private String storedCurrentTemp = null;
-    public String storedIobData = null;
+    private String storedIobData = null;
     private String storedGlucoseStatus = null;
     private String storedProfile = null;
     private String storedMeal_data = null;
+    private String storedAutosens_data = null;
 
     /**
-     *  Main code
+     * Main code
      */
 
     public DetermineBasalAdapterAMAJS(ScriptReader scriptReader) throws IOException {
@@ -102,17 +105,22 @@ public class DetermineBasalAdapterAMAJS {
         mMealData = new V8Object(mV8rt);
         mMealData.add("carbs", 0);
         mMealData.add("boluses", 0);
+        mMealData.add("mealCOB", 0.0d);
         mV8rt.add(PARAM_meal_data, mMealData);
+        // Autosens data
+        mV8rt.executeVoidScript("autosens_data = undefined");
     }
 
     public DetermineBasalResultAMA invoke() {
+
         mV8rt.executeVoidScript(
                 "console.error(\"determine_basal(\"+\n" +
                         "JSON.stringify(" + PARAM_glucoseStatus + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_currentTemp +   ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_iobData +       ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_profile +       ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_meal_data +     ")+ \") \");"
+                        "JSON.stringify(" + PARAM_currentTemp + ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_iobData + ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_profile + ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_autosens_data + ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_meal_data + ")+ \") \");"
         );
         mV8rt.executeVoidScript(
                 "var rT = determine_basal(" +
@@ -120,9 +128,9 @@ public class DetermineBasalAdapterAMAJS {
                         PARAM_currentTemp + ", " +
                         PARAM_iobData + ", " +
                         PARAM_profile + ", " +
-                        "undefined, " +
+                        PARAM_autosens_data + ", " +
                         PARAM_meal_data + ", " +
-                        "setTempBasal" +
+                        "tempBasalFunctions" +
                         ");");
 
 
@@ -144,6 +152,8 @@ public class DetermineBasalAdapterAMAJS {
         storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
         storedProfile = mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");");
         storedMeal_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");");
+        if (mAutosensData != null)
+            storedAutosens_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_autosens_data + ");");
 
         return result;
     }
@@ -168,10 +178,21 @@ public class DetermineBasalAdapterAMAJS {
         return storedMeal_data;
     }
 
+    String getAutosensDataParam() {
+        return storedAutosens_data;
+    }
+
     private void loadScript() throws IOException {
+        mV8rt.executeVoidScript(readFile("OpenAPSAMA/round-basal.js"), "OpenAPSAMA/round-basal.js", 0);
+        mV8rt.executeVoidScript("var round_basal = module.exports;");
+        mV8rt.executeVoidScript("require = function() {return round_basal;};");
+
+        mV8rt.executeVoidScript(readFile("OpenAPSAMA/basal-set-temp.js"), "OpenAPSAMA/basal-set-temp.js ", 0);
+        mV8rt.executeVoidScript("var tempBasalFunctions = module.exports;");
+
         mV8rt.executeVoidScript(
                 readFile("OpenAPSAMA/determine-basal.js"),
-                "OpenAPSAMA/bin/oref0-determine-basal.js",
+                "OpenAPSAMA/determine-basal.js",
                 0);
         mV8rt.executeVoidScript("var determine_basal = module.exports;");
         mV8rt.executeVoidScript(
@@ -228,7 +249,8 @@ public class DetermineBasalAdapterAMAJS {
                         PumpInterface pump,
                         IobTotal iobData,
                         DatabaseHelper.GlucoseStatus glucoseStatus,
-                        TreatmentsPlugin.MealData mealData) {
+                        TreatmentsPlugin.MealData mealData,
+                        JSONObject autosensData) {
 
         String units = profile.getUnits();
 
@@ -258,18 +280,31 @@ public class DetermineBasalAdapterAMAJS {
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
         mGlucoseStatus.add("delta", glucoseStatus.delta);
         mGlucoseStatus.add("avgdelta", glucoseStatus.avgdelta);
+        mGlucoseStatus.add("short_avgdelta", glucoseStatus.short_avgdelta);
+        mGlucoseStatus.add("long_avgdelta", glucoseStatus.long_avgdelta);
 
         mMealData.add("carbs", mealData.carbs);
         mMealData.add("boluses", mealData.boluses);
+        mMealData.add("mealCOB", mealData.mealCOB);
+
+        if (autosensData != null) {
+            mAutosensData = new V8Object(mV8rt);
+            // TODO: add autosens data here for AMA
+        } else {
+            mV8rt.executeVoidScript("autosens_data = undefined");
+        }
     }
 
 
-     public void release() {
+    public void release() {
         mProfile.release();
         mCurrentTemp.release();
         mIobData.release();
         mMealData.release();
         mGlucoseStatus.release();
+        if (mAutosensData != null) {
+            mAutosensData.release();
+        }
         mV8rt.release();
     }
 

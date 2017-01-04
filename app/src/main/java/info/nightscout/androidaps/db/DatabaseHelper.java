@@ -209,10 +209,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     /*
      * Returns glucose_status for openAPS or null if no actual data available
      */
-    public static class GlucoseStatus implements Parcelable {
+    public static class GlucoseStatus {
         public double glucose = 0d;
         public double delta = 0d;
         public double avgdelta = 0d;
+        public double short_avgdelta = 0d; // TODO: add calculation for AMA
+        public double long_avgdelta = 0d; // TODO: add calculation for AMA
 
         @Override
         public String toString() {
@@ -225,34 +227,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.glucose) + "</b>: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl<br>" +
                     "<b>" + MainApp.sResources.getString(R.string.delta) + "</b>: " + DecimalFormatter.to0Decimal(delta) + " mg/dl<br>" +
                     "<b>" + MainApp.sResources.getString(R.string.avgdelta) + "</b>: " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl");
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeDouble(avgdelta);
-            dest.writeDouble(delta);
-            dest.writeDouble(glucose);
-        }
-
-        public final Parcelable.Creator<GlucoseStatus> CREATOR = new Parcelable.Creator<GlucoseStatus>() {
-            public GlucoseStatus createFromParcel(Parcel in) {
-                return new GlucoseStatus(in);
-            }
-
-            public GlucoseStatus[] newArray(int size) {
-                return new GlucoseStatus[size];
-            }
-        };
-
-        private GlucoseStatus(Parcel in) {
-            avgdelta = in.readDouble();
-            delta = in.readDouble();
-            glucose = in.readDouble();
         }
 
         public GlucoseStatus() {

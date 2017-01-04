@@ -141,6 +141,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public class MealData {
         public double boluses = 0d;
         public double carbs = 0d;
+        public double mealCOB = 0.0d; // TODO: add calculation for AMA
     }
 
     @Override
