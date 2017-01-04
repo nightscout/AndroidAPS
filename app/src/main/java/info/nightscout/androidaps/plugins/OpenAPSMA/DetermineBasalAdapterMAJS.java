@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -16,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.client.data.NSProfile;
@@ -226,7 +224,7 @@ public class DetermineBasalAdapterMAJS {
                         double targetBg,
                         PumpInterface pump,
                         IobTotal iobData,
-                        DatabaseHelper.GlucoseStatus glucoseStatus,
+                        GlucoseStatus glucoseStatus,
                         TreatmentsPlugin.MealData mealData) {
 
         String units = profile.getUnits();

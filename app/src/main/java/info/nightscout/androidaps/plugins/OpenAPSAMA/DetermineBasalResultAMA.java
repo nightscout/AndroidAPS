@@ -9,7 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 
 public class DetermineBasalResultAMA extends APSResult {
 

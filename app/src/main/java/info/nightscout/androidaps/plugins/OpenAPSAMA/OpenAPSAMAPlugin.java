@@ -14,7 +14,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -22,7 +22,7 @@ import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
@@ -107,7 +107,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
 

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.OpenAPSMA;
+package info.nightscout.androidaps.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;

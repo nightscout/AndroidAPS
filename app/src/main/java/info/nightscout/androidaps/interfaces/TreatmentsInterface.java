@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces;
 import java.util.List;
 
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 
 /**
