@@ -15,9 +15,9 @@ import java.io.IOException;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.client.data.NSProfile;
 
 public class DetermineBasalAdapterMAJS {
@@ -225,7 +225,7 @@ public class DetermineBasalAdapterMAJS {
                         PumpInterface pump,
                         IobTotal iobData,
                         GlucoseStatus glucoseStatus,
-                        TreatmentsPlugin.MealData mealData) {
+                        MealData mealData) {
 
         String units = profile.getUnits();
 

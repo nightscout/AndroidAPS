@@ -16,6 +16,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -136,12 +137,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
-    }
-
-    public class MealData {
-        public double boluses = 0d;
-        public double carbs = 0d;
-        public double mealCOB = 0.0d; // TODO: add calculation for AMA
     }
 
     @Override

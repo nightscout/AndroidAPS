@@ -16,6 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -25,7 +26,6 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
@@ -171,7 +171,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        TreatmentsPlugin.MealData mealData = treatments.getMealData();
+        MealData mealData = treatments.getMealData();
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
