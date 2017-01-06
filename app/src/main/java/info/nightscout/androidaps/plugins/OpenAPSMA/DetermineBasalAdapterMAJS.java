@@ -70,7 +70,7 @@ public class DetermineBasalAdapterMAJS {
         mProfile.add("max_basal", 0);
         mProfile.add("max_bg", 0);
         mProfile.add("min_bg", 0);
-        mProfile.add("carbratio", 0);
+        mProfile.add("carb_ratio", 0);
         mProfile.add("sens", 0);
         mProfile.add("current_basal", 0);
         mV8rt.add(PARAM_profile, mProfile);
@@ -238,7 +238,7 @@ public class DetermineBasalAdapterMAJS {
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
         mProfile.add("target_bg", targetBg);
-        mProfile.add("carbratio", profile.getIc(profile.secondsFromMidnight()));
+        mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
         mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
 
         mProfile.add("current_basal", pump.getBaseBasalRate());
