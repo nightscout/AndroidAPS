@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +112,13 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
                     if (determineBasalAdapterAMAJS != null) {
                         glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getGlucoseStatusParam()));
                         currentTempView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getCurrentTempParam()));
-                        iobDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getIobDataParam()));
+                        try {
+                            JSONArray iobArray = new JSONArray(determineBasalAdapterAMAJS.getIobDataParam());
+                            iobDataView.setText(String.format(MainApp.sResources.getString(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0)));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            iobDataView.setText("JSONException");
+                        }
                         profileView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getProfileParam()));
                         mealDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getMealDataParam()));
                     }

@@ -13,6 +13,7 @@ public interface TreatmentsInterface {
 
     void updateTotalIOB();
     IobTotal getLastCalculation();
+    IobTotal getCalculationToTime(long time);
     MealData getMealData();
     List<Treatment> getTreatments();
 }

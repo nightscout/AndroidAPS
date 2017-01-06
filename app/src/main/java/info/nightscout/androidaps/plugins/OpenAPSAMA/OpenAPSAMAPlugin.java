@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -16,6 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -107,7 +109,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
 
@@ -162,16 +164,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
 
-        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOB();
-        tempBasals.updateTotalIOB();
-        IobTotal bolusIob = treatments.getLastCalculation();
-        IobTotal basalIob = tempBasals.getLastCalculation();
+        IobTotal[] iobArray = IobTotal.calculateIobArrayInDia();
 
-        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
-
-        MealData mealData = treatments.getMealData();
+        MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
@@ -188,7 +183,14 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
-        determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData, null);
+        List<BgReading> bgReadings = MainApp.getDbHelper().getDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia())), false);
+        AutosensResult autosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
+
+        determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
+                autosensResult.ratio, //autosensDataRatio
+                false, // isTempTargetSet  TODO: add when we start handling temp targets
+                Constants.MIN_5M_CARBIMPACT //min_5m_carbimpact
+                );
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
@@ -203,7 +205,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
                 determineBasalResultAMA.changeRequested = false;
         }
 
-        determineBasalResultAMA.iob = iobTotal;
+        determineBasalResultAMA.iob = iobArray[0];
 
         determineBasalAdapterAMAJS.release();
 

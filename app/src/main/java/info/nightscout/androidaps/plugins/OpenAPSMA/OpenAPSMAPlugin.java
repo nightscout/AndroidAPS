@@ -107,7 +107,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
 

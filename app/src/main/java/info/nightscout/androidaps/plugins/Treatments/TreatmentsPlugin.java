@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
@@ -22,6 +23,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.client.data.NSProfile;
 
 /**
@@ -112,28 +114,32 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void updateTotalIOB() {
+    public IobTotal getCalculationToTime(long time) {
         IobTotal total = new IobTotal();
 
-        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
-            return;
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null) {
-            lastCalculation = total;
-            return;
-        }
+        if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
+            return total;
+        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        if (profile == null)
+            return total;
 
         Double dia = profile.getDia();
 
-        Date now = new Date();
+        Date now = new Date(time);
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
             Iob tIOB = t.iobCalc(now, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = t.iobCalc(now, dia / 2);
+            Iob bIOB = t.iobCalc(now, dia / Constants.BOLUSSNOOZE_DIA_ADVISOR);
             total.bolussnooze += bIOB.iobContrib;
         }
+        return total;
+    }
+
+    @Override
+    public void updateTotalIOB() {
+        IobTotal total = getCalculationToTime(new Date().getTime());
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;

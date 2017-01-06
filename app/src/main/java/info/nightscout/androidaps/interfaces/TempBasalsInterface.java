@@ -11,6 +11,7 @@ import info.nightscout.androidaps.data.IobTotal;
 public interface TempBasalsInterface {
     void updateTotalIOB();
     IobTotal getLastCalculation();
+    IobTotal getCalculationToTime(long time);
 
     TempBasal getTempBasal (Date time);
     TempBasal getExtendedBolus (Date time);

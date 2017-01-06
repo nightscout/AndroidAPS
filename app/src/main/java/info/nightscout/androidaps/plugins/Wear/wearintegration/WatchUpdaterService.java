@@ -144,7 +144,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         BgReading lastBG = MainApp.getDbHelper().lastBg();
         if (lastBG != null) {
-            GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
             if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
             if (wear_integration) {
@@ -254,8 +254,8 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         if (last_bg == null) return;
 
-        List<BgReading> graph_bgs =  MainApp.getDbHelper().getDataFromTime(startTime);
-        GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        List<BgReading> graph_bgs =  MainApp.getDbHelper().getDataFromTime(startTime, true);
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if (!graph_bgs.isEmpty()) {
             DataMap entries = dataMapSingleBG(last_bg, glucoseStatus);

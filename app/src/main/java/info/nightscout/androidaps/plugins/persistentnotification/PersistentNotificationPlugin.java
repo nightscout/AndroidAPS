@@ -102,7 +102,7 @@ public class PersistentNotificationPlugin implements PluginBase{
 
 
         BgReading lastBG = MainApp.getDbHelper().lastBg();
-        GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if(profile != null && lastBG != null) {
             line1 = lastBG.valueToUnitsToString(profile.getUnits());

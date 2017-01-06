@@ -398,4 +398,7 @@
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="openapsama">OpenAPS AMA</string>
+    <string name="short_avgdelta">Short avg. delta</string>
+    <string name="long_avgdelta">Long avg. delta</string>
+    <string name="array_of_elements">Array of %d elements.\nActual value:</string>
 </resources>

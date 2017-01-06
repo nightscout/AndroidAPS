@@ -13,9 +13,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.client.data.NSProfile;
@@ -28,10 +32,10 @@ public class DetermineBasalAdapterAMAJS {
     V8 mV8rt;
     private V8Object mProfile;
     private V8Object mGlucoseStatus;
-    private V8Object mIobData;
+    private V8Array mIobData;
     private V8Object mMealData;
     private V8Object mCurrentTemp;
-    private V8Object mAutosensData = null;
+    private V8Object mAutosensData;
 
     private final String PARAM_currentTemp = "currentTemp";
     private final String PARAM_iobData = "iobData";
@@ -73,8 +77,14 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("max_basal", 0);
         mProfile.add("max_bg", 0);
         mProfile.add("min_bg", 0);
-        mProfile.add("carbratio", 0);
+        mProfile.add("carb_ratio", 0);
         mProfile.add("sens", 0);
+        mProfile.add("max_daily_safety_multiplier", Constants.MAX_DAILY_SAFETY_MULTIPLIER);
+        mProfile.add("current_basal_safety_multiplier", Constants.CURRENT_BASAL_SAFETY_MULTIPLIER);
+        mProfile.add("skip_neutral_temps", true);
+        mProfile.add("temptargetSet", false);
+        mProfile.add("autosens_adjust_targets", false);
+        mProfile.add("min_5m_carbimpact", 0);
         mProfile.add("current_basal", 0);
         mV8rt.add(PARAM_profile, mProfile);
         // Current temp
@@ -84,14 +94,8 @@ public class DetermineBasalAdapterAMAJS {
         mCurrentTemp.add("rate", 0);
         mV8rt.add(PARAM_currentTemp, mCurrentTemp);
         // IOB data
-        mIobData = new V8Object(mV8rt);
-        mIobData.add("iob", 0); //netIob
-        mIobData.add("activity", 0); //netActivity
-        mIobData.add("bolussnooze", 0); //bolusIob
-        mIobData.add("basaliob", 0);
-        mIobData.add("netbasalinsulin", 0);
-        mIobData.add("hightempinsulin", 0);
-        mV8rt.add(PARAM_iobData, mIobData);
+//        mIobData = new V8Array(mV8rt);
+//        mV8rt.add(PARAM_iobData, mIobData);
         // Glucose status
         mGlucoseStatus = new V8Object(mV8rt);
         mGlucoseStatus.add("glucose", 0);
@@ -105,7 +109,9 @@ public class DetermineBasalAdapterAMAJS {
         mMealData.add("mealCOB", 0.0d);
         mV8rt.add(PARAM_meal_data, mMealData);
         // Autosens data
-        mV8rt.executeVoidScript("autosens_data = undefined");
+        mAutosensData = new V8Object(mV8rt);
+        mMealData.add("ratio", 0.0d);
+        mV8rt.add(PARAM_autosens_data, mAutosensData);
     }
 
     public DetermineBasalResultAMA invoke() {
@@ -149,8 +155,7 @@ public class DetermineBasalAdapterAMAJS {
         storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
         storedProfile = mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");");
         storedMeal_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");");
-        if (mAutosensData != null)
-            storedAutosens_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_autosens_data + ");");
+        storedAutosens_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_autosens_data + ");");
 
         return result;
     }
@@ -225,11 +230,15 @@ public class DetermineBasalAdapterAMAJS {
         JavaVoidCallback callbackLog = new JavaVoidCallback() {
             @Override
             public void invoke(V8Object arg0, V8Array parameters) {
-                if (parameters.length() > 0) {
-                    Object arg1 = parameters.get(0);
-                    if (Config.logAPSResult)
-                        log.debug("Input params: " + arg1);
+                int i = 0;
+                String s = "";
+                while (i < parameters.length()) {
+                    Object arg = parameters.get(i);
+                    s += arg + " ";
+                    i++;
                 }
+                if (!s.equals("") && Config.logAPSResult)
+                    log.debug("Script debug: " + s);
             }
         };
         mV8rt.registerJavaMethod(callbackLog, "log");
@@ -244,10 +253,12 @@ public class DetermineBasalAdapterAMAJS {
                         double maxBg,
                         double targetBg,
                         PumpInterface pump,
-                        IobTotal iobData,
+                        IobTotal[] iobArray,
                         GlucoseStatus glucoseStatus,
                         MealData mealData,
-                        JSONObject autosensData) {
+                        double autosensDataRatio,
+                        boolean tempTargetSet,
+                        double min_5m_carbimpact) {
 
         String units = profile.getUnits();
 
@@ -260,23 +271,21 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
         mProfile.add("target_bg", targetBg);
-        mProfile.add("carbratio", profile.getIc(profile.secondsFromMidnight()));
+        mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
         mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
-
         mProfile.add("current_basal", pump.getBaseBasalRate());
+        mProfile.add("temptargetSet", tempTargetSet);
+        mProfile.add("autosens_adjust_targets", MainApp.getConfigBuilder().isAMAModeEnabled());
+        mProfile.add("min_5m_carbimpact", min_5m_carbimpact);
+
         mCurrentTemp.add("duration", pump.getTempBasalRemainingMinutes());
         mCurrentTemp.add("rate", pump.getTempBasalAbsoluteRate());
 
-        mIobData.add("iob", iobData.iob); //netIob
-        mIobData.add("activity", iobData.activity); //netActivity
-        mIobData.add("bolussnooze", iobData.bolussnooze); //bolusIob
-        mIobData.add("basaliob", iobData.basaliob);
-        mIobData.add("netbasalinsulin", iobData.netbasalinsulin);
-        mIobData.add("hightempinsulin", iobData.hightempinsulin);
+        mIobData = mV8rt.executeArrayScript(IobTotal.convertToJSONArray(iobArray).toString());
+        mV8rt.add(PARAM_iobData, mIobData);
 
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
         mGlucoseStatus.add("delta", glucoseStatus.delta);
-        mGlucoseStatus.add("avgdelta", glucoseStatus.avgdelta);
         mGlucoseStatus.add("short_avgdelta", glucoseStatus.short_avgdelta);
         mGlucoseStatus.add("long_avgdelta", glucoseStatus.long_avgdelta);
 
@@ -284,12 +293,7 @@ public class DetermineBasalAdapterAMAJS {
         mMealData.add("boluses", mealData.boluses);
         mMealData.add("mealCOB", mealData.mealCOB);
 
-        if (autosensData != null) {
-            mAutosensData = new V8Object(mV8rt);
-            // TODO: add autosens data here for AMA
-        } else {
-            mV8rt.executeVoidScript("autosens_data = undefined");
-        }
+        mAutosensData.add("ratio", autosensDataRatio);
     }
 
 

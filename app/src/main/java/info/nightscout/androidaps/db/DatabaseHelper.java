@@ -183,12 +183,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    public List<BgReading> getDataFromTime(long mills) {
+    public List<BgReading> getDataFromTime(long mills, boolean ascending) {
         try {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
             List<BgReading> bgReadings;
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", true);
+            queryBuilder.orderBy("timeIndex", ascending);
             Where where = queryBuilder.where();
             where.ge("timeIndex", mills).and().gt("value", 38);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
@@ -200,63 +200,4 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
-    /*
-     * Returns glucose_status for openAPS or null if no actual data available
-     */
-    @Nullable
-    public GlucoseStatus getGlucoseStatusData() {
-        GlucoseStatus result = new GlucoseStatus();
-        try {
-
-            Dao<BgReading, Long> daoBgreadings = null;
-            daoBgreadings = getDaoBgReadings();
-            List<BgReading> bgReadings;
-            QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.where().gt("value", 38);
-            queryBuilder.limit(4l);
-            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
-            bgReadings = daoBgreadings.query(preparedQuery);
-
-            int sizeRecords = bgReadings.size();
-
-            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {
-                return null;
-            }
-
-            double minutes = 5;
-            double change;
-            double avg;
-
-            if (bgReadings.size() > 3) {
-                BgReading now = bgReadings.get(sizeRecords - 4);
-                BgReading last = bgReadings.get(sizeRecords - 3);
-                BgReading last1 = bgReadings.get(sizeRecords - 2);
-                BgReading last2 = bgReadings.get(sizeRecords - 1);
-                if (last2.value > 38) {
-                    minutes = (now.timeIndex - last2.timeIndex)/(60d*1000);
-                    change = now.value - last2.value;
-                } else if (last1.value > 38) {
-                    minutes = (now.timeIndex - last1.timeIndex)/(60d*1000);;
-                    change = now.value - last1.value;
-                } else if (last.value > 38) {
-                    minutes = (now.timeIndex - last.timeIndex)/(60d*1000);
-                    change = now.value - last.value;
-                } else {
-                    change = 0;
-                }
-                //multiply by 5 to get the same unit as delta, i.e. mg/dL/5m
-                avg = change / minutes * 5;
-
-                result.glucose = now.value;
-                result.delta = (now.value - last.value)*5*60*1000/(now.getTimeIndex() - last.getTimeIndex());
-                result.avgdelta = avg;
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return null;
-        }
-        result.round();
-        return result;
-    }
 }
