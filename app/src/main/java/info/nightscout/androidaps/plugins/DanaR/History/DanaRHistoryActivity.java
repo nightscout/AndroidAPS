@@ -308,7 +308,7 @@ public class DanaRHistoryActivity extends Activity {
                     holder.dailybasal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + "U");
                     holder.dailybolus.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + "U");
                     holder.dailytotal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()+ record.getRecordDailyBasal()) + "U");
-                    holder.time.setText(DateUtil.timeString(record.getRecordDate()));
+                    holder.time.setText(DateUtil.dateString(record.getRecordDate()));
                     holder.time.setVisibility(View.VISIBLE);
                     holder.value.setVisibility(View.GONE);
                     holder.stringvalue.setVisibility(View.GONE);

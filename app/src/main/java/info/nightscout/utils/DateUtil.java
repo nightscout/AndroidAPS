@@ -86,11 +86,15 @@ public class DateUtil {
     }
 
     public static String dateString(Date date) {
-        return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_DATE);
+        //return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_DATE); this provide month name not number
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        return df.format(date);
     }
 
     public static String dateString(long mills) {
-        return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_DATE);
+        //return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_DATE); this provide month name not number
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        return df.format(mills);
     }
 
     public static String timeString(Date date) {

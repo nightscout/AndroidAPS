@@ -196,7 +196,7 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
                     if (DanaRKoreanPlugin.getDanaRPump().lastConnection.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - DanaRKoreanPlugin.getDanaRPump().lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);
-                        lastConnectionView.setText(DateUtil.dateString(DanaRKoreanPlugin.getDanaRPump().lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
+                        lastConnectionView.setText(DateUtil.timeString(DanaRKoreanPlugin.getDanaRPump().lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
 //                    if (DanaRKoreanPlugin.getDanaRPump().lastBolusTime.getTime() != 0) {
