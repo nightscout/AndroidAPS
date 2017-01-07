@@ -73,7 +73,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                getPlugin().invoke();
+                getPlugin().invoke("OpenAPSAMA button");
                 break;
         }
 

@@ -214,7 +214,7 @@ public class OverviewFragment extends Fragment {
         acceptTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainApp.getConfigBuilder().getActiveLoop().invoke(false);
+                MainApp.getConfigBuilder().getActiveLoop().invoke("Accept temp button", false);
                 final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
                 if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

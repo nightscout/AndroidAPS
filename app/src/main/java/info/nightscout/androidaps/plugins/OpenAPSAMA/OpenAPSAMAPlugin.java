@@ -99,7 +99,8 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     }
 
     @Override
-    public void invoke() {
+    public void invoke(String initiator) {
+        log.debug("invoke from " + initiator);
         lastAPSResult = null;
         DetermineBasalAdapterAMAJS determineBasalAdapterAMAJS = null;
         try {

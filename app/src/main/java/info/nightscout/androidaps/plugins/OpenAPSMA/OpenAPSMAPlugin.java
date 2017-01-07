@@ -97,7 +97,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     }
 
     @Override
-    public void invoke() {
+    public void invoke(String initiator) {
+        log.debug("invoke from " + initiator);
         lastAPSResult = null;
         DetermineBasalAdapterMAJS determineBasalAdapterMAJS = null;
         try {
