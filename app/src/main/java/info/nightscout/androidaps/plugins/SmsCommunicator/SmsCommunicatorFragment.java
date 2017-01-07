@@ -15,13 +15,13 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.util.Collections;
 import java.util.Comparator;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
+import info.nightscout.utils.DateUtil;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -89,15 +89,14 @@ public class SmsCommunicatorFragment extends Fragment {
                     int messagesToShow = 40;
 
                     int start = Math.max(0, getPlugin().messages.size() - messagesToShow);
-                    DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
 
                     String logText = "";
                     for (int x = start; x < getPlugin().messages.size(); x++) {
                         SmsCommunicatorPlugin.Sms sms = getPlugin().messages.get(x);
                         if (sms.received) {
-                            logText += df.format(sms.date) + " &lt;&lt;&lt; " + (sms.processed ? "● " : "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
+                            logText += DateUtil.timeString(sms.date) + " &lt;&lt;&lt; " + (sms.processed ? "● " : "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
                         } else if (sms.sent) {
-                            logText += df.format(sms.date) + " &gt;&gt;&gt; " + (sms.processed ? "● " : "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
+                            logText += DateUtil.timeString(sms.date) + " &gt;&gt;&gt; " + (sms.processed ? "● " : "○ ") + sms.phoneNumber + " <b>" + sms.text + "</b><br>";
                         }
                     }
                     logView.setText(Html.fromHtml(logText));

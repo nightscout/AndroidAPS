@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension;
+package info.nightscout.androidaps.plugins.Overview.graphExtensions;
 /**
  * GraphView
  * Copyright (C) 2014  Jonas Gehring
