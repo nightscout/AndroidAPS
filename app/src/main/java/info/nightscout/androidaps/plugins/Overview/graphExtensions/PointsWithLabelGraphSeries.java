@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension;
+package info.nightscout.androidaps.plugins.Overview.graphExtensions;
 
 /**
  * GraphView
@@ -25,7 +25,6 @@ package info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension;
  */
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;

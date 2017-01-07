@@ -38,7 +38,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,9 +72,10 @@ import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
-import info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -822,11 +822,10 @@ public class OverviewFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
-            DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
             holder.text.setText(notification.text);
-            holder.time.setText(df.format(notification.date));
+            holder.time.setText(DateUtil.timeString(notification.date));
             if (notification.level == Notification.URGENT)
                 holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationUrgent));
             else if (notification.level == Notification.NORMAL)

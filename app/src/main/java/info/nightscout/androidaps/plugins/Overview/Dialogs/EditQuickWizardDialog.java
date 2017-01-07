@@ -15,7 +15,6 @@ import android.widget.Spinner;
 
 import org.json.JSONException;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -62,15 +61,14 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
         int posFrom = 0;
         int posTo = 95;
         ArrayList<CharSequence> timeList = new ArrayList<>();
-        DateFormat df = new SimpleDateFormat("HH:mm");
         int pos = 0;
         for (int t = 0; t < 24 * 60 * 60; t += 15 * 60) {
-            timeList.add(df.format(DateUtil.toDate(t)));
+            timeList.add(DateUtil.timeString(DateUtil.toDate(t)));
             if (entry.validFrom() == t) posFrom = pos;
             if (entry.validTo() == t) posTo = pos;
             pos++;
         }
-        timeList.add(df.format(DateUtil.toDate(24 * 60 * 60 - 60)));
+        timeList.add(DateUtil.timeString(DateUtil.toDate(24 * 60 * 60 - 60)));
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
                 android.R.layout.simple_spinner_item, timeList);
