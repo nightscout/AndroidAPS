@@ -44,6 +44,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
     TextView mealDataView;
     TextView autosensDataView;
     TextView resultView;
+    TextView scriptdebugView;
     TextView requestView;
 
     @Override
@@ -60,6 +61,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
         profileView = (TextView) view.findViewById(R.id.openapsma_profile);
         mealDataView = (TextView) view.findViewById(R.id.openapsma_mealdata);
         autosensDataView = (TextView) view.findViewById(R.id.openapsma_autosensdata);
+        scriptdebugView = (TextView) view.findViewById(R.id.openapsma_scriptdebugdata);
         resultView = (TextView) view.findViewById(R.id.openapsma_result);
         requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
@@ -124,6 +126,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
                         profileView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getProfileParam()));
                         mealDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getMealDataParam()));
                         autosensDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getAutosensDataParam()));
+                        scriptdebugView.setText(determineBasalAdapterAMAJS.getScriptDebug());
                     }
                     if (getPlugin().lastAPSRun != null) {
                         lastRunView.setText(getPlugin().lastAPSRun.toLocaleString());
@@ -145,6 +148,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
                     profileView.setText("");
                     mealDataView.setText("");
                     autosensDataView.setText("");
+                    scriptdebugView.setText("");
                     requestView.setText("");
                     lastRunView.setText("");
                 }

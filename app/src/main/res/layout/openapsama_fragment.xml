@@ -159,6 +159,20 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/openapsma_scriptdebugdata_label"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:layout_marginLeft="5dp" />
+
+                <TextView
+                    android:id="@+id/openapsma_scriptdebugdata"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="@string/openapsma_result_label"
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 

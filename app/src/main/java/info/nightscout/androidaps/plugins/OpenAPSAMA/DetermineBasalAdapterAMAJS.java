@@ -51,6 +51,8 @@ public class DetermineBasalAdapterAMAJS {
     private String storedMeal_data = null;
     private String storedAutosens_data = null;
 
+    private String scriptDebug = "";
+
     /**
      * Main code
      */
@@ -183,6 +185,10 @@ public class DetermineBasalAdapterAMAJS {
         return storedAutosens_data;
     }
 
+    String getScriptDebug() {
+        return scriptDebug;
+    }
+
     private void loadScript() throws IOException {
         mV8rt.executeVoidScript(readFile("OpenAPSAMA/round-basal.js"), "OpenAPSAMA/round-basal.js", 0);
         mV8rt.executeVoidScript("var round_basal = module.exports;");
@@ -236,8 +242,10 @@ public class DetermineBasalAdapterAMAJS {
                     s += arg + " ";
                     i++;
                 }
-                if (!s.equals("") && Config.logAPSResult)
+                if (!s.equals("") && Config.logAPSResult) {
                     log.debug("Script debug: " + s);
+                    scriptDebug += s + "\n";
+                }
             }
         };
         mV8rt.registerJavaMethod(callbackLog, "log");
