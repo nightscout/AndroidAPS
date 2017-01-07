@@ -116,15 +116,14 @@ public class DetermineBasalAdapterAMAJS {
 
     public DetermineBasalResultAMA invoke() {
 
-        mV8rt.executeVoidScript(
-                "console.error(\"determine_basal(\"+\n" +
-                        "JSON.stringify(" + PARAM_glucoseStatus + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_currentTemp + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_iobData + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_profile + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_autosens_data + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_meal_data + ")+ \") \");"
-        );
+        log.debug(">>> Invoking detemine_basal <<<");
+        log.debug("Glucose status: " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");"));
+        log.debug("IOB data:       " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");"));
+        log.debug("Current temp:   " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");"));
+        log.debug("Profile:        " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");"));
+        log.debug("Meal data:      " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");"));
+        log.debug("Autosens data:  " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_autosens_data + ");"));
+
         mV8rt.executeVoidScript(
                 "var rT = determine_basal(" +
                         PARAM_glucoseStatus + ", " +
