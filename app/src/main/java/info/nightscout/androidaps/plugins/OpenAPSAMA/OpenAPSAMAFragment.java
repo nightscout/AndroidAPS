@@ -42,6 +42,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
     TextView iobDataView;
     TextView profileView;
     TextView mealDataView;
+    TextView autosensDataView;
     TextView resultView;
     TextView requestView;
 
@@ -58,6 +59,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
         iobDataView = (TextView) view.findViewById(R.id.openapsma_iobdata);
         profileView = (TextView) view.findViewById(R.id.openapsma_profile);
         mealDataView = (TextView) view.findViewById(R.id.openapsma_mealdata);
+        autosensDataView = (TextView) view.findViewById(R.id.openapsma_autosensdata);
         resultView = (TextView) view.findViewById(R.id.openapsma_result);
         requestView = (TextView) view.findViewById(R.id.openapsma_request);
 
@@ -121,6 +123,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
                         }
                         profileView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getProfileParam()));
                         mealDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getMealDataParam()));
+                        autosensDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getAutosensDataParam()));
                     }
                     if (getPlugin().lastAPSRun != null) {
                         lastRunView.setText(getPlugin().lastAPSRun.toLocaleString());
@@ -141,6 +144,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
                     iobDataView.setText("");
                     profileView.setText("");
                     mealDataView.setText("");
+                    autosensDataView.setText("");
                     requestView.setText("");
                     lastRunView.setText("");
                 }
