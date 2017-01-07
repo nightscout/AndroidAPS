@@ -107,10 +107,10 @@ public class DetermineBasalAdapterAMAJS {
         mMealData.add("carbs", 0);
         mMealData.add("boluses", 0);
         mMealData.add("mealCOB", 0.0d);
+        mMealData.add("ratio", 0.0d);
         mV8rt.add(PARAM_meal_data, mMealData);
         // Autosens data
         mAutosensData = new V8Object(mV8rt);
-        mMealData.add("ratio", 0.0d);
         mV8rt.add(PARAM_autosens_data, mAutosensData);
     }
 
