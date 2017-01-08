@@ -53,37 +53,6 @@ public class DetermineBasalResultMA extends APSResult {
         result.release();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(json.toString());
-        dest.writeDouble(eventualBG);
-        dest.writeDouble(snoozeBG);
-        dest.writeString(mealAssist);
-    }
-
-    public final Parcelable.Creator<DetermineBasalResultMA> CREATOR = new Parcelable.Creator<DetermineBasalResultMA>() {
-        public DetermineBasalResultMA createFromParcel(Parcel in) {
-            return new DetermineBasalResultMA(in);
-        }
-
-        public DetermineBasalResultMA[] newArray(int size) {
-            return new DetermineBasalResultMA[size];
-        }
-    };
-
-    private DetermineBasalResultMA(Parcel in) {
-        super(in);
-        try {
-            json = new JSONObject(in.readString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        eventualBG = in.readDouble();
-        snoozeBG = in.readDouble();
-        mealAssist = in.readString();
-    }
-
     public DetermineBasalResultMA() {
     }
 

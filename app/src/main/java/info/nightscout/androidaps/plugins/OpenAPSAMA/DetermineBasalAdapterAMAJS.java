@@ -93,8 +93,7 @@ public class DetermineBasalAdapterAMAJS {
 
 
         String ret = mV8rt.executeStringScript("JSON.stringify(rT);");
-        if (Config.logAPSResult)
-            log.debug("Result: " + ret);
+        log.debug("Result: " + ret);
 
         V8Object v8ObjectReuslt = mV8rt.getObject("rT");
 

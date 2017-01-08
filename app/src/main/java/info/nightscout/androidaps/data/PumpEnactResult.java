@@ -14,7 +14,7 @@ import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
-public class PumpEnactResult extends Object implements Parcelable {
+public class PumpEnactResult extends Object {
     public boolean success = false;    // request was processed successfully (but possible no change was needed)
     public boolean enacted = false;    // request was processed successfully and change has been made
     public String comment = "";
@@ -83,43 +83,6 @@ public class PumpEnactResult extends Object implements Parcelable {
             ret += "<br><b>" + MainApp.sResources.getString(R.string.comment) + "</b>: " + comment;
         }
         return Html.fromHtml(ret);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(success ? 1 : 0);
-        dest.writeInt(enacted ? 1 : 0);
-        dest.writeInt(isPercent ? 1 : 0);
-        dest.writeString(comment);
-        dest.writeInt(duration);
-        dest.writeDouble(absolute);
-        dest.writeInt(percent);
-    }
-
-    public final Parcelable.Creator<PumpEnactResult> CREATOR = new Parcelable.Creator<PumpEnactResult>() {
-        public PumpEnactResult createFromParcel(Parcel in) {
-            return new PumpEnactResult(in);
-        }
-
-        public PumpEnactResult[] newArray(int size) {
-            return new PumpEnactResult[size];
-        }
-    };
-
-    protected PumpEnactResult(Parcel in) {
-        success = in.readInt() == 1 ? true : false;
-        enacted = in.readInt() == 1 ? true : false;
-        isPercent = in.readInt() == 1 ? true : false;
-        duration = in.readInt();
-        comment = in.readString();
-        absolute = in.readDouble();
-        percent = in.readInt();
-
     }
 
     public PumpEnactResult() {

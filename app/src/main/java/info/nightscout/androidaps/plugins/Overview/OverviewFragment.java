@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -50,6 +52,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempBasal;
@@ -69,12 +72,13 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
@@ -106,6 +110,7 @@ public class OverviewFragment extends Fragment {
     TextView iobView;
     TextView apsModeView;
     GraphView bgGraph;
+    CheckBox showPredictionView;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -162,11 +167,24 @@ public class OverviewFragment extends Fragment {
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
         quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizard);
         quickWizardLayout = (LinearLayout) view.findViewById(R.id.overview_quickwizardlayout);
+        showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
+
+        showPredictionView.setChecked(prefs.getBoolean("showprediction", false));
+
+        showPredictionView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("showprediction", showPredictionView.isChecked());
+                editor.apply();
+                updateGUI();
+            }
+        });
 
         treatmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -613,6 +631,13 @@ public class OverviewFragment extends Fragment {
                 + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
         iobView.setText(iobtext);
 
+        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
+        if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
+            showPredictionView.setVisibility(View.VISIBLE);
+        } else {
+            showPredictionView.setVisibility(View.GONE);
+        }
+
         // ****** GRAPH *******
 
         // allign to hours
@@ -623,9 +648,21 @@ public class OverviewFragment extends Fragment {
         calendar.set(Calendar.MINUTE, 0);
         calendar.add(Calendar.HOUR, 1);
 
-        int hoursToFetch = 6;
-        long toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
-        long fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+        int hoursToFetch;
+        long toTime;
+        long fromTime;
+        long endTime;
+        if (showPrediction) {
+            hoursToFetch = 3;
+            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+            endTime = toTime + hoursToFetch * 60 * 60 * 1000L;
+        } else {
+            hoursToFetch = 6;
+            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+            endTime = toTime;
+        }
 
         Double lowLine = SafeParse.stringToDouble(prefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(prefs.getString("high_mark", "0"));
@@ -644,6 +681,7 @@ public class OverviewFragment extends Fragment {
         LineGraphSeries<DataPoint> seriesNow = null;
         PointsGraphSeries<BgReading> seriesInRage = null;
         PointsGraphSeries<BgReading> seriesOutOfRange = null;
+        PointsGraphSeries<BgReading> predSeries = null;
         PointsWithLabelGraphSeries<Treatment> seriesTreatments = null;
 
         // remove old data from graph
@@ -652,11 +690,11 @@ public class OverviewFragment extends Fragment {
         // **** HIGH and LOW targets graph ****
         DataPoint[] lowDataPoints = new DataPoint[]{
                 new DataPoint(fromTime, lowLine),
-                new DataPoint(toTime, lowLine)
+                new DataPoint(endTime, lowLine)
         };
         DataPoint[] highDataPoints = new DataPoint[]{
                 new DataPoint(fromTime, highLine),
-                new DataPoint(toTime, highLine)
+                new DataPoint(endTime, highLine)
         };
         bgGraph.addSeries(seriesLow = new LineGraphSeries<DataPoint>(lowDataPoints));
         seriesLow.setColor(Color.RED);
@@ -673,7 +711,6 @@ public class OverviewFragment extends Fragment {
             public boolean isTempBasal = false;
         }
 
-        Double maxAllowedBasal = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
         Double maxBasalValueFound = 0d;
 
         long now = new Date().getTime();
@@ -702,7 +739,7 @@ public class OverviewFragment extends Fragment {
         }
 
         // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(toTime);
+        bgGraph.getViewport().setMaxX(endTime);
         bgGraph.getViewport().setMinX(fromTime);
         bgGraph.getViewport().setXAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
@@ -749,6 +786,19 @@ public class OverviewFragment extends Fragment {
             seriesOutOfRange.setShape(PointsGraphSeries.Shape.POINT);
             seriesOutOfRange.setSize(5);
             seriesOutOfRange.setColor(Color.RED);
+        }
+
+        if (showPrediction) {
+            DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
+            List<BgReading> predArray = amaResult.getPredictions();
+            BgReading[] pred = new BgReading[predArray.size()];
+            pred = predArray.toArray(pred);
+            if (pred.length > 0) {
+                bgGraph.addSeries(predSeries = new PointsGraphSeries<BgReading>(pred));
+                predSeries.setShape(PointsGraphSeries.Shape.POINT);
+                predSeries.setSize(4);
+                predSeries.setColor(Color.MAGENTA);
+            }
         }
 
         // **** NOW line ****

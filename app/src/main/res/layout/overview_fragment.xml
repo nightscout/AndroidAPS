@@ -150,10 +150,22 @@
                 android:layout_gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/overview_bggraph"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dip" />
+                android:layout_height="match_parent">
+
+                <com.jjoe64.graphview.GraphView
+                    android:id="@+id/overview_bggraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dip" />
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/overview_showprediction"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/overview_accepttemplayout"
