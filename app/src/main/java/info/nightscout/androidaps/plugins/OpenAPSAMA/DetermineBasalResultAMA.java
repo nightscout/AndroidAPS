@@ -16,7 +16,6 @@ public class DetermineBasalResultAMA extends APSResult {
     public JSONObject json = new JSONObject();
     public double eventualBG;
     public double snoozeBG;
-    public String mealAssist;
     public IobTotal iob;
 
     public DetermineBasalResultAMA(V8Object result, JSONObject j) {
@@ -26,7 +25,6 @@ public class DetermineBasalResultAMA extends APSResult {
             changeRequested = false;
             rate = -1;
             duration = -1;
-            mealAssist = "";
         } else {
             reason = result.getString("reason");
             eventualBG = result.getDouble("eventualBG");
@@ -46,9 +44,6 @@ public class DetermineBasalResultAMA extends APSResult {
                 duration = -1;
                 changeRequested = false;
             }
-            if (result.contains("mealAssist")) {
-                mealAssist = result.getString("mealAssist");
-            } else mealAssist = "";
         }
         result.release();
     }
@@ -74,7 +69,6 @@ public class DetermineBasalResultAMA extends APSResult {
         }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
-        newResult.mealAssist = new String(mealAssist);
         return newResult;
     }
 
