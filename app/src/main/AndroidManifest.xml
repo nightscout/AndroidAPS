@@ -37,6 +37,7 @@
         <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity" />
         <activity android:name=".plugins.DanaRKorean.History.DanaRHistoryActivity" />
         <activity android:name=".plugins.DanaR.History.DanaRStatsActivity" />
+        <activity android:name=".plugins.DanaRKorean.History.DanaRStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />

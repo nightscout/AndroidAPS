@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.DanaR.History;
+package info.nightscout.androidaps.plugins.DanaRKorean.History;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -38,10 +38,10 @@ import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.CircadianPercentageProfile.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
+import info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
@@ -158,6 +158,7 @@ public class DanaRStatsActivity extends Activity {
         loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
     }
 
+
     private void loadDataFromDB(byte type) {
         try {
             Dao<DanaRHistoryRecord, String> dao = MainApp.getDbHelper().getDaoDanaRHistory();
@@ -242,6 +243,7 @@ public class DanaRStatsActivity extends Activity {
         });
     }
 
+
     @Subscribe
     public void onStatusEvent(final EventDanaRSyncStatus s) {
         log.debug("EventDanaRSyncStatus: " + s.message);
@@ -274,4 +276,6 @@ public class DanaRStatsActivity extends Activity {
                 }
         );
     }
+
+
 }
