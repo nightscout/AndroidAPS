@@ -346,7 +346,6 @@ public class DataService extends IntentService {
                         handleAddedTreatment(trstr);
                     }
                 }
-                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -368,7 +367,6 @@ public class DataService extends IntentService {
                         handleChangedTreatment(trstr);
                     }
                 }
-                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -392,7 +390,6 @@ public class DataService extends IntentService {
                         removeTreatmentFromDb(_id);
                     }
                 }
-                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -471,6 +468,7 @@ public class DataService extends IntentService {
                 int updated = MainApp.getDbHelper().getDaoTreatments().update(stored);
                 if (Config.logIncommingData)
                     log.debug("Records updated: " + updated);
+                scheduleTreatmentChange();
             }
         } else {
             if (Config.logIncommingData)
@@ -494,6 +492,7 @@ public class DataService extends IntentService {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            scheduleTreatmentChange();
         }
     }
 
@@ -547,6 +546,7 @@ public class DataService extends IntentService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        scheduleTreatmentChange();
     }
 
     public void handleDanaRHistoryRecords(JSONObject trJson) throws JSONException, SQLException {
