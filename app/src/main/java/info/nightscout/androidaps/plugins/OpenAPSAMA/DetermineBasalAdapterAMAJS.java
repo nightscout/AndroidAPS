@@ -70,15 +70,15 @@ public class DetermineBasalAdapterAMAJS {
     public DetermineBasalResultAMA invoke() {
 
         log.debug(">>> Invoking detemine_basal <<<");
-        log.debug("Glucose status: " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");"));
-        log.debug("IOB data:       " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");"));
-        log.debug("Current temp:   " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");"));
-        log.debug("Profile:        " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");"));
-        log.debug("Meal data:      " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");"));
+        log.debug("Glucose status: " + (storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");")));
+        log.debug("IOB data:       " + (storedIobData = mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");")));
+        log.debug("Current temp:   " + (storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");")));
+        log.debug("Profile:        " + (storedProfile = mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");")));
+        log.debug("Meal data:      " + (storedMeal_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");")));
         if (mAutosensData != null)
-            log.debug("Autosens data:  " + mV8rt.executeStringScript("JSON.stringify(" + PARAM_autosens_data + ");"));
+            log.debug("Autosens data:  " + (storedAutosens_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_autosens_data + ");")));
         else
-            log.debug("Autosens data:  " + "undefined");
+            log.debug("Autosens data:  " + (storedAutosens_data = "undefined"));
 
         mV8rt.executeVoidScript(
                 "var rT = determine_basal(" +
@@ -104,16 +104,6 @@ public class DetermineBasalAdapterAMAJS {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
-        storedIobData = mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");");
-        storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
-        storedProfile = mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");");
-        storedMeal_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");");
-        if (mAutosensData != null)
-            storedAutosens_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_autosens_data + ");");
-        else
-            storedAutosens_data = "undefined";
 
         return result;
     }
