@@ -678,6 +678,7 @@ public class OverviewFragment extends Fragment {
             highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
 
+        LineGraphSeries<DataPoint> basalsLineSeries = null;
         BarGraphSeries<DataPoint> basalsSeries = null;
         LineGraphSeries<DataPoint> seriesLow = null;
         LineGraphSeries<DataPoint> seriesHigh = null;
@@ -719,13 +720,21 @@ public class OverviewFragment extends Fragment {
         long now = new Date().getTime();
         if (pump.getPumpDescription().isTempBasalCapable) {
             List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
+            List<DataPoint> basalLineArray = new ArrayList<DataPoint>();
+            double lastBaseBasal = 0;
             for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
                 TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
+                double basebasal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
                 Double basal = 0d;
                 if (tb != null)
                     basalArray.add(new BarDataPoint(time, basal = tb.tempBasalConvertedToAbsolute(new Date(time)), true));
-                else
-                    basalArray.add(new BarDataPoint(time, basal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
+                else {
+                    basalArray.add(new BarDataPoint(time, basal = basebasal, false));
+                }
+                if (basebasal != lastBaseBasal)
+                    basalLineArray.add(new DataPoint(time, lastBaseBasal));
+                basalLineArray.add(new DataPoint(time, basebasal));
+                lastBaseBasal = basebasal;
                 maxBasalValueFound = Math.max(maxBasalValueFound, basal);
             }
             BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
@@ -739,6 +748,12 @@ public class OverviewFragment extends Fragment {
                     else return Color.CYAN;
                 }
             });
+            DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
+            basalLine = basalLineArray.toArray(basalLine);
+            bgGraph.addSeries(basalsLineSeries = new LineGraphSeries<DataPoint>(basalLine));
+            basalsLineSeries.setColor(Color.CYAN);
+            basalsLineSeries.setDrawDataPoints(false);
+            basalsLineSeries.setThickness(2);
         }
 
         // set manual x bounds to have nice steps
@@ -850,12 +865,11 @@ public class OverviewFragment extends Fragment {
         // set second scale
         if (pump.getPumpDescription().isTempBasalCapable) {
             bgGraph.getSecondScale().addSeries(basalsSeries);
+            bgGraph.getSecondScale().addSeries(basalsLineSeries);
             bgGraph.getSecondScale().setMinY(0);
             bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
             bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
         }
-
-
     }
 
     //Notifications
