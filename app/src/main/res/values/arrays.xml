@@ -17,6 +17,7 @@
         <item>@string/bg_lang</item>
         <item>@string/es_lang</item>
         <item>@string/ko_lang</item>
+        <item>@string/el_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
         <item>en</item>
@@ -25,5 +26,6 @@
         <item>bg</item>
         <item>es</item>
         <item>ko</item>
+        <item>el</item>
     </string-array>
 </resources>
