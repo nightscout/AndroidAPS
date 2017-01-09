@@ -28,6 +28,7 @@ public class Constants {
 
     public static final long remoteBolusMinDistance = 15 * 60 * 1000L;
 
+
     // AMA
     public static final int MAX_DAILY_SAFETY_MULTIPLIER = 3;
     public static final int CURRENT_BASAL_SAFETY_MULTIPLIER = 4;
@@ -37,4 +38,7 @@ public class Constants {
     public static final double AUTOSENS_MIN = 0.7d;
     public static final double MIN_5M_CARBIMPACT = 3d;
 
+    // Circadian Percentage Profile
+    public static final int CPP_MIN_PERCENTAGE = 50;
+    public static final int CPP_MAX_PERCENTAGE = 200;
 }
