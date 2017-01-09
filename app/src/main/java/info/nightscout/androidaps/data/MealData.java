@@ -24,7 +24,7 @@ public class MealData {
         if (profile == null) return;
 
         // TODO: not sure how much data do i need for AMA
-        List<BgReading> bgReadings = MainApp.getDbHelper().getDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * profile.getDia() * 2), false);
+        List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * profile.getDia() * 2), false);
 
         long now = new Date().getTime();
         long dia_ago = now - (new Double(profile.getDia() * 60 * 60 * 1000l)).longValue();

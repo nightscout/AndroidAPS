@@ -21,8 +21,6 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.data.IobTotal;
@@ -184,7 +182,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
-        List<BgReading> bgReadings = MainApp.getDbHelper().getDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia())), false);
+        List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia())), false);
         AutosensResult autosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
 
         determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,

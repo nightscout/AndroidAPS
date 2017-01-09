@@ -4,11 +4,6 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,7 +56,7 @@ public class GlucoseStatus {
     public static GlucoseStatus getGlucoseStatusData() {
         // load 45min
         long fromtime = (long) (new Date().getTime() - 60 * 1000L * 45);
-        List<BgReading> data = MainApp.getDbHelper().getDataFromTime(fromtime, false);
+        List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
         int sizeRecords = data.size();
         if (sizeRecords < 4 || data.get(0).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {

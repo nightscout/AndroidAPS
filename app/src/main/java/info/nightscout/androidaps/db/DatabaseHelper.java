@@ -183,7 +183,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    public List<BgReading> getDataFromTime(long mills, boolean ascending) {
+    public List<BgReading> getBgreadingsDataFromTime(long mills, boolean ascending) {
         try {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
             List<BgReading> bgReadings;
@@ -198,6 +198,40 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return new ArrayList<BgReading>();
+    }
+
+    public List<Treatment> getTreatmentDataFromTime(long mills, boolean ascending) {
+        try {
+            Dao<Treatment, Long> daoTreatments = getDaoTreatments();
+            List<Treatment> treatments;
+            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
+            queryBuilder.orderBy("timeIndex", ascending);
+            Where where = queryBuilder.where();
+            where.ge("timeIndex", mills);
+            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
+            treatments = daoTreatments.query(preparedQuery);
+            return treatments;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<Treatment>();
+    }
+
+    public List<TempBasal> getTempbasalsDataFromTime(long mills, boolean ascending, boolean isExtended) {
+        try {
+            Dao<TempBasal, Long> daoTempbasals = getDaoTempBasals();
+            List<TempBasal> tempbasals;
+            QueryBuilder<TempBasal, Long> queryBuilder = daoTempbasals.queryBuilder();
+            queryBuilder.orderBy("timeIndex", ascending);
+            Where where = queryBuilder.where();
+            where.ge("timeIndex", mills).and().eq("isExtended", isExtended);
+            PreparedQuery<TempBasal> preparedQuery = queryBuilder.prepare();
+            tempbasals = daoTempbasals.query(preparedQuery);
+            return tempbasals;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<TempBasal>();
     }
 
 }

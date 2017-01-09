@@ -254,7 +254,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         if (last_bg == null) return;
 
-        List<BgReading> graph_bgs =  MainApp.getDbHelper().getDataFromTime(startTime, true);
+        List<BgReading> graph_bgs =  MainApp.getDbHelper().getBgreadingsDataFromTime(startTime, true);
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if (!graph_bgs.isEmpty()) {

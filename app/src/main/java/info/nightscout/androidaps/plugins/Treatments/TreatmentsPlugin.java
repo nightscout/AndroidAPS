@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Treatments;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -86,17 +87,11 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     public void initializeData() {
-        try {
-            Dao<Treatment, Long> dao = MainApp.getDbHelper().getDaoTreatments();
-            QueryBuilder<Treatment, Long> queryBuilder = dao.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.limit(30l);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            treatments = dao.query(preparedQuery);
-        } catch (SQLException e) {
-            log.debug(e.getMessage(), e);
-            treatments = new ArrayList<Treatment>();
-        }
+        double dia = 3;
+        if (MainApp.getConfigBuilder().getActiveProfile() != null)
+            dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
+        long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
+        treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
     }
 
     /*

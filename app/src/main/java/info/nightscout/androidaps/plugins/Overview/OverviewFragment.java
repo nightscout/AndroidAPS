@@ -746,7 +746,7 @@ public class OverviewFragment extends Fragment {
         bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
         // **** BG graph ****
-        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime, true);
+        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<BgReading> inRangeArray = new ArrayList<BgReading>();
         List<BgReading> outOfRangeArray = new ArrayList<BgReading>();
 
