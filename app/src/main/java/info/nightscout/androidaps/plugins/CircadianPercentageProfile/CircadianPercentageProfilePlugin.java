@@ -15,7 +15,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
@@ -27,8 +26,6 @@ import info.nightscout.utils.ToastUtils;
  */
 public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInterface {
     public static final String SETTINGS_PREFIX = "CircadianPercentageProfile";
-    public static final int MIN_PERCENTAGE = 50;
-    public static final int MAX_PERCENTAGE = 200;
     private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
 
     private static boolean fragmentEnabled = true;
@@ -262,13 +259,13 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     }
 
     private void performLimitCheck() {
-        if (percentage < MIN_PERCENTAGE || percentage > MAX_PERCENTAGE){
+        if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE){
             String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage");
             log.error(msg);
             MainApp.getConfigBuilder().uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
-            percentage = Math.max(percentage, MIN_PERCENTAGE);
-            percentage = Math.min(percentage, MAX_PERCENTAGE);
+            percentage = Math.max(percentage, Constants.CPP_MIN_PERCENTAGE);
+            percentage = Math.min(percentage, Constants.CPP_MAX_PERCENTAGE);
         }
     }
 

@@ -25,4 +25,8 @@ public class Constants {
     public static final long keepAliveMsecs = 5 * 60 * 1000L;
 
     public static final long remoteBolusMinDistance = 15 * 60 * 1000L;
+
+    // Circadian Percentage Profile
+    public static final int CPP_MIN_PERCENTAGE = 50;
+    public static final int CPP_MAX_PERCENTAGE = 200;
 }
