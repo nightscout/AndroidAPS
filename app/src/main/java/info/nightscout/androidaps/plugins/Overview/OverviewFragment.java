@@ -653,10 +653,13 @@ public class OverviewFragment extends Fragment {
         long fromTime;
         long endTime;
         if (showPrediction) {
-            hoursToFetch = 3;
+            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA)finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
+            predHours = Math.min(2, predHours);
+            predHours = Math.max(0, predHours);
+            hoursToFetch = (int) (6 - predHours);
             toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-            endTime = toTime + hoursToFetch * 60 * 60 * 1000L;
+            endTime = toTime + predHours * 60 * 60 * 1000L;
         } else {
             hoursToFetch = 6;
             toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
