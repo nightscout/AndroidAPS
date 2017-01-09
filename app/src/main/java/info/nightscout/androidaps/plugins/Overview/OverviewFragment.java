@@ -816,8 +816,8 @@ public class OverviewFragment extends Fragment {
         // custom paint to make a dotted line
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(1);
-        paint.setPathEffect(new DashPathEffect(new float[]{4, 20}, 0));
+        paint.setStrokeWidth(2);
+        paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
 
