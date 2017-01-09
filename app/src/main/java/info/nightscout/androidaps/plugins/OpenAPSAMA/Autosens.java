@@ -81,7 +81,7 @@ public class Autosens {
             long bgTime = bucketed_data.get(i).timeIndex;
             int secondsFromMidnight = NSProfile.secondsFromMidnight(new Date(bgTime));
 
-            double sens = profile.getIsf(secondsFromMidnight);
+            double sens = NSProfile.toMgdl(profile.getIsf(secondsFromMidnight), profile.getUnits());
 
             //console.error(bgTime , bucketed_data[i].glucose);
             double bg;
@@ -158,10 +158,10 @@ public class Autosens {
         double basalOff = 0;
 
         if (pSensitive < 0) { // sensitive
-            basalOff = pSensitive * (60 / 5) / profile.getIsf(NSProfile.secondsFromMidnight());
+            basalOff = pSensitive * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
             log.debug("Excess insulin sensitivity detected: ");
         } else if (pResistant > 0) { // resistant
-            basalOff = pResistant * (60 / 5) / profile.getIsf(NSProfile.secondsFromMidnight());
+            basalOff = pResistant * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
             log.debug("Excess insulin resistance detected: ");
         } else {
             log.debug("Sensitivity normal.");
@@ -177,9 +177,9 @@ public class Autosens {
             log.debug("Ratio limited from " + rawRatio + " to " + ratio);
         }
 
-        double newisf = Math.round(profile.getIsf(NSProfile.secondsFromMidnight()) / ratio);
+        double newisf = Math.round(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits()) / ratio);
         if (ratio != 1) {
-            log.debug("ISF adjusted from " + profile.getIsf(NSProfile.secondsFromMidnight()) + " to " + newisf);
+            log.debug("ISF adjusted from " + NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits()) + " to " + newisf);
         }
         //console.error("Basal adjustment "+basalOff.toFixed(2)+"U/hr");
         //console.error("Ratio: "+ratio*100+"%: new ISF: "+newisf.toFixed(1)+"mg/dL/U");
