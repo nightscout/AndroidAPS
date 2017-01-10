@@ -293,7 +293,7 @@
     <string name="objectives_2_objective">Entender el lazo abierto, incluidas las recomendaciones de basales temporales</string>
     <string name="objectives_2_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
     <string name="objectives_3_objective">Iniciar el bucle cerrado con suspensión con baja glucosa</string>
-    <string name="objectives_3_gate">Ejecutar en lazo cerrado con max IOB=0 durante unos dias sin demasiados valores bajos de glucosa</string>
+    <string name="objectives_3_gate">Ejecutar en lazo cerrado con max IOB=0 durante unos días sin demasiados valores bajos de glucosa</string>
     <string name="objectives_4_objective">Ajuste del bucle cerrado, aumento máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
     <string name="objectives_4_gate">Funcionando unos cuantos días, y al menos una noche sin alarmas bajas BG, y bajar gradualmente BG</string>
     <string name="objectives_5_objective">Ajustar los basales y ratios, si es necesario, y luego activar auto-sens</string>
