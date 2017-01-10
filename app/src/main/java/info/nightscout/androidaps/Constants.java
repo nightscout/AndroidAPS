@@ -36,6 +36,7 @@ public class Constants {
     public static final int BOLUSSNOOZE_DIA_ADVISOR = 2;
     public static final double AUTOSENS_MAX = 1.2d;
     public static final double AUTOSENS_MIN = 0.7d;
+    public static final boolean AUTOSENS_ADJUST_TARGETS = false;
     public static final double MIN_5M_CARBIMPACT = 3d;
 
     // Circadian Percentage Profile
