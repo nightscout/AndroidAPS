@@ -97,7 +97,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
 
     private void initializeData() {
         double dia = 3;
-        if (MainApp.getConfigBuilder().getActiveProfile() != null)
+        if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
             dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
         tempBasals = MainApp.getDbHelper().getTempbasalsDataFromTime(fromMills, false, false);
