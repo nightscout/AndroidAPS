@@ -38,6 +38,7 @@ import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
+import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangeFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
@@ -76,6 +77,7 @@ public class MainApp extends Application {
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.getPlugin());
             pluginsList.add(ActionsFragment.getPlugin());
+            pluginsList.add(TempTargetRangeFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANARKOREAN) pluginsList.add(DanaRKoreanFragment.getPlugin());
             if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.getPlugin());

@@ -398,4 +398,5 @@
     <string name="minago">%dmin ago</string>
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
+    <string name="temptargetrange">Temp Target</string>
 </resources>
