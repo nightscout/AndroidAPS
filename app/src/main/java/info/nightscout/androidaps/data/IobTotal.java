@@ -23,13 +23,16 @@ public class IobTotal {
     public Double netInsulin = 0d; // for calculations from temp basals only
     public Double netRatio = 0d; // for calculations from temp basals only
 
-    public IobTotal() {
+    long time;
+
+    public IobTotal(long time) {
         this.iob = 0d;
         this.activity = 0d;
         this.bolussnooze = 0d;
         this.basaliob = 0d;
         this.netbasalinsulin = 0d;
         this.hightempinsulin = 0d;
+        this.time = time;
     }
 
     public IobTotal plus(IobTotal other) {
@@ -45,7 +48,7 @@ public class IobTotal {
     }
 
     public static IobTotal combine(IobTotal bolusIOB, IobTotal basalIob) {
-        IobTotal result = new IobTotal();
+        IobTotal result = new IobTotal(bolusIOB.time);
         result.iob = bolusIOB.iob + basalIob.basaliob;
         result.activity = bolusIOB.activity + basalIob.activity;
         result.bolussnooze = bolusIOB.bolussnooze;
@@ -85,7 +88,7 @@ public class IobTotal {
             json.put("basaliob", basaliob);
             json.put("bolussnooze", bolussnooze);
             json.put("activity", activity);
-            json.put("time", DateUtil.toISOString(new Date()));
+            json.put("time", DateUtil.toISOString(new Date(time)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -95,19 +98,15 @@ public class IobTotal {
     public static IobTotal calulateFromTreatmentsAndTemps() {
         ConfigBuilderPlugin.getActiveTreatments().updateTotalIOB();
         IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculation().round();
-        if (bolusIob == null) bolusIob = new IobTotal();
         ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOB();
         IobTotal basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculation().round();
-        if (basalIob == null) basalIob = new IobTotal();
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         return  iobTotal;
     }
 
     public static IobTotal calulateFromTreatmentsAndTemps(long time) {
         IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getCalculationToTime(time).round();
-        if (bolusIob == null) bolusIob = new IobTotal();
         IobTotal basalIob = ConfigBuilderPlugin.getActiveTempBasals().getCalculationToTime(time).round();
-        if (basalIob == null) basalIob = new IobTotal();
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         return  iobTotal;
     }

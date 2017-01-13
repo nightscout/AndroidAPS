@@ -219,10 +219,8 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
                     MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
                     IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-                    if (bolusIob == null) bolusIob = new IobTotal();
                     MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
                     IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-                    if (basalIob == null) basalIob = new IobTotal();
 
                     reply += MainApp.sResources.getString(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                             + MainApp.sResources.getString(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

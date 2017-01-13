@@ -110,7 +110,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public IobTotal getCalculationToTime(long time) {
-        IobTotal total = new IobTotal();
+        IobTotal total = new IobTotal(time);
 
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return total;

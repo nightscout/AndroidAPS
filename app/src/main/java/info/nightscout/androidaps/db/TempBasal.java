@@ -53,7 +53,7 @@ public class TempBasal {
 
 
     public IobTotal iobCalc(Date time) {
-        IobTotal result = new IobTotal();
+        IobTotal result = new IobTotal(time.getTime());
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null)

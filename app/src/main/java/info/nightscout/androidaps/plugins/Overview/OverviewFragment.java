@@ -621,10 +621,8 @@ public class OverviewFragment extends Fragment {
         // iob
         MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
         IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-        if (bolusIob == null) bolusIob = new IobTotal();
         MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
         IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-        if (basalIob == null) basalIob = new IobTotal();
 
         String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

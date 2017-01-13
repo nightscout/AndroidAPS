@@ -174,7 +174,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
         checkForExpired(tempBasals);
         checkForExpired(extendedBoluses);
         Date now = new Date(time);
-        IobTotal total = new IobTotal();
+        IobTotal total = new IobTotal(time);
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
             TempBasal t = tempBasals.get(pos);
             IobTotal calc = t.iobCalc(now);
