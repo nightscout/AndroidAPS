@@ -45,6 +45,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        onCreate(getWritableDatabase(), getConnectionSource());
     }
 
 
@@ -58,7 +59,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
         } catch (SQLException e) {
-            log.error(DatabaseHelper.class.getName(), "Can't create database", e);
+            log.error("Can't create database", e);
             throw new RuntimeException(e);
         }
     }
@@ -74,7 +75,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
-            log.error(DatabaseHelper.class.getName(), "Can't drop databases", e);
+            log.error("Can't drop databases", e);
             throw new RuntimeException(e);
         }
     }

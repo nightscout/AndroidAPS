@@ -10,7 +10,6 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.TempBasals.TempBasalsPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -43,6 +42,9 @@ public class TempTarget {
 
     @DatabaseField
     public int duration;    // in minutes
+
+    @DatabaseField
+    public String _id;    // NS _id
 
     public Date getPlannedTimeEnd() {
         return new Date(timeStart.getTime() + 60 * 1_000 * duration);

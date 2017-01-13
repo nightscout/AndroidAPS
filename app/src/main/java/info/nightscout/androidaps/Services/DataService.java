@@ -29,6 +29,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventNewTempTargetRange;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
@@ -379,6 +381,7 @@ public class DataService extends IntentService {
                     JSONObject trJson = new JSONObject(trstring);
                     String _id = trJson.getString("_id");
                     removeTreatmentFromDb(_id);
+                    handleRemoveTempTargetRecord(trJson);
                 }
 
                 if (bundles.containsKey("treatments")) {
@@ -388,6 +391,7 @@ public class DataService extends IntentService {
                         JSONObject trJson = jsonArray.getJSONObject(i);
                         String _id = trJson.getString("_id");
                         removeTreatmentFromDb(_id);
+                        handleRemoveTempTargetRecord(trJson);
                     }
                 }
             } catch (Exception e) {
@@ -443,6 +447,7 @@ public class DataService extends IntentService {
     private void handleAddedTreatment(String trstring) throws JSONException, SQLException {
         JSONObject trJson = new JSONObject(trstring);
         handleDanaRHistoryRecords(trJson); // update record _id in history
+        handleAddChangeTempTargetRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("ADD: Uninterested treatment: " + trstring);
@@ -499,6 +504,7 @@ public class DataService extends IntentService {
     private void handleChangedTreatment(String trstring) throws JSONException, SQLException {
         JSONObject trJson = new JSONObject(trstring);
         handleDanaRHistoryRecords(trJson); // update record _id in history
+        handleAddChangeTempTargetRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("CHANGE: Uninterested treatment: " + trstring);
@@ -569,6 +575,78 @@ public class DataService extends IntentService {
                 } else {
                     // already set
                 }
+            }
+        }
+    }
+
+ /*
+ {
+    "_id": "58795998aa86647ba4d68ce7",
+    "enteredBy": "",
+    "eventType": "Temporary Target",
+    "reason": "Eating Soon",
+    "targetTop": 80,
+    "targetBottom": 80,
+    "duration": 120,
+    "created_at": "2017-01-13T22:50:00.782Z",
+    "carbs": null,
+    "insulin": null
+}
+  */
+
+    public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.getString("eventType").equals("Temporary Target")) {
+            Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
+            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", trJson.getString("_id")).or().eq("timeIndex", trJson.getLong("mills"));
+            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+            List<TempTarget> list = daoTempTargets.query(preparedQuery);
+            if (list.size() == 0) {
+                // Record does not exists. add
+                TempTarget newRecord = new TempTarget();
+                newRecord.timeStart = new Date(trJson.getLong("mills"));
+                newRecord.duration = trJson.getInt("duration");
+                newRecord.low = trJson.getDouble("targetBottom");
+                newRecord.high = trJson.getDouble("targetTop");
+                newRecord.reason = trJson.getString("reason");
+                daoTempTargets.createIfNotExists(newRecord);
+                if (Config.logIncommingData)
+                    log.debug("Adding TempTarget record to database: " + newRecord.toString());
+                MainApp.bus().post(new EventNewTempTargetRange());
+            } else if (list.size() == 1) {
+                if (Config.logIncommingData)
+                    log.debug("Updating TempTarget record in database: " + trJson.getString("_id"));
+                TempTarget record = list.get(0);
+                record.timeStart = new Date(trJson.getLong("mills"));
+                record.duration = trJson.getInt("duration");
+                record.low = trJson.getDouble("targetBottom");
+                record.high = trJson.getDouble("targetTop");
+                record.reason = trJson.getString("reason");
+                daoTempTargets.update(record);
+                MainApp.bus().post(new EventNewTempTargetRange());
+            }
+        }
+    }
+
+    public void handleRemoveTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.getString("eventType").equals("Temporary Target")) {
+            Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
+            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", trJson.getString("_id")).or().eq("timeIndex", trJson.getLong("mills"));
+            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+            List<TempTarget> list = daoTempTargets.query(preparedQuery);
+
+            if (list.size() == 1) {
+                TempTarget record = list.get(0);
+                if (Config.logIncommingData)
+                    log.debug("Removing TempTarget record from database: " + record.toString());
+                daoTempTargets.delete(record);
+                MainApp.bus().post(new EventNewTempTargetRange());
+            } else {
+                if (Config.logIncommingData)
+                    log.debug("TempTarget not found database: " + trJson.toString());
             }
         }
     }

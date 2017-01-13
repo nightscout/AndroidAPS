@@ -144,6 +144,7 @@ public class TempTargetRangeFragment extends Fragment implements FragmentBase {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(tempTargetRangePlugin.getList()), false);
                 }
             });
     }
