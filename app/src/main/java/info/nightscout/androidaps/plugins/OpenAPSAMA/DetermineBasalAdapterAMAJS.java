@@ -232,7 +232,7 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("skip_neutral_temps", true);
         mProfile.add("current_basal", pump.getBaseBasalRate());
         mProfile.add("temptargetSet", tempTargetSet);
-        mProfile.add("autosens_adjust_targets", MainApp.getConfigBuilder().isAMAModeEnabled());
+        mProfile.add("autosens_adjust_targets", Constants.AUTOSENS_ADJUST_TARGETS);
         mProfile.add("min_5m_carbimpact", min_5m_carbimpact);
         mV8rt.add(PARAM_profile, mProfile);
 
