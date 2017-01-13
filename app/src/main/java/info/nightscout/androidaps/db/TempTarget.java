@@ -8,7 +8,11 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.TempBasals.TempBasalsPlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
+import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPTARGETS)
 public class TempTarget {
@@ -29,10 +33,10 @@ public class TempTarget {
     public Date timeStart;
 
     @DatabaseField
-    public double low;
+    public double low; // in mgdl
 
     @DatabaseField
-    public double high;
+    public double high; // in mgdl
 
     @DatabaseField
     public String reason;
@@ -42,6 +46,20 @@ public class TempTarget {
 
     public Date getPlannedTimeEnd() {
         return new Date(timeStart.getTime() + 60 * 1_000 * duration);
+    }
+
+    public String lowValueToUnitsToString(String units) {
+        if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(low);
+        else return DecimalFormatter.to1Decimal(low * Constants.MGDL_TO_MMOLL);
+    }
+
+    public String highValueToUnitsToString(String units) {
+        if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(high);
+        else return DecimalFormatter.to1Decimal(low * Constants.MGDL_TO_MMOLL);
+    }
+
+    public boolean isInProgress() {
+        return ((TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class)).getTempTargetInProgress(new Date().getTime()) == this;
     }
 
     public String log() {

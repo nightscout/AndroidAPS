@@ -216,6 +216,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
+    public List<TempTarget> getTemptargetsDataFromTime(long mills, boolean ascending) {
+        try {
+            Dao<TempTarget, Long> daoTempTargets = getDaoTempTargets();
+            List<TempTarget> tempTargets;
+            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
+            queryBuilder.orderBy("timeIndex", ascending);
+            Where where = queryBuilder.where();
+            where.ge("timeIndex", mills);
+            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+            tempTargets = daoTempTargets.query(preparedQuery);
+            return tempTargets;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<TempTarget>();
+    }
+
     /*
      * Returns glucose_status for openAPS or null if no actual data available
      */
