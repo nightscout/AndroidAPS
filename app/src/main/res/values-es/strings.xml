@@ -103,7 +103,7 @@
     <string name="loop_constraintsprocessed_label">Tras procesar limitaciones</string>
     <string name="loop_setbypump_label">Definido por la bomba</string>
     <string name="openapsma_lastenact_label">Última aceptada</string>
-    <string name="refreshfromnightscout">¿Quieres actualizar tratamientos de Nightscout?</string>
+    <string name="refreshtreatmentsfromnightscout">¿Quieres actualizar tratamientos de Nightscout?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
     <string name="noapsselected">NO APS Seleccionado</string>

@@ -1,14 +1,20 @@
 package info.nightscout.androidaps.plugins.TempTargetRange;
 
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,19 +24,21 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventNewTempTargetRange;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 13/01/17.
  */
 
-public class TempTargetRangeFragment extends Fragment implements FragmentBase {
+public class TempTargetRangeFragment extends Fragment implements View.OnClickListener, FragmentBase {
 
     private static TempTargetRangePlugin tempTargetRangePlugin = new TempTargetRangePlugin();
 
@@ -40,6 +48,7 @@ public class TempTargetRangeFragment extends Fragment implements FragmentBase {
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
+    Button refreshFromNS;
 
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
 
@@ -117,8 +126,39 @@ public class TempTargetRangeFragment extends Fragment implements FragmentBase {
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(tempTargetRangePlugin.getList());
         recyclerView.setAdapter(adapter);
 
+        refreshFromNS = (Button) view.findViewById(R.id.temptargetrange_refreshfromnightscout);
+        refreshFromNS.setOnClickListener(this);
+
         updateGUI();
         return view;
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.temptargetrange_refreshfromnightscout:
+                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getContext());
+                boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
+                if(nsUploadOnly){
+                    ToastUtils.showToastInUiThread(getContext(),this.getContext().getString(R.string.ns_upload_only_enabled));
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                    builder.setTitle(this.getContext().getString(R.string.confirmation));
+                    builder.setMessage(this.getContext().getString(R.string.refreshtemptargetsfromnightscout));
+                    builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            MainApp.getDbHelper().resetTempTargets();
+                            tempTargetRangePlugin.initializeData();
+                            updateGUI();
+                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                        }
+                    });
+                    builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                    builder.show();
+                }
+                break;
+        }
     }
 
     @Override
@@ -134,7 +174,7 @@ public class TempTargetRangeFragment extends Fragment implements FragmentBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewTempTargetRange ev) {
+    public void onStatusEvent(final EventTempTargetRangeChange ev) {
         updateGUI();
     }
 

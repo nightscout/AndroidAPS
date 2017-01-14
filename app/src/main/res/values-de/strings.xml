@@ -120,7 +120,7 @@
     <string name="setextendedbolusquestion">Setze neuen extended Bolus:</string>
     <string name="setbasalquestion">Akzeptiere neue temp Basalrate:</string>
     <string name="danar_useextended_title">Benutze extended Bolus für hohe temps (\>200%)></string>
-    <string name="refreshfromnightscout">Möchtest du die Treatments von Nightscout abrufen</string>
+    <string name="refreshtreatmentsfromnightscout">Möchtest du die Treatments von Nightscout abrufen</string>
     <string name="objectives_pumpstatusavailableinns">Pumpen Status verfügbar in NS</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="overview_newtempbasal_basal_label">Basal Wert</string>

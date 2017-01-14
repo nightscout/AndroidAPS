@@ -107,7 +107,8 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
-    <string name="refreshfromnightscout">Do you want to refresh treatments from Nightscout</string>
+    <string name="refreshtreatmentsfromnightscout">Do you want to refresh treatments from Nightscout</string>
+    <string name="refreshtemptargetsfromnightscout">Do you want to refresh temp targets from Nightscout</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -399,4 +400,5 @@
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
     <string name="temptargetrange">Temp Target</string>
+    <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
 </resources>

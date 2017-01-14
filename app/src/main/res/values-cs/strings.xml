@@ -124,7 +124,7 @@
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="rate">Hodnota</string>
     <string name="reason">Zdůvodnění</string>
-    <string name="refreshfromnightscout">Opravdu aktualizovat ošetření z NS</string>
+    <string name="refreshtreatmentsfromnightscout">Opravdu aktualizovat ošetření z NS</string>
     <string name="safety">Bezpečnost</string>
     <string name="danar_useextended_title">Použít kombo bolusy pro >200%</string>
     <string name="setextendedbolusquestion">Spustit nový kombo bolus:</string>

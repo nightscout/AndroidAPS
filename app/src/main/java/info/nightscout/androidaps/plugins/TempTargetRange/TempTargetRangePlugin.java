@@ -2,13 +2,8 @@ package info.nightscout.androidaps.plugins.TempTargetRange;
 
 import android.support.annotation.Nullable;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +11,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventNewTempTargetRange;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 
 /**
  * Created by mike on 13/01/17.
@@ -81,11 +76,11 @@ public class TempTargetRangePlugin implements PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewTempTargetRange ev) {
-
+    public void onStatusEvent(final EventTempTargetRangeChange ev) {
+        initializeData();
     }
 
-    private void initializeData() {
+    public void initializeData() {
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * 24);
         tempTargets = MainApp.getDbHelper().getTemptargetsDataFromTime(fromMills, false);
     }

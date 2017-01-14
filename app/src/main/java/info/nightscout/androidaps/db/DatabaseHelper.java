@@ -130,9 +130,17 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void resetTreatments() {
         try {
-
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void resetTempTargets() {
+        try {
+            TableUtils.dropTable(connectionSource, TempTarget.class, true);
+            TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
         } catch (SQLException e) {
             e.printStackTrace();
         }
