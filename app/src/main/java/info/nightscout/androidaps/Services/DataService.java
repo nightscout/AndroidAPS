@@ -40,7 +40,10 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
@@ -253,10 +256,15 @@ public class DataService extends IntentService {
                 ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
                 ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
-                if (ConfigBuilderPlugin.nsClientVersionCode < 121)
-                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
+                if (ConfigBuilderPlugin.nsClientVersionCode < 121) {
+                    Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                } else {
+                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                }
             } else {
-                ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
+                Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
             }
             if (bundles.containsKey("status")) {
                 try {
