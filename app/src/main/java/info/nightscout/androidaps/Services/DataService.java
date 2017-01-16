@@ -253,7 +253,7 @@ public class DataService extends IntentService {
                 ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
                 ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
-                if (ConfigBuilderPlugin.nsClientVersionCode < 118)
+                if (ConfigBuilderPlugin.nsClientVersionCode < 121)
                     ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
             } else {
                 ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
