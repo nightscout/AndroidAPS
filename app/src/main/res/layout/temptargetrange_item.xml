@@ -89,9 +89,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 android:paddingLeft="10dp"
-                android:paddingRight="5dp"
                 android:text="@string/reason"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="5dp"
+                android:text=":" />
 
             <TextView
                 android:id="@+id/temptargetrange_reason"
@@ -100,7 +105,16 @@
                 android:layout_gravity="center_vertical"
                 android:paddingRight="10dp"
                 android:text="Activity"
+                android:layout_weight="1"
                 android:textStyle="bold" />
+
+            <TextView
+                android:text="@string/overview_quickwizard_item_remove_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/temptargetrange_remove"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_orange_light" />
 
         </LinearLayout>
 

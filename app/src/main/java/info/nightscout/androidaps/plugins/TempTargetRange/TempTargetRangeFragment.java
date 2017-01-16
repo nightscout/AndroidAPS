@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -18,8 +19,10 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.Dao;
 import com.squareup.otto.Subscribe;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -79,7 +82,8 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
             else
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.cardColorBackground));
-        }
+            holder.remove.setTag(tempTarget);
+         }
 
         @Override
         public int getItemCount() {
@@ -91,13 +95,14 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        public static class TempTargetsViewHolder extends RecyclerView.ViewHolder {
+        public static class TempTargetsViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
             CardView cv;
             TextView date;
             TextView duration;
             TextView low;
             TextView high;
             TextView reason;
+            TextView remove;
             LinearLayout dateLinearLayout;
 
             TempTargetsViewHolder(View itemView) {
@@ -108,7 +113,31 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
                 low = (TextView) itemView.findViewById(R.id.temptargetrange_low);
                 high = (TextView) itemView.findViewById(R.id.temptargetrange_high);
                 reason = (TextView) itemView.findViewById(R.id.temptargetrange_reason);
+                remove = (TextView) itemView.findViewById(R.id.temptargetrange_remove);
+                remove.setOnClickListener(this);
+                remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.temptargetrange_datelinearlayout);
+            }
+
+            @Override
+            public void onClick(View v) {
+                TempTarget tempTarget = (TempTarget) v.getTag();
+                switch (v.getId()) {
+                    case R.id.temptargetrange_remove:
+                        String _id = tempTarget._id;
+                        if (_id != null && !_id.equals("")) {
+                            MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
+                            try {
+                                Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
+                                daoTempTargets.delete(tempTarget);
+                                MainApp.bus().post(new EventTempTargetRangeChange());
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                        break;
+                }
             }
         }
     }
