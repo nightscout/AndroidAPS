@@ -404,4 +404,5 @@
     <string name="careportal_temptarget">Temporary Target</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
+    <string name="removerecord">Remove record:</string>
 </resources>

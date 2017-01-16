@@ -77,7 +77,6 @@ public class MainApp extends Application {
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.getPlugin());
             pluginsList.add(ActionsFragment.getPlugin());
-            pluginsList.add(TempTargetRangeFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANARKOREAN) pluginsList.add(DanaRKoreanFragment.getPlugin());
             if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.getPlugin());
@@ -89,6 +88,7 @@ public class MainApp extends Application {
             pluginsList.add(SimpleProfileFragment.getPlugin());
             pluginsList.add(LocalProfileFragment.getPlugin());
             pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
+            pluginsList.add(TempTargetRangeFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
             pluginsList.add(TempBasalsFragment.getPlugin());
             pluginsList.add(SafetyFragment.getPlugin());

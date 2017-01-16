@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.TempTargetRange;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -53,7 +54,9 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
     LinearLayoutManager llm;
     Button refreshFromNS;
 
-    public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
+    Context context;
+
+    public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
 
         List<TempTarget> tempTargetList;
 
@@ -95,7 +98,7 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        public static class TempTargetsViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
+        public class TempTargetsViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
             CardView cv;
             TextView date;
             TextView duration;
@@ -121,20 +124,29 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
 
             @Override
             public void onClick(View v) {
-                TempTarget tempTarget = (TempTarget) v.getTag();
+                final TempTarget tempTarget = (TempTarget) v.getTag();
+                final Context finalContext = context;
                 switch (v.getId()) {
                     case R.id.temptargetrange_remove:
-                        String _id = tempTarget._id;
+                        final String _id = tempTarget._id;
                         if (_id != null && !_id.equals("")) {
-                            MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
-                            try {
-                                Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
-                                daoTempTargets.delete(tempTarget);
-                                MainApp.bus().post(new EventTempTargetRangeChange());
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                            }
-
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
+                            builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + _id);
+                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
+                                    try {
+                                        Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
+                                        daoTempTargets.delete(tempTarget);
+                                        MainApp.bus().post(new EventTempTargetRangeChange());
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                            builder.show();
                         }
                         break;
                 }
@@ -157,6 +169,8 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
 
         refreshFromNS = (Button) view.findViewById(R.id.temptargetrange_refreshfromnightscout);
         refreshFromNS.setOnClickListener(this);
+
+        context = getContext();
 
         updateGUI();
         return view;
