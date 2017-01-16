@@ -225,7 +225,7 @@
     <string name="reloadprofile">Обнови профила</string>
     <string name="percent">Процент</string>
     <string name="glucosetype_sensor">Сензор</string>
-    <string name="glucosetype_manual">Ръчно</string>
+    <string name="manual">Ръчно</string>
     <string name="glucosetype_finger">Пръст</string>
     <string name="danar_valuenotsetproperly">Неправилно зададени стойности</string>
     <string name="danar_viewprofile">Виж профила</string>

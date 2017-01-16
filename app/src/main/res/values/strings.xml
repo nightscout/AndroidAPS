@@ -258,7 +258,7 @@
     <string name="smscommunicator_remotebolusnotallowed">Remote bolus not allowed</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
-    <string name="glucosetype_manual">Manual</string>
+    <string name="manual">Manual</string>
     <string name="careportal_temporarytarget">Temporary Target</string>
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
     <string name="danarprofile">DanaR profile settings</string>
@@ -401,4 +401,7 @@
     <string name="localprofile">Local Profile</string>
     <string name="temptargetrange">Temp Target</string>
     <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
+    <string name="careportal_temptarget">Temporary Target</string>
+    <string name="eatingsoon">Eating Soon</string>
+    <string name="activity">Activity</string>
 </resources>

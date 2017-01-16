@@ -245,7 +245,7 @@
     <string name="smscommunicator_remotebolusnotallowed">Bolo remoto no permitido</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
-    <string name="glucosetype_manual">Manual</string>
+    <string name="manual">Manual</string>
     <string name="careportal_temporarytarget">Objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
     <string name="danarprofile">Configuración perfil DanaR</string>

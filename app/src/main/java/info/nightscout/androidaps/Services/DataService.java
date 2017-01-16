@@ -596,21 +596,27 @@ public class DataService extends IntentService {
 
     public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals("Temporary Target")) {
+            if (Config.logIncommingData)
+                log.debug("Processing TempTarget record: " + trJson.toString());
             Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
             QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
             Where where = queryBuilder.where();
             where.eq("_id", trJson.getString("_id")).or().eq("timeIndex", trJson.getLong("mills"));
             PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
             List<TempTarget> list = daoTempTargets.query(preparedQuery);
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            if (profile == null) return; // no profile data, better ignore than do something wrong
+            String units = profile.getUnits();
             if (list.size() == 0) {
                 // Record does not exists. add
                 TempTarget newRecord = new TempTarget();
                 newRecord.timeStart = new Date(trJson.getLong("mills"));
                 newRecord.duration = trJson.getInt("duration");
-                newRecord.low = trJson.getDouble("targetBottom");
-                newRecord.high = trJson.getDouble("targetTop");
+                newRecord.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
+                newRecord.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
                 newRecord.reason = trJson.getString("reason");
                 newRecord._id = trJson.getString("_id");
+                newRecord.setTimeIndex(newRecord.getTimeIndex());
                 daoTempTargets.createIfNotExists(newRecord);
                 if (Config.logIncommingData)
                     log.debug("Adding TempTarget record to database: " + newRecord.log());
@@ -621,9 +627,10 @@ public class DataService extends IntentService {
                 TempTarget record = list.get(0);
                 record.timeStart = new Date(trJson.getLong("mills"));
                 record.duration = trJson.getInt("duration");
-                record.low = trJson.getDouble("targetBottom");
-                record.high = trJson.getDouble("targetTop");
+                record.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
+                record.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
                 record.reason = trJson.getString("reason");
+                record._id = trJson.getString("_id");
                 daoTempTargets.update(record);
                 MainApp.bus().post(new EventTempTargetRangeChange());
             }

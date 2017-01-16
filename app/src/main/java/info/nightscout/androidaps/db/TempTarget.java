@@ -18,7 +18,7 @@ public class TempTarget {
     private static Logger log = LoggerFactory.getLogger(TempTarget.class);
 
     public long getTimeIndex() {
-        return timeStart.getTime();
+        return timeStart.getTime() - timeStart.getTime() % 1000;
     }
 
     public void setTimeIndex(long timeIndex) {

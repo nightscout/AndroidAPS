@@ -222,7 +222,7 @@
     <string name="danarprofile">DanaR Profil Einstellungen</string>
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_car">Kohlehydrahte Absorptionsrate</string>
-    <string name="glucosetype_manual">Manuell</string>
+    <string name="manual">Manuell</string>
     <string name="danar_dailyunits">Einheiten (Tag)</string>
     <string name="danar_invalidinput">ungültige Eingabe</string>
     <string name="danar_valuenotsetproperly">Wert nicht korrekt gesetzt</string>

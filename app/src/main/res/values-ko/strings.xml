@@ -248,7 +248,7 @@
     <string name="smscommunicator_remotebolusnotallowed">원격 식사주입 허용되지 않음</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
-    <string name="glucosetype_manual">Manual</string>
+    <string name="manual">Manual</string>
     <string name="careportal_temporarytarget">Temporary Target</string>
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
     <string name="danarprofile">DanaR 프로파일 설정</string>
