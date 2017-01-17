@@ -20,6 +20,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -29,6 +30,7 @@ import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateResultGui;
+import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
@@ -183,6 +185,17 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         minBg = verifyHardLimits(minBg, "minBg", 72, 180);
         maxBg = verifyHardLimits(maxBg, "maxBg", 100, 270);
         targetBg = verifyHardLimits(targetBg, "targetBg", 80, 200);
+
+        TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
+        if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
+            TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
+            if (tempTarget != null) {
+                minBg = verifyHardLimits(tempTarget.low, "minBg", 72, 180);
+                maxBg = verifyHardLimits(tempTarget.high, "maxBg", 72, 270);
+                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", 80, 200);
+            }
+        }
+
         maxIob = verifyHardLimits(maxIob, "maxIob", 0, 7);
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 

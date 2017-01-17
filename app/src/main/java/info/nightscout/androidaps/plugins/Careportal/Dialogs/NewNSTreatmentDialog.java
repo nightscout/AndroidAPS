@@ -24,6 +24,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.j256.ormlite.dao.Dao;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,10 +44,13 @@ import java.util.Date;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.PlusMinusEditText;
@@ -73,6 +78,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     LinearLayout layoutAbsolute;
     LinearLayout layoutCarbTime;
     LinearLayout layoutProfile;
+    LinearLayout layoutTempTarget;
     Button dateButton;
     Button timeButton;
     Button okButton;
@@ -91,6 +97,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     EditText carbTimeEdit;
     EditText splitEdit;
     Spinner profileSpinner;
+    EditText low;
+    EditText high;
+    Spinner reasonSpinner;
 
     PlusMinusEditText editBg;
     PlusMinusEditText editCarbs;
@@ -142,6 +151,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         layoutAbsolute = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_absolute_layout);
         layoutCarbTime = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_carbtime_layout);
         layoutProfile = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_profile_layout);
+        layoutTempTarget = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout);
 
         bgUnitsView = (TextView) view.findViewById(R.id.careportal_newnstreatment_bgunits);
         meterRadioButton = (RadioButton) view.findViewById(R.id.careportal_newnstreatment_meter);
@@ -193,6 +203,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         notesEdit = (EditText) view.findViewById(R.id.careportal_newnstreatment_notes);
         splitEdit = (EditText) view.findViewById(R.id.careportal_newnstreatment_splitinput);
 
+        reasonSpinner = (Spinner) view.findViewById(R.id.careportal_newnstreatment_temptarget_reason);
+        low = (EditText) view.findViewById(R.id.careportal_temptarget_low);
+        high = (EditText) view.findViewById(R.id.careportal_temptarget_high);
+
         eventTime = new Date();
         dateButton = (Button) view.findViewById(R.id.careportal_newnstreatment_eventdate);
         timeButton = (Button) view.findViewById(R.id.careportal_newnstreatment_eventtime);
@@ -204,7 +218,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         okButton = (Button) view.findViewById(R.id.careportal_newnstreatment_ok);
         okButton.setOnClickListener(this);
 
-        // BG
+        // profile
         profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         ArrayList<CharSequence> profileList;
         units = Constants.MGDL;
@@ -227,6 +241,17 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             }
         }
 
+        // temp target
+        ArrayList<CharSequence> reasonList = new ArrayList<CharSequence>();
+        reasonList.add(MainApp.sResources.getString(R.string.eatingsoon));
+        reasonList.add(MainApp.sResources.getString(R.string.activity));
+        reasonList.add(MainApp.sResources.getString(R.string.manual));
+        ArrayAdapter<CharSequence> adapterReason = new ArrayAdapter<CharSequence>(getContext(),
+                android.R.layout.simple_spinner_item, reasonList);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        reasonSpinner.setAdapter(adapterReason);
+
+        // bg
         bgUnitsView.setText(units);
 
         // Set BG if not old
@@ -271,6 +296,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         showOrHide(layoutAbsolute, options.absolute);
         showOrHide(layoutCarbTime, options.prebolus);
         showOrHide(layoutProfile, options.profile);
+        showOrHide(layoutTempTarget, options.tempTarget);
 
         return view;
     }
@@ -403,6 +429,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 case R.id.careportal_openapsoffline:
                     data.put("eventType", "OpenAPS Offline");
                     break;
+                case R.id.careportal_temptarget:
+                    data.put("eventType", "Temporary Target");
+                    break;
             }
             if (SafeParse.stringToDouble(bgInputEdit.getText().toString()) != 0d) {
                 data.put("glucose", SafeParse.stringToDouble(bgInputEdit.getText().toString()));
@@ -426,6 +455,12 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 data.put("preBolus", SafeParse.stringToDouble(carbTimeEdit.getText().toString()));
             if (!notesEdit.getText().toString().equals(""))
                 data.put("notes", notesEdit.getText().toString());
+            if (!reasonSpinner.getSelectedItem().toString().equals(""))
+                data.put("reason", reasonSpinner.getSelectedItem().toString());
+            if (SafeParse.stringToDouble(low.getText().toString()) != 0d)
+                data.put("targetBottom", SafeParse.stringToDouble(low.getText().toString()));
+            if (SafeParse.stringToDouble(high.getText().toString()) != 0d)
+                data.put("targetTop", SafeParse.stringToDouble(high.getText().toString()));
             data.put("units", units);
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             if (options.eventType == R.id.careportal_combobolus) {
@@ -509,6 +544,14 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 ret += data.get("profile");
                 ret += "\n";
             }
+            if (data.has("targetBottom") && data.has("targetTop")) {
+                ret += getString(R.string.target_range);
+                ret += " ";
+                ret += data.get("targetBottom");
+                ret += " - ";
+                ret += data.get("targetTop");
+                ret += "\n";
+            }
             if (data.has("created_at")) {
                 ret += getString(R.string.careportal_newnstreatment_eventtime_label);
                 ret += ": ";
@@ -555,6 +598,35 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                     }
                                     ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                                 } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                }
+                if (options.executeTempTarget) {
+                    if (data.has("targetBottom") && data.has("targetTop")) {
+                        sHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    TempTarget tempTarget = new TempTarget();
+                                    tempTarget.timeStart = eventTime;
+                                    tempTarget.duration = data.getInt("duration");
+                                    tempTarget.reason = data.getString("reason");
+                                    tempTarget.low = NSProfile.toMgdl(data.getDouble("targetBottom"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
+                                    tempTarget.high = NSProfile.toMgdl(data.getDouble("targetTop"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
+                                    tempTarget.setTimeIndex(tempTarget.getTimeIndex());
+                                    Dao<TempTarget, Long> dao = MainApp.getDbHelper().getDaoTempTargets();
+                                    log.debug("Creating new TempTarget db record: " + tempTarget.log());
+                                    dao.createIfNotExists(tempTarget);
+                                    MainApp.bus().post(new EventTempTargetRangeChange());
+                                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (SQLException e) {
                                     e.printStackTrace();
                                 }
                             }

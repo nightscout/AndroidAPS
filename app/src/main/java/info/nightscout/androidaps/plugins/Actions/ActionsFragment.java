@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import com.squareup.otto.Subscribe;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -35,6 +36,7 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
     }
 
     Button profileSwitch;
+    Button tempTarget;
     Button extendedBolus;
     Button tempBasal;
     Button fill;
@@ -49,11 +51,13 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
         View view = inflater.inflate(R.layout.actions_fragment, container, false);
 
         profileSwitch = (Button) view.findViewById(R.id.actions_profileswitch);
+        tempTarget = (Button) view.findViewById(R.id.actions_temptarget);
         extendedBolus = (Button) view.findViewById(R.id.actions_extendedbolus);
         tempBasal = (Button) view.findViewById(R.id.actions_settempbasal);
         fill = (Button) view.findViewById(R.id.actions_fill);
 
         profileSwitch.setOnClickListener(this);
+        tempTarget.setOnClickListener(this);
         extendedBolus.setOnClickListener(this);
         tempBasal.setOnClickListener(this);
         fill.setOnClickListener(this);
@@ -106,6 +110,10 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
                         fill.setVisibility(View.GONE);
                     else
                         fill.setVisibility(View.VISIBLE);
+                    if (!Config.APS)
+                        tempTarget.setVisibility(View.GONE);
+                    else
+                        tempTarget.setVisibility(View.VISIBLE);
                 }
             });
     }
@@ -117,10 +125,17 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
         switch (view.getId()) {
             case R.id.actions_profileswitch:
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
+                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch);
                 newDialog.show(manager, "NewNSTreatmentDialog");
+                break;
+            case R.id.actions_temptarget:
+                NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
+                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temptarget, R.string.careportal_temptarget, false, false, false, false, true, false, false, false, false, true);
+                temptarget.executeTempTarget = true;
+                newTTDialog.setOptions(temptarget);
+                newTTDialog.show(manager, "NewNSTreatmentDialog");
                 break;
             case R.id.actions_extendedbolus:
                 NewExtendedBolusDialog newExtendedDialog = new NewExtendedBolusDialog();

@@ -36,20 +36,38 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Open Loop"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_weight="0.2" />
 
                 <TextView
                     android:id="@+id/overview_activeprofile"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/pillborder"
                     android:gravity="center_vertical|center_horizontal"
+                    android:text="Profile"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/colorProfileSwitchButton" />
+                    android:textColor="@color/colorProfileSwitchButton"
+                    android:layout_weight="0.5" />
+
+                <TextView
+                    android:id="@+id/overview_temptarget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/temptargetborder"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="TempTarget"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/mdtp_white"
+                    android:layout_weight="0.2" />
             </LinearLayout>
 
             <LinearLayout

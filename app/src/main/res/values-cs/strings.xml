@@ -124,7 +124,7 @@
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="rate">Hodnota</string>
     <string name="reason">Zdůvodnění</string>
-    <string name="refreshfromnightscout">Opravdu aktualizovat ošetření z NS</string>
+    <string name="refreshtreatmentsfromnightscout">Opravdu aktualizovat ošetření z NS</string>
     <string name="safety">Bezpečnost</string>
     <string name="danar_useextended_title">Použít kombo bolusy pro >200%</string>
     <string name="setextendedbolusquestion">Spustit nový kombo bolus:</string>
@@ -237,7 +237,7 @@
     <string name="careportal_temporarytarget">Dočasný cíl</string>
     <string name="careportal_temporarytargetcancel">Dočasný cíl konec</string>
     <string name="glucosetype_finger">Glukoměr</string>
-    <string name="glucosetype_manual">Jiný</string>
+    <string name="manual">Jiný</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="danarprofile">DanaR profil</string>
     <string name="danarprofile_car">Rychlost absorbce sacharidů</string>

@@ -157,7 +157,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
-                    builder.setMessage(this.getContext().getString(R.string.refreshfromnightscout));
+                    builder.setMessage(this.getContext().getString(R.string.refreshtreatmentsfromnightscout));
                     builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             MainApp.getDbHelper().resetTreatments();
