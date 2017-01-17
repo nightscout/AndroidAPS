@@ -123,6 +123,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         Date now = new Date(time);
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
+            if (t.created_at.getTime() > time) continue;
             Iob tIOB = t.iobCalc(now, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
