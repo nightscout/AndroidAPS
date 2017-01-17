@@ -365,7 +365,7 @@
     <string name="low_mark">Долна линия</string>
     <string name="lowbattery">Изтощена батерия</string>
     <string name="open_settings_on_wear">Отвори Опции на часовника</string>
-    <string name="prefs_range_summary">Горна и долна линия на диаграмата на часовника</string>
+    <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l) </string>
     <string name="prefs_range_title">Диапазон на визуализация</string>
     <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
     <string name="profile_set_ok">Базалният профил е обновен</string>
