@@ -177,7 +177,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 MainApp.sResources.getString(R.string.objectives_6_objective),
                 "",
                 new Date(0),
-                1,
+                14,
                 new Date(0)));
     }
 

@@ -493,8 +493,16 @@ public class DataService extends IntentService {
             treatment.created_at = new Date(trJson.getLong("mills"));
             if (trJson.has("eventType")) {
                 treatment.mealBolus = true;
-                if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
-                if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0)
+                if (trJson.get("eventType").equals("Correction Bolus"))
+                    treatment.mealBolus = false;
+                double carbs = treatment.carbs;
+                if (trJson.has("boluscalc")) {
+                    JSONObject boluscalc = trJson.getJSONObject("boluscalc");
+                    if (boluscalc.has("carbs")) {
+                        carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
+                    }
+                }
+                if (carbs <= 0)
                     treatment.mealBolus = false;
             }
             treatment.setTimeIndex(treatment.getTimeIndex());
@@ -546,8 +554,16 @@ public class DataService extends IntentService {
         treatment.created_at = new Date(trJson.getLong("mills"));
         if (trJson.has("eventType")) {
             treatment.mealBolus = true;
-            if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
-            if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0)
+            if (trJson.get("eventType").equals("Correction Bolus"))
+                treatment.mealBolus = false;
+            double carbs = treatment.carbs;
+            if (trJson.has("boluscalc")) {
+                JSONObject boluscalc = trJson.getJSONObject("boluscalc");
+                if (boluscalc.has("carbs")) {
+                    carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
+                }
+            }
+            if (carbs <= 0)
                 treatment.mealBolus = false;
         }
         treatment.setTimeIndex(treatment.getTimeIndex());

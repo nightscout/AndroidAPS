@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="openapsama"
+        android:title="@string/openapsama">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="openapsama_useautosens"
+            android:title="@string/openapsama_useautosens" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

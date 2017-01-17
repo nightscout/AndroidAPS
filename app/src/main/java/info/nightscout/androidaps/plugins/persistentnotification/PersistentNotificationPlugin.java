@@ -15,8 +15,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -27,8 +27,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -103,7 +102,7 @@ public class PersistentNotificationPlugin implements PluginBase{
 
 
         BgReading lastBG = MainApp.getDbHelper().lastBg();
-        DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if(profile != null && lastBG != null) {
             line1 = lastBG.valueToUnitsToString(profile.getUnits());
@@ -127,10 +126,8 @@ public class PersistentNotificationPlugin implements PluginBase{
         //IOB
         MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
         IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-        if (bolusIob == null) bolusIob = new IobTotal();
         MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
         IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-        if (basalIob == null) basalIob = new IobTotal();
         String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + ctx.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + ctx.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";

@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -49,9 +51,10 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
@@ -70,12 +73,13 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
@@ -110,6 +114,7 @@ public class OverviewFragment extends Fragment {
     TextView apsModeView;
     TextView tempTargetView;
     GraphView bgGraph;
+    CheckBox showPredictionView;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -167,11 +172,24 @@ public class OverviewFragment extends Fragment {
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
         quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizard);
         quickWizardLayout = (LinearLayout) view.findViewById(R.id.overview_quickwizardlayout);
+        showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
+
+        showPredictionView.setChecked(prefs.getBoolean("showprediction", false));
+
+        showPredictionView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putBoolean("showprediction", showPredictionView.isChecked());
+                editor.apply();
+                updateGUI();
+            }
+        });
 
         treatmentButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -219,7 +237,7 @@ public class OverviewFragment extends Fragment {
         acceptTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                MainApp.getConfigBuilder().getActiveLoop().invoke(false);
+                MainApp.getConfigBuilder().getActiveLoop().invoke("Accept temp button", false);
                 final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
                 if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -530,8 +548,8 @@ public class OverviewFragment extends Fragment {
             acceptTempLayout.setVisibility(View.GONE);
         }
 
+        TempBasal activeTemp = pump.getTempBasal();
         if (pump.isTempBasalInProgress()) {
-            TempBasal activeTemp = pump.getTempBasal();
             cancelTempLayout.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
             runningTempView.setVisibility(View.VISIBLE);
@@ -595,10 +613,11 @@ public class OverviewFragment extends Fragment {
         if (lastBG != null && bgView != null) {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             arrowView.setText(lastBG.directionToSymbol());
-            DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
             if (glucoseStatus != null){
                 deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
-                avgdeltaView.setText("øΔ " + NSProfile.toUnitsString(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                avgdeltaView.setText("øΔ15m: " + NSProfile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
+                        "  øΔ40m: " + NSProfile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
             }
 
             BgReading.units = profile.getUnits();
@@ -619,15 +638,20 @@ public class OverviewFragment extends Fragment {
         // iob
         MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
         IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-        if (bolusIob == null) bolusIob = new IobTotal();
         MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
         IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-        if (basalIob == null) basalIob = new IobTotal();
 
         String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
         iobView.setText(iobtext);
+
+        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
+        if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
+            showPredictionView.setVisibility(View.VISIBLE);
+        } else {
+            showPredictionView.setVisibility(View.GONE);
+        }
 
         // ****** GRAPH *******
 
@@ -639,9 +663,24 @@ public class OverviewFragment extends Fragment {
         calendar.set(Calendar.MINUTE, 0);
         calendar.add(Calendar.HOUR, 1);
 
-        int hoursToFetch = 6;
-        long toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
-        long fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+        int hoursToFetch;
+        long toTime;
+        long fromTime;
+        long endTime;
+        if (showPrediction) {
+            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA)finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
+            predHours = Math.min(2, predHours);
+            predHours = Math.max(0, predHours);
+            hoursToFetch = (int) (6 - predHours);
+            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+            endTime = toTime + predHours * 60 * 60 * 1000L;
+        } else {
+            hoursToFetch = 6;
+            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+            endTime = toTime;
+        }
 
         Double lowLine = SafeParse.stringToDouble(prefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(prefs.getString("high_mark", "0"));
@@ -654,12 +693,14 @@ public class OverviewFragment extends Fragment {
             highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
 
+        LineGraphSeries<DataPoint> basalsLineSeries = null;
         BarGraphSeries<DataPoint> basalsSeries = null;
         LineGraphSeries<DataPoint> seriesLow = null;
         LineGraphSeries<DataPoint> seriesHigh = null;
         LineGraphSeries<DataPoint> seriesNow = null;
         PointsGraphSeries<BgReading> seriesInRage = null;
         PointsGraphSeries<BgReading> seriesOutOfRange = null;
+        PointsGraphSeries<BgReading> predSeries = null;
         PointsWithLabelGraphSeries<Treatment> seriesTreatments = null;
 
         // remove old data from graph
@@ -668,11 +709,11 @@ public class OverviewFragment extends Fragment {
         // **** HIGH and LOW targets graph ****
         DataPoint[] lowDataPoints = new DataPoint[]{
                 new DataPoint(fromTime, lowLine),
-                new DataPoint(toTime, lowLine)
+                new DataPoint(endTime, lowLine)
         };
         DataPoint[] highDataPoints = new DataPoint[]{
                 new DataPoint(fromTime, highLine),
-                new DataPoint(toTime, highLine)
+                new DataPoint(endTime, highLine)
         };
         bgGraph.addSeries(seriesLow = new LineGraphSeries<DataPoint>(lowDataPoints));
         seriesLow.setColor(Color.RED);
@@ -689,19 +730,26 @@ public class OverviewFragment extends Fragment {
             public boolean isTempBasal = false;
         }
 
-        Double maxAllowedBasal = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
         Double maxBasalValueFound = 0d;
 
         long now = new Date().getTime();
         if (pump.getPumpDescription().isTempBasalCapable) {
             List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
+            List<DataPoint> basalLineArray = new ArrayList<DataPoint>();
+            double lastBaseBasal = 0;
             for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
                 TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
+                double basebasal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
                 Double basal = 0d;
                 if (tb != null)
                     basalArray.add(new BarDataPoint(time, basal = tb.tempBasalConvertedToAbsolute(new Date(time)), true));
-                else
-                    basalArray.add(new BarDataPoint(time, basal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
+                else {
+                    basalArray.add(new BarDataPoint(time, basal = basebasal, false));
+                }
+                if (basebasal != lastBaseBasal)
+                    basalLineArray.add(new DataPoint(time, lastBaseBasal));
+                basalLineArray.add(new DataPoint(time, basebasal));
+                lastBaseBasal = basebasal;
                 maxBasalValueFound = Math.max(maxBasalValueFound, basal);
             }
             BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
@@ -715,17 +763,23 @@ public class OverviewFragment extends Fragment {
                     else return Color.CYAN;
                 }
             });
+            DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
+            basalLine = basalLineArray.toArray(basalLine);
+            bgGraph.addSeries(basalsLineSeries = new LineGraphSeries<DataPoint>(basalLine));
+            basalsLineSeries.setColor(Color.CYAN);
+            basalsLineSeries.setDrawDataPoints(false);
+            basalsLineSeries.setThickness(2);
         }
 
         // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(toTime);
+        bgGraph.getViewport().setMaxX(endTime);
         bgGraph.getViewport().setMinX(fromTime);
         bgGraph.getViewport().setXAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
         bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
         // **** BG graph ****
-        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getDataFromTime(fromTime);
+        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<BgReading> inRangeArray = new ArrayList<BgReading>();
         List<BgReading> outOfRangeArray = new ArrayList<BgReading>();
 
@@ -767,6 +821,19 @@ public class OverviewFragment extends Fragment {
             seriesOutOfRange.setColor(Color.RED);
         }
 
+        if (showPrediction) {
+            DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
+            List<BgReading> predArray = amaResult.getPredictions();
+            BgReading[] pred = new BgReading[predArray.size()];
+            pred = predArray.toArray(pred);
+            if (pred.length > 0) {
+                bgGraph.addSeries(predSeries = new PointsGraphSeries<BgReading>(pred));
+                predSeries.setShape(PointsGraphSeries.Shape.POINT);
+                predSeries.setSize(4);
+                predSeries.setColor(Color.MAGENTA);
+            }
+        }
+
         // **** NOW line ****
         DataPoint[] nowPoints = new DataPoint[]{
                 new DataPoint(now, 0),
@@ -779,8 +846,8 @@ public class OverviewFragment extends Fragment {
         // custom paint to make a dotted line
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(1);
-        paint.setPathEffect(new DashPathEffect(new float[]{4, 20}, 0));
+        paint.setStrokeWidth(2);
+        paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
 
@@ -813,12 +880,11 @@ public class OverviewFragment extends Fragment {
         // set second scale
         if (pump.getPumpDescription().isTempBasalCapable) {
             bgGraph.getSecondScale().addSeries(basalsSeries);
+            bgGraph.getSecondScale().addSeries(basalsLineSeries);
             bgGraph.getSecondScale().setMinY(0);
             bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
             bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
         }
-
-
     }
 
     //Notifications

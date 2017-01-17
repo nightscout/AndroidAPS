@@ -8,9 +8,10 @@ import com.eclipsesource.v8.V8Object;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 
-public class DetermineBasalResult extends APSResult {
+public class DetermineBasalResultMA extends APSResult {
 
     public JSONObject json = new JSONObject();
     public double eventualBG;
@@ -18,7 +19,7 @@ public class DetermineBasalResult extends APSResult {
     public String mealAssist;
     public IobTotal iob;
 
-    public DetermineBasalResult(V8Object result, JSONObject j) {
+    public DetermineBasalResultMA(V8Object result, JSONObject j) {
         json = j;
         if (result.contains("error")) {
             reason = result.getString("error");
@@ -52,43 +53,12 @@ public class DetermineBasalResult extends APSResult {
         result.release();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeString(json.toString());
-        dest.writeDouble(eventualBG);
-        dest.writeDouble(snoozeBG);
-        dest.writeString(mealAssist);
-    }
-
-    public final Parcelable.Creator<DetermineBasalResult> CREATOR = new Parcelable.Creator<DetermineBasalResult>() {
-        public DetermineBasalResult createFromParcel(Parcel in) {
-            return new DetermineBasalResult(in);
-        }
-
-        public DetermineBasalResult[] newArray(int size) {
-            return new DetermineBasalResult[size];
-        }
-    };
-
-    private DetermineBasalResult(Parcel in) {
-        super(in);
-        try {
-            json = new JSONObject(in.readString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        eventualBG = in.readDouble();
-        snoozeBG = in.readDouble();
-        mealAssist = in.readString();
-    }
-
-    public DetermineBasalResult() {
+    public DetermineBasalResultMA() {
     }
 
     @Override
-    public DetermineBasalResult clone() {
-        DetermineBasalResult newResult = new DetermineBasalResult();
+    public DetermineBasalResultMA clone() {
+        DetermineBasalResultMA newResult = new DetermineBasalResultMA();
         newResult.reason = new String(reason);
         newResult.rate = rate;
         newResult.duration = duration;
