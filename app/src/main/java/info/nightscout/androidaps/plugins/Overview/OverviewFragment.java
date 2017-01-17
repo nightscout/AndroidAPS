@@ -38,7 +38,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -73,9 +72,10 @@ import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
-import info.nightscout.androidaps.plugins.Overview.GraphSeriesExtension.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -101,6 +101,7 @@ public class OverviewFragment extends Fragment {
     TextView avgdeltaView;
     TextView runningTempView;
     TextView baseBasalView;
+    LinearLayout basalLayout;
     TextView activeProfileView;
     TextView iobView;
     TextView apsModeView;
@@ -146,6 +147,7 @@ public class OverviewFragment extends Fragment {
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
         runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
+        basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
@@ -521,7 +523,13 @@ public class OverviewFragment extends Fragment {
             cancelTempLayout.setVisibility(View.GONE);
             runningTempView.setVisibility(View.GONE);
         }
-        baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
+
+        if (pump.getPumpDescription().isTempBasalCapable) {
+            basalLayout.setVisibility(View.VISIBLE);
+            baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
+        } else {
+            basalLayout.setVisibility(View.GONE);
+        }
 
         if (profile != null && profile.getActiveProfile() != null)
             activeProfileView.setText(profile.getActiveProfile());
@@ -668,27 +676,29 @@ public class OverviewFragment extends Fragment {
         Double maxBasalValueFound = 0d;
 
         long now = new Date().getTime();
-        List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
-        for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
-            TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
-            Double basal = 0d;
-            if (tb != null)
-                basalArray.add(new BarDataPoint(time, basal = tb.tempBasalConvertedToAbsolute(new Date(time)), true));
-            else
-                basalArray.add(new BarDataPoint(time, basal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
-            maxBasalValueFound = Math.max(maxBasalValueFound, basal);
-        }
-        BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
-        basal = basalArray.toArray(basal);
-        bgGraph.addSeries(basalsSeries = new BarGraphSeries<DataPoint>(basal));
-        basalsSeries.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-            @Override
-            public int get(DataPoint data) {
-                BarDataPoint point = (BarDataPoint) data;
-                if (point.isTempBasal) return Color.BLUE;
-                else return Color.CYAN;
+        if (pump.getPumpDescription().isTempBasalCapable) {
+            List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
+            for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
+                TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
+                Double basal = 0d;
+                if (tb != null)
+                    basalArray.add(new BarDataPoint(time, basal = tb.tempBasalConvertedToAbsolute(new Date(time)), true));
+                else
+                    basalArray.add(new BarDataPoint(time, basal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time))), false));
+                maxBasalValueFound = Math.max(maxBasalValueFound, basal);
             }
-        });
+            BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
+            basal = basalArray.toArray(basal);
+            bgGraph.addSeries(basalsSeries = new BarGraphSeries<DataPoint>(basal));
+            basalsSeries.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+                @Override
+                public int get(DataPoint data) {
+                    BarDataPoint point = (BarDataPoint) data;
+                    if (point.isTempBasal) return Color.BLUE;
+                    else return Color.CYAN;
+                }
+            });
+        }
 
         // set manual x bounds to have nice steps
         bgGraph.getViewport().setMaxX(toTime);
@@ -784,10 +794,12 @@ public class OverviewFragment extends Fragment {
         bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
 
         // set second scale
-        bgGraph.getSecondScale().addSeries(basalsSeries);
-        bgGraph.getSecondScale().setMinY(0);
-        bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
-        bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
+        if (pump.getPumpDescription().isTempBasalCapable) {
+            bgGraph.getSecondScale().addSeries(basalsSeries);
+            bgGraph.getSecondScale().setMinY(0);
+            bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
+            bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
+        }
 
 
     }
@@ -810,11 +822,10 @@ public class OverviewFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
-            DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
             holder.text.setText(notification.text);
-            holder.time.setText(df.format(notification.date));
+            holder.time.setText(DateUtil.timeString(notification.date));
             if (notification.level == Notification.URGENT)
                 holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationUrgent));
             else if (notification.level == Notification.NORMAL)

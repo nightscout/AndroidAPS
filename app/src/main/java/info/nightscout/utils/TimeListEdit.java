@@ -23,9 +23,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.MainApp;
@@ -84,23 +82,29 @@ public class TimeListEdit {
 
         for (int i = 0; i < itemsCount(); i++) {
             View childview = inflater.inflate(R.layout.timelistedit_element, layout, false);
+            childview.setId(View.generateViewId());
             final Spinner timeSpinner = (Spinner) childview.findViewById(R.id.timelistedit_time);
+            timeSpinner.setId(View.generateViewId());
             int previous = i == 0 ? -1 * ONEHOURINSECONDS : secondFromMidnight(i - 1);
             int next = i == itemsCount() - 1 ? 24 * ONEHOURINSECONDS : secondFromMidnight(i + 1);
             if (i == 0) next = ONEHOURINSECONDS;
             fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
 
             final EditText editText1 = (EditText) childview.findViewById(R.id.timelistedit_edit1);
+            editText1.setId(View.generateViewId());
             fillNumber(editText1, value1(i));
             final EditText editText2 = ((EditText) childview.findViewById(R.id.timelistedit_edit2));
             fillNumber(editText2, value2(i));
+            editText2.setId(View.generateViewId());
             if (data2 == null) {
                 editText2.setVisibility(View.GONE);
             }
 
 
             ImageView addbutton = (ImageView) childview.findViewById(R.id.timelistedit_add);
+            addbutton.setId(View.generateViewId());
             ImageView removebutton = (ImageView) childview.findViewById(R.id.timelistedit_remove);
+            removebutton.setId(View.generateViewId());
 
             if (itemsCount() == 1 && i == 0) {
                 removebutton.setVisibility(View.GONE);
@@ -218,10 +222,9 @@ public class TimeListEdit {
     public void fillSpinner(Spinner spinner, int secondsFromMidnight, int previous, int next) {
         int posInList = 0;
         ArrayList<CharSequence> timeList = new ArrayList<>();
-        DateFormat df = new SimpleDateFormat("HH:mm");
         int pos = 0;
         for (int t = previous + ONEHOURINSECONDS; t < next; t += ONEHOURINSECONDS) {
-            timeList.add(df.format(DateUtil.toDate(t)));
+            timeList.add(DateUtil.timeString(DateUtil.toDate(t)));
             if (secondsFromMidnight == t) posInList = pos;
             pos++;
         }
@@ -326,10 +329,9 @@ public class TimeListEdit {
     }
 
     void log() {
-        DateFormat df = new SimpleDateFormat("HH:mm");
         for (int i = 0; i < data1.length(); i++) {
             int pos = 0;
-            log.debug(i + ": @" + df.format(DateUtil.toDate(secondFromMidnight(i))) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
+            log.debug(i + ": @" + DateUtil.timeString(DateUtil.toDate(secondFromMidnight(i))) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
         }
     }
 }

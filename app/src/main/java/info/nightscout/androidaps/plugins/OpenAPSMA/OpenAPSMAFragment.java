@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSMAUpdateResultGui;
 import info.nightscout.utils.JSONFormatter;
@@ -101,14 +102,20 @@ public class OpenAPSMAFragment extends Fragment implements View.OnClickListener,
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getPlugin().lastAPSResult != null) {
-                        glucoseStatusView.setText(JSONFormatter.format(getPlugin().lastDetermineBasalAdapterJS.getGlucoseStatusParam()));
-                        currentTempView.setText(JSONFormatter.format(getPlugin().lastDetermineBasalAdapterJS.getCurrentTempParam()));
-                        iobDataView.setText(JSONFormatter.format(getPlugin().lastDetermineBasalAdapterJS.getIobDataParam()));
-                        profileView.setText(JSONFormatter.format(getPlugin().lastDetermineBasalAdapterJS.getProfileParam()));
-                        mealDataView.setText(JSONFormatter.format(getPlugin().lastDetermineBasalAdapterJS.getMealDataParam()));
-                        resultView.setText(JSONFormatter.format(getPlugin().lastAPSResult.json));
-                        requestView.setText(getPlugin().lastAPSResult.toSpanned());
+                    DetermineBasalResult lastAPSResult = getPlugin().lastAPSResult;
+                    if (lastAPSResult != null) {
+                        resultView.setText(JSONFormatter.format(lastAPSResult.json));
+                        requestView.setText(lastAPSResult.toSpanned());
+                    }
+                    DetermineBasalAdapterJS determineBasalAdapterJS = getPlugin().lastDetermineBasalAdapterJS;
+                    if (determineBasalAdapterJS != null) {
+                        glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterJS.getGlucoseStatusParam()));
+                        currentTempView.setText(JSONFormatter.format(determineBasalAdapterJS.getCurrentTempParam()));
+                        iobDataView.setText(JSONFormatter.format(determineBasalAdapterJS.getIobDataParam()));
+                        profileView.setText(JSONFormatter.format(determineBasalAdapterJS.getProfileParam()));
+                        mealDataView.setText(JSONFormatter.format(determineBasalAdapterJS.getMealDataParam()));
+                    }
+                    if (getPlugin().lastAPSRun != null) {
                         lastRunView.setText(getPlugin().lastAPSRun.toLocaleString());
                     }
                 }

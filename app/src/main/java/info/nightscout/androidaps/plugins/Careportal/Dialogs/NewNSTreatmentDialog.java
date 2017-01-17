@@ -33,7 +33,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -197,10 +196,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         eventTime = new Date();
         dateButton = (Button) view.findViewById(R.id.careportal_newnstreatment_eventdate);
         timeButton = (Button) view.findViewById(R.id.careportal_newnstreatment_eventtime);
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-        DateFormat tf = DateFormat.getTimeInstance(DateFormat.SHORT);
-        dateButton.setText(df.format(eventTime));
-        timeButton.setText(tf.format(eventTime));
+        dateButton.setText(DateUtil.dateString(eventTime));
+        timeButton.setText(DateUtil.timeString(eventTime));
         dateButton.setOnClickListener(this);
         timeButton.setOnClickListener(this);
 
@@ -330,8 +327,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         eventTime.setYear(year - 1900);
         eventTime.setMonth(monthOfYear);
         eventTime.setDate(dayOfMonth);
-        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
-        dateButton.setText(df.format(eventTime));
+        dateButton.setText(DateUtil.dateString(eventTime));
     }
 
     @Override
@@ -339,8 +335,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         eventTime.setHours(hourOfDay);
         eventTime.setMinutes(minute);
         eventTime.setSeconds(second);
-        DateFormat tf = DateFormat.getTimeInstance(DateFormat.SHORT);
-        timeButton.setText(tf.format(eventTime));
+        timeButton.setText(DateUtil.timeString(eventTime));
     }
 
 

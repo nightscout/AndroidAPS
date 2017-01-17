@@ -42,6 +42,7 @@ import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
+import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
@@ -55,6 +56,7 @@ public class DataService extends IntentService {
 
     boolean xDripEnabled = false;
     boolean nsClientEnabled = true;
+    boolean mm640gEnabled = false;
 
     public DataService() {
         super("DataService");
@@ -69,9 +71,15 @@ public class DataService extends IntentService {
         if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
             xDripEnabled = true;
             nsClientEnabled = false;
+            mm640gEnabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
+            mm640gEnabled = false;
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
+            xDripEnabled = false;
+            nsClientEnabled = false;
+            mm640gEnabled = true;
         }
 
         boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfilePlugin.class);
@@ -84,6 +92,10 @@ public class DataService extends IntentService {
             if (Intents.ACTION_NEW_BG_ESTIMATE.equals(action)) {
                 if (xDripEnabled) {
                     handleNewDataFromXDrip(intent);
+                }
+            } else if (Intents.NS_EMULATOR.equals(action)) {
+                if (mm640gEnabled) {
+                    handleNewDataFromMM640g(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
                 // always handle SGV if NS-Client is the source
@@ -167,6 +179,58 @@ public class DataService extends IntentService {
             MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
         } catch (SQLException e) {
             e.printStackTrace();
+        }
+        MainApp.bus().post(new EventNewBG());
+    }
+
+    private void handleNewDataFromMM640g(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        final String collection = bundle.getString("collection");
+        if (collection == null) return;
+
+        if (collection.equals("entries")) {
+            final String data = bundle.getString("data");
+
+            if ((data != null) && (data.length() > 0)) {
+                try {
+                    final JSONArray json_array = new JSONArray(data);
+                    for (int i = 0; i < json_array.length(); i++) {
+                        final JSONObject json_object = json_array.getJSONObject(i);
+                        final String type = json_object.getString("type");
+                        switch (type) {
+                            case "sgv":
+                                BgReading bgReading = new BgReading();
+
+                                bgReading.value = json_object.getDouble("sgv");
+                                bgReading.direction = json_object.getString("direction");
+                                bgReading.timeIndex = json_object.getLong("date");
+                                bgReading.raw = json_object.getDouble("sgv");
+
+                                if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
+                                    if (Config.logIncommingBG)
+                                        log.debug("Ignoring old MM640g BG " + bgReading.toString());
+                                    return;
+                                }
+
+                                if (Config.logIncommingBG)
+                                    log.debug("MM640g BG " + bgReading.toString());
+
+                                try {
+                                    MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                                break;
+                            default:
+                                log.debug("Unknown entries type: " + type);
+                        }
+                    }
+                } catch (JSONException e) {
+                    log.error("Got JSON exception: " + e);
+                }
+            }
         }
         MainApp.bus().post(new EventNewBG());
     }
@@ -282,7 +346,6 @@ public class DataService extends IntentService {
                         handleAddedTreatment(trstr);
                     }
                 }
-                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -304,7 +367,6 @@ public class DataService extends IntentService {
                         handleChangedTreatment(trstr);
                     }
                 }
-                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -328,7 +390,6 @@ public class DataService extends IntentService {
                         removeTreatmentFromDb(_id);
                     }
                 }
-                scheduleTreatmentChange();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -407,6 +468,7 @@ public class DataService extends IntentService {
                 int updated = MainApp.getDbHelper().getDaoTreatments().update(stored);
                 if (Config.logIncommingData)
                     log.debug("Records updated: " + updated);
+                scheduleTreatmentChange();
             }
         } else {
             if (Config.logIncommingData)
@@ -430,6 +492,7 @@ public class DataService extends IntentService {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+            scheduleTreatmentChange();
         }
     }
 
@@ -483,6 +546,7 @@ public class DataService extends IntentService {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        scheduleTreatmentChange();
     }
 
     public void handleDanaRHistoryRecords(JSONObject trJson) throws JSONException, SQLException {

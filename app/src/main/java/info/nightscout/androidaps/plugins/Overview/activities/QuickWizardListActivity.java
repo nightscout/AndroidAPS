@@ -15,17 +15,15 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-import info.nightscout.androidaps.AgreementActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.EditQuickWizardDialog;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.QuickWizard;
 import info.nightscout.androidaps.plugins.Overview.events.EventQuickWizardChange;
-import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
 public class QuickWizardListActivity extends AppCompatActivity implements View.OnClickListener {
@@ -54,9 +52,8 @@ public class QuickWizardListActivity extends AppCompatActivity implements View.O
 
         @Override
         public void onBindViewHolder(QuickWizardEntryViewHolder holder, int position) {
-            DateFormat df = new SimpleDateFormat("HH:mm");
-            holder.from.setText(df.format(qvData.get(position).validFromDate()));
-            holder.to.setText(df.format(qvData.get(position).validToDate()));
+            holder.from.setText(DateUtil.timeString(qvData.get(position).validFromDate()));
+            holder.to.setText(DateUtil.timeString(qvData.get(position).validToDate()));
             holder.buttonText.setText(qvData.get(position).buttonText());
             holder.carbs.setText(DecimalFormatter.to0Decimal(qvData.get(position).carbs()) + " g");
         }

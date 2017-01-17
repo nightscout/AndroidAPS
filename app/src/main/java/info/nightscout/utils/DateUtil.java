@@ -1,5 +1,7 @@
 package info.nightscout.utils;
 
+import android.text.format.DateUtils;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -8,6 +10,8 @@ import java.util.GregorianCalendar;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import info.nightscout.androidaps.MainApp;
 
 /**
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
@@ -81,4 +85,30 @@ public class DateUtil {
         return retval;
     }
 
+    public static String dateString(Date date) {
+        //return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_DATE); this provide month name not number
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        return df.format(date);
+    }
+
+    public static String dateString(long mills) {
+        //return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_DATE); this provide month name not number
+        DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+        return df.format(mills);
+    }
+
+    public static String timeString(Date date) {
+        return DateUtils.formatDateTime(MainApp.instance(), date.getTime(), DateUtils.FORMAT_SHOW_TIME);
+    }
+
+    public static String timeString(long mills) {
+        return DateUtils.formatDateTime(MainApp.instance(), mills, DateUtils.FORMAT_SHOW_TIME);
+    }
+
+    public static String dateAndTimeString(Date date) {
+        return dateString(date) + " " + timeString(date);
+    }
+    public static String dateAndTimeString(long mills) {
+        return dateString(mills) + " " + timeString(mills);
+    }
 }
