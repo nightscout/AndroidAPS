@@ -56,6 +56,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -80,6 +81,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.TempBasals.TempBasalsPlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -109,6 +112,7 @@ public class OverviewFragment extends Fragment {
     TextView activeProfileView;
     TextView iobView;
     TextView apsModeView;
+    TextView tempTargetView;
     GraphView bgGraph;
     CheckBox showPredictionView;
 
@@ -157,6 +161,7 @@ public class OverviewFragment extends Fragment {
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
+        tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
         treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
@@ -459,7 +464,7 @@ public class OverviewFragment extends Fragment {
         updateNotifications();
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
-        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) // app not initialized yet
             return;
 
         // Skip if not initialized yet
@@ -515,8 +520,20 @@ public class OverviewFragment extends Fragment {
             apsModeView.setVisibility(View.GONE);
         }
 
-        // **** Temp button ****
+        // temp target
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
+        if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
+            TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
+            if (tempTarget != null) {
+                tempTargetView.setVisibility(View.VISIBLE);
+                tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+            } else {
+                tempTargetView.setVisibility(View.GONE);
+            }
+        }
+
+        // **** Temp button ****
         PumpInterface pump = MainApp.getConfigBuilder();
 
         boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
@@ -557,7 +574,7 @@ public class OverviewFragment extends Fragment {
             public boolean onLongClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
+                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");

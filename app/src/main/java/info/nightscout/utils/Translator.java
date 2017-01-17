@@ -56,7 +56,7 @@ public class Translator {
             case "Sensor":
                 return MainApp.sResources.getString(R.string.glucosetype_sensor);
             case "Manual":
-                return MainApp.sResources.getString(R.string.glucosetype_manual);
+                return MainApp.sResources.getString(R.string.manual);
         }
         return text;
     }

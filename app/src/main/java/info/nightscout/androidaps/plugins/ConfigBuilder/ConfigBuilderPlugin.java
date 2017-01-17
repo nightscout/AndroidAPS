@@ -981,7 +981,25 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString(), NewExtendedBolusDialog.class);
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void removeCareportalEntryFromNS(String _id) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbRemove");
+            bundle.putString("collection", "treatments");
+            bundle.putString("_id", _id);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbRemove(intent, _id, ConfigBuilderPlugin.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
