@@ -188,7 +188,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             if (tempTarget != null) {
                 minBg = verifyHardLimits(tempTarget.low, "minBg", 72, 180);
                 maxBg = verifyHardLimits(tempTarget.high, "maxBg", 72, 270);
-                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", 80, 200);
+                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", 72, 200);
             }
         }
 
