@@ -42,4 +42,12 @@ public class Constants {
     // Circadian Percentage Profile
     public static final int CPP_MIN_PERCENTAGE = 50;
     public static final int CPP_MAX_PERCENTAGE = 200;
+
+    public static final String MAX_BG_DEFAULT_MGDL = "180";
+    public static final String MAX_BG_DEFAULT_MMOL = "10";
+    public static final String MIN_BG_DEFAULT_MGDL = "100";
+    public static final String MIN_BG_DEFAULT_MMOL = "5";
+    public static final String TARGET_BG_DEFAULT_MGDL = "150";
+    public static final String TARGET_BG_DEFAULT_MMOL = "7";
+
 }
