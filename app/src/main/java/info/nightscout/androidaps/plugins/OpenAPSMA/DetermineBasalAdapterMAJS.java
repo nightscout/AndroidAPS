@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -16,15 +13,15 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.client.data.NSProfile;
 
-public class DetermineBasalAdapterJS implements Parcelable {
-    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterJS.class);
+public class DetermineBasalAdapterMAJS {
+    private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterMAJS.class);
 
 
     private ScriptReader mScriptReader = null;
@@ -47,49 +44,11 @@ public class DetermineBasalAdapterJS implements Parcelable {
     private String storedProfile = null;
     private String storedMeal_data = null;
 
-    /**
-     *   Parcelable implementation
-     *   result string for display only
-     **/
-    protected DetermineBasalAdapterJS(Parcel in) {
-        storedCurrentTemp = in.readString();
-        storedIobData = in.readString();
-        storedGlucoseStatus = in.readString();
-        storedProfile = in.readString();
-        storedMeal_data = in.readString();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(storedCurrentTemp);
-        dest.writeString(storedIobData);
-        dest.writeString(storedGlucoseStatus);
-        dest.writeString(storedProfile);
-        dest.writeString(storedMeal_data);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<DetermineBasalAdapterJS> CREATOR = new Creator<DetermineBasalAdapterJS>() {
-        @Override
-        public DetermineBasalAdapterJS createFromParcel(Parcel in) {
-            return new DetermineBasalAdapterJS(in);
-        }
-
-        @Override
-        public DetermineBasalAdapterJS[] newArray(int size) {
-            return new DetermineBasalAdapterJS[size];
-        }
-    };
-
-    /**
+     /**
      *  Main code
      */
 
-    public DetermineBasalAdapterJS(ScriptReader scriptReader) throws IOException {
+    public DetermineBasalAdapterMAJS(ScriptReader scriptReader) throws IOException {
         mV8rt = V8.createV8Runtime();
         mScriptReader = scriptReader;
 
@@ -143,7 +102,7 @@ public class DetermineBasalAdapterJS implements Parcelable {
         mV8rt.add(PARAM_meal_data, mMealData);
     }
 
-    public DetermineBasalResult invoke() {
+    public DetermineBasalResultMA invoke() {
         mV8rt.executeVoidScript(
                 "console.error(\"determine_basal(\"+\n" +
                         "JSON.stringify(" + PARAM_glucoseStatus + ")+ \", \" +\n" +
@@ -170,14 +129,13 @@ public class DetermineBasalAdapterJS implements Parcelable {
 
         V8Object v8ObjectReuslt = mV8rt.getObject("rT");
 
-        DetermineBasalResult result = null;
+        DetermineBasalResultMA result = null;
         try {
-            result = new DetermineBasalResult(v8ObjectReuslt, new JSONObject(ret));
+            result = new DetermineBasalResultMA(v8ObjectReuslt, new JSONObject(ret));
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        // Store input params for Parcelable
         storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
         storedIobData = mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");");
         storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
@@ -266,8 +224,8 @@ public class DetermineBasalAdapterJS implements Parcelable {
                         double targetBg,
                         PumpInterface pump,
                         IobTotal iobData,
-                        DatabaseHelper.GlucoseStatus glucoseStatus,
-                        TreatmentsPlugin.MealData mealData) {
+                        GlucoseStatus glucoseStatus,
+                        MealData mealData) {
 
         String units = profile.getUnits();
 

@@ -103,7 +103,7 @@
     <string name="loop_constraintsprocessed_label">Tras procesar limitaciones</string>
     <string name="loop_setbypump_label">Definido por la bomba</string>
     <string name="openapsma_lastenact_label">Última aceptada</string>
-    <string name="refreshfromnightscout">¿Quieres actualizar tratamientos de Nightscout?</string>
+    <string name="refreshtreatmentsfromnightscout">¿Quieres actualizar tratamientos de Nightscout?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
     <string name="noapsselected">NO APS Seleccionado</string>
@@ -245,7 +245,7 @@
     <string name="smscommunicator_remotebolusnotallowed">Bolo remoto no permitido</string>
     <string name="glucosetype_finger">Dedo</string>
     <string name="glucosetype_sensor">Sensor</string>
-    <string name="glucosetype_manual">Manual</string>
+    <string name="manual">Manual</string>
     <string name="careportal_temporarytarget">Objetivo temporal</string>
     <string name="careportal_temporarytargetcancel">Cancelar Objetivo temporal</string>
     <string name="danarprofile">Configuración perfil DanaR</string>
@@ -293,7 +293,7 @@
     <string name="objectives_2_objective">Entender el lazo abierto, incluidas las recomendaciones de basales temporales</string>
     <string name="objectives_2_gate">Sobre la base de esa experiencia, decidir valores de máximo basal, y ajustar la bomba y preferencias</string>
     <string name="objectives_3_objective">Iniciar el bucle cerrado con suspensión con baja glucosa</string>
-    <string name="objectives_3_gate">Ejecutar en lazo cerrado con max IOB=0 durante unos dias sin demasiados valores bajos de glucosa</string>
+    <string name="objectives_3_gate">Ejecutar en lazo cerrado con max IOB=0 durante unos días sin demasiados valores bajos de glucosa</string>
     <string name="objectives_4_objective">Ajuste del bucle cerrado, aumento máximo IOB por encima de 0 y bajando gradualmente objetivos BG</string>
     <string name="objectives_4_gate">Funcionando unos cuantos días, y al menos una noche sin alarmas bajas BG, y bajar gradualmente BG</string>
     <string name="objectives_5_objective">Ajustar los basales y ratios, si es necesario, y luego activar auto-sens</string>

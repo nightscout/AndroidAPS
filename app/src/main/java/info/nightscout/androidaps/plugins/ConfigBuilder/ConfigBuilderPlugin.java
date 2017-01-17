@@ -43,13 +43,13 @@ import info.nightscout.androidaps.plugins.DanaR.comm.MsgError;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResult;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
+import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.client.data.DbLogger;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
@@ -647,7 +647,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             emptyDescription.isBolusCapable = false;
             emptyDescription.isExtendedBolusCapable = false;
             emptyDescription.isSetBasalProfileCapable = false;
-            emptyDescription.isTempBasalCapable = false;
+            emptyDescription.isTempBasalCapable = true; // needs to be true before real driver is selected
             emptyDescription.isRefillingCapable = false;
             return emptyDescription;
         }
@@ -697,7 +697,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isAMAModeEnabled() {
-        boolean result = true;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        boolean result = preferences.getBoolean("openapsama_useautosens", false);
 
         ArrayList<PluginBase> constraintsPlugins = MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class);
         for (PluginBase p : constraintsPlugins) {
@@ -901,8 +902,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
                 deviceStatus.suggested = apsResult.json();
 
-                if (lastRun.request instanceof DetermineBasalResult) {
-                    DetermineBasalResult result = (DetermineBasalResult) lastRun.request;
+                if (lastRun.request instanceof DetermineBasalResultMA) {
+                    DetermineBasalResultMA result = (DetermineBasalResultMA) lastRun.request;
+                    deviceStatus.iob = result.iob.json();
+                    deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                }
+
+                if (lastRun.request instanceof DetermineBasalResultAMA) {
+                    DetermineBasalResultAMA result = (DetermineBasalResultAMA) lastRun.request;
                     deviceStatus.iob = result.iob.json();
                     deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
                 }
@@ -974,7 +981,25 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            DbLogger.dbAdd(intent, data.toString(), NewExtendedBolusDialog.class);
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void removeCareportalEntryFromNS(String _id) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbRemove");
+            bundle.putString("collection", "treatments");
+            bundle.putString("_id", _id);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbRemove(intent, _id, ConfigBuilderPlugin.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
