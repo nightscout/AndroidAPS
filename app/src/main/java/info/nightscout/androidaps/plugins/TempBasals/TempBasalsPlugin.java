@@ -220,7 +220,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
         if (tempBasals.size() > 0)
             oldestTemp = Math.min(oldestTemp, tempBasals.get(tempBasals.size() - 1).timeStart.getTime());
         if (extendedBoluses.size() > 0)
-            oldestTemp = Math.min(oldestTemp, extendedBoluses.get(tempBasals.size() - 1).timeStart.getTime());
+            oldestTemp = Math.min(oldestTemp, extendedBoluses.get(extendedBoluses.size() - 1).timeStart.getTime());
         oldestTemp -= 15 * 60 * 1000L; // allow 15 min before
         return oldestTemp;
     }
