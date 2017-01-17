@@ -5,9 +5,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -29,7 +26,6 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.client.data.NSProfile;
 
 /**
  * Created by mike on 05.08.2016.
@@ -215,6 +211,17 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
             if (t.isInProgress(time)) return t;
         }
         return null;
+    }
+
+    @Override
+    public long oldestDataAvaialable() {
+        long oldestTemp = new Date().getTime();
+        if (tempBasals.size() > 0)
+            oldestTemp = Math.min(oldestTemp, tempBasals.get(tempBasals.size() - 1).timeStart.getTime());
+        if (extendedBoluses.size() > 0)
+            oldestTemp = Math.min(oldestTemp, extendedBoluses.get(tempBasals.size() - 1).timeStart.getTime());
+        oldestTemp -= 15 * 60 * 1000L; // allow 15 min before
+        return oldestTemp;
     }
 
     List<TempBasal> getMergedList() {

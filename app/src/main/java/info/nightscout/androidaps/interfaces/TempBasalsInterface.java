@@ -15,4 +15,6 @@ public interface TempBasalsInterface {
 
     TempBasal getTempBasal (Date time);
     TempBasal getExtendedBolus (Date time);
+
+    long oldestDataAvaialable();
 }
