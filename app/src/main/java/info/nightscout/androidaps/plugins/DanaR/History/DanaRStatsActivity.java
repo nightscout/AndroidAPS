@@ -14,6 +14,7 @@ import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -137,15 +138,15 @@ public class DanaRStatsActivity extends Activity {
         totalBaseBasal = (EditText) findViewById(R.id.danar_stats_editTotalBaseBasal);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        TBB = preferences.getString("TBB", "10");
+        TBB = preferences.getString("TBB", "18");
         totalBaseBasal.setHint(TBB);
         totalBaseBasal.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 SharedPreferences.Editor edit = preferences.edit();
                 edit.putString("TBB",totalBaseBasal.getText().toString());
                 edit.commit();
-                loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
                 TBB = preferences.getString("TBB", "");
+                loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
             }
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -304,9 +305,13 @@ public class DanaRStatsActivity extends Activity {
                 cleanTable(etl);
                 DateFormat df = new SimpleDateFormat("dd.MM.");
 
-                magicNumber = 18d;
-                String[] separatedTBB = TBB.split(" ");
-                magicNumber = Double.parseDouble(separatedTBB[0]);
+                if(TextUtils.isEmpty(TBB)) {
+                    totalBaseBasal.setError("Please Enter Total Base Basal");
+                    return;
+                }
+                else {
+                    magicNumber = Double.parseDouble(TBB);
+                }
 
                 ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
                 if (pi instanceof CircadianPercentageProfilePlugin){

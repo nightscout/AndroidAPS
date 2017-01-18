@@ -90,7 +90,9 @@
                 <LinearLayout
                     android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -108,6 +110,28 @@
                         android:layout_column="1"
                         android:layout_weight="1">
                     </TableLayout>
+
+                    <Space
+                        android:layout_width="10dp"
+                        android:layout_height="30dp" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="18"
+                        android:textSize="50px"
+                        android:gravity="center"
+                        android:inputType="numberDecimal"
+                        android:id="@+id/danar_stats_editTotalBaseBasal" />
+
+                    <TextView
+                        android:text="@string/danar_stats_tbb"
+                        android:labelFor="@+id/danar_stats_editTotalBaseBasal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/danar_stats_editTotalBaseBasal_label"
+                        android:gravity="center"
+                        android:layout_weight="1" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -135,26 +159,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
-            <EditText
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:hint="TBB"
-                android:ems="10"
-                android:gravity="center"
-                android:inputType="numberDecimal"
-                android:id="@+id/danar_stats_editTotalBaseBasal" />
-
-            <TextView
-                android:text="@string/danar_stats_tbb"
-                android:labelFor="@+id/danar_stats_editTotalBaseBasal"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:id="@+id/danar_stats_editTotalBaseBasal_label"
-                android:gravity="top" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="20dp" />
 
             <TextView
                 android:id="@+id/danar_stats_Message"
