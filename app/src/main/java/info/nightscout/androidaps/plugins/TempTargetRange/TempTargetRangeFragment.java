@@ -84,6 +84,9 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             if (tempTarget.isInProgress())
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
             else if (tempTarget.duration == 0){
+                holder.low.setText("");
+                holder.high.setText("");
+                holder.duration.setText(R.string.cancel);
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationUrgent));
             }
             else

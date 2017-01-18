@@ -624,6 +624,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         if(tempTarget.duration != 0) {
                                             tempTarget.low = NSProfile.toMgdl(data.getDouble("targetBottom"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
                                             tempTarget.high = NSProfile.toMgdl(data.getDouble("targetTop"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
+                                        } else {
+                                            tempTarget.low = 0;
+                                            tempTarget.high = 0;
                                         }
                                         tempTarget.setTimeIndex(tempTarget.getTimeIndex());
                                         Dao<TempTarget, Long> dao = MainApp.getDbHelper().getDaoTempTargets();
