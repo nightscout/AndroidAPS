@@ -9,22 +9,13 @@
 
 
     <LinearLayout
-        android:id="@+id/danar_historytop"
+        android:id="@+id/danar_statstop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_marginRight="5dp"
-            android:layout_weight="1"
-            android:background="@drawable/loopmodeborder"
-            android:gravity="center_horizontal"
-            android:textColor="@color/cardColorBackground"
-            android:text="@string/danar_stats" />
 
 
     </LinearLayout>
@@ -41,17 +32,93 @@
             android:orientation="vertical">
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/loopmodeborder"
+                android:gravity="center_horizontal"
+                android:textColor="@color/cardColorBackground"
+                android:text="@string/danar_stats" />
+
+            <TableLayout
+                android:stretchColumns="0,1,2,3,4"
+                android:id="@+id/main_table"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
+            </TableLayout>
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="10dp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/loopmodeborder"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/cardColorBackground"
+                        android:text="@string/danar_stats_cumulative_tdd" />
+
+                    <TableLayout
+                        android:stretchColumns="0,1,2"
+                        android:id="@+id/cumulative_table"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_column="0"
+                        android:layout_weight="1">
+
+                    </TableLayout>
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="10dp"
+                    android:layout_height="10dp" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/loopmodeborder"
+                        android:gravity="center_horizontal"
+                        android:textColor="@color/cardColorBackground"
+                        android:text="@string/danar_stats_expweight" />
+
+                    <TableLayout
+                        android:stretchColumns="0,1,2"
+                        android:id="@+id/expweight_table"
+                        android:layout_height="match_parent"
+                        android:layout_width="match_parent"
+                        android:layout_column="1"
+                        android:layout_weight="1">
+                    </TableLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
                 android:id="@+id/danar_historystatus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal" />
 
-            <TextView
-                android:id="@+id/danar_stats_textview"
-                android:layout_width="match_parent"
-                android:layout_height="fill_parent"
-                android:text="Da kommt was hin." />
         </LinearLayout>
     </ScrollView>
 
@@ -62,12 +129,51 @@
         android:layout_alignParentBottom="true"
         android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/danar_historyreload"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/danar_historyreload" />
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <EditText
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:hint="TBB"
+                android:ems="10"
+                android:gravity="center"
+                android:inputType="numberDecimal"
+                android:id="@+id/danar_stats_editTotalBaseBasal" />
+
+            <TextView
+                android:text="@string/danar_stats_tbb"
+                android:labelFor="@+id/danar_stats_editTotalBaseBasal"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/danar_stats_editTotalBaseBasal_label"
+                android:gravity="top" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20dp" />
+
+            <TextView
+                android:id="@+id/danar_stats_Message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textSize="45px"
+                android:textColor="#ff0000"
+                android:text="@string/danar_stats_warning_Message" />
+
+            <Button
+                android:id="@+id/danar_historyreload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/danar_historyreload" />
+
+        </LinearLayout>
 
     </LinearLayout>
+
 </RelativeLayout>

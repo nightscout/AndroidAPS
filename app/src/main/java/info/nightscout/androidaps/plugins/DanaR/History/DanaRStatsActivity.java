@@ -5,14 +5,21 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.j256.ormlite.dao.Dao;
@@ -26,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,13 +62,15 @@ public class DanaRStatsActivity extends Activity {
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
 
-    TextView statusView;
-    TextView mainView;
+    TextView statusView, statsMessage;
+    EditText totalBaseBasal;
     Button reloadButton;
     LinearLayoutManager llm;
+    TableLayout tl,ctl,etl;
+    String TBB;
+    double magicNumber;
 
     List<DanaRHistoryRecord> historyList = new ArrayList<>();
-
 
     public DanaRStatsActivity() {
         super();
@@ -119,11 +129,121 @@ public class DanaRStatsActivity extends Activity {
         setContentView(R.layout.danar_statsactivity);
 
         statusView = (TextView) findViewById(R.id.danar_historystatus);
-        mainView = (TextView) findViewById(R.id.danar_stats_textview);
         reloadButton = (Button) findViewById(R.id.danar_historyreload);
         llm = new LinearLayoutManager(this);
         statusView.setVisibility(View.GONE);
+        statsMessage = (TextView) findViewById(R.id.danar_stats_Message);
+        statsMessage.setVisibility(View.GONE);
+        totalBaseBasal = (EditText) findViewById(R.id.danar_stats_editTotalBaseBasal);
 
+        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        TBB = preferences.getString("TBB", "10");
+        totalBaseBasal.setHint(TBB);
+        totalBaseBasal.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                SharedPreferences.Editor edit = preferences.edit();
+                edit.putString("TBB",totalBaseBasal.getText().toString());
+                edit.commit();
+                loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+                TBB = preferences.getString("TBB", "");
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        // stats table
+        tl = (TableLayout) findViewById(R.id.main_table);
+        TableRow tr_head = new TableRow(this);
+        tr_head.setBackgroundColor(Color.DKGRAY);
+        tr_head.setLayoutParams(new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView label_date = new TextView(this);
+        label_date.setText(getString(R.string.danar_stats_date));
+        label_date.setTextColor(Color.WHITE);
+        tr_head.addView(label_date);
+
+        TextView label_basalrate = new TextView(this);
+        label_basalrate.setText(getString(R.string.danar_stats_basalrate));
+        label_basalrate.setTextColor(Color.WHITE);
+        tr_head.addView(label_basalrate);
+
+        TextView label_bolus = new TextView(this);
+        label_bolus.setText(getString(R.string.danar_stats_bolus));
+        label_bolus.setTextColor(Color.WHITE);
+        tr_head.addView(label_bolus);
+
+        TextView label_tdd = new TextView(this);
+        label_tdd.setText(getString(R.string.danar_stats_tdd));
+        label_tdd.setTextColor(Color.WHITE);
+        tr_head.addView(label_tdd);
+
+        TextView label_ratio = new TextView(this);
+        label_ratio.setText(getString(R.string.danar_stats_ratio));
+        label_ratio.setTextColor(Color.WHITE);
+        tr_head.addView(label_ratio);
+
+        // add stats headers to tables
+        tl.addView(tr_head, new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
+
+        // cumulative table
+        ctl = (TableLayout) findViewById(R.id.cumulative_table);
+        TableRow ctr_head = new TableRow(this);
+        ctr_head.setBackgroundColor(Color.DKGRAY);
+        ctr_head.setLayoutParams(new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView label_cum_amount_days = new TextView(this);
+        label_cum_amount_days.setText(getString(R.string.danar_stats_amount_days));
+        label_cum_amount_days.setTextColor(Color.WHITE);
+        ctr_head.addView(label_cum_amount_days);
+
+        TextView label_cum_tdd = new TextView(this);
+        label_cum_tdd.setText(getString(R.string.danar_stats_tdd));
+        label_cum_tdd.setTextColor(Color.WHITE);
+        ctr_head.addView(label_cum_tdd);
+
+        TextView label_cum_ratio = new TextView(this);
+        label_cum_ratio.setText(getString(R.string.danar_stats_ratio));
+        label_cum_ratio.setTextColor(Color.WHITE);
+        ctr_head.addView(label_cum_ratio);
+
+        // add cummulative headers to tables
+        ctl.addView(ctr_head, new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
+
+        // expontial table
+        etl = (TableLayout) findViewById(R.id.expweight_table);
+        TableRow etr_head = new TableRow(this);
+        etr_head.setBackgroundColor(Color.DKGRAY);
+        etr_head.setLayoutParams(new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
+
+        TextView label_exp_weight = new TextView(this);
+        label_exp_weight.setText(getString(R.string.danar_stats_weight));
+        label_exp_weight.setTextColor(Color.WHITE);
+        etr_head.addView(label_exp_weight);
+
+        TextView label_exp_tdd = new TextView(this);
+        label_exp_tdd.setText(getString(R.string.danar_stats_tdd));
+        label_exp_tdd.setTextColor(Color.WHITE);
+        etr_head.addView(label_exp_tdd);
+
+        TextView label_exp_ratio = new TextView(this);
+        label_exp_ratio.setText(getString(R.string.danar_stats_ratio));
+        label_exp_ratio.setTextColor(Color.WHITE);
+        etr_head.addView(label_exp_ratio);
+
+        // add expontial headers to tables
+        etl.addView(etr_head, new TableLayout.LayoutParams(
+                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.WRAP_CONTENT));
 
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +260,8 @@ public class DanaRStatsActivity extends Activity {
                             public void run() {
                                 reloadButton.setVisibility(View.GONE);
                                 statusView.setVisibility(View.VISIBLE);
+                                statsMessage.setVisibility(View.VISIBLE);
+                                statsMessage.setText(getString(R.string.danar_stats_warning_Message));
                             }
                         });
                         mExecutionService.loadHistory(RecordTypes.RECORD_TYPE_DAILY);
@@ -149,12 +271,14 @@ public class DanaRStatsActivity extends Activity {
                             public void run() {
                                 reloadButton.setVisibility(View.VISIBLE);
                                 statusView.setVisibility(View.GONE);
+                                statsMessage.setVisibility(View.GONE);
                             }
                         });
                     }
                 });
             }
         });
+
         loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
     }
 
@@ -175,14 +299,24 @@ public class DanaRStatsActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mainView.setText("");
-                DateFormat df = new SimpleDateFormat("dd.MM. - ");
+                cleanTable(tl);
+                cleanTable(ctl);
+                cleanTable(etl);
+                DateFormat df = new SimpleDateFormat("dd.MM.");
 
-                double magicNumber = 18d;
+                magicNumber = 18d;
+                String[] separatedTBB = TBB.split(" ");
+                magicNumber = Double.parseDouble(separatedTBB[0]);
 
                 ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
                 if (pi instanceof CircadianPercentageProfilePlugin){
                     magicNumber = ((CircadianPercentageProfilePlugin)pi).baseBasalSum();
+                    DecimalFormat decimalFormat = new DecimalFormat("####0.000");
+                    totalBaseBasal.setHint(decimalFormat.format(magicNumber));
+                    totalBaseBasal.setEnabled(false);
+                    totalBaseBasal.setClickable(false);
+                    totalBaseBasal.setFocusable(false);
+                    totalBaseBasal.setInputType(0);
                 }
 
                 magicNumber *=2;
@@ -192,31 +326,103 @@ public class DanaRStatsActivity extends Activity {
                 double weighted03 = 0d;
                 double weighted05 = 0d;
                 double weighted07 = 0d;
-                String avg_string = "\n" + getString(R.string.danar_stats_avg);
-                String weighted_string = "\n\n" + getString(R.string.danar_stats_expweight);
 
                 for (DanaRHistoryRecord record: historyList) {
                     double tdd= record.getRecordDailyBolus() + record.getRecordDailyBasal();
-                    mainView.append(df.format(new Date(record.getRecordDate())));
-                    mainView.append(getString(R.string.danar_stats_basalrate) + DecimalFormatter.to2Decimal(record.getRecordDailyBasal()));
-                    mainView.append(getString(R.string.danar_stats_bolus) + DecimalFormatter.to2Decimal(record.getRecordDailyBolus()));
-                    mainView.append(getString(R.string.danar_stats_tdi) + DecimalFormatter.to2Decimal(tdd));
-                    mainView.append(" " + Math.round(100*tdd/magicNumber) +"%");
-                    mainView.append("\n");
+
+                    // Create the table row
+                    TableRow tr = new TableRow(DanaRStatsActivity.this);
+                    if(i%2!=0) tr.setBackgroundColor(Color.DKGRAY);
+                    tr.setId(100+i);
+                    tr.setLayoutParams(new TableLayout.LayoutParams(
+                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.WRAP_CONTENT));
+
+                    // Here create the TextView dynamically
+                    TextView labelDATE = new TextView(DanaRStatsActivity.this);
+                    labelDATE.setId(200+i);
+                    labelDATE.setText(df.format(new Date(record.getRecordDate())));
+                    labelDATE.setTextColor(Color.WHITE);
+                    tr.addView(labelDATE);
+
+                    TextView labelBASAL = new TextView(DanaRStatsActivity.this);
+                    labelBASAL.setId(300+i);
+                    labelBASAL.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + " U");
+                    labelBASAL.setTextColor(Color.WHITE);
+                    tr.addView(labelBASAL);
+
+                    TextView labelBOLUS = new TextView(DanaRStatsActivity.this);
+                    labelBOLUS.setId(400+i);
+                    labelBOLUS.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + " U");
+                    labelBOLUS.setTextColor(Color.WHITE);
+                    tr.addView(labelBOLUS);
+
+                    TextView labelTDD = new TextView(DanaRStatsActivity.this);
+                    labelTDD.setId(500+i);
+                    labelTDD.setText(DecimalFormatter.to2Decimal(tdd) + " U");
+                    labelTDD.setTextColor(Color.WHITE);
+                    tr.addView(labelTDD);
+
+                    TextView labelRATIO = new TextView(DanaRStatsActivity.this);
+                    labelRATIO.setId(600+i);
+                    labelRATIO.setText(Math.round(100*tdd/magicNumber) +" %");
+                    labelRATIO.setTextColor(Color.WHITE);
+                    tr.addView(labelRATIO);
+
+                    // add stats rows to tables
+                    tl.addView(tr, new TableLayout.LayoutParams(
+                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.WRAP_CONTENT));
+
                     sum = sum + tdd;
                     i++;
-                    avg_string = avg_string + "\n " + i +": " + DecimalFormatter.to2Decimal(sum/i) + " " + Math.round(100*sum/i/magicNumber) +"%";
+
+                    // Create the cumtable row
+                    TableRow ctr = new TableRow(DanaRStatsActivity.this);
+                    if(i%2==0) ctr.setBackgroundColor(Color.DKGRAY);
+                    ctr.setId(700+i);
+                    ctr.setLayoutParams(new TableLayout.LayoutParams(
+                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.WRAP_CONTENT));
+
+                    // Here create the TextView dynamically
+                    TextView labelDAYS = new TextView(DanaRStatsActivity.this);
+                    labelDAYS.setId(800+i);
+                    labelDAYS.setText("" + i);
+                    labelDAYS.setTextColor(Color.WHITE);
+                    ctr.addView(labelDAYS);
+
+                    TextView labelCUMTDD = new TextView(DanaRStatsActivity.this);
+                    labelCUMTDD.setId(900+i);
+                    labelCUMTDD.setText(DecimalFormatter.to2Decimal(sum/i) + " U");
+                    labelCUMTDD.setTextColor(Color.WHITE);
+                    ctr.addView(labelCUMTDD);
+
+                    TextView labelCUMRATIO = new TextView(DanaRStatsActivity.this);
+                    labelCUMRATIO.setId(1000+i);
+                    labelCUMRATIO.setText(Math.round(100*sum/i/magicNumber) + " %");
+                    labelCUMRATIO.setTextColor(Color.WHITE);
+                    ctr.addView(labelCUMRATIO);
+
+                    // add cummulative rows to tables
+                    ctl.addView(ctr, new TableLayout.LayoutParams(
+                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.WRAP_CONTENT));
                 }
 
                 if (historyList.size()<3 || !(df.format(new Date(historyList.get(0).getRecordDate())).equals(df.format(new Date(System.currentTimeMillis() - 1000*60*60*24))))){
-                    mainView.setBackgroundColor(Color.RED);
+                    tl.setBackgroundColor(Color.RED);
+                    statsMessage.setVisibility(View.VISIBLE);
+                    statsMessage.setText(getString(R.string.danar_stats_olddata_Message));
+
                 } else {
-                    mainView.setBackgroundColor(Color.TRANSPARENT);
+                    tl.setBackgroundColor(Color.TRANSPARENT);
                 }
 
                 Collections.reverse(historyList);
 
                 i = 0;
+
                 for (DanaRHistoryRecord record: historyList) {
                     double tdd= record.getRecordDailyBolus() + record.getRecordDailyBasal();
                     if(i == 0 ) {
@@ -231,15 +437,52 @@ public class DanaRStatsActivity extends Activity {
                     }
                     i++;
                 }
-                weighted_string = weighted_string + "\n 0.3 " + DecimalFormatter.to2Decimal(weighted03) + " " + Math.round(100*weighted03/magicNumber) +"%";
-                weighted_string = weighted_string + "\n 0.5 " + DecimalFormatter.to2Decimal(weighted05) + " " + Math.round(100*weighted05/magicNumber) +"%";
-                weighted_string = weighted_string + "\n 0.7 " + DecimalFormatter.to2Decimal(weighted07) + " " + Math.round(100*weighted07/magicNumber) +"%";
 
+                // Create the exptable row
+                TableRow etr = new TableRow(DanaRStatsActivity.this);
+                if(i%2!=0) etr.setBackgroundColor(Color.DKGRAY);
+                etr.setId(1100+i);
+                etr.setLayoutParams(new TableLayout.LayoutParams(
+                        TableLayout.LayoutParams.FILL_PARENT,
+                        TableLayout.LayoutParams.WRAP_CONTENT));
 
-                mainView.append(avg_string);
-                mainView.append(weighted_string);
+                // Here create the TextView dynamically
+                TextView labelWEIGHT = new TextView(DanaRStatsActivity.this);
+                labelWEIGHT.setId(1200+i);
+                labelWEIGHT.setText("0.3\n" + "0.5\n" + "0.7");
+                labelWEIGHT.setTextColor(Color.WHITE);
+                etr.addView(labelWEIGHT);
+
+                TextView labelEXPTDD = new TextView(DanaRStatsActivity.this);
+                labelEXPTDD.setId(1300+i);
+                labelEXPTDD.setText(DecimalFormatter.to2Decimal(weighted03)
+                        + " U\n" + DecimalFormatter.to2Decimal(weighted05)
+                        + " U\n" + DecimalFormatter.to2Decimal(weighted07) + " U");
+                labelEXPTDD.setTextColor(Color.WHITE);
+                etr.addView(labelEXPTDD);
+
+                TextView labelEXPRATIO = new TextView(DanaRStatsActivity.this);
+                labelEXPRATIO.setId(1400+i);
+                labelEXPRATIO.setText(Math.round(100*weighted03/magicNumber) +" %\n"
+                        + Math.round(100*weighted05/magicNumber) +" %\n"
+                        + Math.round(100*weighted07/magicNumber) +" %");
+                labelEXPRATIO.setTextColor(Color.WHITE);
+                etr.addView(labelEXPRATIO);
+
+                // add exponentail rows to tables
+                etl.addView(etr, new TableLayout.LayoutParams(
+                        TableLayout.LayoutParams.FILL_PARENT,
+                        TableLayout.LayoutParams.WRAP_CONTENT));
             }
         });
+    }
+
+    private void cleanTable(TableLayout table) {
+        int childCount = table.getChildCount();
+        // Remove all rows except the first one
+        if (childCount > 1) {
+            table.removeViews(1, childCount - 1);
+        }
     }
 
     @Subscribe
