@@ -18,7 +18,6 @@ public class AutosensResult {
         try {
             ret.put("ratio", ratio);
             ret.put("ratioLimit", ratioLimit);
-            ret.put("carbsAbsorbed", carbsAbsorbed);
             ret.put("pastSensitivity", pastSensitivity);
             ret.put("sensResult", sensResult);
             ret.put("ratio", ratio);
