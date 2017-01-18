@@ -7,7 +7,7 @@ public class Config {
     // MAIN FUCTIONALITY
     public static final boolean APS = BuildConfig.APS;
     // PLUGINS
-    public static final boolean OPENAPSMAENABLED = APS;
+    public static final boolean OPENAPSENABLED = APS;
     public static final boolean LOOPENABLED = APS;
     public static final boolean WEAR = BuildConfig.WEAR;
 

@@ -108,15 +108,15 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        invoke(true);
+        invoke("EventTreatmentChange", true);
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        invoke(true);
+        invoke("EventNewBG", true);
     }
 
-    public void invoke(boolean allowNotification) {
+    public void invoke(String initiator, boolean allowNotification) {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke");
@@ -136,7 +136,7 @@ public class LoopPlugin implements PluginBase {
 
             APSInterface usedAPS = configBuilder.getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS)) {
-                usedAPS.invoke();
+                usedAPS.invoke(initiator);
                 result = usedAPS.getLastAPSResult();
             }
 

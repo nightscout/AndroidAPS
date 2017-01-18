@@ -26,4 +26,14 @@ public class DbLogger {
         } else if (Config.logNSUpload)
             log.debug("DBADD dbAdd " + q.size() + " receivers " + data);
     }
+
+   public static void dbRemove(Intent intent, String data, Class sender) {
+        Logger log = LoggerFactory.getLogger(sender);
+        List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
+        if (q.size() < 1) {
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.nsclientnotinstalled));
+            log.error("DBREMOVE No receivers");
+        } else if (Config.logNSUpload)
+            log.debug("DBREMOVE dbRemove " + q.size() + " receivers " + data);
+    }
 }

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Treatments;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -13,14 +14,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.client.data.NSProfile;
 
 /**
@@ -83,17 +87,11 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     public void initializeData() {
-        try {
-            Dao<Treatment, Long> dao = MainApp.getDbHelper().getDaoTreatments();
-            QueryBuilder<Treatment, Long> queryBuilder = dao.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.limit(30l);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            treatments = dao.query(preparedQuery);
-        } catch (SQLException e) {
-            log.debug(e.getMessage(), e);
-            treatments = new ArrayList<Treatment>();
-        }
+        double dia = 3;
+        if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
+            dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
+        long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
+        treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
     }
 
     /*
@@ -111,57 +109,44 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void updateTotalIOB() {
-        IobTotal total = new IobTotal();
+    public IobTotal getCalculationToTime(long time) {
+        IobTotal total = new IobTotal(time);
 
-        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
-            return;
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null) {
-            lastCalculation = total;
-            return;
-        }
+        if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
+            return total;
+        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        if (profile == null)
+            return total;
 
         Double dia = profile.getDia();
 
-        Date now = new Date();
+        Date now = new Date(time);
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
+            if (t.created_at.getTime() > time) continue;
             Iob tIOB = t.iobCalc(now, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = t.iobCalc(now, dia / 2);
+            Iob bIOB = t.iobCalc(now, dia / Constants.BOLUSSNOOZE_DIA_ADVISOR);
             total.bolussnooze += bIOB.iobContrib;
         }
+        return total;
+    }
+
+    @Override
+    public void updateTotalIOB() {
+        IobTotal total = getCalculationToTime(new Date().getTime());
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
     }
 
-    public class MealData {
-        public double boluses = 0d;
-        public double carbs = 0d;
-    }
-
     @Override
     public MealData getMealData() {
         MealData result = new MealData();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null)
-            return result;
 
         for (Treatment treatment : treatments) {
-            long now = new Date().getTime();
-            long dia_ago = now - (new Double(profile.getDia() * 60 * 60 * 1000l)).longValue();
-            long t = treatment.created_at.getTime();
-            if (t > dia_ago && t <= now) {
-                if (treatment.carbs >= 1) {
-                    result.carbs += treatment.carbs;
-                }
-                if (treatment.insulin >= 0.1 && treatment.mealBolus) {
-                    result.boluses += treatment.insulin;
-                }
-            }
+            result.addTreatment(treatment);
         }
         return result;
     }

@@ -16,9 +16,11 @@ public class OptionsToShow {
     public boolean absolute;
     public boolean profile;
     public boolean split;
+    public boolean tempTarget;
 
     // perform direct actions
     public boolean executeProfileSwitch = false;
+    public boolean executeTempTarget = false;
 
     public OptionsToShow(int eventType,
                          int eventName,
@@ -30,7 +32,8 @@ public class OptionsToShow {
                          boolean percent,
                          boolean absolute,
                          boolean profile,
-                         boolean split) {
+                         boolean split,
+                         boolean tempTarget) {
         this.eventType = eventType;
         this.eventName = eventName;
         this.bg = bg;
@@ -42,5 +45,6 @@ public class OptionsToShow {
         this.absolute = absolute;
         this.profile = profile;
         this.split = split;
+        this.tempTarget = tempTarget;
     }
 }

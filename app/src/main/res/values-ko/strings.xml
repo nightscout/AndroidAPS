@@ -104,7 +104,7 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">최근 주입</string>
-    <string name="refreshfromnightscout">나이트스카우트에서 Treatments를 새로고치시겠습니까</string>
+    <string name="refreshtreatmentsfromnightscout">나이트스카우트에서 Treatments를 새로고치시겠습니까</string>
     <string name="ok">OK</string>
     <string name="cancel">취소</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -248,7 +248,7 @@
     <string name="smscommunicator_remotebolusnotallowed">원격 식사주입 허용되지 않음</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
-    <string name="glucosetype_manual">Manual</string>
+    <string name="manual">Manual</string>
     <string name="careportal_temporarytarget">Temporary Target</string>
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
     <string name="danarprofile">DanaR 프로파일 설정</string>

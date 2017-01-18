@@ -3,11 +3,7 @@ package info.nightscout.androidaps.db;
 import android.content.Context;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
-import android.text.Html;
-import android.text.Spanned;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -27,9 +23,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.Round;
+import info.nightscout.androidaps.data.GlucoseStatus;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -37,6 +31,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_NAME = "AndroidAPSDb";
     public static final String DATABASE_BGREADINGS = "BgReadings";
     public static final String DATABASE_TEMPBASALS = "TempBasals";
+    public static final String DATABASE_TEMPTARGETS = "TempTargets";
     public static final String DATABASE_TREATMENTS = "Treatments";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
 
@@ -44,6 +39,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        onCreate(getWritableDatabase(), getConnectionSource());
     }
 
 
@@ -52,11 +48,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             log.info("onCreate");
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
+            TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
         } catch (SQLException e) {
-            log.error(DatabaseHelper.class.getName(), "Can't create database", e);
+            log.error("Can't create database", e);
             throw new RuntimeException(e);
         }
     }
@@ -66,12 +63,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             log.info(DatabaseHelper.class.getName(), "onUpgrade");
             TableUtils.dropTable(connectionSource, TempBasal.class, true);
+            TableUtils.dropTable(connectionSource, TempTarget.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
             TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
-            log.error(DatabaseHelper.class.getName(), "Can't drop databases", e);
+            log.error("Can't drop databases", e);
             throw new RuntimeException(e);
         }
     }
@@ -87,35 +85,38 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void cleanUpDatabases() {
         // TODO: call it somewhere
         log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
-        getWritableDatabase().delete("BgReadings", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        getWritableDatabase().delete(DATABASE_BGREADINGS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
 
         log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPBASALS));
-        getWritableDatabase().delete("TempBasals", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        getWritableDatabase().delete(DATABASE_TEMPBASALS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPBASALS));
 
+        log.debug("Before TempTargets size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPTARGETS));
+        getWritableDatabase().delete(DATABASE_TEMPTARGETS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        log.debug("After TempTargets size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPTARGETS));
+
         log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
-        getWritableDatabase().delete("Treatments", "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        getWritableDatabase().delete(DATABASE_TREATMENTS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
 
-        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "DanaRHistory"));
-        getWritableDatabase().delete("History", "recordDate" + " < '" + (new Date().getTime() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
-        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), "DanaRHistory"));
+        log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
+        getWritableDatabase().delete(DATABASE_DANARHISTORY, "recordDate" + " < '" + (new Date().getTime() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
+        log.debug("After History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
     }
 
     public void resetDatabases() {
         try {
             TableUtils.dropTable(connectionSource, TempBasal.class, true);
+            TableUtils.dropTable(connectionSource, TempTarget.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
             TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
+            TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
-//            MainApp.bus().post(new EventNewBG());
-//            MainApp.bus().post(new EventTreatmentChange());
-//            MainApp.bus().post(new EventTempBasalChange());
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -123,7 +124,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void resetTreatments() {
         try {
-
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
         } catch (SQLException e) {
@@ -131,8 +131,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+    public void resetTempTargets() {
+        try {
+            TableUtils.dropTable(connectionSource, TempTarget.class, true);
+            TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Dao<TempBasal, Long> getDaoTempBasals() throws SQLException {
         return getDao(TempBasal.class);
+    }
+
+    public Dao<TempTarget, Long> getDaoTempTargets() throws SQLException {
+        return getDao(TempTarget.class);
     }
 
     public Dao<Treatment, Long> getDaoTreatments() throws SQLException {
@@ -189,12 +202,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    public List<BgReading> getDataFromTime(long mills) {
+    public List<BgReading> getBgreadingsDataFromTime(long mills, boolean ascending) {
         try {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
             List<BgReading> bgReadings;
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", true);
+            queryBuilder.orderBy("timeIndex", ascending);
             Where where = queryBuilder.where();
             where.ge("timeIndex", mills).and().gt("value", 38);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
@@ -206,126 +219,56 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
-    /*
-     * Returns glucose_status for openAPS or null if no actual data available
-     */
-    public static class GlucoseStatus implements Parcelable {
-        public double glucose = 0d;
-        public double delta = 0d;
-        public double avgdelta = 0d;
-
-        @Override
-        public String toString() {
-            return MainApp.sResources.getString(R.string.glucose) + " " + DecimalFormatter.to0Decimal(glucose) + " mg/dl\n" +
-                    MainApp.sResources.getString(R.string.delta) + " " + DecimalFormatter.to0Decimal(delta) + " mg/dl\n" +
-                    MainApp.sResources.getString(R.string.avgdelta) + " " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl";
-        }
-
-        public Spanned toSpanned() {
-            return Html.fromHtml("<b>" + MainApp.sResources.getString(R.string.glucose) + "</b>: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl<br>" +
-                    "<b>" + MainApp.sResources.getString(R.string.delta) + "</b>: " + DecimalFormatter.to0Decimal(delta) + " mg/dl<br>" +
-                    "<b>" + MainApp.sResources.getString(R.string.avgdelta) + "</b>: " + DecimalFormatter.to2Decimal(avgdelta) + " mg/dl");
-        }
-
-        @Override
-        public int describeContents() {
-            return 0;
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            dest.writeDouble(avgdelta);
-            dest.writeDouble(delta);
-            dest.writeDouble(glucose);
-        }
-
-        public final Parcelable.Creator<GlucoseStatus> CREATOR = new Parcelable.Creator<GlucoseStatus>() {
-            public GlucoseStatus createFromParcel(Parcel in) {
-                return new GlucoseStatus(in);
-            }
-
-            public GlucoseStatus[] newArray(int size) {
-                return new GlucoseStatus[size];
-            }
-        };
-
-        private GlucoseStatus(Parcel in) {
-            avgdelta = in.readDouble();
-            delta = in.readDouble();
-            glucose = in.readDouble();
-        }
-
-        public GlucoseStatus() {
-        }
-
-        public GlucoseStatus(Double glucose, Double delta, Double avgdelta) {
-            this.glucose = glucose;
-            this.delta = delta;
-            this.avgdelta = avgdelta;
-        }
-
-        public GlucoseStatus round() {
-            this.glucose = Round.roundTo(this.glucose, 0.1);
-            this.delta = Round.roundTo(this.delta, 0.01);
-            this.avgdelta = Round.roundTo(this.avgdelta, 0.01);
-            return this;
-        }
-    }
-
-    @Nullable
-    public GlucoseStatus getGlucoseStatusData() {
-        GlucoseStatus result = new GlucoseStatus();
+    public List<Treatment> getTreatmentDataFromTime(long mills, boolean ascending) {
         try {
-
-            Dao<BgReading, Long> daoBgreadings = null;
-            daoBgreadings = getDaoBgReadings();
-            List<BgReading> bgReadings;
-            QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.where().gt("value", 38);
-            queryBuilder.limit(4l);
-            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
-            bgReadings = daoBgreadings.query(preparedQuery);
-
-            int sizeRecords = bgReadings.size();
-
-            if (sizeRecords < 4 || bgReadings.get(sizeRecords - 4).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {
-                return null;
-            }
-
-            double minutes = 5;
-            double change;
-            double avg;
-
-            if (bgReadings.size() > 3) {
-                BgReading now = bgReadings.get(sizeRecords - 4);
-                BgReading last = bgReadings.get(sizeRecords - 3);
-                BgReading last1 = bgReadings.get(sizeRecords - 2);
-                BgReading last2 = bgReadings.get(sizeRecords - 1);
-                if (last2.value > 38) {
-                    minutes = (now.timeIndex - last2.timeIndex)/(60d*1000);
-                    change = now.value - last2.value;
-                } else if (last1.value > 38) {
-                    minutes = (now.timeIndex - last1.timeIndex)/(60d*1000);;
-                    change = now.value - last1.value;
-                } else if (last.value > 38) {
-                    minutes = (now.timeIndex - last.timeIndex)/(60d*1000);
-                    change = now.value - last.value;
-                } else {
-                    change = 0;
-                }
-                //multiply by 5 to get the same unit as delta, i.e. mg/dL/5m
-                avg = change / minutes * 5;
-
-                result.glucose = now.value;
-                result.delta = (now.value - last.value)*5*60*1000/(now.getTimeIndex() - last.getTimeIndex());
-                result.avgdelta = avg;
-            }
+            Dao<Treatment, Long> daoTreatments = getDaoTreatments();
+            List<Treatment> treatments;
+            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
+            queryBuilder.orderBy("timeIndex", ascending);
+            Where where = queryBuilder.where();
+            where.ge("timeIndex", mills);
+            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
+            treatments = daoTreatments.query(preparedQuery);
+            return treatments;
         } catch (SQLException e) {
             e.printStackTrace();
-            return null;
         }
-        result.round();
-        return result;
+        return new ArrayList<Treatment>();
     }
+
+    public List<TempTarget> getTemptargetsDataFromTime(long mills, boolean ascending) {
+        try {
+            Dao<TempTarget, Long> daoTempTargets = getDaoTempTargets();
+            List<TempTarget> tempTargets;
+            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
+            queryBuilder.orderBy("timeIndex", ascending);
+            Where where = queryBuilder.where();
+            where.ge("timeIndex", mills);
+            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+            tempTargets = daoTempTargets.query(preparedQuery);
+            return tempTargets;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<TempTarget>();
+    }
+
+
+    public List<TempBasal> getTempbasalsDataFromTime(long mills, boolean ascending, boolean isExtended) {
+        try {
+            Dao<TempBasal, Long> daoTempbasals = getDaoTempBasals();
+            List<TempBasal> tempbasals;
+            QueryBuilder<TempBasal, Long> queryBuilder = daoTempbasals.queryBuilder();
+            queryBuilder.orderBy("timeIndex", ascending);
+            Where where = queryBuilder.where();
+            where.ge("timeIndex", mills).and().eq("isExtended", isExtended);
+            PreparedQuery<TempBasal> preparedQuery = queryBuilder.prepare();
+            tempbasals = daoTempbasals.query(preparedQuery);
+            return tempbasals;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<TempBasal>();
+    }
+
 }

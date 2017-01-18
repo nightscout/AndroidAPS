@@ -17,7 +17,12 @@ public class JSONFormatter {
     public static Spanned format(final String jsonString) {
         final JsonVisitor visitor = new JsonVisitor(4, ' ');
         try {
-            return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
+            if (jsonString.equals("undefined"))
+                return Html.fromHtml("undefined");
+            else if (jsonString.getBytes()[0] == '[')
+                return Html.fromHtml(visitor.visit(new JSONArray(jsonString), 0));
+            else
+                return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
         } catch (JSONException e) {
             e.printStackTrace();
             return Html.fromHtml("");

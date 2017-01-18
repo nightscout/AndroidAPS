@@ -16,6 +16,7 @@
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
+    <color name="colorTempTargetButton">#d43429</color>
 
     <color name="colorInProgress">#c45026</color>
     <color name="colorAffectingIOB">#830400</color>

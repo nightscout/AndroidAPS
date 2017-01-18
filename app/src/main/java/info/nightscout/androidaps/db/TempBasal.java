@@ -10,7 +10,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -53,7 +53,7 @@ public class TempBasal {
 
 
     public IobTotal iobCalc(Date time) {
-        IobTotal result = new IobTotal();
+        IobTotal result = new IobTotal(time.getTime());
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null)

@@ -76,7 +76,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Frag
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loop_run:
-                getPlugin().invoke(true);
+                getPlugin().invoke("Loop button", true);
                 break;
         }
 

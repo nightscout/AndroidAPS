@@ -197,6 +197,16 @@
                 app:layout_gravity="fill"
                 app:layout_row="5" />
 
+            <Button
+                android:id="@+id/careportal_temptarget"
+                android:layout_width="0dp"
+                android:layout_height="70dp"
+                android:text="@string/careportal_temptarget"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="fill"
+                app:layout_row="6" />
+
         </android.support.v7.widget.GridLayout>
     </ScrollView>
 </FrameLayout>
