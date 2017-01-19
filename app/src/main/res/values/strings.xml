@@ -27,7 +27,7 @@
     <string name="nsprofileview_isf_label">ISF:</string>
     <string name="nsprofileview_basal_label">Basal:</string>
     <string name="nsprofileview_target_label">Target:</string>
-    <string name="nsprofileview_noprofile_text">NO PROFILE SET</string>
+    <string name="noprofileset">NO PROFILE SET</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -319,6 +319,7 @@
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
     <string name="smscommunicator_loopisdisabled">Loop is disabled</string>
     <string name="smscommunicator_loopisenabled">Loop is enabled</string>
+    <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
     <string name="openapsma_valueoutofrange" formatted="false">Value %s is out of hard limits</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
@@ -408,7 +409,6 @@
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
     <string name="temptargetrange">Temp Target</string>
     <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
-    <string name="careportal_temptarget">Temporary Target</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
@@ -428,4 +428,5 @@
     <string name="danar_stats_skipMessageButton">Display Alert Message Again</string>
     <string name="danar_stats_skipMessageCheckbox">Please do not show again</string>
     <string name="danar_stats_skipMessage">Possibly inaccurate if using boluses for priming/filling!</string>
+    <string name="initializing">Initializing ...</string>
 </resources>

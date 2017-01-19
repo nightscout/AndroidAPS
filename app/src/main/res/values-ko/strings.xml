@@ -26,7 +26,7 @@
     <string name="nsprofileview_isf_label">인슐린 민감도(ISF):</string>
     <string name="nsprofileview_basal_label">기초주입:</string>
     <string name="nsprofileview_target_label">목표:</string>
-    <string name="nsprofileview_noprofile_text">NO PROFILE SET</string>
+    <string name="noprofileset">NO PROFILE SET</string>
     <string name="treatments_insulin_label_string">인슐린:</string>
     <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="treatments_iob_label_string">IOB:</string>
