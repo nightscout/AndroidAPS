@@ -636,7 +636,6 @@ public class OverviewFragment extends Fragment {
             treatmentButton.setVisibility(View.VISIBLE);
         }
 
-        String units = profile.getUnits();
 
         // QuickWizard button
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
