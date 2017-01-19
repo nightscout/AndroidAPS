@@ -34,6 +34,9 @@ import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
+import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.checkOnlyHardLimits;
+import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.verifyHardLimits;
+
 /**
  * Created by mike on 05.08.2016.
  */
@@ -179,7 +182,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
         minBg = verifyHardLimits(minBg, "minBg", 72, 180);
-        maxBg = verifyHardLimits(maxBg, "maxBg", 100, 270);
+        maxBg = verifyHardLimits(maxBg, "maxBg", 99, 270);
         targetBg = verifyHardLimits(targetBg, "targetBg", 80, 200);
 
         TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
@@ -235,21 +238,5 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         //deviceStatus.suggested = determineBasalResultMA.json;
     }
 
-    // safety checks
-    public static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
-        return value.equals(verifyHardLimits(value, valueName, lowLimit, highLimit));
-    }
-
-    public static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
-        if (value < lowLimit || value > highLimit) {
-            String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), valueName);
-            log.error(msg);
-            MainApp.getConfigBuilder().uploadError(msg);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
-            value = Math.max(value, lowLimit);
-            value = Math.min(value, highLimit);
-        }
-        return value;
-    }
 
 }

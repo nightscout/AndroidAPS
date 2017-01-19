@@ -125,11 +125,13 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
                         }
                         profileView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getProfileParam()));
                         mealDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getMealDataParam()));
-                        autosensDataView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getAutosensDataParam()));
                         scriptdebugView.setText(determineBasalAdapterAMAJS.getScriptDebug());
                     }
                     if (getPlugin().lastAPSRun != null) {
                         lastRunView.setText(getPlugin().lastAPSRun.toLocaleString());
+                    }
+                    if (getPlugin().lastAutosensResult != null) {
+                        autosensDataView.setText(JSONFormatter.format(getPlugin().lastAutosensResult.json()));
                     }
                 }
             });
