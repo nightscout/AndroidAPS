@@ -312,4 +312,5 @@
     <string name="absorption_rate">Absorptionsrate:</string>
     <string name="configbuilder">Config Builder</string>
     <string name="minago">vor %d min</string>
+    <string name="el_lang"></string>
 </resources>
