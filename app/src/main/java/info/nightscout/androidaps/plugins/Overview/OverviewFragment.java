@@ -622,21 +622,6 @@ public class OverviewFragment extends Fragment {
         });
         tempTargetView.setLongClickable(true);
 
-
-
-
-
-        if (profile == null || !pump.isInitialized()) {
-            // disable all treatment buttons because we are not able to check constraints without profile
-            wizardButton.setVisibility(View.INVISIBLE);
-            treatmentButton.setVisibility(View.INVISIBLE);
-            return;
-        } else {
-            wizardButton.setVisibility(View.VISIBLE);
-            treatmentButton.setVisibility(View.VISIBLE);
-        }
-
-
         // QuickWizard button
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized()) {
