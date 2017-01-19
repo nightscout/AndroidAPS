@@ -45,6 +45,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
     Date lastAPSRun = null;
     DetermineBasalResultAMA lastAPSResult = null;
+    AutosensResult lastAutosensResult = null;
 
     boolean fragmentEnabled = false;
     boolean fragmentVisible = true;
@@ -173,7 +174,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
         minBg = verifyHardLimits(minBg, "minBg", 72, 180);
-        maxBg = verifyHardLimits(maxBg, "maxBg", 100, 270);
+        maxBg = verifyHardLimits(maxBg, "maxBg", 99, 270);
         targetBg = verifyHardLimits(targetBg, "targetBg", 80, 200);
 
         boolean isTempTarget = false;
@@ -202,10 +203,10 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         long oldestDataAvailable = MainApp.getConfigBuilder().getActiveTempBasals().oldestDataAvaialable();
         List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia()))), false);
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString() + " (" + bgReadings.size() + " records)");
-        AutosensResult autosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
+        lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
 
         determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
-                autosensResult.ratio, //autosensDataRatio
+                lastAutosensResult.ratio, //autosensDataRatio
                 isTempTarget,
                 Constants.MIN_5M_CARBIMPACT //min_5m_carbimpact
                 );
@@ -247,15 +248,18 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     }
 
     public static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
-        if (value < lowLimit || value > highLimit) {
+        Double newvalue = value;
+        if (newvalue < lowLimit || newvalue > highLimit) {
+            newvalue = Math.max(newvalue, lowLimit);
+            newvalue = Math.min(newvalue, highLimit);
             String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), valueName);
+            msg += ".\n";
+            msg += String.format(MainApp.sResources.getString(R.string.openapsma_valuelimitedto), value, newvalue);
             log.error(msg);
             MainApp.getConfigBuilder().uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
-            value = Math.max(value, lowLimit);
-            value = Math.min(value, highLimit);
         }
-        return value;
+        return newvalue;
     }
 
 }

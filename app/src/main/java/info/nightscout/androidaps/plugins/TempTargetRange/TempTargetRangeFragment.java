@@ -92,7 +92,7 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             else
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.cardColorBackground));
             holder.remove.setTag(tempTarget);
-         }
+        }
 
         @Override
         public int getItemCount() {
@@ -104,7 +104,7 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        public class TempTargetsViewHolder extends RecyclerView.ViewHolder  implements View.OnClickListener {
+        public class TempTargetsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             CardView cv;
             TextView date;
             TextView duration;
@@ -134,26 +134,26 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
                 final Context finalContext = context;
                 switch (v.getId()) {
                     case R.id.temptargetrange_remove:
-                        final String _id = tempTarget._id;
-                        if (_id != null && !_id.equals("")) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                            builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + _id);
-                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
+                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempTarget.timeStart));
+                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                final String _id = tempTarget._id;
+                                if (_id != null && !_id.equals("")) {
                                     MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
-                                    try {
-                                        Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
-                                        daoTempTargets.delete(tempTarget);
-                                        MainApp.bus().post(new EventTempTargetRangeChange());
-                                    } catch (SQLException e) {
-                                        e.printStackTrace();
-                                    }
                                 }
-                            });
-                            builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
-                            builder.show();
-                        }
+                                try {
+                                    Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
+                                    daoTempTargets.delete(tempTarget);
+                                    MainApp.bus().post(new EventTempTargetRangeChange());
+                                } catch (SQLException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
+                        builder.show();
                         break;
                 }
             }
@@ -188,8 +188,8 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             case R.id.temptargetrange_refreshfromnightscout:
                 SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getContext());
                 boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
-                if(nsUploadOnly){
-                    ToastUtils.showToastInUiThread(getContext(),this.getContext().getString(R.string.ns_upload_only_enabled));
+                if (nsUploadOnly) {
+                    ToastUtils.showToastInUiThread(getContext(), this.getContext().getString(R.string.ns_upload_only_enabled));
                 } else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
