@@ -181,17 +181,17 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
-        minBg = verifyHardLimits(minBg, "minBg", 72, 180);
-        maxBg = verifyHardLimits(maxBg, "maxBg", 99, 270);
-        targetBg = verifyHardLimits(targetBg, "targetBg", 80, 200);
-
+        minBg = verifyHardLimits(minBg, "minBg", Constants.VERY_HARD_LIMIT_MIN_BG[0], Constants.VERY_HARD_LIMIT_MIN_BG[1]);
+        maxBg = verifyHardLimits(maxBg, "maxBg", Constants.VERY_HARD_LIMIT_MAX_BG[0], Constants.VERY_HARD_LIMIT_MAX_BG[1]);
+        targetBg = verifyHardLimits(targetBg, "targetBg", Constants.VERY_HARD_LIMIT_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TARGET_BG[1]);
+        
         TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
         if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
             TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
             if (tempTarget != null) {
-                minBg = verifyHardLimits(tempTarget.low, "minBg", 72, 180);
-                maxBg = verifyHardLimits(tempTarget.high, "maxBg", 72, 270);
-                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", 72, 200);
+                minBg = verifyHardLimits(tempTarget.low, "minBg", Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
+                maxBg = verifyHardLimits(tempTarget.high, "maxBg", Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
+                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
             }
         }
 
