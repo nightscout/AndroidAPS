@@ -42,4 +42,15 @@ public class Constants {
     // Circadian Percentage Profile
     public static final int CPP_MIN_PERCENTAGE = 50;
     public static final int CPP_MAX_PERCENTAGE = 200;
+
+    // Very Hard Limits Ranges
+    // First value is the Lowest and second value is the Highest a Limit can define
+    public static final int[] VERY_HARD_LIMIT_MIN_BG = {72,180};
+    public static final int[] VERY_HARD_LIMIT_MAX_BG = {99,270};
+    public static final int[] VERY_HARD_LIMIT_TARGET_BG = {80,200};
+
+    // Very Hard Limits Ranges for Temp Targets
+    public static final int[] VERY_HARD_LIMIT_TEMP_MIN_BG = {72,180};
+    public static final int[] VERY_HARD_LIMIT_TEMP_MAX_BG = {72,270};
+    public static final int[] VERY_HARD_LIMIT_TEMP_TARGET_BG = {72,200};
 }
