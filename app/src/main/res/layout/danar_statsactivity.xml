@@ -7,7 +7,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".plugins.DanaR.History.DanaRHistoryActivity">
 
-
     <LinearLayout
         android:id="@+id/danar_statstop"
         android:layout_width="match_parent"
@@ -16,7 +15,6 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:orientation="horizontal">
-
 
     </LinearLayout>
 
@@ -77,7 +75,6 @@
                         android:layout_weight="1">
 
                     </TableLayout>
-
                 </LinearLayout>
 
                 <Space
@@ -126,7 +123,7 @@
                             android:layout_weight="1" />
 
                         <EditText
-                            android:layout_width="65dp"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:inputType="numberDecimal"
                             android:layout_marginRight="10dp"
@@ -152,7 +149,7 @@
                             android:layout_weight="1" />
 
                         <TextView
-                            android:layout_width="65dp"
+                            android:layout_width="70dp"
                             android:layout_height="wrap_content"
                             android:textAppearance="?android:attr/textAppearanceMedium"
                             android:gravity="center_vertical|center_horizontal"
@@ -161,11 +158,8 @@
                             android:id="@+id/danar_stats_editTotalBaseBasal2" />
 
                     </LinearLayout>
-
                 </LinearLayout>
             </LinearLayout>
-
-
         </LinearLayout>
     </ScrollView>
 
@@ -194,7 +188,8 @@
                 android:id="@+id/danar_stats_Message"
                 android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:textSize="24sp"
+                android:textSize="15sp"
+                android:textStyle="bold"
                 android:textColor="#ff0000"
                 android:background="@drawable/pillborder"
                 android:paddingLeft="10dp"
@@ -210,7 +205,5 @@
                 android:text="@string/danar_historyreload" />
 
         </LinearLayout>
-
     </LinearLayout>
-
 </RelativeLayout>
