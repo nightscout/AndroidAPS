@@ -83,6 +83,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLab
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -113,6 +114,7 @@ public class OverviewFragment extends Fragment {
     TextView iobView;
     TextView apsModeView;
     TextView tempTargetView;
+    TextView initializingView;
     GraphView bgGraph;
     CheckBox showPredictionView;
 
@@ -121,7 +123,6 @@ public class OverviewFragment extends Fragment {
 
     LinearLayout cancelTempLayout;
     LinearLayout acceptTempLayout;
-    LinearLayout quickWizardLayout;
     Button cancelTempButton;
     Button treatmentButton;
     Button wizardButton;
@@ -158,6 +159,7 @@ public class OverviewFragment extends Fragment {
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
+        initializingView = (TextView) view.findViewById(R.id.overview_initializing);
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
@@ -171,7 +173,6 @@ public class OverviewFragment extends Fragment {
         acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
         quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizard);
-        quickWizardLayout = (LinearLayout) view.findViewById(R.id.overview_quickwizardlayout);
         showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
@@ -285,7 +286,7 @@ public class OverviewFragment extends Fragment {
 
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null) {
-            quickWizardLayout.setVisibility(View.VISIBLE);
+            quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText();
             BolusWizard wizard = new BolusWizard();
             wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), lastBG.valueToUnits(profile.getUnits()), 0d, true, true);
@@ -432,6 +433,9 @@ public class OverviewFragment extends Fragment {
     public void onStatusEvent(final EventNewBasalProfile ev) { updateGUIIfVisible(); }
 
     @Subscribe
+    public void onStatusEvent(final EventTempTargetRangeChange ev) {updateGUIIfVisible();}
+
+    @Subscribe
     public void onStatusEvent(final EventNewNotification n) { updateNotifications(); }
 
     @Subscribe
@@ -464,8 +468,14 @@ public class OverviewFragment extends Fragment {
         updateNotifications();
         BgReading actualBG = MainApp.getDbHelper().actualBg();
         BgReading lastBG = MainApp.getDbHelper().lastBg();
-        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) // app not initialized yet
+
+        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
+            initializingView.setText(R.string.noprofileset);
+            initializingView.setVisibility(View.VISIBLE);
             return;
+        } else {
+            initializingView.setVisibility(View.GONE);
+        }
 
         // Skip if not initialized yet
         if (bgGraph == null)
@@ -526,11 +536,25 @@ public class OverviewFragment extends Fragment {
         if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
             TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
             if (tempTarget != null) {
+                tempTargetView.setTextColor(Color.BLACK);
+                tempTargetView.setBackgroundResource(R.drawable.temptargetborder);
                 tempTargetView.setVisibility(View.VISIBLE);
                 tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
             } else {
-                tempTargetView.setVisibility(View.GONE);
+
+                String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+                String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+                if (!profile.getUnits().equals(Constants.MGDL)) {
+                    maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
+                    minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
+                }
+                tempTargetView.setTextColor(Color.WHITE);
+                tempTargetView.setBackgroundResource(R.drawable.temptargetborderdisabled);
+                tempTargetView.setText(prefs.getString("openapsma_min_bg", minBgDefault) + " - " + prefs.getString("openapsma_max_bg", maxBgDefault));
+                tempTargetView.setVisibility(View.VISIBLE);
             }
+        } else {
+            tempTargetView.setVisibility(View.GONE);
         }
 
         // **** Temp button ****
@@ -583,34 +607,39 @@ public class OverviewFragment extends Fragment {
         });
         activeProfileView.setLongClickable(true);
 
-        if (profile == null || !pump.isInitialized()) {
-            // disable all treatment buttons because we are not able to check constraints without profile
-            wizardButton.setVisibility(View.INVISIBLE);
-            treatmentButton.setVisibility(View.INVISIBLE);
-            return;
-        } else {
-            wizardButton.setVisibility(View.VISIBLE);
-            treatmentButton.setVisibility(View.VISIBLE);
-        }
 
-        String units = profile.getUnits();
+        tempTargetView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
+                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temptarget, R.string.careportal_temptarget, false, false, false, false, true, false, false, false, false, true);
+                temptarget.executeTempTarget = true;
+                newTTDialog.setOptions(temptarget);
+                newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+                return true;
+            }
+        });
+        tempTargetView.setLongClickable(true);
 
         // QuickWizard button
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized()) {
-            quickWizardLayout.setVisibility(View.VISIBLE);
+            quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText() + " " + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
             wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), lastBG.valueToUnits(profile.getUnits()), 0d, true, true);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
-                quickWizardLayout.setVisibility(View.GONE);
+                quickWizardButton.setVisibility(View.GONE);
         } else
-            quickWizardLayout.setVisibility(View.GONE);
+            quickWizardButton.setVisibility(View.GONE);
+
+        String units = profile.getUnits();
 
         // **** BG value ****
-        if (lastBG != null && bgView != null) {
+        if (lastBG != null) {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             arrowView.setText(lastBG.directionToSymbol());
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
@@ -885,6 +914,21 @@ public class OverviewFragment extends Fragment {
             bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
             bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
         }
+
+        // Pump not initialized message
+        if (!pump.isInitialized()) {
+            // disable all treatment buttons because we are not able to check constraints without profile
+            wizardButton.setVisibility(View.INVISIBLE);
+            treatmentButton.setVisibility(View.INVISIBLE);
+            quickWizardButton.setVisibility(View.INVISIBLE);
+            initializingView.setText(R.string.waitingforpump);
+            initializingView.setVisibility(View.VISIBLE);
+        } else {
+            wizardButton.setVisibility(View.VISIBLE);
+            treatmentButton.setVisibility(View.VISIBLE);
+            initializingView.setVisibility(View.GONE);
+        }
+
     }
 
     //Notifications

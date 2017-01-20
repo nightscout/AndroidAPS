@@ -76,7 +76,7 @@ public class Autosens {
         double[] bgis = new double[bucketed_data.size() - 2];
         double[] deviations = new double[bucketed_data.size() - 2];
 
-        String debugString = "";
+        String pastSensitivity = "";
         for (int i = 0; i < bucketed_data.size() - 3; ++i) {
             long bgTime = bucketed_data.get(i).timeIndex;
             int secondsFromMidnight = NSProfile.secondsFromMidnight(new Date(bgTime));
@@ -108,20 +108,21 @@ public class Autosens {
             // Exclude large positive deviations (carb absorption) from autosens
             if (avgDelta - bgi < 6) {
                 if (deviation > 0) {
-                    debugString += "+";
+                    pastSensitivity += "+";
                 } else if (deviation == 0) {
-                    debugString += "=";
+                    pastSensitivity += "=";
                 } else {
-                    debugString += "-";
+                    pastSensitivity += "-";
                 }
                 avgDeltas[i] = avgDelta;
                 bgis[i] = bgi;
                 deviations[i] = deviation;
                 deviationSum += deviation;
             } else {
-                debugString += ">";
+                pastSensitivity += ">";
                 //console.error(bgTime);
             }
+            //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
             // if bgTime is more recent than mealTime
             if (bgTime > mealTime) {
@@ -134,7 +135,7 @@ public class Autosens {
             }
         }
         //console.error("");
-        log.debug(debugString);
+        log.debug(pastSensitivity);
         //console.log(JSON.stringify(avgDeltas));
         //console.log(JSON.stringify(bgis));
         Arrays.sort(avgDeltas);
@@ -157,15 +158,17 @@ public class Autosens {
         //console.error("Mean deviation: "+average.toFixed(2));
         double basalOff = 0;
 
+        String sensResult = "";
         if (pSensitive < 0) { // sensitive
             basalOff = pSensitive * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
-            log.debug("Excess insulin sensitivity detected: ");
+            sensResult = "Excess insulin sensitivity detected";
         } else if (pResistant > 0) { // resistant
             basalOff = pResistant * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
-            log.debug("Excess insulin resistance detected: ");
+            sensResult = "Excess insulin resistance detected";
         } else {
-            log.debug("Sensitivity normal.");
+            sensResult = "Sensitivity normal";
         }
+        log.debug(sensResult);
         double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
         // don't adjust more than 1.5x
@@ -173,8 +176,10 @@ public class Autosens {
         ratio = Math.max(ratio, Constants.AUTOSENS_MIN);
         ratio = Math.min(ratio, Constants.AUTOSENS_MAX);
 
+        String ratioLimit = "";
         if (ratio != rawRatio) {
-            log.debug("Ratio limited from " + rawRatio + " to " + ratio);
+            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
+            log.debug(ratioLimit);
         }
 
         double newisf = Math.round(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits()) / ratio);
@@ -187,6 +192,9 @@ public class Autosens {
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);
         output.carbsAbsorbed = Round.roundTo(carbsAbsorbed, 0.01);
+        output.pastSensitivity = pastSensitivity;
+        output.ratioLimit = ratioLimit;
+        output.sensResult = sensResult;
         return output;
     }
 

@@ -269,6 +269,12 @@
                 android:text="@string/danar_history"
                 android:id="@+id/danar_history"
                 android:layout_weight="1" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/danar_stats"
+                android:id="@+id/danar_stats"
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 

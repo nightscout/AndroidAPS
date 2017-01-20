@@ -142,7 +142,7 @@
     <string name="objectives_gate_label_string">Gate:</string>
     <string name="objectives_objective_label_string">Objective:</string>
     <string name="objectives">Zielsetzungen</string>
-    <string name="nsprofileview_noprofile_text">KEIN PROFIL GESETZT</string>
+    <string name="noprofileset">KEIN PROFIL GESETZT</string>
     <string name="nsclientnotinstalled">NSClient nicht installiert. Record lost!</string>
     <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuelle Basalwerte beim Upload zu NightScout</string>
     <string name="noprofile">Bisher noch kein Profil von NS geladen</string>

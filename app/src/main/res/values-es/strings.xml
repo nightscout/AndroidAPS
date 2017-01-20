@@ -25,7 +25,7 @@
     <string name="nsprofileview_isf_label">ISF (Factor Sensibilidad Insulina):</string>
     <string name="nsprofileview_basal_label">Dosis Basal:</string>
     <string name="nsprofileview_target_label">Objetivo:</string>
-    <string name="nsprofileview_noprofile_text">PERFIL NO ACTIVO</string>
+    <string name="noprofileset">PERFIL NO ACTIVO</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
     <string name="treatments_iob_label_string">IOB:</string>

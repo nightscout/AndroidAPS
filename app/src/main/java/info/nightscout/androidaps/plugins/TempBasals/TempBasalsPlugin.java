@@ -180,6 +180,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
         if (useExtendedBoluses) {
             for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                 TempBasal t = extendedBoluses.get(pos);
+                if (t.timeStart.getTime() > time) continue;
                 IobTotal calc = t.iobCalc(now);
                 total.plus(calc);
             }

@@ -34,6 +34,9 @@ import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
+import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.checkOnlyHardLimits;
+import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.verifyHardLimits;
+
 /**
  * Created by mike on 05.08.2016.
  */
@@ -145,13 +148,13 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String units = profile.getUnits();
 
-        String maxBgDefault = "180";
-        String minBgDefault = "100";
-        String targetBgDefault = "150";
+        String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+        String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+        String targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
         if (!units.equals(Constants.MGDL)) {
-            maxBgDefault = "10";
-            minBgDefault = "5";
-            targetBgDefault = "7";
+            maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
+            minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
+            targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
         }
 
         Date now = new Date();
@@ -178,17 +181,17 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
-        minBg = verifyHardLimits(minBg, "minBg", 72, 180);
-        maxBg = verifyHardLimits(maxBg, "maxBg", 100, 270);
-        targetBg = verifyHardLimits(targetBg, "targetBg", 80, 200);
-
+        minBg = verifyHardLimits(minBg, "minBg", Constants.VERY_HARD_LIMIT_MIN_BG[0], Constants.VERY_HARD_LIMIT_MIN_BG[1]);
+        maxBg = verifyHardLimits(maxBg, "maxBg", Constants.VERY_HARD_LIMIT_MAX_BG[0], Constants.VERY_HARD_LIMIT_MAX_BG[1]);
+        targetBg = verifyHardLimits(targetBg, "targetBg", Constants.VERY_HARD_LIMIT_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TARGET_BG[1]);
+        
         TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
         if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
             TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
             if (tempTarget != null) {
-                minBg = verifyHardLimits(tempTarget.low, "minBg", 72, 180);
-                maxBg = verifyHardLimits(tempTarget.high, "maxBg", 72, 270);
-                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", 72, 200);
+                minBg = verifyHardLimits(tempTarget.low, "minBg", Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
+                maxBg = verifyHardLimits(tempTarget.high, "maxBg", Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
+                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
             }
         }
 
@@ -235,21 +238,5 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         //deviceStatus.suggested = determineBasalResultMA.json;
     }
 
-    // safety checks
-    public static boolean checkOnlyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
-        return value.equals(verifyHardLimits(value, valueName, lowLimit, highLimit));
-    }
-
-    public static Double verifyHardLimits(Double value, String valueName, double lowLimit, double highLimit) {
-        if (value < lowLimit || value > highLimit) {
-            String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), valueName);
-            log.error(msg);
-            MainApp.getConfigBuilder().uploadError(msg);
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
-            value = Math.max(value, lowLimit);
-            value = Math.min(value, highLimit);
-        }
-        return value;
-    }
 
 }
