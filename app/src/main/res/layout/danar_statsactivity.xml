@@ -113,25 +113,54 @@
 
                     <Space
                         android:layout_width="10dp"
-                        android:layout_height="30dp" />
+                        android:layout_height="10dp" />
 
-                    <EditText
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="18"
-                        android:textSize="50px"
-                        android:gravity="center"
-                        android:inputType="numberDecimal"
-                        android:id="@+id/danar_stats_editTotalBaseBasal" />
+                        android:layout_height="match_parent">
 
-                    <TextView
-                        android:text="@string/danar_stats_tbb"
-                        android:labelFor="@+id/danar_stats_editTotalBaseBasal"
+                        <TextView
+                            android:text="@string/danar_stats_tbb"
+                            android:labelFor="@+id/danar_stats_editTotalBaseBasal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/danar_stats_editTotalBaseBasal_label"
+                            android:gravity="left"
+                            android:layout_weight="1" />
+
+                        <EditText
+                            android:layout_width="79dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="50px"
+                            android:gravity="center"
+                            android:inputType="numberDecimal"
+                            android:id="@+id/danar_stats_editTotalBaseBasal" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/danar_stats_editTotalBaseBasal_label"
-                        android:gravity="center"
-                        android:layout_weight="1" />
+                        android:layout_height="match_parent">
+
+                        <TextView
+                            android:text="@string/danar_stats_tbb2"
+                            android:labelFor="@+id/danar_stats_editTotalBaseBasal2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/danar_stats_editTotalBaseBasal2_label"
+                            android:gravity="left"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:layout_width="79dp"
+                            android:layout_height="wrap_content"
+                            android:textSize="50px"
+                            android:gravity="center"
+                            android:inputType="numberDecimal"
+                            android:id="@+id/danar_stats_editTotalBaseBasal2" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
             </LinearLayout>

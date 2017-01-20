@@ -63,7 +63,7 @@ public class DanaRStatsActivity extends Activity {
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
 
-    TextView statusView, statsMessage;
+    TextView statusView, statsMessage,totalBaseBasal2;
     EditText totalBaseBasal;
     Button reloadButton;
     LinearLayoutManager llm;
@@ -136,9 +136,11 @@ public class DanaRStatsActivity extends Activity {
         statsMessage = (TextView) findViewById(R.id.danar_stats_Message);
         statsMessage.setVisibility(View.GONE);
         totalBaseBasal = (EditText) findViewById(R.id.danar_stats_editTotalBaseBasal);
+        totalBaseBasal2 = (TextView) findViewById(R.id.danar_stats_editTotalBaseBasal2);
+
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        TBB = preferences.getString("TBB", "18");
+        TBB = preferences.getString("TBB", "10.00");
         totalBaseBasal.setHint(TBB);
         totalBaseBasal.addTextChangedListener(new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -304,27 +306,29 @@ public class DanaRStatsActivity extends Activity {
                 cleanTable(ctl);
                 cleanTable(etl);
                 DateFormat df = new SimpleDateFormat("dd.MM.");
-
-                if(TextUtils.isEmpty(TBB)) {
-                    totalBaseBasal.setError("Please Enter Total Base Basal");
-                    return;
-                }
-                else {
-                    magicNumber = Double.parseDouble(TBB);
-                }
+                DecimalFormat decimalFormat = new DecimalFormat("0.000");
 
                 ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
                 if (pi instanceof CircadianPercentageProfilePlugin){
                     magicNumber = ((CircadianPercentageProfilePlugin)pi).baseBasalSum();
-                    DecimalFormat decimalFormat = new DecimalFormat("####0.000");
                     totalBaseBasal.setHint(decimalFormat.format(magicNumber));
                     totalBaseBasal.setEnabled(false);
                     totalBaseBasal.setClickable(false);
                     totalBaseBasal.setFocusable(false);
                     totalBaseBasal.setInputType(0);
-                }
+                } else {
 
+                    if(TextUtils.isEmpty(TBB)) {
+                        totalBaseBasal.setError("Please Enter Total Base Basal");
+                        return;
+                    }
+                    else {
+                        magicNumber = Double.parseDouble(TBB);
+                    }
+
+                }
                 magicNumber *=2;
+                totalBaseBasal2.setHint(decimalFormat.format(magicNumber));
 
                 int i = 0;
                 double sum = 0d;
