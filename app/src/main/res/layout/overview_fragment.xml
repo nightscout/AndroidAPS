@@ -30,14 +30,16 @@
                     android:id="@+id/overview_apsmode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:layout_weight="0.2"
                     android:background="@drawable/loopmodeborder"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Open Loop"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_weight="0.1" />
+
 
                 <TextView
                     android:id="@+id/overview_activeprofile"
@@ -59,13 +61,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_weight="0.2"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/temptargetborder"
                     android:gravity="center_vertical|center_horizontal"
-                    android:paddingLeft="10dp"
                     android:text="TempTarget"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/mdtp_white" />
+                    android:textColor="@color/mdtp_white"
+                    android:layout_weight="0.2" />
             </LinearLayout>
 
             <LinearLayout
@@ -88,7 +92,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/overview_bg"

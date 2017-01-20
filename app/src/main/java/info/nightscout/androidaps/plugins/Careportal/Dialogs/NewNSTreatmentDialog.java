@@ -370,6 +370,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         String enteredBy = SP.getString("careportal_enteredby", "");
         JSONObject data = new JSONObject();
         try {
+            boolean allowZeroDuration = false;
             data.put("created_at", DateUtil.toISOString(eventTime));
             switch (options.eventType) {
                 case R.id.careportal_bgcheck:
@@ -431,6 +432,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     break;
                 case R.id.careportal_temptarget:
                     data.put("eventType", "Temporary Target");
+                    allowZeroDuration = true;
                     break;
             }
             if (SafeParse.stringToDouble(bgInputEdit.getText().toString()) != 0d) {
@@ -443,7 +445,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 data.put("carbs", SafeParse.stringToDouble(carbsEdit.getText().toString()));
             if (SafeParse.stringToDouble(insulinEdit.getText().toString()) != 0d)
                 data.put("insulin", SafeParse.stringToDouble(insulinEdit.getText().toString()));
-            if (SafeParse.stringToDouble(durationeEdit.getText().toString()) != 0d)
+            if (allowZeroDuration || SafeParse.stringToDouble(durationeEdit.getText().toString()) != 0d)
                 data.put("duration", SafeParse.stringToDouble(durationeEdit.getText().toString()));
             if (layoutPercent.getVisibility() != View.GONE)
                 data.put("percent", SafeParse.stringToDouble(percentEdit.getText().toString()));
@@ -607,30 +609,41 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                 }
                 if (options.executeTempTarget) {
-                    if (data.has("targetBottom") && data.has("targetTop")) {
-                        sHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    TempTarget tempTarget = new TempTarget();
-                                    tempTarget.timeStart = eventTime;
-                                    tempTarget.duration = data.getInt("duration");
-                                    tempTarget.reason = data.getString("reason");
-                                    tempTarget.low = NSProfile.toMgdl(data.getDouble("targetBottom"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
-                                    tempTarget.high = NSProfile.toMgdl(data.getDouble("targetTop"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
-                                    tempTarget.setTimeIndex(tempTarget.getTimeIndex());
-                                    Dao<TempTarget, Long> dao = MainApp.getDbHelper().getDaoTempTargets();
-                                    log.debug("Creating new TempTarget db record: " + tempTarget.log());
-                                    dao.createIfNotExists(tempTarget);
-                                    MainApp.bus().post(new EventTempTargetRangeChange());
-                                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
+
+
+                    try {
+                        if ((data.has("targetBottom") && data.has("targetTop")) || (data.has("duration")&& data.getInt("duration") == 0)) {
+                            sHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        TempTarget tempTarget = new TempTarget();
+                                        tempTarget.timeStart = eventTime;
+                                        tempTarget.duration = data.getInt("duration");
+                                        tempTarget.reason = data.getString("reason");
+                                        if(tempTarget.duration != 0) {
+                                            tempTarget.low = NSProfile.toMgdl(data.getDouble("targetBottom"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
+                                            tempTarget.high = NSProfile.toMgdl(data.getDouble("targetTop"), MainApp.getConfigBuilder().getActiveProfile().getProfile().getUnits());
+                                        } else {
+                                            tempTarget.low = 0;
+                                            tempTarget.high = 0;
+                                        }
+                                        tempTarget.setTimeIndex(tempTarget.getTimeIndex());
+                                        Dao<TempTarget, Long> dao = MainApp.getDbHelper().getDaoTempTargets();
+                                        log.debug("Creating new TempTarget db record: " + tempTarget.log());
+                                        dao.createIfNotExists(tempTarget);
+                                        MainApp.bus().post(new EventTempTargetRangeChange());
+                                        ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (SQLException e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 } else {
                     ConfigBuilderPlugin.uploadCareportalEntryToNS(data);

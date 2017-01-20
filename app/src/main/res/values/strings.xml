@@ -427,4 +427,5 @@
     <string name="danar_stats_tbb">Total Base Basal</string>
     <string name="danar_stats_tbb2">Total Base Basal ²</string>
     <string name="initializing">Initializing ...</string>
+    <string name="careportal_temptarget">Temporary Target</string>
 </resources>

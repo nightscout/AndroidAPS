@@ -81,7 +81,9 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.TempBasals.TempBasalsPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -431,6 +433,9 @@ public class OverviewFragment extends Fragment {
     public void onStatusEvent(final EventNewBasalProfile ev) { updateGUIIfVisible(); }
 
     @Subscribe
+    public void onStatusEvent(final EventTempTargetRangeChange ev) {updateGUIIfVisible();}
+
+    @Subscribe
     public void onStatusEvent(final EventNewNotification n) { updateNotifications(); }
 
     @Subscribe
@@ -531,11 +536,25 @@ public class OverviewFragment extends Fragment {
         if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
             TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
             if (tempTarget != null) {
+                tempTargetView.setTextColor(Color.BLACK);
+                tempTargetView.setBackgroundResource(R.drawable.temptargetborder);
                 tempTargetView.setVisibility(View.VISIBLE);
                 tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
             } else {
-                tempTargetView.setVisibility(View.GONE);
+
+                String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+                String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+                if (!profile.getUnits().equals(Constants.MGDL)) {
+                    maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
+                    minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
+                }
+                tempTargetView.setTextColor(Color.WHITE);
+                tempTargetView.setBackgroundResource(R.drawable.temptargetborderdisabled);
+                tempTargetView.setText(prefs.getString("openapsma_min_bg", minBgDefault) + " - " + prefs.getString("openapsma_max_bg", maxBgDefault));
+                tempTargetView.setVisibility(View.VISIBLE);
             }
+        } else {
+            tempTargetView.setVisibility(View.GONE);
         }
 
         // **** Temp button ****
@@ -587,6 +606,21 @@ public class OverviewFragment extends Fragment {
             }
         });
         activeProfileView.setLongClickable(true);
+
+
+        tempTargetView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
+                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temptarget, R.string.careportal_temptarget, false, false, false, false, true, false, false, false, false, true);
+                temptarget.executeTempTarget = true;
+                newTTDialog.setOptions(temptarget);
+                newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+                return true;
+            }
+        });
+        tempTargetView.setLongClickable(true);
 
         // QuickWizard button
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();

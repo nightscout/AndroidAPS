@@ -148,13 +148,13 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String units = profile.getUnits();
 
-        String maxBgDefault = "180";
-        String minBgDefault = "100";
-        String targetBgDefault = "150";
+        String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+        String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+        String targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
         if (!units.equals(Constants.MGDL)) {
-            maxBgDefault = "10";
-            minBgDefault = "5";
-            targetBgDefault = "7";
+            maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
+            minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
+            targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
         }
 
         Date now = new Date();

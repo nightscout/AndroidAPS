@@ -91,7 +91,10 @@ public class TempTargetRangePlugin implements PluginBase {
 
     @Nullable
     public TempTarget getTempTargetInProgress(long time) {
-        for (int i = tempTargets.size() - 1; i >= 0; i--) {
+        for (int i = 0; i < tempTargets.size(); i++) {
+            // a zero-duration temp target will cancel all prior targets
+            if (tempTargets.get(i).duration == 0) return null;
+
             if (tempTargets.get(i).timeStart.getTime() > time) continue;
             if (tempTargets.get(i).getPlannedTimeEnd().getTime() >= time) return tempTargets.get(i);
         }
