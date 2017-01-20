@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -15,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -111,6 +113,21 @@ public class DanaRStatsActivity extends Activity {
         }
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View myView = getCurrentFocus();
+            if ( myView instanceof EditText) {
+                Rect rect = new Rect();
+                myView.getGlobalVisibleRect(rect);
+                if (!rect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    myView.clearFocus();
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
+    }
+
     ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
@@ -134,18 +151,20 @@ public class DanaRStatsActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         statusView = (TextView) findViewById(R.id.danar_stats_connection_status);
         reloadButton = (Button) findViewById(R.id.danar_statsreload);
-        llm = new LinearLayoutManager(this);
-        statusView.setVisibility(View.GONE);
-        statsMessage = (TextView) findViewById(R.id.danar_stats_Message);
-        statsMessage.setVisibility(View.GONE);
         totalBaseBasal = (EditText) findViewById(R.id.danar_stats_editTotalBaseBasal);
         totalBaseBasal2 = (TextView) findViewById(R.id.danar_stats_editTotalBaseBasal2);
-        decimalFormat = new DecimalFormat("0.000");
+        statsMessage = (TextView) findViewById(R.id.danar_stats_Message);
+
+        statusView.setVisibility(View.GONE);
+        statsMessage.setVisibility(View.GONE);
 
         totalBaseBasal2.setEnabled(false);
         totalBaseBasal2.setClickable(false);
         totalBaseBasal2.setFocusable(false);
         totalBaseBasal2.setInputType(0);
+
+        decimalFormat = new DecimalFormat("0.000");
+        llm = new LinearLayoutManager(this);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         TBB = preferences.getString("TBB", "10.00");
@@ -293,14 +312,8 @@ public class DanaRStatsActivity extends Activity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId== EditorInfo.IME_ACTION_DONE){
-                    SharedPreferences.Editor edit = preferences.edit();
-                    edit.putString("TBB",totalBaseBasal.getText().toString());
-                    edit.commit();
-                    TBB = preferences.getString("TBB", "");
-                    loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     totalBaseBasal.clearFocus();
+                    return true;
                 }
                 return false;
             }
@@ -311,6 +324,14 @@ public class DanaRStatsActivity extends Activity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
                     totalBaseBasal.getText().clear();
+                } else {
+                    SharedPreferences.Editor edit = preferences.edit();
+                    edit.putString("TBB",totalBaseBasal.getText().toString());
+                    edit.commit();
+                    TBB = preferences.getString("TBB", "");
+                    loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(totalBaseBasal.getWindowToken(), 0);
                 }
             }
         });

@@ -151,18 +151,20 @@ public class DanaRStatsActivity extends Activity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         statusView = (TextView) findViewById(R.id.danar_stats_connection_status);
         reloadButton = (Button) findViewById(R.id.danar_statsreload);
-        llm = new LinearLayoutManager(this);
-        statusView.setVisibility(View.GONE);
-        statsMessage = (TextView) findViewById(R.id.danar_stats_Message);
-        statsMessage.setVisibility(View.GONE);
         totalBaseBasal = (EditText) findViewById(R.id.danar_stats_editTotalBaseBasal);
         totalBaseBasal2 = (TextView) findViewById(R.id.danar_stats_editTotalBaseBasal2);
-        decimalFormat = new DecimalFormat("0.000");
+        statsMessage = (TextView) findViewById(R.id.danar_stats_Message);
+
+        statusView.setVisibility(View.GONE);
+        statsMessage.setVisibility(View.GONE);
 
         totalBaseBasal2.setEnabled(false);
         totalBaseBasal2.setClickable(false);
         totalBaseBasal2.setFocusable(false);
         totalBaseBasal2.setInputType(0);
+
+        decimalFormat = new DecimalFormat("0.000");
+        llm = new LinearLayoutManager(this);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         TBB = preferences.getString("TBB", "10.00");
