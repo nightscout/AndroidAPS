@@ -23,8 +23,6 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/danar_historytop"
-        android:layout_above="@+id/danar_historybuttons"
         android:layout_alignParentStart="true">
         <LinearLayout
             android:layout_width="match_parent"
@@ -35,9 +33,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/loopmodeborder"
                 android:gravity="center_horizontal"
-                android:textColor="@color/cardColorBackground"
+                android:textColor="@color/mdtp_white"
+                android:background="@drawable/pillborder"
                 android:text="@string/danar_stats" />
 
             <TableLayout
@@ -66,17 +64,16 @@
                     <TextView
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/loopmodeborder"
+                        android:textColor="@color/mdtp_white"
+                        android:background="@drawable/pillborder"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/cardColorBackground"
                         android:text="@string/danar_stats_cumulative_tdd" />
 
                     <TableLayout
                         android:stretchColumns="0,1,2"
                         android:id="@+id/cumulative_table"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:layout_width="match_parent"
-                        android:layout_column="0"
                         android:layout_weight="1">
 
                     </TableLayout>
@@ -97,17 +94,16 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/loopmodeborder"
                         android:gravity="center_horizontal"
-                        android:textColor="@color/cardColorBackground"
+                        android:textColor="@color/mdtp_white"
+                        android:background="@drawable/pillborder"
                         android:text="@string/danar_stats_expweight" />
 
                     <TableLayout
                         android:stretchColumns="0,1,2"
                         android:id="@+id/expweight_table"
-                        android:layout_height="match_parent"
+                        android:layout_height="0dp"
                         android:layout_width="match_parent"
-                        android:layout_column="1"
                         android:layout_weight="1">
                     </TableLayout>
 
@@ -123,18 +119,21 @@
                         <TextView
                             android:text="@string/danar_stats_tbb"
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/danar_stats_editTotalBaseBasal_label"
                             android:gravity="left"
                             android:layout_weight="1" />
 
                         <EditText
-                            android:layout_width="79dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
-                            android:textSize="50px"
-                            android:gravity="center"
                             android:inputType="numberDecimal"
+                            android:layout_marginRight="10dp"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/mdtp_white"
+                            android:background="@drawable/pillborder"
                             android:id="@+id/danar_stats_editTotalBaseBasal" />
                     </LinearLayout>
 
@@ -146,18 +145,19 @@
                         <TextView
                             android:text="@string/danar_stats_tbb2"
                             android:labelFor="@+id/danar_stats_editTotalBaseBasal2"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:id="@+id/danar_stats_editTotalBaseBasal2_label"
                             android:gravity="left"
                             android:layout_weight="1" />
 
                         <TextView
-                            android:layout_width="79dp"
+                            android:layout_width="65dp"
                             android:layout_height="wrap_content"
-                            android:textSize="50px"
-                            android:gravity="center"
-                            android:inputType="numberDecimal"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:gravity="center_vertical|center_horizontal"
+                            android:layout_marginRight="10dp"
+                            android:textColor="@color/mdtp_white"
                             android:id="@+id/danar_stats_editTotalBaseBasal2" />
 
                     </LinearLayout>
@@ -165,12 +165,6 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/danar_historystatus"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal" />
 
         </LinearLayout>
     </ScrollView>
@@ -184,25 +178,35 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:gravity="center_vertical|center_horizontal"
             android:layout_weight="1">
 
+            <TextView
+                android:id="@+id/danar_stats_connection_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal" />
 
             <TextView
                 android:id="@+id/danar_stats_Message"
-                android:layout_width="match_parent"
+                android:layout_width="350dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textSize="45px"
+                android:textSize="24sp"
                 android:textColor="#ff0000"
+                android:background="@drawable/pillborder"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
                 android:text="@string/danar_stats_warning_Message" />
 
             <Button
-                android:id="@+id/danar_historyreload"
-                android:layout_width="match_parent"
+                android:id="@+id/danar_statsreload"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:textColor="@color/mdtp_white"
+                android:background="@drawable/pillborder"
                 android:text="@string/danar_historyreload" />
 
         </LinearLayout>

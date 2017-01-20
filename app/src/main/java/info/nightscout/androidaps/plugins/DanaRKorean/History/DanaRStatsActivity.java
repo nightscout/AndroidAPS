@@ -13,10 +13,12 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TableLayout;
@@ -70,6 +72,7 @@ public class DanaRStatsActivity extends Activity {
     TableLayout tl,ctl,etl;
     String TBB;
     double magicNumber;
+    DecimalFormat decimalFormat;
 
     List<DanaRHistoryRecord> historyList = new ArrayList<>();
 
@@ -128,30 +131,55 @@ public class DanaRStatsActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.danar_statsactivity);
-
-        statusView = (TextView) findViewById(R.id.danar_historystatus);
-        reloadButton = (Button) findViewById(R.id.danar_historyreload);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        statusView = (TextView) findViewById(R.id.danar_stats_connection_status);
+        reloadButton = (Button) findViewById(R.id.danar_statsreload);
         llm = new LinearLayoutManager(this);
         statusView.setVisibility(View.GONE);
         statsMessage = (TextView) findViewById(R.id.danar_stats_Message);
         statsMessage.setVisibility(View.GONE);
         totalBaseBasal = (EditText) findViewById(R.id.danar_stats_editTotalBaseBasal);
         totalBaseBasal2 = (TextView) findViewById(R.id.danar_stats_editTotalBaseBasal2);
+        decimalFormat = new DecimalFormat("0.000");
 
+        totalBaseBasal2.setEnabled(false);
+        totalBaseBasal2.setClickable(false);
+        totalBaseBasal2.setFocusable(false);
+        totalBaseBasal2.setInputType(0);
 
         final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         TBB = preferences.getString("TBB", "10.00");
-        totalBaseBasal.setHint(TBB);
-        totalBaseBasal.addTextChangedListener(new TextWatcher() {
-            public void afterTextChanged(Editable s) {
-                SharedPreferences.Editor edit = preferences.edit();
-                edit.putString("TBB",totalBaseBasal.getText().toString());
-                edit.commit();
-                TBB = preferences.getString("TBB", "");
-                loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+        totalBaseBasal.setText(TBB);
+
+        ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
+        if (pi instanceof CircadianPercentageProfilePlugin){
+            totalBaseBasal.setText(decimalFormat.format(((CircadianPercentageProfilePlugin)pi).baseBasalSum()));
+        }
+
+        totalBaseBasal.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId== EditorInfo.IME_ACTION_DONE){
+                    SharedPreferences.Editor edit = preferences.edit();
+                    edit.putString("TBB",totalBaseBasal.getText().toString());
+                    edit.commit();
+                    TBB = preferences.getString("TBB", "");
+                    loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+                    totalBaseBasal.clearFocus();
+                }
+                return false;
             }
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
+        totalBaseBasal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus){
+                    totalBaseBasal.getText().clear();
+                }
+            }
         });
 
         // stats table
@@ -306,29 +334,17 @@ public class DanaRStatsActivity extends Activity {
                 cleanTable(ctl);
                 cleanTable(etl);
                 DateFormat df = new SimpleDateFormat("dd.MM.");
-                DecimalFormat decimalFormat = new DecimalFormat("0.000");
 
-                ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
-                if (pi instanceof CircadianPercentageProfilePlugin){
-                    magicNumber = ((CircadianPercentageProfilePlugin)pi).baseBasalSum();
-                    totalBaseBasal.setHint(decimalFormat.format(magicNumber));
-                    totalBaseBasal.setEnabled(false);
-                    totalBaseBasal.setClickable(false);
-                    totalBaseBasal.setFocusable(false);
-                    totalBaseBasal.setInputType(0);
-                } else {
-
-                    if(TextUtils.isEmpty(TBB)) {
-                        totalBaseBasal.setError("Please Enter Total Base Basal");
-                        return;
-                    }
-                    else {
-                        magicNumber = Double.parseDouble(TBB);
-                    }
-
+                if(TextUtils.isEmpty(TBB)) {
+                    totalBaseBasal.setError("Please Enter Total Base Basal");
+                    return;
                 }
+                else {
+                    magicNumber = Double.parseDouble(TBB);
+                }
+
                 magicNumber *=2;
-                totalBaseBasal2.setHint(decimalFormat.format(magicNumber));
+                totalBaseBasal2.setText(decimalFormat.format(magicNumber));
 
                 int i = 0;
                 double sum = 0d;
