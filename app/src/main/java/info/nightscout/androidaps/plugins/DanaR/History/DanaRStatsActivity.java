@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -15,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -109,6 +111,21 @@ public class DanaRStatsActivity extends Activity {
             unbindService(mConnection);
             mBounded = false;
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View myView = getCurrentFocus();
+            if ( myView instanceof EditText) {
+                Rect rect = new Rect();
+                myView.getGlobalVisibleRect(rect);
+                if (!rect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    myView.clearFocus();
+                }
+            }
+        }
+        return super.dispatchTouchEvent( event );
     }
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -293,14 +310,8 @@ public class DanaRStatsActivity extends Activity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if(actionId== EditorInfo.IME_ACTION_DONE){
-                    SharedPreferences.Editor edit = preferences.edit();
-                    edit.putString("TBB",totalBaseBasal.getText().toString());
-                    edit.commit();
-                    TBB = preferences.getString("TBB", "");
-                    loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
-                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                     totalBaseBasal.clearFocus();
+                    return true;
                 }
                 return false;
             }
@@ -311,6 +322,14 @@ public class DanaRStatsActivity extends Activity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus){
                     totalBaseBasal.getText().clear();
+                } else {
+                    SharedPreferences.Editor edit = preferences.edit();
+                    edit.putString("TBB",totalBaseBasal.getText().toString());
+                    edit.commit();
+                    TBB = preferences.getString("TBB", "");
+                    loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(totalBaseBasal.getWindowToken(), 0);
                 }
             }
         });
