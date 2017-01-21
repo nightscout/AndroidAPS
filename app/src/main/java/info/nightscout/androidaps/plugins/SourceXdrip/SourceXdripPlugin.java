@@ -29,6 +29,12 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
     }
 
     @Override
+    public String getNameShort() {
+        // use long name as fallback (no tabs)
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == BGSOURCE && fragmentEnabled;
     }

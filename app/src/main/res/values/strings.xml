@@ -429,4 +429,22 @@
     <string name="initializing">Initializing ...</string>
     <string name="careportal_temptarget">Temporary Target</string>
     <string name="openapsama_autosens_adjusttargets">Allow autosens to adjust targets</string>
+    <string name="actions_shortname">ACT</string>
+    <string name="configbuilder_shortname">CONF</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="simpleprofile_shortname">SP</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="temptargetrange_shortname">TT</string>
+    <string name="localprofile_shortname">LP</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="circadian_percentage_profile_shortname">CPP</string>
+    <string name="tempbasals_shortname">TB</string>
+    <string name="overview_shortname">HOME</string>
+    <string name="virtualpump_shortname">VPUMP</string>
+    <string name="profileviewer_shortname">NSPROFILE</string>
+    <string name="treatments_shortname">TREAT</string>
+    <string name="careportal_shortname">CP</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="wear_shortname">WEAR</string>
+    <string name="smscommunicator_shortname">SMS</string>
 </resources>

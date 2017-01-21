@@ -36,7 +36,7 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return visibleFragmentList.get(position).getName();
+        return visibleFragmentList.get(position).getNameShort();
     }
 
     @Override
