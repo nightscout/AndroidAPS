@@ -447,4 +447,5 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="wear_shortname">WEAR</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="short_tabtitles">Shorten tab titles</string>
 </resources>

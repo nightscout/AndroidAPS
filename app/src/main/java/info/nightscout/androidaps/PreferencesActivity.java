@@ -40,6 +40,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             recreate();
             MainApp.bus().post(new EventRefreshGui(true));
         }
+        if (key.equals("short_tabtitles")) {
+            MainApp.bus().post(new EventRefreshGui(true));
+        }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
 
