@@ -203,7 +203,12 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         long oldestDataAvailable = MainApp.getConfigBuilder().getActiveTempBasals().oldestDataAvaialable();
         List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia()))), false);
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString() + " (" + bgReadings.size() + " records)");
-        lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
+
+        if(MainApp.getConfigBuilder().isAMAModeEnabled()){
+            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
+        } else {
+            lastAutosensResult = new AutosensResult();
+        }
 
         determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
                 lastAutosensResult.ratio, //autosensDataRatio

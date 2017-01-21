@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -214,6 +217,8 @@ public class DetermineBasalAdapterAMAJS {
                         double min_5m_carbimpact) {
 
         String units = profile.getUnits();
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        boolean autosensAdustTargets = preferences.getBoolean("openapsama_autosens_adjusttargets", false);
 
         mProfile = new V8Object(mV8rt);
         mProfile.add("max_iob", maxIob);
@@ -232,7 +237,7 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("skip_neutral_temps", true);
         mProfile.add("current_basal", pump.getBaseBasalRate());
         mProfile.add("temptargetSet", tempTargetSet);
-        mProfile.add("autosens_adjust_targets", Constants.AUTOSENS_ADJUST_TARGETS);
+        mProfile.add("autosens_adjust_targets", autosensAdustTargets);
         mProfile.add("min_5m_carbimpact", min_5m_carbimpact);
         mV8rt.add(PARAM_profile, mProfile);
 
