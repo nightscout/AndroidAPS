@@ -349,7 +349,7 @@
     <string name="button1">Botón 1</string>
     <string name="button2">Botón 2</string>
     <string name="button3">Botón 3</string>
-    <string name="careportal_temptarget">Perfil Temporal</string>
+    <string name="careportal_temptarget">Objetivo Temporal</string>
     <string name="danar_disableeasymode">Inhabilitar EasyUI modo en bomba</string>
     <string name="danar_enableextendedbolus">Habilitar bolos extendidos en bomba</string>
     <string name="danar_switchtouhmode">Cambio de modo de U/d a U/h en bomba</string>
