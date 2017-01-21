@@ -85,6 +85,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/temptargetrange_reason_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
@@ -93,6 +94,7 @@
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
+                android:id="@+id/temptargetrange_reason_colon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingRight="5dp"
