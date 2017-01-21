@@ -36,14 +36,13 @@ public class Constants {
     public static final int BOLUSSNOOZE_DIA_ADVISOR = 2;
     public static final double AUTOSENS_MAX = 1.2d;
     public static final double AUTOSENS_MIN = 0.7d;
-    public static final boolean AUTOSENS_ADJUST_TARGETS = false;
     public static final double MIN_5M_CARBIMPACT = 3d;
 
     // Circadian Percentage Profile
     public static final int CPP_MIN_PERCENTAGE = 50;
     public static final int CPP_MAX_PERCENTAGE = 200;
 
-
+    // Defaults for settings
     public static final String MAX_BG_DEFAULT_MGDL = "180";
     public static final String MAX_BG_DEFAULT_MMOL = "10";
     public static final String MIN_BG_DEFAULT_MGDL = "100";

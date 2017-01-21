@@ -7,11 +7,13 @@ import org.json.JSONObject;
  * Created by mike on 06.01.2017.
  */
 public class AutosensResult {
-    public double ratio;
-    public double carbsAbsorbed;
-    public String sensResult;
-    public String pastSensitivity;
-    public String ratioLimit;
+
+    //default values to show when autosens algorithm is not called
+    public double ratio = 1d;
+    public double carbsAbsorbed = 0d;
+    public String sensResult = "autosens deactivated";
+    public String pastSensitivity = "";
+    public String ratioLimit = "";
 
     public JSONObject json() {
         JSONObject ret = new JSONObject();
