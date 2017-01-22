@@ -21,6 +21,7 @@ public interface PluginBase {
     String getFragmentClass();
 
     String getName();
+    String getNameShort();
     boolean isEnabled(int type);
     boolean isVisibleInTabs(int type);
     boolean canBeHidden(int type);

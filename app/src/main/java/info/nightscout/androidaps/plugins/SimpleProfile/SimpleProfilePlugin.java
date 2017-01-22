@@ -59,6 +59,17 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     @Override
+    public String getNameShort() {
+        String name = MainApp.sResources.getString(R.string.simpleprofile_shortname);
+        if (!name.trim().isEmpty()){
+            //only if translation exists
+            return name;
+        }
+        // use long name as fallback
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == PROFILE && fragmentEnabled;
     }

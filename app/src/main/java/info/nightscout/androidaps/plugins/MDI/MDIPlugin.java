@@ -75,6 +75,12 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public String getNameShort() {
+        // use long name as fallback (not visible in tabs)
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == PUMP && fragmentEnabled;
     }

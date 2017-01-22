@@ -62,6 +62,17 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
     }
 
     @Override
+    public String getNameShort() {
+        String name = MainApp.sResources.getString(R.string.tempbasals_shortname);
+        if (!name.trim().isEmpty()){
+            //only if translation exists
+            return name;
+        }
+        // use long name as fallback
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == TEMPBASAL && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }

@@ -376,4 +376,22 @@
     <string name="wear">Wear</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
      <string name="minago">преди %d м.</string>
+    <string name="actions_shortname">" "</string>
+    <string name="wear_shortname">" "</string>
+    <string name="virtualpump_shortname">" "</string>
+    <string name="treatments_shortname">" "</string>
+    <string name="temptargetrange_shortname">" "</string>
+    <string name="tempbasals_shortname">" "</string>
+    <string name="smscommunicator_shortname">" "</string>
+    <string name="simpleprofile_shortname">" "</string>
+    <string name="profileviewer_shortname">" "</string>
+    <string name="overview_shortname">" "</string>
+    <string name="objectives_shortname">" "</string>
+    <string name="oaps_shortname">" "</string>
+    <string name="loop_shortname">" "</string>
+    <string name="localprofile_shortname">" "</string>
+    <string name="danarpump_shortname">" "</string>
+    <string name="configbuilder_shortname">" "</string>
+    <string name="circadian_percentage_profile_shortname">" "</string>
+    <string name="careportal_shortname">" "</string>
 </resources>
