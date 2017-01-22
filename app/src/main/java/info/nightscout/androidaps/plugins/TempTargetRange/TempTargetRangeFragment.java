@@ -76,19 +76,23 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
             if (profile == null) return;
             TempTarget tempTarget = tempTargetList.get(position);
-            holder.date.setText(DateUtil.dateAndTimeString(tempTarget.timeStart) + " - " + DateUtil.timeString(tempTargetList.get(position).getPlannedTimeEnd()));
-            holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.duration) + " min");
-            holder.low.setText(tempTarget.lowValueToUnitsToString(profile.getUnits()));
-            holder.high.setText(tempTarget.highValueToUnitsToString(profile.getUnits()));
-            holder.reason.setText(tempTarget.reason);
-            if (tempTarget.isInProgress())
-                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
-            else if (tempTarget.duration == 0){
+            if (tempTarget.duration != 0) {
+                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.timeStart) + " - " + DateUtil.timeString(tempTargetList.get(position).getPlannedTimeEnd()));
+                holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.duration) + " min");
+                holder.low.setText(tempTarget.lowValueToUnitsToString(profile.getUnits()));
+                holder.high.setText(tempTarget.highValueToUnitsToString(profile.getUnits()));
+                holder.reason.setText(tempTarget.reason);
+            } else {
+                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.timeStart));
+                holder.duration.setText(R.string.cancel);
                 holder.low.setText("");
                 holder.high.setText("");
-                holder.duration.setText(R.string.cancel);
-                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationUrgent));
+                holder.reason.setText("");
+                holder.reasonLabel.setText("");
+                holder.reasonColon.setText("");
             }
+            if (tempTarget.isInProgress())
+                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
             else
                 holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.cardColorBackground));
             holder.remove.setTag(tempTarget);
@@ -111,6 +115,8 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             TextView low;
             TextView high;
             TextView reason;
+            TextView reasonLabel;
+            TextView reasonColon;
             TextView remove;
             LinearLayout dateLinearLayout;
 
@@ -122,6 +128,8 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
                 low = (TextView) itemView.findViewById(R.id.temptargetrange_low);
                 high = (TextView) itemView.findViewById(R.id.temptargetrange_high);
                 reason = (TextView) itemView.findViewById(R.id.temptargetrange_reason);
+                reasonLabel = (TextView) itemView.findViewById(R.id.temptargetrange_reason_label);
+                reasonColon = (TextView) itemView.findViewById(R.id.temptargetrange_reason_colon);
                 remove = (TextView) itemView.findViewById(R.id.temptargetrange_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
