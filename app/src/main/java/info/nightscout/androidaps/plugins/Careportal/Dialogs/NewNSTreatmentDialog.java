@@ -49,6 +49,7 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.CircadianPercentageProfile.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.client.data.NSProfile;
@@ -597,6 +598,12 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         MainApp.bus().post(new EventNewBasalProfile(nsProfile));
                                     } else {
                                         log.error("No active pump selected");
+                                    }
+                                    if (MainApp.getConfigBuilder().getActiveProfile() instanceof CircadianPercentageProfilePlugin) {
+                                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getConfigBuilder().getActiveProfile();
+                                        data.put("CircadianPercentageProfile", true);
+                                        data.put("timeshift", cpp.timeshift);
+                                        data.put("percentage", cpp.percentage);
                                     }
                                     ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                                 } catch (JSONException e) {

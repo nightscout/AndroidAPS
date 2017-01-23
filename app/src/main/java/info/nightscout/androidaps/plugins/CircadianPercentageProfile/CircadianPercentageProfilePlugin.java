@@ -39,8 +39,8 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     Double car;
     Double targetLow;
     Double targetHigh;
-    int percentage;
-    int timeshift;
+    public int percentage;
+    public int timeshift;
     double[] basebasal = new double[]{1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d};
     double[] baseisf = new double[]{35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d};
     double[] baseic = new double[]{4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d};
