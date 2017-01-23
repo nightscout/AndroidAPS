@@ -433,6 +433,12 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     break;
                 case R.id.careportal_temptarget:
                     data.put("eventType", "Temporary Target");
+                    if (!reasonSpinner.getSelectedItem().toString().equals(""))
+                        data.put("reason", reasonSpinner.getSelectedItem().toString());
+                    if (SafeParse.stringToDouble(low.getText().toString()) != 0d)
+                        data.put("targetBottom", SafeParse.stringToDouble(low.getText().toString()));
+                    if (SafeParse.stringToDouble(high.getText().toString()) != 0d)
+                        data.put("targetTop", SafeParse.stringToDouble(high.getText().toString()));
                     allowZeroDuration = true;
                     break;
             }
@@ -458,12 +464,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 data.put("preBolus", SafeParse.stringToDouble(carbTimeEdit.getText().toString()));
             if (!notesEdit.getText().toString().equals(""))
                 data.put("notes", notesEdit.getText().toString());
-            if (!reasonSpinner.getSelectedItem().toString().equals(""))
-                data.put("reason", reasonSpinner.getSelectedItem().toString());
-            if (SafeParse.stringToDouble(low.getText().toString()) != 0d)
-                data.put("targetBottom", SafeParse.stringToDouble(low.getText().toString()));
-            if (SafeParse.stringToDouble(high.getText().toString()) != 0d)
-                data.put("targetTop", SafeParse.stringToDouble(high.getText().toString()));
             data.put("units", units);
             if (!enteredBy.equals("")) data.put("enteredBy", enteredBy);
             if (options.eventType == R.id.careportal_combobolus) {
