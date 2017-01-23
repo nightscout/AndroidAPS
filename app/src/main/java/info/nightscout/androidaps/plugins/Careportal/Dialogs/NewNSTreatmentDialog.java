@@ -612,12 +612,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                             }
                         });
                     }
-                } else {
-                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
-                }
-                if (options.executeTempTarget) {
-
-
+                } else if (options.executeTempTarget) {
                     try {
                         if ((data.has("targetBottom") && data.has("targetTop")) || (data.has("duration")&& data.getInt("duration") == 0)) {
                             sHandler.post(new Runnable() {
