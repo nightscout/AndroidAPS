@@ -375,7 +375,7 @@
     <string name="resend_all_data">Изпрати всички данни отново</string>
     <string name="wear">Wear</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
-     <string name="minago" formatted="false">преди %d м.</string>
+     <string name="minago">преди %d м.</string>
     <string name="actions_shortname">" "</string>
     <string name="wear_shortname">" "</string>
     <string name="virtualpump_shortname">" "</string>
