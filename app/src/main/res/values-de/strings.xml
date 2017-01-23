@@ -314,7 +314,7 @@
     <string name="minago">vor %d min</string>
     <string name="actions_shortname">"AKT"</string>
     <string name="wear_shortname">"WEAR"</string>
-    <string name="virtualpump_shortname">"VT"</string>
+    <string name="virtualpump_shortname">"VP"</string>
     <string name="treatments_shortname">"TREAT"</string>
     <string name="temptargetrange_shortname">"TT"</string>
     <string name="tempbasals_shortname">"TB"</string>
