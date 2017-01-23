@@ -316,8 +316,8 @@
     <string name="wear_shortname">"WEAR"</string>
     <string name="virtualpump_shortname">"VT"</string>
     <string name="treatments_shortname">"TREAT"</string>
-    <string name="temptargetrange_shortname">"TARGET"</string>
-    <string name="tempbasals_shortname">"BASAL"</string>
+    <string name="temptargetrange_shortname">"TT"</string>
+    <string name="tempbasals_shortname">"TB"</string>
     <string name="smscommunicator_shortname">"SMS"</string>
     <string name="simpleprofile_shortname">"SP"</string>
     <string name="profileviewer_shortname">"PROF"</string>
@@ -327,7 +327,7 @@
     <string name="loop_shortname">"LOOP"</string>
     <string name="localprofile_shortname">"LP"</string>
     <string name="danarpump_shortname">"DANA"</string>
-    <string name="configbuilder_shortname">"CONFIG"</string>
-    <string name="circadian_percentage_profile_shortname">"CCP"</string>
+    <string name="configbuilder_shortname">"CONF"</string>
+    <string name="circadian_percentage_profile_shortname">"CPP"</string>
     <string name="careportal_shortname">"CP"</string>
 </resources>
