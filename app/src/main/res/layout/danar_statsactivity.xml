@@ -196,6 +196,10 @@
                 android:paddingRight="10dp"
                 android:text="@string/danar_stats_warning_Message" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
             <Button
                 android:id="@+id/danar_statsreload"
                 android:layout_width="200dp"
