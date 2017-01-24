@@ -132,11 +132,8 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/me.denley.wearpreferenceactivity/wearpreferenceactivity/0.5.0/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/ustwo-clockwise-debug/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
-<<<<<<< Updated upstream
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental-safeguard" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
-=======
->>>>>>> Stashed changes
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
