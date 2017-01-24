@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.data;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
@@ -24,6 +26,7 @@ public class GlucoseStatus {
     public double avgdelta = 0d;
     public double short_avgdelta = 0d;
     public double long_avgdelta = 0d;
+
 
     @Override
     public String toString() {
@@ -54,6 +57,8 @@ public class GlucoseStatus {
 
     @Nullable
     public static GlucoseStatus getGlucoseStatusData() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
+
         // load 45min
         long fromtime = (long) (new Date().getTime() - 60 * 1000L * 45);
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
@@ -104,8 +109,15 @@ public class GlucoseStatus {
 
         GlucoseStatus status = new GlucoseStatus();
         status.glucose = now.value;
-        status.delta = average(last_deltas);
+
         status.short_avgdelta = average(short_deltas);
+
+        if(prefs.getBoolean("always_use_shortavg",false) || last_deltas.isEmpty()){
+            status.delta = status.short_avgdelta;
+        } else {
+            status.delta = average(last_deltas);
+        }
+
         status.long_avgdelta = average(long_deltas);
         status.avgdelta = status.short_avgdelta; // for OpenAPS MA
 

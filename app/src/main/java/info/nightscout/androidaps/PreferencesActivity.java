@@ -104,6 +104,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (Config.SMSCOMMUNICATORENABLED)
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
             addPreferencesFromResource(R.xml.pref_others);
+            addPreferencesFromResource(R.xml.pref_advanced);
             initSummary(getPreferenceScreen());
         }
 

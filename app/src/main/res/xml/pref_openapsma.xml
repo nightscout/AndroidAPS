@@ -31,5 +31,4 @@
             android:numeric="decimal"
             android:title="@string/openapsma_maxiob_summary" />
     </PreferenceCategory>
-
 </PreferenceScreen>
