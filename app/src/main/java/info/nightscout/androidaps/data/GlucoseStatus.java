@@ -112,7 +112,7 @@ public class GlucoseStatus {
 
         status.short_avgdelta = average(short_deltas);
 
-        if(prefs.getBoolean("always_use_shortavg",false) || (last_deltas.isEmpty() && prefs.getBoolean("default_to_shortavg",false))){
+        if(prefs.getBoolean("always_use_shortavg",false) || last_deltas.isEmpty()){
             status.delta = status.short_avgdelta;
         } else {
             status.delta = average(last_deltas);

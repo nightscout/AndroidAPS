@@ -53,7 +53,7 @@ public class Constants {
     // Very Hard Limits Ranges
     // First value is the Lowest and second value is the Highest a Limit can define
     public static final int[] VERY_HARD_LIMIT_MIN_BG = {72,180};
-    public static final int[] VERY_HARD_LIMIT_MAX_BG = {99,270};
+    public static final int[] VERY_HARD_LIMIT_MAX_BG = {90,270};
     public static final int[] VERY_HARD_LIMIT_TARGET_BG = {80,200};
 
     // Very Hard Limits Ranges for Temp Targets

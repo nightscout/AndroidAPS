@@ -449,8 +449,7 @@
     <string name="smscommunicator_shortname">SMS</string>
     <string name="short_tabtitles">Shorten tab titles</string>
     <string name="prefs_delta_title">Delta Settings</string>
-    <string name="default_to_shortavg">Default to short average delta</string>
-    <string name="default_to_shortavg_summary">Use short average delta when simple delta cannot be computed.</string>
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
+    <string name="advancedsettings_title">Advanced Settings</string>
 </resources>
