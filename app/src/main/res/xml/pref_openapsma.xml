@@ -30,6 +30,18 @@
             android:key="openapsma_max_iob"
             android:numeric="decimal"
             android:title="@string/openapsma_maxiob_summary" />
+        <PreferenceScreen
+            android:title="@string/prefs_delta_title">
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="default_to_shortavg"
+                android:title="@string/default_to_shortavg"
+                android:summary="@string/default_to_shortavg_summary"/>
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="always_use_shortavg"
+                android:title="@string/always_use_shortavg"
+                android:summary="@string/always_use_shortavg_summary"/>
+        </PreferenceScreen>
     </PreferenceCategory>
-
 </PreferenceScreen>
