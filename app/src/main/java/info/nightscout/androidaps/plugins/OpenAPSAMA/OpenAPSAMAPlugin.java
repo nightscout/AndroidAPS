@@ -224,7 +224,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
                 lastAutosensResult.ratio, //autosensDataRatio
                 isTempTarget,
-                Double.parseDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
+                SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
                 );
 
 

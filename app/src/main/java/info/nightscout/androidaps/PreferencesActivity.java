@@ -10,6 +10,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -53,11 +54,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getTitle().toString().toLowerCase().contains("password"))
-            {
+            if (pref.getTitle().toString().toLowerCase().contains("password")) {
                 pref.setSummary("******");
-            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")){
-                pref.setSummary("Value is set to: " +editTextPref.getText() + "\n" + editTextPref.getSummary());
+            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
+                ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
+                pref.setSummary(editTextPref.getText());
             }
         }
         if (pref instanceof MultiSelectListPreference) {

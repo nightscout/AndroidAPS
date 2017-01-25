@@ -17,6 +17,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SafeParse;
 
 
 public class Autosens {
@@ -131,7 +132,7 @@ public class Autosens {
             if (bgTime > mealTime) {
                 // figure out how many carbs that represents
                 // but always assume at least 3mg/dL/5m (default) absorption
-                double ci = Math.max(deviation, Double.parseDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0")));
+                double ci = Math.max(deviation, SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0")));
                 double absorbed = ci * profile.getIc(secondsFromMidnight) / sens;
                 // and add that to the running total carbsAbsorbed
                 carbsAbsorbed += absorbed;
@@ -176,8 +177,8 @@ public class Autosens {
 
         // don't adjust more than 1.5x
         double rawRatio = ratio;
-        ratio = Math.max(ratio, Double.parseDouble(SP.getString("openapsama_autosens_min", "0.7")));
-        ratio = Math.min(ratio, Double.parseDouble(SP.getString("openapsama_autosens_max", "1.2")));
+        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
+        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
 
         String ratioLimit = "";
         if (ratio != rawRatio) {

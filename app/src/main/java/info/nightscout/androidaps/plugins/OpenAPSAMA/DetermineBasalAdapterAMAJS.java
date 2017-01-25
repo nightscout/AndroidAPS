@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SafeParse;
 
 public class DetermineBasalAdapterAMAJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterAMAJS.class);
@@ -231,13 +232,13 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("target_bg", targetBg);
         mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
         mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
-        mProfile.add("max_daily_safety_multiplier", Integer.parseInt(preferences.getString("openapsama_max_daily_safety_multiplier", "3")));
-        mProfile.add("current_basal_safety_multiplier", Integer.parseInt(preferences.getString("openapsama_max_basal_safety_multiplier", "4")));
+        mProfile.add("max_daily_safety_multiplier", SafeParse.stringToInt(preferences.getString("openapsama_max_daily_safety_multiplier", "3")));
+        mProfile.add("current_basal_safety_multiplier", SafeParse.stringToInt(preferences.getString("openapsama_max_basal_safety_multiplier", "4")));
         mProfile.add("skip_neutral_temps", preferences.getBoolean("openapsama_skip_neutral_temps", false));
         mProfile.add("current_basal", pump.getBaseBasalRate());
         mProfile.add("temptargetSet", tempTargetSet);
         mProfile.add("autosens_adjust_targets", preferences.getBoolean("openapsama_autosens_adjusttargets", true));
-        mProfile.add("min_5m_carbimpact", Double.parseDouble(preferences.getString("openapsama_min_5m_carbimpact", "3.0")));
+        mProfile.add("min_5m_carbimpact", SafeParse.stringToDouble(preferences.getString("openapsama_min_5m_carbimpact", "3.0")));
         mV8rt.add(PARAM_profile, mProfile);
 
         mCurrentTemp = new V8Object(mV8rt);
