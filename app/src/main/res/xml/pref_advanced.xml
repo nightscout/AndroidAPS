@@ -25,6 +25,69 @@
                     android:title="@string/always_use_shortavg"
                     android:summary="@string/always_use_shortavg_summary"/>
             </PreferenceCategory>
+            <PreferenceCategory
+                android:title="OpenAPS preferences.json">
+                <EditTextPreference
+                    android:defaultValue="3"
+                    android:selectAllOnFocus="true"
+                    android:inputType="number"
+                    android:title="@string/openapsama_max_daily_safety_multiplier"
+                    android:summary="@string/openapsama_max_daily_safety_multiplier_summary"
+                    android:key="openapsama_max_daily_safety_multiplier" />
+                <EditTextPreference
+                    android:defaultValue="4"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:inputType="number"
+                    android:title="@string/openapsama_current_basal_safety_multiplier"
+                    android:summary="@string/openapsama_max_daily_safety_multiplier_summary"
+                    android:key="openapsama_current_basal_safety_multiplier" />
+                <EditTextPreference
+                    android:defaultValue="1.2"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:inputType="numberDecimal"
+                    android:title="@string/openapsama_autosens_max"
+                    android:summary="@string/openapsama_autosens_max_summary"
+                    android:key="openapsama_autosens_max"
+                    android:dependency="openapsama_useautosens"/>
+                <EditTextPreference
+                    android:defaultValue="0.7"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:inputType="numberDecimal"
+                    android:title="@string/openapsama_autosens_min"
+                    android:summary="@string/openapsama_autosens_min_summary"
+                    android:key="openapsama_autosens_min"
+                    android:dependency="openapsama_useautosens"/>
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="openapsama_autosens_adjusttargets"
+                    android:dependency="openapsama_useautosens"
+                    android:title="@string/openapsama_autosens_adjusttargets"
+                    android:summary="@string/openapsama_autosens_adjusttargets_summary" />
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:title="@string/openapsama_skip_neutral_temps"
+                    android:summary="@string/openapsama_skip_neutral_temps_summary"
+                    android:key="openapsama_skip_neutral_temps" />
+                <EditTextPreference
+                    android:defaultValue="2"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:inputType="number"
+                    android:title="@string/openapsama_bolussnooze_dia_divisor"
+                    android:summary="@string/openapsama_bolussnooze_dia_divisor_summary"
+                    android:key="openapsama_bolussnooze_dia_divisor" />
+                <EditTextPreference
+                    android:defaultValue="3"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true"
+                    android:inputType="numberDecimal"
+                    android:title="@string/openapsama_min_5m_carbimpact"
+                    android:summary="@string/openapsama_min_5m_carbimpact_summary"
+                    android:key="openapsama_min_5m_carbimpact" />
+            </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

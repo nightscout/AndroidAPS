@@ -218,7 +218,6 @@ public class DetermineBasalAdapterAMAJS {
 
         String units = profile.getUnits();
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        boolean autosensAdustTargets = preferences.getBoolean("openapsama_autosens_adjusttargets", false);
 
         mProfile = new V8Object(mV8rt);
         mProfile.add("max_iob", maxIob);
@@ -232,13 +231,13 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("target_bg", targetBg);
         mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
         mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
-        mProfile.add("max_daily_safety_multiplier", Constants.MAX_DAILY_SAFETY_MULTIPLIER);
-        mProfile.add("current_basal_safety_multiplier", Constants.CURRENT_BASAL_SAFETY_MULTIPLIER);
-        mProfile.add("skip_neutral_temps", true);
+        mProfile.add("max_daily_safety_multiplier", Integer.parseInt(preferences.getString("openapsama_max_daily_safety_multiplier", "3")));
+        mProfile.add("current_basal_safety_multiplier", Integer.parseInt(preferences.getString("openapsama_max_basal_safety_multiplier", "4")));
+        mProfile.add("skip_neutral_temps", preferences.getBoolean("openapsama_skip_neutral_temps", false));
         mProfile.add("current_basal", pump.getBaseBasalRate());
         mProfile.add("temptargetSet", tempTargetSet);
-        mProfile.add("autosens_adjust_targets", autosensAdustTargets);
-        mProfile.add("min_5m_carbimpact", min_5m_carbimpact);
+        mProfile.add("autosens_adjust_targets", preferences.getBoolean("openapsama_autosens_adjusttargets", true));
+        mProfile.add("min_5m_carbimpact", Double.parseDouble(preferences.getString("openapsama_min_5m_carbimpact", "3.0")));
         mV8rt.add(PARAM_profile, mProfile);
 
         mCurrentTemp = new V8Object(mV8rt);

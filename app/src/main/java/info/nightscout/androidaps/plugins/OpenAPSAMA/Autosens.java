@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +23,7 @@ public class Autosens {
     private static Logger log = LoggerFactory.getLogger(Autosens.class);
 
     public static AutosensResult detectSensitivityandCarbAbsorption(List<BgReading> glucose_data, long mealTime) {
-
+        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         //console.error(mealTime);
@@ -128,7 +131,7 @@ public class Autosens {
             if (bgTime > mealTime) {
                 // figure out how many carbs that represents
                 // but always assume at least 3mg/dL/5m (default) absorption
-                double ci = Math.max(deviation, Constants.MIN_5M_CARBIMPACT);
+                double ci = Math.max(deviation, Double.parseDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0")));
                 double absorbed = ci * profile.getIc(secondsFromMidnight) / sens;
                 // and add that to the running total carbsAbsorbed
                 carbsAbsorbed += absorbed;
@@ -173,8 +176,8 @@ public class Autosens {
 
         // don't adjust more than 1.5x
         double rawRatio = ratio;
-        ratio = Math.max(ratio, Constants.AUTOSENS_MIN);
-        ratio = Math.min(ratio, Constants.AUTOSENS_MAX);
+        ratio = Math.max(ratio, Double.parseDouble(SP.getString("openapsama_autosens_min", "0.7")));
+        ratio = Math.min(ratio, Double.parseDouble(SP.getString("openapsama_autosens_max", "1.2")));
 
         String ratioLimit = "";
         if (ratio != rawRatio) {
