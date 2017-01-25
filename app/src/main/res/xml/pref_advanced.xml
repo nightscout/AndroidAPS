@@ -27,6 +27,12 @@
             </PreferenceCategory>
             <PreferenceCategory
                 android:title="OpenAPS preferences.json">
+                <Preference
+                    android:summary="@string/openapsama_link_to_preferncejson_doc_txt" >
+                    <intent
+                        android:action="android.intent.action.VIEW"
+                        android:data="@string/openapsama_link_to_preferncejson_doc" />
+                </Preference>
                 <EditTextPreference
                     android:defaultValue="3"
                     android:selectAllOnFocus="true"
