@@ -210,8 +210,10 @@
     <string name="el_lang">Greek</string>
     <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
     <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
+    <string name="openapsma_maxbasal_title">max basal</string>
     <string name="openapsma_maxbasal_summary">Max U/hr a Temp Basal can be set to</string>
-    <string name="openapsma_maxiob_summary">Maximum basal IOB OpenAPS can deliver [U]</string>
+    <string name="openapsma_maxiob_title">Max IOB</string>
+    <string name="openapsma_maxiob_summary">Maximum basal IOB OpenAPS can deliver [U]\n\nThis will default to zero. After several days or weeks, depending on your comfort level, you may choose to adjust this number.</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
     <string name="language">Language</string>
@@ -263,6 +265,7 @@
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
     <string name="danarprofile">DanaR profile settings</string>
     <string name="danarprofile_dia">DIA [h]</string>
+    <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="danarprofile_car">Carbs absorption rate</string>
     <string name="failedupdatebasalprofile">Failed to update basal profile</string>
     <string name="danar_history">History</string>
