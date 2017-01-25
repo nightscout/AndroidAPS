@@ -150,15 +150,6 @@ public class DetermineBasalAdapterAMAJS {
                 "OpenAPSAMA/determine-basal.js",
                 0);
         mV8rt.executeVoidScript("var determine_basal = module.exports;");
-        mV8rt.executeVoidScript(
-                "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
-                        "rT.duration = duration;\n" +
-                        "    rT.rate = rate;" +
-                        "return rT;" +
-                        "};",
-                "setTempBasal.js",
-                0
-        );
     }
 
     private void initModuleParent() {
