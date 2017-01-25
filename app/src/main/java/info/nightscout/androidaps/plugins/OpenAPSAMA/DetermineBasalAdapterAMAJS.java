@@ -139,8 +139,7 @@ public class DetermineBasalAdapterAMAJS {
     }
 
     private void loadScript() throws IOException {
-        mV8rt.executeVoidScript(readFile("OpenAPSAMA/round-basal.js"), "OpenAPSAMA/round-basal.js", 0);
-        mV8rt.executeVoidScript("var round_basal = module.exports;");
+        mV8rt.executeVoidScript("var round_basal = function round_basal(basal, profile) { return basal; };");
         mV8rt.executeVoidScript("require = function() {return round_basal;};");
 
         mV8rt.executeVoidScript(readFile("OpenAPSAMA/basal-set-temp.js"), "OpenAPSAMA/basal-set-temp.js ", 0);
