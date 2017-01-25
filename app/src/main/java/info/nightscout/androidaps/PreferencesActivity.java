@@ -57,7 +57,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             {
                 pref.setSummary("******");
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")){
-                pref.setSummary(editTextPref.getText());
+                pref.setSummary("Value is set to: " +editTextPref.getText() + "\n" + editTextPref.getSummary());
             }
         }
         if (pref instanceof MultiSelectListPreference) {
