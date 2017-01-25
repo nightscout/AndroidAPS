@@ -428,8 +428,6 @@
     <string name="danar_stats_tbb2">TBB * 2</string>
     <string name="initializing">Initializing ...</string>
     <string name="careportal_temptarget">Temporary Target</string>
-    <string name="openapsama_autosens_adjusttargets">Allow autosens to adjust targets</string>
-    <string name="openapsama_autosens_adjusttargets_summary">This is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
@@ -461,6 +459,8 @@
     <string name="openapsama_autosens_max_summary">This is a multiplier cap for autosens (and soon autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
     <string name="openapsama_autosens_min">autosens_min</string>
     <string name="openapsama_autosens_min_summary">The other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
+    <string name="openapsama_autosens_adjusttargets">autosens_adjust_targets</string>
+    <string name="openapsama_autosens_adjusttargets_summary">This is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
     <string name="openapsama_skip_neutral_temps">skip_neutral_temps</string>
     <string name="openapsama_skip_neutral_temps_summary">Defaults to false, so that OpenAPS will set temps whenever it can, so it will be easier to see if the system is working, even when you are offline. This means OpenAPS will set a “neutral” temp (same as your default basal) if no adjustments are needed. If you are a light sleeper and the “on the hour” buzzing or beeping wakes you up (even in vibrate mode), you may want to turn this to “true” to skip this setting. However, we recommend it for most people who will be using this system on the go and out of constant connectivity.</string>
     <string name="openapsama_bolussnooze_dia_divisor">bolussnooze_dia_divisor</string>
