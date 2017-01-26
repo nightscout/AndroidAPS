@@ -6,14 +6,13 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPBASALS)
@@ -190,16 +189,15 @@ public class TempBasal {
     }
 
     public String toString() {
-        DateFormat formatDateToJustTime = new SimpleDateFormat("HH:mm");
         String extended = isExtended ? "E " : "";
 
         if (isAbsolute) {
             return extended + DecimalFormatter.to2Decimal(absolute) + "U/h @" +
-                    formatDateToJustTime.format(timeStart) +
+                    DateUtil.timeString(timeStart) +
                     " " + getRealDuration() + "/" + duration + "min";
         } else { // percent
             return percent + "% @" +
-                    formatDateToJustTime.format(timeStart) +
+                    DateUtil.timeString(timeStart) +
                     " " + getRealDuration() + "/" + duration + "min";
         }
     }

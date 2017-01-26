@@ -17,7 +17,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -27,6 +26,7 @@ import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
 
@@ -61,13 +61,11 @@ public class TempBasalsFragment extends Fragment implements FragmentBase {
 
         @Override
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
-            DateFormat df = DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
-            DateFormat enddf = DateFormat.getTimeInstance(DateFormat.SHORT);
             TempBasal tempBasal = tempBasalList.get(position);
             if (tempBasal.timeEnd != null) {
-                holder.date.setText(df.format(tempBasal.timeStart) + " - " + enddf.format(tempBasalList.get(position).timeEnd));
+                holder.date.setText(DateUtil.dateAndTimeString(tempBasal.timeStart) + " - " + DateUtil.timeString(tempBasalList.get(position).timeEnd));
             } else {
-                holder.date.setText(df.format(tempBasal.timeStart));
+                holder.date.setText(DateUtil.dateAndTimeString(tempBasal.timeStart));
             }
             holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.duration) + " min");
             if (tempBasal.isAbsolute) {

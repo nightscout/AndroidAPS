@@ -6,12 +6,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
+import info.nightscout.utils.DateUtil;
 
 public class MsgHistoryAll extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgHistoryAll.class);
@@ -150,8 +150,7 @@ public class MsgHistoryAll extends MessageBase {
             log.error(e.getMessage(), e);
         }
 
-        DateFormat df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
-        ev.message = df.format(new Date(danaRHistoryRecord.getRecordDate()));
+        ev.message = DateUtil.dateAndTimeString(danaRHistoryRecord.getRecordDate());
         ev.message += " " + messageType;
         MainApp.bus().post(ev);
 
