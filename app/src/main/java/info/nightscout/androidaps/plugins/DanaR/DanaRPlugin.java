@@ -724,7 +724,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public PumpDescription getPumpDescription() {
+    public static PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 

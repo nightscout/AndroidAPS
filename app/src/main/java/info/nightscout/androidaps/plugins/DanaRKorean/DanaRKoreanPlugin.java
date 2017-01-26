@@ -724,7 +724,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public PumpDescription getPumpDescription() {
+    public static PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
