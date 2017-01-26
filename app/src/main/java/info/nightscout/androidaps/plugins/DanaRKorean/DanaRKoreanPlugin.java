@@ -66,7 +66,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     private static DanaRKoreanPump sDanaRKoreanPump = new DanaRKoreanPump();
     private static boolean useExtendedBoluses = false;
 
-    private PumpDescription pumpDescription = new PumpDescription();
+    public static PumpDescription pumpDescription = new PumpDescription();
 
     public static DanaRKoreanPump getDanaRPump() {
         return sDanaRKoreanPump;
@@ -713,7 +713,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public static PumpDescription getPumpDescription() {
+    public PumpDescription getPumpDescription() {
         return pumpDescription;
     }
 
