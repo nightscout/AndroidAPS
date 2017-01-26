@@ -11,6 +11,9 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.view.View;
+
+import com.andreabaccega.widget.FormEditText;
 
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -30,6 +33,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         myPreferenceFragment = new MyPreferenceFragment();
         getFragmentManager().beginTransaction().replace(android.R.id.content, myPreferenceFragment).commit();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+
     }
 
     @Override
@@ -45,7 +49,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             MainApp.bus().post(new EventRefreshGui(true));
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
-    }
+
+
+}
 
     private static  void updatePrefSummary(Preference pref) {
         if (pref instanceof ListPreference || pref instanceof BluetoothDevicePreference) {
