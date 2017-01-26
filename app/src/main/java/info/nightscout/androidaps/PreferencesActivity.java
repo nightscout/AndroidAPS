@@ -10,10 +10,7 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
-import android.preference.SwitchPreference;
-import android.view.View;
 
-import com.andreabaccega.widget.FormEditText;
 
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
