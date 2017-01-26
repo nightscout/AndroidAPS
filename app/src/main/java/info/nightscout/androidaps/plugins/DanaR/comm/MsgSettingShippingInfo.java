@@ -32,6 +32,7 @@ public class MsgSettingShippingInfo extends MessageBase {
             log.debug("Serial number: " + pump.serialNumber);
             log.debug("Shipping date: " + pump.shippingDate);
             log.debug("Shipping country: " + pump.shippingCountry);
+            log.debug("Is new pump: " + pump.isNewPump);
         }
     }
 }
