@@ -464,8 +464,6 @@
     <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
     <string name="openapsama_autosens_adjusttargets">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets_summary">Default value: true\nThis is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
-    <string name="openapsama_skip_neutral_temps">skip_neutral_temps</string>
-    <string name="openapsama_skip_neutral_temps_summary">Default value: false\nOpenAPS will set temps whenever it can, so it will be easier to see if the system is working, even when you are offline. This means OpenAPS will set a “neutral” temp (same as your default basal) if no adjustments are needed. If you are a light sleeper and the “on the hour” buzzing or beeping wakes you up (even in vibrate mode), you may want to turn this to “true” to skip this setting. However, we recommend it for most people who will be using this system on the go and out of constant connectivity.</string>
     <string name="openapsama_bolussnooze_dia_divisor">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact">min_5m_carbimpact</string>

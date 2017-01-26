@@ -46,7 +46,6 @@
                     android:title="@string/openapsama_max_daily_safety_multiplier"
                     android:dialogMessage="@string/openapsama_max_daily_safety_multiplier_summary"
                     android:key="openapsama_max_daily_safety_multiplier" />
-
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     validate:testType="numericRange"
                     validate:minNumber="1"
@@ -72,8 +71,7 @@
                     android:maxLines="20"
                     android:title="@string/openapsama_autosens_max"
                     android:dialogMessage="@string/openapsama_autosens_max_summary"
-                    android:key="openapsama_autosens_max"
-                    android:dependency="openapsama_useautosens"/>
+                    android:key="openapsama_autosens_max" />
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     validate:testType="floatNumericRange"
                     validate:minNumber="0"
@@ -85,32 +83,12 @@
                     android:maxLines="20"
                     android:title="@string/openapsama_autosens_min"
                     android:dialogMessage="@string/openapsama_autosens_min_summary"
-                    android:key="openapsama_autosens_min"
-                    android:dependency="openapsama_useautosens"/>
-                <PreferenceScreen
-                    android:title="@string/openapsama_autosens_adjusttargets">
-                    <PreferenceCategory
-                        android:title="@string/openapsama_autosens_adjusttargets">
-                        <Preference android:summary="@string/openapsama_autosens_adjusttargets_summary" />
-                        <SwitchPreference
-                            android:defaultValue="true"
-                            android:key="openapsama_autosens_adjusttargets"
-                            android:dependency="openapsama_useautosens"
-                            android:title="@string/openapsama_autosens_adjusttargets" />
-                    </PreferenceCategory>
-                </PreferenceScreen>
-                <PreferenceScreen
-                    android:title="@string/openapsama_skip_neutral_temps">
-                    <PreferenceCategory
-                        android:title="@string/openapsama_skip_neutral_temps">
-                        <Preference android:summary="@string/openapsama_skip_neutral_temps_summary" />
-                        <SwitchPreference
-                            android:defaultValue="false"
-                            android:title="@string/openapsama_skip_neutral_temps"
-                            android:key="openapsama_skip_neutral_temps"
-                            android:dependency="openapsama_useautosens" />
-                    </PreferenceCategory>
-                </PreferenceScreen>
+                    android:key="openapsama_autosens_min" />
+                <SwitchPreference
+                    android:defaultValue="true"
+                    android:key="openapsama_autosens_adjusttargets"
+                    android:title="@string/openapsama_autosens_adjusttargets"
+                    android:summary="@string/openapsama_autosens_adjusttargets_summary"/>
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     validate:testType="numericRange"
                     validate:minNumber="1"
