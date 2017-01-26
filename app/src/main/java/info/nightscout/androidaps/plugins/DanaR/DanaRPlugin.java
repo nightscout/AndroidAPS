@@ -66,7 +66,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private static DanaRPump sDanaRPump = new DanaRPump();
     private static boolean useExtendedBoluses = false;
 
-    private static PumpDescription pumpDescription = new PumpDescription();
+    public static PumpDescription pumpDescription = new PumpDescription();
 
     public static DanaRPump getDanaRPump() {
         return sDanaRPump;
