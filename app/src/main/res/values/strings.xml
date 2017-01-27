@@ -210,10 +210,10 @@
     <string name="el_lang">Greek</string>
     <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
     <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
-    <string name="openapsma_maxbasal_title">max basal</string>
-    <string name="openapsma_maxbasal_summary">Max U/hr a Temp Basal can be set to</string>
-    <string name="openapsma_maxiob_title">Max IOB</string>
-    <string name="openapsma_maxiob_summary">Maximum basal IOB OpenAPS can deliver [U]\n\nThis will default to zero. After several days or weeks, depending on your comfort level, you may choose to adjust this number.</string>
+    <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
+    <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
+    <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
+    <string name="openapsma_maxiob_summary">This value is called Max IOB in OpenAPS context\nThis will default to zero. After several days or weeks, depending on your comfort level, you may choose to adjust this number.</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">DISMISS</string>
     <string name="language">Language</string>
