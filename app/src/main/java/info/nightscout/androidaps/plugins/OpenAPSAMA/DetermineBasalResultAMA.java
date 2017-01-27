@@ -34,8 +34,8 @@ public class DetermineBasalResultAMA extends APSResult {
             duration = -1;
         } else {
             reason = result.getString("reason");
-            eventualBG = result.getDouble("eventualBG");
-            snoozeBG = result.getDouble("snoozeBG");
+            if (result.contains("eventualBG")) eventualBG = result.getDouble("eventualBG");
+            if (result.contains("snoozeBG")) snoozeBG = result.getDouble("snoozeBG");
             if (result.contains("rate")) {
                 rate = result.getDouble("rate");
                 if (rate < 0d) rate = 0d;
