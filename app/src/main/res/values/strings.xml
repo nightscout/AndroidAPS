@@ -452,4 +452,6 @@
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
+    <string name="virtualpump_firmware_label">Firmware:</string>
+    <string formatted="false" name="danar_model">Model: %02X Protocol: %02X Code: %02X</string>
 </resources>
