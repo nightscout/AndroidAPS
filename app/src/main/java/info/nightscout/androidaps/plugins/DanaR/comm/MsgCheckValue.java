@@ -24,6 +24,9 @@ public class MsgCheckValue extends MessageBase {
     public void handleMessage(byte[] bytes) {
         DanaRPump pump = DanaRPlugin.getDanaRPump();
 
+        DanaRPlugin.getDanaRPump().isNewPump = true;
+        log.debug("New firmware confirmed");
+
         pump.model = intFromBuff(bytes, 0, 1);
         pump.protocol = intFromBuff(bytes, 1, 1);
         pump.productCode = intFromBuff(bytes, 2, 1);

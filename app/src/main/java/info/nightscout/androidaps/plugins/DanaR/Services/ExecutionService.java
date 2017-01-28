@@ -279,7 +279,6 @@ public class ExecutionService extends Service {
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
             MsgCheckValue checkValue = new MsgCheckValue();
 
-
             if (danaRPump.isNewPump) {
                 mSerialIOThread.sendMessage(checkValue);
                 if (!checkValue.received) {

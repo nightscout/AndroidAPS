@@ -77,10 +77,6 @@ public class SerialIOThread extends Thread {
 
                     if (Config.logDanaMessageDetail)
                         log.debug("<<<<< " + message.getMessageName() + " " + message.toHexString(extractedBuff));
-                    if (message.getCommand() == 0xF0F1) {
-                        DanaRPlugin.getDanaRPump().isNewPump = true;
-                        log.debug("New firmware confirmed");
-                    }
 
                     // process the message content
                     message.received = true;
