@@ -24,15 +24,10 @@ public class MsgSettingShippingInfo extends MessageBase {
         pump.serialNumber = stringFromBuff(bytes, 0, 10);
         pump.shippingDate = dateFromBuff(bytes, 10);
         pump.shippingCountry = asciiStringFromBuff(bytes, 13, 3);
-        if (pump.shippingDate.getTime() > new Date(116, 4, 1).getTime()) {
-            pump.isNewPump = true;
-        } else
-            pump.isNewPump = false;
         if (Config.logDanaMessageDetail) {
             log.debug("Serial number: " + pump.serialNumber);
             log.debug("Shipping date: " + pump.shippingDate);
             log.debug("Shipping country: " + pump.shippingCountry);
-            log.debug("Is new pump: " + pump.isNewPump);
         }
     }
 }

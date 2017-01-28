@@ -36,7 +36,7 @@ public class DanaRPump {
     public String serialNumber = "";
     public Date shippingDate = new Date(0);
     public String shippingCountry = "";
-    public boolean isNewPump = false;
+    public boolean isNewPump = true;
     public int password = -1;
     public Date pumpTime = new Date(0);
 
