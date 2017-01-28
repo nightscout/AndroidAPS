@@ -77,6 +77,10 @@ public class SerialIOThread extends Thread {
 
                     if (Config.logDanaMessageDetail)
                         log.debug("<<<<< " + message.getMessageName() + " " + message.toHexString(extractedBuff));
+                    if (message.getCommand() == 0xF0F1) {
+                        DanaRPlugin.getDanaRPump().isNewPump = true;
+                        log.debug("New firmware confirmed");
+                    }
 
                     // process the message content
                     message.received = true;
@@ -176,6 +180,10 @@ public class SerialIOThread extends Thread {
         }
         if (!message.received) {
             log.warn("Reply not received " + message.getMessageName());
+            if (message.getCommand() == 0xF0F1) {
+                DanaRPlugin.getDanaRPump().isNewPump = false;
+                log.debug("Old firmware detected");
+            }
         }
         scheduleDisconnection();
     }

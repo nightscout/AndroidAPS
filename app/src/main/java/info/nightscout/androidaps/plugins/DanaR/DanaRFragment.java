@@ -63,6 +63,7 @@ public class DanaRFragment extends Fragment implements FragmentBase {
     TextView batteryView;
     TextView reservoirView;
     TextView iobView;
+    TextView firmwareView;
     Button viewProfileButton;
     Button historyButton;
 
@@ -103,6 +104,7 @@ public class DanaRFragment extends Fragment implements FragmentBase {
         batteryView = (TextView) view.findViewById(R.id.danar_battery);
         reservoirView = (TextView) view.findViewById(R.id.danar_reservoir);
         iobView = (TextView) view.findViewById(R.id.danar_iob);
+        firmwareView = (TextView) view.findViewById(R.id.danar_firmware);
         viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
         historyButton = (Button) view.findViewById(R.id.danar_history);
 
@@ -194,24 +196,24 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
-
-                    if (DanaRPlugin.getDanaRPump().lastConnection.getTime() != 0) {
-                        Long agoMsec = new Date().getTime() - DanaRPlugin.getDanaRPump().lastConnection.getTime();
+                    DanaRPump pump = DanaRPlugin.getDanaRPump();
+                    if (pump.lastConnection.getTime() != 0) {
+                        Long agoMsec = new Date().getTime() - pump.lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);
-                        lastConnectionView.setText(DateUtil.timeString(DanaRPlugin.getDanaRPump().lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
+                        lastConnectionView.setText(DateUtil.timeString(pump.lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
-                    if (DanaRPlugin.getDanaRPump().lastBolusTime.getTime() != 0) {
-                        Long agoMsec = new Date().getTime() - DanaRPlugin.getDanaRPump().lastBolusTime.getTime();
+                    if (pump.lastBolusTime.getTime() != 0) {
+                        Long agoMsec = new Date().getTime() - pump.lastBolusTime.getTime();
                         double agoHours =  agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
-                            lastBolusView.setText(DateUtil.timeString(DanaRPlugin.getDanaRPump().lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getPlugin().getDanaRPump().lastBolusAmount) + " U");
+                            lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getPlugin().getDanaRPump().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
                     }
 
-                    dailyUnitsView.setText(DecimalFormatter.to0Decimal(DanaRPlugin.getDanaRPump().dailyTotalUnits) + " / " + DanaRPlugin.getDanaRPump().maxDailyTotalUnits + " U");
-                    SetWarnColor.setColor(dailyUnitsView, DanaRPlugin.getDanaRPump().dailyTotalUnits, DanaRPlugin.getDanaRPump().maxDailyTotalUnits * 0.75d, DanaRPlugin.getDanaRPump().maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("( " + (DanaRPlugin.getDanaRPump().activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getPlugin().getBaseBasalRate()) + " U/h");
+                    dailyUnitsView.setText(DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U");
+                    SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
+                    basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getPlugin().getBaseBasalRate()) + " U/h");
                     if (getPlugin().isRealTempBasalInProgress()) {
                         tempBasalView.setText(getPlugin().getRealTempBasal().toString());
                     } else {
@@ -222,11 +224,16 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                     } else {
                         extendedBolusView.setText("");
                     }
-                    reservoirView.setText(DecimalFormatter.to0Decimal(DanaRPlugin.getDanaRPump().reservoirRemainingUnits) + " / 300 U");
-                    SetWarnColor.setColorInverse(reservoirView, DanaRPlugin.getDanaRPump().reservoirRemainingUnits, 50d, 20d);
-                    batteryView.setText("{fa-battery-" + (DanaRPlugin.getDanaRPump().batteryRemaining / 25) + "}");
-                    SetWarnColor.setColorInverse(batteryView, DanaRPlugin.getDanaRPump().batteryRemaining, 51d, 26d);
-                    iobView.setText(DanaRPlugin.getDanaRPump().iob + " U");
+                    reservoirView.setText(DecimalFormatter.to0Decimal(pump.reservoirRemainingUnits) + " / 300 U");
+                    SetWarnColor.setColorInverse(reservoirView, pump.reservoirRemainingUnits, 50d, 20d);
+                    batteryView.setText("{fa-battery-" + (pump.batteryRemaining / 25) + "}");
+                    SetWarnColor.setColorInverse(batteryView, pump.batteryRemaining, 51d, 26d);
+                    iobView.setText(pump.iob + " U");
+                    if (pump.isNewPump) {
+                        firmwareView.setText(String.format(getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
+                    } else {
+                        firmwareView.setText("OLD");
+                    }
                 }
             });
 

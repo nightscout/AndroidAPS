@@ -226,6 +226,7 @@ public class ExecutionService extends Service {
                     if (!getPumpStatus()) {
                         mSerialIOThread.disconnect("getPumpStatus failed");
                         waitMsec(3000);
+                        getBTSocketForSelectedPump();
                     }
                 }
             }
@@ -276,17 +277,20 @@ public class ExecutionService extends Service {
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
+            MsgCheckValue checkValue = new MsgCheckValue();
 
 
-            mSerialIOThread.sendMessage(new MsgSettingShippingInfo()); // TODO: show it somewhere
+            if (danaRPump.isNewPump) {
+                mSerialIOThread.sendMessage(checkValue);
+                if (!checkValue.received) {
+                    return false;
+                }
+            }
+
             mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
             mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
-
-            if (danaRPump.isNewPump) {
-                mSerialIOThread.sendMessage(new MsgCheckValue());
-            }
 
             if (!statusMsg.received) {
                 mSerialIOThread.sendMessage(statusMsg);

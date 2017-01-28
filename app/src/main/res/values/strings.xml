@@ -397,4 +397,6 @@
     <string name="minago">%dmin ago</string>
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Local Profile</string>
+    <string name="virtualpump_firmware_label">Firmware:</string>
+    <string formatted="false" name="danar_model">Model: %02X Protocol: %02X Code: %02X</string>
 </resources>
