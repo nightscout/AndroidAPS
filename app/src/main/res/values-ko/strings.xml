@@ -211,7 +211,7 @@
     <string name="connecting">연결중</string>
     <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
-    <string name="syncprofiletopump_title">NS 프로파일을 펌프에 동기화하기</string>
+    <string name="syncprofiletopump_title">프로파일을 펌프에 동기화하기</string>
     <string name="danar_pump_settings">다나R 펌프 설정</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>

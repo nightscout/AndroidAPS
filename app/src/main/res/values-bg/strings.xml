@@ -205,7 +205,7 @@
     <string name="end_user_license_agreement_i_understand">РАЗБИРАМ И СЕ СЪГЛАСЯВАМ</string>
     <string name="language">Език</string>
     <string name="save">Сигурност</string>
-    <string name="syncprofiletopump_title">Синхронизирай помпата с профила в Nightscout</string>
+    <string name="syncprofiletopump_title">Синхронизирай помпата с профила</string>
     <string name="nobtadapter">Няма bluetooth адаптер</string>
     <string name="nightscout">Nightscout</string>
     <string name="dismiss">Разбрах</string>

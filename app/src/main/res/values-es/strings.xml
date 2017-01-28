@@ -209,7 +209,7 @@
     <string name="connecting">Conectando</string>
     <string name="connected">Conectado</string>
     <string name="disconnected">Desconectado</string>
-    <string name="syncprofiletopump_title">Sincronizar perfil NS a bomba</string>
+    <string name="syncprofiletopump_title">Sincronizar perfil a bomba</string>
     <string name="danar_pump_settings">Ajustes de la bomba DanaR</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>

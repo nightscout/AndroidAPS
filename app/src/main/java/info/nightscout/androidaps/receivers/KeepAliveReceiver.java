@@ -11,8 +11,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.preference.PreferenceManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,10 +26,12 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.ToastUtils;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
@@ -62,6 +66,14 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     }
                 });
                 t.start();
+            }
+        }
+        PumpInterface pump = MainApp.getConfigBuilder();
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (pump != null && profile != null) {
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            if (SP.getBoolean("syncprofiletopump", false)) {
+                pump.setNewBasalProfile(profile);
             }
         }
 

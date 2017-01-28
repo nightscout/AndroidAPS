@@ -220,7 +220,7 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="syncprofiletopump_title">Sync Nightscout profile to pump</string>
+    <string name="syncprofiletopump_title">Sync profile to pump</string>
     <string name="danar_pump_settings">DanaR pump settings</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
@@ -454,4 +454,5 @@
     <string name="advancedsettings_title">Advanced Settings</string>
     <string name="virtualpump_firmware_label">Firmware:</string>
     <string formatted="false" name="danar_model">Model: %02X Protocol: %02X Code: %02X</string>
+    <string name="profile">Profile</string>
 </resources>

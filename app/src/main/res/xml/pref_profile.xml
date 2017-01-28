@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
-        android:key="nigthscout"
-        android:title="@string/nightscout">
+        android:key="profile"
+        android:title="@string/profile">
 
         <SwitchPreference
             android:defaultValue="false"

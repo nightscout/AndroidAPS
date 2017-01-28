@@ -92,7 +92,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_openapsma);
             if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
                 addPreferencesFromResource(R.xml.pref_openapsama);
-            addPreferencesFromResource(R.xml.pref_nightscout);
+            addPreferencesFromResource(R.xml.pref_profile);
             if (Config.DANAR) {
                 DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
                 DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);

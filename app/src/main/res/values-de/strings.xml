@@ -235,7 +235,7 @@
     <string name="hoursago">vor h </string>
     <string name="smscommunicator">SMS Kommunikator</string>
     <string name="smscommunicator_allowednumbers">erlaubte Telefonnummern</string>
-    <string name="syncprofiletopump_title">Nightscout Profil zur Pumpe synchronisieren</string>
+    <string name="syncprofiletopump_title">Profil zur Pumpe synchronisieren</string>
     <string name="waitingforpumpresult">auf Pumpenergebnis warten</string>
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="smscommunicator_remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
