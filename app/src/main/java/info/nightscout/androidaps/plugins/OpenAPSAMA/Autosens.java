@@ -98,7 +98,7 @@ public class Autosens {
 //            avgDelta = avgDelta.toFixed(2);
             IobTotal iob = IobTotal.calulateFromTreatmentsAndTemps(bgTime);
 
-            double bgi = Math.round((-iob.activity * sens * 5) * 100) / 100;
+            double bgi = Math.round((-iob.activity * sens * 5) * 100) / 100d;
 //            bgi = bgi.toFixed(2);
             //console.error(delta);
             double deviation = delta - bgi;
