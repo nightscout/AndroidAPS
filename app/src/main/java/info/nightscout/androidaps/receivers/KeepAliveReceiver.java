@@ -50,7 +50,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 isBasalOutdated = true;
 
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            if (SP.getBoolean("syncprofiletopump", false)) {
+            if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {

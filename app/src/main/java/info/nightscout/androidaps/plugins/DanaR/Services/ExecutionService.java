@@ -32,6 +32,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.DanaR.SerialIOThread;
@@ -226,6 +227,8 @@ public class ExecutionService extends Service {
                     if (!getPumpStatus()) {
                         mSerialIOThread.disconnect("getPumpStatus failed");
                         waitMsec(3000);
+                        if (!MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PUMP))
+                            return;
                         getBTSocketForSelectedPump();
                     }
                 }
