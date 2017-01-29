@@ -36,7 +36,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     boolean mgdl;
     boolean mmol;
     Double dia;
-    Double car;
     Double targetLow;
     Double targetHigh;
     public int percentage;
@@ -108,7 +107,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         editor.putBoolean(SETTINGS_PREFIX + "mmol", mmol);
         editor.putBoolean(SETTINGS_PREFIX + "mgdl", mgdl);
         editor.putString(SETTINGS_PREFIX + "dia", dia.toString());
-        editor.putString(SETTINGS_PREFIX + "car", car.toString());
         editor.putString(SETTINGS_PREFIX + "targetlow", targetLow.toString());
         editor.putString(SETTINGS_PREFIX + "targethigh", targetHigh.toString());
         editor.putString(SETTINGS_PREFIX + "timeshift", timeshift + "");
@@ -150,13 +148,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
                 log.debug(e.getMessage());
             }
         else dia = 3d;
-        if (settings.contains(SETTINGS_PREFIX + "car"))
-            try {
-                car = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "car", "20"));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else car = 20d;
         if (settings.contains(SETTINGS_PREFIX + "targetlow"))
             try {
                 targetLow = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "targetlow", "80"));
@@ -236,9 +227,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             }
             profile.put("carbratio", icArray);
 
-            profile.put("carbs_hr", car);
-
-            JSONArray isfArray = new JSONArray();
+             JSONArray isfArray = new JSONArray();
             for (int i = 0; i < 24; i++) {
                 isfArray.put(new JSONObject().put("timeAsSeconds", i * 60 * 60).put("value", baseisf[(offset + i) % 24] * 100d / percentage));
             }

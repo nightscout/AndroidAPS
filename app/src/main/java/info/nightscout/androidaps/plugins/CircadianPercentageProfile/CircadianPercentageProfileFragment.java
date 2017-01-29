@@ -48,7 +48,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     EditText diaView;
     RadioButton mgdlView;
     RadioButton mmolView;
-    EditText carView;
     EditText targetlowView;
     EditText targethighView;
     EditText percentageView;
@@ -74,7 +73,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         diaView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_dia);
         mgdlView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mgdl);
         mmolView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mmol);
-        carView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_car);
         targetlowView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targethigh);
         percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
@@ -101,7 +99,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         mgdlView.setChecked(circadianPercentageProfilePlugin.mgdl);
         mmolView.setChecked(circadianPercentageProfilePlugin.mmol);
         diaView.setText(circadianPercentageProfilePlugin.dia.toString());
-        carView.setText(circadianPercentageProfilePlugin.car.toString());
         targetlowView.setText(circadianPercentageProfilePlugin.targetLow.toString());
         targethighView.setText(circadianPercentageProfilePlugin.targetHigh.toString());
         percentageView.setText("" + circadianPercentageProfilePlugin.percentage);
@@ -226,7 +223,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                     circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
                 }
                 circadianPercentageProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
-                circadianPercentageProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
                 circadianPercentageProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
                 circadianPercentageProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
                 circadianPercentageProfilePlugin.timeshift = SafeParse.stringToInt(timeshiftView.getText().toString());
@@ -236,7 +232,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         };
 
         diaView.addTextChangedListener(textWatch);
-        carView.addTextChangedListener(textWatch);
         targetlowView.addTextChangedListener(textWatch);
         targethighView.addTextChangedListener(textWatch);
         percentageView.addTextChangedListener(textWatch);

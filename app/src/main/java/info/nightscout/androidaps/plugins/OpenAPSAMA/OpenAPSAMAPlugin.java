@@ -204,7 +204,6 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxIob = verifyHardLimits(maxIob, "maxIob", 0, 7);
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
-        if (!checkOnlyHardLimits(profile.getCarbAbsorbtionRate(), "carbs_hr", 4, 100)) return;
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
         if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100)) return;
         if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900)) return;

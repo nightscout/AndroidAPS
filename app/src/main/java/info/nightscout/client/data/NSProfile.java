@@ -120,7 +120,7 @@ public class NSProfile {
         }
         return 3D;
     }
-
+/*
     public Double getCarbAbsorbtionRate() {
         return getCarbAbsorbtionRate(getDefaultProfile());
     }
@@ -137,7 +137,7 @@ public class NSProfile {
         }
         return 0D;
     }
-
+*/
     // mmol or mg/dl
     public String getUnits() {
         return getUnits(getDefaultProfile());

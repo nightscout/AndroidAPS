@@ -8,11 +8,6 @@
             android:key="danarprofile_dia"
             android:numeric="decimal"
             android:title="@string/danarprofile_dia" />
-        <EditTextPreference
-            android:defaultValue=""
-            android:key="danarprofile_car"
-            android:numeric="decimal"
-            android:title="@string/danarprofile_car" />
 
     </PreferenceCategory>
 

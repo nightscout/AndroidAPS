@@ -34,7 +34,6 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     Double dia;
     Double ic;
     Double isf;
-    Double car;
     Double basal;
     Double targetLow;
     Double targetHigh;
@@ -104,7 +103,6 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         editor.putString("SimpleProfile" + "dia", dia.toString());
         editor.putString("SimpleProfile" + "ic", ic.toString());
         editor.putString("SimpleProfile" + "isf", isf.toString());
-        editor.putString("SimpleProfile" + "car", car.toString());
         editor.putString("SimpleProfile" + "basal", basal.toString());
         editor.putString("SimpleProfile" + "targetlow", targetLow.toString());
         editor.putString("SimpleProfile" + "targethigh", targetHigh.toString());
@@ -153,13 +151,6 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
                 log.debug(e.getMessage());
             }
         else isf = 200d;
-        if (settings.contains("SimpleProfile" + "car"))
-            try {
-                car = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "car", "20"));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else car = 20d;
         if (settings.contains("SimpleProfile" + "basal"))
             try {
                 basal = SafeParse.stringToDouble(settings.getString("SimpleProfile" + "basal", "1"));
@@ -232,7 +223,6 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
             json.put("store", store);
             profile.put("dia", dia);
             profile.put("carbratio", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", ic)));
-            profile.put("carbs_hr", car);
             profile.put("sens", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", isf)));
             profile.put("basal", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", basal)));
             profile.put("target_low", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetLow)));
