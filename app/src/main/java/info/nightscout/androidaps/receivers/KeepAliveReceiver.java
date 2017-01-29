@@ -78,30 +78,6 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         }
 
         log.debug("KeepAlive received");
-        final DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-        if (danaRPlugin != null && Config.DANAR && danaRPlugin.isEnabled(PluginBase.PUMP)) {
-            if (danaRPlugin.getDanaRPump().lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime() && !danaRPlugin.isConnected() && !danaRPlugin.isConnecting()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        danaRPlugin.doConnect("KeepAlive. Basal outdated: ");
-                    }
-                });
-                t.start();
-            }
-        }
-        final DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-        if (danaRKoreanPlugin != null && Config.DANAR && danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
-            if (danaRKoreanPlugin.getDanaRPump().lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime() && !danaRKoreanPlugin.isConnected() && !danaRKoreanPlugin.isConnecting()) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        danaRKoreanPlugin.doConnect("KeepAlive. Basal outdated: ");
-                    }
-                });
-                t.start();
-            }
-        }
         wl.release();
     }
 
