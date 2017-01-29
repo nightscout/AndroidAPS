@@ -417,4 +417,26 @@
     <string name="configbuilder_shortname">" "</string>
     <string name="circadian_percentage_profile_shortname">" "</string>
     <string name="careportal_shortname">" "</string>
+    <string name="advancedsettings_title">Rozšířené nastavení</string>
+    <string name="always_use_shortavg">Vždy používat krátkodobý průměrný rozdíl glykémií místo rozdílu posledních 2 hodnot</string>
+    <string name="always_use_shortavg_summary">Výhodné, pokud data z xDripu obsahují velký šum</string>
+    <string name="danar_stats">Statistika z pumpy</string>
+    <string name="danar_stats_amount_days">Dní</string>
+    <string name="danar_stats_cumulative_tdd">Kumulativní TDD</string>
+    <string name="danar_stats_expweight">Exponenciálně vážené TDD</string>
+    <string name="danar_stats_olddata_Message">Zastaralá data. Prosím načtěte je znovu</string>
+    <string name="danar_stats_basalrate">Bazál</string>
+    <string name="danar_stats_bolus">Bolus</string>
+    <string name="danar_stats_date">Datum</string>
+    <string name="danar_stats_ratio">Koef</string>
+    <string name="danar_stats_tbb">Celk. denní bazál</string>
+    <string name="danar_stats_tbb2">TBB * 2</string>
+    <string name="danar_stats_tdd">TDD</string>
+    <string name="danar_stats_warning_Message">Pravděpodobně nepřesné při používání bolusů k doplňování</string>
+    <string name="danar_stats_weight">Váha</string>
+    <string name="openapsama_autosens_adjusttargets">Povolit funkci Autosens měnit cílový rozsah</string>
+    <string name="prefs_delta_title">Nastavení parametru delta BG</string>
+    <string name="profile">Profil</string>
+    <string name="short_tabtitles">Krátké názvy modulů</string>
+    <string name="virtualpump_firmware_label">Firmware:</string>
 </resources>

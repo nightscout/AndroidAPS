@@ -425,7 +425,6 @@
     <string name="danar_stats_tbb">Total Base Basal</string>
     <string name="danar_stats_tbb2">TBB * 2</string>
     <string name="initializing">Initializing ...</string>
-    <string name="careportal_temptarget">Temporary Target</string>
     <string name="openapsama_autosens_adjusttargets">Allow autosens to adjust targets</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>

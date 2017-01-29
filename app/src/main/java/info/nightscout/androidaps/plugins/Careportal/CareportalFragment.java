@@ -8,10 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 
 public class CareportalFragment extends Fragment implements FragmentBase, View.OnClickListener {
@@ -44,7 +42,7 @@ public class CareportalFragment extends Fragment implements FragmentBase, View.O
     final OptionsToShow tempbasalend = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend, true, false, false, false, false, false, false, false, false, false);
     final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
     final OptionsToShow openapsoffline = new OptionsToShow(R.id.careportal_openapsoffline, R.string.careportal_openapsoffline, false, false, false, false, true, false, false, false, false, false);
-    final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temptarget, R.string.careportal_temptarget, false, false, false, false, true, false, false, false, false, true);
+    final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,7 +67,7 @@ public class CareportalFragment extends Fragment implements FragmentBase, View.O
         view.findViewById(R.id.careportal_tempbasalend).setOnClickListener(this);
         view.findViewById(R.id.careportal_tempbasalstart).setOnClickListener(this);
         view.findViewById(R.id.careportal_openapsoffline).setOnClickListener(this);
-        view.findViewById(R.id.careportal_temptarget).setOnClickListener(this);
+        view.findViewById(R.id.careportal_temporarytarget).setOnClickListener(this);
         return view;
     }
 
@@ -132,7 +130,7 @@ public class CareportalFragment extends Fragment implements FragmentBase, View.O
             case R.id.careportal_openapsoffline:
                 newDialog.setOptions(openapsoffline);
                 break;
-            case R.id.careportal_temptarget:
+            case R.id.careportal_temporarytarget:
                 newDialog.setOptions(temptarget);
                 break;
             default:

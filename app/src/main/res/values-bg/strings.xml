@@ -393,7 +393,6 @@
     <string name="circadian_percentage_profile_shortname">"ППр "</string>
     <string name="careportal_shortname">"CaPr"</string>
     <string name="activity">Физ.активност</string>
-    <string name="careportal_temptarget">Временна цел</string>
     <string name="danar_stats">DanaR статистика</string>
     <string name="danar_stats_basalrate">Базал</string>
     <string name="danar_stats_bolus">Болус</string>

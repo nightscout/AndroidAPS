@@ -44,7 +44,6 @@ import java.util.Date;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -431,7 +430,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 case R.id.careportal_openapsoffline:
                     data.put("eventType", "OpenAPS Offline");
                     break;
-                case R.id.careportal_temptarget:
+                case R.id.careportal_temporarytarget:
                     data.put("eventType", "Temporary Target");
                     if (!reasonSpinner.getSelectedItem().toString().equals(""))
                         data.put("reason", reasonSpinner.getSelectedItem().toString());
