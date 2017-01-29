@@ -61,8 +61,8 @@
                     android:key="openapsama_current_basal_safety_multiplier" />
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     validate:testType="floatNumericRange"
-                    validate:minNumber="0"
-                    validate:maxNumber="10"
+                    validate:floatminNumber="0.1"
+                    validate:floatmaxNumber="5"
                     android:digits="0123456789.,"
                     android:defaultValue="1.2"
                     android:selectAllOnFocus="true"
@@ -74,8 +74,8 @@
                     android:key="openapsama_autosens_max" />
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     validate:testType="floatNumericRange"
-                    validate:minNumber="0"
-                    validate:maxNumber="10"
+                    validate:floatminNumber="0.1"
+                    validate:floatmaxNumber="5"
                     android:defaultValue="0.7"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
@@ -104,8 +104,8 @@
                     android:key="openapsama_bolussnooze_dia_divisor" />
                 <com.andreabaccega.widget.ValidatingEditTextPreference
                     validate:testType="floatNumericRange"
-                    validate:minNumber="0"
-                    validate:maxNumber="10"
+                    validate:floatminNumber="0.1"
+                    validate:floatmaxNumber="10"
                     android:defaultValue="3.0"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
