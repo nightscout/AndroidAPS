@@ -30,6 +30,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateRes
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -179,6 +180,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
 
+        Date start = new Date();
         TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
         treatments.updateTotalIOB();
@@ -191,6 +193,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         MealData mealData = treatments.getMealData();
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
+        Profiler.log(log, "MA data gathering", start);
 
         minBg = verifyHardLimits(minBg, "minBg", Constants.VERY_HARD_LIMIT_MIN_BG[0], Constants.VERY_HARD_LIMIT_MIN_BG[1]);
         maxBg = verifyHardLimits(maxBg, "maxBg", Constants.VERY_HARD_LIMIT_MAX_BG[0], Constants.VERY_HARD_LIMIT_MAX_BG[1]);
@@ -215,7 +218,9 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
+        start = new Date();
         determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        Profiler.log(log, "MA calculation", start);
 
 
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
