@@ -58,19 +58,19 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     }
                 });
                 t.start();
-            } else if (isBasalOutdated) {
-                Thread t = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pump.updateStatus("KeepAlive. Basal outdated.");
-                    }
-                });
-                t.start();
             } else if (isStatusOutdated) {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         pump.updateStatus("KeepAlive. Status outdated.");
+                    }
+                });
+                t.start();
+            } else if (isBasalOutdated) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pump.updateStatus("KeepAlive. Basal outdated.");
                     }
                 });
                 t.start();
