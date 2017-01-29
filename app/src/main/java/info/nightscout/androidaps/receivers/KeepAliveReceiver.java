@@ -7,12 +7,9 @@ package info.nightscout.androidaps.receivers;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 
@@ -23,16 +20,12 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.client.data.NSProfile;
-import info.nightscout.utils.ToastUtils;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
@@ -43,6 +36,47 @@ public class KeepAliveReceiver extends BroadcastReceiver {
         PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "");
         wl.acquire();
 
+
+        final PumpInterface pump = MainApp.getConfigBuilder();
+        final NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (pump != null && profile != null) {
+            boolean isBasalOutdated = false;
+            boolean isStatusOutdated = false;
+
+            Date lastConnection = pump.lastStatusTime();
+            if (lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime())
+                isStatusOutdated = true;
+            if (Math.abs(profile.getBasal(NSProfile.secondsFromMidnight()) - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep)
+                isBasalOutdated = true;
+
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            if (SP.getBoolean("syncprofiletopump", false)) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pump.setNewBasalProfile(profile);
+                    }
+                });
+                t.start();
+            } else if (isBasalOutdated) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pump.updateStatus("KeepAlive. Basal outdated.");
+                    }
+                });
+                t.start();
+            } else if (isStatusOutdated) {
+                Thread t = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        pump.updateStatus("KeepAlive. Status outdated.");
+                    }
+                });
+                t.start();
+            }
+        }
+
         log.debug("KeepAlive received");
         final DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
         if (danaRPlugin != null && Config.DANAR && danaRPlugin.isEnabled(PluginBase.PUMP)) {
@@ -50,7 +84,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        danaRPlugin.doConnect("KeepAlive");
+                        danaRPlugin.doConnect("KeepAlive. Basal outdated: ");
                     }
                 });
                 t.start();
@@ -62,21 +96,12 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        danaRKoreanPlugin.doConnect("KeepAlive");
+                        danaRKoreanPlugin.doConnect("KeepAlive. Basal outdated: ");
                     }
                 });
                 t.start();
             }
         }
-        PumpInterface pump = MainApp.getConfigBuilder();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (pump != null && profile != null) {
-            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-            if (SP.getBoolean("syncprofiletopump", false)) {
-                pump.setNewBasalProfile(profile);
-            }
-        }
-
         wl.release();
     }
 

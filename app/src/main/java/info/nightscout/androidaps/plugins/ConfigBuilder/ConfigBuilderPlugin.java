@@ -374,6 +374,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
+    public Date lastStatusTime() {
+        return activePump.lastStatusTime();
+    }
+
+    @Override
+    public void updateStatus(String reason) {
+        activePump.updateStatus(reason);
+    }
+
+    @Override
     public double getBaseBasalRate() {
         return activePump.getBaseBasalRate();
     }

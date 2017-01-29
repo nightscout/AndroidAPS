@@ -137,6 +137,16 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public Date lastStatusTime() {
+        return new Date();
+    }
+
+    @Override
+    public void updateStatus(String reason) {
+        // do nothing
+    }
+
+    @Override
     public double getBaseBasalRate() {
         return 0d;
     }
