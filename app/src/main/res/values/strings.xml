@@ -430,7 +430,6 @@
     <string name="danar_stats_tbb">Total Base Basal</string>
     <string name="danar_stats_tbb2">TBB * 2</string>
     <string name="initializing">Initializing ...</string>
-    <string name="careportal_temptarget">Temporary Target</string>
     <string name="actions_shortname">ACT</string>
     <string name="configbuilder_shortname">CONF</string>
     <string name="loop_shortname">LOOP</string>
