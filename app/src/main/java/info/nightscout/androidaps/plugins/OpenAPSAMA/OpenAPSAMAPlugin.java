@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateRes
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -178,6 +179,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
 
+        Date start = new Date();
         IobTotal[] iobArray = IobTotal.calculateIobArrayInDia();
 
         MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
@@ -219,7 +221,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         } else {
             lastAutosensResult = new AutosensResult();
         }
+        Profiler.log(log, "AMA data gathering", start);
 
+        start = new Date();
         determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
                 lastAutosensResult.ratio, //autosensDataRatio
                 isTempTarget,
@@ -228,6 +232,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
+        Profiler.log(log, "AMA calculation", start);
         // Fix bug determine basal
         if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultAMA.changeRequested = false;
