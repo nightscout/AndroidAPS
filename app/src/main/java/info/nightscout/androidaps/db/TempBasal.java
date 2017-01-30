@@ -131,7 +131,7 @@ public class TempBasal {
 
     public int getRealDuration() {
         Long msecs = getTimeEnd().getTime() - timeStart.getTime();
-        return (int) (msecs / 60 / 1000);
+        return Math.round(msecs / 60f / 1000);
     }
 
     public long getMillisecondsFromStart() {
@@ -140,8 +140,8 @@ public class TempBasal {
 
     public int getPlannedRemainingMinutes() {
         if (timeEnd != null) return 0;
-        long remainingMin = (getPlannedTimeEnd().getTime() - new Date().getTime()) / 1000 / 60;
-        return (remainingMin < 0) ? 0 : (int) remainingMin;
+        float remainingMin = (getPlannedTimeEnd().getTime() - new Date().getTime()) / 1000f / 60;
+        return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 
     public boolean isInProgress() {
