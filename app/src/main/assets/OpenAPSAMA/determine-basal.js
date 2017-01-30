@@ -197,7 +197,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     if (iob_data.basaliob) { basaliob = iob_data.basaliob; }
     else { basaliob = iob_data.iob - iob_data.bolussnooze; }
 
-    // generate predicted future BGs based on IOB, COB, and current absortpion rate
+    // generate predicted future BGs based on IOB, COB, and current absorption rate
 
     var COBpredBGs = [];
     var aCOBpredBGs = [];
@@ -347,6 +347,7 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
                 // use snoozeBG to more gradually ramp in any counteraction of the user's boluses
                 // multiply by 2 to low-temp faster for increased hypo safety
                 var insulinReq = 2 * Math.min(0, (snoozeBG - target_bg) / sens);
+                insulinReq = round( insulinReq , 2);
                 if (minDelta < 0 && minDelta > expectedDelta) {
                     // if we're barely falling, newinsulinReq should be barely negative
                     rT.reason += ", Snooze BG " + convert_bg(snoozeBG, profile);
@@ -374,9 +375,19 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         }
     }
 
+    var minutes_running;
+    if (typeof currenttemp.duration == 'undefined' || currenttemp.duration == 0) {
+        minutes_running = 30;
+    } else if (typeof currenttemp.minutesrunning !== 'undefined'){
+        // If the time the current temp is running is not defined, use default request duration of 30 minutes.
+        minutes_running = currenttemp.minutesrunning;
+    } else {
+        minutes_running = 30 - currenttemp.duration;
+    }
+
     // if there is a low-temp running, and eventualBG would be below min_bg without it, let it run
     if (round_basal(currenttemp.rate, profile) < round_basal(basal, profile) ) {
-        var lowtempimpact = (currenttemp.rate - basal) * (currenttemp.duration/60) * sens;
+        var lowtempimpact = (currenttemp.rate - basal) * ((30-minutes_running)/60) * sens;
         var adjEventualBG = eventualBG + lowtempimpact;
         if ( adjEventualBG < min_bg ) {
             rT.reason += "letting low temp of " + currenttemp.rate + " run.";
