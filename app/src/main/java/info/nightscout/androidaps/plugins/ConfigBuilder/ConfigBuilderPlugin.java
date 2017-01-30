@@ -16,7 +16,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -46,7 +45,6 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -82,7 +80,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public ConfigBuilderPlugin() {
         MainApp.bus().register(this);
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");;
+        mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");
+        ;
     }
 
     @Override
@@ -103,7 +102,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.configbuilder_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -210,14 +209,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public void logPluginStatus() {
         for (PluginBase p : pluginList) {
             log.debug(p.getName() + ":" +
-                    (p.isEnabled(1) ? " GENERAL" : "")  +
-                    (p.isEnabled(2) ? " TREATMENT" : "")  +
-                    (p.isEnabled(3) ? " TEMPBASAL" : "")  +
-                    (p.isEnabled(4) ? " PROFILE" : "")  +
-                    (p.isEnabled(5) ? " APS" : "")  +
-                    (p.isEnabled(6) ? " PUMP" : "")  +
-                    (p.isEnabled(7) ? " CONSTRAINTS" : "")  +
-                    (p.isEnabled(8) ? " LOOP" : "")  +
+                    (p.isEnabled(1) ? " GENERAL" : "") +
+                    (p.isEnabled(2) ? " TREATMENT" : "") +
+                    (p.isEnabled(3) ? " TEMPBASAL" : "") +
+                    (p.isEnabled(4) ? " PROFILE" : "") +
+                    (p.isEnabled(5) ? " APS" : "") +
+                    (p.isEnabled(6) ? " PUMP" : "") +
+                    (p.isEnabled(7) ? " CONSTRAINTS" : "") +
+                    (p.isEnabled(8) ? " LOOP" : "") +
                     (p.isEnabled(9) ? " BGSOURCE" : "")
             );
         }
@@ -444,15 +443,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
             t.created_at = new Date();
             t.mealBolus = result.carbsDelivered > 0;
-            try {
-                MainApp.getDbHelper().getDaoTreatments().create(t);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            MainApp.getDbHelper().create(t);
             t.setTimeIndex(t.getTimeIndex());
             t.carbs = (double) result.carbsDelivered;
             uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
-            MainApp.bus().post(new EventTreatmentChange());
         }
         mWakeLock.release();
         return result;
@@ -496,19 +490,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             t.carbs = (double) result.carbsDelivered;
             t.created_at = new Date();
             t.mealBolus = t.carbs > 0;
-            try {
-                MainApp.getDbHelper().getDaoTreatments().create(t);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            MainApp.getDbHelper().create(t);
             t.setTimeIndex(t.getTimeIndex());
             t.sendToNSClient();
-            MainApp.bus().post(new EventTreatmentChange());
         }
         mWakeLock.release();
         return result;
     }
-
 
 
     @Override
@@ -819,7 +807,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             data.put("absolute", absolute);
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + absolute + "u/h " + durationInMinutes +" min"); // ECOR
+            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + absolute + "u/h " + durationInMinutes + " min"); // ECOR
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
@@ -849,7 +837,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 data.put("percent", percent - 100);
                 data.put("created_at", DateUtil.toISOString(new Date()));
                 data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-                data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + percent + "% " + durationInMinutes +" min"); // ECOR
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + percent + "% " + durationInMinutes + " min"); // ECOR
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
                 bundle.putString("collection", "treatments");
