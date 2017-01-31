@@ -180,9 +180,13 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxBg = Round.roundTo(maxBg, 0.1d);
 
         Date start = new Date();
+        Date startPart = new Date();
         IobTotal[] iobArray = IobTotal.calculateIobArrayInDia();
+        Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
+        startPart = new Date();
         MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
+        Profiler.log(log, "getMealData()", startPart);
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
@@ -212,15 +216,19 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
+        startPart = new Date();
         long oldestDataAvailable = MainApp.getConfigBuilder().getActiveTempBasals().oldestDataAvaialable();
         List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia()))), false);
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString() + " (" + bgReadings.size() + " records)");
+        Profiler.log(log, "getBgreadingsDataFromTime()", startPart);
 
+        startPart = new Date();
         if(MainApp.getConfigBuilder().isAMAModeEnabled()){
             lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, null);
         } else {
             lastAutosensResult = new AutosensResult();
         }
+        Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
         Profiler.log(log, "AMA data gathering", start);
 
         start = new Date();
