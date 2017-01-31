@@ -217,7 +217,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString() + " (" + bgReadings.size() + " records)");
 
         if(MainApp.getConfigBuilder().isAMAModeEnabled()){
-            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
+            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, null);
         } else {
             lastAutosensResult = new AutosensResult();
         }
