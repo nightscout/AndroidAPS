@@ -151,7 +151,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                     }
                                     if (!result.success) {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                        builder.setTitle(MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                                         builder.setMessage(result.comment);
                                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                         builder.show();
