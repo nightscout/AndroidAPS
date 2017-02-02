@@ -116,6 +116,7 @@
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
+    <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
     <string name="overview_newtempbasal_basal_label">Basal value</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
