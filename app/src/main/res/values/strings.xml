@@ -116,6 +116,7 @@
     <string name="openapsma_disabled">Plugin is disabled</string>
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
+    <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
     <string name="overview_newtempbasal_basal_label">Basal value</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
@@ -222,7 +223,7 @@
     <string name="connecting">Connecting</string>
     <string name="connected">Connected</string>
     <string name="disconnected">Disconnected</string>
-    <string name="syncprofiletopump_title">Sync Nightscout profile to pump</string>
+    <string name="syncprofiletopump_title">Sync profile to pump</string>
     <string name="danar_pump_settings">DanaR pump settings</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
@@ -365,7 +366,6 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">DIA:</string>
-    <string name="absorption_rate">Absorption rate:</string>
     <string name="target_range">Target range:</string>
     <string name="edit_base_basal">Edit Base-Basal:</string>
     <string name="edit_base_isf">Edit Base-ISF:</string>
@@ -455,6 +455,7 @@
     <string name="advancedsettings_title">Advanced Settings</string>
     <string name="virtualpump_firmware_label">Firmware:</string>
     <string formatted="false" name="danar_model">Model: %02X Protocol: %02X Code: %02X</string>
+    <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3\nThis is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
     <string name="openapsama_current_basal_safety_multiplier">current_basal_safety_multiplier</string>

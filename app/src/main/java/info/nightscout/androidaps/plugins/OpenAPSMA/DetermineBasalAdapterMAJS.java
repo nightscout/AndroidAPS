@@ -63,7 +63,6 @@ public class DetermineBasalAdapterMAJS {
         // Profile
         mProfile = new V8Object(mV8rt);
         mProfile.add("max_iob", 0);
-        mProfile.add("carbs_hr", 0);
         mProfile.add("dia", 0);
         mProfile.add("type", "current");
         mProfile.add("max_daily_basal", 0);
@@ -230,7 +229,6 @@ public class DetermineBasalAdapterMAJS {
         String units = profile.getUnits();
 
         mProfile.add("max_iob", maxIob);
-        mProfile.add("carbs_hr", profile.getCarbAbsorbtionRate());
         mProfile.add("dia", profile.getDia());
         mProfile.add("type", "current");
         mProfile.add("max_daily_basal", profile.getMaxDailyBasal());

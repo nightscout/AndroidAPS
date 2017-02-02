@@ -20,6 +20,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -212,7 +213,6 @@ public class DetermineBasalAdapterAMAJS {
 
         mProfile = new V8Object(mV8rt);
         mProfile.add("max_iob", maxIob);
-        mProfile.add("carbs_hr", profile.getCarbAbsorbtionRate());
         mProfile.add("dia", profile.getDia());
         mProfile.add("type", "current");
         mProfile.add("max_daily_basal", profile.getMaxDailyBasal());
@@ -235,6 +235,13 @@ public class DetermineBasalAdapterAMAJS {
         mCurrentTemp.add("temp", "absolute");
         mCurrentTemp.add("duration", pump.getTempBasalRemainingMinutes());
         mCurrentTemp.add("rate", pump.getTempBasalAbsoluteRate());
+
+        // as we have non default temps longer than 30 mintues
+        TempBasal tempBasal = pump.getTempBasal();
+        if(tempBasal != null){
+            mCurrentTemp.add("minutesrunning", tempBasal.getRealDuration());
+        }
+
         mV8rt.add(PARAM_currentTemp, mCurrentTemp);
 
         mIobData = mV8rt.executeArrayScript(IobTotal.convertToJSONArray(iobArray).toString());

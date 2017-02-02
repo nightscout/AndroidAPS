@@ -272,6 +272,18 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
+    public Date lastStatusTime() {
+        return getDanaRPump().lastConnection;
+    }
+
+    @Override
+    public void updateStatus(String reason) {
+        if (!isConnected() && !isConnecting()) {
+            doConnect(reason);
+        }
+    }
+
+    @Override
     public double getBaseBasalRate() {
         return getDanaRPump().currentBasal;
     }

@@ -37,7 +37,6 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     Double dia;
     JSONArray ic;
     JSONArray isf;
-    Double car;
     JSONArray basal;
     JSONArray targetLow;
     JSONArray targetHigh;
@@ -107,7 +106,6 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         editor.putString("LocalProfile" + "dia", dia.toString());
         editor.putString("LocalProfile" + "ic", ic.toString());
         editor.putString("LocalProfile" + "isf", isf.toString());
-        editor.putString("LocalProfile" + "car", car.toString());
         editor.putString("LocalProfile" + "basal", basal.toString());
         editor.putString("LocalProfile" + "targetlow", targetLow.toString());
         editor.putString("LocalProfile" + "targethigh", targetHigh.toString());
@@ -178,13 +176,6 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
                 e.printStackTrace();
             }
         }
-        if (settings.contains("LocalProfile" + "car"))
-            try {
-                car = SafeParse.stringToDouble(settings.getString("LocalProfile" + "car", "20"));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else car = 20d;
         if (settings.contains("LocalProfile" + "basal"))
             try {
                 basal = new JSONArray(settings.getString("LocalProfile" + "basal", DEFAULTARRAY));
@@ -290,7 +281,6 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             json.put("store", store);
             profile.put("dia", dia);
             profile.put("carbratio", ic);
-            profile.put("carbs_hr", car);
             profile.put("sens", isf);
             profile.put("basal", basal);
             profile.put("target_low", targetLow);

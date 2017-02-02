@@ -6,8 +6,10 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.Autosens;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.AutosensResult;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.client.data.NSProfile;
 
 /**
@@ -32,10 +34,12 @@ public class MealData {
         if (t > dia_ago && t <= now) {
             if (treatment.carbs >= 1) {
                 carbs += treatment.carbs;
-                AutosensResult result = Autosens.detectSensitivityandCarbAbsorption(bgReadings, t);
-                double myCarbsAbsorbed = result.carbsAbsorbed;
-                double myMealCOB = Math.max(0, carbs - myCarbsAbsorbed);
-                mealCOB = Math.max(mealCOB, myMealCOB);
+                if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
+                    AutosensResult result = Autosens.detectSensitivityandCarbAbsorption(bgReadings, t);
+                    double myCarbsAbsorbed = result.carbsAbsorbed;
+                    double myMealCOB = Math.max(0, carbs - myCarbsAbsorbed);
+                    mealCOB = Math.max(mealCOB, myMealCOB);
+                }
             }
             if (treatment.insulin > 0 && treatment.mealBolus) {
                 boluses += treatment.insulin;

@@ -45,7 +45,6 @@ public class LocalProfileFragment extends Fragment implements FragmentBase {
     RadioButton mmolView;
     TimeListEdit icView;
     TimeListEdit isfView;
-    EditText carView;
     TimeListEdit basalView;
     TimeListEdit targetView;
     Button profileswitchButton;
@@ -66,7 +65,6 @@ public class LocalProfileFragment extends Fragment implements FragmentBase {
         mmolView = (RadioButton) layout.findViewById(R.id.localprofile_mmol);
         icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label), getPlugin().ic, null, new DecimalFormat("0.0"), save);
         isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label), getPlugin().isf, null, new DecimalFormat("0.0"), save);
-        carView = (EditText) layout.findViewById(R.id.localprofile_car);
         basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label), getPlugin().basal, null, new DecimalFormat("0.00"), save);
         targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label), getPlugin().targetLow, getPlugin().targetHigh, new DecimalFormat("0.0"), save);
         profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
@@ -81,7 +79,6 @@ public class LocalProfileFragment extends Fragment implements FragmentBase {
         mgdlView.setChecked(localProfilePlugin.mgdl);
         mmolView.setChecked(localProfilePlugin.mmol);
         diaView.setText(localProfilePlugin.dia.toString());
-        carView.setText(localProfilePlugin.car.toString());
 
         mgdlView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,13 +125,11 @@ public class LocalProfileFragment extends Fragment implements FragmentBase {
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
                 localProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
-                localProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
                 localProfilePlugin.storeSettings();
             }
         };
 
         diaView.addTextChangedListener(textWatch);
-        carView.addTextChangedListener(textWatch);
 
         onStatusEvent(null);
 

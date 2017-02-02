@@ -28,6 +28,9 @@ public interface PumpInterface {
     int setNewBasalProfile(NSProfile profile);
     boolean isThisProfileSet(NSProfile profile);
 
+    Date lastStatusTime();
+    void updateStatus(String reason);
+
     double getBaseBasalRate(); // base basal rate, not temp basal
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();

@@ -32,6 +32,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusProgress;
 import info.nightscout.androidaps.plugins.DanaR.comm.MsgBolusStart;
@@ -222,6 +223,8 @@ public class ExecutionService extends Service {
                     if (!getPumpStatus()) {
                         mSerialIOThread.disconnect("getPumpStatus failed");
                         waitMsec(3000);
+                        if (!MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP))
+                            return;
                         getBTSocketForSelectedPump();
                     }
                 }

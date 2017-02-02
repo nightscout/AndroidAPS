@@ -41,7 +41,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-               android:text="@string/dia"
+                android:text="@string/dia"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
@@ -75,27 +75,15 @@
                 android:inputType="numberDecimal" />
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/absorption_rate"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <EditText
-                android:id="@+id/simpleprofile_car"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/simpleprofile_basalrate_label"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/basal_rate"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
                 android:id="@+id/simpleprofile_basalrate"
-                android:layout_width="100dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="numberDecimal" />
 

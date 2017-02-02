@@ -146,6 +146,16 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public Date lastStatusTime() {
+        return new Date();
+    }
+
+    @Override
+    public void updateStatus(String reason) {
+        // do nothing
+    }
+
+    @Override
     public double getBaseBasalRate() {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null)

@@ -246,24 +246,6 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/absorption_rate"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                    <EditText
-                        android:id="@+id/circadianpercentageprofile_car"
-                        android:layout_width="100dp"
-                        android:layout_height="wrap_content"
-                        android:layout_column="2"
-                        android:inputType="numberDecimal" />
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:text="@string/target_range"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 

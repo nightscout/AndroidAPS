@@ -132,7 +132,7 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
                 break;
             case R.id.actions_temptarget:
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temptarget, R.string.careportal_temptarget, false, false, false, false, true, false, false, false, false, true);
+                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
                 temptarget.executeTempTarget = true;
                 newTTDialog.setOptions(temptarget);
                 newTTDialog.show(manager, "NewNSTreatmentDialog");

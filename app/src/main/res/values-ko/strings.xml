@@ -211,7 +211,7 @@
     <string name="connecting">연결중</string>
     <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
-    <string name="syncprofiletopump_title">NS 프로파일을 펌프에 동기화하기</string>
+    <string name="syncprofiletopump_title">프로파일을 펌프에 동기화하기</string>
     <string name="danar_pump_settings">다나R 펌프 설정</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
@@ -253,7 +253,6 @@
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
     <string name="danarprofile">DanaR 프로파일 설정</string>
     <string name="danarprofile_dia">인슐린활동시간(DIA) [h]</string>
-    <string name="danarprofile_car">탄수화물 흡수속도 [g/hour]</string>
     <string name="failedupdatebasalprofile">기초주입 프로파일 갱신 실패</string>
     <string name="danar_history">History</string>
     <string name="danar_historyreload">Reload</string>
@@ -350,7 +349,6 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">DIA:</string>
-    <string name="absorption_rate">Absorption rate:</string>
     <string name="target_range">Target range:</string>
     <string name="edit_base_basal">Edit Base-Basal:</string>
     <string name="edit_base_isf">Edit Base-ISF:</string>

@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateRes
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -178,9 +179,14 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
 
+        Date start = new Date();
+        Date startPart = new Date();
         IobTotal[] iobArray = IobTotal.calculateIobArrayInDia();
+        Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
+        startPart = new Date();
         MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
+        Profiler.log(log, "getMealData()", startPart);
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
 
@@ -204,23 +210,28 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxIob = verifyHardLimits(maxIob, "maxIob", 0, 7);
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
-        if (!checkOnlyHardLimits(profile.getCarbAbsorbtionRate(), "carbs_hr", 4, 100)) return;
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
         if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100)) return;
         if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900)) return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
+        startPart = new Date();
         long oldestDataAvailable = MainApp.getConfigBuilder().getActiveTempBasals().oldestDataAvaialable();
         List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia()))), false);
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString() + " (" + bgReadings.size() + " records)");
+        Profiler.log(log, "getBgreadingsDataFromTime()", startPart);
 
+        startPart = new Date();
         if(MainApp.getConfigBuilder().isAMAModeEnabled()){
-            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, new Date().getTime());
+            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, null);
         } else {
             lastAutosensResult = new AutosensResult();
         }
+        Profiler.log(log, "detectSensitivityandCarbAbsorption()", startPart);
+        Profiler.log(log, "AMA data gathering", start);
 
+        start = new Date();
         determineBasalAdapterAMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobArray, glucoseStatus, mealData,
                 lastAutosensResult.ratio, //autosensDataRatio
                 isTempTarget,
@@ -229,6 +240,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();
+        Profiler.log(log, "AMA calculation", start);
         // Fix bug determine basal
         if (determineBasalResultAMA.rate == 0d && determineBasalResultAMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultAMA.changeRequested = false;
