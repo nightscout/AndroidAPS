@@ -22,6 +22,8 @@ import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by emmablack on 12/26/14.
  */
@@ -29,13 +31,18 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         GoogleApiClient.OnConnectionFailedListener {
     private static final String WEARABLE_DATA_PATH = "/nightscout_watch_data";
     private static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
+    private static final String WEARABLE_CANCELBOLUS_PATH = "/nightscout_watch_cancel_bolus";
+
     private static final String OPEN_SETTINGS = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
 
 
+
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
+    private static final String ACTION_CANCELBOLUS = "com.dexdrip.stephenblack.nightwatch.CANCELBOLUS";
+
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
     GoogleApiClient googleApiClient;
     private long lastRequest = 0;
@@ -65,8 +72,43 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         }
     }
 
+    public class BolusCancelTask extends AsyncTask<Void, Void, Void> {
+        Context mContext;
+
+        BolusCancelTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (googleApiClient.isConnected()) {
+                    NodeApi.GetConnectedNodesResult nodes =
+                            Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                    for (Node node : nodes.getNodes()) {
+                        Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_CANCELBOLUS_PATH, null);
+                    }
+
+            } else {
+                googleApiClient.blockingConnect(15, TimeUnit.SECONDS);
+                if (googleApiClient.isConnected()) {
+                    NodeApi.GetConnectedNodesResult nodes =
+                            Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                    for (Node node : nodes.getNodes()) {
+                        Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_CANCELBOLUS_PATH, null);
+                    }
+
+                }
+            }
+            return null;
+        }
+    }
+
     public void requestData() {
         new DataRequester(this).execute();
+    }
+
+    public void cancelBolus() {
+        new BolusCancelTask(this).execute();
     }
 
     public void googleApiConnect() {
@@ -84,7 +126,11 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         if (intent != null && ACTION_RESEND.equals(intent.getAction())) {
             googleApiConnect();
             requestData();
+        } else if(intent != null && ACTION_CANCELBOLUS.equals(intent.getAction())){
+            googleApiConnect();
+            cancelBolus();
         }
+        //TODO: add action to cancel bolus
         return START_STICKY;
     }
 
@@ -131,23 +177,29 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
     private void showBolusProgress(int progresspercent) {
         int notificationId = 001;
-// Build intent for notification content
-        Intent viewIntent = new Intent();
-        PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
+        // Build intent for notification content
+        //TODO: Add Action in order to see that it is a cancel event
+        Intent cancelIntent = new Intent(this, ListenerService.class);
+        cancelIntent.setAction(ACTION_CANCELBOLUS);
+        PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);;
 
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_icon)
                         .setContentTitle("Bolus Progress")
                         .setContentText(progresspercent + "%")
-                        .setContentIntent(viewPendingIntent);
+                        .setContentIntent(cancelPendingIntent);
 
-// Get an instance of the NotificationManager service
+        //TODO: set separate cancel extension with icon
+
+        // Get an instance of the NotificationManager service
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
 
-// Build the notification and issues it with notification manager.
+        // Build the notification and issues it with notification manager.
         notificationManager.notify(notificationId, notificationBuilder.build());
+
+        //TODO: Cancel notification when 100%
     }
 
     public static void requestData(Context context) {
