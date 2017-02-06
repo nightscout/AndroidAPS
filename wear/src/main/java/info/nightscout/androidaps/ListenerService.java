@@ -188,7 +188,10 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         .setSmallIcon(R.drawable.ic_icon)
                         .setContentTitle("Bolus Progress")
                         .setContentText(progresspercent + "%")
-                        .setContentIntent(cancelPendingIntent);
+                        .setContentIntent(cancelPendingIntent)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                        .setVibrate(new long[]{0, 100, 1000})
+                        .addAction(R.drawable.ic_cancel, "CANCEL BOLUS", cancelPendingIntent);
 
         //TODO: set separate cancel extension with icon
 
