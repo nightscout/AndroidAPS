@@ -44,6 +44,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     public static final String ACTION_OPEN_SETTINGS = WatchUpdaterService.class.getName().concat(".OpenSettings");
     public static final String ACTION_SEND_STATUS = WatchUpdaterService.class.getName().concat(".SendStatus");
     public static final String ACTION_SEND_BASALS = WatchUpdaterService.class.getName().concat(".SendBasals");
+    public static final String ACTION_SEND_BOLUSPROGRESS = WatchUpdaterService.class.getName().concat(".BolusProgress");
 
 
     private GoogleApiClient googleApiClient;
@@ -52,6 +53,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private static final String OPEN_SETTINGS_PATH = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
+    public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
 
 
     boolean wear_integration = false;
@@ -115,6 +117,8 @@ public class WatchUpdaterService extends WearableListenerService implements
                     sendStatus();
                 } else if (ACTION_SEND_BASALS.equals(action)) {
                     sendBasals();
+                } else if (ACTION_SEND_BOLUSPROGRESS.equals(action)){
+                    sendBolusProgress(intent.getIntExtra("progresspercent", 0));
                 } else {
                     sendData();
                 }
@@ -420,6 +424,20 @@ public class WatchUpdaterService extends WearableListenerService implements
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("OpenSettings", "No connection to wearable available!");
+        }
+    }
+
+    private void sendBolusProgress(int progresspercent) {
+        if (googleApiClient.isConnected()) {
+            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(BOLUS_PROGRESS_PATH);
+            //unique content
+            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putString("bolusProgress", "bolusProgress");
+            dataMapRequest.getDataMap().putInt("progresspercent", progresspercent);
+            PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+        } else {
+            Log.e("BolusProgress", "No connection to wearable available!");
         }
     }
 

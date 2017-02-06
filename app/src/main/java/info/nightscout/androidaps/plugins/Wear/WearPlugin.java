@@ -15,6 +15,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterService;
 
 /**
@@ -139,6 +140,14 @@ public class WearPlugin implements PluginBase {
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
         sendDataToWatch(false, true, false);
+    }
+
+
+    @Subscribe
+    public void onStatusEvent(final EventOverviewBolusProgress ev) {
+        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
+        intent.putExtra("progresspercent", ev.percent);
+        ctx.startService(intent);
     }
 
     public static boolean isEnabled() {

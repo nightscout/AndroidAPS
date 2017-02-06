@@ -1,10 +1,15 @@
 package info.nightscout.androidaps;
 
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.NotificationCompat.WearableExtender;
+
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -27,6 +32,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String OPEN_SETTINGS = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
+    public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
 
 
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
@@ -97,7 +103,9 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     Intent intent = new Intent(this, NWPreferences.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
-
+                } else if (path.equals(BOLUS_PROGRESS_PATH)) {
+                    int progress = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getInt("progresspercent", 0);
+                    showBolusProgress(progress);
                 } else if (path.equals(NEW_STATUS_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
@@ -119,6 +127,27 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                 }
             }
         }
+    }
+
+    private void showBolusProgress(int progresspercent) {
+        int notificationId = 001;
+// Build intent for notification content
+        Intent viewIntent = new Intent();
+        PendingIntent viewPendingIntent = PendingIntent.getActivity(this, 0, viewIntent, 0);
+
+        NotificationCompat.Builder notificationBuilder =
+                new NotificationCompat.Builder(this)
+                        .setSmallIcon(R.drawable.ic_icon)
+                        .setContentTitle("Bolus Progress")
+                        .setContentText(progresspercent + "%")
+                        .setContentIntent(viewPendingIntent);
+
+// Get an instance of the NotificationManager service
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(this);
+
+// Build the notification and issues it with notification manager.
+        notificationManager.notify(notificationId, notificationBuilder.build());
     }
 
     public static void requestData(Context context) {
