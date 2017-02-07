@@ -26,6 +26,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -424,6 +425,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
         }
 
+        MainApp.bus().post(new EventBolusRequested(insulin));
+
         PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
 
         BolusProgressDialog.bolusEnded = true;
@@ -468,6 +471,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             bolusProgressDialog.setInsulin(insulin);
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
         }
+
+        MainApp.bus().post(new EventBolusRequested(insulin));
 
         PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
 
