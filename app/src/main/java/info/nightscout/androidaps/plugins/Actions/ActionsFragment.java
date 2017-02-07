@@ -106,9 +106,9 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
                         tempBasal.setVisibility(View.GONE);
                     else
                         tempBasal.setVisibility(View.VISIBLE);
-                   /* if (!MainApp.getConfigBuilder().getPumpDescription().isRefillingCapable || !MainApp.getConfigBuilder().isInitialized())
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isRefillingCapable || !MainApp.getConfigBuilder().isInitialized())
                         fill.setVisibility(View.GONE);
-                    else */
+                    else
                         fill.setVisibility(View.VISIBLE);
                     if (!Config.APS)
                         tempTarget.setVisibility(View.GONE);
