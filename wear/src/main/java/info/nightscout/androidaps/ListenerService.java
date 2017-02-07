@@ -132,7 +132,6 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             googleApiConnect();
             cancelBolus();
         }
-        //TODO: add action to cancel bolus
         return START_STICKY;
     }
 
@@ -202,11 +201,9 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         .setVibrate(vibratePattern)
                         .addAction(R.drawable.ic_cancel, "CANCEL BOLUS", cancelPendingIntent);
 
-        // Get an instance of the NotificationManager service
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
 
-        // Build the notification and issues it with notification manager.
         notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
 
         if (progresspercent == 100){

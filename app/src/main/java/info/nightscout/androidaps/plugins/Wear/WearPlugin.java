@@ -155,15 +155,11 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventBolusRequested ev) {
-        ToastUtils.showToastInUiThread(ctx, "EventBolusRequested !!!");
         String status = String.format(MainApp.sResources.getString(R.string.bolusrequested), ev.getAmount());
-
         Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
         intent.putExtra("progresspercent", 0);
         intent.putExtra("progressstatus", status);
-        ToastUtils.showToastInUiThread(ctx, "before startService");
         ctx.startService(intent);
-        ToastUtils.showToastInUiThread(ctx, "after startService");
 
     }
 
