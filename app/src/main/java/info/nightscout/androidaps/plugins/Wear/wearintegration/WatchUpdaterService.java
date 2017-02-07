@@ -120,7 +120,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 } else if (ACTION_SEND_BASALS.equals(action)) {
                     sendBasals();
                 } else if (ACTION_SEND_BOLUSPROGRESS.equals(action)){
-                    sendBolusProgress(intent.getIntExtra("progresspercent", 0));
+                    sendBolusProgress(intent.getIntExtra("progresspercent", 0), intent.hasExtra("progressstatus")?intent.getStringExtra("progressstatus"):"");
                 } else {
                     sendData();
                 }
@@ -152,7 +152,6 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private void cancelBolus() {
-        //ToastUtils.showToastInUiThread(this, "cancelBolus()");
         PumpInterface pump = MainApp.getConfigBuilder();
         pump.stopBolusDelivering();
     }
@@ -440,12 +439,13 @@ public class WatchUpdaterService extends WearableListenerService implements
         }
     }
 
-    private void sendBolusProgress(int progresspercent) {
+    private void sendBolusProgress(int progresspercent, String status) {
         if (googleApiClient.isConnected()) {
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(BOLUS_PROGRESS_PATH);
             //unique content
             dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("bolusProgress", "bolusProgress");
+            dataMapRequest.getDataMap().putString("progressstatus", status);
             dataMapRequest.getDataMap().putInt("progresspercent", progresspercent);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);

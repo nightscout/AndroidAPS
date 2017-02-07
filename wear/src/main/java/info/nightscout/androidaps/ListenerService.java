@@ -1,5 +1,6 @@
 package info.nightscout.androidaps;
 
+import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.app.NotificationCompat.WearableExtender;
 
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,7 +38,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
 
-
+    public static final int NOTIFICATION_ID = 001;
 
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
     private static final String ACTION_CANCELBOLUS = "com.dexdrip.stephenblack.nightwatch.CANCELBOLUS";
@@ -151,7 +151,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     startActivity(intent);
                 } else if (path.equals(BOLUS_PROGRESS_PATH)) {
                     int progress = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getInt("progresspercent", 0);
-                    showBolusProgress(progress);
+                    String status = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("progressstatus", "");
+                    showBolusProgress(progress, status);
                 } else if (path.equals(NEW_STATUS_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
@@ -175,10 +176,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         }
     }
 
-    private void showBolusProgress(int progresspercent) {
-        int notificationId = 001;
-        // Build intent for notification content
-        //TODO: Add Action in order to see that it is a cancel event
+    private void showBolusProgress(int progresspercent, String progresstatus) {
         Intent cancelIntent = new Intent(this, ListenerService.class);
         cancelIntent.setAction(ACTION_CANCELBOLUS);
         PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);;
@@ -187,23 +185,42 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_icon)
                         .setContentTitle("Bolus Progress")
-                        .setContentText(progresspercent + "%")
+                        .setContentText(progresspercent + "% - " + progresstatus)
                         .setContentIntent(cancelPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setVibrate(new long[]{0, 100, 1000})
+                        .setVibrate(new long[]{0, 50, 1000})
                         .addAction(R.drawable.ic_cancel, "CANCEL BOLUS", cancelPendingIntent);
-
-        //TODO: set separate cancel extension with icon
 
         // Get an instance of the NotificationManager service
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
 
         // Build the notification and issues it with notification manager.
-        notificationManager.notify(notificationId, notificationBuilder.build());
+        notificationManager.notify(NOTIFICATION_ID, notificationBuilder.build());
 
-        //TODO: Cancel notification when 100%
+        if (progresspercent == 100){
+            scheduleDismiss();
+        }
     }
+
+    private void scheduleDismiss() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                NotificationManagerCompat notificationManager =
+                        NotificationManagerCompat.from(ListenerService.this);
+                notificationManager.cancel(NOTIFICATION_ID);
+            }
+        });
+        t.start();
+    }
+
+
 
     public static void requestData(Context context) {
         Intent intent = new Intent(context, ListenerService.class);

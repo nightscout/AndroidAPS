@@ -147,6 +147,7 @@ public class WearPlugin implements PluginBase {
     public void onStatusEvent(final EventOverviewBolusProgress ev) {
         Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_BOLUSPROGRESS);
         intent.putExtra("progresspercent", ev.percent);
+        intent.putExtra("progressstatus", ev.status);
         ctx.startService(intent);
     }
 
