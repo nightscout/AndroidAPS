@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
@@ -46,6 +47,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
     GoogleApiClient googleApiClient;
     private long lastRequest = 0;
+
 
     public class DataRequester extends AsyncTask<Void, Void, Void> {
         Context mContext;
@@ -181,6 +183,15 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         cancelIntent.setAction(ACTION_CANCELBOLUS);
         PendingIntent cancelPendingIntent = PendingIntent.getService(this, 0, cancelIntent, 0);;
 
+        long[] vibratePattern;
+        boolean vibreate = PreferenceManager
+                .getDefaultSharedPreferences(this).getBoolean("vibrateOnBolus", true);
+        if(vibreate){
+            vibratePattern = new long[]{0, 50, 1000};
+        } else {
+            vibratePattern = new long[]{0, 1, 1000};
+        }
+
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this)
                         .setSmallIcon(R.drawable.ic_icon)
@@ -188,7 +199,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         .setContentText(progresspercent + "% - " + progresstatus)
                         .setContentIntent(cancelPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
-                        .setVibrate(new long[]{0, 50, 1000})
+                        .setVibrate(vibratePattern)
                         .addAction(R.drawable.ic_cancel, "CANCEL BOLUS", cancelPendingIntent);
 
         // Get an instance of the NotificationManager service
