@@ -3,6 +3,7 @@ package info.nightscout.androidaps;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
+import android.support.wearable.watchface.WatchFaceStyle;
 import android.view.LayoutInflater;
 
 import com.ustwo.clockwise.common.WatchMode;
@@ -38,6 +39,11 @@ public class LargeHome extends BaseWatchFace {
             }
             sgvTapTime = eventTime;
         }
+    }
+
+    @Override
+    protected WatchFaceStyle getWatchFaceStyle(){
+        return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
     }
 
     @Override

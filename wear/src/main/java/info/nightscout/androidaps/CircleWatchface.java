@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.watchface.WatchFaceStyle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -346,7 +347,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getInRangeColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.argb(255, 120, 255, 120);
         } else {
             return Color.argb(255, 0, 240, 0);
@@ -355,7 +356,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getHighColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.argb(255, 255, 255, 120);
         } else {
             return Color.argb(255, 255, 200, 0);
@@ -364,7 +365,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getBackgroundColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.BLACK;
         } else {
             return Color.WHITE;
@@ -373,7 +374,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getTextColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.WHITE;
         } else {
             return Color.BLACK;
@@ -666,7 +667,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         Log.d("CircleWatchface", "addReadingSoft");
         double size;
         int color = Color.LTGRAY;
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             color = Color.DKGRAY;
         }
 
@@ -684,7 +685,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         double size;
         int color = Color.LTGRAY;
         int indicatorColor = Color.DKGRAY;
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             color = Color.DKGRAY;
             indicatorColor = Color.LTGRAY;
         }
@@ -723,5 +724,11 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
             sgvTapTime = eventTime;
         }
     }
+
+    @Override
+    protected WatchFaceStyle getWatchFaceStyle(){
+        return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
+    }
+
 
 }
