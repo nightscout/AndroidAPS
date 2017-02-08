@@ -163,6 +163,15 @@ public class WearPlugin implements PluginBase {
 
     }
 
+    public void requestActionConfirmation(String title, String message, String actionstring){
+
+        Intent intent = new Intent(ctx, WatchUpdaterService.class).setAction(WatchUpdaterService.ACTION_SEND_ACTIONCONFIRMATIONREQUEST);
+        intent.putExtra("title", title);
+        intent.putExtra("message", message);
+        intent.putExtra("actionstring", actionstring);
+        ctx.startService(intent);
+    }
+
     public static boolean isEnabled() {
         return fragmentEnabled;
     }

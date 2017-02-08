@@ -45,16 +45,21 @@ public class WatchUpdaterService extends WearableListenerService implements
     public static final String ACTION_SEND_STATUS = WatchUpdaterService.class.getName().concat(".SendStatus");
     public static final String ACTION_SEND_BASALS = WatchUpdaterService.class.getName().concat(".SendBasals");
     public static final String ACTION_SEND_BOLUSPROGRESS = WatchUpdaterService.class.getName().concat(".BolusProgress");
+    public static final String ACTION_SEND_ACTIONCONFIRMATIONREQUEST = WatchUpdaterService.class.getName().concat(".ActionConfirmationRequest");
 
 
     private GoogleApiClient googleApiClient;
     public static final String WEARABLE_DATA_PATH = "/nightscout_watch_data";
     public static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
     private static final String WEARABLE_CANCELBOLUS_PATH = "/nightscout_watch_cancel_bolus";
+    public static final String WEARABLE_CONFIRM_ACTIONSTRING_PATH = "/nightscout_watch_confirmactionstring";
+    public static final String WEARABLE_INITIATE_ACTIONSTRING_PATH = "/nightscout_watch_initiateactionstring";
+
     private static final String OPEN_SETTINGS_PATH = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
+    public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
 
 
 
@@ -121,7 +126,13 @@ public class WatchUpdaterService extends WearableListenerService implements
                     sendBasals();
                 } else if (ACTION_SEND_BOLUSPROGRESS.equals(action)){
                     sendBolusProgress(intent.getIntExtra("progresspercent", 0), intent.hasExtra("progressstatus")?intent.getStringExtra("progressstatus"):"");
-                } else {
+                } else if (ACTION_SEND_ACTIONCONFIRMATIONREQUEST.equals(action)){
+                    String title = intent.getStringExtra("title");
+                    String message = intent.getStringExtra("message");
+                    String actionstring = intent.getStringExtra("actionstring");
+                    sendActionConfirmationRequest(title, message, actionstring);
+                }
+                else {
                     sendData();
                 }
             } else {
@@ -147,6 +158,18 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             if (event != null && event.getPath().equals(WEARABLE_CANCELBOLUS_PATH)) {
                 cancelBolus();
+            }
+
+            if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
+                String actionstring = new String(event.getData());
+                ToastUtils.showToastInUiThread(this, "INITIATE: " + actionstring);
+                //TODO: watch initiated action
+            }
+
+            if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
+                String actionstring = new String(event.getData());
+                ToastUtils.showToastInUiThread(this, "CONFIRM: " + actionstring);
+                //TODO: watch confirmed action
             }
         }
     }
@@ -451,6 +474,23 @@ public class WatchUpdaterService extends WearableListenerService implements
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {
             Log.e("BolusProgress", "No connection to wearable available!");
+        }
+    }
+
+    private void sendActionConfirmationRequest(String title, String message, String actionstring) {
+        if (googleApiClient.isConnected()) {
+            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(ACTION_CONFIRMATION_REQUEST_PATH);
+            //unique content
+            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putString("actionConfirmationRequest", "actionConfirmationRequest");
+            dataMapRequest.getDataMap().putString("title", title);
+            dataMapRequest.getDataMap().putString("message", message);
+            dataMapRequest.getDataMap().putString("actionstring", actionstring);
+
+            PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+        } else {
+            Log.e("ActionConfirmationRequest", "No connection to wearable available!");
         }
     }
 

@@ -32,11 +32,15 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String WEARABLE_DATA_PATH = "/nightscout_watch_data";
     private static final String WEARABLE_RESEND_PATH = "/nightscout_watch_data_resend";
     private static final String WEARABLE_CANCELBOLUS_PATH = "/nightscout_watch_cancel_bolus";
+    public static final String WEARABLE_CONFIRM_ACTIONSTRING_PATH = "/nightscout_watch_confirmactionstring";
+    public static final String WEARABLE_INITIATE_ACTIONSTRING_PATH = "/nightscout_watch_initiateactionstring";
 
     private static final String OPEN_SETTINGS = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
+    public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
+
 
     public static final int BOLUS_PROGRESS_NOTIF_ID = 001;
     public static final int CONFIRM_NOTIF_ID = 002;
@@ -86,11 +90,11 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         @Override
         protected Void doInBackground(Void... params) {
             if (googleApiClient.isConnected()) {
-                    NodeApi.GetConnectedNodesResult nodes =
-                            Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
-                    for (Node node : nodes.getNodes()) {
-                        Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_CANCELBOLUS_PATH, null);
-                    }
+                NodeApi.GetConnectedNodesResult nodes =
+                        Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                for (Node node : nodes.getNodes()) {
+                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_CANCELBOLUS_PATH, null);
+                }
 
             } else {
                 googleApiClient.blockingConnect(15, TimeUnit.SECONDS);
@@ -107,12 +111,51 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         }
     }
 
+    public class MessageActionTask extends AsyncTask<Void, Void, Void> {
+        Context mContext;
+        String mActionstring;
+        String mMessagePath;
+
+        MessageActionTask(Context context, String messagePath, String actionstring) {
+            mContext = context;
+            mActionstring = actionstring;
+            mMessagePath = messagePath;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            if (googleApiClient.isConnected()) {
+                NodeApi.GetConnectedNodesResult nodes =
+                        Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                for (Node node : nodes.getNodes()) {
+                    Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), mMessagePath, mActionstring.getBytes());
+                }
+
+            } else {
+                googleApiClient.blockingConnect(15, TimeUnit.SECONDS);
+                if (googleApiClient.isConnected()) {
+                    //TODO: copy send code
+
+                }
+            }
+            return null;
+        }
+    }
+
     public void requestData() {
         new DataRequester(this).execute();
     }
 
     public void cancelBolus() {
         new BolusCancelTask(this).execute();
+    }
+
+    private void sendConfirmActionstring(String actionstring) {
+        new MessageActionTask(this, WEARABLE_CONFIRM_ACTIONSTRING_PATH, actionstring).execute();
+    }
+
+    private void sendInitiateActionstring(String actionstring) {
+        new MessageActionTask(this, WEARABLE_INITIATE_ACTIONSTRING_PATH, actionstring).execute();
     }
 
     public void googleApiConnect() {
@@ -150,11 +193,14 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     NotificationManagerCompat.from(ListenerService.this);
             notificationManager.cancel(CONFIRM_NOTIF_ID);
 
+            String actionstring = intent.getStringExtra("actionstring");
+            sendConfirmActionstring(actionstring);
 
             //TODO: send confirmation string to phone
          }
         return START_STICKY;
     }
+
 
     @Override
     public void onDataChanged(DataEventBuffer dataEvents) {
@@ -175,7 +221,12 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     int progress = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getInt("progresspercent", 0);
                     String status = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("progressstatus", "");
                     showBolusProgress(progress, status);
-                } else if (path.equals(NEW_STATUS_PATH)) {
+                } else if (path.equals(ACTION_CONFIRMATION_REQUEST_PATH)) {
+                    String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");
+                    String message = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("message");
+                    String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
+                    showConfirmationDialog(title, message, actionstring);
+                }else if (path.equals(NEW_STATUS_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
                     messageIntent.setAction(Intent.ACTION_SEND);
@@ -236,6 +287,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         Intent actionIntent = new Intent(this, ListenerService.class);
         actionIntent.setAction(ACTION_CONFIRMATION);
+        actionIntent.putExtra("actionstring", actionstring);
         PendingIntent actionPendingIntent = PendingIntent.getService(this, 0, actionIntent, 0);;
 
         long[] vibratePattern = new long[]{0, 100, 50, 100, 50};

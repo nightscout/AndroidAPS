@@ -42,7 +42,10 @@ public class WearFragment extends Fragment implements FragmentBase {
         view.findViewById(R.id.wear_opensettings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getPlugin(getContext()).openSettings();
+                //TODO: revert after debugging!
+                //getPlugin(getContext()).openSettings();
+                getPlugin(getContext()).requestActionConfirmation("Titel", "bla bla", "action 1 string");
+
             }
         });
 
