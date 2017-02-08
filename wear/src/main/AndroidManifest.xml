@@ -86,6 +86,15 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name="info.nightscout.androidaps.actions.ActionsListActivity"
+            android:label="@string/label_actions_activity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>

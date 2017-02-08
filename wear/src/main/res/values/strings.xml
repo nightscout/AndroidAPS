@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">AAPS Prefs.</string>
+    <string name="label_actions_activity">AAPS Actions</string>
 
     <string-array name="chart_timeframe">
         <item>1 hour</item>
