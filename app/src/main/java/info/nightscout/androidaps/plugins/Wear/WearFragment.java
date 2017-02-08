@@ -44,7 +44,12 @@ public class WearFragment extends Fragment implements FragmentBase {
             public void onClick(View view) {
                 //TODO: revert after debugging!
                 //getPlugin(getContext()).openSettings();
-                getPlugin(getContext()).requestActionConfirmation("Titel", "bla bla", "action 1 string");
+                String title = "CONFIRM"; //TODO: i18n
+                String message = "Insulin: 7.0U \n" +
+                        "Carbs: 26 \n" +
+                        "CONSTRAINTS APPLIED!!!"; //TODO: apply constraints
+                String actionstring = "Bolus 7.0 Carbs 26"; //TODO: to be returned by watch if confirmed
+                getPlugin(getContext()).requestActionConfirmation(title, message, actionstring);
 
             }
         });

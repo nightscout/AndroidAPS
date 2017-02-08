@@ -3,6 +3,7 @@ package info.nightscout.androidaps;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -134,8 +135,11 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             } else {
                 googleApiClient.blockingConnect(15, TimeUnit.SECONDS);
                 if (googleApiClient.isConnected()) {
-                    //TODO: copy send code
-
+                    NodeApi.GetConnectedNodesResult nodes =
+                            Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                    for (Node node : nodes.getNodes()) {
+                        Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), mMessagePath, mActionstring.getBytes());
+                    }
                 }
             }
             return null;
@@ -288,7 +292,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         Intent actionIntent = new Intent(this, ListenerService.class);
         actionIntent.setAction(ACTION_CONFIRMATION);
         actionIntent.putExtra("actionstring", actionstring);
-        PendingIntent actionPendingIntent = PendingIntent.getService(this, 0, actionIntent, 0);;
+        PendingIntent actionPendingIntent = PendingIntent.getService(this, 0, actionIntent, PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_UPDATE_CURRENT);;
 
         long[] vibratePattern = new long[]{0, 100, 50, 100, 50};
 
@@ -307,8 +311,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         notificationManager.notify(CONFIRM_NOTIF_ID, notificationBuilder.build());
 
-        // keep the confirmation dialog open for half a minute.
-        scheduleDismiss(CONFIRM_NOTIF_ID, 30);
+        // keep the confirmation dialog open for one minute.
+        scheduleDismiss(CONFIRM_NOTIF_ID, 60);
 
     }
 
