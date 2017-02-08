@@ -39,6 +39,7 @@ import com.ustwo.clockwise.common.WatchShape;
 import java.util.ArrayList;
 import java.util.Date;
 
+import info.nightscout.androidaps.actions.ActionsListActivity;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -83,6 +84,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     private String externalStatusString = "no status";
     private TextView statusView;
     private long chartTapTime = 0l;
+    private long sgvTapTime = 0l;
 
     @Override
     public void onCreate() {
@@ -143,6 +145,8 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
 
+        int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
+
         if (tapType == TAP_TYPE_TAP&&
                 x >=chart.getLeft() &&
                 x <= chart.getRight()&&
@@ -152,6 +156,17 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 changeChartTimeframe();
             }
             chartTapTime = eventTime;
+        } else if (tapType == TAP_TYPE_TAP&&
+                x + extra >=mSgv.getLeft() &&
+                x - extra <= mSgv.getRight()&&
+                y >= mSgv.getTop() &&
+                y <= mSgv.getBottom()){
+            if (eventTime - sgvTapTime < 800){
+                Intent intent = new Intent(this, ActionsListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            sgvTapTime = eventTime;
         }
     }
 

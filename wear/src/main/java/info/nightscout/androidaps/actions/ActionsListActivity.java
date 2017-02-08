@@ -18,35 +18,36 @@ import info.nightscout.androidaps.R;
 public class ActionsListActivity extends Activity
         implements WearableListView.ClickListener {
 
-    // Sample dataset for the list
-    String[] elements = { "Temp Target", "Bolus", "Settings"};
+    String[] elements = ActionsDefinitions.getActionNames();
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actions_list_activity);
 
         // Get the list component from the layout of the activity
         WearableListView listView =
-        (WearableListView) findViewById(R.id.wearable_list);
+                (WearableListView) findViewById(R.id.wearable_list);
 
         // Assign an adapter to the list
         listView.setAdapter(new Adapter(this, elements));
 
         // Set a click listener
         listView.setClickListener(this);
-        }
+    }
 
-// WearableListView click listener
-@Override
-public void onClick(WearableListView.ViewHolder v) {
+    // WearableListView click listener
+    @Override
+    public void onClick(WearableListView.ViewHolder v) {
         Integer tag = (Integer) v.itemView.getTag();
-        // use this data to complete some action ...
-        }
+        ActionsDefinitions.doAction(tag, this);
+        //ActionsDefinitions.doAction(v.getAdapterPosition(), this);
+        finish();
+    }
 
-@Override
-public void onTopEmptyRegionClick() {
-        }
+    @Override
+    public void onTopEmptyRegionClick() {
+    }
 
 
     private static final class Adapter extends WearableListView.Adapter {
@@ -64,10 +65,11 @@ public void onTopEmptyRegionClick() {
         // Provide a reference to the type of views you're using
         public static class ItemViewHolder extends WearableListView.ViewHolder {
             private TextView textView;
+
             public ItemViewHolder(View itemView) {
                 super(itemView);
                 // find the text view within the custom item's layout
-                textView = (TextView) itemView.findViewById(R.id.name);
+                textView = (TextView) itemView.findViewById(R.id.actionitem);
             }
         }
 
@@ -102,10 +104,6 @@ public void onTopEmptyRegionClick() {
             return mDataset.length;
         }
     }
-
-
-
-
 
 
 }

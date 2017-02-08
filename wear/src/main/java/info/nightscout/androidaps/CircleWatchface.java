@@ -35,6 +35,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.TreeSet;
 
+import info.nightscout.androidaps.actions.ActionsListActivity;
+
 
 public class CircleWatchface extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final float PADDING = 20f;
@@ -79,6 +81,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     private View myLayout;
 
     protected SharedPreferences sharedPrefs;
+    private TextView mSgv;
+    private long sgvTapTime = 0;
 
 
     @Override
@@ -144,7 +148,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         // prepare fields
 
         TextView textView = null;
-
+        mSgv = (TextView) myLayout.findViewById(R.id.sgvString);
         textView = (TextView) myLayout.findViewById(R.id.sgvString);
         if (sharedPrefs.getBoolean("showBG", true)) {
             textView.setVisibility(View.VISIBLE);
@@ -700,4 +704,24 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         addArch(canvas, (float) size, offset * offsetMultiplier + 11, color, (float) (360f - size)); // Dark fill
         addArch(canvas, (offset + .8f) * offsetMultiplier + 11, getBackgroundColor(), 360);
     }
+
+    @Override
+    protected void onTapCommand(int tapType, int x, int y, long eventTime) {
+
+        int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
+
+        if (tapType == TAP_TYPE_TAP&&
+                x + extra >=mSgv.getLeft() &&
+                x - extra <= mSgv.getRight()&&
+                y >= mSgv.getTop() &&
+                y <= mSgv.getBottom()){
+            if (eventTime - sgvTapTime < 800){
+                Intent intent = new Intent(this, ActionsListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            sgvTapTime = eventTime;
+        }
+    }
+
 }

@@ -49,6 +49,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String ACTION_RESEND = "com.dexdrip.stephenblack.nightwatch.RESEND_DATA";
     private static final String ACTION_CANCELBOLUS = "com.dexdrip.stephenblack.nightwatch.CANCELBOLUS";
     private static final String ACTION_CONFIRMATION = "com.dexdrip.stephenblack.nightwatch.CONFIRMACTION";
+    private static final String ACTION_INITIATE_ACTION = "com.dexdrip.stephenblack.nightwatch.INITIATE_ACTION";
 
 
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
@@ -200,8 +201,14 @@ public class ListenerService extends WearableListenerService implements GoogleAp
             String actionstring = intent.getStringExtra("actionstring");
             sendConfirmActionstring(actionstring);
 
-            //TODO: send confirmation string to phone
-         }
+         } else if(intent != null && ACTION_INITIATE_ACTION.equals(intent.getAction())){
+            googleApiConnect();
+
+            String actionstring = intent.getStringExtra("actionstring");
+            sendInitiateActionstring(actionstring);
+
+        }
+
         return START_STICKY;
     }
 
@@ -338,6 +345,13 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     public static void requestData(Context context) {
         Intent intent = new Intent(context, ListenerService.class);
         intent.setAction(ACTION_RESEND);
+        context.startService(intent);
+    }
+
+    public static void initiateAction(Context context, String actionstring) {
+        Intent intent = new Intent(context, ListenerService.class);
+        intent.putExtra("actionstring", actionstring);
+        intent.setAction(ACTION_INITIATE_ACTION);
         context.startService(intent);
     }
 
