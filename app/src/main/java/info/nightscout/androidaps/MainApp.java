@@ -90,7 +90,7 @@ public class MainApp extends Application {
             pluginsList.add(SimpleProfileFragment.getPlugin());
             pluginsList.add(LocalProfileFragment.getPlugin());
             pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
-            pluginsList.add(TempTargetRangeFragment.getPlugin());
+            if (Config.APS) pluginsList.add(TempTargetRangeFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
             pluginsList.add(TempBasalsFragment.getPlugin());
             pluginsList.add(SafetyFragment.getPlugin());

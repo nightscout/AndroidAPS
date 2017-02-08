@@ -94,7 +94,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_closedmode);
             if (Config.OPENAPSENABLED)
                 addPreferencesFromResource(R.xml.pref_openapsma);
-            if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
+            if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
                 addPreferencesFromResource(R.xml.pref_openapsama);
             addPreferencesFromResource(R.xml.pref_profile);
             if (Config.DANAR) {
