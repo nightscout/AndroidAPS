@@ -532,7 +532,7 @@ public class OverviewFragment extends Fragment {
         // temp target
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
-        if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
+        if (Config.APS && tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
             TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
             if (tempTarget != null) {
                 tempTargetView.setTextColor(Color.BLACK);
