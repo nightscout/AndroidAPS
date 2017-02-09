@@ -162,8 +162,6 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
 
             if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
-                ToastUtils.showToastInUiThread(this, "INITIATE1");
-
                 String actionstring = new String(event.getData());
                 ToastUtils.showToastInUiThread(this, "INITIATE: " + actionstring);
                 ActionStringHandler.handleInitiate(actionstring);

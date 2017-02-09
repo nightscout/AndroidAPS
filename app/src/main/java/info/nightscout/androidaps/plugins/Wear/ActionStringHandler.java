@@ -1,15 +1,29 @@
 package info.nightscout.androidaps.plugins.Wear;
 
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DecimalFormat;
+import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.QuickWizard;
+import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.BolusWizard;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -60,7 +74,15 @@ public class ActionStringHandler {
 
             rAction += "fill " + insulinAfterConstraints;
 
-        } else if(false){
+        } else if ("wizard".equals(act[0])) {
+            Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
+            Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbsBeforeConstraints);
+            //TODO: wizard calculation
+            return;
+
+        }
+
+        else if(false){
             //... add more actions
 
         } else return;
@@ -121,6 +143,4 @@ public class ActionStringHandler {
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
     }
-
-
 }

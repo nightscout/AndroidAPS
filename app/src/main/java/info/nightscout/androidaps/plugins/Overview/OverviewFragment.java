@@ -292,7 +292,7 @@ public class OverviewFragment extends Fragment {
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
-                boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
+               boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
                 boluscalcJSON.put("targetBGLow", wizard.targetBGLow);
                 boluscalcJSON.put("targetBGHigh", wizard.targetBGHigh);
                 boluscalcJSON.put("isf", wizard.sens);
