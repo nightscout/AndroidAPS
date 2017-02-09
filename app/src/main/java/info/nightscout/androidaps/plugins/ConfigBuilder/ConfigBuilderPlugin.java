@@ -466,7 +466,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         carbs = applyCarbsConstraints(carbs);
 
         BolusProgressDialog bolusProgressDialog = null;
-        if (context != null) {
+        if (context != null ) {
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(insulin);
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");

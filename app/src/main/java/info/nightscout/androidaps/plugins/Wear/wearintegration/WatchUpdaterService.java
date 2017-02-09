@@ -31,6 +31,7 @@ import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
@@ -165,13 +166,13 @@ public class WatchUpdaterService extends WearableListenerService implements
 
                 String actionstring = new String(event.getData());
                 ToastUtils.showToastInUiThread(this, "INITIATE: " + actionstring);
-                //TODO: watch initiated action
+                ActionStringHandler.handleInitiate(actionstring);
             }
 
             if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
                 ToastUtils.showToastInUiThread(this, "CONFIRM: " + actionstring);
-                //TODO: watch confirmed action
+                ActionStringHandler.handleConfirmation(actionstring);
             }
         }
     }
