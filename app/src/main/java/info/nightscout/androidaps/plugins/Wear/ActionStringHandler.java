@@ -75,6 +75,17 @@ public class ActionStringHandler {
 
             rAction += "fill " + insulinAfterConstraints;
 
+        } else if ("fill".equals(act[0])) {
+            ///////////////////////////////////// PRIME/FILL
+            double amount = SafeParse.stringToDouble(act[1]);
+
+            Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(amount);
+            rMessage += MainApp.instance().getString(R.string.primefill) + ": " + insulinAfterConstraints + "U";
+            if (insulinAfterConstraints - amount != 0)
+                rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
+
+            rAction += "fill " + insulinAfterConstraints;
+
         } else if ("status".equals(act[0])) {
             ///////////////////////////////////// STATUS
             rTitle = "STATUS";
@@ -130,7 +141,7 @@ public class ActionStringHandler {
         // do the parsing, check constraints and enact!
         String[] act = actionString.split("\\s+");
 
-        if ("fill".equals(act[0])){
+        if (false && "fill".equals(act[0])){
             Double amount = SafeParse.stringToDouble(act[1]);
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(amount);
             if(amount - insulinAfterConstraints != 0){

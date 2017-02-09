@@ -290,6 +290,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                 NotificationManagerCompat.from(this);
 
         notificationManager.notify(BOLUS_PROGRESS_NOTIF_ID, notificationBuilder.build());
+        notificationManager.cancel(CONFIRM_NOTIF_ID); // multiple watch setup
+
 
         if (progresspercent == 100){
             scheduleDismiss(BOLUS_PROGRESS_NOTIF_ID, 5);
