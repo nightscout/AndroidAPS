@@ -709,11 +709,12 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             extended.put("PumpIOB", getDanaRPump().iob);
 //            extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
 //            extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
-            if (isTempBasalInProgress()) {
+            TempBasal tb = getTempBasal();
+            if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
-                extended.put("TempBasalStart", getTempBasal().timeStart.toLocaleString());
-                extended.put("TempBasalRemaining", getTempBasal().getPlannedRemainingMinutes());
-                extended.put("IsExtended", getTempBasal().isExtended);
+                extended.put("TempBasalStart", tb.timeStart.toLocaleString());
+                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+                extended.put("IsExtended", tb.isExtended);
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
