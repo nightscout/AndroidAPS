@@ -453,4 +453,5 @@
     <string name="virtualpump_firmware_label">Firmware:</string>
     <string formatted="false" name="danar_model">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
+    <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
 </resources>
