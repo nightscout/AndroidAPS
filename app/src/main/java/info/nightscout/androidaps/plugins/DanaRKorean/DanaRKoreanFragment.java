@@ -240,7 +240,7 @@ public class DanaRKoreanFragment extends Fragment implements FragmentBase {
                     SetWarnColor.setColorInverse(batteryView, pump.batteryRemaining, 51d, 26d);
                     iobView.setText(pump.iob + " U");
                     if (pump.isNewPump) {
-                        firmwareView.setText(String.format(getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
+                        firmwareView.setText(String.format(MainApp.sResources.getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
                     } else {
                         firmwareView.setText("OLD");
                     }
