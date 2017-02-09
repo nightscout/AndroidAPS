@@ -191,8 +191,6 @@
     <string name="de_lang">German</string>
     <string name="openapsma_high_summary">Maximální hodnota glykémie ještě v rozsahu</string>
     <string name="openapsma_low_summary">Minimální hodnota glykémie ještě v rozsahu</string>
-    <string name="openapsma_maxbasal_summary">Maximální povolený bazál [U/h]</string>
-    <string name="openapsma_maxiob_summary">Maximální bazální IOB [U]</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">POTVRDIT</string>
     <string name="language">Jazyk</string>
@@ -240,7 +238,6 @@
     <string name="manual">Jiný</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="danarprofile">DanaR profil</string>
-    <string name="danarprofile_dia">Celková doba aktivity inzulínu[h]</string>
     <string name="failedupdatebasalprofile">Chyba při nastavení dočasného bazálu</string>
     <string name="danar_alarm">alarm</string>
     <string name="danar_basalhour">hodinový bazál</string>
@@ -434,9 +431,23 @@
     <string name="danar_stats_tdd">TDD</string>
     <string name="danar_stats_warning_Message">Pravděpodobně nepřesné při používání bolusů k doplňování</string>
     <string name="danar_stats_weight">Váha</string>
-    <string name="openapsama_autosens_adjusttargets">Povolit funkci Autosens měnit cílový rozsah</string>
     <string name="prefs_delta_title">Nastavení parametru delta BG</string>
     <string name="profile">Profil</string>
     <string name="short_tabtitles">Krátké názvy modulů</string>
     <string name="virtualpump_firmware_label">Firmware:</string>
+    <string name="smscommunicator_invalidphonennumber">Špatné telefonní číslo</string>
+    <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
+    <string name="copied_to_clipboard">Nakopírováno do schránky</string>
+    <string name="copy_to_clipboard">Kopírovat do schránky</string>
+    <string name="danarprofile_dia_summary">Celková doba aktivity inzulínu</string>
+    <string name="danarprofile_dia">DIA [h]</string>
+    <string name="error_field_must_not_be_empty">Toto pole nesmí být prázdné</string>
+    <string name="nav_show_logcat">Zobrazit log</string>
+    <string name="openapsma_maxbasal_title">Maximální povolený bazál [U/h]</string>
+    <string name="openapsma_maxiob_title">Maximální bazální IOB [U]</string>
+    <string name="openapsma_maxbasal_summary">Tato hodnota je v kontextu OpenAPS nazývána max basal</string>
+    <string name="openapsma_maxiob_summary">Tato hodnota je v kontextu OpenAPS nazývána max IOB</string>
+    <string name="error_only_numeric_digits_allowed">Povoleny pouze číslice</string>
+    <string name="error_only_numeric_digits_range_allowed">Povoleny pouze čísla v rozsahu %1$s - %2$s</string>
+    <string name="error_phone_not_valid">Neplatné telefonní číslo</string>
 </resources>

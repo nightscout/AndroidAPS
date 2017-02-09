@@ -81,9 +81,9 @@ public class GlucoseStatus {
                 BgReading then = data.get(i);
                 long then_date = then.timeIndex;
                 double avgdelta = 0;
-                int minutesago;
+                long minutesago;
 
-                minutesago = Math.round((now_date - then_date) / (1000 * 60));
+                minutesago = Math.round((now_date - then_date) / (1000d * 60));
                 // multiply by 5 to get the same units as delta, i.e. mg/dL/5m
                 change = now.value - then.value;
                 avgdelta = change / minutesago * 5;

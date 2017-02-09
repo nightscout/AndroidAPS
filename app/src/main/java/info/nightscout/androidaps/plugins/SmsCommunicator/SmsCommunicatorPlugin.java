@@ -31,6 +31,8 @@ import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.client.data.NSProfile;
@@ -446,8 +448,13 @@ public class SmsCommunicatorPlugin implements PluginBase {
         SmsManager smsManager = SmsManager.getDefault();
         sms.text = stripAccents(sms.text);
         if (sms.text.length() > 140) sms.text = sms.text.substring(0, 139);
-        smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
-        messages.add(sms);
+        try {
+            smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
+            messages.add(sms);
+        } catch (IllegalArgumentException e) {
+            Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.sResources.getString(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);
+            MainApp.bus().post(new EventNewNotification(notification));
+        }
     }
 
     private String generatePasscode() {

@@ -137,7 +137,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                         @Override
                         public void run() {
                             if (c.sStatus == c.CONNECTING) {
-                                statusView.setText(String.format(getString(R.string.danar_history_connectingfor), c.sSecondsElapsed));
+                                statusView.setText(String.format(MainApp.sResources.getString(R.string.danar_history_connectingfor), c.sSecondsElapsed));
                             } else if (c.sStatus == c.CONNECTED) {
                                 statusView.setText(MainApp.sResources.getString(R.string.connected));
                             } else {

@@ -8,7 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="AppTheme.base" parent="Theme.AppCompat.NoActionBar"></style>
+    <style name="AppTheme.base" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:textColorSecondary">@color/mdtp_white</item>
+    </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
