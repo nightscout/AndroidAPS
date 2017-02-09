@@ -267,7 +267,7 @@
     <string name="danarprofile">DanaR profile settings</string>
     <string name="danarprofile_dia">DIA [h]</string>
     <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
-    <string name="danarprofile_car">Carbs absorption rate</string>
+    <string name="failedupdatebasalprofile">Failed to update basal profile</string>
     <string name="danar_history">History</string>
     <string name="danar_historyreload">Reload</string>
     <string name="uploading">Uploading</string>

@@ -30,7 +30,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         myPreferenceFragment = new MyPreferenceFragment();
         getFragmentManager().beginTransaction().replace(android.R.id.content, myPreferenceFragment).commit();
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-
     }
 
     @Override
@@ -46,9 +45,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             MainApp.bus().post(new EventRefreshGui(true));
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
-
-
-}
+    }
 
     private static  void updatePrefSummary(Preference pref) {
         if (pref instanceof ListPreference || pref instanceof BluetoothDevicePreference) {
