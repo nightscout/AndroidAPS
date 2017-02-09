@@ -12,7 +12,7 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/treatments_newtreatment_insulinamount_minus"
+            android:id="@+id/minusbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center">
         <EditText
-            android:id="@+id/treatments_newtreatment_insulinamount"
+            android:id="@+id/amountfield"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -49,7 +49,7 @@
             android:gravity="center" />
         </LinearLayout>
         <ImageView
-            android:id="@+id/treatments_newtreatment_insulinamount_plus"
+            android:id="@+id/plusbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

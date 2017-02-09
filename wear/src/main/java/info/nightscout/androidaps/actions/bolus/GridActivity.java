@@ -2,18 +2,14 @@ package info.nightscout.androidaps.actions.bolus;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import info.nightscout.androidaps.R;
@@ -62,7 +58,7 @@ public class GridActivity extends Activity {
 
         @Override
         public Object instantiateItem(ViewGroup container, int row, int col) {
-            final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.grid_view_pager_item, container, false);
+            final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
             final TextView textView = (TextView) view.findViewById(R.id.label);
             textView.setText("label: " + col);
             container.addView(view);

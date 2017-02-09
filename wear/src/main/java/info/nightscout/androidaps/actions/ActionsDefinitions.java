@@ -7,6 +7,7 @@ import info.nightscout.androidaps.ListenerService;
 import info.nightscout.androidaps.NWPreferences;
 import info.nightscout.androidaps.actions.bolus.BolusActivity;
 import info.nightscout.androidaps.actions.bolus.GridActivity;
+import info.nightscout.androidaps.actions.wizard.WizardActivity;
 
 /**
  * Created by adrian on 08/02/17.
@@ -16,13 +17,13 @@ final class ActionsDefinitions {
 
     private static final String[] ACTION_NAMES = {
             "Temp Target",
-            "Bolus",
+            "Wizard",
             "Settings",
             "Resend Data",
             "Fillpreset 1",
             "Fillpreset 2",
             "Fillpreset 3",
-            "008"};
+            "009"};
 
 
     public static void doAction(int position, Context ctx) {
@@ -32,7 +33,7 @@ final class ActionsDefinitions {
             case 0:
                 break;
             case 1:
-                intent = new Intent(ctx, BolusActivity.class);
+                intent = new Intent(ctx, WizardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ctx.startActivity(intent);
                 break;
