@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import info.nightscout.androidaps.ListenerService;
 import info.nightscout.androidaps.NWPreferences;
+import info.nightscout.androidaps.actions.bolus.BolusActivity;
 
 /**
  * Created by adrian on 08/02/17.
@@ -20,18 +21,22 @@ final class ActionsDefinitions {
             "Fillpreset 1",
             "Fillpreset 2",
             "Fillpreset 3",
-            "004"};
+            "005"};
 
 
     public static void doAction(int position, Context ctx) {
 
+        Intent intent;
         switch (position) {
             case 0:
                 break;
             case 1:
+                intent = new Intent(ctx, BolusActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ctx.startActivity(intent);
                 break;
             case 2:
-                Intent intent = new Intent(ctx, NWPreferences.class);
+                intent = new Intent(ctx, NWPreferences.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ctx.startActivity(intent);
                 break;
