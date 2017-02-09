@@ -103,8 +103,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".interaction.NWPreferences"
-            android:label="@string/label_xdrip_activity">
+            android:name=".interaction.AAPSPreferences"
+            android:label="SETTINGS">
         </activity>
         <activity
             android:name=".interaction.actions.WizardActivity"
@@ -121,6 +121,14 @@
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:label="Bolus">
+        </activity>
+        <activity
+            android:name=".interaction.actions.FillActivity"
+            android:label="Fill">
+        </activity>
+        <activity
+            android:name=".interaction.actions.TempTargetActivity"
+            android:label="TempTarget">
         </activity>
     </application>
 </manifest>

@@ -24,7 +24,7 @@ import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.interaction.NWPreferences;
+import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.R;
 
 /**
@@ -227,7 +227,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
                 String path = event.getDataItem().getUri().getPath();
                 if (path.equals(OPEN_SETTINGS)) {
-                    Intent intent = new Intent(this, NWPreferences.class);
+                    Intent intent = new Intent(this, AAPSPreferences.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     startActivity(intent);
                 } else if (path.equals(BOLUS_PROGRESS_PATH)) {

@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.interaction.menus;
 
+import android.content.Intent;
+
 import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.interaction.actions.FillActivity;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 
 /**
@@ -14,7 +17,9 @@ public class FillMenuActivity extends MenuListActivity {
         return new String[] {
                 "Preset 1",
                 "Preset 2",
-                "Preset 3"};
+                "Preset 3",
+                "Free amount"
+        };
     }
 
     @Override
@@ -28,6 +33,11 @@ public class FillMenuActivity extends MenuListActivity {
                 break;
             case 2:
                 ListenerService.initiateAction(this, "fillpreset 3");
+                break;
+            case 3:
+                Intent intent = new Intent(this, FillActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                this.startActivity(intent);
                 break;
         }
 

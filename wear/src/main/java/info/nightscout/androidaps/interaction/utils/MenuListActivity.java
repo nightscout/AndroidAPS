@@ -25,6 +25,12 @@ public abstract class MenuListActivity extends Activity
     protected abstract void doAction(int position);
 
     @Override
+    protected void onPause(){
+        super.onPause();
+        finish();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.actions_list_activity);

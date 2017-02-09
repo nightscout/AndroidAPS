@@ -3,8 +3,9 @@ package info.nightscout.androidaps.interaction.menus;
 import android.content.Intent;
 
 import info.nightscout.androidaps.data.ListenerService;
-import info.nightscout.androidaps.interaction.NWPreferences;
+import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.BolusActivity;
+import info.nightscout.androidaps.interaction.actions.TempTargetActivity;
 import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 import info.nightscout.androidaps.interaction.actions.WizardActivity;
 
@@ -32,6 +33,9 @@ public class MainMenuActivity extends MenuListActivity {
         Intent intent;
         switch (position) {
             case 0:
+                intent = new Intent(this, TempTargetActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                this.startActivity(intent);
                 break;
             case 1:
                 intent = new Intent(this, BolusActivity.class);
@@ -44,7 +48,7 @@ public class MainMenuActivity extends MenuListActivity {
                 this.startActivity(intent);
                 break;
             case 3:
-                intent = new Intent(this, NWPreferences.class);
+                intent = new Intent(this, AAPSPreferences.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 this.startActivity(intent);
                 break;
