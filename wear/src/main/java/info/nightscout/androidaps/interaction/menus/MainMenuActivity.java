@@ -1,11 +1,12 @@
-package info.nightscout.androidaps.actions;
+package info.nightscout.androidaps.interaction.menus;
 
 import android.content.Intent;
 
-import info.nightscout.androidaps.ListenerService;
-import info.nightscout.androidaps.NWPreferences;
-import info.nightscout.androidaps.actions.utils.MenuListActivity;
-import info.nightscout.androidaps.actions.wizard.WizardActivity;
+import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.interaction.NWPreferences;
+import info.nightscout.androidaps.interaction.actions.BolusActivity;
+import info.nightscout.androidaps.interaction.utils.MenuListActivity;
+import info.nightscout.androidaps.interaction.actions.WizardActivity;
 
 /**
  * Created by adrian on 09/02/17.
@@ -17,6 +18,7 @@ public class MainMenuActivity extends MenuListActivity {
     protected String[] getElements() {
         return new String[] {
                 "TTarget",
+                "Bolus",
                 "Wizard",
                 "Settings",
                 "Re-Sync",
@@ -32,24 +34,29 @@ public class MainMenuActivity extends MenuListActivity {
             case 0:
                 break;
             case 1:
-                intent = new Intent(this, WizardActivity.class);
+                intent = new Intent(this, BolusActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 this.startActivity(intent);
                 break;
             case 2:
-                intent = new Intent(this, NWPreferences.class);
+                intent = new Intent(this, WizardActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 this.startActivity(intent);
                 break;
             case 3:
-                ListenerService.requestData(this);
+                intent = new Intent(this, NWPreferences.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                this.startActivity(intent);
                 break;
             case 4:
+                ListenerService.requestData(this);
+                break;
+            case 5:
                 intent = new Intent(this, StatusMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 this.startActivity(intent);
                 break;
-            case 5:
+            case 6:
                 intent = new Intent(this, FillMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 this.startActivity(intent);

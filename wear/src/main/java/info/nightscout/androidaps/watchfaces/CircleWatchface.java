@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.watchfaces;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,7 +36,9 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-import info.nightscout.androidaps.actions.MainMenuActivity;
+import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
 
 public class CircleWatchface extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {

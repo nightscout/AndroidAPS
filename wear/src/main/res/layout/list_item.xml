@@ -1,4 +1,4 @@
-<info.nightscout.androidaps.actions.WearableListItemLayout
+<info.nightscout.androidaps.interaction.utils.WearableListItemLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:gravity="center_vertical"
     android:layout_width="match_parent"
@@ -19,5 +19,5 @@
         android:lineSpacingExtra="-4sp"
         android:textColor="@color/dark_statusView"
         android:textSize="32sp"/>
-</info.nightscout.androidaps.actions.WearableListItemLayout>
+</info.nightscout.androidaps.interaction.utils.WearableListItemLayout>
 

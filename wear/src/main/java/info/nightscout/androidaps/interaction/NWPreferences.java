@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.interaction;
 
 
 import android.os.Bundle;

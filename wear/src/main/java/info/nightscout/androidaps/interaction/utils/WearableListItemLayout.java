@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.actions;
+package info.nightscout.androidaps.interaction.utils;
 
 import android.content.Context;
 import android.graphics.drawable.GradientDrawable;

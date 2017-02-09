@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.watchfaces;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,7 +39,12 @@ import com.ustwo.clockwise.common.WatchShape;
 import java.util.ArrayList;
 import java.util.Date;
 
-import info.nightscout.androidaps.actions.MainMenuActivity;
+import info.nightscout.androidaps.data.BasalWatchData;
+import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.TempWatchData;
+import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**

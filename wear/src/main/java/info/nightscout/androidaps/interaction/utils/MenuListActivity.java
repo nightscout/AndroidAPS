@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.actions.utils;
+package info.nightscout.androidaps.interaction.utils;
 
 import android.app.Activity;
 import android.content.Context;

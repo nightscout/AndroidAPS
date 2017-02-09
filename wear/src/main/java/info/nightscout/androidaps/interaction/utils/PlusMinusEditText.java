@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.actions.utils;
+package info.nightscout.androidaps.interaction.utils;
 
 import android.os.Handler;
 import android.os.Message;

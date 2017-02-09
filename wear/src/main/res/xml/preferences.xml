@@ -11,6 +11,15 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="units_mgdl"
+        android:title="Units for Actions"
+        android:summaryOn="mg/dl"
+        android:summaryOff="mmol/l"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
         android:key="showExternalStatus"
         android:title="Show Loop Status"
         app:wear_iconOff="@drawable/settings_off"

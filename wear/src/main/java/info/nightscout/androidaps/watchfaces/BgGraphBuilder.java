@@ -1,9 +1,8 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.watchfaces;
 
 import android.content.Context;
 import android.graphics.DashPathEffect;
 import android.preference.PreferenceManager;
-import android.support.v4.content.ContextCompat;
 import android.text.format.DateFormat;
 
 import java.text.SimpleDateFormat;
@@ -14,6 +13,9 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 
+import info.nightscout.androidaps.data.BasalWatchData;
+import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.data.TempWatchData;
 import lecho.lib.hellocharts.model.Axis;
 import lecho.lib.hellocharts.model.AxisValue;
 import lecho.lib.hellocharts.model.Line;

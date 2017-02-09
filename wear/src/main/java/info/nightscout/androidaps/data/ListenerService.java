@@ -1,9 +1,8 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.data;
 
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -24,6 +23,9 @@ import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.concurrent.TimeUnit;
+
+import info.nightscout.androidaps.interaction.NWPreferences;
+import info.nightscout.androidaps.R;
 
 /**
  * Created by emmablack on 12/26/14.

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.actions.wizard;
+package info.nightscout.androidaps.interaction.actions;
 
 
 import android.app.Activity;
@@ -15,10 +15,10 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.ListenerService;
+import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.actions.utils.PlusMinusEditText;
-import info.nightscout.androidaps.actions.utils.SafeParse;
+import info.nightscout.androidaps.interaction.utils.PlusMinusEditText;
+import info.nightscout.androidaps.interaction.utils.SafeParse;
 
 /**
  * Created by adrian on 09/02/17.

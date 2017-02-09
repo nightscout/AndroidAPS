@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.watchfaces;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,18 +8,18 @@ import android.view.LayoutInflater;
 
 import com.ustwo.clockwise.common.WatchMode;
 
-import info.nightscout.androidaps.actions.MainMenuActivity;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
-public class Home extends BaseWatchFace {
+public class LargeHome extends BaseWatchFace {
 
-    private long chartTapTime = 0;
     private long sgvTapTime = 0;
 
     @Override
     public void onCreate() {
         super.onCreate();
         LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        layoutView = inflater.inflate(R.layout.activity_home, null);
+        layoutView = inflater.inflate(R.layout.activity_home_large, null);
         performViewSetup();
     }
 
@@ -29,15 +29,6 @@ public class Home extends BaseWatchFace {
         int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
 
         if (tapType == TAP_TYPE_TAP&&
-                x >=chart.getLeft() &&
-                x <= chart.getRight()&&
-                y >= chart.getTop() &&
-                y <= chart.getBottom()){
-            if (eventTime - chartTapTime < 800){
-                changeChartTimeframe();
-            }
-            chartTapTime = eventTime;
-        } else if (tapType == TAP_TYPE_TAP&&
                 x + extra >=mSgv.getLeft() &&
                 x - extra <= mSgv.getRight()&&
                 y >= mSgv.getTop() &&
@@ -51,20 +42,14 @@ public class Home extends BaseWatchFace {
         }
     }
 
-    private void changeChartTimeframe() {
-        int timeframe = Integer.parseInt(sharedPrefs.getString("chart_timeframe", "3"));
-        timeframe = (timeframe%5) + 1;
-        sharedPrefs.edit().putString("chart_timeframe", "" + timeframe).commit();
-    }
-
     @Override
     protected WatchFaceStyle getWatchFaceStyle(){
         return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
     }
 
-
-    protected void setColorDark() {
-        mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_statusView));
+    @Override
+    protected void setColorDark(){
+        mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mLinearLayout));
         mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
         mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
         if (sgvLevel == 1) {
@@ -94,41 +79,10 @@ public class Home extends BaseWatchFace {
         }
 
         mStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mStatus_home));
-
-        if (chart != null) {
-            highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_highColor);
-            lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_lowColor);
-            midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
-            pointSize = 2;
-            setupCharts();
-        }
     }
 
-    protected void setColorLowRes() {
-        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
-        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
-        mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
-        mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_Timestamp));
-        if (chart != null) {
-            highColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            lowColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            midColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor);
-            gridColor = ContextCompat.getColor(getApplicationContext(), R.color.dark_gridColor);
-            basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark_lowres);
-            basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light_lowres);
-            pointSize = 2;
-            setupCharts();
-        }
-
-    }
-
-
+    @Override
     protected void setColorBright() {
-
         if (getCurrentWatchMode() == WatchMode.INTERACTIVE) {
             mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_stripe_background));
             mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.light_background));
@@ -158,20 +112,41 @@ public class Home extends BaseWatchFace {
                 mUploaderBattery.setTextColor(Color.RED);
             }
             mStatus.setTextColor(Color.WHITE);
-
             mTime.setTextColor(Color.BLACK);
-            if (chart != null) {
-                highColor = ContextCompat.getColor(getApplicationContext(), R.color.light_highColor);
-                lowColor = ContextCompat.getColor(getApplicationContext(), R.color.light_lowColor);
-                midColor = ContextCompat.getColor(getApplicationContext(), R.color.light_midColor);
-                gridColor = ContextCompat.getColor(getApplicationContext(), R.color.light_gridColor);
-                basalBackgroundColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_light);
-                basalCenterColor = ContextCompat.getColor(getApplicationContext(), R.color.basal_dark);
-                pointSize = 2;
-                setupCharts();
-            }
         } else {
-            setColorDark();
+            mRelativeLayout.setBackgroundColor(Color.BLACK);
+            mLinearLayout.setBackgroundColor(Color.LTGRAY);
+            if (sgvLevel == 1) {
+                mSgv.setTextColor(Color.YELLOW);
+                mDirection.setTextColor(Color.YELLOW);
+                mDelta.setTextColor(Color.YELLOW);
+            } else if (sgvLevel == 0) {
+                mSgv.setTextColor(Color.WHITE);
+                mDirection.setTextColor(Color.WHITE);
+                mDelta.setTextColor(Color.WHITE);
+            } else if (sgvLevel == -1) {
+                mSgv.setTextColor(Color.RED);
+                mDirection.setTextColor(Color.RED);
+                mDelta.setTextColor(Color.RED);
+            }
+
+            mUploaderBattery.setTextColor(Color.BLACK);
+            mTimestamp.setTextColor(Color.BLACK);
+            mStatus.setTextColor(Color.BLACK);
+            mTime.setTextColor(Color.WHITE);
         }
+    }
+
+    @Override
+    protected void setColorLowRes() {
+        mLinearLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mLinearLayout));
+        mTime.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTime));
+        mRelativeLayout.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_background));
+        mSgv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mDelta.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mDirection.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_midColor));
+        mTimestamp.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mTimestamp1_home));
+        mUploaderBattery.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_uploaderBattery));
+        mStatus.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.dark_mStatus_home));
     }
 }

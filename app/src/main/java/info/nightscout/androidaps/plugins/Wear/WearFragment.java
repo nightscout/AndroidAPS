@@ -42,15 +42,7 @@ public class WearFragment extends Fragment implements FragmentBase {
         view.findViewById(R.id.wear_opensettings).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //TODO: revert after debugging!
-                //getPlugin(getContext()).openSettings();
-                String title = "CONFIRM"; //TODO: i18n
-                String message = "Insulin: 7.0U \n" +
-                        "Carbs: 26 \n" +
-                        "CONSTRAINTS APPLIED!!!"; //TODO: apply constraints
-                String actionstring = "Bolus 7.0 Carbs 26"; //TODO: to be returned by watch if confirmed
-                getPlugin(getContext()).requestActionConfirmation(title, message, actionstring);
-
+                getPlugin(getContext()).openSettings();
             }
         });
 

@@ -1,7 +1,7 @@
-package info.nightscout.androidaps.actions;
+package info.nightscout.androidaps.interaction.menus;
 
-import info.nightscout.androidaps.ListenerService;
-import info.nightscout.androidaps.actions.utils.MenuListActivity;
+import info.nightscout.androidaps.data.ListenerService;
+import info.nightscout.androidaps.interaction.utils.MenuListActivity;
 
 /**
  * Created by adrian on 09/02/17.

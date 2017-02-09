@@ -17,7 +17,7 @@
             android:value="@integer/google_play_services_version" />
 
         <service
-            android:name=".BIGChart"
+            android:name=".watchfaces.BIGChart"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_big_chart"
             android:permission="android.permission.BIND_WALLPAPER">
@@ -35,7 +35,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".Home"
+            android:name=".watchfaces.Home"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip"
             android:permission="android.permission.BIND_WALLPAPER">
@@ -53,7 +53,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".LargeHome"
+            android:name=".watchfaces.LargeHome"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_large"
             android:permission="android.permission.BIND_WALLPAPER">
@@ -71,7 +71,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".CircleWatchface"
+            android:name=".watchfaces.CircleWatchface"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_circle"
             android:permission="android.permission.BIND_WALLPAPER">
@@ -88,22 +88,14 @@
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
-        <service android:name=".ListenerService">
+        <service android:name=".data.ListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
 
         <activity
-            android:name=".NWPreferences"
-            android:label="@string/label_xdrip_activity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".actions.MainMenuActivity"
+            android:name=".interaction.menus.MainMenuActivity"
             android:label="@string/label_actions_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -111,16 +103,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".actions.wizard.WizardActivity"
+            android:name=".interaction.NWPreferences"
+            android:label="@string/label_xdrip_activity">
+        </activity>
+        <activity
+            android:name=".interaction.actions.WizardActivity"
             android:label="Wizard">
         </activity>
         <activity
-            android:name=".actions.FillMenuActivity"
+            android:name=".interaction.menus.FillMenuActivity"
             android:label="Fillmenu">
         </activity>
         <activity
-            android:name=".actions.StatusMenuActivity"
+            android:name=".interaction.menus.StatusMenuActivity"
             android:label="Status">
+        </activity>
+        <activity
+            android:name=".interaction.actions.BolusActivity"
+            android:label="Bolus">
         </activity>
     </application>
 </manifest>
