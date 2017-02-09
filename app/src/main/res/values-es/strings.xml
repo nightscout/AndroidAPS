@@ -401,7 +401,6 @@
     <string name="temptargetrange_refreshfromnightscout">Actualizar objetivo temporal desde NS</string>
     <string name="timeshift_hint"></string>
     <string name="units">Unidades:</string>
-    <string name="openapsama_autosens_adjusttargets">Reajuste objetivos por autosens</string>
     <string name="error_only_numeric_digits_allowed">Sólo se permiten caracteres numéricos</string>
     <string name="error_only_numeric_digits_range_allowed">Sólo se permiten dígitos en el rango %1$s - %2$s</string>
     <string name="error_field_must_not_be_empty">Este campo no puede estar vacío</string>

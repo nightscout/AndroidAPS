@@ -455,19 +455,19 @@
     <string name="virtualpump_firmware_label">Firmware:</string>
     <string formatted="false" name="danar_model">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
-    <string name="openapsama_max_daily_safety_multiplier">max_daily_safety_multiplier</string>
+    <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3\nThis is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
-    <string name="openapsama_current_basal_safety_multiplier">current_basal_safety_multiplier</string>
+    <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4\nThis is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
-    <string name="openapsama_autosens_max">autosens_max</string>
+    <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
-    <string name="openapsama_autosens_min">autosens_min</string>
+    <string name="openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
-    <string name="openapsama_autosens_adjusttargets">autosens_adjust_targets</string>
+    <string name="openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets_summary">Default value: true\nThis is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
-    <string name="openapsama_bolussnooze_dia_divisor">bolussnooze_dia_divisor</string>
+    <string name="openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
-    <string name="openapsama_min_5m_carbimpact">min_5m_carbimpact</string>
+    <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
     <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0\nThis is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
