@@ -18,14 +18,13 @@ import info.nightscout.client.data.NSProfile;
 public class MealData {
     public double boluses = 0d;
     public double carbs = 0d;
-    public double mealCOB = 0.0d; // TODO: add calculation for AMA
+    public double mealCOB = 0.0d;
 
 
     public void addTreatment(Treatment treatment) {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null) return;
 
-        // TODO: not sure how much data do i need for AMA
         List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * profile.getDia() * 2), false);
 
         long now = new Date().getTime();
