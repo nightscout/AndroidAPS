@@ -33,6 +33,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".PreferencesActivity" />
+        <activity android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity" android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
         <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity" />
         <activity android:name=".plugins.DanaRKorean.History.DanaRHistoryActivity" />

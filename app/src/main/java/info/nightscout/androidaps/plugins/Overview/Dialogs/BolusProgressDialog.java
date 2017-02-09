@@ -29,6 +29,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     TextView statusView;
     TextView stopPressedView;
     ProgressBar progressBar;
+    BolusProgressHelperActivity helperActivity;
 
     static double amount;
     public static boolean bolusEnded = false;
@@ -43,6 +44,10 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     public void setInsulin(double amount) {
         this.amount = amount;
         bolusEnded = false;
+    }
+
+    public void setHelperActivity(BolusProgressHelperActivity activity){
+        this.helperActivity = activity;
     }
 
     @Override
@@ -69,6 +74,14 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         MainApp.bus().register(this);
         running = true;
         if (bolusEnded) dismiss();
+    }
+
+    @Override
+    public void dismiss(){
+        super.dismiss();
+        if (helperActivity!= null){
+            helperActivity.finish();
+        }
     }
 
     @Override
