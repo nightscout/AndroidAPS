@@ -36,7 +36,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-import info.nightscout.androidaps.actions.ActionsListActivity;
+import info.nightscout.androidaps.actions.MainMenuActivity;
 
 
 public class CircleWatchface extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -717,7 +717,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 y >= mSgv.getTop() &&
                 y <= mSgv.getBottom()){
             if (eventTime - sgvTapTime < 800){
-                Intent intent = new Intent(this, ActionsListActivity.class);
+                Intent intent = new Intent(this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }

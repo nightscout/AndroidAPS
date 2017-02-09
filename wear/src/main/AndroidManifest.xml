@@ -99,27 +99,28 @@
             android:label="@string/label_xdrip_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".actions.ActionsListActivity"
+            android:name=".actions.MainMenuActivity"
             android:label="@string/label_actions_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".actions.wizard.WizardActivity"
             android:label="Wizard">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        </activity>
+        <activity
+            android:name=".actions.FillMenuActivity"
+            android:label="Fillmenu">
+        </activity>
+        <activity
+            android:name=".actions.StatusMenuActivity"
+            android:label="Status">
         </activity>
     </application>
 </manifest>

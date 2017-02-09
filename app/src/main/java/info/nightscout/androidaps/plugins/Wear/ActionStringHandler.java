@@ -57,6 +57,7 @@ public class ActionStringHandler {
         String[] act = actionstring.split("\\s+");
 
         if ("fillpreset".equals(act[0])) {
+            ///////////////////////////////////// PRIME/FILL
             double amount = 0d;
             if ("1".equals(act[1])) {
                 amount = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button1", "0.3"))));
@@ -73,6 +74,27 @@ public class ActionStringHandler {
                 rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
 
             rAction += "fill " + insulinAfterConstraints;
+
+        } else if ("status".equals(act[0])) {
+            ///////////////////////////////////// STATUS
+            rTitle = "STATUS";
+            rAction = "statusmessage";
+            //TODO: add meaningfull status
+
+            if("general".equals(act[1])){
+                rMessage = "Today is going to be a good day!";
+            } else if("pump".equals(act[1])){
+                rTitle += " PUMP";
+                rMessage = "I'm feeling pumped!";
+            } else if("loop".equals(act[1])){
+                rTitle += " LOOP";
+                rMessage = "A loop di loop di loop!";
+
+            } else if("targets".equals(act[1])){
+                rTitle += " TARGETS";
+                rMessage = "Always on target!";
+            }
+            rMessage += "\n\n\nTODO:\nAdd some meaningful status.";
 
         } else if ("wizard".equals(act[0])) {
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);

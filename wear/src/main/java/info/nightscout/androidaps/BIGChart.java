@@ -39,7 +39,7 @@ import com.ustwo.clockwise.common.WatchShape;
 import java.util.ArrayList;
 import java.util.Date;
 
-import info.nightscout.androidaps.actions.ActionsListActivity;
+import info.nightscout.androidaps.actions.MainMenuActivity;
 import lecho.lib.hellocharts.view.LineChartView;
 
 /**
@@ -162,7 +162,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
                 y >= mSgv.getTop() &&
                 y <= mSgv.getBottom()){
             if (eventTime - sgvTapTime < 800){
-                Intent intent = new Intent(this, ActionsListActivity.class);
+                Intent intent = new Intent(this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }

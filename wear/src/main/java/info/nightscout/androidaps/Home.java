@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 
 import com.ustwo.clockwise.common.WatchMode;
 
-import info.nightscout.androidaps.actions.ActionsListActivity;
+import info.nightscout.androidaps.actions.MainMenuActivity;
 
 public class Home extends BaseWatchFace {
 
@@ -43,7 +43,7 @@ public class Home extends BaseWatchFace {
                 y >= mSgv.getTop() &&
                 y <= mSgv.getBottom()){
             if (eventTime - sgvTapTime < 800){
-                Intent intent = new Intent(this, ActionsListActivity.class);
+                Intent intent = new Intent(this, MainMenuActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             }

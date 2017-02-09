@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.actions;
+package info.nightscout.androidaps.actions.utils;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,10 +15,14 @@ import info.nightscout.androidaps.R;
  * Created by adrian on 08/02/17.
  */
 
-public class ActionsListActivity extends Activity
+public abstract class MenuListActivity extends Activity
         implements WearableListView.ClickListener {
 
-    String[] elements = ActionsDefinitions.getActionNames();
+    String[] elements = getElements();
+
+    protected abstract String[] getElements();
+
+    protected abstract void doAction(int position);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class ActionsListActivity extends Activity
     @Override
     public void onClick(WearableListView.ViewHolder v) {
         Integer tag = (Integer) v.itemView.getTag();
-        ActionsDefinitions.doAction(tag, this);
+        doAction(tag);
         //ActionsDefinitions.doAction(v.getAdapterPosition(), this);
         finish();
     }
