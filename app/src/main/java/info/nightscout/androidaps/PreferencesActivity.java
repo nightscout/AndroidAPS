@@ -57,7 +57,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getTitle().toString().toLowerCase().contains("password")) {
+            if (pref.getKey().contains("danar_password")) {
                 pref.setSummary("******");
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
