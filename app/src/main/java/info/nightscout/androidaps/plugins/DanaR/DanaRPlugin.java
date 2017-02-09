@@ -292,17 +292,19 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public double getTempBasalAbsoluteRate() {
-        if (isRealTempBasalInProgress()) {
-            if (getRealTempBasal().isAbsolute) {
-                return getRealTempBasal().absolute;
+        TempBasal tb = getRealTempBasal();
+        if (tb != null) {
+            if (tb.isAbsolute) {
+                return tb.absolute;
             } else {
                 Double baseRate = getBaseBasalRate();
-                Double tempRate = baseRate * (getRealTempBasal().percent / 100d);
+                Double tempRate = baseRate * (tb.percent / 100d);
                 return tempRate;
             }
         }
-        if (isExtendedBoluslInProgress() && useExtendedBoluses) {
-            return getBaseBasalRate() + getExtendedBolus().absolute;
+        TempBasal eb = getExtendedBolus();
+        if (eb != null && useExtendedBoluses) {
+            return getBaseBasalRate() + eb.absolute;
         }
         return 0;
     }
