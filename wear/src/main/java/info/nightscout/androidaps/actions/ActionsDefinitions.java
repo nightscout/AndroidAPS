@@ -5,8 +5,6 @@ import android.content.Intent;
 
 import info.nightscout.androidaps.ListenerService;
 import info.nightscout.androidaps.NWPreferences;
-import info.nightscout.androidaps.actions.bolus.BolusActivity;
-import info.nightscout.androidaps.actions.bolus.GridActivity;
 import info.nightscout.androidaps.actions.wizard.WizardActivity;
 
 /**
@@ -55,9 +53,6 @@ final class ActionsDefinitions {
                 ListenerService.initiateAction(ctx, "fillpreset 3");
                 break;
             case 7:
-                intent = new Intent(ctx, GridActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                ctx.startActivity(intent);
                 break;
         }
 

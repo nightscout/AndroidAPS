@@ -113,23 +113,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".actions.bolus.BolusActivity"
-            android:label="@string/title_activity_bolus">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".actions.bolus.GridActivity"
-            android:label="GridTest">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name=".actions.wizard.WizardActivity"
             android:label="Wizard">
             <intent-filter>
