@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
@@ -36,7 +37,17 @@ public class GridActivity extends Activity {
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
+
     }
+
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
+    }
+
 
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
@@ -67,5 +78,7 @@ public class GridActivity extends Activity {
         public boolean isViewFromObject(View view, Object object) {
             return view==object;
         }
+
+
     }
 }
