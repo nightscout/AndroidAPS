@@ -6,6 +6,7 @@ import android.content.Intent;
 import info.nightscout.androidaps.ListenerService;
 import info.nightscout.androidaps.NWPreferences;
 import info.nightscout.androidaps.actions.bolus.BolusActivity;
+import info.nightscout.androidaps.actions.bolus.GridActivity;
 
 /**
  * Created by adrian on 08/02/17.
@@ -21,7 +22,7 @@ final class ActionsDefinitions {
             "Fillpreset 1",
             "Fillpreset 2",
             "Fillpreset 3",
-            "005"};
+            "006"};
 
 
     public static void doAction(int position, Context ctx) {
@@ -51,6 +52,11 @@ final class ActionsDefinitions {
                 break;
             case 6:
                 ListenerService.initiateAction(ctx, "fillpreset 3");
+                break;
+            case 7:
+                intent = new Intent(ctx, GridActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                ctx.startActivity(intent);
                 break;
         }
 
