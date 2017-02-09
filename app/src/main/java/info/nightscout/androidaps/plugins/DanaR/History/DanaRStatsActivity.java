@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class DanaRStatsActivity extends Activity {
@@ -366,7 +367,7 @@ public class DanaRStatsActivity extends Activity {
                     return;
                 }
                 else {
-                    magicNumber = Double.parseDouble(TBB);
+                    magicNumber = SafeParse.stringToDouble(TBB);
                 }
 
                 magicNumber *=2;

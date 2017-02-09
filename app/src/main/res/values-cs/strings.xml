@@ -439,4 +439,6 @@
     <string name="profile">Profil</string>
     <string name="short_tabtitles">Krátké názvy modulů</string>
     <string name="virtualpump_firmware_label">Firmware:</string>
+    <string name="smscommunicator_invalidphonennumber">Špatné telefonní číslo</string>
+    <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
 </resources>

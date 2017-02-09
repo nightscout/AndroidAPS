@@ -258,6 +258,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         if (!isInitialized())
             return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
         DanaRKoreanPump pump = getDanaRPump();
+        if (pump.pumpProfiles == null)
+            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
         int basalValues = pump.basal48Enable ? 48 : 24;
         int basalIncrement = pump.basal48Enable ? 30 * 60 : 60 * 60;
         for (int h = 0; h < basalValues; h++) {
@@ -290,17 +292,19 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public double getTempBasalAbsoluteRate() {
-        if (isRealTempBasalInProgress()) {
-            if (getRealTempBasal().isAbsolute) {
-                return getRealTempBasal().absolute;
+        TempBasal tb = getRealTempBasal();
+        if (tb != null) {
+            if (tb.isAbsolute) {
+                return tb.absolute;
             } else {
                 Double baseRate = getBaseBasalRate();
-                Double tempRate = baseRate * (getRealTempBasal().percent / 100d);
+                Double tempRate = baseRate * (tb.percent / 100d);
                 return tempRate;
             }
         }
-        if (isExtendedBoluslInProgress() && useExtendedBoluses) {
-            return getBaseBasalRate() + getExtendedBolus().absolute;
+        TempBasal eb = getExtendedBolus();
+        if (eb != null && useExtendedBoluses) {
+            return getBaseBasalRate() + eb.absolute;
         }
         return 0;
     }
@@ -707,11 +711,12 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             extended.put("PumpIOB", getDanaRPump().iob);
 //            extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
 //            extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
-            if (isTempBasalInProgress()) {
+            TempBasal tb = getTempBasal();
+            if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
-                extended.put("TempBasalStart", getTempBasal().timeStart.toLocaleString());
-                extended.put("TempBasalRemaining", getTempBasal().getPlannedRemainingMinutes());
-                extended.put("IsExtended", getTempBasal().isExtended);
+                extended.put("TempBasalStart", tb.timeStart.toLocaleString());
+                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+                extended.put("IsExtended", tb.isExtended);
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
