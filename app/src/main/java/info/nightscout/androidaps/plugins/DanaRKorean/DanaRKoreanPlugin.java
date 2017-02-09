@@ -258,6 +258,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         if (!isInitialized())
             return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
         DanaRKoreanPump pump = getDanaRPump();
+        if (pump.pumpProfiles == null)
+            return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
         int basalValues = pump.basal48Enable ? 48 : 24;
         int basalIncrement = pump.basal48Enable ? 30 * 60 : 60 * 60;
         for (int h = 0; h < basalValues; h++) {
