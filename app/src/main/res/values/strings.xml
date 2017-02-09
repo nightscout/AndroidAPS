@@ -476,4 +476,7 @@
     <string name="error_field_must_not_be_empty">The field must not be empty</string>
     <string name="error_phone_not_valid">Phone number not valid</string>
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
+    <string name="copy_to_clipboard">Copy To Clipboard</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="nav_show_logcat">Show log</string>
 </resources>

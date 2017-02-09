@@ -9,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -29,10 +28,9 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
-import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
+import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 
@@ -144,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_import:
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.importSharedPreferences(this);
+                break;
+            case R.id.nav_show_logcat:
+                LogDialog.showLogcat(this);
                 break;
 //            case R.id.nav_test_alarm:
 //                final int REQUEST_CODE_ASK_PERMISSIONS = 2355;

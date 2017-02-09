@@ -240,7 +240,6 @@
     <string name="manual">Jiný</string>
     <string name="glucosetype_sensor">Senzor</string>
     <string name="danarprofile">DanaR profil</string>
-    <string name="danarprofile_dia">Celková doba aktivity inzulínu[h]</string>
     <string name="failedupdatebasalprofile">Chyba při nastavení dočasného bazálu</string>
     <string name="danar_alarm">alarm</string>
     <string name="danar_basalhour">hodinový bazál</string>
@@ -441,4 +440,10 @@
     <string name="virtualpump_firmware_label">Firmware:</string>
     <string name="smscommunicator_invalidphonennumber">Špatné telefonní číslo</string>
     <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
+    <string name="copied_to_clipboard">Nakopírováno do schránky</string>
+    <string name="copy_to_clipboard">Kopírovat do schránky</string>
+    <string name="danarprofile_dia_summary">Celková doba aktivity inzulínu</string>
+    <string name="danarprofile_dia">DIA [h]</string>
+    <string name="error_field_must_not_be_empty"></string>
+    <string name="nav_show_logcat">Zobrazit log</string>
 </resources>
