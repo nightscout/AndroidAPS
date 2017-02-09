@@ -11,6 +11,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 
+
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -53,10 +54,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getTitle().toString().toLowerCase().contains("password"))
-            {
+            if (pref.getKey().contains("danar_password")) {
                 pref.setSummary("******");
-            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")){
+            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
+                ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
             }
         }

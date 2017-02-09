@@ -7,3 +7,6 @@ wear/wear.iml
 .DS_Store
 /build
 /captures
+*.apk
+build/
+**/*.iml
