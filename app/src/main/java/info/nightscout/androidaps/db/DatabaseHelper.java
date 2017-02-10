@@ -172,48 +172,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(DanaRHistoryRecord.class);
     }
 
-    /*
-     * Return last BgReading from database or null if db is empty
-     */
-    @Nullable
-    public BgReading lastBg() {
-        List<BgReading> bgList = null;
-
-        try {
-            Dao<BgReading, Long> daoBgReadings = getDaoBgReadings();
-            QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.limit(1L);
-            queryBuilder.where().gt("value", 38);
-            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
-            bgList = daoBgReadings.query(preparedQuery);
-
-        } catch (SQLException e) {
-            log.debug(e.getMessage(), e);
-        }
-        if (bgList != null && bgList.size() > 0)
-            return bgList.get(0);
-        else
-            return null;
-    }
-
-    /*
-     * Return bg reading if not old ( <9 min )
-     * or null if older
-     */
-    @Nullable
-    public BgReading actualBg() {
-        BgReading lastBg = lastBg();
-
-        if (lastBg == null)
-            return null;
-
-        if (lastBg.timeIndex > new Date().getTime() - 9 * 60 * 1000)
-            return lastBg;
-
-        return null;
-    }
-
     public List<BgReading> getBgreadingsDataFromTime(long mills, boolean ascending) {
         try {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();

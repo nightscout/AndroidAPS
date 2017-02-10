@@ -496,7 +496,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             }
 
             // Compare with extended rate in progress
-            if (Math.abs(getDanaRPump().extendedBolusAbsoluteRate - extendedRateToSet) < 0.02D) { // Allow some rounding diff
+            if (isExtendedBoluslInProgress() && Math.abs(getDanaRPump().extendedBolusAbsoluteRate - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
                 // correct extended already set
                 result.success = true;
                 result.absolute = getDanaRPump().extendedBolusAbsoluteRate;
