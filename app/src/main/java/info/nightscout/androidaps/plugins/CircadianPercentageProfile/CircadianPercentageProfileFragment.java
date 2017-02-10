@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.andreabaccega.widget.FormEditText;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -50,8 +51,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     RadioButton mmolView;
     EditText targetlowView;
     EditText targethighView;
-    EditText percentageView;
-    EditText timeshiftView;
+    FormEditText percentageView;
+    FormEditText timeshiftView;
     TextView profileView;
     TextView baseprofileIC;
     TextView baseprofileBasal;
@@ -75,8 +76,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         mmolView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mmol);
         targetlowView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targethigh);
-        percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
-        timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
+        percentageView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
+        timeshiftView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
         profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
         baseprofileBasal = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal);
         baseprofileBasalLayout = (LinearLayout) layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal_layout);
@@ -217,15 +218,21 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
 
-                if (SafeParse.stringToInt(percentageView.getText().toString()) == 0) {
-                    circadianPercentageProfilePlugin.percentage = 100;
-                } else {
-                    circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
+                if (percentageView.testValidity()) {
+                    if (SafeParse.stringToInt(percentageView.getText().toString()) == 0) {
+                        circadianPercentageProfilePlugin.percentage = 100;
+                    } else {
+                        circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
+                    }
+                    updateProfileInfo();
+                }
+                if (timeshiftView.testValidity()) {
+                    circadianPercentageProfilePlugin.timeshift = SafeParse.stringToInt(timeshiftView.getText().toString());
+                    updateProfileInfo();
                 }
                 circadianPercentageProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
                 circadianPercentageProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
                 circadianPercentageProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
-                circadianPercentageProfilePlugin.timeshift = SafeParse.stringToInt(timeshiftView.getText().toString());
                 circadianPercentageProfilePlugin.storeSettings();
                 updateProfileInfo();
             }
