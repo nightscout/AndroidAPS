@@ -69,8 +69,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     BasalEditDialog basalEditDialog;
     LinearLayout ll;
 
-    Boolean percentageViewHint = true;
-    Boolean timeshiftViewHint = true;
+    static Boolean percentageViewHint = true;
+    static Boolean timeshiftViewHint = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -202,7 +202,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 }
                 else {
                     if (timeshiftViewHint) {
-                        customSnackbar(view, getString(R.string.timeshift_hint), "timeshiftViewHint");
+                        customSnackbar(view, getString(R.string.timeshift_hint));
                     }
                 }
             }
@@ -218,7 +218,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 }
                 else {
                     if (percentageViewHint) {
-                        customSnackbar(view, getString(R.string.percentagefactor_hint), "percentageViewHint");
+                        customSnackbar(view, getString(R.string.percentagefactor_hint));
                     }
                 }
             }
@@ -312,7 +312,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         return layout;
     }
 
-    private void customSnackbar(View view, String Msg, final String Hint) {
+    private void customSnackbar(View view, final String Msg) {
         if (timeshiftViewHint || percentageViewHint) {
             Snackbar mSnackBar = Snackbar.make(view,
                     Msg,
@@ -322,9 +322,9 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                     .setAction(getString(R.string.dismiss), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (Hint.equals("percentageViewHint")) {
+                            if (Msg.equals(getString(R.string.percentagefactor_hint))) {
                                 percentageViewHint = false;
-                            } else if (Hint.equals("timeshiftViewHint")) {
+                            } else if (Msg.equals(getString(R.string.timeshift_hint))) {
                                 timeshiftViewHint = false;
                             }
                         }
