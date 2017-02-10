@@ -85,7 +85,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.bolusStep = 0.05d;
 
         pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.1d;
+        pumpDescription.extendedBolusStep = 0.05d;
 
         pumpDescription.isTempBasalCapable = true;
         pumpDescription.lowTempBasalStyle = PumpDescription.PERCENT;
