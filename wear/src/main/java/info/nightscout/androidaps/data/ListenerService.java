@@ -57,6 +57,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
     private static final String ACTION_RESEND_BULK = "com.dexdrip.stephenblack.nightwatch.RESEND_BULK_DATA";
     GoogleApiClient googleApiClient;
     private long lastRequest = 0;
+    private DismissThread confirmThread;
+    private DismissThread bolusprogressThread;
 
 
     public class DataRequester extends AsyncTask<Void, Void, Void> {
@@ -289,16 +291,23 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         NotificationManagerCompat notificationManager =
                 NotificationManagerCompat.from(this);
 
+        if(confirmThread != null){
+            confirmThread.invalidate();
+        }
         notificationManager.notify(BOLUS_PROGRESS_NOTIF_ID, notificationBuilder.build());
         notificationManager.cancel(CONFIRM_NOTIF_ID); // multiple watch setup
 
 
         if (progresspercent == 100){
-            scheduleDismiss(BOLUS_PROGRESS_NOTIF_ID, 5);
+            scheduleDismissBolusprogress(5);
         }
     }
 
     private void showConfirmationDialog(String title, String message, String actionstring) {
+
+        if(confirmThread != null){
+            confirmThread.invalidate();
+        }
 
         Intent actionIntent = new Intent(this, ListenerService.class);
         actionIntent.setAction(ACTION_CONFIRMATION);
@@ -323,28 +332,58 @@ public class ListenerService extends WearableListenerService implements GoogleAp
         notificationManager.notify(CONFIRM_NOTIF_ID, notificationBuilder.build());
 
         // keep the confirmation dialog open for one minute.
-        scheduleDismiss(CONFIRM_NOTIF_ID, 60);
+        scheduleDismissConfirm(60);
 
     }
 
-    private void scheduleDismiss(final int notificationId, final int seconds) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(seconds * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                NotificationManagerCompat notificationManager =
-                        NotificationManagerCompat.from(ListenerService.this);
-                notificationManager.cancel(notificationId);
+    private void scheduleDismissConfirm(final int seconds) {
+        if(confirmThread != null){
+            confirmThread.invalidate();
+        }
+        confirmThread = new DismissThread(CONFIRM_NOTIF_ID, seconds);
+        confirmThread.start();
+    }
+
+    private void scheduleDismissBolusprogress(final int seconds) {
+        if(confirmThread != null){
+            confirmThread.invalidate();
+        }
+        bolusprogressThread = new DismissThread(BOLUS_PROGRESS_NOTIF_ID, seconds);
+        bolusprogressThread.start();
+    }
+
+
+
+    private class DismissThread extends Thread{
+        private final int notificationID;
+        private final int seconds;
+        private boolean valid = true;
+
+        DismissThread(int notificationID, int seconds){
+            this.notificationID = notificationID;
+            this.seconds = seconds;
+        }
+
+        public synchronized void invalidate(){
+            valid = false;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(seconds * 1000);
+            } catch (InterruptedException e) {
+                //e.printStackTrace();
             }
-        });
-        t.start();
+            synchronized (this) {
+                if(valid) {
+                    NotificationManagerCompat notificationManager =
+                            NotificationManagerCompat.from(ListenerService.this);
+                    notificationManager.cancel(notificationID);
+                }
+            }
+        }
     }
-
-
 
     public static void requestData(Context context) {
         Intent intent = new Intent(context, ListenerService.class);
