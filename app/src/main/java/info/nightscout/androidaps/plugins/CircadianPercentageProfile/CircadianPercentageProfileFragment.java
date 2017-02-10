@@ -4,6 +4,7 @@ package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -210,7 +211,14 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                     timeshiftView.setError(null);
                 }
                 else {
-                    timeshiftView.setError(getString(R.string.timeshift_hint), null);
+                    new CountDownTimer(5000, 1000) { //timer for 5sec
+                        public void onTick(long millisUntilFinished) {
+                            timeshiftView.setError(getString(R.string.timeshift_hint), null);
+                        }
+                        public void onFinish() {
+                            timeshiftView.setError(null);
+                        }
+                    }.start();
                 }
             }
         });
@@ -224,7 +232,14 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                     percentageView.setError(null);
                 }
                 else {
-                    percentageView.setError(getString(R.string.percentagefactor_hint), null);
+                    new CountDownTimer(5000, 1000) { //timer for 5sec
+                        public void onTick(long millisUntilFinished) {
+                            percentageView.setError(getString(R.string.percentagefactor_hint), null);
+                        }
+                        public void onFinish() {
+                            percentageView.setError(null);
+                        }
+                    }.start();
                 }
             }
         });
