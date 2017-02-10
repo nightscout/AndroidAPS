@@ -253,7 +253,12 @@
                         android:text="@string/dia"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="floatNumericRange"
+                        validate:floatminNumber="1.0"
+                        validate:floatmaxNumber="10.0"
+                        android:digits="0123456789.,"
+                        android:selectAllOnFocus="true"
                         android:id="@+id/circadianpercentageprofile_dia"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
@@ -271,14 +276,24 @@
                         android:text="@string/target_range"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="floatNumericRange"
+                        validate:floatminNumber="5.0"
+                        validate:floatmaxNumber="180.0"
+                        android:digits="0123456789.,"
+                        android:selectAllOnFocus="true"
                         android:id="@+id/circadianpercentageprofile_targetlow"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_column="2"
                         android:inputType="numberDecimal" />
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="floatNumericRange"
+                        validate:floatminNumber="10.0"
+                        validate:floatmaxNumber="270.0"
+                        android:digits="0123456789.,"
+                        android:selectAllOnFocus="true"
                         android:id="@+id/circadianpercentageprofile_targethigh"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
