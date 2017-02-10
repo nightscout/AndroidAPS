@@ -312,6 +312,7 @@ public class ActionStringHandler {
     }
 
     private static void doFillBolus(final Double amount) {
+        if(1==1)return;
         Handler handler = new Handler(handlerThread.getLooper());
         handler.post(new Runnable() {
             @Override
@@ -327,6 +328,7 @@ public class ActionStringHandler {
     }
 
     private static void doBolus(final Double amount, final Integer carbs) {
+        if(1==1)return;
         Handler handler = new Handler(handlerThread.getLooper());
         handler.post(new Runnable() {
             @Override
