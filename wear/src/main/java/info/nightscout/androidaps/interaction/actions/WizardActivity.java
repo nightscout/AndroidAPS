@@ -71,7 +71,13 @@ public class WizardActivity extends Activity {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
                 final TextView textView = (TextView) view.findViewById(R.id.label);
                 textView.setText("carbs");
-                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 100d, 1d, new DecimalFormat("0"), false);
+                if (editCarbs == null) {
+                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 100d, 1d, new DecimalFormat("0"), false);
+                } else {
+                    double def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
+                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 100d, 1d, new DecimalFormat("0"), false);
+
+                }
                 container.addView(view);
                 return view;
             } else if(col == 1){
@@ -80,6 +86,11 @@ public class WizardActivity extends Activity {
                 textView.setText("include BG?");
 
                 final ImageView togglebutton = (ImageView) view.findViewById(R.id.togglebutton);
+                if(useBG){
+                    togglebutton.setImageResource(R.drawable.ic_toggle_on);
+                } else {
+                    togglebutton.setImageResource(R.drawable.ic_toggle_off);
+                }
                 togglebutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -99,6 +110,11 @@ public class WizardActivity extends Activity {
                 textView.setText("Bolus IOB?");
 
                 final ImageView togglebutton = (ImageView) view.findViewById(R.id.togglebutton);
+                if(includeBolusIOB){
+                    togglebutton.setImageResource(R.drawable.ic_toggle_on);
+                } else {
+                    togglebutton.setImageResource(R.drawable.ic_toggle_off);
+                }
                 togglebutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -118,6 +134,11 @@ public class WizardActivity extends Activity {
                 textView.setText("Basal IOB?");
 
                 final ImageView togglebutton = (ImageView) view.findViewById(R.id.togglebutton);
+                if(includeBasalIOB){
+                    togglebutton.setImageResource(R.drawable.ic_toggle_on);
+                } else {
+                    togglebutton.setImageResource(R.drawable.ic_toggle_off);
+                }
                 togglebutton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

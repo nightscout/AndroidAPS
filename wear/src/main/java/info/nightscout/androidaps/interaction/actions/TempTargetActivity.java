@@ -77,7 +77,12 @@ public class TempTargetActivity extends Activity {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
                 final TextView textView = (TextView) view.findViewById(R.id.label);
                 textView.setText("duration");
-                time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60d, 0d, 24*60d, 1d, new DecimalFormat("0"), false);
+                if (time == null) {
+                    time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60d, 0d, 24 * 60d, 1d, new DecimalFormat("0"), false);
+                } else {
+                    double def = SafeParse.stringToDouble(time.editText.getText().toString());
+                    time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 24 * 60d, 1d, new DecimalFormat("0"), false);
+                }
                 container.addView(view);
                 return view;
 
@@ -86,9 +91,17 @@ public class TempTargetActivity extends Activity {
                  final TextView textView = (TextView) view.findViewById(R.id.label);
                  textView.setText("low");
                  if (isMGDL){
-                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 100d, 72d, 180d, 1d, new DecimalFormat("0"), false);
+                     double def = 100;
+                     if (lowRange != null){
+                         def = SafeParse.stringToDouble(lowRange.editText.getText().toString());
+                     }
+                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 1d, new DecimalFormat("0"), false);
                  } else {
-                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 5.5, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
+                     double def = 5.5;
+                     if (lowRange != null){
+                         def = SafeParse.stringToDouble(lowRange.editText.getText().toString());
+                     }
+                     lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
                  }
 
                  container.addView(view);
@@ -98,9 +111,17 @@ public class TempTargetActivity extends Activity {
                  final TextView textView = (TextView) view.findViewById(R.id.label);
                  textView.setText("high");
                  if (isMGDL){
-                     highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 100d, 72d, 180d, 1d, new DecimalFormat("0"), false);
+                     double def = 100;
+                     if (highRange != null){
+                         def = SafeParse.stringToDouble(highRange.editText.getText().toString());
+                     }
+                     highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 72d, 180d, 1d, new DecimalFormat("0"), false);
                  } else {
-                     highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 5.5, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
+                     double def = 5.5;
+                     if (highRange != null){
+                         def = SafeParse.stringToDouble(highRange.editText.getText().toString());
+                     }
+                     highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
                  }
 
                  container.addView(view);
