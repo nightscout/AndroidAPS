@@ -52,7 +52,7 @@ public class FillActivity extends Activity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return 3;
+            return 2;
         }
 
         @Override

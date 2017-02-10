@@ -48,6 +48,8 @@ public class ActionStringHandler {
 
     private static long lastSentTimestamp = 0;
     private static String lastConfirmActionString = null;
+    private static BolusWizard lastBolusWizard = null;
+
     private static SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
 
@@ -57,6 +59,8 @@ public class ActionStringHandler {
     }
 
     public synchronized static void handleInitiate(String actionstring){
+
+        lastBolusWizard = null;
 
         String rTitle = "CONFIRM"; //TODO: i18n
         String rMessage = "";
@@ -178,18 +182,58 @@ public class ActionStringHandler {
             ////////////////////////////////////////////// WIZARD
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
             Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbsBeforeConstraints);
-            //TODO: wizard calculation
-            return;
 
-        }
+            if(carbsAfterConstraints - carbsBeforeConstraints !=0){
+                sendError("Carb constraint violation!"); return;
+            }
 
-        else if(false){
-            //... add more actions
+            boolean useBG = Boolean.parseBoolean(act[2]);
+            boolean useBolusIOB = Boolean.parseBoolean(act[3]);
+            boolean useBasalIOB = Boolean.parseBoolean(act[4]);
+
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            if (profile == null) {
+                sendError("No profile found!"); return;
+            }
+
+            BgReading bgReading = MainApp.getDbHelper().actualBg();
+            if(bgReading==null && useBG){
+                sendError("No recent BG to base calculation on!"); return;
+            }
+
+            BolusWizard bolusWizard = new BolusWizard();
+            bolusWizard.doCalc(profile.getDefaultProfile(), carbsAfterConstraints, useBG?bgReading.valueToUnits(profile.getUnits()):0d, 0d, useBolusIOB, useBasalIOB);
+
+            Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(bolusWizard.calculatedTotalInsulin);
+            if(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin !=0){
+                sendError("Insulin contraint violation!"); return;
+            }
+
+
+            double insulin = bolusWizard.calculatedTotalInsulin;
+            if(bolusWizard.calculatedTotalInsulin < 0) {
+                bolusWizard.calculatedTotalInsulin = 0d;
+            }
+
+            if(bolusWizard.calculatedTotalInsulin <=0 && bolusWizard.carbs <=0){
+                rAction = "info";
+                rTitle = "INFO";
+            }
+            rAction = actionstring;
+
+            DecimalFormat format = new DecimalFormat("0.00");
+            rMessage += "Bolus: " + format.format(bolusWizard.calculatedTotalInsulin) + "U";
+            rMessage += "\nWizard: " + format.format(insulin) + "U";
+            rMessage += "\nCarb: " + format.format(bolusWizard.insulinFromCarbs) + "U";
+            if(useBG)rMessage += "\nBG: " + format.format(bolusWizard.insulinFromBG) + "U";
+            if(useBolusIOB)rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
+            if(useBasalIOB)rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulingFromBasalsIOB) + "U";
+            rMessage += "\nIC:" + DecimalFormatter.to1Decimal(bolusWizard.ic);
+            if(useBG)rMessage += " ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens);
+
+            lastBolusWizard = bolusWizard;
 
         } else return;
-
-
-
 
         // send result
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, rMessage, rAction);
@@ -228,10 +272,17 @@ public class ActionStringHandler {
                 high *= Constants.MMOLL_TO_MGDL;
             }
             generateTempTarget(duration, low, high);
+        } else if ("wizard".equals(act[0])){
+            //use last calculation as confirmed string matches
+
+            doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs);
+            lastBolusWizard = null;
+        } else if ("bolus".equals(act[0])) {
+            double insulin = SafeParse.stringToDouble(act[1]);
+            int carbs = SafeParse.stringToInt(act[2]);
+            doBolus(insulin, carbs);
         }
-
-
-
+        lastBolusWizard = null;
     }
 
     private static void generateTempTarget(int duration, double low, double high) {
@@ -275,9 +326,25 @@ public class ActionStringHandler {
         });
     }
 
+    private static void doBolus(final Double amount, final Integer carbs) {
+        Handler handler = new Handler(handlerThread.getLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(amount, carbs, null, true);
+                if (!result.success) {
+                    sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror)  +
+                            "\n" +
+                            result.comment);
+                }
+            }
+        });
+    }
+
     private synchronized static void sendError(String errormessage){
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("ERROR", errormessage, "error");
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
+        lastBolusWizard = null;
     }
 }
