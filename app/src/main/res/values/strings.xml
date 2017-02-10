@@ -253,6 +253,7 @@
     <string name="smscommunicator_allowednumbers">Allowed phone numbers</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">To send calibration %.2fU reply with code %s</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
@@ -484,4 +485,7 @@
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
+    <string name="smscommunicator_remotecalibrationnotallowed">Remote calibration not allowed</string>
+    <string name="smscommunicator_calibrationsent">Calibration sent</string>
+    <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
 </resources>

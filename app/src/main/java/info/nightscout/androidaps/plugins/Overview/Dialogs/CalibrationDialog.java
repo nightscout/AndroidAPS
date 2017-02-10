@@ -23,7 +23,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.PlusMinusEditText;
-import info.nightscout.utils.XripCalibrations;
+import info.nightscout.utils.XdripCalibrations;
 
 public class CalibrationDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(CalibrationDialog.class);
@@ -71,7 +71,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.overview_calibration_okbutton:
                 final Double bg = bgText.getValue();
-                XripCalibrations.confirmAndSendCalibration(bg, parentContext);
+                XdripCalibrations.confirmAndSendCalibration(bg, parentContext);
                 dismiss();
                 break;
         }

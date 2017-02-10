@@ -23,8 +23,8 @@ import info.nightscout.client.data.NSProfile;
  * Created by mike on 10.02.2017.
  */
 
-public class XripCalibrations {
-    private static Logger log = LoggerFactory.getLogger(XripCalibrations.class);
+public class XdripCalibrations {
+    private static Logger log = LoggerFactory.getLogger(XdripCalibrations.class);
 
     public static void confirmAndSendCalibration(final Double bg, Context parentContext) {
         if (parentContext != null) {
@@ -43,7 +43,7 @@ public class XripCalibrations {
         }
     }
 
-    private static boolean sendIntent(Double bg) {
+    public static boolean sendIntent(Double bg) {
         final NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         Context context = MainApp.instance().getApplicationContext();
@@ -62,6 +62,7 @@ public class XripCalibrations {
             return false;
         } else {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.calibrationsent));
+            log.debug(MainApp.sResources.getString(R.string.calibrationsent));
             return true;
         }
     }
