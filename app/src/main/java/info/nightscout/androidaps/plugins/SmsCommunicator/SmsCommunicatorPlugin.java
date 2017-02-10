@@ -212,8 +212,8 @@ public class SmsCommunicatorPlugin implements PluginBase {
         if (splited.length > 0) {
             switch (splited[0].toUpperCase()) {
                 case "BG":
-                    BgReading actualBG = MainApp.getDbHelper().actualBg();
-                    BgReading lastBG = MainApp.getDbHelper().lastBg();
+                    BgReading actualBG = GlucoseStatus.actualBg();
+                    BgReading lastBG = GlucoseStatus.lastBg();
 
                     NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
                     String units = profile.getUnits();

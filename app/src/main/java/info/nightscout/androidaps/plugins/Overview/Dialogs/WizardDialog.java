@@ -36,6 +36,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
@@ -278,7 +279,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         else editBg.setStep(0.1d);
 
         // Set BG if not old
-        BgReading lastBg = MainApp.getDbHelper().actualBg();
+        BgReading lastBg = GlucoseStatus.actualBg();
 
         if (lastBg != null) {
             Double lastBgValue = lastBg.valueToUnits(units);

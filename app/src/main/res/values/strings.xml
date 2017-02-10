@@ -453,7 +453,7 @@
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
     <string name="virtualpump_firmware_label">Firmware:</string>
-    <string formatted="false" name="danar_model">Model: %02X Protocol: %02X Code: %02X</string>
+    <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3\nThis is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
@@ -479,4 +479,9 @@
     <string name="copy_to_clipboard">Copy To Clipboard</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="nav_show_logcat">Show log</string>
+    <string name="overview_calibration">Calibration</string>
+    <string name="overview_calibration_bg_label">Calibration BG</string>
+    <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
+    <string name="xdripnotinstalled">xDrip+ not installed</string>
+    <string name="calibrationsent">Calibration sent to xDrip</string>
 </resources>

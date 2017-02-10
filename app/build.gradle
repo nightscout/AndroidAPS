@@ -70,7 +70,7 @@ android {
             dimension "limits"
             buildConfigField "int", "MAXBOLUS", "5"
         }
-       full {
+        full {
             dimension "standard"
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"

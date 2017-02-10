@@ -450,4 +450,9 @@
     <string name="error_only_numeric_digits_allowed">Povoleny pouze číslice</string>
     <string name="error_only_numeric_digits_range_allowed">Povoleny pouze čísla v rozsahu %1$s - %2$s</string>
     <string name="error_phone_not_valid">Neplatné telefonní číslo</string>
+    <string name="calibrationsent">Kalibrace odeslána do xDripu</string>
+    <string name="overview_calibration">Kalibrace</string>
+    <string name="overview_calibration_bg_label">Kalibrační glykémie</string>
+    <string name="send_calibration">Poslat do xDripu kalibraci %.1f ?</string>
+    <string name="xdripnotinstalled">xDrip+ není nainstalován</string>
 </resources>

@@ -75,12 +75,14 @@ import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotificati
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.client.data.NSProfile;
@@ -125,6 +127,7 @@ public class OverviewFragment extends Fragment {
     Button cancelTempButton;
     Button treatmentButton;
     Button wizardButton;
+    Button calibrationButton;
     Button acceptTempButton;
     Button quickWizardButton;
 
@@ -172,6 +175,7 @@ public class OverviewFragment extends Fragment {
         acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
         quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizard);
+        calibrationButton = (Button) view.findViewById(R.id.overview_calibration);
         showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
@@ -233,6 +237,15 @@ public class OverviewFragment extends Fragment {
             }
         });
 
+        calibrationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FragmentManager manager = getFragmentManager();
+                CalibrationDialog calibrationDialog = new CalibrationDialog();
+                calibrationDialog.setContext(getContext());
+                calibrationDialog.show(manager, "CalibrationDialog");
+            }
+        });
 
         acceptTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,7 +291,7 @@ public class OverviewFragment extends Fragment {
     }
 
     void processQuickWizard() {
-        final BgReading lastBG = MainApp.getDbHelper().lastBg();
+        final BgReading lastBG = GlucoseStatus.lastBg();
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return;
         final NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
@@ -465,8 +478,8 @@ public class OverviewFragment extends Fragment {
     @SuppressLint("SetTextI18n")
     public void updateGUI() {
         updateNotifications();
-        BgReading actualBG = MainApp.getDbHelper().actualBg();
-        BgReading lastBG = MainApp.getDbHelper().lastBg();
+        BgReading actualBG = GlucoseStatus.actualBg();
+        BgReading lastBG = GlucoseStatus.lastBg();
 
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
             initializingView.setText(R.string.noprofileset);
@@ -569,6 +582,13 @@ public class OverviewFragment extends Fragment {
             acceptTempButton.setText(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
         } else {
             acceptTempLayout.setVisibility(View.GONE);
+        }
+
+        // **** Calibration button ****
+        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && GlucoseStatus.actualBg() != null) {
+            calibrationButton.setVisibility(View.VISIBLE);
+        } else {
+            calibrationButton.setVisibility(View.GONE);
         }
 
         TempBasal activeTemp = pump.getTempBasal();
