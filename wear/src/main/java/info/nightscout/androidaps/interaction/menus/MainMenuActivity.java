@@ -18,7 +18,7 @@ public class MainMenuActivity extends MenuListActivity {
     @Override
     protected String[] getElements() {
         return new String[] {
-                "TTarget",
+                "TempT",
                 "Bolus",
                 "Wizard",
                 "Settings",
