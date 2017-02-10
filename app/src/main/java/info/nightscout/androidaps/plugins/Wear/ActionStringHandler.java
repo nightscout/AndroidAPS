@@ -218,9 +218,9 @@ public class ActionStringHandler {
             if(bolusWizard.calculatedTotalInsulin <=0 && bolusWizard.carbs <=0){
                 rAction = "info";
                 rTitle = "INFO";
+            } else {
+                rAction = actionstring;
             }
-            rAction = actionstring;
-
             DecimalFormat format = new DecimalFormat("0.00");
             rMessage += "Bolus: " + format.format(bolusWizard.calculatedTotalInsulin) + "U";
             rMessage += "\nWizard: " + format.format(insulin) + "U";
