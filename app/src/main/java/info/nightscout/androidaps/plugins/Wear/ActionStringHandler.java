@@ -5,22 +5,32 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.preference.PreferenceManager;
+import android.support.annotation.BoolRes;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+
+import com.j256.ormlite.dao.Dao;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.QuickWizard;
+import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -76,7 +86,7 @@ public class ActionStringHandler {
             rAction += "fill " + insulinAfterConstraints;
 
         } else if ("fill".equals(act[0])) {
-            ///////////////////////////////////// PRIME/FILL
+            ////////////////////////////////////////////// PRIME/FILL
             double amount = SafeParse.stringToDouble(act[1]);
 
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(amount);
@@ -86,11 +96,68 @@ public class ActionStringHandler {
 
             rAction += "fill " + insulinAfterConstraints;
 
+        } else if ("bolus".equals(act[0])) {
+            ////////////////////////////////////////////// BOLUS
+            double insulin = SafeParse.stringToDouble(act[1]);
+            int carbs = SafeParse.stringToInt(act[2]);
+            Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
+            Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
+            rMessage += MainApp.instance().getString(R.string.bolus) + ": " + insulinAfterConstraints + "U\n";
+            rMessage += MainApp.instance().getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+
+            if ((insulinAfterConstraints - insulin != 0) || (carbsAfterConstraints - carbs != 0)) {
+                rMessage += "\n" + MainApp.instance().getString(R.string.constraintapllied);
+            }
+            rAction += "bolus " + insulinAfterConstraints + " " + carbsAfterConstraints;
+
+        } else if ("temptarget".equals(act[0])) {
+            ///////////////////////////////////////////////////////// TEMPTARGET
+            boolean isMGDL = Boolean.parseBoolean(act[1]);
+
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
+            if (!(Config.APS && tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL))) {
+                sendError("TempTargets not possible! Please check your configuration.");
+                return;
+            }
+            if (profile == null) {
+                sendError("No profile found!");
+                return;
+            }
+            if(profile.getUnits().equals(Constants.MGDL) != isMGDL){
+                sendError("Different units used on watch and phone!");
+                return;
+            }
+
+            int duration = SafeParse.stringToInt(act[2]);
+            if (duration == 0){
+                rMessage += "Zero-Temp-Target - cancelling running Temp-Targets?";
+                rAction = "temptarget true 0 0 0";
+            } else {
+                double low = SafeParse.stringToDouble(act[3]);
+                double high = SafeParse.stringToDouble(act[4]);
+                if(!isMGDL){
+                    low *= Constants.MMOLL_TO_MGDL;
+                    high *= Constants.MMOLL_TO_MGDL;
+                }
+                if (low < Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0] || low > Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]) {
+                    sendError("Min-BG out of range!");
+                    return;
+                }
+                if (high < Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0] || high > Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]) {
+                    sendError("Max-BG out of range!");
+                    return;
+                }
+                rMessage += "Temptarget:\nMin: " + act[3] + "\nMax: " + act[4] + "\nDuration: " +  act[2];
+                rAction = actionstring;
+
+            }
+
         } else if ("status".equals(act[0])) {
-            ///////////////////////////////////// STATUS
+            ////////////////////////////////////////////// STATUS
             rTitle = "STATUS";
             rAction = "statusmessage";
-            //TODO: add meaningfull status
+            //TODO: add meaningful status
 
             if("general".equals(act[1])){
                 rMessage = "Today is going to be a good day!";
@@ -108,6 +175,7 @@ public class ActionStringHandler {
             rMessage += "\n\n\nTODO:\nAdd some meaningful status.";
 
         } else if ("wizard".equals(act[0])) {
+            ////////////////////////////////////////////// WIZARD
             Integer carbsBeforeConstraints = SafeParse.stringToInt(act[1]);
             Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbsBeforeConstraints);
             //TODO: wizard calculation
@@ -141,7 +209,7 @@ public class ActionStringHandler {
         // do the parsing, check constraints and enact!
         String[] act = actionString.split("\\s+");
 
-        if (false && "fill".equals(act[0])){
+        if ("fill".equals(act[0])){
             Double amount = SafeParse.stringToDouble(act[1]);
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(amount);
             if(amount - insulinAfterConstraints != 0){
@@ -150,10 +218,46 @@ public class ActionStringHandler {
                 return;
             }
             doFillBolus(amount);
+        } else if ("temptarget".equals(act[0])) {
+            int duration = SafeParse.stringToInt(act[2]);
+            double low = SafeParse.stringToDouble(act[3]);
+            double high = SafeParse.stringToDouble(act[4]);
+            boolean isMGDL = Boolean.parseBoolean(act[1]);
+            if(!isMGDL){
+                low *= Constants.MMOLL_TO_MGDL;
+                high *= Constants.MMOLL_TO_MGDL;
+            }
+            generateTempTarget(duration, low, high);
         }
 
 
 
+    }
+
+    private static void generateTempTarget(int duration, double low, double high) {
+        TempTarget tempTarget = new TempTarget();
+        tempTarget.timeStart = new Date();
+        tempTarget.duration = duration;
+        tempTarget.reason = "WearPlugin";
+        if(tempTarget.duration != 0) {
+            tempTarget.low = low;
+            tempTarget.high = high;
+        } else {
+            tempTarget.low = 0;
+            tempTarget.high = 0;
+        }
+        tempTarget.setTimeIndex(tempTarget.getTimeIndex());
+        Dao<TempTarget, Long> dao = null;
+        try {
+            dao = MainApp.getDbHelper().getDaoTempTargets();
+            dao.createIfNotExists(tempTarget);
+            MainApp.bus().post(new EventTempTargetRangeChange());
+
+            //TODO: Nightscout-Treatment for Temp-Target!
+            //ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private static void doFillBolus(final Double amount) {

@@ -77,7 +77,7 @@ public class TempTargetActivity extends Activity {
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
                 final TextView textView = (TextView) view.findViewById(R.id.label);
                 textView.setText("duration");
-                time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 24*60d, 1d, new DecimalFormat("0"), false);
+                time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60d, 0d, 24*60d, 1d, new DecimalFormat("0"), false);
                 container.addView(view);
                 return view;
 
@@ -117,8 +117,8 @@ public class TempTargetActivity extends Activity {
                         // (you have to swipe past them anyways - but still)
 
                         String actionstring = "temptarget "
-                                + SafeParse.stringToInt(time.editText.getText().toString())
                                 + " " + isMGDL
+                                + " " + SafeParse.stringToInt(time.editText.getText().toString())
                                 + " " + SafeParse.stringToDouble(lowRange.editText.getText().toString())
                                 + " " + SafeParse.stringToDouble(highRange.editText.getText().toString())
                                 ;
