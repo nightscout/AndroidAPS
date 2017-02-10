@@ -141,6 +141,54 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             }
         });
 
+        timeshiftView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            boolean counter = false;
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    timeshiftView.clearFocus();
+                    ll.requestFocusFromTouch();
+                }
+                else {
+                    if (!counter) {
+                        new CountDownTimer(5000, 1000) { //timer for 5sec
+                            public void onTick(long millisUntilFinished) {
+                                timeshiftView.setError(getString(R.string.timeshift_hint), null);
+                            }
+                            public void onFinish() {
+                                timeshiftView.setError(null);
+                            }
+                        }.start();
+                        counter = true;
+                    }
+                }
+            }
+        });
+
+        percentageView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            boolean counter = false;
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    percentageView.clearFocus();
+                    ll.requestFocusFromTouch();
+                }
+                else {
+                    if (!counter) {
+                    new CountDownTimer(5000, 1000) { //timer for 5sec
+                        public void onTick(long millisUntilFinished) {
+                            percentageView.setError(getString(R.string.percentagefactor_hint), null);
+                        }
+                        public void onFinish() {
+                            percentageView.setError(null);
+                        }
+                    }.start();
+                       counter = true;
+                    }
+                }
+            }
+        });
+
         timeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -185,62 +233,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                 basalEditDialog = new BasalEditDialog();
                 basalEditDialog.setup(getPlugin().baseic, getString(R.string.edit_base_ic), CircadianPercentageProfileFragment.this);
                 basalEditDialog.show(getFragmentManager(), getString(R.string.edit_base_ic));
-            }
-        });
-
-        timeshiftView.setOnClickListener(new  View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                timeshiftView.setError(null);
-            }
-        });
-
-        percentageView.setOnClickListener(new  View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                percentageView.setError(null);
-            }
-        });
-
-        timeshiftView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
-                    timeshiftView.clearFocus();
-                    ll.requestFocusFromTouch();
-                    timeshiftView.setError(null);
-                }
-                else {
-                    new CountDownTimer(5000, 1000) { //timer for 5sec
-                        public void onTick(long millisUntilFinished) {
-                            timeshiftView.setError(getString(R.string.timeshift_hint), null);
-                        }
-                        public void onFinish() {
-                            timeshiftView.setError(null);
-                        }
-                    }.start();
-                }
-            }
-        });
-
-        percentageView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (!hasFocus) {
-                    percentageView.clearFocus();
-                    ll.requestFocusFromTouch();
-                    percentageView.setError(null);
-                }
-                else {
-                    new CountDownTimer(5000, 1000) { //timer for 5sec
-                        public void onTick(long millisUntilFinished) {
-                            percentageView.setError(getString(R.string.percentagefactor_hint), null);
-                        }
-                        public void onFinish() {
-                            percentageView.setError(null);
-                        }
-                    }.start();
-                }
             }
         });
 
