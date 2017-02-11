@@ -290,7 +290,7 @@
 
                     <com.andreabaccega.widget.FormEditText
                         validate:testType="floatNumericRange"
-                        validate:floatminNumber="10.0"
+                        validate:floatminNumber="4.0"
                         validate:floatmaxNumber="270.0"
                         android:digits="0123456789.,"
                         android:selectAllOnFocus="true"
