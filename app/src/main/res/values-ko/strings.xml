@@ -398,4 +398,8 @@
     <string name="configbuilder_shortname">" "</string>
     <string name="circadian_percentage_profile_shortname">" "</string>
     <string name="careportal_shortname">" "</string>
+    <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
+    <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
+    <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
+    <string name="error_phone_not_valid">유효한 도메인 이름이 아닙니다.</string>
 </resources>

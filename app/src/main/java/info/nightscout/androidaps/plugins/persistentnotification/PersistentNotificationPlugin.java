@@ -108,7 +108,7 @@ public class PersistentNotificationPlugin implements PluginBase{
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
 
-        BgReading lastBG = MainApp.getDbHelper().lastBg();
+        BgReading lastBG = GlucoseStatus.lastBg();
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if(profile != null && lastBG != null) {
