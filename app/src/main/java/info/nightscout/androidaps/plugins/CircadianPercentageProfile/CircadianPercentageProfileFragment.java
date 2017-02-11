@@ -43,6 +43,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfileFragment.class);
 
     private static CircadianPercentageProfilePlugin circadianPercentageProfilePlugin = new CircadianPercentageProfilePlugin();
+    private Object snackbarCaller;
 
     public static CircadianPercentageProfilePlugin getPlugin() {
         return circadianPercentageProfilePlugin;
@@ -68,6 +69,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     ImageView isfeditIcon;
     BasalEditDialog basalEditDialog;
     LinearLayout ll;
+    Snackbar mSnackBar;
 
     static Boolean percentageViewHint = true;
     static Boolean timeshiftViewHint = true;
@@ -197,12 +199,15 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
+                    if(mSnackBar!=null && snackbarCaller == timeshiftView){
+                        mSnackBar.dismiss();
+                    }
                     timeshiftView.clearFocus();
                     ll.requestFocusFromTouch();
                 }
                 else {
                     if (timeshiftViewHint) {
-                        customSnackbar(view, getString(R.string.timeshift_hint));
+                        customSnackbar(view, getString(R.string.timeshift_hint), timeshiftView);
                     }
                 }
             }
@@ -213,12 +218,15 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
+                    if(mSnackBar!=null && snackbarCaller == percentageView){
+                        mSnackBar.dismiss();
+                    }
                     percentageView.clearFocus();
                     ll.requestFocusFromTouch();
                 }
                 else {
                     if (percentageViewHint) {
-                        customSnackbar(view, getString(R.string.percentagefactor_hint));
+                        customSnackbar(view, getString(R.string.percentagefactor_hint), percentageView);
                     }
                 }
             }
@@ -312,14 +320,17 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         return layout;
     }
 
-    private void customSnackbar(View view, final String Msg) {
+    private void customSnackbar(View view, final String Msg, Object snackbarCaller) {
+        if(mSnackBar!= null) mSnackBar.dismiss();
+
+        this.snackbarCaller = snackbarCaller;
         if (timeshiftViewHint || percentageViewHint) {
-            Snackbar mSnackBar = Snackbar.make(view,
+            mSnackBar = Snackbar.make(view,
                     Msg,
                     Snackbar.LENGTH_LONG)
-                    .setDuration(7000)
+                    .setDuration(Snackbar.LENGTH_LONG)
                     .setActionTextColor(getResources().getColor(R.color.notificationInfo))
-                    .setAction(getString(R.string.dismiss), new View.OnClickListener() {
+                    .setAction(getString(R.string.dont_show_again), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (Msg.equals(getString(R.string.percentagefactor_hint))) {
