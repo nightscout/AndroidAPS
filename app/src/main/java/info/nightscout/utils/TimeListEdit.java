@@ -2,6 +2,8 @@ package info.nightscout.utils;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.text.Editable;
 import android.text.Layout;
 import android.text.TextWatcher;
@@ -73,11 +75,8 @@ public class TimeListEdit {
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
         textlabel.setLayoutParams(llp);
-        textlabel.setBackgroundColor(MainApp.sResources.getColor(R.color.linearBlockBackground));
-        if (Build.VERSION.SDK_INT < 23)
-            textlabel.setTextAppearance(context, android.R.style.TextAppearance_Medium);
-        else
-            textlabel.setTextAppearance(android.R.style.TextAppearance_Medium);
+        textlabel.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.linearBlockBackground));
+        TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);
         layout.addView(textlabel);
 
         for (int i = 0; i < itemsCount(); i++) {
