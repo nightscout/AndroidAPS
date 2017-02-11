@@ -253,7 +253,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     @Override
     public NSProfile getProfile() {
 
-        // performLimitCheck();
+        performLimitCheck();
 
         return convertedProfile;
     }
