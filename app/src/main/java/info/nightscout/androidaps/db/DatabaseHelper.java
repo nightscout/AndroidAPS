@@ -257,7 +257,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
             Where where = queryBuilder.where();
             where.eq("_id", _id);
-            queryBuilder.limit(10);
+            queryBuilder.limit(10L);
             PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
             List<Treatment> trList = daoTreatments.query(preparedQuery);
             if (trList.size() != 1) {
@@ -281,7 +281,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
             Where where = queryBuilder.where();
             where.eq("timeIndex", timeIndex);
-            queryBuilder.limit(10);
+            queryBuilder.limit(10L);
             PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
             List<Treatment> trList = daoTreatments.query(preparedQuery);
             if (trList.size() != 1) {
