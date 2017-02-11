@@ -18,7 +18,7 @@ import info.nightscout.androidaps.R;
 public abstract class MenuListActivity extends Activity
         implements WearableListView.ClickListener {
 
-    String[] elements = getElements();
+    String[] elements;
 
     protected abstract String[] getElements();
 
@@ -33,6 +33,7 @@ public abstract class MenuListActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        elements = getElements();
         setContentView(R.layout.actions_list_activity);
 
         // Get the list component from the layout of the activity

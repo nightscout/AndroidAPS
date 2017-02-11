@@ -80,8 +80,20 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_RESEND_PATH, null);
                     }
                 }
-            } else
-                googleApiClient.connect();
+            } else {
+                googleApiClient.blockingConnect(15, TimeUnit.SECONDS);
+                if (googleApiClient.isConnected()) {
+                    if (System.currentTimeMillis() - lastRequest > 20 * 1000) { // enforce 20-second debounce period
+                        lastRequest = System.currentTimeMillis();
+
+                        NodeApi.GetConnectedNodesResult nodes =
+                                Wearable.NodeApi.getConnectedNodes(googleApiClient).await();
+                        for (Node node : nodes.getNodes()) {
+                            Wearable.MessageApi.sendMessage(googleApiClient, node.getId(), WEARABLE_RESEND_PATH, null);
+                        }
+                    }
+                }
+            }
             return null;
         }
     }

@@ -105,12 +105,19 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
-
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="animation"
         android:summary="Animations. (Circle WF)"
         android:title="Animations"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="primefill"
+        android:summary="Prime/Fill from watch possible"
+        android:title="Prime in Menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 </PreferenceScreen>

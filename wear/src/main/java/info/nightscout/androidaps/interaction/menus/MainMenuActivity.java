@@ -1,6 +1,9 @@
 package info.nightscout.androidaps.interaction.menus;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
@@ -15,8 +18,20 @@ import info.nightscout.androidaps.interaction.actions.WizardActivity;
 
 public class MainMenuActivity extends MenuListActivity {
 
+    SharedPreferences sp;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        sp = PreferenceManager.getDefaultSharedPreferences(this);
+        super.onCreate(savedInstanceState);
+        ListenerService.requestData(this);
+    }
+
     @Override
     protected String[] getElements() {
+
+        boolean showPrimeFill  = sp.getBoolean("primefill", false);
+
         return new String[] {
                 "TempT",
                 "Bolus",
@@ -24,7 +39,7 @@ public class MainMenuActivity extends MenuListActivity {
                 "Settings",
                 "Re-Sync",
                 "Status",
-                "Prime/Fill"};
+                showPrimeFill?"Prime/Fill":""};
     }
 
     @Override
@@ -61,9 +76,12 @@ public class MainMenuActivity extends MenuListActivity {
                 this.startActivity(intent);
                 break;
             case 6:
-                intent = new Intent(this, FillMenuActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
+                boolean showPrimeFill  = sp.getBoolean("primefill", false);
+                if(showPrimeFill) {
+                    intent = new Intent(this, FillMenuActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.startActivity(intent);
+                }
                 break;
         }
 

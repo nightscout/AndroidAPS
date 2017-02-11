@@ -201,13 +201,15 @@ public class ActionStringHandler {
             if(bgReading==null && useBG){
                 sendError("No recent BG to base calculation on!"); return;
             }
-
+            DecimalFormat format = new DecimalFormat("0.00");
             BolusWizard bolusWizard = new BolusWizard();
             bolusWizard.doCalc(profile.getDefaultProfile(), carbsAfterConstraints, useBG?bgReading.valueToUnits(profile.getUnits()):0d, 0d, useBolusIOB, useBasalIOB);
 
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(bolusWizard.calculatedTotalInsulin);
             if(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin !=0){
-                sendError("Insulin contraint violation!"); return;
+                sendError("Insulin contraint violation!" +
+                        "\nCannot deliver " + format.format(bolusWizard.calculatedTotalInsulin)  +"!");
+                return;
             }
 
 
@@ -222,17 +224,14 @@ public class ActionStringHandler {
             } else {
                 rAction = actionstring;
             }
-            DecimalFormat format = new DecimalFormat("0.00");
             rMessage += "Carbs: " + bolusWizard.carbs + "g";
             rMessage += "\nBolus: " + format.format(bolusWizard.calculatedTotalInsulin) + "U";
-            rMessage += "\nCalculation: ";
-            rMessage += "\nWizard: " + format.format(insulin) + "U";
-            rMessage += "\nCarb: " + format.format(bolusWizard.insulinFromCarbs) + "U";
-            if(useBG)rMessage += "\nBG: " + format.format(bolusWizard.insulinFromBG) + "U";
+            rMessage += "\n_____________";
+            rMessage += "\nCalc (IC:" + DecimalFormatter.to1Decimal(bolusWizard.ic) + ", " + "ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens) +  "): ";
+            rMessage += "\nFrom Carbs: " + format.format(bolusWizard.insulinFromCarbs) + "U";
+            if(useBG)rMessage += "\nFrom BG: " + format.format(bolusWizard.insulinFromBG) + "U";
             if(useBolusIOB)rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
             if(useBasalIOB)rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulingFromBasalsIOB) + "U";
-            rMessage += "\nIC:" + DecimalFormatter.to1Decimal(bolusWizard.ic);
-            if(useBG)rMessage += " ISF:" + DecimalFormatter.to1Decimal(bolusWizard.sens);
 
             lastBolusWizard = bolusWizard;
 
@@ -315,7 +314,7 @@ public class ActionStringHandler {
     }
 
     private static void doFillBolus(final Double amount) {
-        if(1==1)return;
+        //if(1==1)return;
         Handler handler = new Handler(handlerThread.getLooper());
         handler.post(new Runnable() {
             @Override
@@ -331,7 +330,7 @@ public class ActionStringHandler {
     }
 
     private static void doBolus(final Double amount, final Integer carbs) {
-        if(1==1)return;
+        //if(1==1)return;
         Handler handler = new Handler(handlerThread.getLooper());
         handler.post(new Runnable() {
             @Override
