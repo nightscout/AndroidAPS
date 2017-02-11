@@ -1,1 +1,6 @@
+*.iml
+.gradle
 /build
+*.apk
+build/
+.idea/

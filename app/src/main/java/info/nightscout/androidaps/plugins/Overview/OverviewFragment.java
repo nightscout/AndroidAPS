@@ -13,6 +13,7 @@ import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
@@ -931,7 +932,7 @@ public class OverviewFragment extends Fragment {
             bgGraph.getSecondScale().addSeries(basalsLineSeries);
             bgGraph.getSecondScale().setMinY(0);
             bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
-            bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(MainApp.instance().getResources().getColor(R.color.background_material_dark)); // same color as backround = hide
+            bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(ContextCompat.getColor(MainApp.instance(), R.color.background_material_dark)); // same color as backround = hide
         }
 
         // Pump not initialized message
@@ -973,13 +974,13 @@ public class OverviewFragment extends Fragment {
             holder.text.setText(notification.text);
             holder.time.setText(DateUtil.timeString(notification.date));
             if (notification.level == Notification.URGENT)
-                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationUrgent));
+                holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationUrgent));
             else if (notification.level == Notification.NORMAL)
-                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationNormal));
+                holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationNormal));
             else if (notification.level == Notification.LOW)
-                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationLow));
+                holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationLow));
             else if (notification.level == Notification.INFO)
-                holder.cv.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.notificationInfo));
+                holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationInfo));
         }
 
         @Override
