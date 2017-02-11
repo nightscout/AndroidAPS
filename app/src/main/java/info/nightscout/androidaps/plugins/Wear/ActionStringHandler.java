@@ -223,7 +223,9 @@ public class ActionStringHandler {
                 rAction = actionstring;
             }
             DecimalFormat format = new DecimalFormat("0.00");
-            rMessage += "Bolus: " + format.format(bolusWizard.calculatedTotalInsulin) + "U";
+            rMessage += "Carbs: " + bolusWizard.carbs + "g";
+            rMessage += "\nBolus: " + format.format(bolusWizard.calculatedTotalInsulin) + "U";
+            rMessage += "\nCalculation: ";
             rMessage += "\nWizard: " + format.format(insulin) + "U";
             rMessage += "\nCarb: " + format.format(bolusWizard.insulinFromCarbs) + "U";
             if(useBG)rMessage += "\nBG: " + format.format(bolusWizard.insulinFromBG) + "U";
