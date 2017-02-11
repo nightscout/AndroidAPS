@@ -4,22 +4,26 @@ package info.nightscout.androidaps.plugins.CircadianPercentageProfile;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.andreabaccega.widget.FormEditText;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -34,7 +38,6 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
 
 public class CircadianPercentageProfileFragment extends Fragment implements FragmentBase {
     private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfileFragment.class);
@@ -45,13 +48,13 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         return circadianPercentageProfilePlugin;
     }
 
-    EditText diaView;
+    FormEditText diaView;
     RadioButton mgdlView;
     RadioButton mmolView;
-    EditText targetlowView;
-    EditText targethighView;
-    EditText percentageView;
-    EditText timeshiftView;
+    FormEditText targetlowView;
+    FormEditText targethighView;
+    FormEditText percentageView;
+    FormEditText timeshiftView;
     TextView profileView;
     TextView baseprofileIC;
     TextView baseprofileBasal;
@@ -64,19 +67,24 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     ImageView iceditIcon;
     ImageView isfeditIcon;
     BasalEditDialog basalEditDialog;
+    LinearLayout ll;
 
+    static Boolean percentageViewHint = true;
+    static Boolean timeshiftViewHint = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.circadianpercentageprofile_fragment, container, false);
-        diaView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_dia);
+        ll = (LinearLayout) layout.findViewById(R.id.circadianpercentageprofile_linearlayout);
+        ll.requestFocusFromTouch();
+        diaView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_dia);
         mgdlView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mgdl);
         mmolView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mmol);
-        targetlowView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targetlow);
-        targethighView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_targethigh);
-        percentageView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
-        timeshiftView = (EditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
+        targetlowView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_targetlow);
+        targethighView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_targethigh);
+        percentageView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_percentage);
+        timeshiftView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_timeshift);
         profileView = (TextView) layout.findViewById(R.id.circadianpercentageprofile_profileview);
         baseprofileBasal = (TextView) layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal);
         baseprofileBasalLayout = (LinearLayout) layout.findViewById(R.id.circadianpercentageprofile_baseprofilebasal_layout);
@@ -137,23 +145,6 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             }
         });
 
-        timeshiftView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b)
-                    ToastUtils.showToastInUiThread(getContext(), getString(R.string.timeshift_hint));
-
-            }
-        });
-
-        percentageView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean b) {
-                if (b)
-                    ToastUtils.showToastInUiThread(getContext(), getString(R.string.percentagefactor_hint));
-            }
-        });
-
         timeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,6 +192,70 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             }
         });
 
+        timeshiftView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    timeshiftView.clearFocus();
+                    ll.requestFocusFromTouch();
+                }
+                else {
+                    if (timeshiftViewHint) {
+                        customSnackbar(view, getString(R.string.timeshift_hint));
+                    }
+                }
+            }
+        });
+
+        percentageView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    percentageView.clearFocus();
+                    ll.requestFocusFromTouch();
+                }
+                else {
+                    if (percentageViewHint) {
+                        customSnackbar(view, getString(R.string.percentagefactor_hint));
+                    }
+                }
+            }
+        });
+
+        diaView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    diaView.clearFocus();
+                    ll.requestFocusFromTouch();
+                }
+            }
+        });
+
+        targethighView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    targethighView.clearFocus();
+                    ll.requestFocusFromTouch();
+                }
+            }
+        });
+
+        targetlowView.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+                    targetlowView.clearFocus();
+                    ll.requestFocusFromTouch();
+                }
+            }
+        });
 
         TextWatcher textWatch = new TextWatcher() {
 
@@ -217,15 +272,30 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
 
-                if (SafeParse.stringToInt(percentageView.getText().toString()) == 0) {
-                    circadianPercentageProfilePlugin.percentage = 100;
-                } else {
-                    circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
+                if (percentageView.testValidity()) {
+                    if (SafeParse.stringToInt(percentageView.getText().toString()) == 0) {
+                        circadianPercentageProfilePlugin.percentage = 100;
+                    } else {
+                        circadianPercentageProfilePlugin.percentage = SafeParse.stringToInt(percentageView.getText().toString());
+                    }
+                    updateProfileInfo();
                 }
-                circadianPercentageProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
-                circadianPercentageProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
-                circadianPercentageProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
-                circadianPercentageProfilePlugin.timeshift = SafeParse.stringToInt(timeshiftView.getText().toString());
+                if (timeshiftView.testValidity()) {
+                    circadianPercentageProfilePlugin.timeshift = SafeParse.stringToInt(timeshiftView.getText().toString());
+                    updateProfileInfo();
+                }
+                if (diaView.testValidity()) {
+                    circadianPercentageProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
+                    updateProfileInfo();
+                }
+                if (targethighView.testValidity()) {
+                    circadianPercentageProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
+                    updateProfileInfo();
+                }
+                if (targetlowView.testValidity()) {
+                    circadianPercentageProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
+                    updateProfileInfo();
+                }
                 circadianPercentageProfilePlugin.storeSettings();
                 updateProfileInfo();
             }
@@ -240,6 +310,34 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         onStatusEvent(null);
 
         return layout;
+    }
+
+    private void customSnackbar(View view, final String Msg) {
+        if (timeshiftViewHint || percentageViewHint) {
+            Snackbar mSnackBar = Snackbar.make(view,
+                    Msg,
+                    Snackbar.LENGTH_LONG)
+                    .setDuration(7000)
+                    .setActionTextColor(getResources().getColor(R.color.notificationInfo))
+                    .setAction(getString(R.string.dismiss), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (Msg.equals(getString(R.string.percentagefactor_hint))) {
+                                percentageViewHint = false;
+                            } else if (Msg.equals(getString(R.string.timeshift_hint))) {
+                                timeshiftViewHint = false;
+                            }
+                        }
+                    });
+            view = mSnackBar.getView();
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+            params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
+            view.setLayoutParams(params);
+            view.setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+            TextView mainTextView = (TextView) (view).findViewById(android.support.design.R.id.snackbar_text);
+            mainTextView.setTextColor(getResources().getColor(R.color.mdtp_white));
+            mSnackBar.show();
+        }
     }
 
     private void updateProfileInfo() {
@@ -274,6 +372,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             basalEditDialog.dismiss();
         }
         basalEditDialog = null;
+        ll.requestFocusFromTouch();
     }
 
     public static class BasalEditDialog extends DialogFragment {
@@ -354,6 +453,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         basalEditDialog = null;
 
         MainApp.bus().unregister(this);
+        ll.requestFocusFromTouch();
     }
 
     @Override
@@ -361,6 +461,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         super.onResume();
         MainApp.bus().register(this);
         onStatusEvent(null);
+        ll.requestFocusFromTouch();
     }
 
     @Subscribe
