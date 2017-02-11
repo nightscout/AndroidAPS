@@ -3,17 +3,18 @@
     android:gravity="center_vertical"
     android:layout_width="match_parent"
     android:layout_height="80dp">
-    <ImageView
+    <!-- ImageView
         android:id="@+id/circle"
         android:layout_height="20dp"
         android:layout_margin="16dp"
         android:layout_width="20dp"
-        android:src="@drawable/wl_circle"/>
+        android:src="@drawable/wl_circle"/-->
     <TextView
         android:id="@+id/actionitem"
-        android:gravity="center_vertical|left"
-        android:layout_width="wrap_content"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="match_parent"
         android:layout_marginRight="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_height="match_parent"
         android:fontFamily="sans-serif-condensed-light"
         android:lineSpacingExtra="-4sp"

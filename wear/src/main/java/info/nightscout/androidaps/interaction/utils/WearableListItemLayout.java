@@ -17,7 +17,7 @@ import info.nightscout.androidaps.R;
 public class WearableListItemLayout extends LinearLayout
         implements WearableListView.OnCenterProximityListener {
 
-    private ImageView mCircle;
+    //private ImageView mCircle;
     private TextView mName;
 
     private final float mFadedTextAlpha;
@@ -45,19 +45,19 @@ public class WearableListItemLayout extends LinearLayout
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mCircle = (ImageView) findViewById(R.id.circle);
+        //mCircle = (ImageView) findViewById(R.id.circle);
         mName = (TextView) findViewById(R.id.actionitem);
     }
 
     @Override
     public void onCenterPosition(boolean animate) {
         mName.setAlpha(1f);
-        ((GradientDrawable) mCircle.getDrawable()).setColor(mChosenCircleColor);
+        //((GradientDrawable) mCircle.getDrawable()).setColor(mChosenCircleColor);
     }
 
     @Override
     public void onNonCenterPosition(boolean animate) {
-        ((GradientDrawable) mCircle.getDrawable()).setColor(mFadedCircleColor);
+        //((GradientDrawable) mCircle.getDrawable()).setColor(mFadedCircleColor);
         mName.setAlpha(mFadedTextAlpha);
     }
 }
