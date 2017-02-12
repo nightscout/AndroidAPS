@@ -272,4 +272,9 @@ public class MDIPlugin implements PluginBase, PumpInterface {
         return pumpDescription;
     }
 
+    @Override
+    public String shortStatus(boolean veryShort) {
+        return deviceID();
+    }
+
 }

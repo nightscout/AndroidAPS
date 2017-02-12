@@ -828,7 +828,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     // Reply for sms communicator
-    public String shortStatus() {
+    public String shortStatus(boolean veryShort) {
         String ret = "";
         if (getDanaRPump().lastConnection.getTime() != 0) {
             Long agoMsec = new Date().getTime() - getDanaRPump().lastConnection.getTime();
@@ -843,6 +843,9 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         if (isExtendedBoluslInProgress()) {
             ret += "Extended: " + getExtendedBolus().toString() + "\n";
+        }
+        if (!veryShort){
+            ret += "TDD: " + DecimalFormatter.to0Decimal(getDanaRPump().dailyTotalUnits) + " / " + getDanaRPump().maxDailyTotalUnits + " U\n";
         }
         ret += "IOB: " + getDanaRPump().iob + "U\n";
         ret += "Reserv: " + DecimalFormatter.to0Decimal(getDanaRPump().reservoirRemainingUnits) + "U\n";
