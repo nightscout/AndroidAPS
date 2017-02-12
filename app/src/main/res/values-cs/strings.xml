@@ -249,7 +249,7 @@
     <string name="danar_glucose">glykémie</string>
     <string name="danar_history">Historie</string>
     <string name="danar_history_alarm">Alarmy</string>
-    <string name="danar_history_basalhours">Hodinvé bazály</string>
+    <string name="danar_history_basalhours">Hodinové bazály</string>
     <string name="danar_history_bolus">Bolusy</string>
     <string name="danar_history_carbohydrates">Sacharidy</string>
     <string name="danar_history_connectingfor" formatted="false">Připojování %d sec</string>
