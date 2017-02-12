@@ -125,6 +125,16 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
+    public boolean isBusy() {
+        return false;
+    }
+
+    @Override
     public boolean isTempBasalInProgress() {
         return getTempBasal() != null;
     }

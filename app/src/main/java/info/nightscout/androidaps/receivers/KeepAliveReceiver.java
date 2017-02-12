@@ -58,7 +58,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     }
                 });
                 t.start();
-            } else if (isStatusOutdated) {
+            } else if (isStatusOutdated && !pump.isBusy()) {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -66,7 +66,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                     }
                 });
                 t.start();
-            } else if (isBasalOutdated) {
+            } else if (isBasalOutdated && !pump.isBusy()) {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {

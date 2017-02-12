@@ -242,7 +242,7 @@
     <string name="ko_lang">Korean</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="wrongpumppassword">Falsches Pumpen-Passwort!</string>
-    <string name="waitingforpump">Warte auf Pumpe</string>
+    <string name="waitingforpump">Warte auf Pumpe. Click to refresh.</string>
     <string name="correctionbous">Korr</string>
     <string name="bolusdelivering">Abgabe %.2fU</string>
     <string name="bolusdelivered">%.2fU Bolus erfolgreich abgegeben</string>

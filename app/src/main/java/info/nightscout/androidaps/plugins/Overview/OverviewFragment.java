@@ -71,6 +71,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
@@ -116,7 +117,7 @@ public class OverviewFragment extends Fragment {
     TextView iobView;
     TextView apsModeView;
     TextView tempTargetView;
-    TextView initializingView;
+    TextView pumpStatusView;
     GraphView bgGraph;
     CheckBox showPredictionView;
 
@@ -162,7 +163,7 @@ public class OverviewFragment extends Fragment {
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
-        initializingView = (TextView) view.findViewById(R.id.overview_initializing);
+        pumpStatusView = (TextView) view.findViewById(R.id.overview_initializing);
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
@@ -268,7 +269,7 @@ public class OverviewFragment extends Fragment {
                                         finalLastRun.setByPump = applyResult;
                                         finalLastRun.lastEnact = new Date();
                                         finalLastRun.lastOpenModeAccept = new Date();
-                                        MainApp.getConfigBuilder().uploadDeviceStatus();
+                                        MainApp.getConfigBuilder().uploadDeviceStatus(15);
                                         ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
                                         if (objectivesPlugin != null) {
                                             objectivesPlugin.manualEnacts++;
@@ -284,6 +285,19 @@ public class OverviewFragment extends Fragment {
                     builder.show();
                 }
                 updateGUI();
+            }
+        });
+
+        pumpStatusView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
+                    sHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MainApp.getConfigBuilder().updateStatus("RefreshClicked");
+                        }
+                    });
             }
         });
 
@@ -443,16 +457,41 @@ public class OverviewFragment extends Fragment {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNewBasalProfile ev) { updateGUIIfVisible(); }
+    public void onStatusEvent(final EventNewBasalProfile ev) {
+        updateGUIIfVisible();
+    }
 
     @Subscribe
-    public void onStatusEvent(final EventTempTargetRangeChange ev) {updateGUIIfVisible();}
+    public void onStatusEvent(final EventTempTargetRangeChange ev) {
+        updateGUIIfVisible();
+    }
 
     @Subscribe
-    public void onStatusEvent(final EventNewNotification n) { updateNotifications(); }
+    public void onStatusEvent(final EventNewNotification n) {
+        updateNotifications();
+    }
 
     @Subscribe
-    public void onStatusEvent(final EventDismissNotification n) { updateNotifications(); }
+    public void onStatusEvent(final EventDismissNotification n) {
+        updateNotifications();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventDanaRConnectionStatus s) {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (s.sStatus == EventDanaRConnectionStatus.CONNECTING)
+                        updatePumpStatus(String.format(getString(R.string.danar_history_connectingfor), s.sSecondsElapsed));
+                    else if (s.sStatus == EventDanaRConnectionStatus.PERFORMING)
+                        updatePumpStatus(s.sAction);
+                    else if (s.sStatus == EventDanaRConnectionStatus.DISCONNECTED)
+                        updatePumpStatus(null);
+                }
+            });
+    }
 
     private void hideTempRecommendation() {
         Activity activity = getActivity();
@@ -476,6 +515,35 @@ public class OverviewFragment extends Fragment {
             });
     }
 
+    private void updatePumpStatus(String status) {
+        PumpInterface pump = MainApp.getConfigBuilder();
+        if (status != null) {
+            pumpStatusView.setText(status);
+            pumpStatusView.setVisibility(View.VISIBLE);
+        } else if (pump.isBusy()) {
+            pumpStatusView.setText(R.string.pumpbusy);
+            pumpStatusView.setVisibility(View.VISIBLE);
+        } else if (pump.isSuspended()) {
+            // disable all treatment buttons because we are not able to check constraints without profile
+            wizardButton.setVisibility(View.INVISIBLE);
+            treatmentButton.setVisibility(View.INVISIBLE);
+            quickWizardButton.setVisibility(View.INVISIBLE);
+            pumpStatusView.setText(R.string.pumpsuspendedclicktorefresh);
+            pumpStatusView.setVisibility(View.VISIBLE);
+        } else if (!pump.isInitialized()) {
+            // disable all treatment buttons because we are not able to check constraints without profile
+            wizardButton.setVisibility(View.INVISIBLE);
+            treatmentButton.setVisibility(View.INVISIBLE);
+            quickWizardButton.setVisibility(View.INVISIBLE);
+            pumpStatusView.setText(R.string.waitingforpump);
+            pumpStatusView.setVisibility(View.VISIBLE);
+        } else {
+            wizardButton.setVisibility(View.VISIBLE);
+            treatmentButton.setVisibility(View.VISIBLE);
+            pumpStatusView.setVisibility(View.GONE);
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     public void updateGUI() {
         updateNotifications();
@@ -483,11 +551,11 @@ public class OverviewFragment extends Fragment {
         BgReading lastBG = GlucoseStatus.lastBg();
 
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
-            initializingView.setText(R.string.noprofileset);
-            initializingView.setVisibility(View.VISIBLE);
+            pumpStatusView.setText(R.string.noprofileset);
+            pumpStatusView.setVisibility(View.VISIBLE);
             return;
         } else {
-            initializingView.setVisibility(View.GONE);
+            pumpStatusView.setVisibility(View.GONE);
         }
 
         // Skip if not initialized yet
@@ -504,7 +572,7 @@ public class OverviewFragment extends Fragment {
             apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
             apsModeView.setTextColor(Color.BLACK);
             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-            if(activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+            if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
                 if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
                 } else {
@@ -522,10 +590,10 @@ public class OverviewFragment extends Fragment {
                 @Override
                 public boolean onLongClick(View view) {
                     view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    if (activeloop == null){
+                    if (activeloop == null) {
                         log.error("no active loop?");
                         return true;
-                    } else if (activeloop.isEnabled(PluginBase.LOOP)){
+                    } else if (activeloop.isEnabled(PluginBase.LOOP)) {
                         activeloop.setFragmentEnabled(PluginBase.LOOP, false);
                         activeloop.setFragmentVisible(PluginBase.LOOP, false);
                     } else {
@@ -578,7 +646,7 @@ public class OverviewFragment extends Fragment {
         showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
         showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
 
-        if (showAcceptButton && pump.isInitialized() && ConfigBuilderPlugin.getActiveLoop() != null) {
+        if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && ConfigBuilderPlugin.getActiveLoop() != null) {
             acceptTempLayout.setVisibility(View.VISIBLE);
             acceptTempButton.setText(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
         } else {
@@ -644,7 +712,7 @@ public class OverviewFragment extends Fragment {
 
         // QuickWizard button
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
-        if (quickWizardEntry != null && lastBG != null && pump.isInitialized()) {
+        if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText() + " " + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
@@ -663,7 +731,7 @@ public class OverviewFragment extends Fragment {
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             arrowView.setText(lastBG.directionToSymbol());
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-            if (glucoseStatus != null){
+            if (glucoseStatus != null) {
                 deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
                 avgdeltaView.setText("øΔ15m: " + NSProfile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
                         "  øΔ40m: " + NSProfile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
@@ -717,7 +785,7 @@ public class OverviewFragment extends Fragment {
         long fromTime;
         long endTime;
         if (showPrediction) {
-            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA)finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
+            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
             hoursToFetch = (int) (6 - predHours);
@@ -734,11 +802,11 @@ public class OverviewFragment extends Fragment {
         Double lowLine = SafeParse.stringToDouble(prefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(prefs.getString("high_mark", "0"));
 
-        if (lowLine < 1){
+        if (lowLine < 1) {
             lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
         }
 
-        if(highLine < 1){
+        if (highLine < 1) {
             highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
 
@@ -847,7 +915,7 @@ public class OverviewFragment extends Fragment {
         }
         maxBgValue = NSProfile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
-        if(highLine > maxBgValue) maxBgValue = highLine;
+        if (highLine > maxBgValue) maxBgValue = highLine;
         Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
 
         BgReading[] inRange = new BgReading[inRangeArray.size()];
@@ -935,20 +1003,7 @@ public class OverviewFragment extends Fragment {
             bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(ContextCompat.getColor(MainApp.instance(), R.color.background_material_dark)); // same color as backround = hide
         }
 
-        // Pump not initialized message
-        if (!pump.isInitialized()) {
-            // disable all treatment buttons because we are not able to check constraints without profile
-            wizardButton.setVisibility(View.INVISIBLE);
-            treatmentButton.setVisibility(View.INVISIBLE);
-            quickWizardButton.setVisibility(View.INVISIBLE);
-            initializingView.setText(R.string.waitingforpump);
-            initializingView.setVisibility(View.VISIBLE);
-        } else {
-            wizardButton.setVisibility(View.VISIBLE);
-            treatmentButton.setVisibility(View.VISIBLE);
-            initializingView.setVisibility(View.GONE);
-        }
-
+        updatePumpStatus(null);
     }
 
     //Notifications
@@ -1038,7 +1093,6 @@ public class OverviewFragment extends Fragment {
                 }
             });
     }
-
 
 
 }
