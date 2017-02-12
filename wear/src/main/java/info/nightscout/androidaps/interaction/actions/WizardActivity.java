@@ -72,10 +72,10 @@ public class WizardActivity extends Activity {
                 final TextView textView = (TextView) view.findViewById(R.id.label);
                 textView.setText("carbs");
                 if (editCarbs == null) {
-                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 100d, 1d, new DecimalFormat("0"), false);
+                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 0d, 0d, 150d, 1d, new DecimalFormat("0"), false);
                 } else {
                     double def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
-                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 100d, 1d, new DecimalFormat("0"), false);
+                    editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
 
                 }
                 container.addView(view);

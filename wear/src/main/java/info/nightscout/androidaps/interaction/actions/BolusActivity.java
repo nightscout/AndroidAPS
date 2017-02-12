@@ -83,7 +83,7 @@ public class BolusActivity extends Activity {
                 if (editCarbs != null){
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
-                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 100d, 1d, new DecimalFormat("0"), false);
+                editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
                 container.addView(view);
                 return view;
             } else {
