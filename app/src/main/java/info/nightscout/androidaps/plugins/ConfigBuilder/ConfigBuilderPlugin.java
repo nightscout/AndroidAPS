@@ -662,6 +662,15 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         }
     }
 
+    @Override
+    public String shortStatus(boolean veryShort) {
+        if (activePump != null) {
+            return activePump.shortStatus(veryShort);
+        } else {
+            return "No Pump active!";
+        }
+    }
+
     /**
      * Constraints interface
      **/

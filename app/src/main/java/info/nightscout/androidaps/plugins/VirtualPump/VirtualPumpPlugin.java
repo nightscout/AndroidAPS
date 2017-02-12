@@ -430,4 +430,9 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         return pumpDescription;
     }
 
+    @Override
+    public String shortStatus(boolean veryShort) {
+        return "Virtual Pump";
+    }
+
 }

@@ -51,4 +51,6 @@ public interface PumpInterface {
     String deviceID();
 
     PumpDescription getPumpDescription();
+
+    public String shortStatus(boolean veryShort);
 }
