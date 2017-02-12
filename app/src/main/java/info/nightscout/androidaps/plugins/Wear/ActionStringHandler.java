@@ -2,10 +2,12 @@ package info.nightscout.androidaps.plugins.Wear;
 
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.preference.PreferenceManager;
 import android.support.annotation.BoolRes;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 
@@ -165,17 +167,17 @@ public class ActionStringHandler {
             //TODO: add meaningful status
 
             if("general".equals(act[1])){
-                rMessage = "Today is going to be a good day!";
+                rMessage = getGeneralStatus();
             } else if("pump".equals(act[1])){
                 rTitle += " PUMP";
-                rMessage = "I'm feeling pumped!";
+                rMessage = getPumpStatus();
             } else if("loop".equals(act[1])){
                 rTitle += " LOOP";
-                rMessage = "A loop di loop di loop!";
+                rMessage = getLoopStatus();
 
             } else if("targets".equals(act[1])){
                 rTitle += " TARGETS";
-                rMessage = "Always on target!";
+                rMessage = getTargetsStatus();
             }
             rMessage += "\n\n\nTODO:\nAdd some meaningful status.";
 
@@ -241,6 +243,58 @@ public class ActionStringHandler {
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, rMessage, rAction);
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = rAction;
+    }
+
+    @NonNull
+    private static String getGeneralStatus() {
+        return "Today is going to be a good day!";
+    }
+
+    @NonNull
+    private static String getPumpStatus() {
+        return "I'm feeling pumped!";
+    }
+
+    @NonNull
+    private static String getLoopStatus() {
+        return "A loop di loop di loop!";
+    }
+
+    @NonNull
+    private static String getTargetsStatus() {
+        String ret = "";
+        if (!Config.APS){
+            return "Targets only apply in APS mode!";
+        }
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (profile == null){
+            return "No profile set :(";
+        }
+
+        //Check for Temp-Target:
+        TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
+        if (Config.APS && tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
+            TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
+            if (tempTarget != null) {
+                ret += "Temp Target: " + NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits());
+                ret += "\nuntil: " + DateUtil.timeString(tempTarget.getPlannedTimeEnd());
+                ret += "\n\n";
+            }
+        }
+
+        //Default Range/Target
+        String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+        String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+        String targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
+        if (!profile.getUnits().equals(Constants.MGDL)) {
+            maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
+            minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
+            targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
+        }
+        ret += "DEFAULT RANGE: ";
+        ret += sp.getString("openapsma_min_bg", minBgDefault) + " - " + sp.getString("openapsma_max_bg", maxBgDefault);
+        ret += " target: " + sp.getString("openapsma_target_bg", targetBgDefault);
+        return ret;
     }
 
 
