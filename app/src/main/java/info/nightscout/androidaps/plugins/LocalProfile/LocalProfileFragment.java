@@ -156,7 +156,7 @@ public class LocalProfileFragment extends Fragment implements FragmentBase {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
+                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);
