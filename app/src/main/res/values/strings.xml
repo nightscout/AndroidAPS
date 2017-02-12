@@ -486,7 +486,7 @@
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
     <string name="smscommunicator_remotecalibrationnotallowed">Remote calibration not allowed</string>
-    <string name="smscommunicator_calibrationsent">Calibration sent</string>
+    <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
     <string name="dont_show_again">Don\'t show again</string>
 </resources>
