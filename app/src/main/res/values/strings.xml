@@ -498,4 +498,5 @@
     <string name="stoppingextendedbolus">Stopping extended bolus</string>
     <string name="updatingbasalrates">Updating basal rates</string>
     <string name="disconnecting">Disconnecting</string>
+    <string name="executing">Executing</string>
 </resources>
