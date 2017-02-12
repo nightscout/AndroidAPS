@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -68,7 +69,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     ImageView iceditIcon;
     ImageView isfeditIcon;
     BasalEditDialog basalEditDialog;
-    LinearLayout ll;
+    FrameLayout fl;
     Snackbar mSnackBar;
 
     static Boolean percentageViewHint = true;
@@ -78,8 +79,8 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.circadianpercentageprofile_fragment, container, false);
-        ll = (LinearLayout) layout.findViewById(R.id.circadianpercentageprofile_linearlayout);
-        ll.requestFocusFromTouch();
+        fl = (FrameLayout) layout.findViewById(R.id.circadianpercentageprofile_framelayout);
+        fl.requestFocusFromTouch();
         diaView = (FormEditText) layout.findViewById(R.id.circadianpercentageprofile_dia);
         mgdlView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mgdl);
         mmolView = (RadioButton) layout.findViewById(R.id.circadianpercentageprofile_mmol);
@@ -203,7 +204,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                         mSnackBar.dismiss();
                     }
                     timeshiftView.clearFocus();
-                    ll.requestFocusFromTouch();
+                    fl.requestFocusFromTouch();
                 }
                 else {
                     if (timeshiftViewHint) {
@@ -222,7 +223,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
                         mSnackBar.dismiss();
                     }
                     percentageView.clearFocus();
-                    ll.requestFocusFromTouch();
+                    fl.requestFocusFromTouch();
                 }
                 else {
                     if (percentageViewHint) {
@@ -238,7 +239,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
                     diaView.clearFocus();
-                    ll.requestFocusFromTouch();
+                    fl.requestFocusFromTouch();
                 }
             }
         });
@@ -249,7 +250,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
                     targethighView.clearFocus();
-                    ll.requestFocusFromTouch();
+                    fl.requestFocusFromTouch();
                 }
             }
         });
@@ -260,7 +261,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             public void onFocusChange(View view, boolean hasFocus) {
                 if (!hasFocus) {
                     targetlowView.clearFocus();
-                    ll.requestFocusFromTouch();
+                    fl.requestFocusFromTouch();
                 }
             }
         });
@@ -325,11 +326,9 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
 
         this.snackbarCaller = snackbarCaller;
         if (timeshiftViewHint || percentageViewHint) {
-            mSnackBar = Snackbar.make(view,
-                    Msg,
-                    Snackbar.LENGTH_LONG)
-                    .setDuration(Snackbar.LENGTH_LONG)
-                    .setActionTextColor(getResources().getColor(R.color.notificationInfo))
+            //noinspection WrongConstant
+            mSnackBar = Snackbar.make(view, Msg, 7000)
+                    .setActionTextColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationInfo))
                     .setAction(getString(R.string.dont_show_again), new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -344,9 +343,9 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
             params.gravity = Gravity.CENTER_HORIZONTAL | Gravity.TOP;
             view.setLayoutParams(params);
-            view.setBackgroundColor(getResources().getColor(R.color.cardview_dark_background));
+            view.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.cardview_dark_background));
             TextView mainTextView = (TextView) (view).findViewById(android.support.design.R.id.snackbar_text);
-            mainTextView.setTextColor(getResources().getColor(R.color.mdtp_white));
+            mainTextView.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.mdtp_white));
             mSnackBar.show();
         }
     }
@@ -383,7 +382,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
             basalEditDialog.dismiss();
         }
         basalEditDialog = null;
-        ll.requestFocusFromTouch();
+        fl.requestFocusFromTouch();
     }
 
     public static class BasalEditDialog extends DialogFragment {
@@ -464,7 +463,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         basalEditDialog = null;
 
         MainApp.bus().unregister(this);
-        ll.requestFocusFromTouch();
+        fl.requestFocusFromTouch();
     }
 
     @Override
@@ -472,7 +471,7 @@ public class CircadianPercentageProfileFragment extends Fragment implements Frag
         super.onResume();
         MainApp.bus().register(this);
         onStatusEvent(null);
-        ll.requestFocusFromTouch();
+        fl.requestFocusFromTouch();
     }
 
     @Subscribe
