@@ -142,7 +142,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private void sendData() {
 
-        BgReading lastBG = MainApp.getDbHelper().lastBg();
+        BgReading lastBG = GlucoseStatus.lastBg();
         if (lastBG != null) {
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
@@ -250,7 +250,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private void resendData() {
         if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
         long startTime = System.currentTimeMillis() - (long)(60000 * 60 * 5.5);
-        BgReading last_bg = MainApp.getDbHelper().lastBg();
+        BgReading last_bg = GlucoseStatus.lastBg();
 
         if (last_bg == null) return;
 

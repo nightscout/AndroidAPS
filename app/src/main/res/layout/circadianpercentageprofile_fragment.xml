@@ -1,7 +1,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/circadianpercentageprofile_framelayout"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:descendantFocusability="beforeDescendants"
     tools:context=".plugins.CircadianPercentageProfile.CircadianPercentageProfileFragment">
 
     <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,9 +38,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/pillborder"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:padding="5dp"
+                    android:backgroundTint="@color/mdtp_transparent_black"
+                    android:background="@drawable/pillborder"
+                    android:backgroundTintMode="src_over">
 
                     <ImageView
                         android:id="@+id/circadianpercentageprofile_percentageicon"
@@ -44,23 +51,34 @@
                         android:src="@mipmap/ic_percentage"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="numericRange"
+                        validate:minNumber="50"
+                        validate:maxNumber="200"
+                        android:digits="0123456789.,"
                         android:id="@+id/circadianpercentageprofile_percentage"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
-                        android:hint="@string/percentagefactor_hint"
-                        android:inputType="number"/>
-
+                        android:inputType="number"
+                        android:selectAllOnFocus="true"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
+
+                <Space
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/pillborder"
                     android:orientation="horizontal"
-                    android:padding="5dp">
+                    android:padding="5dp"
+                    android:backgroundTint="@color/mdtp_transparent_black"
+                    android:background="@drawable/pillborder"
+                    android:backgroundTintMode="src_over">
 
                     <ImageView
                         android:id="@+id/circadianpercentageprofile_timeicon"
@@ -69,12 +87,17 @@
                         android:src="@mipmap/ic_time"
                         android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="numericRange"
+                        validate:minNumber="0"
+                        validate:maxNumber="24"
+                        android:digits="0123456789.,"
                         android:id="@+id/circadianpercentageprofile_timeshift"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content"
-                        android:hint="@string/timeshift_hint"
-                        android:inputType="number"/>
+                        android:inputType="number"
+                        android:selectAllOnFocus="true"
+                        android:textAlignment="center" />
 
                 </LinearLayout>
             </LinearLayout>
@@ -231,7 +254,12 @@
                         android:text="@string/dia"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="floatNumericRange"
+                        validate:floatminNumber="1.0"
+                        validate:floatmaxNumber="10.0"
+                        android:digits="0123456789.,"
+                        android:selectAllOnFocus="true"
                         android:id="@+id/circadianpercentageprofile_dia"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
@@ -249,14 +277,24 @@
                         android:text="@string/target_range"
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="floatNumericRange"
+                        validate:floatminNumber="4.0"
+                        validate:floatmaxNumber="180.0"
+                        android:digits="0123456789.,"
+                        android:selectAllOnFocus="true"
                         android:id="@+id/circadianpercentageprofile_targetlow"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"
                         android:layout_column="2"
                         android:inputType="numberDecimal" />
 
-                    <EditText
+                    <com.andreabaccega.widget.FormEditText
+                        validate:testType="floatNumericRange"
+                        validate:floatminNumber="4.0"
+                        validate:floatmaxNumber="270.0"
+                        android:digits="0123456789.,"
+                        android:selectAllOnFocus="true"
                         android:id="@+id/circadianpercentageprofile_targethigh"
                         android:layout_width="100dp"
                         android:layout_height="wrap_content"

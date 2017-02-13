@@ -9,13 +9,6 @@
             android:key="openapsama_useautosens"
             android:title="@string/openapsama_useautosens" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="openapsama_autosens_adjusttargets"
-            android:dependency="openapsama_useautosens"
-            android:title="@string/openapsama_autosens_adjusttargets"/>
-
-
     </PreferenceCategory>
 
 </PreferenceScreen>

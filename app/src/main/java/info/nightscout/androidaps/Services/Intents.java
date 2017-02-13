@@ -31,4 +31,6 @@ public interface Intents {
     String ACTION_NEW_BG_ESTIMATE_NO_DATA = "com.eveningoutpost.dexdrip.BgEstimateNoData";
 
     String NS_EMULATOR = "com.eveningoutpost.dexdrip.NS_EMULATOR";
+
+    String ACTION_REMOTE_CALIBRATION = "com.eveningoutpost.dexdrip.NewCalibration";
 }

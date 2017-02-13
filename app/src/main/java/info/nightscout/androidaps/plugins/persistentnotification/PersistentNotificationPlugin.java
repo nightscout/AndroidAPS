@@ -108,19 +108,19 @@ public class PersistentNotificationPlugin implements PluginBase{
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
 
-        BgReading lastBG = MainApp.getDbHelper().lastBg();
+        BgReading lastBG = GlucoseStatus.lastBg();
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if(profile != null && lastBG != null) {
             line1 = lastBG.valueToUnitsToString(profile.getUnits());
-        }
-        if (glucoseStatus != null) {
-            line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
-            + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
-        } else {
-             line1 += " " +
-                     ctx.getString(R.string.old_data) +
-                     " ";
+            if (glucoseStatus != null) {
+                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
+                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
+            } else {
+                line1 += " " +
+                        ctx.getString(R.string.old_data) +
+                        " ";
+            }
         }
 
         PumpInterface pump = MainApp.getConfigBuilder();

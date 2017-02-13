@@ -219,7 +219,7 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                         Long agoMsec = new Date().getTime() - pump.lastBolusTime.getTime();
                         double agoHours =  agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
-                            lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getPlugin().getDanaRPump().lastBolusAmount) + " U");
+                            lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getPlugin().getDanaRPump().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
                     }
 
@@ -242,7 +242,7 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                     SetWarnColor.setColorInverse(batteryView, pump.batteryRemaining, 51d, 26d);
                     iobView.setText(pump.iob + " U");
                     if (pump.isNewPump) {
-                        firmwareView.setText(String.format(getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
+                        firmwareView.setText(String.format(MainApp.sResources.getString(R.string.danar_model), pump.model, pump.protocol, pump.productCode));
                     } else {
                         firmwareView.setText("OLD");
                     }

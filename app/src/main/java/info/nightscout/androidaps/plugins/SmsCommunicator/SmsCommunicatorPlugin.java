@@ -31,11 +31,14 @@ import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.XdripCalibrations;
 
 /**
  * Created by mike on 05.08.2016.
@@ -61,6 +64,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
         String confirmCode;
         double bolusRequested = 0d;
         double tempBasal = 0d;
+        double calibrationRequested = 0d;
 
         public Sms(SmsMessage message) {
             phoneNumber = message.getOriginatingAddress();
@@ -92,6 +96,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
     Sms cancelTempBasalWaitingForConfirmation = null;
     Sms tempBasalWaitingForConfirmation = null;
     Sms bolusWaitingForConfirmation = null;
+    Sms calibrationWaitingForConfirmation = null;
     Date lastRemoteBolusTime = new Date(0);
 
     ArrayList<Sms> messages = new ArrayList<>();
@@ -119,7 +124,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.smscommunicator_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -210,8 +215,8 @@ public class SmsCommunicatorPlugin implements PluginBase {
         if (splited.length > 0) {
             switch (splited[0].toUpperCase()) {
                 case "BG":
-                    BgReading actualBG = MainApp.getDbHelper().actualBg();
-                    BgReading lastBG = MainApp.getDbHelper().lastBg();
+                    BgReading actualBG = GlucoseStatus.actualBg();
+                    BgReading lastBG = GlucoseStatus.lastBg();
 
                     NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
                     String units = profile.getUnits();
@@ -364,6 +369,23 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         }
                     }
                     break;
+                case "CAL":
+                    if (splited.length > 1) {
+                        amount = SafeParse.stringToDouble(splited[1]);
+                        boolean remoteCommandsAllowed = sharedPreferences.getBoolean("smscommunicator_remotecommandsallowed", false);
+                        if (amount > 0d && remoteCommandsAllowed) {
+                            passCode = generatePasscode();
+                            reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_calibrationreplywithcode), amount, passCode);
+                            receivedSms.processed = true;
+                            resetWaitingMessages();
+                            sendSMS(calibrationWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
+                            calibrationWaitingForConfirmation.calibrationRequested = amount;
+                        } else {
+                            reply = MainApp.sResources.getString(R.string.smscommunicator_remotecalibrationnotallowed);
+                            sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        }
+                    }
+                    break;
                 default: // expect passCode here
                     if (bolusWaitingForConfirmation != null && !bolusWaitingForConfirmation.processed &&
                             bolusWaitingForConfirmation.confirmCode.equals(splited[0]) && new Date().getTime() - bolusWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
@@ -417,6 +439,17 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                         }
+                    } else if (calibrationWaitingForConfirmation != null && !calibrationWaitingForConfirmation.processed &&
+                            calibrationWaitingForConfirmation.confirmCode.equals(splited[0]) && new Date().getTime() - calibrationWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
+                        calibrationWaitingForConfirmation.processed = true;
+                        boolean result = XdripCalibrations.sendIntent(calibrationWaitingForConfirmation.calibrationRequested);
+                        if (result) {
+                            reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_calibrationsent));
+                            sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        } else {
+                            reply = MainApp.sResources.getString(R.string.smscommunicator_calibrationfailed);
+                            sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                        }
                     } else {
                         sendSMS(new Sms(receivedSms.phoneNumber, MainApp.sResources.getString(R.string.smscommunicator_unknowncommand), new Date()));
                     }
@@ -446,8 +479,13 @@ public class SmsCommunicatorPlugin implements PluginBase {
         SmsManager smsManager = SmsManager.getDefault();
         sms.text = stripAccents(sms.text);
         if (sms.text.length() > 140) sms.text = sms.text.substring(0, 139);
-        smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
-        messages.add(sms);
+        try {
+            smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
+            messages.add(sms);
+        } catch (IllegalArgumentException e) {
+            Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.sResources.getString(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);
+            MainApp.bus().post(new EventNewNotification(notification));
+        }
     }
 
     private String generatePasscode() {
@@ -464,6 +502,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
         tempBasalWaitingForConfirmation = null;
         cancelTempBasalWaitingForConfirmation = null;
         bolusWaitingForConfirmation = null;
+        calibrationWaitingForConfirmation = null;
     }
 
     public static String stripAccents(String s) {

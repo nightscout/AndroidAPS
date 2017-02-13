@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatu
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class DanaRStatsActivity extends Activity {
@@ -185,7 +186,7 @@ public class DanaRStatsActivity extends Activity {
         TableRow tr_head = new TableRow(this);
         tr_head.setBackgroundColor(Color.DKGRAY);
         tr_head.setLayoutParams(new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_date = new TextView(this);
@@ -215,7 +216,7 @@ public class DanaRStatsActivity extends Activity {
 
         // add stats headers to tables
         tl.addView(tr_head, new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         // cumulative table
@@ -223,7 +224,7 @@ public class DanaRStatsActivity extends Activity {
         TableRow ctr_head = new TableRow(this);
         ctr_head.setBackgroundColor(Color.DKGRAY);
         ctr_head.setLayoutParams(new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_cum_amount_days = new TextView(this);
@@ -243,7 +244,7 @@ public class DanaRStatsActivity extends Activity {
 
         // add cummulative headers to tables
         ctl.addView(ctr_head, new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         // expontial table
@@ -251,7 +252,7 @@ public class DanaRStatsActivity extends Activity {
         TableRow etr_head = new TableRow(this);
         etr_head.setBackgroundColor(Color.DKGRAY);
         etr_head.setLayoutParams(new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         TextView label_exp_weight = new TextView(this);
@@ -271,7 +272,7 @@ public class DanaRStatsActivity extends Activity {
 
         // add expontial headers to tables
         etl.addView(etr_head, new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.FILL_PARENT,
+                TableLayout.LayoutParams.MATCH_PARENT,
                 TableLayout.LayoutParams.WRAP_CONTENT));
 
         reloadButton.setOnClickListener(new View.OnClickListener() {
@@ -366,7 +367,7 @@ public class DanaRStatsActivity extends Activity {
                     return;
                 }
                 else {
-                    magicNumber = Double.parseDouble(TBB);
+                    magicNumber = SafeParse.stringToDouble(TBB);
                 }
 
                 magicNumber *=2;
@@ -386,7 +387,7 @@ public class DanaRStatsActivity extends Activity {
                     if(i%2!=0) tr.setBackgroundColor(Color.DKGRAY);
                     tr.setId(100+i);
                     tr.setLayoutParams(new TableLayout.LayoutParams(
-                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
                     // Here create the TextView dynamically
@@ -422,7 +423,7 @@ public class DanaRStatsActivity extends Activity {
 
                     // add stats rows to tables
                     tl.addView(tr, new TableLayout.LayoutParams(
-                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
                     sum = sum + tdd;
@@ -433,7 +434,7 @@ public class DanaRStatsActivity extends Activity {
                     if(i%2==0) ctr.setBackgroundColor(Color.DKGRAY);
                     ctr.setId(700+i);
                     ctr.setLayoutParams(new TableLayout.LayoutParams(
-                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
                     // Here create the TextView dynamically
@@ -457,7 +458,7 @@ public class DanaRStatsActivity extends Activity {
 
                     // add cummulative rows to tables
                     ctl.addView(ctr, new TableLayout.LayoutParams(
-                            TableLayout.LayoutParams.FILL_PARENT,
+                            TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
                 }
 
@@ -493,7 +494,7 @@ public class DanaRStatsActivity extends Activity {
                 if(i%2!=0) etr.setBackgroundColor(Color.DKGRAY);
                 etr.setId(1100+i);
                 etr.setLayoutParams(new TableLayout.LayoutParams(
-                        TableLayout.LayoutParams.FILL_PARENT,
+                        TableLayout.LayoutParams.MATCH_PARENT,
                         TableLayout.LayoutParams.WRAP_CONTENT));
 
                 // Here create the TextView dynamically
@@ -521,7 +522,7 @@ public class DanaRStatsActivity extends Activity {
 
                 // add exponentail rows to tables
                 etl.addView(etr, new TableLayout.LayoutParams(
-                        TableLayout.LayoutParams.FILL_PARENT,
+                        TableLayout.LayoutParams.MATCH_PARENT,
                         TableLayout.LayoutParams.WRAP_CONTENT));
             }
         });

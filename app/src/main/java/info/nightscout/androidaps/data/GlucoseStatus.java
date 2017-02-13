@@ -6,6 +6,14 @@ import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
 
+import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +29,7 @@ import info.nightscout.utils.Round;
  */
 
 public class GlucoseStatus {
+    private static Logger log = LoggerFactory.getLogger(GlucoseStatus.class);
     public double glucose = 0d;
     public double delta = 0d;
     public double avgdelta = 0d;
@@ -81,9 +90,9 @@ public class GlucoseStatus {
                 BgReading then = data.get(i);
                 long then_date = then.timeIndex;
                 double avgdelta = 0;
-                int minutesago;
+                long minutesago;
 
-                minutesago = Math.round((now_date - then_date) / (1000 * 60));
+                minutesago = Math.round((now_date - then_date) / (1000d * 60));
                 // multiply by 5 to get the same units as delta, i.e. mg/dL/5m
                 change = now.value - then.value;
                 avgdelta = change / minutesago * 5;
@@ -122,6 +131,48 @@ public class GlucoseStatus {
         status.avgdelta = status.short_avgdelta; // for OpenAPS MA
 
         return status.round();
+    }
+
+    /*
+     * Return last BgReading from database or null if db is empty
+     */
+    @Nullable
+    public static BgReading lastBg() {
+        List<BgReading> bgList = null;
+
+        try {
+            Dao<BgReading, Long> daoBgReadings = MainApp.getDbHelper().getDaoBgReadings();
+            QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
+            queryBuilder.orderBy("timeIndex", false);
+            queryBuilder.limit(1L);
+            queryBuilder.where().gt("value", 38);
+            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
+            bgList = daoBgReadings.query(preparedQuery);
+
+        } catch (SQLException e) {
+            log.debug(e.getMessage(), e);
+        }
+        if (bgList != null && bgList.size() > 0)
+            return bgList.get(0);
+        else
+            return null;
+    }
+
+    /*
+     * Return bg reading if not old ( <9 min )
+     * or null if older
+     */
+    @Nullable
+    public static BgReading actualBg() {
+        BgReading lastBg = lastBg();
+
+        if (lastBg == null)
+            return null;
+
+        if (lastBg.timeIndex > new Date().getTime() - 9 * 60 * 1000)
+            return lastBg;
+
+        return null;
     }
 
     public static double average(ArrayList<Double> array) {

@@ -246,7 +246,7 @@
     <string name="overview_bolusprogress_stoppressed">НАТИСНАТ СТОП</string>
     <string name="openapsma_target_bg">КЗ цел за изчисления</string>
     <string name="pumpbusy">Помпата е заета</string>
-    <string name="waitingforpump">Изчаква за помпа</string>
+    <string name="waitingforpump">Изчаква за помпа. Click to refresh.</string>
     <string name="wrongpumppassword">Грешна парола за помпата!</string>
     <string name="youareonallowedlimit">Достигнахте лимита</string>
     <string name="danar_alarm">аларма</string>
@@ -410,7 +410,6 @@
     <string name="long_avgdelta">Дългоср. изменение</string>
     <string name="mdi">Писалки</string>
     <string name="openapsama">OpenAPS AMA</string>
-    <string name="openapsama_autosens_adjusttargets">Позволи autosens да променя целите</string>
     <string name="openapsama_useautosens">Разреши AMA autosens</string>
     <string name="openapsma_autosensdata_label">Autosens данни</string>
     <string name="old_data">СТАРИ ДАННИ</string>

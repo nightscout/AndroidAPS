@@ -272,6 +272,7 @@ public class ExecutionService extends Service {
 
     private boolean getPumpStatus() {
         try {
+            MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.gettingpumpstatus)));
             //MsgStatus statusMsg = new MsgStatus();
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
@@ -330,6 +331,7 @@ public class ExecutionService extends Service {
             danaRKoreanPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
+            MainApp.getConfigBuilder().uploadDeviceStatus(60);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -339,32 +341,40 @@ public class ExecutionService extends Service {
     public boolean tempBasal(int percent, int durationInHours) {
         connect("tempBasal");
         if (!isConnected()) return false;
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.disconnecting)));
         return true;
     }
 
     public boolean tempBasalStop() {
         connect("tempBasalStop");
         if (!isConnected()) return false;
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.stoppingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.disconnecting)));
         return true;
     }
 
     public boolean extendedBolus(double insulin, int durationInHalfHours) {
         connect("extendedBolus");
         if (!isConnected()) return false;
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.disconnecting)));
         return true;
     }
 
     public boolean extendedBolusStop() {
         connect("extendedBolusStop");
         if (!isConnected()) return false;
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
         mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.disconnecting)));
         return true;
     }
 
@@ -476,11 +486,13 @@ public class ExecutionService extends Service {
     public boolean updateBasalsInPump(final NSProfile profile) {
         connect("updateBasalsInPump");
         if (!isConnected()) return false;
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.updatingbasalrates)));
         double[] basal = buildDanaRProfileRecord(profile);
         MsgSetSingleBasalProfile msgSet = new MsgSetSingleBasalProfile(basal);
         mSerialIOThread.sendMessage(msgSet);
         danaRKoreanPump.lastSettingsRead = new Date(0); // force read full settings
         getPumpStatus();
+        MainApp.bus().post(new EventDanaRConnectionStatus(EventDanaRConnectionStatus.PERFORMING, 0, MainApp.sResources.getString(R.string.disconnecting)));
         return true;
     }
 

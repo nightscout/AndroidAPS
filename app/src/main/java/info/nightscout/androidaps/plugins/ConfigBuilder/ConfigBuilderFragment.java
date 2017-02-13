@@ -64,7 +64,6 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
 
 
     // TODO: sorting
-    // TODO: Toast and sound when command failed
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

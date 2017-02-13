@@ -11,6 +11,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 
+
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -53,10 +54,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getTitle().toString().toLowerCase().contains("password"))
-            {
+            if (pref.getKey().contains("danar_password")) {
                 pref.setSummary("******");
-            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")){
+            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
+                ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
             }
         }
@@ -90,7 +91,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_closedmode);
             if (Config.OPENAPSENABLED)
                 addPreferencesFromResource(R.xml.pref_openapsma);
-            if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
+            if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
                 addPreferencesFromResource(R.xml.pref_openapsama);
             addPreferencesFromResource(R.xml.pref_profile);
             if (Config.DANAR) {
