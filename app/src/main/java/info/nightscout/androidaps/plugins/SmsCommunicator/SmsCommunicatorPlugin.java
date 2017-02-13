@@ -307,12 +307,12 @@ public class SmsCommunicatorPlugin implements PluginBase {
                 case "DANAR":
                     DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
                     if (danaRPlugin != null && danaRPlugin.isEnabled(PluginBase.PUMP)) {
-                        reply = danaRPlugin.shortStatus();
+                        reply = danaRPlugin.shortStatus(true);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     }
                     DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
                     if (danaRKoreanPlugin != null && danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
-                        reply = danaRKoreanPlugin.shortStatus();
+                        reply = danaRKoreanPlugin.shortStatus(true);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     }
                     receivedSms.processed = true;
@@ -396,12 +396,12 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0, null);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
-                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
+                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus(true);
                                 lastRemoteBolusTime = new Date();
                                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             } else {
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_bolusfailed);
-                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
+                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus(true);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                         }
@@ -414,11 +414,11 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             PumpEnactResult result = pumpInterface.setTempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
-                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
+                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus(true);
                                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             } else {
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalfailed);
-                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
+                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus(true);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                         }
@@ -431,11 +431,11 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             PumpEnactResult result = pumpInterface.cancelTempBasal();
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalcanceled));
-                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
+                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus(true);
                                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             } else {
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcancelfailed);
-                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus();
+                                if (danaRPlugin != null) reply += "\n" + danaRPlugin.shortStatus(true);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                         }
