@@ -25,7 +25,7 @@ import info.nightscout.androidaps.interaction.utils.SafeParse;
  */
 
 
-public class BolusActivity extends Activity {
+public class BolusActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editCarbs;
     PlusMinusEditText editInsulin;
@@ -65,25 +65,23 @@ public class BolusActivity extends Activity {
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
             if(col == 0){
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
-                final TextView textView = (TextView) view.findViewById(R.id.label);
-                textView.setText("insulin");
+                final View view = getInflatedPlusMinusView(container);
                 double def = 0;
                 if (editInsulin != null){
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
+                setLabelToPlusMinusView(view, "insulin");
                 container.addView(view);
                 return view;
             } else if(col == 1){
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
-                final TextView textView = (TextView) view.findViewById(R.id.label);
-                textView.setText("carbs");
+                final View view = getInflatedPlusMinusView(container);
                 double def = 0;
                 if (editCarbs != null){
                     def = SafeParse.stringToDouble(editCarbs.editText.getText().toString());
                 }
                 editCarbs = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 150d, 1d, new DecimalFormat("0"), false);
+                setLabelToPlusMinusView(view, "carbs");
                 container.addView(view);
                 return view;
             } else {

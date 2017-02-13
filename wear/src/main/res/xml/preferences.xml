@@ -18,6 +18,14 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="input_design"
+        android:summary="Input Design"
+        android:title="Input Design" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showExternalStatus"

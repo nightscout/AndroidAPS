@@ -25,7 +25,7 @@ import info.nightscout.androidaps.interaction.utils.SafeParse;
  */
 
 
-public class FillActivity extends Activity {
+public class FillActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editInsulin;
 
@@ -64,14 +64,13 @@ public class FillActivity extends Activity {
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
             if(col == 0){
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
-                final TextView textView = (TextView) view.findViewById(R.id.label);
-                textView.setText("insulin");
+                final View view = getInflatedPlusMinusView(container);
                 double def = 0d;
                 if (editInsulin != null){
                     def = SafeParse.stringToDouble(editInsulin.editText.getText().toString());
                 }
                 editInsulin = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 30d, 0.1d, new DecimalFormat("#0.0"), false);
+                setLabelToPlusMinusView(view, "insulin");
                 container.addView(view);
                 return view;
             } else {

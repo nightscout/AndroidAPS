@@ -29,7 +29,7 @@ import static android.preference.PreferenceManager.getDefaultSharedPreferences;
  */
 
 
-public class TempTargetActivity extends Activity {
+public class TempTargetActivity extends ViewSelectorActivity {
 
     PlusMinusEditText lowRange;
     PlusMinusEditText highRange;
@@ -74,7 +74,7 @@ public class TempTargetActivity extends Activity {
         public Object instantiateItem(ViewGroup container, int row, int col) {
 
              if(col == 0){
-                final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
+                final View view = getInflatedPlusMinusView(container);
                 final TextView textView = (TextView) view.findViewById(R.id.label);
                 textView.setText("duration");
                 if (time == null) {
@@ -83,13 +83,12 @@ public class TempTargetActivity extends Activity {
                     double def = SafeParse.stringToDouble(time.editText.getText().toString());
                     time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 24 * 60d, 1d, new DecimalFormat("0"), false);
                 }
-                container.addView(view);
+                 setLabelToPlusMinusView(view, "duration");
+                 container.addView(view);
                 return view;
 
             } else if(col == 1){
-                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
-                 final TextView textView = (TextView) view.findViewById(R.id.label);
-                 textView.setText("low");
+                 final View view = getInflatedPlusMinusView(container);
                  if (isMGDL){
                      double def = 100;
                      if (lowRange != null){
@@ -103,13 +102,11 @@ public class TempTargetActivity extends Activity {
                      }
                      lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
                  }
-
+                 setLabelToPlusMinusView(view, "low");
                  container.addView(view);
                  return view;
              } else if(col == 2){
-                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
-                 final TextView textView = (TextView) view.findViewById(R.id.label);
-                 textView.setText("high");
+                 final View view = getInflatedPlusMinusView(container);
                  if (isMGDL){
                      double def = 100;
                      if (highRange != null){
@@ -123,7 +120,7 @@ public class TempTargetActivity extends Activity {
                      }
                      highRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
                  }
-
+                 setLabelToPlusMinusView(view, "high");
                  container.addView(view);
                  return view;
              }else {
