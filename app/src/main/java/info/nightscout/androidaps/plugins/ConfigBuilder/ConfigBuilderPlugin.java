@@ -30,6 +30,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -49,6 +50,7 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -439,6 +441,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
         }
 
+        MainApp.bus().post(new EventBolusRequested(insulin));
+
         PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
 
         BolusProgressDialog.bolusEnded = true;
@@ -478,11 +482,19 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         carbs = applyCarbsConstraints(carbs);
 
         BolusProgressDialog bolusProgressDialog = null;
-        if (context != null) {
+        if (context != null ) {
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(insulin);
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+        } else {
+            Intent i = new Intent();
+            i.putExtra("insulin", insulin.doubleValue());
+            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
         }
+
+        MainApp.bus().post(new EventBolusRequested(insulin));
 
         PumpEnactResult result = activePump.deliverTreatment(insulin, carbs, context);
 

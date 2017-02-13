@@ -8,5 +8,5 @@
         android:layout_height="match_parent"
         app:rectLayout="@layout/rect_activity_home"
         app:roundLayout="@layout/round_activity_home"
-        tools:context=".Home"
+        tools:context=".watchfaces.Home"
         tools:deviceIds="wear"/>

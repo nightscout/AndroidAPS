@@ -1,6 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="vibrateOnBolus"
+        android:title="Vibrate on Bolus"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="units_mgdl"
+        android:title="Units for Actions"
+        android:summaryOn="mg/dl"
+        android:summaryOff="mmol/l"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="input_design"
+        android:summary="Input Design"
+        android:title="Input Design" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="showExternalStatus"
@@ -88,12 +113,19 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 
-
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="animation"
         android:summary="Animations. (Circle WF)"
         android:title="Animations"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="primefill"
+        android:summary="Prime/Fill from watch possible"
+        android:title="Prime in Menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
 </PreferenceScreen>

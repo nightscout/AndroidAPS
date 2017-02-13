@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="info.nightscout.androidaps" >
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="info.nightscout.androidaps">
 
     <uses-feature android:name="android.hardware.type.watch" />
+
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -9,83 +11,124 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_icon"
         android:label="@string/app_name"
-        android:theme="@android:style/Theme.DeviceDefault" >
+        android:theme="@android:style/Theme.DeviceDefault">
         <meta-data
-                android:name="com.google.android.gms.version"
-                android:value="@integer/google_play_services_version" />
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <service
-            android:name="info.nightscout.androidaps.BIGChart"
+            android:name=".watchfaces.BIGChart"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_big_chart"
             android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face"/>
-            <meta-data android:name="com.google.android.wearable.watchface.preview" android:resource="@drawable/watchface_bigchart" />
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_bigchart" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
+
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
-
         <service
-            android:name="info.nightscout.androidaps.Home"
+            android:name=".watchfaces.Home"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip"
             android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data android:name="android.service.wallpaper"
-                       android:resource="@xml/watch_face"/>
-            <meta-data android:name="com.google.android.wearable.watchface.preview" android:resource="@drawable/watchface_graph" />
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_graph" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
+
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
-
         <service
-            android:name="info.nightscout.androidaps.LargeHome"
+            android:name=".watchfaces.LargeHome"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_large"
             android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data android:name="android.service.wallpaper"
-                       android:resource="@xml/watch_face"/>
-            <meta-data android:name="com.google.android.wearable.watchface.preview" android:resource="@drawable/watchface_dark" />
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_dark" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
+
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
-
         <service
-            android:name="info.nightscout.androidaps.CircleWatchface"
+            android:name=".watchfaces.CircleWatchface"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip_circle"
             android:permission="android.permission.BIND_WALLPAPER">
-            <meta-data android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face"/>
-            <meta-data android:name="com.google.android.wearable.watchface.preview" android:resource="@drawable/watchface_circle" />
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_circle" />
+
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
+
                 <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
             </intent-filter>
         </service>
-
-
-        <service android:name="info.nightscout.androidaps.ListenerService">
+        <service android:name=".data.ListenerService">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
+
         <activity
-            android:name="info.nightscout.androidaps.NWPreferences"
-            android:label="@string/label_xdrip_activity" >
+            android:name=".interaction.menus.MainMenuActivity"
+            android:label="@string/label_actions_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".interaction.AAPSPreferences"
+            android:label="SETTINGS">
+        </activity>
+        <activity
+            android:name=".interaction.actions.WizardActivity"
+            android:label="Wizard">
+        </activity>
+        <activity
+            android:name=".interaction.menus.FillMenuActivity"
+            android:label="Fillmenu">
+        </activity>
+        <activity
+            android:name=".interaction.menus.StatusMenuActivity"
+            android:label="Status">
+        </activity>
+        <activity
+            android:name=".interaction.actions.BolusActivity"
+            android:label="Bolus">
+        </activity>
+        <activity
+            android:name=".interaction.actions.FillActivity"
+            android:label="Fill">
+        </activity>
+        <activity
+            android:name=".interaction.actions.TempTargetActivity"
+            android:label="TempTarget">
+        </activity>
     </application>
-
 </manifest>

@@ -15,7 +15,7 @@ import info.nightscout.client.data.NSProfile;
 public class BolusWizard {
     // Inputs
     JSONObject specificProfile = null;
-    Integer carbs = 0;
+    public Integer carbs = 0;
     Double bg = 0d;
     Double correction;
     Boolean includeBolusIOB = true;

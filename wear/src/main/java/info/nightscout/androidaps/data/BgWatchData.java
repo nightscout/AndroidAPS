@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.data;
 
 /**
  * Created by emmablack on 1/7/15.

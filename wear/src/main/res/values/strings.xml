@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">AAPS Prefs.</string>
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
 
     <string-array name="chart_timeframe">
         <item>1 hour</item>
@@ -18,5 +19,28 @@
         <item>4</item>
         <item>5</item>
     </string-array>
+
+
+
+    <string-array name="input_design">
+        <item>Default</item>
+        <item>Quick righty</item>
+        <item>Quick lefty</item>
+        <item>Modern Sparse</item>
+
+    </string-array>
+    <string-array name="input_design_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+
+
+
+    <string name="title_activity_bolus">BolusActivity</string>
+    <string name="hello_round">Hello Round World!</string>
+    <string name="hello_square">Hello Square World!</string>
 
 </resources>

@@ -1,5 +1,6 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.watchfaces;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -7,9 +8,13 @@ import android.view.LayoutInflater;
 
 import com.ustwo.clockwise.common.WatchMode;
 
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
+
 public class Home extends BaseWatchFace {
 
     private long chartTapTime = 0;
+    private long sgvTapTime = 0;
 
     @Override
     public void onCreate() {
@@ -22,6 +27,8 @@ public class Home extends BaseWatchFace {
     @Override
     protected void onTapCommand(int tapType, int x, int y, long eventTime) {
 
+        int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
+
         if (tapType == TAP_TYPE_TAP&&
                 x >=chart.getLeft() &&
                 x <= chart.getRight()&&
@@ -31,6 +38,17 @@ public class Home extends BaseWatchFace {
                 changeChartTimeframe();
             }
             chartTapTime = eventTime;
+        } else if (tapType == TAP_TYPE_TAP&&
+                x + extra >=mSgv.getLeft() &&
+                x - extra <= mSgv.getRight()&&
+                y >= mSgv.getTop() &&
+                y <= mSgv.getBottom()){
+            if (eventTime - sgvTapTime < 800){
+                Intent intent = new Intent(this, MainMenuActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            sgvTapTime = eventTime;
         }
     }
 

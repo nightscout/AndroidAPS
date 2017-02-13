@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.androidaps.watchfaces;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.wearable.watchface.WatchFaceStyle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -34,6 +35,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.TreeSet;
+
+import info.nightscout.androidaps.data.BgWatchData;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.menus.MainMenuActivity;
 
 
 public class CircleWatchface extends WatchFace implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -79,6 +84,8 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     private View myLayout;
 
     protected SharedPreferences sharedPrefs;
+    private TextView mSgv;
+    private long sgvTapTime = 0;
 
 
     @Override
@@ -144,7 +151,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         // prepare fields
 
         TextView textView = null;
-
+        mSgv = (TextView) myLayout.findViewById(R.id.sgvString);
         textView = (TextView) myLayout.findViewById(R.id.sgvString);
         if (sharedPrefs.getBoolean("showBG", true)) {
             textView.setVisibility(View.VISIBLE);
@@ -342,7 +349,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getInRangeColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.argb(255, 120, 255, 120);
         } else {
             return Color.argb(255, 0, 240, 0);
@@ -351,7 +358,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getHighColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.argb(255, 255, 255, 120);
         } else {
             return Color.argb(255, 255, 200, 0);
@@ -360,7 +367,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getBackgroundColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.BLACK;
         } else {
             return Color.WHITE;
@@ -369,7 +376,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
     }
 
     public int getTextColor() {
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             return Color.WHITE;
         } else {
             return Color.BLACK;
@@ -662,7 +669,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         Log.d("CircleWatchface", "addReadingSoft");
         double size;
         int color = Color.LTGRAY;
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             color = Color.DKGRAY;
         }
 
@@ -680,7 +687,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         double size;
         int color = Color.LTGRAY;
         int indicatorColor = Color.DKGRAY;
-        if (sharedPrefs.getBoolean("dark", false)) {
+        if (sharedPrefs.getBoolean("dark", true)) {
             color = Color.DKGRAY;
             indicatorColor = Color.LTGRAY;
         }
@@ -700,4 +707,30 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
         addArch(canvas, (float) size, offset * offsetMultiplier + 11, color, (float) (360f - size)); // Dark fill
         addArch(canvas, (offset + .8f) * offsetMultiplier + 11, getBackgroundColor(), 360);
     }
+
+    @Override
+    protected void onTapCommand(int tapType, int x, int y, long eventTime) {
+
+        int extra = mSgv!=null?(mSgv.getRight() - mSgv.getLeft())/2:0;
+
+        if (tapType == TAP_TYPE_TAP&&
+                x + extra >=mSgv.getLeft() &&
+                x - extra <= mSgv.getRight()&&
+                y >= mSgv.getTop() &&
+                y <= mSgv.getBottom()){
+            if (eventTime - sgvTapTime < 800){
+                Intent intent = new Intent(this, MainMenuActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+            sgvTapTime = eventTime;
+        }
+    }
+
+    @Override
+    protected WatchFaceStyle getWatchFaceStyle(){
+        return new WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build();
+    }
+
+
 }
