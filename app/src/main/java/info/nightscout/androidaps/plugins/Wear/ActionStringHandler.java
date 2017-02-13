@@ -20,6 +20,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -28,9 +29,11 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.QuickWizard;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
@@ -62,6 +65,9 @@ public class ActionStringHandler {
     }
 
     public synchronized static void handleInitiate(String actionstring){
+
+        if(!BuildConfig.WEAR_CONTROL) return;
+
 
         lastBolusWizard = null;
 
@@ -164,11 +170,7 @@ public class ActionStringHandler {
             ////////////////////////////////////////////// STATUS
             rTitle = "STATUS";
             rAction = "statusmessage";
-            //TODO: add meaningful status
-
-            if("general".equals(act[1])){
-                rMessage = getGeneralStatus();
-            } else if("pump".equals(act[1])){
+            if("pump".equals(act[1])){
                 rTitle += " PUMP";
                 rMessage = getPumpStatus();
             } else if("loop".equals(act[1])){
@@ -179,7 +181,6 @@ public class ActionStringHandler {
                 rTitle += " TARGETS";
                 rMessage = getTargetsStatus();
             }
-            rMessage += "\n\n\nTODO:\nAdd some meaningful status.";
 
         } else if ("wizard".equals(act[0])) {
             ////////////////////////////////////////////// WIZARD
@@ -246,18 +247,39 @@ public class ActionStringHandler {
     }
 
     @NonNull
-    private static String getGeneralStatus() {
-        return "Today is going to be a good day!";
-    }
-
-    @NonNull
     private static String getPumpStatus() {
-        return "I'm feeling pumped!";
+        return MainApp.getConfigBuilder().shortStatus(false);
     }
 
     @NonNull
     private static String getLoopStatus() {
-        return "A loop di loop di loop!";
+        String ret = "";
+        // decide if enabled/disabled closed/open; what Plugin as APS?
+        final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        if(activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+            if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+                ret += "CLOSED LOOP\n";
+            } else {
+                ret += "OPEN LOOP\n";
+            }
+            final APSInterface aps = MainApp.getConfigBuilder().getActiveAPS();
+            ret += "APS: " + ((aps==null)?"NO APS SELECTED!":((PluginBase) aps).getName());
+            if(activeloop.lastRun != null){
+                if(activeloop.lastRun.lastAPSRun != null)
+                    ret += "\nLast Run: " + DateUtil.timeString(activeloop.lastRun.lastAPSRun);
+
+                if(activeloop.lastRun.lastEnact != null)
+                    ret += "\nLast Enact: " + DateUtil.timeString(activeloop.lastRun.lastEnact);
+
+            }
+
+
+
+        } else {
+            ret += "LOOP DISABLED\n";
+        }
+        return ret;
+
     }
 
     @NonNull
@@ -299,6 +321,9 @@ public class ActionStringHandler {
 
 
     public synchronized static void handleConfirmation(String actionString){
+
+        if(!BuildConfig.WEAR_CONTROL) return;
+
 
         //Guard from old or duplicate confirmations
         if (lastConfirmActionString == null) return;

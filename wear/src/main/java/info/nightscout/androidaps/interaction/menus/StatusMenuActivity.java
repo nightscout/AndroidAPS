@@ -12,7 +12,6 @@ public class StatusMenuActivity extends MenuListActivity {
     @Override
     protected String[] getElements() {
         return new String[] {
-                "General",
                 "Pump",
                 "Loop",
                 "Targets"};
@@ -21,16 +20,14 @@ public class StatusMenuActivity extends MenuListActivity {
     @Override
     protected void doAction(int position) {
         switch (position) {
+
             case 0:
-                ListenerService.initiateAction(this, "status general");
-                break;
-            case 1:
                 ListenerService.initiateAction(this, "status pump");
                 break;
-            case 2:
+            case 1:
                 ListenerService.initiateAction(this, "status loop");
                 break;
-            case 3:
+            case 2:
                 ListenerService.initiateAction(this, "status targets");
                 break;
         }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.interaction.actions.BolusActivity;
@@ -30,8 +31,14 @@ public class MainMenuActivity extends MenuListActivity {
     @Override
     protected String[] getElements() {
 
-        boolean showPrimeFill  = sp.getBoolean("primefill", false);
+        if(!BuildConfig.WEAR_CONTROL){
+            return new String[] {
+                    "Settings",
+                    "Re-Sync"};
+        }
 
+
+        boolean showPrimeFill  = sp.getBoolean("primefill", false);
         return new String[] {
                 "TempT",
                 "Bolus",
@@ -46,6 +53,22 @@ public class MainMenuActivity extends MenuListActivity {
     protected void doAction(int position) {
 
         Intent intent;
+
+        if(!BuildConfig.WEAR_CONTROL) {
+            switch (position) {
+                case 0:
+                    intent = new Intent(this, AAPSPreferences.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    this.startActivity(intent);
+                    break;
+                case 1:
+                    ListenerService.requestData(this);
+                    break;
+            }
+            return;
+        }
+
+
         switch (position) {
             case 0:
                 intent = new Intent(this, TempTargetActivity.class);
