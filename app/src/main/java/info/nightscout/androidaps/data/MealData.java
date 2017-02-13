@@ -28,7 +28,7 @@ public class MealData {
         List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * profile.getDia() * 2), false);
 
         long now = new Date().getTime();
-        long dia_ago = now - (new Double(profile.getDia() * 60 * 60 * 1000l)).longValue();
+        long dia_ago = now - (new Double(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
         long t = treatment.created_at.getTime();
         if (t > dia_ago && t <= now) {
             if (treatment.carbs >= 1) {
