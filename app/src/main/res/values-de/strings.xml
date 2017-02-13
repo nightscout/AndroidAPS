@@ -242,7 +242,7 @@
     <string name="ko_lang">Korean</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="wrongpumppassword">Falsches Pumpen-Passwort!</string>
-    <string name="waitingforpump">Warte auf Pumpe. Click to refresh.</string>
+    <string name="waitingforpumpclicktorefresh">Warte auf Pumpe. Click to refresh.</string>
     <string name="correctionbous">Korr</string>
     <string name="bolusdelivering">Abgabe %.2fU</string>
     <string name="bolusdelivered">%.2fU Bolus erfolgreich abgegeben</string>
@@ -332,4 +332,6 @@
     <string name="error_field_must_not_be_empty">Pflichtfeld</string>
     <string name="error_phone_not_valid">Telefonnummer ist nicht gültig.</string>
     <string name="error_only_numeric_digits_range_allowed">Bitte verwenden Sie nur Ziffern von %1$s - %2$s</string>
+    <string name="waitingforpump">Warte auf Pumpe</string>
+    <string name="wear"></string>
 </resources>

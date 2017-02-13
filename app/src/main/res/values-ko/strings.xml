@@ -286,7 +286,7 @@
     <string name="occlusion">막힘</string>
     <string name="overview_bolusprogress_stop">정지</string>
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
-    <string name="waitingforpump">펌프를 기다리고 있습니다. Click to refresh.</string>
+    <string name="waitingforpumpclicktorefresh">펌프를 기다리고 있습니다. Click to refresh.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU을 주입합니다</string>
     <string name="objectives_0_objective">나이트스카우트를 세팅하고, 기초주입과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
@@ -402,4 +402,5 @@
     <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
     <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
     <string name="error_phone_not_valid">유효한 도메인 이름이 아닙니다.</string>
+    <string name="waitingforpump">펌프를 기다리고 있습니다</string>
 </resources>

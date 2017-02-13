@@ -535,7 +535,7 @@ public class OverviewFragment extends Fragment {
             wizardButton.setVisibility(View.INVISIBLE);
             treatmentButton.setVisibility(View.INVISIBLE);
             quickWizardButton.setVisibility(View.INVISIBLE);
-            pumpStatusView.setText(R.string.waitingforpump);
+            pumpStatusView.setText(R.string.waitingforpumpclicktorefresh);
             pumpStatusView.setVisibility(View.VISIBLE);
         } else {
             wizardButton.setVisibility(View.VISIBLE);

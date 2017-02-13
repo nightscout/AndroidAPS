@@ -283,7 +283,7 @@
     <string name="occlusion">Oclusión</string>
     <string name="overview_bolusprogress_stop">Detener</string>
     <string name="overview_bolusprogress_stoppressed">Parar pulsado</string>
-    <string name="waitingforpump">Esperando bomba. Click to refresh.</string>
+    <string name="waitingforpumpclicktorefresh">Esperando bomba. Click to refresh.</string>
     <string formatted="false" name="overview_bolusprogress_goingtodeliver">Va a entregar% .2fU</string>
     <string name="objectives_0_objective">Configuración de visualización y monitoreo, y el análisis de los basales y ratios</string>
     <string name="objectives_0_gate">Comprobar que los datos de BG están disponibles en Nightscout, y que los datos de la bomba de insulina se están subiendo</string>
@@ -405,4 +405,5 @@
     <string name="error_only_numeric_digits_range_allowed">Sólo se permiten dígitos en el rango %1$s - %2$s</string>
     <string name="error_field_must_not_be_empty">Este campo no puede estar vacío</string>
     <string name="error_phone_not_valid">Número de teléfono inválido</string>
+    <string name="waitingforpump">Esperando bomba</string>
 </resources>

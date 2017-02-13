@@ -271,7 +271,7 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoped">Zastaveno</string>
     <string name="overview_bolusprogress_stoppressed">STISKNUTO STOP</string>
-    <string name="waitingforpump">Čekání na pumpu. Klik pro připojení.</string>
+    <string name="waitingforpumpclicktorefresh">Čekání na pumpu. Klik pro připojení.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Podávání %.2fU inzulínu</string>
     <string name="objectives_0_gate">Zkontrolovat, zda jsou glykémie a údaje z pumpy viditelné v Nightscoutu</string>
     <string name="objectives_0_objective">Nastavit vizualizaci a monitoring, analyzovat bazály a koeficienty</string>
@@ -470,4 +470,6 @@
     <string name="stoppingextendedbolus">Zastavuji extended bolus</string>
     <string name="stoppingtempbasal">Zastavuji dočasný bazál</string>
     <string name="updatingbasalrates">Aktualizuji bazály</string>
+    <string name="bolusrequested">Spouštím dodávání %.2fU</string>
+    <string name="waitingforpump">Čekání na pumpu</string>
 </resources>

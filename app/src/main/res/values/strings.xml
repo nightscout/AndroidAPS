@@ -302,7 +302,8 @@
     <string name="occlusion">Occlusion</string>
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
-    <string name="waitingforpump">Waiting for pump. Click to refresh.</string>
+    <string name="waitingforpump">Waiting for pump</string>
+    <string name="waitingforpumpclicktorefresh">Waiting for pump. Click to refresh.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Going to deliver %.2fU</string>
     <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
     <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
