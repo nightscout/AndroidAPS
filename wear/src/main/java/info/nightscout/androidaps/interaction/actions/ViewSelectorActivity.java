@@ -26,8 +26,7 @@ public class ViewSelectorActivity extends Activity {
         } else if (design == 3) {
             return LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item_quicklefty, container, false);
         } else if (design == 4) {
-            //TODO: LadyViktoria: Add your design
-            return LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item, container, false);
+            return LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_editplusminus_item_viktoria, container, false);
         }
 
         //default
@@ -40,8 +39,9 @@ public class ViewSelectorActivity extends Activity {
         int design = Integer.parseInt(sharedPrefs.getString("input_design", "1"));
 
         if (design == 4){
-            //TODO: LadyViktoria: Add your design label
-
+            //@LadyViktoria: Here the label can be set differently, if you like.
+            final TextView textView = (TextView) view.findViewById(R.id.label);
+            textView.setText(labelText);
         } else {
             final TextView textView = (TextView) view.findViewById(R.id.label);
             textView.setText(labelText);
