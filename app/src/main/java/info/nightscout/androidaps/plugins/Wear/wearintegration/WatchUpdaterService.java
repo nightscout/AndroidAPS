@@ -163,13 +163,13 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                ToastUtils.showToastInUiThread(this, "INITIATE: " + actionstring);
+                ToastUtils.showToastInUiThread(this, "Wear: " + actionstring);
                 ActionStringHandler.handleInitiate(actionstring);
             }
 
             if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                ToastUtils.showToastInUiThread(this, "CONFIRM: " + actionstring);
+                ToastUtils.showToastInUiThread(this, "Wear Confirm: " + actionstring);
                 ActionStringHandler.handleConfirmation(actionstring);
             }
         }
@@ -488,7 +488,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putString("message", message);
             dataMapRequest.getDataMap().putString("actionstring", actionstring);
 
-            ToastUtils.showToastInUiThread(this, "SENT: " + actionstring);
+            ToastUtils.showToastInUiThread(this, "Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
