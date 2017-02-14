@@ -306,17 +306,17 @@ public class OverviewFragment extends Fragment {
     }
 
     void processQuickWizard() {
-        final BgReading lastBG = GlucoseStatus.lastBg();
+        final BgReading actualBg = GlucoseStatus.actualBg();
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return;
         final NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
 
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
-        if (quickWizardEntry != null && lastBG != null) {
+        if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText();
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), lastBG.valueToUnits(profile.getUnits()), 0d, true, true);
+            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), actualBg.valueToUnits(profile.getUnits()), 0d, true, true);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -328,7 +328,7 @@ public class OverviewFragment extends Fragment {
                 boluscalcJSON.put("iob", -(wizard.insulingFromBolusIOB + wizard.insulingFromBasalsIOB));
                 boluscalcJSON.put("bolusiobused", true);
                 boluscalcJSON.put("basaliobused", true);
-                boluscalcJSON.put("bg", lastBG.valueToUnits(profile.getUnits()));
+                boluscalcJSON.put("bg", actualBg.valueToUnits(profile.getUnits()));
                 boluscalcJSON.put("insulinbg", wizard.insulinFromBG);
                 boluscalcJSON.put("insulinbgused", true);
                 boluscalcJSON.put("bgdiff", wizard.bgDiff);
@@ -375,7 +375,7 @@ public class OverviewFragment extends Fragment {
                                             getContext(),
                                             finalInsulinAfterConstraints,
                                             finalCarbsAfterConstraints,
-                                            lastBG.valueToUnits(profile.getUnits()),
+                                            actualBg.valueToUnits(profile.getUnits()),
                                             "Manual",
                                             0,
                                             boluscalcJSON
