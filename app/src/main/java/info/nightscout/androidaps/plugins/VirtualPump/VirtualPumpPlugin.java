@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.VirtualPump;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -401,6 +403,10 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public JSONObject getJSONStatus() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        if (!preferences.getBoolean("virtualpump_uploadstatus", false)) {
+            return null;
+        }
         JSONObject pump = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();

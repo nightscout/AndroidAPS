@@ -969,7 +969,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             }
             if (activePump != null) {
                 deviceStatus.device = "openaps://" + deviceID();
-                deviceStatus.pump = getJSONStatus();
+                JSONObject pumpstatus = getJSONStatus();
+                if (pumpstatus != null) {
+                    deviceStatus.pump = getJSONStatus();
+                }
 
                 deviceStatus.created_at = DateUtil.toISOString(new Date());
 

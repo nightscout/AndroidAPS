@@ -501,4 +501,6 @@
     <string name="updatingbasalrates">Updating basal rates</string>
     <string name="disconnecting">Disconnecting</string>
     <string name="executing">Executing</string>
+    <string name="virtualpump_settings">Virtual pump settings</string>
+    <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
 </resources>
