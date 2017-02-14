@@ -230,6 +230,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTreatmentChange();
     }
 
+    public void delete(Treatment treatment) {
+        try {
+            getDaoTreatments().delete(treatment);
+            latestTreatmentChange = treatment.getTimeIndex();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleTreatmentChange();
+    }
+
     public int delete(String _id) {
         Treatment stored = findTreatmentById(_id);
         int removed = 0;
