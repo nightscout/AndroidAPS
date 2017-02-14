@@ -94,14 +94,15 @@
                         android:id="@+id/careportal_newnstreatment_meter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
+                        android:checked="false"
                         android:text="@string/careportal_newnstreatment_meter" />
 
                     <RadioButton
                         android:id="@+id/careportal_newnstreatment_sensor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/careportal_newnstreatment_sensor" />
+                        android:text="@string/careportal_newnstreatment_sensor"
+                        android:checked="true" />
 
                     <RadioButton
                         android:id="@+id/careportal_newnstreatment_other"
