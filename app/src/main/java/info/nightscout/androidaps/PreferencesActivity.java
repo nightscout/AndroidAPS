@@ -55,7 +55,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getKey().contains("danar_password")) {
+            if (pref.getKey().contains("password")) {
                 pref.setSummary("******");
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
@@ -83,6 +83,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_password);
             addPreferencesFromResource(R.xml.pref_quickwizard);
             addPreferencesFromResource(R.xml.pref_language);
             if (Config.CAREPORTALENABLED)

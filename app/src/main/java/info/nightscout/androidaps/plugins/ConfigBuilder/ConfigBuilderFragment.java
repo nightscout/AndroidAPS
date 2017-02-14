@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,6 +30,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
+import info.nightscout.utils.PasswordProtection;
 
 
 public class ConfigBuilderFragment extends Fragment implements FragmentBase {
@@ -62,6 +65,8 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
     PluginCustomAdapter constraintsDataAdapter = null;
     PluginCustomAdapter generalDataAdapter = null;
 
+    LinearLayout mainLayout;
+    Button unlock;
 
     // TODO: sorting
 
@@ -89,6 +94,25 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
         if (ConfigBuilderPlugin.nightscoutVersionCode < 900)
             nightscoutVerView.setTextColor(Color.RED);
         setViews();
+
+        unlock = (Button) view.findViewById(R.id.configbuilder_unlock);
+        mainLayout = (LinearLayout) view.findViewById(R.id.configbuilder_mainlayout);
+
+        if (PasswordProtection.isLocked("settings_password")) {
+            mainLayout.setVisibility(View.GONE);
+            unlock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
+                        @Override
+                        public void run() {
+                            mainLayout.setVisibility(View.VISIBLE);
+                            unlock.setVisibility(View.GONE);
+                        }
+                    }, null);
+                }
+            });
+        }
         return view;
     }
 

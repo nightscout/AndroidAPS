@@ -503,4 +503,7 @@
     <string name="executing">Executing</string>
     <string name="virtualpump_settings">Virtual pump settings</string>
     <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
+    <string name="wrongpassword">Wrong password</string>
+    <string name="settings_password">Password for settings</string>
+    <string name="unlock_settings">Unlock settings</string>
 </resources>

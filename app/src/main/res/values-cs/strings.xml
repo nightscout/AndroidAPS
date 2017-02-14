@@ -472,4 +472,9 @@
     <string name="updatingbasalrates">Aktualizuji bazály</string>
     <string name="bolusrequested">Spouštím dodávání %.2fU</string>
     <string name="waitingforpump">Čekání na pumpu</string>
+    <string name="settings_password">Heslo do nastavení</string>
+    <string name="virtualpump_settings">Nastavení virtuální pumpy</string>
+    <string name="virtualpump_uploadstatus_title">Nahrávat status do NS</string>
+    <string name="wrongpassword">Chybné heslo</string>
+    <string name="unlock_settings">Odemknout nastavení</string>
 </resources>
