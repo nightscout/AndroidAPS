@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.Treatment;
@@ -74,6 +75,8 @@ import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingShippingInf
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusBasic;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusTempBasal;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -332,6 +335,12 @@ public class ExecutionService extends Service {
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             MainApp.getConfigBuilder().uploadDeviceStatus(60);
+            if (danaRKoreanPump.dailyTotalUnits > danaRKoreanPump.maxDailyTotalUnits * Constants.dailyLimitWarning ) {
+                log.debug("Approaching daily limit: " + danaRKoreanPump.dailyTotalUnits + "/" + danaRKoreanPump.maxDailyTotalUnits);
+                Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.sResources.getString(R.string.approachingdailylimit), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(reportFail));
+                MainApp.getConfigBuilder().uploadError(MainApp.sResources.getString(R.string.approachingdailylimit) + ": " + danaRKoreanPump.dailyTotalUnits + "/" + danaRKoreanPump.maxDailyTotalUnits + "U");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

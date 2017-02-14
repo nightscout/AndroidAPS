@@ -477,4 +477,5 @@
     <string name="virtualpump_uploadstatus_title">Nahrávat status do NS</string>
     <string name="wrongpassword">Chybné heslo</string>
     <string name="unlock_settings">Odemknout nastavení</string>
+    <string name="approachingdailylimit">Blíží se denní limit inzulínu</string>
 </resources>

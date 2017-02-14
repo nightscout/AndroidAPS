@@ -506,4 +506,5 @@
     <string name="wrongpassword">Wrong password</string>
     <string name="settings_password">Password for settings</string>
     <string name="unlock_settings">Unlock settings</string>
+    <string name="approachingdailylimit">Approaching insulin daily limit</string>
 </resources>
