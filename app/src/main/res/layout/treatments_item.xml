@@ -134,6 +134,13 @@
                 android:layout_marginRight="30dp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:text="@string/overview_quickwizard_item_remove_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/treatments_remove"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_orange_light" />
 
         </LinearLayout>
 

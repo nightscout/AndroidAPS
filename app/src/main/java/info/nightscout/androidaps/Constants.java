@@ -49,4 +49,7 @@ public class Constants {
     public static final int[] VERY_HARD_LIMIT_TEMP_MIN_BG = {72,180};
     public static final int[] VERY_HARD_LIMIT_TEMP_MAX_BG = {72,270};
     public static final int[] VERY_HARD_LIMIT_TEMP_TARGET_BG = {72,200};
+
+    //DanaR
+    public static final double dailyLimitWarning = 0.95d;
 }

@@ -39,6 +39,7 @@ import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.PasswordProtection;
 
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
@@ -125,8 +126,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_preferences:
-                Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
-                startActivity(i);
+                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
+                        startActivity(i);
+                    }
+                }, null);
                 break;
             case R.id.nav_resetdb:
                 new AlertDialog.Builder(this)

@@ -303,6 +303,7 @@
     <string name="overview_bolusprogress_stop">Stop</string>
     <string name="overview_bolusprogress_stoppressed">STOP PRESSED</string>
     <string name="waitingforpump">Waiting for pump</string>
+    <string name="waitingforpumpclicktorefresh">Waiting for pump. Click to refresh.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">Going to deliver %.2fU</string>
     <string name="objectives_0_objective">Setting up visualization and monitoring, and analyzing basals and ratios</string>
     <string name="objectives_0_gate">Verify that BG is available in Nightscout, and pump insulin data is being uploaded</string>
@@ -487,7 +488,23 @@
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
     <string name="smscommunicator_remotecalibrationnotallowed">Remote calibration not allowed</string>
-    <string name="smscommunicator_calibrationsent">Calibration sent</string>
+    <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
     <string name="smscommunicator_calibrationfailed">xDrip is not receiving calibrations</string>
     <string name="dont_show_again">Don\'t show again</string>
+    <string name="pumpsuspendedclicktorefresh">Pump suspended. Click to refresh state</string>
+    <string name="pumpsuspended">Pump suspended</string>
+    <string name="gettingpumpstatus">Getting pump status</string>
+    <string name="settingtempbasal">Setting temp basal</string>
+    <string name="stoppingtempbasal">Stopping temp basal</string>
+    <string name="settingextendedbolus">Setting extended bolus</string>
+    <string name="stoppingextendedbolus">Stopping extended bolus</string>
+    <string name="updatingbasalrates">Updating basal rates</string>
+    <string name="disconnecting">Disconnecting</string>
+    <string name="executing">Executing</string>
+    <string name="virtualpump_settings">Virtual pump settings</string>
+    <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
+    <string name="wrongpassword">Wrong password</string>
+    <string name="settings_password">Password for settings</string>
+    <string name="unlock_settings">Unlock settings</string>
+    <string name="approachingdailylimit">Approaching insulin daily limit</string>
 </resources>

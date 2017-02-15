@@ -211,6 +211,17 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         return getDanaRPump().lastConnection.getTime() > 0 && !getDanaRPump().isConfigUD && !getDanaRPump().isEasyModeEnabled && getDanaRPump().isExtendedBolusEnabled;
     }
 
+    @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
+    public boolean isBusy() {
+        if (sExecutionService == null) return false;
+        return sExecutionService.isConnected() || sExecutionService.isConnecting();
+    }
+
     // Pump interface
     @Override
     public boolean isTempBasalInProgress() {

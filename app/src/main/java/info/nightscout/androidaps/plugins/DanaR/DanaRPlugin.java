@@ -211,6 +211,17 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return getDanaRPump().lastConnection.getTime() > 0 && getDanaRPump().isExtendedBolusEnabled;
     }
 
+    @Override
+    public boolean isSuspended() {
+        return getDanaRPump().pumpSuspended;
+    }
+
+    @Override
+    public boolean isBusy() {
+        if (sExecutionService == null) return false;
+        return sExecutionService.isConnected() || sExecutionService.isConnecting();
+    }
+
     // Pump interface
     @Override
     public boolean isTempBasalInProgress() {
@@ -705,7 +716,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         JSONObject extended = new JSONObject();
         try {
             battery.put("percent", getDanaRPump().batteryRemaining);
-            status.put("status", "normal");
+            status.put("status", getDanaRPump().pumpSuspended ? "suspended" : "normal");
             status.put("timestamp", DateUtil.toISOString(getDanaRPump().lastConnection));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             extended.put("PumpIOB", getDanaRPump().iob);

@@ -18,6 +18,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -75,7 +79,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     static ArrayList<PluginBase> pluginList;
 
-    static Date lastDeviceStatusUpload = new Date(0);
+    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledPost = null;
 
     PowerManager.WakeLock mWakeLock;
 
@@ -334,6 +339,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     @Override
     public boolean isInitialized() {
         return activePump.isInitialized();
+    }
+
+    @Override
+    public boolean isSuspended() {
+        return activePump.isSuspended();
+    }
+
+    @Override
+    public boolean isBusy() {
+        return activePump.isBusy();
     }
 
     @Override
@@ -608,6 +623,17 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             result.comment = MainApp.sResources.getString(R.string.pumpNotInitialized);
             result.enacted = false;
             result.success = false;
+            log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpNotInitialized));
+            return result;
+        }
+
+        if (isSuspended()) {
+            result = new PumpEnactResult();
+            result.comment = MainApp.sResources.getString(R.string.pumpsuspended);
+            result.enacted = false;
+            result.success = false;
+            log.debug("applyAPSRequest: " + MainApp.sResources.getString(R.string.pumpsuspended));
+            return result;
         }
 
         if (Config.logCongigBuilderActions)
@@ -801,22 +827,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                // Give some time to Loop
-                try {
-                    Thread.sleep(120 * 1000L);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // if status not uploaded, upload pump status only
-                if (new Date().getTime() - lastDeviceStatusUpload.getTime() > 120 * 1000L) {
-                    uploadDeviceStatus();
-                }
-            }
-        });
-        t.start();
+        uploadDeviceStatus(120);
     }
 
     public void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes) {
@@ -922,11 +933,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         }
     }
 
-    public void uploadDeviceStatus() {
+    public void doUploadDeviceStatus() {
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
             LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
-            if (lastRun != null && lastRun.lastAPSRun.getTime() > new Date().getTime() - 60 * 1000L) {
+            if (lastRun != null && lastRun.lastAPSRun.getTime() > new Date().getTime() - 300 * 1000L) {
                 // do not send if result is older than 1 min
                 APSResult apsResult = lastRun.request;
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
@@ -958,16 +969,34 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             }
             if (activePump != null) {
                 deviceStatus.device = "openaps://" + deviceID();
-                deviceStatus.pump = getJSONStatus();
+                JSONObject pumpstatus = getJSONStatus();
+                if (pumpstatus != null) {
+                    deviceStatus.pump = getJSONStatus();
+                }
 
                 deviceStatus.created_at = DateUtil.toISOString(new Date());
 
                 deviceStatus.sendToNSClient();
-                lastDeviceStatusUpload = new Date();
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    static public void uploadDeviceStatus(int sec) {
+        class PostRunnable implements Runnable {
+            public void run() {
+                MainApp.getConfigBuilder().doUploadDeviceStatus();
+                scheduledPost = null;
+            }
+        }
+        // prepare task for execution
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledPost != null)
+            scheduledPost.cancel(false);
+        Runnable task = new PostRunnable();
+        scheduledPost = worker.schedule(task, sec, TimeUnit.SECONDS);
+        log.debug("Scheduling devicestatus upload in " + sec + " sec");
     }
 
     public void uploadBolusWizardRecord(Treatment t, double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
