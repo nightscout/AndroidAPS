@@ -75,6 +75,12 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public String getNameShort() {
+        // use long name as fallback (not visible in tabs)
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == PUMP && fragmentEnabled;
     }
@@ -110,6 +116,16 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
+    public boolean isBusy() {
+        return false;
+    }
+
+    @Override
     public boolean isTempBasalInProgress() {
         return false;
     }
@@ -128,6 +144,16 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     @Override
     public boolean isThisProfileSet(NSProfile profile) {
         return false;
+    }
+
+    @Override
+    public Date lastStatusTime() {
+        return new Date();
+    }
+
+    @Override
+    public void updateStatus(String reason) {
+        // do nothing
     }
 
     @Override
@@ -254,6 +280,11 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
+    }
+
+    @Override
+    public String shortStatus(boolean veryShort) {
+        return deviceID();
     }
 
 }

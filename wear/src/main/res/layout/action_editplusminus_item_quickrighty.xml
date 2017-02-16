@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center">
+        <EditText
+            android:id="@+id/amountfield"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:inputType="numberDecimal"
+            android:minWidth="100dp"
+            android:paddingTop="10dp"
+            android:text="112"
+            android:textSize="45sp"
+            android:cursorVisible="false"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="label"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:gravity="center"
+            android:textSize="25sp" />
+
+            <ImageView
+                android:id="@+id/minusbutton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/circle"
+                android:backgroundTint="#ffffff"
+                android:src="@drawable/ic_action_minus"
+                android:tint="#ffffff" />
+
+        </LinearLayout>
+        <ImageView
+            android:id="@+id/plusbutton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/circle"
+            android:backgroundTint="#ffffff"
+            android:src="@drawable/ic_action_add"
+            android:tint="#ffffff" />
+</LinearLayout>
+</RelativeLayout>

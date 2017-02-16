@@ -89,7 +89,7 @@
     <string name="nsprofileview_basal_label">Базални стойности:</string>
     <string name="nsprofileview_dia_label">DIA (Време на действие на инсулина):</string>
     <string name="nsprofileview_ic_label">IC (Инсулин/въглехидр.):</string>
-    <string name="nsprofileview_noprofile_text">НЕ Е ЗАДАДЕН ПРОФИЛ</string>
+    <string name="noprofileset">НЕ Е ЗАДАДЕН ПРОФИЛ</string>
     <string name="nsprofileview_target_label">Целeва КЗ:</string>
     <string name="nsprofileview_units_label">Единици:</string>
     <string name="objectives">Цели</string>
@@ -124,7 +124,7 @@
     <string name="objectives_pumpstatusavailableinns">Статус на помпа в NS</string>
     <string name="rate">Стойност</string>
     <string name="reason">Основание</string>
-    <string name="refreshfromnightscout">Искате ли да обновите treatments от Nightscout</string>
+    <string name="refreshtreatmentsfromnightscout">Искате ли да обновите treatments от Nightscout</string>
     <string name="safety">Безопасност</string>
     <string name="setextendedbolusquestion">Задай нов удължен болусs:</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
@@ -205,7 +205,7 @@
     <string name="end_user_license_agreement_i_understand">РАЗБИРАМ И СЕ СЪГЛАСЯВАМ</string>
     <string name="language">Език</string>
     <string name="save">Сигурност</string>
-    <string name="syncprofiletopump_title">Синхронизирай помпата с профила в Nightscout</string>
+    <string name="syncprofiletopump_title">Синхронизирай помпата с профила</string>
     <string name="nobtadapter">Няма bluetooth адаптер</string>
     <string name="nightscout">Nightscout</string>
     <string name="dismiss">Разбрах</string>
@@ -225,12 +225,11 @@
     <string name="reloadprofile">Обнови профила</string>
     <string name="percent">Процент</string>
     <string name="glucosetype_sensor">Сензор</string>
-    <string name="glucosetype_manual">Ръчно</string>
+    <string name="manual">Ръчно</string>
     <string name="glucosetype_finger">Пръст</string>
     <string name="danar_valuenotsetproperly">Неправилно зададени стойности</string>
     <string name="danar_viewprofile">Виж профила</string>
     <string name="danarprofile">DanaR профил</string>
-    <string name="danarprofile_car">Усвояване на въглехидрати гр./ч.</string>
     <string name="danarprofile_dia">DIA (Време на действие на инсулина) ч.:</string>
     <string name="danar_lastbolus">Последен болус:</string>
     <string name="danar_invalidinput">Неправилни входни данни</string>
@@ -247,7 +246,7 @@
     <string name="overview_bolusprogress_stoppressed">НАТИСНАТ СТОП</string>
     <string name="openapsma_target_bg">КЗ цел за изчисления</string>
     <string name="pumpbusy">Помпата е заета</string>
-    <string name="waitingforpump">Изчаква за помпа</string>
+    <string name="waitingforpumpclicktorefresh">Изчаква за помпа. Click to refresh.</string>
     <string name="wrongpumppassword">Грешна парола за помпата!</string>
     <string name="youareonallowedlimit">Достигнахте лимита</string>
     <string name="danar_alarm">аларма</string>
@@ -348,7 +347,6 @@
     <string name="ns_upload_only">NS upload only (изключва синхронизацията)</string>
     <string name="ns_upload_only_enabled">Моля изключете "NS upload only" за да използвате това.</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
-    <string name="absorption_rate">Усвояване на ВХ (ч):</string>
     <string name="alert_dialog_storage_permission_text">Моля рестартирайте телефона или AndroidAPS, в противен случай информацията за грешки няма да се запише(важно за да се потвърди, че алгоритъмът работи правилно)</string>
     <string name="androidaps_tempbasalendnote">Край на временен базал</string>
     <string name="androidaps_tempbasalstartnote">Старт на временен базал</string>
@@ -365,7 +363,7 @@
     <string name="low_mark">Долна линия</string>
     <string name="lowbattery">Изтощена батерия</string>
     <string name="open_settings_on_wear">Отвори Опции на часовника</string>
-    <string name="prefs_range_summary">Горна и долна линия на диаграмата на часовника</string>
+    <string name="prefs_range_summary">Стойност на линиите за ниска и висока КЗ (mmol/l) </string>
     <string name="prefs_range_title">Диапазон на визуализация</string>
     <string name="profile_set_failed">Неуспешно задаване на базален профил</string>
     <string name="profile_set_ok">Базалният профил е обновен</string>
@@ -375,5 +373,66 @@
     <string name="resend_all_data">Изпрати всички данни отново</string>
     <string name="wear">Wear</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
-     <string name="minago">преди %d м.</string>
+    <string name="minago" formatted="false">преди %d м.</string>
+    <string name="actions_shortname">"Д-я"</string>
+    <string name="wear_shortname">"Wear"</string>
+    <string name="virtualpump_shortname">"ВП "</string>
+    <string name="treatments_shortname">"ТТ "</string>
+    <string name="temptargetrange_shortname">"ВЦeл"</string>
+    <string name="tempbasals_shortname">"ВБ "</string>
+    <string name="smscommunicator_shortname">"СМС "</string>
+    <string name="simpleprofile_shortname">"ОПр "</string>
+    <string name="profileviewer_shortname">"Пр "</string>
+    <string name="overview_shortname">"HOME"</string>
+    <string name="objectives_shortname">"ЦЕЛИ "</string>
+    <string name="oaps_shortname">"oAPS"</string>
+    <string name="loop_shortname">"Loop "</string>
+    <string name="localprofile_shortname">"ЛПр "</string>
+    <string name="danarpump_shortname">"Dana"</string>
+    <string name="configbuilder_shortname">"КОНФ. "</string>
+    <string name="circadian_percentage_profile_shortname">"ППр "</string>
+    <string name="careportal_shortname">"CaPr"</string>
+    <string name="activity">Физ.активност</string>
+    <string name="danar_stats">DanaR статистика</string>
+    <string name="danar_stats_basalrate">Базал</string>
+    <string name="danar_stats_bolus">Болус</string>
+    <string name="danar_stats_date">Дата</string>
+    <string name="danar_stats_olddata_Message">Стари данни! Натиснете \"Презареждане\"</string>
+    <string name="danar_stats_ratio">Коефициент</string>
+    <string name="danar_stats_tbb">Общо базален инс.</string>
+    <string name="danar_stats_tbb2">Общо базален инс.²</string>
+    <string name="danar_stats_tdd">TDD</string>
+    <string name="danar_stats_warning_Message">Възможна неточност, ако сте използвали болус за презареждане!</string>
+    <string name="eatingsoon">Преди хранене</string>
+    <string name="el_lang">Greek</string>
+    <string name="initializing">Инициализиране ...</string>
+    <string name="localprofile">Локален профил</string>
+    <string name="long_avgdelta">Дългоср. изменение</string>
+    <string name="mdi">Писалки</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="openapsama_useautosens">Разреши AMA autosens</string>
+    <string name="openapsma_autosensdata_label">Autosens данни</string>
+    <string name="old_data">СТАРИ ДАННИ</string>
+    <string name="ongoingnotificaction">Текущи известия</string>
+    <string name="openapsma_scriptdebugdata_label">Script debug</string>
+    <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
+    <string name="refreshtemptargetsfromnightscout">Искате ли да обновите временните цели от Найтскаут</string>
+    <string name="removerecord">Премахни запис:</string>
+    <string name="short_avgdelta">Краткоср. Δ:</string>
+    <string name="short_tabtitles">Къси имена</string>
+    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
+    <string name="temptargetrange">Временна цел</string>
+    <string name="temptargetrange_refreshfromnightscout">Обнови временни цели от NS</string>
+    <string name="danar_stats_expweight">Експоненциално претеглена TDD</string>
+    <string name="danar_stats_cumulative_tdd">Комулативна TDD</string>
+    <string name="danar_stats_weight">Тегло</string>
+    <string name="danar_stats_amount_days"># Days</string>
+    <string name="MM640g">MM640g</string>
+    <string name="array_of_elements" formatted="false">Масив от %d елемента. Актуална стойност:</string>
+    <string name="sms_basal">Basal:</string>
+    <string name="sms_bolus">Bolus:</string>
+    <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IOB:</string>
+    <string name="sms_minago" formatted="false">%dmin ago</string>
+    <string name="waitingforpump">Изчаква за помпа</string>
 </resources>

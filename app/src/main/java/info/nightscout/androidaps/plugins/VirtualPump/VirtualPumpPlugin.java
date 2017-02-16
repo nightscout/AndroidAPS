@@ -1,6 +1,8 @@
 package info.nightscout.androidaps.plugins.VirtualPump;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -79,6 +81,17 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public String getNameShort() {
+        String name = MainApp.sResources.getString(R.string.virtualpump_shortname);
+        if (!name.trim().isEmpty()){
+            //only if translation exists
+            return name;
+        }
+        // use long name as fallback
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == PUMP && fragmentEnabled;
     }
@@ -114,6 +127,16 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public boolean isSuspended() {
+        return false;
+    }
+
+    @Override
+    public boolean isBusy() {
+        return false;
+    }
+
+    @Override
     public boolean isTempBasalInProgress() {
         return getTempBasal() != null;
     }
@@ -132,6 +155,16 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public boolean isThisProfileSet(NSProfile profile) {
         return false;
+    }
+
+    @Override
+    public Date lastStatusTime() {
+        return new Date();
+    }
+
+    @Override
+    public void updateStatus(String reason) {
+        // do nothing
     }
 
     @Override
@@ -370,6 +403,10 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public JSONObject getJSONStatus() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+        if (!preferences.getBoolean("virtualpump_uploadstatus", false)) {
+            return null;
+        }
         JSONObject pump = new JSONObject();
         JSONObject battery = new JSONObject();
         JSONObject status = new JSONObject();
@@ -407,6 +444,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
+    }
+
+    @Override
+    public String shortStatus(boolean veryShort) {
+        return "Virtual Pump";
     }
 
 }

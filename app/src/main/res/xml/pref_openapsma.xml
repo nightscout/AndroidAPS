@@ -24,12 +24,13 @@
             android:defaultValue="1"
             android:key="openapsma_max_basal"
             android:numeric="decimal"
-            android:title="@string/openapsma_maxbasal_summary" />
+            android:dialogMessage="@string/openapsma_maxbasal_summary"
+            android:title="@string/openapsma_maxbasal_title" />
         <EditTextPreference
             android:defaultValue="1.5"
             android:key="openapsma_max_iob"
             android:numeric="decimal"
-            android:title="@string/openapsma_maxiob_summary" />
+            android:dialogMessage="@string/openapsma_maxiob_summary"
+            android:title="@string/openapsma_maxiob_title" />
     </PreferenceCategory>
-
 </PreferenceScreen>

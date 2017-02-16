@@ -17,6 +17,8 @@ import info.nightscout.client.data.NSProfile;
 public interface PumpInterface {
 
     boolean isInitialized();
+    boolean isSuspended();
+    boolean isBusy();
 
     boolean isTempBasalInProgress();
     boolean isExtendedBoluslInProgress();
@@ -27,6 +29,9 @@ public interface PumpInterface {
     int NOT_NEEDED = 2;
     int setNewBasalProfile(NSProfile profile);
     boolean isThisProfileSet(NSProfile profile);
+
+    Date lastStatusTime();
+    void updateStatus(String reason);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
     double getTempBasalAbsoluteRate();
@@ -48,4 +53,6 @@ public interface PumpInterface {
     String deviceID();
 
     PumpDescription getPumpDescription();
+
+    public String shortStatus(boolean veryShort);
 }

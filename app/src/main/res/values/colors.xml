@@ -3,6 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="colorInitializingBorder">#ff2630</color>
 
     <color name="cardColorBackground">#121212</color>
     <color name="cardObjectiveText">#779ECB</color>
@@ -16,6 +17,8 @@
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
+    <color name="colorTempTargetButton">#d43429</color>
+    <color name="colorCalibrationButton">#ceb812</color>
 
     <color name="colorInProgress">#c45026</color>
     <color name="colorAffectingIOB">#830400</color>

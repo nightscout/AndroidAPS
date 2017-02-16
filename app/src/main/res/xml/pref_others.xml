@@ -31,14 +31,18 @@
                 android:title="@string/low_mark"
                 android:key="low_mark"
                 android:defaultValue="0"
-                android:inputType="number">
+                android:inputType="numberDecimal">
             </EditTextPreference>
             <EditTextPreference
                 android:title="@string/high_mark"
                 android:key="high_mark"
                 android:defaultValue="0"
-                android:inputType="number">
+                android:inputType="numberDecimal">
             </EditTextPreference>
         </PreferenceScreen>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="short_tabtitles"
+            android:title="@string/short_tabtitles"/>
     </PreferenceCategory>
 </PreferenceScreen>

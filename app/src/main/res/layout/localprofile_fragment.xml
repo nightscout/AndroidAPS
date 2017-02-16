@@ -16,9 +16,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/linearBlockBackground"
                 android:text="@string/units"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="@color/linearBlockBackground" />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -42,56 +42,41 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/linearBlockBackground"
                 android:text="@string/dia"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="@color/linearBlockBackground"  />
+                android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <EditText
                 android:id="@+id/localprofile_dia"
+                android:layout_width="70dp"
                 android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                android:textAlignment="center"
                 android:layout_gravity="center_horizontal"
-                android:layout_width="70dp" />
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/localprofile_ic"></LinearLayout>
-
-            <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/localprofile_isf"></LinearLayout>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/absorption_rate"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:background="@color/linearBlockBackground"  />
-
-            <EditText
-                android:id="@+id/localprofile_car"
-                android:layout_height="wrap_content"
                 android:inputType="numberDecimal"
-                android:textAlignment="center"
-                android:layout_gravity="center_horizontal"
-                android:layout_width="70dp" />
+                android:textAlignment="center" />
 
             <LinearLayout
-                android:orientation="vertical"
+                android:id="@+id/localprofile_ic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/localprofile_basal"></LinearLayout>
+                android:orientation="vertical" />
 
             <LinearLayout
+                android:id="@+id/localprofile_isf"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:id="@+id/localprofile_target">
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/localprofile_basal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
+
+            <LinearLayout
+                android:id="@+id/localprofile_target"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
             </LinearLayout>
 

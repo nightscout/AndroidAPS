@@ -39,6 +39,12 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
+    public String getNameShort() {
+        // use long name as fallback (no tabs)
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == CONSTRAINTS;
     }
@@ -97,8 +103,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         if (profile == null) return absoluteRate;
         if (absoluteRate < 0) absoluteRate = 0d;
 
-        Integer maxBasalMult = 4;
-        Integer maxBasalFromDaily = 3;
+        Integer maxBasalMult = SafeParse.stringToInt(SP.getString("openapsama_current_basal_safety_multiplier", "4"));
+        Integer maxBasalFromDaily = SafeParse.stringToInt(SP.getString("openapsama_max_daily_safety_multiplier", "3"));
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double origRate = absoluteRate;
         if (absoluteRate > maxBasal) {
@@ -136,8 +142,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
         if (absoluteRate < 0) absoluteRate = 0d;
 
-        Integer maxBasalMult = 4;
-        Integer maxBasalFromDaily = 3;
+        Integer maxBasalMult = SafeParse.stringToInt(SP.getString("openapsama_current_basal_safety_multiplier", "4"));
+        Integer maxBasalFromDaily = SafeParse.stringToInt(SP.getString("openapsama_max_daily_safety_multiplier", "3"));
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double origRate = absoluteRate;
         if (absoluteRate > maxBasal) {
@@ -185,7 +191,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     public Integer applyCarbsConstraints(Integer carbs) {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         try {
-            Integer maxCarbs = Integer.parseInt(SP.getString("treatmentssafety_maxcarbs", "48"));
+            Integer maxCarbs = SafeParse.stringToInt(SP.getString("treatmentssafety_maxcarbs", "48"));
 
             if (carbs < 0) carbs = 0;
             if (carbs > maxCarbs) carbs = maxCarbs;

@@ -48,7 +48,6 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
     RadioButton mmolView;
     EditText icView;
     EditText isfView;
-    EditText carView;
     EditText basalView;
     EditText targetlowView;
     EditText targethighView;
@@ -63,7 +62,6 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         mmolView = (RadioButton) layout.findViewById(R.id.simpleprofile_mmol);
         icView = (EditText) layout.findViewById(R.id.simpleprofile_ic);
         isfView = (EditText) layout.findViewById(R.id.simpleprofile_isf);
-        carView = (EditText) layout.findViewById(R.id.simpleprofile_car);
         basalView = (EditText) layout.findViewById(R.id.simpleprofile_basalrate);
         targetlowView = (EditText) layout.findViewById(R.id.simpleprofile_targetlow);
         targethighView = (EditText) layout.findViewById(R.id.simpleprofile_targethigh);
@@ -82,7 +80,6 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         diaView.setText(simpleProfilePlugin.dia.toString());
         icView.setText(simpleProfilePlugin.ic.toString());
         isfView.setText(simpleProfilePlugin.isf.toString());
-        carView.setText(simpleProfilePlugin.car.toString());
         basalView.setText(simpleProfilePlugin.basal.toString());
         targetlowView.setText(simpleProfilePlugin.targetLow.toString());
         targethighView.setText(simpleProfilePlugin.targetHigh.toString());
@@ -110,7 +107,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
             @Override
             public void onClick(View view) {
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false);
+                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
@@ -134,7 +131,6 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
                 simpleProfilePlugin.dia = SafeParse.stringToDouble(diaView.getText().toString());
                 simpleProfilePlugin.ic = SafeParse.stringToDouble(icView.getText().toString());
                 simpleProfilePlugin.isf = SafeParse.stringToDouble(isfView.getText().toString());
-                simpleProfilePlugin.car = SafeParse.stringToDouble(carView.getText().toString());
                 simpleProfilePlugin.basal = SafeParse.stringToDouble(basalView.getText().toString());
                 simpleProfilePlugin.targetLow = SafeParse.stringToDouble(targetlowView.getText().toString());
                 simpleProfilePlugin.targetHigh = SafeParse.stringToDouble(targethighView.getText().toString());
@@ -145,7 +141,6 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
         diaView.addTextChangedListener(textWatch);
         icView.addTextChangedListener(textWatch);
         isfView.addTextChangedListener(textWatch);
-        carView.addTextChangedListener(textWatch);
         basalView.addTextChangedListener(textWatch);
         targetlowView.addTextChangedListener(textWatch);
         targethighView.addTextChangedListener(textWatch);
@@ -175,7 +170,7 @@ public class SimpleProfileFragment extends Fragment implements FragmentBase {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
+                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
                         profileswitchButton.setVisibility(View.GONE);
                     } else {
                         profileswitchButton.setVisibility(View.VISIBLE);

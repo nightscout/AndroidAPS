@@ -10,7 +10,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -53,7 +53,7 @@ public class TempBasal {
 
 
     public IobTotal iobCalc(Date time) {
-        IobTotal result = new IobTotal();
+        IobTotal result = new IobTotal(time.getTime());
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         if (profile == null)
@@ -131,7 +131,7 @@ public class TempBasal {
 
     public int getRealDuration() {
         Long msecs = getTimeEnd().getTime() - timeStart.getTime();
-        return (int) (msecs / 60 / 1000);
+        return Math.round(msecs / 60f / 1000);
     }
 
     public long getMillisecondsFromStart() {
@@ -140,8 +140,8 @@ public class TempBasal {
 
     public int getPlannedRemainingMinutes() {
         if (timeEnd != null) return 0;
-        long remainingMin = (getPlannedTimeEnd().getTime() - new Date().getTime()) / 1000 / 60;
-        return (remainingMin < 0) ? 0 : (int) remainingMin;
+        float remainingMin = (getPlannedTimeEnd().getTime() - new Date().getTime()) / 1000f / 60;
+        return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 
     public boolean isInProgress() {

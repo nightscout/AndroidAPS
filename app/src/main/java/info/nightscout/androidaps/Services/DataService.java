@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Telephony;
-import android.support.annotation.Nullable;
 
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -29,26 +28,29 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.client.data.NSSgv;
-import info.nightscout.utils.ToastUtils;
 
 
 public class DataService extends IntentService {
@@ -251,10 +253,15 @@ public class DataService extends IntentService {
                 ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
                 ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
-                if (ConfigBuilderPlugin.nsClientVersionCode < 118)
-                    ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
+                if (ConfigBuilderPlugin.nsClientVersionCode < 121) {
+                    Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                    MainApp.bus().post(new EventNewNotification(notification));
+                } else {
+                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                }
             } else {
-                ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.unsupportedclientver));
+                Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
             }
             if (bundles.containsKey("status")) {
                 try {
@@ -378,7 +385,8 @@ public class DataService extends IntentService {
                     String trstring = bundles.getString("treatment");
                     JSONObject trJson = new JSONObject(trstring);
                     String _id = trJson.getString("_id");
-                    removeTreatmentFromDb(_id);
+                    MainApp.getDbHelper().delete(_id);
+                    handleRemoveTempTargetRecord(trJson);
                 }
 
                 if (bundles.containsKey("treatments")) {
@@ -387,7 +395,8 @@ public class DataService extends IntentService {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject trJson = jsonArray.getJSONObject(i);
                         String _id = trJson.getString("_id");
-                        removeTreatmentFromDb(_id);
+                        MainApp.getDbHelper().delete(_id);
+                        handleRemoveTempTargetRecord(trJson);
                     }
                 }
             } catch (Exception e) {
@@ -443,6 +452,7 @@ public class DataService extends IntentService {
     private void handleAddedTreatment(String trstring) throws JSONException, SQLException {
         JSONObject trJson = new JSONObject(trstring);
         handleDanaRHistoryRecords(trJson); // update record _id in history
+        handleAddChangeTempTargetRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("ADD: Uninterested treatment: " + trstring);
@@ -455,9 +465,9 @@ public class DataService extends IntentService {
         if (trJson.has("timeIndex")) {
             if (Config.logIncommingData)
                 log.debug("ADD: timeIndex found: " + trstring);
-            stored = findByTimeIndex(trJson.getLong("timeIndex"));
+            stored = MainApp.getDbHelper().findTreatmentByTimeIndex(trJson.getLong("timeIndex"));
         } else {
-            stored = findById(_id);
+            stored = MainApp.getDbHelper().findTreatmentById(_id);
         }
 
         if (stored != null) {
@@ -465,10 +475,9 @@ public class DataService extends IntentService {
                 log.debug("ADD: Existing treatment: " + trstring);
             if (trJson.has("timeIndex")) {
                 stored._id = _id;
-                int updated = MainApp.getDbHelper().getDaoTreatments().update(stored);
+                int updated = MainApp.getDbHelper().update(stored);
                 if (Config.logIncommingData)
                     log.debug("Records updated: " + updated);
-                scheduleTreatmentChange();
             }
         } else {
             if (Config.logIncommingData)
@@ -480,25 +489,29 @@ public class DataService extends IntentService {
             treatment.created_at = new Date(trJson.getLong("mills"));
             if (trJson.has("eventType")) {
                 treatment.mealBolus = true;
-                if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
-                if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0)
+                if (trJson.get("eventType").equals("Correction Bolus"))
+                    treatment.mealBolus = false;
+                double carbs = treatment.carbs;
+                if (trJson.has("boluscalc")) {
+                    JSONObject boluscalc = trJson.getJSONObject("boluscalc");
+                    if (boluscalc.has("carbs")) {
+                        carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
+                    }
+                }
+                if (carbs <= 0)
                     treatment.mealBolus = false;
             }
             treatment.setTimeIndex(treatment.getTimeIndex());
-            try {
-                MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
-                if (Config.logIncommingData)
-                    log.debug("ADD: Stored treatment: " + treatment.log());
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            scheduleTreatmentChange();
+            MainApp.getDbHelper().createOrUpdate(treatment);
+            if (Config.logIncommingData)
+                log.debug("ADD: Stored treatment: " + treatment.log());
         }
     }
 
     private void handleChangedTreatment(String trstring) throws JSONException, SQLException {
         JSONObject trJson = new JSONObject(trstring);
         handleDanaRHistoryRecords(trJson); // update record _id in history
+        handleAddChangeTempTargetRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("CHANGE: Uninterested treatment: " + trstring);
@@ -511,15 +524,15 @@ public class DataService extends IntentService {
         if (trJson.has("timeIndex")) {
             if (Config.logIncommingData)
                 log.debug("ADD: timeIndex found: " + trstring);
-            stored = findByTimeIndex(trJson.getLong("timeIndex"));
+            stored = MainApp.getDbHelper().findTreatmentByTimeIndex(trJson.getLong("timeIndex"));
         } else {
-            stored = findById(_id);
+            stored = MainApp.getDbHelper().findTreatmentById(_id);
         }
 
         if (stored != null) {
             if (Config.logIncommingData)
                 log.debug("CHANGE: Removing old: " + trstring);
-            removeTreatmentFromDb(_id);
+            MainApp.getDbHelper().delete(_id);
         }
 
         if (Config.logIncommingData)
@@ -532,21 +545,24 @@ public class DataService extends IntentService {
         treatment.created_at = new Date(trJson.getLong("mills"));
         if (trJson.has("eventType")) {
             treatment.mealBolus = true;
-            if (trJson.get("eventType").equals("Correction Bolus")) treatment.mealBolus = false;
-            if (trJson.get("eventType").equals("Bolus Wizard") && treatment.carbs <= 0)
+            if (trJson.get("eventType").equals("Correction Bolus"))
+                treatment.mealBolus = false;
+            double carbs = treatment.carbs;
+            if (trJson.has("boluscalc")) {
+                JSONObject boluscalc = trJson.getJSONObject("boluscalc");
+                if (boluscalc.has("carbs")) {
+                    carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
+                }
+            }
+            if (carbs <= 0)
                 treatment.mealBolus = false;
         }
         treatment.setTimeIndex(treatment.getTimeIndex());
-        try {
-            Dao.CreateOrUpdateStatus status = MainApp.getDbHelper().getDaoTreatments().createOrUpdate(treatment);
-            if (Config.logIncommingData)
-                log.debug("Records updated: " + status.getNumLinesChanged());
-            if (Config.logIncommingData)
-                log.debug("CHANGE: Stored treatment: " + treatment.log());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleTreatmentChange();
+        Dao.CreateOrUpdateStatus status = MainApp.getDbHelper().createOrUpdate(treatment);
+        if (Config.logIncommingData)
+            log.debug("Records updated: " + status.getNumLinesChanged());
+        if (Config.logIncommingData)
+            log.debug("CHANGE: Stored treatment: " + treatment.log());
     }
 
     public void handleDanaRHistoryRecords(JSONObject trJson) throws JSONException, SQLException {
@@ -573,63 +589,83 @@ public class DataService extends IntentService {
         }
     }
 
-    @Nullable
-    public static Treatment findById(String _id) {
-        try {
-            Dao<Treatment, Long> daoTreatments = MainApp.getDbHelper().getDaoTreatments();
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", _id);
-            queryBuilder.limit(10);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            List<Treatment> trList = daoTreatments.query(preparedQuery);
-            if (trList.size() != 1) {
-                //log.debug("Treatment findById query size: " + trList.size());
-                return null;
-            } else {
-                //log.debug("Treatment findById found: " + trList.get(0).log());
-                return trList.get(0);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
+ /*
+ {
+    "_id": "58795998aa86647ba4d68ce7",
+    "enteredBy": "",
+    "eventType": "Temporary Target",
+    "reason": "Eating Soon",
+    "targetTop": 80,
+    "targetBottom": 80,
+    "duration": 120,
+    "created_at": "2017-01-13T22:50:00.782Z",
+    "carbs": null,
+    "insulin": null
+}
+  */
 
-    @Nullable
-    public static Treatment findByTimeIndex(Long timeIndex) {
-        try {
-            QueryBuilder<Treatment, String> qb = null;
-            Dao<Treatment, Long> daoTreatments = MainApp.getDbHelper().getDaoTreatments();
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("timeIndex", timeIndex);
-            queryBuilder.limit(10);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            List<Treatment> trList = daoTreatments.query(preparedQuery);
-            if (trList.size() != 1) {
-                log.debug("Treatment findByTimeIndex query size: " + trList.size());
-                return null;
-            } else {
-                log.debug("Treatment findByTimeIndex found: " + trList.get(0).log());
-                return trList.get(0);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    private void removeTreatmentFromDb(String _id) throws SQLException {
-        Treatment stored = findById(_id);
-        if (stored != null) {
-            log.debug("REMOVE: Existing treatment (removing): " + _id);
-            int removed = MainApp.getDbHelper().getDaoTreatments().delete(stored);
+    public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals("Temporary Target")) {
             if (Config.logIncommingData)
-                log.debug("Records removed: " + removed);
-            scheduleTreatmentChange();
-        } else {
-            log.debug("REMOVE: Not stored treatment (ignoring): " + _id);
+                log.debug("Processing TempTarget record: " + trJson.toString());
+            Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
+            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", trJson.getString("_id")).or().eq("timeIndex", trJson.getLong("mills"));
+            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+            List<TempTarget> list = daoTempTargets.query(preparedQuery);
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            if (profile == null) return; // no profile data, better ignore than do something wrong
+            String units = profile.getUnits();
+            if (list.size() == 0) {
+                // Record does not exists. add
+                TempTarget newRecord = new TempTarget();
+                newRecord.timeStart = new Date(trJson.getLong("mills"));
+                newRecord.duration = trJson.getInt("duration");
+                newRecord.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
+                newRecord.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
+                newRecord.reason = trJson.getString("reason");
+                newRecord._id = trJson.getString("_id");
+                newRecord.setTimeIndex(newRecord.getTimeIndex());
+                daoTempTargets.createIfNotExists(newRecord);
+                if (Config.logIncommingData)
+                    log.debug("Adding TempTarget record to database: " + newRecord.log());
+                MainApp.bus().post(new EventTempTargetRangeChange());
+            } else if (list.size() == 1) {
+                if (Config.logIncommingData)
+                    log.debug("Updating TempTarget record in database: " + trJson.getString("_id"));
+                TempTarget record = list.get(0);
+                record.timeStart = new Date(trJson.getLong("mills"));
+                record.duration = trJson.getInt("duration");
+                record.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
+                record.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
+                record.reason = trJson.getString("reason");
+                record._id = trJson.getString("_id");
+                daoTempTargets.update(record);
+                MainApp.bus().post(new EventTempTargetRangeChange());
+            }
+        }
+    }
+
+    public void handleRemoveTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.has("_id")) {
+            Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
+            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", trJson.getString("_id"));
+            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+            List<TempTarget> list = daoTempTargets.query(preparedQuery);
+
+            if (list.size() == 1) {
+                TempTarget record = list.get(0);
+                if (Config.logIncommingData)
+                    log.debug("Removing TempTarget record from database: " + record.log());
+                daoTempTargets.delete(record);
+                MainApp.bus().post(new EventTempTargetRangeChange());
+            } else {
+                if (Config.logIncommingData)
+                    log.debug("TempTarget not found database: " + trJson.toString());
+            }
         }
     }
 
@@ -638,10 +674,5 @@ public class DataService extends IntentService {
         if (bundle == null) return;
         MainApp.bus().post(new EventNewSMS(bundle));
     }
-
-    public void scheduleTreatmentChange() {
-        MainApp.bus().post(new EventTreatmentChange());
-    }
-
 
 }

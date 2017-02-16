@@ -94,14 +94,15 @@
                         android:id="@+id/careportal_newnstreatment_meter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:checked="true"
+                        android:checked="false"
                         android:text="@string/careportal_newnstreatment_meter" />
 
                     <RadioButton
                         android:id="@+id/careportal_newnstreatment_sensor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/careportal_newnstreatment_sensor" />
+                        android:text="@string/careportal_newnstreatment_sensor"
+                        android:checked="true" />
 
                     <RadioButton
                         android:id="@+id/careportal_newnstreatment_other"
@@ -557,6 +558,71 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/careportal_newnstreatment_temptarget_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:width="100dp"
+                        android:padding="10dp"
+                        android:text="@string/reason"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <Spinner
+                        android:id="@+id/careportal_newnstreatment_temptarget_reason"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:width="100dp"
+                        android:padding="10dp"
+                        android:text="@string/target_range"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:width="70dp"
+                        android:ems="10"
+                        android:id="@+id/careportal_temptarget_low" />
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:width="70dp"
+                        android:ems="10"
+                        android:id="@+id/careportal_temptarget_high" />
+
+
+
+                </LinearLayout>
 
             </LinearLayout>
 

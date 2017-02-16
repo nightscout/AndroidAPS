@@ -36,9 +36,9 @@
     <string name="careportal_newnstreatment_carbs_label">Kohlehydrate</string>
     <string name="careportal_newnstreatment_duration_min">min</string>
     <string name="careportal_newnstreatment_insulin_label">Insulin</string>
-    <string name="careportal_newnstreatment_glucosetype">Glukose Art</string>
-    <string name="careportal_newnstreatment_eventtype">Ereigniss Typ</string>
-    <string name="careportal_newnstreatment_eventtime_label">Ereigniss Zeit</string>
+    <string name="careportal_newnstreatment_glucosetype">Glukose-Art</string>
+    <string name="careportal_newnstreatment_eventtype">Ereignis-Typ</string>
+    <string name="careportal_newnstreatment_eventtime_label">Ereignis-Zeit</string>
     <string name="careportal_newnstreatment_percent_label">Prozent</string>
     <string name="careportal_note">Notiz</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
@@ -94,7 +94,7 @@
     <string name="treatments_wizard_basaliob_label">Basal IOB</string>
     <string name="treatments_wizard_unit_label">U</string>
     <string name="up">Up</string>
-    <string name="virtualpump">Vituelle Pumpe</string>
+    <string name="virtualpump">Virtuelle Pumpe</string>
     <string name="virtualpump_reservoir_label">Reservoir:</string>
     <string name="xdrip">xDrip</string>
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
@@ -120,7 +120,7 @@
     <string name="setextendedbolusquestion">Setze neuen extended Bolus:</string>
     <string name="setbasalquestion">Akzeptiere neue temp Basalrate:</string>
     <string name="danar_useextended_title">Benutze extended Bolus für hohe temps (\>200%)></string>
-    <string name="refreshfromnightscout">Möchtest du die Treatments von Nightscout abrufen</string>
+    <string name="refreshtreatmentsfromnightscout">Möchtest du die Treatments von Nightscout abrufen</string>
     <string name="objectives_pumpstatusavailableinns">Pumpen Status verfügbar in NS</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="overview_newtempbasal_basal_label">Basal Wert</string>
@@ -142,7 +142,7 @@
     <string name="objectives_gate_label_string">Gate:</string>
     <string name="objectives_objective_label_string">Objective:</string>
     <string name="objectives">Zielsetzungen</string>
-    <string name="nsprofileview_noprofile_text">KEIN PROFIL GESETZT</string>
+    <string name="noprofileset">KEIN PROFIL GESETZT</string>
     <string name="nsclientnotinstalled">NSClient nicht installiert. Record lost!</string>
     <string name="ns_sync_use_absolute_title">Verwende absolute statt prozentuelle Basalwerte beim Upload zu NightScout</string>
     <string name="noprofile">Bisher noch kein Profil von NS geladen</string>
@@ -221,8 +221,7 @@
     <string name="danar_viewprofile">Profil anzeigen</string>
     <string name="danarprofile">DanaR Profil Einstellungen</string>
     <string name="danarprofile_dia">DIA [h]</string>
-    <string name="danarprofile_car">Kohlehydrahte Absorptionsrate</string>
-    <string name="glucosetype_manual">Manuell</string>
+    <string name="manual">Manuell</string>
     <string name="danar_dailyunits">Einheiten (Tag)</string>
     <string name="danar_invalidinput">ungültige Eingabe</string>
     <string name="danar_valuenotsetproperly">Wert nicht korrekt gesetzt</string>
@@ -235,7 +234,7 @@
     <string name="hoursago">vor h </string>
     <string name="smscommunicator">SMS Kommunikator</string>
     <string name="smscommunicator_allowednumbers">erlaubte Telefonnummern</string>
-    <string name="syncprofiletopump_title">Nightscout Profil zur Pumpe synchronisieren</string>
+    <string name="syncprofiletopump_title">Profil zur Pumpe synchronisieren</string>
     <string name="waitingforpumpresult">auf Pumpenergebnis warten</string>
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="smscommunicator_remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
@@ -243,7 +242,7 @@
     <string name="ko_lang">Korean</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="wrongpumppassword">Falsches Pumpen-Passwort!</string>
-    <string name="waitingforpump">Warte auf Pumpe</string>
+    <string name="waitingforpumpclicktorefresh">Warte auf Pumpe. Click to refresh.</string>
     <string name="correctionbous">Korr</string>
     <string name="bolusdelivering">Abgabe %.2fU</string>
     <string name="bolusdelivered">%.2fU Bolus erfolgreich abgegeben</string>
@@ -309,7 +308,30 @@
     <string name="button1">Knopf 1</string>
     <string name="button2">Knopf 2</string>
     <string name="button3">Knopf 3</string>
-    <string name="absorption_rate">Absorptionsrate:</string>
     <string name="configbuilder">Config Builder</string>
     <string name="minago">vor %d min</string>
+    <string name="actions_shortname">"AKT"</string>
+    <string name="wear_shortname">"WEAR"</string>
+    <string name="virtualpump_shortname">"VP"</string>
+    <string name="treatments_shortname">"TREAT"</string>
+    <string name="temptargetrange_shortname">"TT"</string>
+    <string name="tempbasals_shortname">"TB"</string>
+    <string name="smscommunicator_shortname">"SMS"</string>
+    <string name="simpleprofile_shortname">"SP"</string>
+    <string name="profileviewer_shortname">"PROF"</string>
+    <string name="overview_shortname">"HOME"</string>
+    <string name="objectives_shortname">"OBJ"</string>
+    <string name="oaps_shortname">"OAPS"</string>
+    <string name="loop_shortname">"LOOP"</string>
+    <string name="localprofile_shortname">"LP"</string>
+    <string name="danarpump_shortname">"DANA"</string>
+    <string name="configbuilder_shortname">"CONF"</string>
+    <string name="circadian_percentage_profile_shortname">"CPP"</string>
+    <string name="careportal_shortname">"CP"</string>
+    <string name="error_only_numeric_digits_allowed">Bitte verwenden Sie nur Ziffern.</string>
+    <string name="error_field_must_not_be_empty">Pflichtfeld</string>
+    <string name="error_phone_not_valid">Telefonnummer ist nicht gültig.</string>
+    <string name="error_only_numeric_digits_range_allowed">Bitte verwenden Sie nur Ziffern von %1$s - %2$s</string>
+    <string name="waitingforpump">Warte auf Pumpe</string>
+    <string name="wear"></string>
 </resources>

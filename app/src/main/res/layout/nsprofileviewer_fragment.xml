@@ -17,7 +17,7 @@
                 android:id="@+id/profileview_noprofile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/nsprofileview_noprofile_text"
+                android:text="@string/noprofileset"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/holo_red_light"
                 android:textStyle="bold"

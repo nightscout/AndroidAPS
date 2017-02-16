@@ -26,7 +26,7 @@
     <string name="nsprofileview_isf_label">인슐린 민감도(ISF):</string>
     <string name="nsprofileview_basal_label">기초주입:</string>
     <string name="nsprofileview_target_label">목표:</string>
-    <string name="nsprofileview_noprofile_text">NO PROFILE SET</string>
+    <string name="noprofileset">NO PROFILE SET</string>
     <string name="treatments_insulin_label_string">인슐린:</string>
     <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="treatments_iob_label_string">IOB:</string>
@@ -104,7 +104,7 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">최근 주입</string>
-    <string name="refreshfromnightscout">나이트스카우트에서 Treatments를 새로고치시겠습니까</string>
+    <string name="refreshtreatmentsfromnightscout">나이트스카우트에서 Treatments를 새로고치시겠습니까</string>
     <string name="ok">OK</string>
     <string name="cancel">취소</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -211,7 +211,7 @@
     <string name="connecting">연결중</string>
     <string name="connected">연결됨</string>
     <string name="disconnected">연결 끊김</string>
-    <string name="syncprofiletopump_title">NS 프로파일을 펌프에 동기화하기</string>
+    <string name="syncprofiletopump_title">프로파일을 펌프에 동기화하기</string>
     <string name="danar_pump_settings">다나R 펌프 설정</string>
     <string name="nightscout">Nightscout</string>
     <string name="end_user_license_agreement">End User License Agreement</string>
@@ -248,12 +248,11 @@
     <string name="smscommunicator_remotebolusnotallowed">원격 식사주입 허용되지 않음</string>
     <string name="glucosetype_finger">Finger</string>
     <string name="glucosetype_sensor">Sensor</string>
-    <string name="glucosetype_manual">Manual</string>
+    <string name="manual">Manual</string>
     <string name="careportal_temporarytarget">Temporary Target</string>
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
     <string name="danarprofile">DanaR 프로파일 설정</string>
     <string name="danarprofile_dia">인슐린활동시간(DIA) [h]</string>
-    <string name="danarprofile_car">탄수화물 흡수속도 [g/hour]</string>
     <string name="failedupdatebasalprofile">기초주입 프로파일 갱신 실패</string>
     <string name="danar_history">History</string>
     <string name="danar_historyreload">Reload</string>
@@ -287,7 +286,7 @@
     <string name="occlusion">막힘</string>
     <string name="overview_bolusprogress_stop">정지</string>
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
-    <string name="waitingforpump">펌프를 기다리고 있습니다.</string>
+    <string name="waitingforpumpclicktorefresh">펌프를 기다리고 있습니다. Click to refresh.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU을 주입합니다</string>
     <string name="objectives_0_objective">나이트스카우트를 세팅하고, 기초주입과 비율을 분석한다.</string>
     <string name="objectives_0_gate">나이트스카우트에서 혈당 데이터가 잘 들어오는지, 펌프데이터가 업로드 되는지 확인한다.</string>
@@ -350,7 +349,6 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="dia">DIA:</string>
-    <string name="absorption_rate">Absorption rate:</string>
     <string name="target_range">Target range:</string>
     <string name="edit_base_basal">Edit Base-Basal:</string>
     <string name="edit_base_isf">Edit Base-ISF:</string>
@@ -382,4 +380,27 @@
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
     <string name="mdi">MDI</string>
+    <string name="actions_shortname">" "</string>
+    <string name="wear_shortname">" "</string>
+    <string name="virtualpump_shortname">" "</string>
+    <string name="treatments_shortname">" "</string>
+    <string name="temptargetrange_shortname">" "</string>
+    <string name="tempbasals_shortname">" "</string>
+    <string name="smscommunicator_shortname">" "</string>
+    <string name="simpleprofile_shortname">" "</string>
+    <string name="profileviewer_shortname">" "</string>
+    <string name="overview_shortname">" "</string>
+    <string name="objectives_shortname">" "</string>
+    <string name="oaps_shortname">" "</string>
+    <string name="loop_shortname">" "</string>
+    <string name="localprofile_shortname">" "</string>
+    <string name="danarpump_shortname">" "</string>
+    <string name="configbuilder_shortname">" "</string>
+    <string name="circadian_percentage_profile_shortname">" "</string>
+    <string name="careportal_shortname">" "</string>
+    <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
+    <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
+    <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
+    <string name="error_phone_not_valid">유효한 도메인 이름이 아닙니다.</string>
+    <string name="waitingforpump">펌프를 기다리고 있습니다</string>
 </resources>

@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.TempBasals;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,10 +23,10 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -82,13 +83,13 @@ public class TempBasalsFragment extends Fragment implements FragmentBase {
             holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
             holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
             if (tempBasal.isInProgress())
-                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorInProgress));
+                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
             else if (tempBasal.timeEnd == null)
-                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorNotEnded));
+                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorNotEnded));
             else if (tempBasal.iobCalc(new Date()).basaliob != 0)
-                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.colorAffectingIOB));
+                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorAffectingIOB));
             else
-                holder.dateLinearLayout.setBackgroundColor(MainApp.instance().getResources().getColor(R.color.cardColorBackground));
+                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.cardColorBackground));
         }
 
         @Override

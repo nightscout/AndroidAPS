@@ -21,41 +21,79 @@
             </android.support.v7.widget.RecyclerView>
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:orientation="horizontal"
                 android:paddingTop="2dp">
 
                 <TextView
                     android:id="@+id/overview_apsmode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:background="@drawable/loopmodeborder"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Open Loop"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:layout_weight="0.1" />
+
 
                 <TextView
                     android:id="@+id/overview_activeprofile"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="0.5"
                     android:background="@drawable/pillborder"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:text="Profile"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="@color/colorProfileSwitchButton" />
+
+                <TextView
+                    android:id="@+id/overview_temptarget"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/temptargetborder"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="TempTarget"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textColor="@color/mdtp_white"
+                    android:layout_weight="0.2" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingTop="2dp">
+
+                <TextView
+                    android:id="@+id/overview_initializing"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/initializingborder"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/initializing"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_marginTop="10dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
 
                 <TextView
                     android:id="@+id/overview_bg"
@@ -72,13 +110,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="top|left"
+                    android:layout_marginTop="-15dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="-5dp"
                     android:paddingRight="-10dp"
                     android:text="→"
                     android:textSize="70dp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="-15dp" />
+                    android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -108,7 +146,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
                 </LinearLayout>
@@ -116,9 +154,9 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/overview_basallayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/overview_basallayout"
                 android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
@@ -150,10 +188,22 @@
                 android:layout_gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/overview_bggraph"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="160dip" />
+                android:layout_height="match_parent">
+
+                <com.jjoe64.graphview.GraphView
+                    android:id="@+id/overview_bggraph"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dip" />
+
+                <CheckBox
+                    android:id="@+id/overview_showprediction"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/overview_accepttemplayout"
@@ -167,8 +217,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="0.5"
                     android:text="Accept new temp\n0.25U/h"
@@ -187,8 +237,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="0.5"
                     android:text="Cancel temp basal"
@@ -207,8 +257,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="0.5"
                     android:text="@string/overview_bolus_label"
@@ -220,16 +270,28 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="0.5"
                     android:text="@string/overview_calculator_label"
                     android:textColor="@color/colorWizardButton" />
+
+                <Button
+                    android:id="@+id/overview_calibration"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="3dp"
+                    android:layout_weight="0.5"
+                    android:text="@string/overview_calibration"
+                    android:textColor="@color/colorCalibrationButton" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/overview_quickwizardlayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -240,8 +302,8 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="3dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:layout_marginTop="3dp"
                     android:layout_weight="0.5"
                     android:drawableLeft="@drawable/bread"

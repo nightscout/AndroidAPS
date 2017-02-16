@@ -11,13 +11,15 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 
+
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.BluetoothDevicePreference;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
 import info.nightscout.utils.LocaleHelper;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -40,6 +42,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             recreate();
             MainApp.bus().post(new EventRefreshGui(true));
         }
+        if (key.equals("short_tabtitles")) {
+            MainApp.bus().post(new EventRefreshGui(true));
+        }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
 
@@ -50,10 +55,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getTitle().toString().toLowerCase().contains("password"))
-            {
+            if (pref.getKey().contains("password")) {
                 pref.setSummary("******");
-            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")){
+            } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
+                ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
             }
         }
@@ -78,6 +83,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pref_password);
             addPreferencesFromResource(R.xml.pref_quickwizard);
             addPreferencesFromResource(R.xml.pref_language);
             if (Config.CAREPORTALENABLED)
@@ -85,20 +91,29 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             addPreferencesFromResource(R.xml.pref_treatments);
             if (Config.APS)
                 addPreferencesFromResource(R.xml.pref_closedmode);
-            if (Config.OPENAPSMAENABLED)
+            if (Config.OPENAPSENABLED)
                 addPreferencesFromResource(R.xml.pref_openapsma);
-            addPreferencesFromResource(R.xml.pref_nightscout);
+            if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
+                addPreferencesFromResource(R.xml.pref_openapsama);
+            addPreferencesFromResource(R.xml.pref_profile);
             if (Config.DANAR) {
                 DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
                 DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
                 if (danaRPlugin.isEnabled(PluginBase.PUMP) || danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danar);
+                }
+                if (danaRPlugin.isEnabled(PluginBase.PROFILE) || danaRKoreanPlugin.isEnabled(PluginBase.PROFILE)) {
                     addPreferencesFromResource(R.xml.pref_danarprofile);
                 }
+            }
+            VirtualPumpPlugin virtualPumpPlugin = (VirtualPumpPlugin) MainApp.getSpecificPlugin(VirtualPumpPlugin.class);
+            if (virtualPumpPlugin != null && virtualPumpPlugin.isEnabled(PluginBase.PUMP)) {
+                 addPreferencesFromResource(R.xml.pref_virtualpump);
             }
             if (Config.SMSCOMMUNICATORENABLED)
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
             addPreferencesFromResource(R.xml.pref_others);
+            addPreferencesFromResource(R.xml.pref_advanced);
             initSummary(getPreferenceScreen());
         }
 

@@ -50,6 +50,17 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
+    public String getNameShort() {
+        String name = MainApp.sResources.getString(R.string.objectives_shortname);
+        if (!name.trim().isEmpty()){
+            //only if translation exists
+            return name;
+        }
+        // use long name as fallback
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == CONSTRAINTS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
@@ -177,7 +188,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 MainApp.sResources.getString(R.string.objectives_6_objective),
                 "",
                 new Date(0),
-                1,
+                14,
                 new Date(0)));
     }
 

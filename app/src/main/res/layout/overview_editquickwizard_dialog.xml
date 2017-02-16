@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context="info.nightscout.androidaps.plugins.Overview.Dialogs.EditQuickWizardDialog">
 
-    <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"

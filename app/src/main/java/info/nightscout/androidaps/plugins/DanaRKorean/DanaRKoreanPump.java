@@ -36,7 +36,7 @@ public class DanaRKoreanPump {
     public String serialNumber = "";
     public Date shippingDate = new Date(0);
     public String shippingCountry = "";
-    public boolean isNewPump = false;
+    public boolean isNewPump = true;
     public int password = -1;
     public Date pumpTime = new Date(0);
 
@@ -117,7 +117,6 @@ public class DanaRKoreanPump {
 
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         double dia = SafeParse.stringToDouble(SP.getString("danarprofile_dia", "3"));
-        double car = SafeParse.stringToDouble(SP.getString("danarprofile_car", "20"));
 
         try {
             json.put("defaultProfile", PROFILE_PREFIX + (activeProfile + 1));
@@ -131,8 +130,6 @@ public class DanaRKoreanPump {
             carbratios.put(new JSONObject().put("time", "14:00").put("timeAsSeconds", 17 * 3600).put("value", eveningCIR));
             carbratios.put(new JSONObject().put("time", "22:00").put("timeAsSeconds", 22 * 3600).put("value", nightCIR));
             profile.put("carbratio", carbratios);
-
-            profile.put("carbs_hr", car);
 
             JSONArray sens = new JSONArray();
             sens.put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", nightCF));

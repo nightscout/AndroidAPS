@@ -82,6 +82,17 @@ public class LoopPlugin implements PluginBase {
     }
 
     @Override
+    public String getNameShort() {
+        String name = MainApp.sResources.getString(R.string.loop_shortname);
+        if (!name.trim().isEmpty()){
+            //only if translation exists
+            return name;
+        }
+        // use long name as fallback
+        return getName();
+    }
+
+    @Override
     public boolean isEnabled(int type) {
         return type == LOOP && fragmentEnabled && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable;
     }
@@ -108,15 +119,15 @@ public class LoopPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        invoke(true);
+        invoke("EventTreatmentChange", true);
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        invoke(true);
+        invoke("EventNewBG", true);
     }
 
-    public void invoke(boolean allowNotification) {
+    public void invoke(String initiator, boolean allowNotification) {
         try {
             if (Config.logFunctionCalls)
                 log.debug("invoke");
@@ -136,7 +147,7 @@ public class LoopPlugin implements PluginBase {
 
             APSInterface usedAPS = configBuilder.getActiveAPS();
             if (usedAPS != null && ((PluginBase) usedAPS).isEnabled(PluginBase.APS)) {
-                usedAPS.invoke();
+                usedAPS.invoke(initiator);
                 result = usedAPS.getLastAPSResult();
             }
 
@@ -217,7 +228,7 @@ public class LoopPlugin implements PluginBase {
             }
 
             MainApp.bus().post(new EventLoopUpdateGui());
-            MainApp.getConfigBuilder().uploadDeviceStatus();
+            MainApp.getConfigBuilder().uploadDeviceStatus(120);
         } finally {
             if (Config.logFunctionCalls)
                 log.debug("invoke end");

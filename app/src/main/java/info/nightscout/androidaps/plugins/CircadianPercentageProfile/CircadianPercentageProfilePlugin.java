@@ -15,7 +15,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
@@ -27,8 +26,6 @@ import info.nightscout.utils.ToastUtils;
  */
 public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInterface {
     public static final String SETTINGS_PREFIX = "CircadianPercentageProfile";
-    public static final int MIN_PERCENTAGE = 50;
-    public static final int MAX_PERCENTAGE = 200;
     private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
 
     private static boolean fragmentEnabled = true;
@@ -39,11 +36,10 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     boolean mgdl;
     boolean mmol;
     Double dia;
-    Double car;
     Double targetLow;
     Double targetHigh;
-    int percentage;
-    int timeshift;
+    public int percentage;
+    public int timeshift;
     double[] basebasal = new double[]{1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d, 1d};
     double[] baseisf = new double[]{35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d, 35d};
     double[] baseic = new double[]{4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d, 4d};
@@ -65,6 +61,17 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     @Override
     public String getName() {
         return MainApp.instance().getString(R.string.circadian_percentage_profile);
+    }
+
+    @Override
+    public String getNameShort() {
+        String name = MainApp.sResources.getString(R.string.circadian_percentage_profile_shortname);
+        if (!name.trim().isEmpty()){
+            //only if translation exists
+            return name;
+        }
+        // use long name as fallback
+        return getName();
     }
 
     @Override
@@ -100,7 +107,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         editor.putBoolean(SETTINGS_PREFIX + "mmol", mmol);
         editor.putBoolean(SETTINGS_PREFIX + "mgdl", mgdl);
         editor.putString(SETTINGS_PREFIX + "dia", dia.toString());
-        editor.putString(SETTINGS_PREFIX + "car", car.toString());
         editor.putString(SETTINGS_PREFIX + "targetlow", targetLow.toString());
         editor.putString(SETTINGS_PREFIX + "targethigh", targetHigh.toString());
         editor.putString(SETTINGS_PREFIX + "timeshift", timeshift + "");
@@ -142,13 +148,6 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
                 log.debug(e.getMessage());
             }
         else dia = 3d;
-        if (settings.contains(SETTINGS_PREFIX + "car"))
-            try {
-                car = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "car", "20"));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else car = 20d;
         if (settings.contains(SETTINGS_PREFIX + "targetlow"))
             try {
                 targetLow = SafeParse.stringToDouble(settings.getString(SETTINGS_PREFIX + "targetlow", "80"));
@@ -228,9 +227,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             }
             profile.put("carbratio", icArray);
 
-            profile.put("carbs_hr", car);
-
-            JSONArray isfArray = new JSONArray();
+             JSONArray isfArray = new JSONArray();
             for (int i = 0; i < 24; i++) {
                 isfArray.put(new JSONObject().put("timeAsSeconds", i * 60 * 60).put("value", baseisf[(offset + i) % 24] * 100d / percentage));
             }
@@ -262,13 +259,13 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     }
 
     private void performLimitCheck() {
-        if (percentage < MIN_PERCENTAGE || percentage > MAX_PERCENTAGE){
+        if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE){
             String msg = String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage");
             log.error(msg);
             MainApp.getConfigBuilder().uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
-            percentage = Math.max(percentage, MIN_PERCENTAGE);
-            percentage = Math.min(percentage, MAX_PERCENTAGE);
+            percentage = Math.max(percentage, Constants.CPP_MIN_PERCENTAGE);
+            percentage = Math.min(percentage, Constants.CPP_MAX_PERCENTAGE);
         }
     }
 

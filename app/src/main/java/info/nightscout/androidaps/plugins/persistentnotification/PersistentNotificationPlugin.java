@@ -15,8 +15,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -27,8 +27,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.OpenAPSMA.IobTotal;
-import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -60,6 +59,12 @@ public class PersistentNotificationPlugin implements PluginBase{
     @Override
     public String getName() {
         return ctx.getString(R.string.ongoingnotificaction);
+    }
+
+    @Override
+    public String getNameShort() {
+        // use long name as fallback (not visible in tabs)
+        return getName();
     }
 
     @Override
@@ -99,22 +104,23 @@ public class PersistentNotificationPlugin implements PluginBase{
 
 
         String line1 = ctx.getString(R.string.noprofile);
+        if (MainApp.getConfigBuilder().getActiveProfile() == null) return;
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
 
-        BgReading lastBG = MainApp.getDbHelper().lastBg();
-        DatabaseHelper.GlucoseStatus glucoseStatus = MainApp.getDbHelper().getGlucoseStatusData();
+        BgReading lastBG = GlucoseStatus.lastBg();
+        GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if(profile != null && lastBG != null) {
             line1 = lastBG.valueToUnitsToString(profile.getUnits());
-        }
-        if (glucoseStatus != null) {
-            line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
-            + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
-        } else {
-             line1 += " " +
-                     ctx.getString(R.string.old_data) +
-                     " ";
+            if (glucoseStatus != null) {
+                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
+                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
+            } else {
+                line1 += " " +
+                        ctx.getString(R.string.old_data) +
+                        " ";
+            }
         }
 
         PumpInterface pump = MainApp.getConfigBuilder();
@@ -127,10 +133,8 @@ public class PersistentNotificationPlugin implements PluginBase{
         //IOB
         MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
         IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-        if (bolusIob == null) bolusIob = new IobTotal();
         MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
         IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-        if (basalIob == null) basalIob = new IobTotal();
         String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + ctx.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + ctx.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";

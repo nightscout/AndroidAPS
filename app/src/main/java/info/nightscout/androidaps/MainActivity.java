@@ -1,15 +1,16 @@
 package info.nightscout.androidaps;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
@@ -29,12 +34,12 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
-import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
+import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.PasswordProtection;
 
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
@@ -121,8 +126,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.nav_preferences:
-                Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
-                startActivity(i);
+                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", new Runnable() {
+                    @Override
+                    public void run() {
+                        Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
+                        startActivity(i);
+                    }
+                }, null);
                 break;
             case R.id.nav_resetdb:
                 new AlertDialog.Builder(this)
@@ -144,6 +154,9 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_import:
                 ImportExportPrefs.verifyStoragePermissions(this);
                 ImportExportPrefs.importSharedPreferences(this);
+                break;
+            case R.id.nav_show_logcat:
+                LogDialog.showLogcat(this);
                 break;
 //            case R.id.nav_test_alarm:
 //                final int REQUEST_CODE_ASK_PERMISSIONS = 2355;
@@ -257,5 +270,22 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            View v = getCurrentFocus();
+            if ( v instanceof EditText) {
+                Rect outRect = new Rect();
+                v.getGlobalVisibleRect(outRect);
+                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                    v.clearFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                }
+            }
+        }
+        return super.dispatchTouchEvent(event);
     }
 }
