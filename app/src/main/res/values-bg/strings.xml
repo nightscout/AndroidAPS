@@ -128,7 +128,7 @@
     <string name="safety">Безопасност</string>
     <string name="setextendedbolusquestion">Задай нов удължен болусs:</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
-    <string name="simpleprofile">Simple profile</string>
+    <string name="simpleprofile">Обикновен профил</string>
     <string name="tempbasals">Временен базал</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
@@ -290,7 +290,7 @@
     <string name="objectives_4_objective">Настройване на Closed Loop, повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
     <string name="objectives_5_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
     <string name="objectives_5_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
-    <string name="uploading">Uploading</string>
+    <string name="uploading">Качване</string>
     <string name="bolusdelivering" formatted="false">Подава  %.2fU</string>
     <string name="es_lang">Spanish</string>
     <string name="noprofileselected">Не е избран профил</string>
@@ -374,22 +374,22 @@
     <string name="wear">Wear</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
     <string name="minago" formatted="false">преди %d м.</string>
-    <string name="actions_shortname">"Д-я"</string>
+    <string name="actions_shortname">"ДЕЙСТВ"</string>
     <string name="wear_shortname">"Wear"</string>
-    <string name="virtualpump_shortname">"ВП "</string>
-    <string name="treatments_shortname">"ТТ "</string>
+    <string name="virtualpump_shortname">"ВП"</string>
+    <string name="treatments_shortname">"ТТ"</string>
     <string name="temptargetrange_shortname">"ВЦeл"</string>
-    <string name="tempbasals_shortname">"ВБ "</string>
-    <string name="smscommunicator_shortname">"СМС "</string>
-    <string name="simpleprofile_shortname">"ОПр "</string>
-    <string name="profileviewer_shortname">"Пр "</string>
-    <string name="overview_shortname">"HOME"</string>
-    <string name="objectives_shortname">"ЦЕЛИ "</string>
-    <string name="oaps_shortname">"oAPS"</string>
+    <string name="tempbasals_shortname">"ВБ"</string>
+    <string name="smscommunicator_shortname">"СМС"</string>
+    <string name="simpleprofile_shortname">"ОПРОФ"</string>
+    <string name="profileviewer_shortname">"ПРОф"</string>
+    <string name="overview_shortname">"ОСН"</string>
+    <string name="objectives_shortname">\"ЦЕЛИ"</string>
+    <string name="oaps_shortname">"OAPS"</string>
     <string name="loop_shortname">"Loop "</string>
     <string name="localprofile_shortname">"ЛПр "</string>
     <string name="danarpump_shortname">"Dana"</string>
-    <string name="configbuilder_shortname">"КОНФ. "</string>
+    <string name="configbuilder_shortname">"КОНФ"</string>
     <string name="circadian_percentage_profile_shortname">"ППр "</string>
     <string name="careportal_shortname">"CaPr"</string>
     <string name="activity">Физ.активност</string>
@@ -397,7 +397,7 @@
     <string name="danar_stats_basalrate">Базал</string>
     <string name="danar_stats_bolus">Болус</string>
     <string name="danar_stats_date">Дата</string>
-    <string name="danar_stats_olddata_Message">Стари данни! Натиснете \"Презареждане\"</string>
+    <string name="danar_stats_olddata_Message">Стари данни! Натиснете "Презареждане"</string>
     <string name="danar_stats_ratio">Коефициент</string>
     <string name="danar_stats_tbb">Общо базален инс.</string>
     <string name="danar_stats_tbb2">Общо базален инс.²</string>
@@ -435,4 +435,43 @@
     <string name="sms_iob">IOB:</string>
     <string name="sms_minago" formatted="false">%dmin ago</string>
     <string name="waitingforpump">Изчаква за помпа</string>
+    <string name="always_use_shortavg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
+    <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум</string>
+    <string name="approachingdailylimit">Приближава достигане на дневният лимит на иснулин</string>
+    <string name="bolusrequested" formatted="false">Стартира подаване на %.2fU</string>
+    <string name="calibrationsent">Изпратена калибрация до xDrip</string>
+    <string name="copied_to_clipboard">Копирано в клипборд</string>
+    <string name="copy_to_clipboard">Копирай в клипборд</string>
+    <string name="danarprofile_dia_summary">Продължителност на инсулиновата активност</string>
+    <string name="disconnecting">Прекъсване</string>
+    <string name="dont_show_again">Не показвай отново</string>
+    <string name="error_field_must_not_be_empty">Полето не може  да бъде празно</string>
+    <string name="error_only_numeric_digits_allowed">Позволени са само числа</string>
+    <string name="error_only_numeric_digits_range_allowed" formatted="false">Позволени са числа между %1$s - %2$s</string>
+    <string name="error_phone_not_valid">Телефонният номер не е валиден</string>
+    <string name="executing">Изпълнение</string>
+    <string name="gettingpumpstatus">Получава статус на помпа</string>
+    <string name="nav_show_logcat">Покажи лог</string>
+    <string name="openapsma_maxbasal_title">Максимално позволен временен базал Е/ч</string>
+    <string name="openapsma_maxiob_title">Максимален базален IOB</string>
+    <string name="overview_calibration">Калибрация</string>
+    <string name="pumpsuspended">Помпата е спряна</string>
+    <string name="xdripnotinstalled">xDrip+ не е инсталиран</string>
+    <string name="wrongpassword">Грешна парола</string>
+    <string name="virtualpump_uploadstatus_title">Изпраща статус в NS</string>
+    <string name="virtualpump_settings">Настройки на виртуална помпа</string>
+    <string name="updatingbasalrates">Качва базални стойности</string>
+    <string name="virtualpump_firmware_label">Firmware:</string>
+    <string name="unlock_settings">Отключи настройки</string>
+    <string name="stoppingextendedbolus">Спиране на удължен болус</string>
+    <string name="stoppingtempbasal">Спиране на временен базал</string>
+    <string name="smscommunicator_remotecalibrationnotallowed">Не е разрешена отдалечена калибрация</string>
+    <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
+    <string name="send_calibration" formatted="false">Изпращане на калибрация %.1f към xDrip?</string>
+    <string name="settingextendedbolus">Настройки на удължен болус</string>
+    <string name="settings_password">Парола за настройки</string>
+    <string name="settingtempbasal">Настройки на временен базал</string>
+    <string name="pumpsuspendedclicktorefresh">Помпата е спряна. Натиснете за обновяване</string>
+    <string name="prefs_delta_title">Настройки на параметър Δ КЗ</string>
+    <string name="overview_calibration_bg_label">Калибрация на КЗ</string>
 </resources>
