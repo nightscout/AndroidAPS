@@ -529,4 +529,7 @@
     <string name="queue">Queue:</string>
     <string name="status">Status:</string>
     <string name="paused">Paused</string>
+    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
+    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
+    <string name="key_nsclientinternal_hours" translatable="false">nsclientinternal_hours</string>
 </resources>

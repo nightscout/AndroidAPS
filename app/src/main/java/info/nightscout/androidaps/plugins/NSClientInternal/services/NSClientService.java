@@ -29,6 +29,7 @@ import java.util.Map;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
@@ -252,10 +253,10 @@ public class NSClientService extends Service {
     public void readPreferences() {
         SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         nsEnabled = MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL);
-        nsURL = SP.getString("nsclientinternal_url", "");
-        nsAPISecret = SP.getString("nsclientinternal_api_secret", "");
-        nsHours = SafeParse.stringToInt(SP.getString("nsclientinternal_hours", "3"));
-        nsDevice = SP.getString("nsclientinternal_devicename", "");
+        nsURL = SP.getString(MainApp.sResources.getString(R.string.key_nsclientinternal_url), "");
+        nsAPISecret = SP.getString(MainApp.sResources.getString(R.string.key_nsclientinternal_api_secret), "");
+        nsHours = SafeParse.stringToInt(SP.getString(MainApp.sResources.getString(R.string.key_nsclientinternal_hours), "3"));
+        nsDevice = SP.getString("careportal_enteredby", "");
     }
 
     private Emitter.Listener onPing = new Emitter.Listener() {
