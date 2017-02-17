@@ -18,6 +18,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.BluetoothDevicePreference;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
 import info.nightscout.utils.LocaleHelper;
@@ -109,6 +110,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             VirtualPumpPlugin virtualPumpPlugin = (VirtualPumpPlugin) MainApp.getSpecificPlugin(VirtualPumpPlugin.class);
             if (virtualPumpPlugin != null && virtualPumpPlugin.isEnabled(PluginBase.PUMP)) {
                  addPreferencesFromResource(R.xml.pref_virtualpump);
+            }
+            NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+            if (nsClientInternalPlugin != null && nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
+                 addPreferencesFromResource(R.xml.pref_nsclientinternal);
             }
             if (Config.SMSCOMMUNICATORENABLED)
                 addPreferencesFromResource(R.xml.pref_smscommunicator);

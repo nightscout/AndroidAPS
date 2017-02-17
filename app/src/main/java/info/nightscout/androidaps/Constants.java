@@ -52,4 +52,7 @@ public class Constants {
 
     //DanaR
     public static final double dailyLimitWarning = 0.95d;
+
+    //NSClientInternal
+    public static final int MAX_LOG_LINES = 100;
 }

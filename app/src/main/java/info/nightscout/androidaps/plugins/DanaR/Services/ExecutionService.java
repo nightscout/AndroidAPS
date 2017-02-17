@@ -34,7 +34,6 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.DanaR.SerialIOThread;
@@ -82,7 +81,7 @@ import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatu
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 

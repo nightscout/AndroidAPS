@@ -11,11 +11,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
 

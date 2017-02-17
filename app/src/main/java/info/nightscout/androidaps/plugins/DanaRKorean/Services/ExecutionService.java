@@ -77,7 +77,7 @@ import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusBolusExtende
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 

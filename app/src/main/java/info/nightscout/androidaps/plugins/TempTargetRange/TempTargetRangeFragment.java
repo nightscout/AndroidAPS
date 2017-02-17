@@ -34,7 +34,7 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;

@@ -11,11 +11,13 @@ public interface Intents {
     String ACTION_NEW_MBG = "info.nightscout.client.NEW_MBG";
     String ACTION_NEW_CAL = "info.nightscout.client.NEW_CAL";
     String ACTION_NEW_STATUS = "info.nightscout.client.NEW_STATUS";
+    String ACTION_QUEUE_STATUS = "info.nightscout.client.QUEUE_STATUS";
 
 
     // App -> NSClient
     String ACTION_DATABASE = "info.nightscout.client.DBACCESS";
     String ACTION_RESTART = "info.nightscout.client.RESTART";
+    String ACTION_RESEND = "info.nightscout.client.RESEND";
 
     // xDrip -> App
     String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE";

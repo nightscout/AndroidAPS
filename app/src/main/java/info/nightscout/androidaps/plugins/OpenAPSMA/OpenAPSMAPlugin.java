@@ -28,12 +28,11 @@ import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
 
 import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.checkOnlyHardLimits;
 import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.verifyHardLimits;

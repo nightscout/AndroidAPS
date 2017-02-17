@@ -18,14 +18,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);

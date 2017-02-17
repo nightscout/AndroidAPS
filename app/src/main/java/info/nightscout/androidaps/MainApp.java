@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanFragment;
 import info.nightscout.androidaps.plugins.LocalProfile.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.MDI.MDIFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
 import info.nightscout.androidaps.plugins.NSProfile.NSProfileFragment;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
@@ -103,6 +104,7 @@ public class MainApp extends Application {
 
             if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
+            pluginsList.add(NSClientInternalFragment.getPlugin());
 
             pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
 

@@ -8,8 +8,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 
 /**
  * Created by mike on 04.06.2016.

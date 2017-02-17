@@ -507,4 +507,26 @@
     <string name="settings_password">Password for settings</string>
     <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
+    <string name="nsclientinternal">NSClient internal</string>
+    <string name="nsclientinternal_shortname">NSCI</string>
+    <string name="nsclientinternal_url">URL:</string>
+    <string name="nsclientinternal_autoscroll">Autoscroll</string>
+    <string name="restart">Restart</string>
+    <string name="nsclientinternal_title">Internal NSClient</string>
+    <string name="nsclientinternal_url_title">Nightscout URL</string>
+    <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
+    <string name="nsclientinternal_hours">Hours to fetch</string>
+    <string name="nsclientinternal_hours_message">Enter hours to fetch from NS (max 48)</string>
+    <string name="nsclientinternal_secret_title">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogmessage">Enter NS API secret (min 12 chars)</string>
+    <string name="nsclientinternal_devicename_title">Device name</string>
+    <string name="nsclientinternal_devicename_dialogtitle">Enter device name</string>
+    <string name="nsclientinternal_devicename_dialogmessage">It will be used for enteredBy field</string>
+    <string name="deliver_now">Deliver now</string>
+    <string name="clear_queue">Clear queue</string>
+    <string name="show_queue">Show queue</string>
+    <string name="queue">Queue:</string>
+    <string name="status">Status:</string>
+    <string name="paused">Paused</string>
 </resources>
