@@ -5,6 +5,8 @@ import android.app.Activity;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
@@ -60,8 +63,10 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
 
         logScrollview = (ScrollView) view.findViewById(R.id.nsclientinternal_logscrollview);
         autoscrollCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_autoscroll);
+        autoscrollCheckbox.setChecked(getPlugin().autoscroll);
         autoscrollCheckbox.setOnCheckedChangeListener(this);
         pausedCheckbox = (CheckBox) view.findViewById(R.id.nsclientinternal_paused);
+        pausedCheckbox.setChecked(getPlugin().paused);
         pausedCheckbox.setOnCheckedChangeListener(this);
         logTextView = (TextView) view.findViewById(R.id.nsclientinternal_log);
         queueTextView = (TextView) view.findViewById(R.id.nsclientinternal_queue);
@@ -113,13 +118,14 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.nsclientinternal_paused:
-                SP.putBoolean("nsclientinternal_paused", isChecked);
+                SP.putBoolean(R.string.key_nsclientinternal_paused, isChecked);
                 getPlugin().paused = isChecked;
-                // TODO
+                MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
                 updateGUI();
                 break;
             case R.id.nsclientinternal_autoscroll:
-                SP.putBoolean("nsclientinternal_autoscroll", isChecked);
+                SP.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);
+                getPlugin().autoscroll = isChecked;
                 updateGUI();
                 break;
         }
@@ -153,8 +159,9 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
                     if (getPlugin().autoscroll) {
                         logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                     }
-                    urlTextView.setText(getPlugin().url);
-                    queueTextView.setText(((Integer)getPlugin().queue().size()).toString());
+                    urlTextView.setText(getPlugin().url());
+                    Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + getPlugin().queue().size() + "</b>");
+                    queueTextView.setText(queuetext);
                     statusTextView.setText(getPlugin().status);
                 }
             });

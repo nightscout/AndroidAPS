@@ -5,6 +5,8 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 import io.socket.client.Ack;
 
@@ -38,7 +40,7 @@ public class NSAddAck implements Ack {
                     synchronized(this) {
                         this.notify();
                     }
-                    NSClientService.forcerestart = true;
+                    MainApp.bus().post(new EventNSClientRestart());
                     return;
                 }
                 log.debug("DBACCESS " + response.getString("result"));

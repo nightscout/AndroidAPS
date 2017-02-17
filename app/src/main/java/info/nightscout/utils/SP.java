@@ -69,4 +69,10 @@ public class SP {
         editor.putBoolean(key, value);
         editor.apply();
     }
+
+    static public void putBoolean(int resourceID, boolean value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(MainApp.sResources.getString(resourceID), value);
+        editor.apply();
+    }
 }

@@ -537,4 +537,6 @@
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
     <string name="clearlog">Clear log</string>
+    <string name="key_nsclientinternal_autoscroll">nsclientinternal_autoscroll</string>
+    <string name="key_nsclientinternal_paused">nsclientinternal_paused</string>
 </resources>

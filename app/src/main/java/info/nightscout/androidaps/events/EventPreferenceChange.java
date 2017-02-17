@@ -11,6 +11,10 @@ public class EventPreferenceChange {
         changedKey = key;
     }
 
+    public EventPreferenceChange(int resourceID) {
+        changedKey = MainApp.sResources.getString(resourceID);
+    }
+
     public boolean isChanged(int id) {
         return changedKey.equals(MainApp.sResources.getString(id));
     }

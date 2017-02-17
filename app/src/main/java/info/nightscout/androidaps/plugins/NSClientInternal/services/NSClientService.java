@@ -66,7 +66,6 @@ public class NSClientService extends Service {
     private static Logger log = LoggerFactory.getLogger(ExecutionService.class);
 
     static public PowerManager.WakeLock mWakeLock;
-    public static boolean forcerestart = false;
     private IBinder mBinder = new NSClientService.LocalBinder();
 
     static NSProfile nsProfile;
@@ -83,7 +82,7 @@ public class NSClientService extends Service {
     public static Integer nightscoutVersionCode = 0;
 
     private boolean nsEnabled = false;
-    private String nsURL = "";
+    static public String nsURL = "";
     private String nsAPISecret = "";
     private String nsDevice = "";
     private Integer nsHours = 3;
@@ -151,7 +150,8 @@ public class NSClientService extends Service {
     public void onStatusEvent(EventPreferenceChange ev) {
         if (ev.isChanged(R.string.key_nsclientinternal_url) ||
                 ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
-                ev.isChanged(R.string.key_nsclientinternal_hours)
+                ev.isChanged(R.string.key_nsclientinternal_hours) ||
+                ev.isChanged(R.string.key_nsclientinternal_paused)
                 ) {
             destroy();
             initialize();
@@ -185,7 +185,10 @@ public class NSClientService extends Service {
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         MainApp.bus().post(new EventNSClientStatus("Initializing"));
-        if (!nsEnabled) {
+        if (((NSClientInternalPlugin)MainApp.getSpecificPlugin(NSClientInternalPlugin.class)).paused) {
+            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "paused"));
+            MainApp.bus().post(new EventNSClientStatus("Paused"));
+        } else if (!nsEnabled) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "disabled"));
             MainApp.bus().post(new EventNSClientStatus("Disabled"));
         } else if (!nsURL.equals("")) {

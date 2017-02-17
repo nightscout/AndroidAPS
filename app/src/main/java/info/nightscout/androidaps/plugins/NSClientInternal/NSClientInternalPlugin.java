@@ -52,7 +52,6 @@ public class NSClientInternalPlugin implements PluginBase {
 
     public boolean paused = false;
     public boolean autoscroll = true;
-    public String url = "";
 
     public String status = "";
 
@@ -60,9 +59,8 @@ public class NSClientInternalPlugin implements PluginBase {
 
     public NSClientInternalPlugin() {
         MainApp.bus().register(this);
-        paused = SP.getBoolean("nsclientinternal_paused", false);
-        autoscroll = SP.getBoolean("nsclientinternal_autoscroll", true);
-        url = SP.getString("nsclientinternal_url", "");
+        paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
+        autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
 
         if (handler == null) {
             handlerThread = new HandlerThread(NSClientInternalPlugin.class.getSimpleName() + "Handler");
@@ -211,5 +209,9 @@ public class NSClientInternalPlugin implements PluginBase {
 
     public UploadQueue queue() {
         return NSClientService.uploadQueue;
+    }
+
+    public String url() {
+        return NSClientService.nsURL;
     }
 }
