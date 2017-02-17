@@ -24,7 +24,6 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.DanaR.Dialogs.ProfileViewDialog;
@@ -192,11 +191,6 @@ public class DanaRFragment extends Fragment implements FragmentBase {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange s) {
-        updateGUI();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange s) {
         updateGUI();
     }
 

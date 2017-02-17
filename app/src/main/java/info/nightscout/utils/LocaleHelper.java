@@ -40,8 +40,7 @@ public class LocaleHelper {
     }
 
     private static String getPersistedData(Context context, String defaultLanguage) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return preferences.getString(SELECTED_LANGUAGE, defaultLanguage);
+        return SP.getString(SELECTED_LANGUAGE, defaultLanguage);
     }
 
     private static void persist(Context context, String language) {

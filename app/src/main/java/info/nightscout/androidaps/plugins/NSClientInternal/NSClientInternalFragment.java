@@ -2,10 +2,8 @@ package info.nightscout.androidaps.plugins.NSClientInternal;
 
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +23,8 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
-import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
+import info.nightscout.utils.SP;
 
 public class NSClientInternalFragment extends Fragment implements FragmentBase, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalFragment.class);
@@ -106,19 +104,15 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        SharedPreferences.Editor editor = SP.edit();
         switch (buttonView.getId()) {
             case R.id.nsclientinternal_paused:
-                editor.putBoolean("nsclientinternal_paused", isChecked);
-                editor.apply();
+                SP.putBoolean("nsclientinternal_paused", isChecked);
                 getPlugin().paused = isChecked;
                 // TODO
                 updateGUI();
                 break;
             case R.id.nsclientinternal_autoscroll:
-                editor.putBoolean("nsclientinternal_autoscroll", isChecked);
-                editor.apply();
+                SP.putBoolean("nsclientinternal_autoscroll", isChecked);
                 updateGUI();
                 break;
         }

@@ -31,6 +31,8 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
@@ -54,6 +56,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -142,6 +145,25 @@ public class NSClientService extends Service {
         stopSelf();
         if (Config.logFunctionCalls)
             log.debug("EventAppExit finished");
+    }
+
+    @Subscribe
+    public void onStatusEvent(EventPreferenceChange ev) {
+        if (ev.isChanged(R.string.key_nsclientinternal_url) ||
+                ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
+                ev.isChanged(R.string.key_nsclientinternal_hours)
+                ) {
+            destroy();
+            initialize();
+        }
+    }
+
+    @Subscribe
+    public void onStatusEvent(EventConfigBuilderChange ev) {
+        if (nsEnabled != MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL)) {
+            destroy();
+            initialize();
+        }
     }
 
     public static void setNsProfile(NSProfile profile) {
@@ -251,11 +273,10 @@ public class NSClientService extends Service {
     }
 
     public void readPreferences() {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         nsEnabled = MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL);
-        nsURL = SP.getString(MainApp.sResources.getString(R.string.key_nsclientinternal_url), "");
-        nsAPISecret = SP.getString(MainApp.sResources.getString(R.string.key_nsclientinternal_api_secret), "");
-        nsHours = SafeParse.stringToInt(SP.getString(MainApp.sResources.getString(R.string.key_nsclientinternal_hours), "3"));
+        nsURL = SP.getString(R.string.key_nsclientinternal_url, "");
+        nsAPISecret = SP.getString(R.string.key_nsclientinternal_api_secret, "");
+        nsHours = SP.getInt(R.string.key_nsclientinternal_hours, 3);
         nsDevice = SP.getString("careportal_enteredby", "");
     }
 

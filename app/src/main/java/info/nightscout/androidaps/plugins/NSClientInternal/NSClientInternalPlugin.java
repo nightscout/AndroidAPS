@@ -36,6 +36,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientR
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
+import info.nightscout.utils.SP;
 
 public class NSClientInternalPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalPlugin.class);
@@ -59,7 +60,6 @@ public class NSClientInternalPlugin implements PluginBase {
 
     public NSClientInternalPlugin() {
         MainApp.bus().register(this);
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         paused = SP.getBoolean("nsclientinternal_paused", false);
         autoscroll = SP.getBoolean("nsclientinternal_autoscroll", true);
         url = SP.getString("nsclientinternal_url", "");

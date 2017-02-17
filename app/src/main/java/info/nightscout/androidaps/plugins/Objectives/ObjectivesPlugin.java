@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 /**
@@ -211,20 +212,19 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
     }
 
     void loadProgress() {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         for (int num = 0; num < objectives.size(); num++) {
             Objective o = objectives.get(num);
             try {
-                o.started = new Date(SafeParse.stringToLong(settings.getString("Objectives" + num + "started", "0")));
-                o.accomplished = new Date(SafeParse.stringToLong(settings.getString("Objectives" + num + "accomplished", "0")));
+                o.started = new Date(SP.getLong("Objectives" + num + "started", 0L));
+                o.accomplished = new Date(SP.getLong("Objectives" + num + "accomplished", 0L));
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        bgIsAvailableInNS = settings.getBoolean("Objectives" + "bgIsAvailableInNS", false);
-        pumpStatusIsAvailableInNS = settings.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
+        bgIsAvailableInNS = SP.getBoolean("Objectives" + "bgIsAvailableInNS", false);
+        pumpStatusIsAvailableInNS = SP.getBoolean("Objectives" + "pumpStatusIsAvailableInNS", false);
         try {
-            manualEnacts = SafeParse.stringToInt(settings.getString("Objectives" + "manualEnacts", "0"));
+            manualEnacts = SP.getInt("Objectives" + "manualEnacts", 0);
         } catch (Exception e) {
             e.printStackTrace();
         }

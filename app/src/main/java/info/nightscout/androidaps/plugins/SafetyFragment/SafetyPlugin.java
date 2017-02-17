@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.SafetyFragment;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +12,7 @@ import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.Round;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -78,7 +75,6 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
      **/
     @Override
     public boolean isClosedModeEnabled() {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String mode = SP.getString("aps_mode", "open");
         return mode.equals("closed") && BuildConfig.CLOSEDLOOP;
     }
@@ -96,15 +92,14 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         Double origAbsoluteRate = absoluteRate;
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
+        Double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null) return absoluteRate;
         if (absoluteRate < 0) absoluteRate = 0d;
 
-        Integer maxBasalMult = SafeParse.stringToInt(SP.getString("openapsama_max_basal_safety_multiplier", "4"));
-        Integer maxBasalFromDaily = SafeParse.stringToInt(SP.getString("openapsama_max_daily_safety_multiplier", "3"));
+        Integer maxBasalMult = SP.getInt("openapsama_max_basal_safety_multiplier", 4);
+        Integer maxBasalFromDaily = SP.getInt("openapsama_max_daily_safety_multiplier", 3);
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double origRate = absoluteRate;
         if (absoluteRate > maxBasal) {
@@ -128,8 +123,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     @Override
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        Double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
+        Double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null) return percentRate;
@@ -142,8 +136,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
         if (absoluteRate < 0) absoluteRate = 0d;
 
-        Integer maxBasalMult = SafeParse.stringToInt(SP.getString("openapsama_max_basal_safety_multiplier", "4"));
-        Integer maxBasalFromDaily = SafeParse.stringToInt(SP.getString("openapsama_max_daily_safety_multiplier", "3"));
+        Integer maxBasalMult = SP.getInt("openapsama_max_basal_safety_multiplier", 4);
+        Integer maxBasalFromDaily = SP.getInt("openapsama_max_daily_safety_multiplier", 3);
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double origRate = absoluteRate;
         if (absoluteRate > maxBasal) {
@@ -174,9 +168,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public Double applyBolusConstraints(Double insulin) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         try {
-            Double maxBolus = SafeParse.stringToDouble(SP.getString("treatmentssafety_maxbolus", "3"));
+            Double maxBolus = SP.getDouble("treatmentssafety_maxbolus", 3d);
 
             if (insulin < 0) insulin = 0d;
             if (insulin > maxBolus) insulin = maxBolus;
@@ -189,9 +182,8 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public Integer applyCarbsConstraints(Integer carbs) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         try {
-            Integer maxCarbs = SafeParse.stringToInt(SP.getString("treatmentssafety_maxcarbs", "48"));
+            Integer maxCarbs = SP.getInt("treatmentssafety_maxcarbs", 48);
 
             if (carbs < 0) carbs = 0;
             if (carbs > maxCarbs) carbs = maxCarbs;

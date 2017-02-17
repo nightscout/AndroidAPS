@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.NSClientInternal;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
@@ -13,13 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;
-import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSUpdateAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastQueueStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbRequest;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 21.02.2016.
@@ -120,9 +117,8 @@ public class UploadQueue {
 
     private void loadMap() {
         queue = new HashMap<String, DbRequest>();
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         try {
-            String jsonString = sp.getString(KEY, (new JSONObject()).toString());
+            String jsonString = SP.getString(KEY, (new JSONObject()).toString());
             JSONObject jsonObject = new JSONObject(jsonString);
             Iterator<String> keysItr = jsonObject.keys();
             while (keysItr.hasNext()) {

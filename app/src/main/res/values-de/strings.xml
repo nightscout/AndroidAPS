@@ -259,7 +259,7 @@
     <string name="danar_history_glucose">Glukose</string>
     <string name="danar_history_refill">Füllmenge</string>
     <string name="danar_history_syspend">Unterbrechungen</string>
-    <string name="danar_password">Pumpen-Passwort</string>
+    <string name="danar_password_title">Pumpen-Passwort</string>
     <string name="mealbolus">Essensbolus</string>
     <string name="noprofileselected">Kein Profil gewählt</string>
     <string name="overview_bolusprogress_stop">Stop</string>

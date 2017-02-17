@@ -8,11 +8,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 
 import com.squareup.otto.Subscribe;
 
@@ -75,16 +73,15 @@ import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgSettingShippingInf
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusBasic;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.DanaRKorean.comm.MsgStatusTempBasal;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 public class ExecutionService extends Service {
     private static Logger log = LoggerFactory.getLogger(ExecutionService.class);
 
-    private SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
     private String devName;
 
     private SerialIOThread mSerialIOThread;
@@ -183,7 +180,7 @@ public class ExecutionService extends Service {
     }
 
     public void connect(String from) {
-        if (danaRKoreanPump.password != -1 && danaRKoreanPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
+        if (danaRKoreanPump.password != -1 && danaRKoreanPump.password != SP.getInt(R.string.key_danar_password, -1)) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
             return;
         }
@@ -242,7 +239,7 @@ public class ExecutionService extends Service {
     }
 
     private void getBTSocketForSelectedPump() {
-        devName = SP.getString("danar_bt_name", "");
+        devName = SP.getString(MainApp.sResources.getString(R.string.key_danar_bt_name), "");
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter != null) {

@@ -82,13 +82,13 @@ import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class ExecutionService extends Service {
     private static Logger log = LoggerFactory.getLogger(ExecutionService.class);
 
-    private SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
     private String devName;
 
     private SerialIOThread mSerialIOThread;
@@ -187,7 +187,7 @@ public class ExecutionService extends Service {
     }
 
     public void connect(String from) {
-        if (danaRPump.password != -1 && danaRPump.password != SafeParse.stringToInt(SP.getString("danar_password", "-1"))) {
+        if (danaRPump.password != -1 && danaRPump.password != SP.getInt(R.string.key_danar_password, -1)) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
             return;
         }
@@ -246,7 +246,7 @@ public class ExecutionService extends Service {
     }
 
     private void getBTSocketForSelectedPump() {
-        devName = SP.getString("danar_bt_name", "");
+        devName = SP.getString(MainApp.sResources.getString(R.string.key_danar_bt_name), "");
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
         if (bluetoothAdapter != null) {

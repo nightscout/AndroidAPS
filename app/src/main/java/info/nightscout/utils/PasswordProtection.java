@@ -3,8 +3,6 @@ package info.nightscout.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -19,7 +17,6 @@ import info.nightscout.androidaps.R;
 
 public class PasswordProtection {
     static public boolean isLocked(String preference) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         final String password = SP.getString(preference, "");
         if (password.equals("")) {
             return false;
@@ -28,7 +25,6 @@ public class PasswordProtection {
     }
 
     static public void QueryPassword(final Context context, int stringID, String preference, final Runnable ok, final Runnable fail) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         final String password = SP.getString(preference, "");
         if (password.equals("")) {
             if (ok != null) ok.run();

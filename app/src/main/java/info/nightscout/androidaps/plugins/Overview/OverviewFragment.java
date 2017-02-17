@@ -92,6 +92,7 @@ import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 
@@ -99,7 +100,6 @@ public class OverviewFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
-    private SharedPreferences prefs;
 
     public static OverviewPlugin getPlugin() {
         return overviewPlugin;
@@ -151,7 +151,6 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
         bgView = (TextView) view.findViewById(R.id.overview_bg);
@@ -185,12 +184,13 @@ public class OverviewFragment extends Fragment {
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
 
-        showPredictionView.setChecked(prefs.getBoolean("showprediction", false));
+        showPredictionView.setChecked(SP.getBoolean("showprediction", false));
 
         showPredictionView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = prefs.edit();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("showprediction", showPredictionView.isChecked());
                 editor.apply();
                 updateGUI();
@@ -623,15 +623,15 @@ public class OverviewFragment extends Fragment {
                 tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
             } else {
 
-                String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-                String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+                Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+                Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
                 if (!profile.getUnits().equals(Constants.MGDL)) {
                     maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
                     minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
                 }
                 tempTargetView.setTextColor(Color.WHITE);
                 tempTargetView.setBackgroundResource(R.drawable.temptargetborderdisabled);
-                tempTargetView.setText(prefs.getString("openapsma_min_bg", minBgDefault) + " - " + prefs.getString("openapsma_max_bg", maxBgDefault));
+                tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
                 tempTargetView.setVisibility(View.VISIBLE);
             }
         } else {
@@ -799,8 +799,8 @@ public class OverviewFragment extends Fragment {
             endTime = toTime;
         }
 
-        Double lowLine = SafeParse.stringToDouble(prefs.getString("low_mark", "0"));
-        Double highLine = SafeParse.stringToDouble(prefs.getString("high_mark", "0"));
+        Double lowLine = SP.getDouble("low_mark", 0d);
+        Double highLine = SP.getDouble("high_mark", 0d);
 
         if (lowLine < 1) {
             lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);

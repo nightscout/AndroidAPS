@@ -36,7 +36,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        MainApp.bus().post(new EventPreferenceChange());
+        MainApp.bus().post(new EventPreferenceChange(key));
         if (key.equals("language")) {
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);

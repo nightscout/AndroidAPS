@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
@@ -197,6 +198,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                         onEnabledCategoryChanged(plugin, type);
                         configBuilderPlugin.storeSettings();
                         MainApp.bus().post(new EventRefreshGui(true));
+                        MainApp.bus().post(new EventConfigBuilderChange());
                         getPlugin().logPluginStatus();
                     }
                 });

@@ -22,6 +22,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -30,13 +31,13 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.XdripCalibrations;
 
@@ -159,8 +160,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
     @Subscribe
     public void processSettings(final EventPreferenceChange ev) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        String settings = sharedPreferences.getString("smscommunicator_allowednumbers", "");
+        String settings = SP.getString("smscommunicator_allowednumbers", "");
 
         String pattern = ";";
 
@@ -191,8 +191,6 @@ public class SmsCommunicatorPlugin implements PluginBase {
     }
 
     private void processSms(Sms receivedSms) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-
         if (!isEnabled(PluginBase.GENERAL)) {
             log.debug("Ignoring SMS. Plugin disabled.");
             return;
@@ -319,7 +317,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     break;
                 case "BASAL":
                     if (splited.length > 1) {
-                        boolean remoteCommandsAllowed = sharedPreferences.getBoolean("smscommunicator_remotecommandsallowed", false);
+                        boolean remoteCommandsAllowed = SP.getBoolean("smscommunicator_remotecommandsallowed", false);
                         if (splited[1].toUpperCase().equals("CANCEL") || splited[1].toUpperCase().equals("STOP")) {
                             if (remoteCommandsAllowed) {
                                 passCode = generatePasscode();
@@ -355,7 +353,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     } else if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
                         amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
-                        boolean remoteCommandsAllowed = sharedPreferences.getBoolean("smscommunicator_remotecommandsallowed", false);
+                        boolean remoteCommandsAllowed = SP.getBoolean("smscommunicator_remotecommandsallowed", false);
                         if (amount > 0d && remoteCommandsAllowed) {
                             passCode = generatePasscode();
                             reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusreplywithcode), amount, passCode);
@@ -372,7 +370,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                 case "CAL":
                     if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
-                        boolean remoteCommandsAllowed = sharedPreferences.getBoolean("smscommunicator_remotecommandsallowed", false);
+                        boolean remoteCommandsAllowed = SP.getBoolean("smscommunicator_remotecommandsallowed", false);
                         if (amount > 0d && remoteCommandsAllowed) {
                             passCode = generatePasscode();
                             reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_calibrationreplywithcode), amount, passCode);

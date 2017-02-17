@@ -28,6 +28,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.PlusMinusEditText;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 public class FillDialog extends DialogFragment implements OnClickListener {
@@ -72,10 +73,9 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         Button button3 = (Button) view.findViewById(R.id.fill_preset_button3);
         View divider = view.findViewById(R.id.fill_preset_divider);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        amount1 = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button1", "0.3"))));
-        amount2 = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button2", "0"))));
-        amount3 = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button3", "0"))));
+        amount1 = SP.getDouble("fill_button1", 0.3);
+        amount2 = SP.getDouble("fill_button2", 0d);
+        amount3 = SP.getDouble("fill_button3", 0d);
 
         if(amount1 >0) {
             button1.setVisibility(View.VISIBLE);

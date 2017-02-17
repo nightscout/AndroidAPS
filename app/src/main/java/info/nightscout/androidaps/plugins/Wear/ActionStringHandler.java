@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.Wear;
 
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 
 import com.j256.ormlite.dao.Dao;
@@ -25,12 +23,13 @@ import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
@@ -45,9 +44,6 @@ public class ActionStringHandler {
     private static long lastSentTimestamp = 0;
     private static String lastConfirmActionString = null;
     private static BolusWizard lastBolusWizard = null;
-
-    private static SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-
 
     private static HandlerThread handlerThread = new HandlerThread(FillDialog.class.getSimpleName());
     static {
@@ -73,11 +69,11 @@ public class ActionStringHandler {
             ///////////////////////////////////// PRIME/FILL
             double amount = 0d;
             if ("1".equals(act[1])) {
-                amount = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button1", "0.3"))));
+                amount = SP.getDouble("fill_button1", 0.3);
             } else if ("2".equals(act[1])) {
-                amount = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button2", "0"))));
+                amount = SP.getDouble("fill_button2", 0d);
             } else if ("3".equals(act[1])) {
-                amount = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button3", "0"))));
+                amount = SP.getDouble("fill_button3", 0d);
             } else {
                 return;
             }
@@ -295,17 +291,17 @@ public class ActionStringHandler {
         }
 
         //Default Range/Target
-        String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-        String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-        String targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
+        Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+        Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+        Double targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
         if (!profile.getUnits().equals(Constants.MGDL)) {
             maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
             minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
             targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
         }
         ret += "DEFAULT RANGE: ";
-        ret += sp.getString("openapsma_min_bg", minBgDefault) + " - " + sp.getString("openapsma_max_bg", maxBgDefault);
-        ret += " target: " + sp.getString("openapsma_target_bg", targetBgDefault);
+        ret += SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault);
+        ret += " target: " + SP.getDouble("openapsma_target_bg", targetBgDefault);
         return ret;
     }
 
