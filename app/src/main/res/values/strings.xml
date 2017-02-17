@@ -539,4 +539,5 @@
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll">nsclientinternal_autoscroll</string>
     <string name="key_nsclientinternal_paused">nsclientinternal_paused</string>
+    <string name="nowritepermission">NSCLIENT has no write permission</string>
 </resources>

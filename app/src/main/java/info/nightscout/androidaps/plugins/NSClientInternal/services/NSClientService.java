@@ -56,6 +56,9 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import io.socket.client.IO;
@@ -75,6 +78,7 @@ public class NSClientService extends Service {
 
     public static Socket mSocket;
     public static boolean isConnected = false;
+    public static boolean hasWriteAuth = false;
     private static Integer dataCounter = 0;
 
 
@@ -234,6 +238,7 @@ public class NSClientService extends Service {
         if (mSocket != null) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "destroy"));
             isConnected = false;
+            hasWriteAuth = false;
             mSocket.disconnect();
             mSocket = null;
         }
@@ -264,6 +269,7 @@ public class NSClientService extends Service {
         if (ack.write_treatment) connectionStatus += "T";
         connectionStatus += ')';
         isConnected = true;
+        hasWriteAuth = ack.write && ack.write_treatment;
         MainApp.bus().post(new EventNSClientStatus(connectionStatus));
         MainApp.bus().post(new EventNSClientNewLog("AUTH", connectionStatus));
         if (!ack.write) {
@@ -271,6 +277,12 @@ public class NSClientService extends Service {
         }
         if (!ack.write_treatment) {
             MainApp.bus().post(new EventNSClientNewLog("ERROR", "Write treatment permission not granted !!!!"));
+        }
+        if (!hasWriteAuth) {
+            Notification noperm = new Notification(Notification.NSCLIENT_NO_WRITE_PERMISSION, MainApp.sResources.getString(R.string.nowritepermission), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(noperm));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
         }
         lastReception = new Date();
     }
@@ -491,7 +503,7 @@ public class NSClientService extends Service {
 
     public void dbUpdate(DbRequest dbr, NSUpdateAck ack) {
         try {
-            if (!isConnected) return;
+            if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
@@ -505,7 +517,7 @@ public class NSClientService extends Service {
 
     public void dbUpdateUnset(DbRequest dbr, NSUpdateAck ack) {
         try {
-            if (!isConnected) return;
+            if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
@@ -519,7 +531,7 @@ public class NSClientService extends Service {
 
     public void dbRemove(DbRequest dbr, NSUpdateAck ack) {
         try {
-            if (!isConnected) return;
+            if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
@@ -542,7 +554,7 @@ public class NSClientService extends Service {
 
     public void dbAdd(DbRequest dbr, NSAddAck ack) {
         try {
-            if (!isConnected) return;
+            if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("data", dbr.data);
@@ -564,7 +576,7 @@ public class NSClientService extends Service {
     }
 
     public void doPing() {
-        if (!isConnected) return;
+        if (!isConnected || !hasWriteAuth) return;
         MainApp.bus().post(new EventNSClientNewLog("PING", "Sending"));
         uploading = true;
         JSONObject message = new JSONObject();
@@ -612,7 +624,7 @@ public class NSClientService extends Service {
         if (UploadQueue.queue.size() == 0)
             return;
 
-        if (!isConnected) return;
+        if (!isConnected || !hasWriteAuth) return;
 
         MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 

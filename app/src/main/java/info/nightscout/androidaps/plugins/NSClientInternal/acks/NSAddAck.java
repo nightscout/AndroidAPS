@@ -41,7 +41,7 @@ public class NSAddAck implements Ack {
             JSONObject response = (JSONObject) (args[0]);
             if (response.has("result")) {
                 _id = null;
-                if (response.getString("result").equals("Not authorized")) {
+                if (response.getString("result").contains("Not")) {
                     MainApp.bus().post(new EventNSClientRestart());
                     return;
                 }
