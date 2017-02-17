@@ -98,6 +98,15 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/nsclientinternal_clearlog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/clearlog"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_orange_light" />
+
+            <TextView
                 android:id="@+id/nsclientinternal_restart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

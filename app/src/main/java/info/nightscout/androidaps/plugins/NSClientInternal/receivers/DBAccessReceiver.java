@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbRequest;
@@ -27,6 +28,10 @@ public class DBAccessReceiver extends BroadcastReceiver {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
                 "sendQueue");
+        NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+        if (!nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
+            return;
+        }
         wakeLock.acquire();
         try {
             Bundle bundles = intent.getExtras();
@@ -46,10 +51,10 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 return;
             }
 
-            // mark by id
             if (action.equals("dbRemove")) {
                 data = new JSONObject();
             }
+            // mark by id
             try {
                 data.put("NSCLIENT_ID", (new Date()).getTime());
             } catch (JSONException e) {

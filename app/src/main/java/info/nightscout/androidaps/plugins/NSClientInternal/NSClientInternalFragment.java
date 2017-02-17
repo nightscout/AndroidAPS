@@ -42,6 +42,7 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
     private TextView queueTextView;
     private TextView urlTextView;
     private TextView statusTextView;
+    private TextView clearlog;
     private TextView restart;
     private TextView delivernow;
     private TextView clearqueue;
@@ -67,6 +68,9 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
         urlTextView = (TextView) view.findViewById(R.id.nsclientinternal_url);
         statusTextView = (TextView) view.findViewById(R.id.nsclientinternal_status);
 
+        clearlog = (TextView) view.findViewById(R.id.nsclientinternal_clearlog);
+        clearlog.setOnClickListener(this);
+        clearlog.setPaintFlags(clearlog.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         restart = (TextView) view.findViewById(R.id.nsclientinternal_restart);
         restart.setOnClickListener(this);
         restart.setPaintFlags(restart.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -93,8 +97,11 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
             case R.id.nsclientinternal_delivernow:
                 getPlugin().resend("GUI");
                 break;
-            case R.id.nsclientinternal_clearqueue:
+            case R.id.nsclientinternal_clearlog:
                 getPlugin().clearLog();
+                break;
+            case R.id.nsclientinternal_clearqueue:
+                getPlugin().queue().reset();
                 break;
             case R.id.nsclientinternal_showqueue:
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", getPlugin().queue().textList()));
