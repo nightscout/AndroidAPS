@@ -492,181 +492,75 @@ public class NSClientService extends Service {
     public void dbUpdate(DbRequest dbr, NSUpdateAck ack) {
         try {
             if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBUPDATE", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
             message.put("data", dbr.data);
             mSocket.emit("dbUpdate", message, ack);
-            synchronized (ack) {
-                try {
-                    ack.wait(timeToWaitForResponseInMs);
-                } catch (InterruptedException e) {
-                }
-            }
+            MainApp.bus().post(new EventNSClientNewLog("DBUPDATE", "Sent " + dbr._id));
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
-        uploading = false;
-    }
-
-    public void dbUpdate(DbRequest dbr) {
-        try {
-            if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBUPDATE", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
-            JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("_id", dbr._id);
-            message.put("data", dbr.data);
-            mSocket.emit("dbUpdate", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        uploading = false;
     }
 
     public void dbUpdateUnset(DbRequest dbr, NSUpdateAck ack) {
         try {
             if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBUPUNSET", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
             message.put("data", dbr.data);
             mSocket.emit("dbUpdateUnset", message, ack);
-            synchronized (ack) {
-                try {
-                    ack.wait(timeToWaitForResponseInMs);
-                } catch (InterruptedException e) {
-                }
-            }
+            MainApp.bus().post(new EventNSClientNewLog("DBUPDATEUNSET", "Sent " + dbr._id));
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
-        uploading = false;
-    }
-
-    public void dbUpdateUnset(DbRequest dbr) {
-        try {
-            if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBUPUNSET", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
-            JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("_id", dbr._id);
-            message.put("data", dbr.data);
-            mSocket.emit("dbUpdateUnset", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
-        }
-        uploading = false;
     }
 
     public void dbRemove(DbRequest dbr, NSUpdateAck ack) {
         try {
             if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBREMOVE", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
             mSocket.emit("dbRemove", message, ack);
-            synchronized (ack) {
-                try {
-                    ack.wait(timeToWaitForResponseInMs);
-                } catch (InterruptedException e) {
-                }
-            }
+            MainApp.bus().post(new EventNSClientNewLog("DBREMOVE", "Sent " + dbr._id));
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
-        uploading = false;
     }
 
-    public void dbRemove(DbRequest dbr) {
-        try {
-            if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBREMOVE", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
-            JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("_id", dbr._id);
-            mSocket.emit("dbRemove", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
+    @Subscribe
+    public void onStatusEvent(NSUpdateAck ack) {
+        if (ack.result) {
+            uploadQueue.removeID(ack.action, ack._id);
+            MainApp.bus().post(new EventNSClientNewLog("DBUPDATE/DBREMOVE", "Acked " + ack._id));
+        } else {
+            MainApp.bus().post(new EventNSClientNewLog("ERROR", "DBUPDATE/DBREMOVE Unknown response"));
         }
-        uploading = false;
     }
 
     public void dbAdd(DbRequest dbr, NSAddAck ack) {
         try {
             if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBADD", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("data", dbr.data);
             mSocket.emit("dbAdd", message, ack);
-            synchronized (ack) {
-                try {
-                    ack.wait(timeToWaitForResponseInMs);
-                } catch (InterruptedException e) {
-                }
-            }
+            MainApp.bus().post(new EventNSClientNewLog("DBADD", "Sent " + dbr.nsClientID));
         } catch (JSONException e) {
             e.printStackTrace();
-            return;
         }
-        uploading = false;
     }
 
-    public void dbAdd(DbRequest dbr) {
-        try {
-            if (!isConnected) return;
-            if (uploading) {
-                MainApp.bus().post(new EventNSClientNewLog("DBADD", "Busy, adding to queue"));
-                return;
-            }
-            uploading = true;
-            JSONObject message = new JSONObject();
-            message.put("collection", dbr.collection);
-            message.put("data", dbr.data);
-            mSocket.emit("dbAdd", message);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return;
+    @Subscribe
+    public void onStatusEvent(NSAddAck ack) {
+        if (ack.nsClientID != null) {
+            uploadQueue.removeID(ack.json);
+            MainApp.bus().post(new EventNSClientNewLog("DBADD", "Acked " + ack.nsClientID));
+        } else {
+            MainApp.bus().post(new EventNSClientNewLog("ERROR", "DBADD Unknown response"));
         }
-        uploading = false;
     }
 
     public void doPing() {
@@ -735,42 +629,15 @@ public class NSClientService extends Service {
                     if (dbr.action.equals("dbAdd")) {
                         NSAddAck addAck = new NSAddAck();
                         dbAdd(dbr, addAck);
-                        if (addAck._id == null) {
-                            MainApp.bus().post(new EventNSClientNewLog("QUEUE", "No response on dbAdd"));
-                            return;
-                        }
-                        if (Config.detailedLog)
-                            MainApp.bus().post(new EventNSClientNewLog("QUEUE", "dbAdd processed: " + dbr.data.toString()));
-                        else
-                            MainApp.bus().post(new EventNSClientNewLog("QUEUE", "dbAdd processed"));
-                        iter.remove();
                     } else if (dbr.action.equals("dbRemove")) {
-                        NSUpdateAck removeAck = new NSUpdateAck();
+                        NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id);
                         dbRemove(dbr, removeAck);
-                        if (!removeAck.result) {
-                            MainApp.bus().post(new EventNSClientNewLog("QUEUE", "No response on dbRemove"));
-                            return;
-                        }
-                        MainApp.bus().post(new EventNSClientNewLog("QUEUE", "dbRemove processed: " + dbr._id));
-                        iter.remove();
                     } else if (dbr.action.equals("dbUpdate")) {
-                        NSUpdateAck updateAck = new NSUpdateAck();
+                        NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id);
                         dbUpdate(dbr, updateAck);
-                        if (!updateAck.result) {
-                            MainApp.bus().post(new EventNSClientNewLog("QUEUE", "No response on dbUpdate"));
-                            return;
-                        }
-                        MainApp.bus().post(new EventNSClientNewLog("QUEUE", "dbUpdate processed: " + dbr._id));
-                        iter.remove();
                     } else if (dbr.action.equals("dbUpdateUnset")) {
-                        NSUpdateAck updateUnsetAck = new NSUpdateAck();
+                        NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id);
                         dbUpdateUnset(dbr, updateUnsetAck);
-                        if (!updateUnsetAck.result) {
-                            MainApp.bus().post(new EventNSClientNewLog("QUEUE", "No response on dbUpdateUnset"));
-                            return;
-                        }
-                        MainApp.bus().post(new EventNSClientNewLog("QUEUE", "dbUpdateUnset processed: " + dbr._id));
-                        iter.remove();
                     }
                 }
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));

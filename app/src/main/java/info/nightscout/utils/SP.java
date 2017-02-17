@@ -75,4 +75,16 @@ public class SP {
         editor.putBoolean(MainApp.sResources.getString(resourceID), value);
         editor.apply();
     }
+
+    static public void putString(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    static public void putString(int resourceID, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(MainApp.sResources.getString(resourceID), value);
+        editor.apply();
+    }
 }

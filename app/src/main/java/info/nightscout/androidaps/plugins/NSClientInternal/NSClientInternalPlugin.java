@@ -41,8 +41,8 @@ import info.nightscout.utils.SP;
 public class NSClientInternalPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalPlugin.class);
 
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
+    boolean fragmentEnabled = false;
+    boolean fragmentVisible = false;
 
     static public Handler handler;
     static private HandlerThread handlerThread;

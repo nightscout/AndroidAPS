@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
 import io.socket.client.Ack;
 
 /**
@@ -13,6 +14,8 @@ import io.socket.client.Ack;
 public class NSUpdateAck implements Ack {
     private static Logger log = LoggerFactory.getLogger(NSUpdateAck.class);
     public boolean result = false;
+    public String _id = null;
+    public String action;
     public void call(Object...args) {
         JSONObject response = (JSONObject)args[0];
         if (response.has("result"))
@@ -23,10 +26,14 @@ public class NSUpdateAck implements Ack {
                     result = true;
                     log.debug("Internal error: Missing _id returned on dbUpdate ack");
                 }
+                MainApp.bus().post(this);
             } catch (JSONException e) {
             }
-        synchronized(this) {
-            this.notify();
-        }
+    }
+
+    public NSUpdateAck(String action, String _id) {
+        super();
+        this.action = action;
+        this._id = _id;
     }
 }

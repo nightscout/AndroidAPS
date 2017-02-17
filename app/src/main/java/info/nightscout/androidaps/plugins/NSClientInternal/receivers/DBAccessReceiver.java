@@ -55,8 +55,9 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 data = new JSONObject();
             }
             // mark by id
+            Long nsclientid = new Date().getTime();
             try {
-                data.put("NSCLIENT_ID", (new Date()).getTime());
+                data.put("NSCLIENT_ID", nsclientid);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -67,10 +68,10 @@ public class DBAccessReceiver extends BroadcastReceiver {
             }
 
             if (action.equals("dbRemove")) {
-                DbRequest dbr = new DbRequest(action, collection, _id);
+                DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), _id);
                 UploadQueue.add(dbr);
             } else {
-                DbRequest dbr = new DbRequest(action, collection, data);
+                DbRequest dbr = new DbRequest(action, collection, nsclientid.toString(), data);
                 UploadQueue.add(dbr);
             }
 

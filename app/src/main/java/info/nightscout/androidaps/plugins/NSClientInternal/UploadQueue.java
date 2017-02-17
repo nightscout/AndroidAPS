@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.NSClientInternal;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -44,17 +45,7 @@ public class UploadQueue {
             public void run() {
                 log.debug("QUEUE adding: " + dbr.data.toString());
                 queue.put(dbr.hash(), dbr);
-            }
-        });
-    }
-
-    public static void put(final String hash, final DbRequest dbr) {
-        NSClientService.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                queue.put(hash, dbr);
-                BroadcastQueueStatus bs = new BroadcastQueueStatus();
-                bs.handleNewStatus(queue.size(), MainApp.instance().getApplicationContext());
+                saveMap();
             }
         });
     }
@@ -99,32 +90,52 @@ public class UploadQueue {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                saveMap();
             }
         });
     }
 
-    final String KEY = "UploadQueue";
+    public static void removeID(final String action, final String _id) {
+        NSClientService.handler.post(new Runnable() {
+            @Override
+            public void run() {
+                Iterator<Map.Entry<String, DbRequest>> iter = queue.entrySet().iterator();
+                while (iter.hasNext()) {
+                    DbRequest dbr = iter.next().getValue();
+                    if (dbr.action.equals(action) && dbr._id.equals(_id)) {
+                        log.debug("Removing item from UploadQueue");
+                        iter.remove();
+                        return;
+                    } else {
+                        log.debug("Failed removing item from UploadQueue");
+                    }
+                }
+                saveMap();
+            }
+        });
+    }
 
-    private void saveMap() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        JSONObject jsonObject = new JSONObject(queue);
-        String jsonString = jsonObject.toString();
-        SharedPreferences.Editor editor = sp.edit();
-        editor.remove(KEY).commit();
-        editor.putString(KEY, jsonString);
-        editor.commit();
+    final static String KEY = "UploadQueue";
+
+    private static void saveMap() {
+        JSONArray jsonArray = new JSONArray();
+        Iterator<Map.Entry<String, DbRequest>> iter = queue.entrySet().iterator();
+        while (iter.hasNext()) {
+            DbRequest dbr = iter.next().getValue();
+            jsonArray.put(dbr.toJSON());
+        }
+        SP.putString(KEY, jsonArray.toString());
     }
 
     private void loadMap() {
         queue = new HashMap<String, DbRequest>();
         try {
-            String jsonString = SP.getString(KEY, (new JSONObject()).toString());
-            JSONObject jsonObject = new JSONObject(jsonString);
-            Iterator<String> keysItr = jsonObject.keys();
-            while (keysItr.hasNext()) {
-                String key = keysItr.next();
-                DbRequest value = (DbRequest) jsonObject.get(key);
-                queue.put(key, value);
+            String jsonString = SP.getString(KEY, (new JSONArray()).toString());
+            JSONArray jsonArray = new JSONArray(jsonString);
+            for (int i=0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                DbRequest dbr = DbRequest.fromJSON(jsonObject);
+                queue.put(dbr.hash(), dbr);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,6 +148,7 @@ public class UploadQueue {
 
         while (iter.hasNext()) {
             DbRequest dbr = iter.next().getValue();
+            result += "<br>";
             result += dbr.action.toUpperCase() + " ";
             result += dbr.collection + ": ";
             result += dbr.data.toString();

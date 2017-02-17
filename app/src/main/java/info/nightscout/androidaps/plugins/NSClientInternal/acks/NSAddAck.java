@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.NSClientInternal.acks;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,8 @@ import io.socket.client.Ack;
 public class NSAddAck implements Ack {
     private static Logger log = LoggerFactory.getLogger(NSAddAck.class);
     public String _id = null;
+    public String nsClientID = null;
+    public JSONObject json = null;
     public void call(Object...args) {
         // Regular response
         try {
@@ -24,10 +27,12 @@ public class NSAddAck implements Ack {
             if (responsearray.length()>0) {
                     response = responsearray.getJSONObject(0);
                 _id = response.getString("_id");
+                json = response;
+                if (response.has("NSCLIENT_ID")) {
+                    nsClientID = response.getString("NSCLIENT_ID");
+                }
             }
-            synchronized(this) {
-                this.notify();
-            }
+            MainApp.bus().post(this);
             return;
         } catch (Exception e) {
         }
@@ -37,16 +42,10 @@ public class NSAddAck implements Ack {
             if (response.has("result")) {
                 _id = null;
                 if (response.getString("result").equals("Not authorized")) {
-                    synchronized(this) {
-                        this.notify();
-                    }
                     MainApp.bus().post(new EventNSClientRestart());
                     return;
                 }
                 log.debug("DBACCESS " + response.getString("result"));
-            }
-            synchronized(this) {
-                this.notify();
             }
             return;
         } catch (Exception e) {

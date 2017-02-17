@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -14,15 +11,15 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -118,7 +115,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public IobTotal getCalculationToTime(long time) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         IobTotal total = new IobTotal(time);
 
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
