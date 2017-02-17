@@ -98,7 +98,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         if (profile == null) return absoluteRate;
         if (absoluteRate < 0) absoluteRate = 0d;
 
-        Integer maxBasalMult = SP.getInt("openapsama_max_basal_safety_multiplier", 4);
+        Integer maxBasalMult = SP.getInt("openapsama_current_basal_safety_multiplier", 4);
         Integer maxBasalFromDaily = SP.getInt("openapsama_max_daily_safety_multiplier", 3);
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double origRate = absoluteRate;
@@ -136,7 +136,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
 
         if (absoluteRate < 0) absoluteRate = 0d;
 
-        Integer maxBasalMult = SP.getInt("openapsama_max_basal_safety_multiplier", 4);
+        Integer maxBasalMult = SP.getInt("openapsama_current_basal_safety_multiplier", 4);
         Integer maxBasalFromDaily = SP.getInt("openapsama_max_daily_safety_multiplier", 3);
         // Check percentRate but absolute rate too, because we know real current basal in pump
         Double origRate = absoluteRate;
