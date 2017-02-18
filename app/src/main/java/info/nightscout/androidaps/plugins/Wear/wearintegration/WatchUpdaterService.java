@@ -520,9 +520,13 @@ public class WatchUpdaterService extends WearableListenerService implements
             IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
             MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
             IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-            status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "("
-                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+
+            if (mPrefs.getBoolean("wear_detailediob", true)) {
+                status += "("
+                        + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
+                        + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            }
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content

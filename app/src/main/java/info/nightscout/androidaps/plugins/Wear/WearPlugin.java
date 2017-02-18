@@ -120,8 +120,10 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        //possibly new high or low mark
+        // possibly new high or low mark
         resendDataToWatch();
+        // status may be formated differently
+        sendDataToWatch(true, false, false);
     }
 
     @Subscribe
