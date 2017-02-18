@@ -30,7 +30,7 @@ public class MsgBolusProgress extends MessageBase {
         this();
         this.amount = amount;
         this.t = t;
-        lastReceive = 0;
+        lastReceive = new Date().getTime();
     }
 
     @Override

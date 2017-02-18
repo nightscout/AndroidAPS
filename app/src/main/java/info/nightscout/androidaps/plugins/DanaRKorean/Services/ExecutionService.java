@@ -387,7 +387,6 @@ public class ExecutionService extends Service {
     public boolean bolus(Double amount, int carbs, Treatment t) {
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
-        MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
         MsgBolusStop stop = new MsgBolusStop(amount, t);
 
         connect("bolus");
@@ -397,6 +396,8 @@ public class ExecutionService extends Service {
             Calendar time = Calendar.getInstance();
             mSerialIOThread.sendMessage(new MsgSetCarbsEntry(time, carbs));
         }
+
+        MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
         MainApp.bus().post(new EventDanaRBolusStart());
 
         if (!stop.stopped) {
@@ -407,7 +408,7 @@ public class ExecutionService extends Service {
         }
         while (!stop.stopped && !start.failed) {
             waitMsec(100);
-            if (progress.lastReceive != 0 && (new Date().getTime() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+            if ((new Date().getTime() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
                 stop.stopped = true;
                 stop.forced = true;
                 log.debug("Communication stopped");
