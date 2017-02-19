@@ -509,7 +509,7 @@ public class NSClientService extends Service {
             message.put("_id", dbr._id);
             message.put("data", dbr.data);
             mSocket.emit("dbUpdate", message, ack);
-            MainApp.bus().post(new EventNSClientNewLog("DBUPDATE", "Sent " + dbr._id));
+            MainApp.bus().post(new EventNSClientNewLog("DBUPDATE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -523,7 +523,7 @@ public class NSClientService extends Service {
             message.put("_id", dbr._id);
             message.put("data", dbr.data);
             mSocket.emit("dbUpdateUnset", message, ack);
-            MainApp.bus().post(new EventNSClientNewLog("DBUPDATEUNSET", "Sent " + dbr._id));
+            MainApp.bus().post(new EventNSClientNewLog("DBUPDATEUNSET " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -536,7 +536,7 @@ public class NSClientService extends Service {
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
             mSocket.emit("dbRemove", message, ack);
-            MainApp.bus().post(new EventNSClientNewLog("DBREMOVE", "Sent " + dbr._id));
+            MainApp.bus().post(new EventNSClientNewLog("DBREMOVE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -559,7 +559,7 @@ public class NSClientService extends Service {
             message.put("collection", dbr.collection);
             message.put("data", dbr.data);
             mSocket.emit("dbAdd", message, ack);
-            MainApp.bus().post(new EventNSClientNewLog("DBADD", "Sent " + dbr.nsClientID));
+            MainApp.bus().post(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
         } catch (JSONException e) {
             e.printStackTrace();
         }
