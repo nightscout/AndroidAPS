@@ -78,10 +78,10 @@ public class TempTargetActivity extends ViewSelectorActivity {
                 final TextView textView = (TextView) view.findViewById(R.id.label);
                 textView.setText("duration");
                 if (time == null) {
-                    time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60d, 0d, 24 * 60d, 1d, new DecimalFormat("0"), false);
+                    time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 60d, 0d, 24 * 60d, 5d, new DecimalFormat("0"), false);
                 } else {
                     double def = SafeParse.stringToDouble(time.editText.getText().toString());
-                    time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 24 * 60d, 1d, new DecimalFormat("0"), false);
+                    time = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 24 * 60d, 5d, new DecimalFormat("0"), false);
                 }
                  setLabelToPlusMinusView(view, "duration");
                  container.addView(view);
