@@ -482,7 +482,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         carbs = applyCarbsConstraints(carbs);
 
         BolusProgressDialog bolusProgressDialog = null;
-        if (context != null ) {
+        if (context != null) {
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(insulin);
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
@@ -966,6 +966,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                     requested.put("temp", "absolute");
                     deviceStatus.enacted.put("requested", requested);
                 }
+            } else {
+                log.debug("OpenAPS data too old to upload");
             }
             if (activePump != null) {
                 deviceStatus.device = "openaps://" + deviceID();
@@ -973,11 +975,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 if (pumpstatus != null) {
                     deviceStatus.pump = getJSONStatus();
                 }
-
-                deviceStatus.created_at = DateUtil.toISOString(new Date());
-
-                deviceStatus.sendToNSClient();
             }
+            deviceStatus.created_at = DateUtil.toISOString(new Date());
+            deviceStatus.sendToNSClient();
         } catch (JSONException e) {
             e.printStackTrace();
         }
