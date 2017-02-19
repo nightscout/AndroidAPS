@@ -285,12 +285,12 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public Date lastStatusTime() {
+    public Date lastDataTime() {
         return getDanaRPump().lastConnection;
     }
 
     @Override
-    public void updateStatus(String reason) {
+    public void refreshDataFromPump(String reason) {
         if (!isConnected() && !isConnecting()) {
             doConnect(reason);
         }

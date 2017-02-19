@@ -72,6 +72,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         return sDanaRKoreanPump;
     }
 
+    String textStatus = "";
+
     public DanaRKoreanPlugin() {
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
@@ -285,12 +287,12 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public Date lastStatusTime() {
+    public Date lastDataTime() {
         return getDanaRPump().lastConnection;
     }
 
     @Override
-    public void updateStatus(String reason) {
+    public void refreshDataFromPump(String reason) {
         if (!isConnected() && !isConnecting()) {
             doConnect(reason);
         }

@@ -39,7 +39,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean isBasalOutdated = false;
             boolean isStatusOutdated = false;
 
-            Date lastConnection = pump.lastStatusTime();
+            Date lastConnection = pump.lastDataTime();
             if (lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime())
                 isStatusOutdated = true;
             if (Math.abs(profile.getBasal(NSProfile.secondsFromMidnight()) - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep)
@@ -58,7 +58,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        pump.updateStatus("KeepAlive. Status outdated.");
+                        pump.refreshDataFromPump("KeepAlive. Status outdated.");
                     }
                 });
                 t.start();
@@ -66,7 +66,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        pump.updateStatus("KeepAlive. Basal outdated.");
+                        pump.refreshDataFromPump("KeepAlive. Basal outdated.");
                     }
                 });
                 t.start();

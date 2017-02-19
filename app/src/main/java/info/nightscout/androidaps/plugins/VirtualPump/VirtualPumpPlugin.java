@@ -158,12 +158,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public Date lastStatusTime() {
+    public Date lastDataTime() {
         return new Date();
     }
 
     @Override
-    public void updateStatus(String reason) {
+    public void refreshDataFromPump(String reason) {
         // do nothing
     }
 

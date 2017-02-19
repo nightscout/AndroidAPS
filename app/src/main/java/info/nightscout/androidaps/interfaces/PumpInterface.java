@@ -29,8 +29,8 @@ public interface PumpInterface {
     int setNewBasalProfile(NSProfile profile);
     boolean isThisProfileSet(NSProfile profile);
 
-    Date lastStatusTime();
-    void updateStatus(String reason);
+    Date lastDataTime();
+    void refreshDataFromPump(String reason);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
     double getTempBasalAbsoluteRate();
@@ -51,7 +51,9 @@ public interface PumpInterface {
     JSONObject getJSONStatus();
     String deviceID();
 
+    // Pump capabilities
     PumpDescription getPumpDescription();
 
-    public String shortStatus(boolean veryShort);
+    // Short info for SMS, Wear etc
+    String shortStatus(boolean veryShort);
 }

@@ -390,13 +390,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public Date lastStatusTime() {
-        return activePump.lastStatusTime();
+    public Date lastDataTime() {
+        return activePump.lastDataTime();
     }
 
     @Override
-    public void updateStatus(String reason) {
-        activePump.updateStatus(reason);
+    public void refreshDataFromPump(String reason) {
+        activePump.refreshDataFromPump(reason);
     }
 
     @Override
@@ -682,7 +682,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public String deviceID() {
         if (activePump != null)
             return activePump.deviceID();
-        else return "Unknown";
+        else return "No Pump active!";
     }
 
     @Override
