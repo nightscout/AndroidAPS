@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.LocaleHelper;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -120,6 +121,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             addPreferencesFromResource(R.xml.pref_others);
             addPreferencesFromResource(R.xml.pref_advanced);
             initSummary(getPreferenceScreen());
+
+            WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
+            if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
+                addPreferencesFromResource(R.xml.pref_wear);
+            }
         }
 
         public Preference getPreference (String key) {
