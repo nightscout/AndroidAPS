@@ -10,7 +10,6 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.widget.Toast;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -59,8 +58,8 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientS
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -94,6 +93,8 @@ public class NSClientService extends Service {
     private final Integer timeToWaitForResponseInMs = 30000;
     private boolean uploading = false;
     public Date lastReception = new Date();
+
+    public long latestDateInReceivedData = 0;
 
     private String nsAPIhashCode = "";
 
@@ -252,6 +253,7 @@ public class NSClientService extends Service {
             authMessage.put("history", nsHours);
             authMessage.put("status", true); // receive status
             authMessage.put("pingme", true); // send mi pings to keep alive
+            authMessage.put("from", latestDateInReceivedData); // send data newer than
             authMessage.put("secret", nsAPIhashCode);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -411,6 +413,11 @@ public class NSClientService extends Service {
 
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonTreatment);
+                                    //Find latest date in treatment
+                                    if (treatment.getMills() != null && treatment.getMills() < new Date().getTime())
+                                        if (treatment.getMills() > latestDateInReceivedData)
+                                            latestDateInReceivedData = treatment.getMills();
+
                                     if (treatment.getAction() == null) {
                                         if (!isCurrent(treatment)) continue;
                                         addedTreatments.put(jsonTreatment);
@@ -485,9 +492,14 @@ public class NSClientService extends Service {
                                     // Handle new sgv here
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonSgv);
+                                    //Find latest date in sgv
+                                    if (sgv.getMills() != null && sgv.getMills() < new Date().getTime())
+                                        if (sgv.getMills() > latestDateInReceivedData)
+                                            latestDateInReceivedData = sgv.getMills();
                                 }
                                 bs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);
                             }
+                            MainApp.bus().post(new EventNSClientNewLog("LAST", DateUtil.dateAndTimeString(latestDateInReceivedData)));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
