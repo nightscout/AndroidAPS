@@ -507,4 +507,7 @@
     <string name="settings_password">Password for settings</string>
     <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
+    <string name="wear_settings">Wear settings</string>
+    <string name="wear_detailedIOB_title">Show detailed IOB</string>
+    <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
 </resources>

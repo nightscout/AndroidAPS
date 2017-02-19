@@ -15,6 +15,7 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterService;
@@ -120,8 +121,10 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        //possibly new high or low mark
+        // possibly new high or low mark
         resendDataToWatch();
+        // status may be formated differently
+        sendDataToWatch(true, false, false);
     }
 
     @Subscribe
@@ -142,6 +145,17 @@ public class WearPlugin implements PluginBase {
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
         sendDataToWatch(false, true, false);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventRefreshGui ev) {
+
+        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        if (activeloop == null) return;
+
+        if(WatchUpdaterService.shouldReportLoopStatus(activeloop.isEnabled(PluginBase.LOOP))) {
+            sendDataToWatch(true, false, false);
+        }
     }
 
 
