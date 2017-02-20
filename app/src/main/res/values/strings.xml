@@ -515,8 +515,6 @@
     <string name="nsclientinternal_title">Internal NSClient</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
-    <string name="nsclientinternal_hours">Hours to fetch</string>
-    <string name="nsclientinternal_hours_message">Enter hours to fetch from NS (max 48)</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
     <string name="nsclientinternal_secret_dialogmessage">Enter NS API secret (min 12 chars)</string>
@@ -531,7 +529,6 @@
     <string name="paused">Paused</string>
     <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
     <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
-    <string name="key_nsclientinternal_hours" translatable="false">nsclientinternal_hours</string>
     <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
     <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>

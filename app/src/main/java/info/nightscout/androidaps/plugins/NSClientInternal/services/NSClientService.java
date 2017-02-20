@@ -88,7 +88,7 @@ public class NSClientService extends Service {
     static public String nsURL = "";
     private String nsAPISecret = "";
     private String nsDevice = "";
-    private Integer nsHours = 3;
+    private Integer nsHours = 24;
 
     private final Integer timeToWaitForResponseInMs = 30000;
     private boolean uploading = false;
@@ -155,7 +155,6 @@ public class NSClientService extends Service {
     public void onStatusEvent(EventPreferenceChange ev) {
         if (ev.isChanged(R.string.key_nsclientinternal_url) ||
                 ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
-                ev.isChanged(R.string.key_nsclientinternal_hours) ||
                 ev.isChanged(R.string.key_nsclientinternal_paused)
                 ) {
             destroy();
@@ -293,7 +292,6 @@ public class NSClientService extends Service {
         nsEnabled = MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL);
         nsURL = SP.getString(R.string.key_nsclientinternal_url, "");
         nsAPISecret = SP.getString(R.string.key_nsclientinternal_api_secret, "");
-        nsHours = SP.getInt(R.string.key_nsclientinternal_hours, 3);
         nsDevice = SP.getString("careportal_enteredby", "");
     }
 

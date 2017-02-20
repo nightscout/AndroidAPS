@@ -21,18 +21,6 @@
             android:defaultValue=""
             android:inputType="textPassword">
         </EditTextPreference>
-        <com.andreabaccega.widget.ValidatingEditTextPreference
-            validate:testType="numericRange"
-            validate:minNumber="1"
-            validate:maxNumber="48"
-            android:digits="0123456789"
-            android:defaultValue="24"
-            android:selectAllOnFocus="true"
-            android:inputType="number"
-            android:maxLines="20"
-            android:title="@string/nsclientinternal_hours"
-            android:dialogMessage="@string/nsclientinternal_hours_message"
-            android:key="@string/key_nsclientinternal_hours" />
     </PreferenceCategory>
 
 </PreferenceScreen>
