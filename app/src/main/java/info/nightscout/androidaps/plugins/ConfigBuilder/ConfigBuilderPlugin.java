@@ -52,6 +52,7 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
@@ -448,13 +449,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         BolusProgressDialog.bolusEnded = true;
 
-        if (bolusProgressDialog != null && BolusProgressDialog.running) {
-            try {
-                bolusProgressDialog.dismiss();
-            } catch (Exception e) {
-                e.printStackTrace(); // TODO: handle this better
-            }
-        }
+        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
 
         if (result.success) {
             Treatment t = new Treatment();
@@ -501,13 +496,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         BolusProgressDialog.bolusEnded = true;
 
-        if (bolusProgressDialog != null && BolusProgressDialog.running) {
-            try {
-                bolusProgressDialog.dismiss();
-            } catch (Exception e) {
-                e.printStackTrace(); // TODO: handle this better
-            }
-        }
+        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
 
         if (Config.logCongigBuilderActions)
             log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
