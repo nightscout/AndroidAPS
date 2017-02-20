@@ -20,6 +20,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRBolusStart;
 
@@ -125,6 +126,13 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     @Subscribe
     public void onStatusEvent(final EventDanaRBolusStart ev) {
         started = true;
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
+        if(BolusProgressDialog.running){
+            dismiss();
+        }
     }
 
     @Subscribe
