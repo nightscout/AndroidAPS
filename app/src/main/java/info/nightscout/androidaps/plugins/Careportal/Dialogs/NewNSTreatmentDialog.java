@@ -3,11 +3,9 @@ package info.nightscout.androidaps.plugins.Careportal.Dialogs;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.preference.PreferenceManager;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
@@ -42,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -53,10 +50,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.CircadianPercentageProfile.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
-import info.nightscout.client.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.PlusMinusEditText;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 import info.nightscout.utils.Translator;
@@ -391,7 +389,6 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
 
     JSONObject gatherData() {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         String enteredBy = SP.getString("careportal_enteredby", "");
         JSONObject data = new JSONObject();
         try {

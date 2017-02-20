@@ -1,4 +1,4 @@
-package info.nightscout.client.data;
+package info.nightscout.androidaps.plugins.NSClientInternal.data;
 
 import android.content.Intent;
 import android.content.pm.ResolveInfo;

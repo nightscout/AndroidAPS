@@ -27,7 +27,7 @@ public class MsgSetCarbsEntry extends MessageBase {
         AddParamByte((byte) 0x43); //??
         AddParamInt(amount);
         if (Config.logDanaMessageDetail)
-            log.debug("Set carb entry: " + amount + " date " + time.toString());
+            log.debug("Set carb entry: " + amount + " date " + time.getTime().toString());
     }
 
     @Override

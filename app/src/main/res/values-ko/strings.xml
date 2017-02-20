@@ -278,7 +278,7 @@
     <string name="danar_history_refill">교체</string>
     <string name="danar_history_syspend">중지</string>
     <string name="danar_history_connectingfor" formatted="false">%d 초 동안 연결중</string>
-    <string name="danar_password">펌프 비밀번호</string>
+    <string name="danar_password_title">펌프 비밀번호</string>
     <string name="wrongpumppassword">펌프 비밀번호가 잘못되었습니다!</string>
     <string name="pumpbusy">펌프가 바쁩니다</string>
     <string name="overview_bolusprogress_delivered">주입됨</string>

@@ -1,35 +1,25 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.client.data.NSProfile;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -125,7 +115,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public IobTotal getCalculationToTime(long time) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         IobTotal total = new IobTotal(time);
 
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
@@ -143,7 +132,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             Iob tIOB = t.iobCalc(now, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = t.iobCalc(now, dia / SafeParse.stringToInt(SP.getString("openapsama_bolussnooze_dia_divisor", "2")));
+            Iob bIOB = t.iobCalc(now, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
             total.bolussnooze += bIOB.iobContrib;
         }
         return total;

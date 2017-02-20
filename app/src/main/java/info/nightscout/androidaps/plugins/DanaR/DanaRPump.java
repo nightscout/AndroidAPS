@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.DanaR;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,9 +8,9 @@ import java.text.DecimalFormat;
 import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.client.data.NSProfile;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 04.07.2016.
@@ -122,8 +119,7 @@ public class DanaRPump {
 //        Evening / 17:00–21:59
 //        Night / 22:00–5:59
 
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        double dia = SafeParse.stringToDouble(SP.getString("danarprofile_dia", "3"));
+        double dia = SP.getDouble(R.string.key_danarprofile_dia, 3d);
 
         try {
             json.put("defaultProfile", PROFILE_PREFIX + (activeProfile + 1));

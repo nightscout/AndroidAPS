@@ -32,12 +32,12 @@ public class Constants {
     public static final int CPP_MAX_PERCENTAGE = 200;
 
     // Defaults for settings
-    public static final String MAX_BG_DEFAULT_MGDL = "180";
-    public static final String MAX_BG_DEFAULT_MMOL = "10";
-    public static final String MIN_BG_DEFAULT_MGDL = "100";
-    public static final String MIN_BG_DEFAULT_MMOL = "5";
-    public static final String TARGET_BG_DEFAULT_MGDL = "150";
-    public static final String TARGET_BG_DEFAULT_MMOL = "7";
+    public static final Double MAX_BG_DEFAULT_MGDL = 180d;
+    public static final Double MAX_BG_DEFAULT_MMOL = 10d;
+    public static final Double MIN_BG_DEFAULT_MGDL = 100d;
+    public static final Double MIN_BG_DEFAULT_MMOL = 5d;
+    public static final Double TARGET_BG_DEFAULT_MGDL = 150d;
+    public static final Double TARGET_BG_DEFAULT_MMOL = 7d;
 
     // Very Hard Limits Ranges
     // First value is the Lowest and second value is the Highest a Limit can define
@@ -52,4 +52,7 @@ public class Constants {
 
     //DanaR
     public static final double dailyLimitWarning = 0.95d;
+
+    //NSClientInternal
+    public static final int MAX_LOG_LINES = 100;
 }

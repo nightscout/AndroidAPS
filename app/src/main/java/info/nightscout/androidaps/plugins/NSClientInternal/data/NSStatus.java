@@ -1,4 +1,4 @@
-package info.nightscout.client.data;
+package info.nightscout.androidaps.plugins.NSClientInternal.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;

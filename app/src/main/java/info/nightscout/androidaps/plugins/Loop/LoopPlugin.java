@@ -228,7 +228,7 @@ public class LoopPlugin implements PluginBase {
             }
 
             MainApp.bus().post(new EventLoopUpdateGui());
-            MainApp.getConfigBuilder().uploadDeviceStatus(120);
+            MainApp.getConfigBuilder().uploadDeviceStatus(60);
         } finally {
             if (Config.logFunctionCalls)
                 log.debug("invoke end");

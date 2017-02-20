@@ -15,8 +15,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 /**
@@ -63,7 +63,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.localprofile_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -117,117 +117,48 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
-        if (settings.contains("LocalProfile" + "mgdl"))
-            try {
-                mgdl = settings.getBoolean("LocalProfile" + "mgdl", false);
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else mgdl = false;
-        if (settings.contains("LocalProfile" + "mmol"))
-            try {
-                mmol = settings.getBoolean("LocalProfile" + "mmol", true);
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else mmol = true;
-        if (settings.contains("LocalProfile" + "dia"))
-            try {
-                dia = SafeParse.stringToDouble(settings.getString("LocalProfile" + "dia", "3"));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-            }
-        else dia = 3d;
-        if (settings.contains("LocalProfile" + "ic"))
-            try {
-                ic = new JSONArray(settings.getString("LocalProfile" + "ic", DEFAULTARRAY));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-                try {
-                    ic = new JSONArray(DEFAULTARRAY);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        else {
+        mgdl = SP.getBoolean("LocalProfile" + "mgdl", false);
+        mmol = SP.getBoolean("LocalProfile" + "mmol", true);
+        dia = SP.getDouble("LocalProfile" + "dia", 3d);
+        try {
+            ic = new JSONArray(SP.getString("LocalProfile" + "ic", DEFAULTARRAY));
+        } catch (JSONException e1) {
             try {
                 ic = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException e2) {
             }
         }
-        if (settings.contains("LocalProfile" + "isf"))
-            try {
-                isf = new JSONArray(settings.getString("LocalProfile" + "isf", DEFAULTARRAY));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-                try {
-                    isf = new JSONArray(DEFAULTARRAY);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        else {
+        try {
+            isf = new JSONArray(SP.getString("LocalProfile" + "isf", DEFAULTARRAY));
+        } catch (JSONException e1) {
             try {
                 isf = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException e2) {
             }
         }
-        if (settings.contains("LocalProfile" + "basal"))
-            try {
-                basal = new JSONArray(settings.getString("LocalProfile" + "basal", DEFAULTARRAY));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-                try {
-                    basal = new JSONArray(DEFAULTARRAY);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        else {
+        try {
+            basal = new JSONArray(SP.getString("LocalProfile" + "basal", DEFAULTARRAY));
+        } catch (JSONException e1) {
             try {
                 basal = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException e2) {
             }
         }
-        if (settings.contains("LocalProfile" + "targetlow"))
-            try {
-                targetLow = new JSONArray(settings.getString("LocalProfile" + "targetlow", DEFAULTARRAY));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-                try {
-                    targetLow = new JSONArray(DEFAULTARRAY);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        else {
+        try {
+            targetLow = new JSONArray(SP.getString("LocalProfile" + "targetlow", DEFAULTARRAY));
+        } catch (JSONException e1) {
             try {
                 targetLow = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException e2) {
             }
         }
-        if (settings.contains("LocalProfile" + "targethigh"))
-            try {
-                targetHigh = new JSONArray(settings.getString("LocalProfile" + "targethigh", DEFAULTARRAY));
-            } catch (Exception e) {
-                log.debug(e.getMessage());
-                try {
-                    targetHigh = new JSONArray(DEFAULTARRAY);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        else {
+        try {
+            targetHigh = new JSONArray(SP.getString("LocalProfile" + "targethigh", DEFAULTARRAY));
+        } catch (JSONException e1) {
             try {
                 targetHigh = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            } catch (JSONException e2) {
             }
         }
         createConvertedProfile();

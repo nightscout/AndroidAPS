@@ -19,8 +19,9 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSProfile.events.EventNSProfileUpdateGUI;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -110,9 +111,8 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
     private void loadNSProfile() {
         if (Config.logPrefsChange)
             log.debug("Loading stored profile");
-        SharedPreferences store = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        String activeProfile = store.getString("activeProfile", null);
-        String profileString = store.getString("profile", null);
+        String activeProfile = SP.getString("activeProfile", null);
+        String profileString = SP.getString("profile", null);
         if (profileString != null) {
             if (Config.logPrefsChange) {
                 log.debug("Loaded profile: " + profileString);

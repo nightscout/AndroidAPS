@@ -275,7 +275,7 @@
     <string name="danar_history_refill">Rellenar</string>
     <string name="danar_history_syspend">Suspender</string>
     <string formatted="false" name="danar_history_connectingfor">Conexión de %d s</string>
-    <string name="danar_password">Contraseña de la bomba</string>
+    <string name="danar_password_title">Contraseña de la bomba</string>
     <string name="wrongpumppassword">Contraseña de la bomba incorrecta!</string>
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="overview_bolusprogress_delivered">Entregado</string>

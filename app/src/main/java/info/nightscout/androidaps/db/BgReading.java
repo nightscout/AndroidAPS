@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.client.data.NSSgv;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)

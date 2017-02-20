@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.Loop;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 
 import org.json.JSONException;
@@ -10,12 +9,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.client.data.DbLogger;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 
 /*
 {
@@ -382,6 +378,7 @@ public class DeviceStatus {
     public JSONObject enacted = null;
     public JSONObject suggested = null;
     public JSONObject iob = null;
+    public JSONObject uploaderBattery = null;
     public String created_at = null;
 
     public JSONObject mongoRecord () {
@@ -395,6 +392,7 @@ public class DeviceStatus {
                 if (enacted != null) openaps.put("enacted", enacted);
                 if (suggested != null) openaps.put("suggested", suggested);
                 if (iob != null) openaps.put("iob", iob);
+                if (uploaderBattery != null) openaps.put("uploaderBattery", uploaderBattery);
                 record.put("openaps", openaps);
             }
             if (created_at != null) record.put("created_at" , created_at);

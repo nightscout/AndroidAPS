@@ -40,7 +40,7 @@ import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -285,12 +285,12 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public Date lastStatusTime() {
+    public Date lastDataTime() {
         return getDanaRPump().lastConnection;
     }
 
     @Override
-    public void updateStatus(String reason) {
+    public void refreshDataFromPump(String reason) {
         if (!isConnected() && !isConnecting()) {
             doConnect(reason);
         }

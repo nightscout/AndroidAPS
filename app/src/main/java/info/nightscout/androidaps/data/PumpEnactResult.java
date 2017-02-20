@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.data;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -10,7 +8,7 @@ import org.json.JSONObject;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
