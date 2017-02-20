@@ -5,7 +5,7 @@
     tools:context="info.nightscout.androidaps.plugins.Actions.ActionsFragment">
 
     <ScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     <LinearLayout
