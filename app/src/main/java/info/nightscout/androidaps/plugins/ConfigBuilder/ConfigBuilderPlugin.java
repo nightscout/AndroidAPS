@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.BatteryLevel;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -975,6 +976,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 if (pumpstatus != null) {
                     deviceStatus.pump = getJSONStatus();
                 }
+            }
+
+            int batteryLevel = BatteryLevel.getBatteryLevel();
+            if (batteryLevel != BatteryLevel.lastUploadedLevel) {
+                JSONObject uploaderBattery = new JSONObject();
+                uploaderBattery.put("uploaderBattery", batteryLevel);
+                deviceStatus.uploaderBattery = uploaderBattery;
+                BatteryLevel.lastUploadedLevel = batteryLevel;
             }
             deviceStatus.created_at = DateUtil.toISOString(new Date());
             deviceStatus.sendToNSClient();
