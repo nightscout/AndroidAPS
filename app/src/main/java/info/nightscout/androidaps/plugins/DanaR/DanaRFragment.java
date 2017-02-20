@@ -24,13 +24,12 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.DanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.DanaR.History.DanaRStatsActivity;
-import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRNewStatus;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -166,18 +165,18 @@ public class DanaRFragment extends Fragment implements FragmentBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventDanaRConnectionStatus c) {
+    public void onStatusEvent(final EventPumpStatusChanged c) {
         Activity activity = getActivity();
         if (activity != null) {
             activity.runOnUiThread(
                     new Runnable() {
                         @Override
                         public void run() {
-                            if (c.sStatus == EventDanaRConnectionStatus.CONNECTING)
+                            if (c.sStatus == EventPumpStatusChanged.CONNECTING)
                                 btConnectionView.setText("{fa-bluetooth-b spin} " + c.sSecondsElapsed + "s");
-                            else if (c.sStatus == EventDanaRConnectionStatus.CONNECTED)
+                            else if (c.sStatus == EventPumpStatusChanged.CONNECTED)
                                 btConnectionView.setText("{fa-bluetooth}");
-                            else
+                            else if (c.sStatus == EventPumpStatusChanged.DISCONNECTED)
                                 btConnectionView.setText("{fa-bluetooth-b}");
                         }
                     }
@@ -192,11 +191,6 @@ public class DanaRFragment extends Fragment implements FragmentBase {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange s) {
-        updateGUI();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange s) {
         updateGUI();
     }
 

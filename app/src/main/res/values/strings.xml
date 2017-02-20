@@ -294,7 +294,7 @@
     <string name="danar_history_refill">Refill</string>
     <string name="danar_history_syspend">Suspend</string>
     <string name="danar_history_connectingfor" formatted="false">Connecting for %d s</string>
-    <string name="danar_password">Pump password</string>
+    <string name="danar_password_title">Pump password</string>
     <string name="wrongpumppassword">Wrong pump password!</string>
     <string name="pumpbusy">Pump is busy</string>
     <string name="overview_bolusprogress_delivered">Delivered</string>
@@ -507,6 +507,39 @@
     <string name="settings_password">Password for settings</string>
     <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
+    <string name="nsclientinternal">NSClient internal</string>
+    <string name="nsclientinternal_shortname">NSCI</string>
+    <string name="nsclientinternal_url">URL:</string>
+    <string name="nsclientinternal_autoscroll">Autoscroll</string>
+    <string name="restart">Restart</string>
+    <string name="nsclientinternal_title">Internal NSClient</string>
+    <string name="nsclientinternal_url_title">Nightscout URL</string>
+    <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
+    <string name="nsclientinternal_hours">Hours to fetch</string>
+    <string name="nsclientinternal_hours_message">Enter hours to fetch from NS (max 48)</string>
+    <string name="nsclientinternal_secret_title">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogmessage">Enter NS API secret (min 12 chars)</string>
+    <string name="nsclientinternal_devicename_title">Device name</string>
+    <string name="nsclientinternal_devicename_dialogtitle">Enter device name</string>
+    <string name="nsclientinternal_devicename_dialogmessage">It will be used for enteredBy field</string>
+    <string name="deliver_now">Deliver now</string>
+    <string name="clear_queue">Clear queue</string>
+    <string name="show_queue">Show queue</string>
+    <string name="queue">Queue:</string>
+    <string name="status">Status:</string>
+    <string name="paused">Paused</string>
+    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
+    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
+    <string name="key_nsclientinternal_hours" translatable="false">nsclientinternal_hours</string>
+    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
+    <string name="key_danar_password" translatable="false">danar_password</string>
+    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
+    <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
+    <string name="clearlog">Clear log</string>
+    <string name="key_nsclientinternal_autoscroll">nsclientinternal_autoscroll</string>
+    <string name="key_nsclientinternal_paused">nsclientinternal_paused</string>
+    <string name="nowritepermission">NSCLIENT has no write permission</string>
     <string name="wear_settings">Wear settings</string>
     <string name="wear_detailedIOB_title">Show detailed IOB</string>
     <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>

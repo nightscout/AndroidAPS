@@ -36,10 +36,11 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
-import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.PasswordProtection;
+import info.nightscout.utils.SP;
 
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
@@ -86,7 +87,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         String lang = SP.getString("language", "en");
         LocaleHelper.setLocale(getApplicationContext(), lang);
         runOnUiThread(new Runnable() {

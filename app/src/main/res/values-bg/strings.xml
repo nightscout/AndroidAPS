@@ -267,7 +267,7 @@
     <string name="danar_history_syspend">Прекъсване</string>
     <string name="danar_historyreload">Презареждане</string>
     <string name="danar_iob_label">IOB на помпата</string>
-    <string name="danar_password">Парола за помпа</string>
+    <string name="danar_password_title">Парола за помпа</string>
     <string name="danar_refill">пълнене</string>
     <string name="danar_totaluploaded" formatted="false">Общо %d записа са изпратени</string>
     <string name="enacted">Приложено</string>

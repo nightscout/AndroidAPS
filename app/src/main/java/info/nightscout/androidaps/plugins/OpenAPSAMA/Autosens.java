@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,12 +8,12 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.Round;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 
@@ -24,7 +21,6 @@ public class Autosens {
     private static Logger log = LoggerFactory.getLogger(Autosens.class);
 
     public static AutosensResult detectSensitivityandCarbAbsorption(List<BgReading> glucose_data, Long mealTime) {
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         //console.error(mealTime);
@@ -132,7 +128,7 @@ public class Autosens {
             if (mealTime != null && bgTime > mealTime) {
                 // figure out how many carbs that represents
                 // but always assume at least 3mg/dL/5m (default) absorption
-                double ci = Math.max(deviation, SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0")));
+                double ci = Math.max(deviation, SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
                 double absorbed = ci * profile.getIc(secondsFromMidnight) / sens;
                 // and add that to the running total carbsAbsorbed
                 carbsAbsorbed += absorbed;

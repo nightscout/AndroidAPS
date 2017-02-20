@@ -6,9 +6,8 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 

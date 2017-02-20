@@ -63,6 +63,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -71,7 +72,6 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
@@ -87,19 +87,18 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLa
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.utils.SP;
 
 
 public class OverviewFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
-    private SharedPreferences prefs;
 
     public static OverviewPlugin getPlugin() {
         return overviewPlugin;
@@ -118,6 +117,8 @@ public class OverviewFragment extends Fragment {
     TextView apsModeView;
     TextView tempTargetView;
     TextView pumpStatusView;
+    LinearLayout loopStatusLayout;
+    LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     CheckBox showPredictionView;
 
@@ -151,7 +152,6 @@ public class OverviewFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
         bgView = (TextView) view.findViewById(R.id.overview_bg);
@@ -163,7 +163,9 @@ public class OverviewFragment extends Fragment {
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
         basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
-        pumpStatusView = (TextView) view.findViewById(R.id.overview_initializing);
+        pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
+        loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
+        pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
@@ -185,12 +187,13 @@ public class OverviewFragment extends Fragment {
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
 
-        showPredictionView.setChecked(prefs.getBoolean("showprediction", false));
+        showPredictionView.setChecked(SP.getBoolean("showprediction", false));
 
         showPredictionView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences.Editor editor = prefs.edit();
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+                SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("showprediction", showPredictionView.isChecked());
                 editor.apply();
                 updateGUI();
@@ -295,7 +298,7 @@ public class OverviewFragment extends Fragment {
                     sHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            MainApp.getConfigBuilder().updateStatus("RefreshClicked");
+                            MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
                         }
                     });
             }
@@ -320,7 +323,7 @@ public class OverviewFragment extends Fragment {
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
-               boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
+                boluscalcJSON.put("eventTime", DateUtil.toISOString(new Date()));
                 boluscalcJSON.put("targetBGLow", wizard.targetBGLow);
                 boluscalcJSON.put("targetBGHigh", wizard.targetBGHigh);
                 boluscalcJSON.put("isf", wizard.sens);
@@ -477,18 +480,13 @@ public class OverviewFragment extends Fragment {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventDanaRConnectionStatus s) {
+    public void onStatusEvent(final EventPumpStatusChanged s) {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (s.sStatus == EventDanaRConnectionStatus.CONNECTING)
-                        updatePumpStatus(String.format(getString(R.string.danar_history_connectingfor), s.sSecondsElapsed));
-                    else if (s.sStatus == EventDanaRConnectionStatus.PERFORMING)
-                        updatePumpStatus(s.sAction);
-                    else if (s.sStatus == EventDanaRConnectionStatus.DISCONNECTED)
-                        updatePumpStatus(null);
+                    updatePumpStatus(s.textStatus());
                 }
             });
     }
@@ -517,30 +515,15 @@ public class OverviewFragment extends Fragment {
 
     private void updatePumpStatus(String status) {
         PumpInterface pump = MainApp.getConfigBuilder();
-        if (status != null) {
+        if (!status.equals("")) {
             pumpStatusView.setText(status);
-            pumpStatusView.setVisibility(View.VISIBLE);
-        } else if (pump.isBusy()) {
-            pumpStatusView.setText(R.string.pumpbusy);
-            pumpStatusView.setVisibility(View.VISIBLE);
-        } else if (pump.isSuspended()) {
-            // disable all treatment buttons because we are not able to check constraints without profile
-            wizardButton.setVisibility(View.INVISIBLE);
-            treatmentButton.setVisibility(View.INVISIBLE);
-            quickWizardButton.setVisibility(View.INVISIBLE);
-            pumpStatusView.setText(R.string.pumpsuspendedclicktorefresh);
-            pumpStatusView.setVisibility(View.VISIBLE);
-        } else if (!pump.isInitialized()) {
-            // disable all treatment buttons because we are not able to check constraints without profile
-            wizardButton.setVisibility(View.INVISIBLE);
-            treatmentButton.setVisibility(View.INVISIBLE);
-            quickWizardButton.setVisibility(View.INVISIBLE);
-            pumpStatusView.setText(R.string.waitingforpumpclicktorefresh);
-            pumpStatusView.setVisibility(View.VISIBLE);
+            pumpStatusLayout.setVisibility(View.VISIBLE);
+            loopStatusLayout.setVisibility(View.GONE);
         } else {
             wizardButton.setVisibility(View.VISIBLE);
             treatmentButton.setVisibility(View.VISIBLE);
-            pumpStatusView.setVisibility(View.GONE);
+            pumpStatusLayout.setVisibility(View.GONE);
+            loopStatusLayout.setVisibility(View.VISIBLE);
         }
     }
 
@@ -552,10 +535,12 @@ public class OverviewFragment extends Fragment {
 
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
             pumpStatusView.setText(R.string.noprofileset);
-            pumpStatusView.setVisibility(View.VISIBLE);
+            pumpStatusLayout.setVisibility(View.VISIBLE);
+            loopStatusLayout.setVisibility(View.GONE);
             return;
         } else {
-            pumpStatusView.setVisibility(View.GONE);
+            pumpStatusLayout.setVisibility(View.GONE);
+            loopStatusLayout.setVisibility(View.VISIBLE);
         }
 
         // Skip if not initialized yet
@@ -623,15 +608,15 @@ public class OverviewFragment extends Fragment {
                 tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
             } else {
 
-                String maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-                String minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+                Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+                Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
                 if (!profile.getUnits().equals(Constants.MGDL)) {
                     maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
                     minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
                 }
                 tempTargetView.setTextColor(Color.WHITE);
                 tempTargetView.setBackgroundResource(R.drawable.temptargetborderdisabled);
-                tempTargetView.setText(prefs.getString("openapsma_min_bg", minBgDefault) + " - " + prefs.getString("openapsma_max_bg", maxBgDefault));
+                tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
                 tempTargetView.setVisibility(View.VISIBLE);
             }
         } else {
@@ -799,8 +784,8 @@ public class OverviewFragment extends Fragment {
             endTime = toTime;
         }
 
-        Double lowLine = SafeParse.stringToDouble(prefs.getString("low_mark", "0"));
-        Double highLine = SafeParse.stringToDouble(prefs.getString("high_mark", "0"));
+        Double lowLine = SP.getDouble("low_mark", 0d);
+        Double highLine = SP.getDouble("high_mark", 0d);
 
         if (lowLine < 1) {
             lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
@@ -1003,7 +988,7 @@ public class OverviewFragment extends Fragment {
             bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(ContextCompat.getColor(MainApp.instance(), R.color.background_material_dark)); // same color as backround = hide
         }
 
-        updatePumpStatus(null);
+        //updatePumpStatus(null);
     }
 
     //Notifications

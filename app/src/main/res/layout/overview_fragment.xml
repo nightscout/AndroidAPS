@@ -21,6 +21,7 @@
             </android.support.v7.widget.RecyclerView>
 
             <LinearLayout
+                android:id="@+id/overview_looplayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -32,13 +33,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="0.1"
                     android:background="@drawable/loopmodeborder"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Open Loop"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_weight="0.1" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
                 <TextView
@@ -62,38 +63,40 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="0.2"
                     android:background="@drawable/temptargetborder"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="TempTarget"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:text="TempTarget"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/mdtp_white"
-                    android:layout_weight="0.2" />
+                    android:textColor="@color/mdtp_white" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/overview_pumpstatuslayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
 
                 <TextView
-                    android:id="@+id/overview_initializing"
+                    android:id="@+id/overview_pumpstatus"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/initializingborder"
                     android:gravity="center_vertical|center_horizontal"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:text="@string/initializing"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_marginTop="10dp" />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/overview_bg"

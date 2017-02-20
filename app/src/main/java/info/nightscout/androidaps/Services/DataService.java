@@ -49,8 +49,8 @@ import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.androidaps.receivers.DataReceiver;
-import info.nightscout.client.data.NSProfile;
-import info.nightscout.client.data.NSSgv;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 
 
 public class DataService extends IntentService {

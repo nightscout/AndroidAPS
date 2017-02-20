@@ -48,12 +48,12 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.CircadianPercentageProfile.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.DanaR.comm.RecordTypes;
-import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRConnectionStatus;
 import info.nightscout.androidaps.plugins.DanaR.events.EventDanaRSyncStatus;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
@@ -68,11 +68,11 @@ public class DanaRStatsActivity extends Activity {
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
 
-    TextView statusView, statsMessage,totalBaseBasal2;
+    TextView statusView, statsMessage, totalBaseBasal2;
     EditText totalBaseBasal;
     Button reloadButton;
     LinearLayoutManager llm;
-    TableLayout tl,ctl,etl;
+    TableLayout tl, ctl, etl;
     String TBB;
     double magicNumber;
     DecimalFormat decimalFormat;
@@ -118,15 +118,15 @@ public class DanaRStatsActivity extends Activity {
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View myView = getCurrentFocus();
-            if ( myView instanceof EditText) {
+            if (myView instanceof EditText) {
                 Rect rect = new Rect();
                 myView.getGlobalVisibleRect(rect);
-                if (!rect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                if (!rect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     myView.clearFocus();
                 }
             }
         }
-        return super.dispatchTouchEvent( event );
+        return super.dispatchTouchEvent(event);
     }
 
     ServiceConnection mConnection = new ServiceConnection() {
@@ -172,11 +172,11 @@ public class DanaRStatsActivity extends Activity {
         totalBaseBasal.setText(TBB);
 
         ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
-        if (pi != null && pi instanceof CircadianPercentageProfilePlugin){
-            double cppTBB = ((CircadianPercentageProfilePlugin)pi).baseBasalSum();
+        if (pi != null && pi instanceof CircadianPercentageProfilePlugin) {
+            double cppTBB = ((CircadianPercentageProfilePlugin) pi).baseBasalSum();
             totalBaseBasal.setText(decimalFormat.format(cppTBB));
             SharedPreferences.Editor edit = preferences.edit();
-            edit.putString("TBB",totalBaseBasal.getText().toString());
+            edit.putString("TBB", totalBaseBasal.getText().toString());
             edit.commit();
             TBB = preferences.getString("TBB", "");
         }
@@ -312,7 +312,7 @@ public class DanaRStatsActivity extends Activity {
         totalBaseBasal.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId== EditorInfo.IME_ACTION_DONE){
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
                     totalBaseBasal.clearFocus();
                     return true;
                 }
@@ -323,11 +323,11 @@ public class DanaRStatsActivity extends Activity {
         totalBaseBasal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus){
+                if (hasFocus) {
                     totalBaseBasal.getText().clear();
                 } else {
                     SharedPreferences.Editor edit = preferences.edit();
-                    edit.putString("TBB",totalBaseBasal.getText().toString());
+                    edit.putString("TBB", totalBaseBasal.getText().toString());
                     edit.commit();
                     TBB = preferences.getString("TBB", "");
                     loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
@@ -362,15 +362,14 @@ public class DanaRStatsActivity extends Activity {
                 cleanTable(etl);
                 DateFormat df = new SimpleDateFormat("dd.MM.");
 
-                if(TextUtils.isEmpty(TBB)) {
+                if (TextUtils.isEmpty(TBB)) {
                     totalBaseBasal.setError("Please Enter Total Base Basal");
                     return;
-                }
-                else {
+                } else {
                     magicNumber = SafeParse.stringToDouble(TBB);
                 }
 
-                magicNumber *=2;
+                magicNumber *= 2;
                 totalBaseBasal2.setText(decimalFormat.format(magicNumber));
 
                 int i = 0;
@@ -379,45 +378,45 @@ public class DanaRStatsActivity extends Activity {
                 double weighted05 = 0d;
                 double weighted07 = 0d;
 
-                for (DanaRHistoryRecord record: historyList) {
-                    double tdd= record.getRecordDailyBolus() + record.getRecordDailyBasal();
+                for (DanaRHistoryRecord record : historyList) {
+                    double tdd = record.getRecordDailyBolus() + record.getRecordDailyBasal();
 
                     // Create the table row
                     TableRow tr = new TableRow(DanaRStatsActivity.this);
-                    if(i%2!=0) tr.setBackgroundColor(Color.DKGRAY);
-                    tr.setId(100+i);
+                    if (i % 2 != 0) tr.setBackgroundColor(Color.DKGRAY);
+                    tr.setId(100 + i);
                     tr.setLayoutParams(new TableLayout.LayoutParams(
                             TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
                     // Here create the TextView dynamically
                     TextView labelDATE = new TextView(DanaRStatsActivity.this);
-                    labelDATE.setId(200+i);
+                    labelDATE.setId(200 + i);
                     labelDATE.setText(df.format(new Date(record.getRecordDate())));
                     labelDATE.setTextColor(Color.WHITE);
                     tr.addView(labelDATE);
 
                     TextView labelBASAL = new TextView(DanaRStatsActivity.this);
-                    labelBASAL.setId(300+i);
+                    labelBASAL.setId(300 + i);
                     labelBASAL.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + " U");
                     labelBASAL.setTextColor(Color.WHITE);
                     tr.addView(labelBASAL);
 
                     TextView labelBOLUS = new TextView(DanaRStatsActivity.this);
-                    labelBOLUS.setId(400+i);
+                    labelBOLUS.setId(400 + i);
                     labelBOLUS.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + " U");
                     labelBOLUS.setTextColor(Color.WHITE);
                     tr.addView(labelBOLUS);
 
                     TextView labelTDD = new TextView(DanaRStatsActivity.this);
-                    labelTDD.setId(500+i);
+                    labelTDD.setId(500 + i);
                     labelTDD.setText(DecimalFormatter.to2Decimal(tdd) + " U");
                     labelTDD.setTextColor(Color.WHITE);
                     tr.addView(labelTDD);
 
                     TextView labelRATIO = new TextView(DanaRStatsActivity.this);
-                    labelRATIO.setId(600+i);
-                    labelRATIO.setText(Math.round(100*tdd/magicNumber) +" %");
+                    labelRATIO.setId(600 + i);
+                    labelRATIO.setText(Math.round(100 * tdd / magicNumber) + " %");
                     labelRATIO.setTextColor(Color.WHITE);
                     tr.addView(labelRATIO);
 
@@ -431,28 +430,28 @@ public class DanaRStatsActivity extends Activity {
 
                     // Create the cumtable row
                     TableRow ctr = new TableRow(DanaRStatsActivity.this);
-                    if(i%2==0) ctr.setBackgroundColor(Color.DKGRAY);
-                    ctr.setId(700+i);
+                    if (i % 2 == 0) ctr.setBackgroundColor(Color.DKGRAY);
+                    ctr.setId(700 + i);
                     ctr.setLayoutParams(new TableLayout.LayoutParams(
                             TableLayout.LayoutParams.MATCH_PARENT,
                             TableLayout.LayoutParams.WRAP_CONTENT));
 
                     // Here create the TextView dynamically
                     TextView labelDAYS = new TextView(DanaRStatsActivity.this);
-                    labelDAYS.setId(800+i);
+                    labelDAYS.setId(800 + i);
                     labelDAYS.setText("" + i);
                     labelDAYS.setTextColor(Color.WHITE);
                     ctr.addView(labelDAYS);
 
                     TextView labelCUMTDD = new TextView(DanaRStatsActivity.this);
-                    labelCUMTDD.setId(900+i);
-                    labelCUMTDD.setText(DecimalFormatter.to2Decimal(sum/i) + " U");
+                    labelCUMTDD.setId(900 + i);
+                    labelCUMTDD.setText(DecimalFormatter.to2Decimal(sum / i) + " U");
                     labelCUMTDD.setTextColor(Color.WHITE);
                     ctr.addView(labelCUMTDD);
 
                     TextView labelCUMRATIO = new TextView(DanaRStatsActivity.this);
-                    labelCUMRATIO.setId(1000+i);
-                    labelCUMRATIO.setText(Math.round(100*sum/i/magicNumber) + " %");
+                    labelCUMRATIO.setId(1000 + i);
+                    labelCUMRATIO.setText(Math.round(100 * sum / i / magicNumber) + " %");
                     labelCUMRATIO.setTextColor(Color.WHITE);
                     ctr.addView(labelCUMRATIO);
 
@@ -462,7 +461,7 @@ public class DanaRStatsActivity extends Activity {
                             TableLayout.LayoutParams.WRAP_CONTENT));
                 }
 
-                if (historyList.size()<3 || !(df.format(new Date(historyList.get(0).getRecordDate())).equals(df.format(new Date(System.currentTimeMillis() - 1000*60*60*24))))){
+                if (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).getRecordDate())).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))))) {
                     statsMessage.setVisibility(View.VISIBLE);
                     statsMessage.setText(getString(R.string.danar_stats_olddata_Message));
 
@@ -474,38 +473,38 @@ public class DanaRStatsActivity extends Activity {
 
                 i = 0;
 
-                for (DanaRHistoryRecord record: historyList) {
-                    double tdd= record.getRecordDailyBolus() + record.getRecordDailyBasal();
-                    if(i == 0 ) {
+                for (DanaRHistoryRecord record : historyList) {
+                    double tdd = record.getRecordDailyBolus() + record.getRecordDailyBasal();
+                    if (i == 0) {
                         weighted03 = tdd;
                         weighted05 = tdd;
                         weighted07 = tdd;
 
                     } else {
-                        weighted07 = (weighted07*0.3 + tdd*0.7);
-                        weighted05 = (weighted05*0.5 + tdd*0.5);
-                        weighted03 = (weighted03*0.7 + tdd*0.3);
+                        weighted07 = (weighted07 * 0.3 + tdd * 0.7);
+                        weighted05 = (weighted05 * 0.5 + tdd * 0.5);
+                        weighted03 = (weighted03 * 0.7 + tdd * 0.3);
                     }
                     i++;
                 }
 
                 // Create the exptable row
                 TableRow etr = new TableRow(DanaRStatsActivity.this);
-                if(i%2!=0) etr.setBackgroundColor(Color.DKGRAY);
-                etr.setId(1100+i);
+                if (i % 2 != 0) etr.setBackgroundColor(Color.DKGRAY);
+                etr.setId(1100 + i);
                 etr.setLayoutParams(new TableLayout.LayoutParams(
                         TableLayout.LayoutParams.MATCH_PARENT,
                         TableLayout.LayoutParams.WRAP_CONTENT));
 
                 // Here create the TextView dynamically
                 TextView labelWEIGHT = new TextView(DanaRStatsActivity.this);
-                labelWEIGHT.setId(1200+i);
+                labelWEIGHT.setId(1200 + i);
                 labelWEIGHT.setText("0.3\n" + "0.5\n" + "0.7");
                 labelWEIGHT.setTextColor(Color.WHITE);
                 etr.addView(labelWEIGHT);
 
                 TextView labelEXPTDD = new TextView(DanaRStatsActivity.this);
-                labelEXPTDD.setId(1300+i);
+                labelEXPTDD.setId(1300 + i);
                 labelEXPTDD.setText(DecimalFormatter.to2Decimal(weighted03)
                         + " U\n" + DecimalFormatter.to2Decimal(weighted05)
                         + " U\n" + DecimalFormatter.to2Decimal(weighted07) + " U");
@@ -513,10 +512,10 @@ public class DanaRStatsActivity extends Activity {
                 etr.addView(labelEXPTDD);
 
                 TextView labelEXPRATIO = new TextView(DanaRStatsActivity.this);
-                labelEXPRATIO.setId(1400+i);
-                labelEXPRATIO.setText(Math.round(100*weighted03/magicNumber) +" %\n"
-                        + Math.round(100*weighted05/magicNumber) +" %\n"
-                        + Math.round(100*weighted07/magicNumber) +" %");
+                labelEXPRATIO.setId(1400 + i);
+                labelEXPRATIO.setText(Math.round(100 * weighted03 / magicNumber) + " %\n"
+                        + Math.round(100 * weighted05 / magicNumber) + " %\n"
+                        + Math.round(100 * weighted07 / magicNumber) + " %");
                 labelEXPRATIO.setTextColor(Color.WHITE);
                 etr.addView(labelEXPRATIO);
 
@@ -549,21 +548,12 @@ public class DanaRStatsActivity extends Activity {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventDanaRConnectionStatus c) {
+    public void onStatusEvent(final EventPumpStatusChanged c) {
         runOnUiThread(
                 new Runnable() {
                     @Override
                     public void run() {
-                        if (c.sStatus == EventDanaRConnectionStatus.CONNECTING) {
-                            statusView.setText(String.format(getString(R.string.danar_history_connectingfor), c.sSecondsElapsed));
-                            log.debug("EventDanaRConnectionStatus: " + "Connecting for " + c.sSecondsElapsed + "s");
-                        } else if (c.sStatus == EventDanaRConnectionStatus.CONNECTED) {
-                            statusView.setText(MainApp.sResources.getString(R.string.connected));
-                            log.debug("EventDanaRConnectionStatus: Connected");
-                        } else {
-                            statusView.setText(MainApp.sResources.getString(R.string.disconnected));
-                            log.debug("EventDanaRConnectionStatus: Disconnected");
-                        }
+                        statusView.setText(c.textStatus());
                     }
                 }
         );

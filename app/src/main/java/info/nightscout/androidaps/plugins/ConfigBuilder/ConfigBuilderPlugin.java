@@ -54,8 +54,8 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperAc
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.client.data.DbLogger;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -390,13 +390,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public Date lastStatusTime() {
-        return activePump.lastStatusTime();
+    public Date lastDataTime() {
+        return activePump.lastDataTime();
     }
 
     @Override
-    public void updateStatus(String reason) {
-        activePump.updateStatus(reason);
+    public void refreshDataFromPump(String reason) {
+        activePump.refreshDataFromPump(reason);
     }
 
     @Override
@@ -482,7 +482,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         carbs = applyCarbsConstraints(carbs);
 
         BolusProgressDialog bolusProgressDialog = null;
-        if (context != null ) {
+        if (context != null) {
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(insulin);
             bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
@@ -682,7 +682,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public String deviceID() {
         if (activePump != null)
             return activePump.deviceID();
-        else return "Unknown";
+        else return "No Pump active!";
     }
 
     @Override
@@ -966,6 +966,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                     requested.put("temp", "absolute");
                     deviceStatus.enacted.put("requested", requested);
                 }
+            } else {
+                log.debug("OpenAPS data too old to upload");
             }
             if (activePump != null) {
                 deviceStatus.device = "openaps://" + deviceID();
@@ -973,11 +975,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 if (pumpstatus != null) {
                     deviceStatus.pump = getJSONStatus();
                 }
-
-                deviceStatus.created_at = DateUtil.toISOString(new Date());
-
-                deviceStatus.sendToNSClient();
             }
+            deviceStatus.created_at = DateUtil.toISOString(new Date());
+            deviceStatus.sendToNSClient();
         } catch (JSONException e) {
             e.printStackTrace();
         }
