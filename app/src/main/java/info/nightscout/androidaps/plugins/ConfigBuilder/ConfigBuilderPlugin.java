@@ -81,9 +81,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     static ArrayList<PluginBase> pluginList;
 
-    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledPost = null;
-
     PowerManager.WakeLock mWakeLock;
 
     public ConfigBuilderPlugin() {
@@ -815,11 +812,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return maxIobAfterConstrain;
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        uploadDeviceStatus(120);
-    }
-
     public void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes) {
         try {
             Context context = MainApp.instance().getApplicationContext();
@@ -923,7 +915,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         }
     }
 
-    public void doUploadDeviceStatus() {
+    public void uploadDeviceStatus() {
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
             LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
@@ -979,22 +971,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
-
-    static public void uploadDeviceStatus(int sec) {
-        class PostRunnable implements Runnable {
-            public void run() {
-                MainApp.getConfigBuilder().doUploadDeviceStatus();
-                scheduledPost = null;
-            }
-        }
-        // prepare task for execution
-        // cancel waiting task to prevent sending multiple posts
-        if (scheduledPost != null)
-            scheduledPost.cancel(false);
-        Runnable task = new PostRunnable();
-        scheduledPost = worker.schedule(task, sec, TimeUnit.SECONDS);
-        log.debug("Scheduling devicestatus upload in " + sec + " sec");
     }
 
     public void uploadBolusWizardRecord(Treatment t, double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
