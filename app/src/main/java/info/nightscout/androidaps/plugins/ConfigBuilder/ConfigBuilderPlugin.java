@@ -960,12 +960,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             }
 
             int batteryLevel = BatteryLevel.getBatteryLevel();
-            if (batteryLevel != BatteryLevel.lastUploadedLevel) {
-                JSONObject uploaderBattery = new JSONObject();
-                uploaderBattery.put("uploaderBattery", batteryLevel);
-                deviceStatus.uploaderBattery = uploaderBattery;
-                BatteryLevel.lastUploadedLevel = batteryLevel;
-            }
+            JSONObject uploaderBattery = new JSONObject();
+            uploaderBattery.put("uploaderBattery", batteryLevel);
+            deviceStatus.uploaderBattery = uploaderBattery;
+
             deviceStatus.created_at = DateUtil.toISOString(new Date());
             deviceStatus.sendToNSClient();
         } catch (JSONException e) {
