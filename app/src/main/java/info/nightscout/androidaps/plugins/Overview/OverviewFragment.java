@@ -721,7 +721,7 @@ public class OverviewFragment extends Fragment {
                 avgdeltaView.setText("øΔ15m: " + NSProfile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
                         "  øΔ40m: " + NSProfile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
             } else {
-                deltaView.setText(MainApp.sResources.getString(R.string.notavailable));
+                deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
                 avgdeltaView.setText("");
             }
 
