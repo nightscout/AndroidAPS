@@ -253,7 +253,6 @@ public class NSClientService extends Service {
             authMessage.put("client", "Android_" + nsDevice);
             authMessage.put("history", nsHours);
             authMessage.put("status", true); // receive status
-            authMessage.put("pingme", true); // send mi pings to keep alive
             authMessage.put("from", latestDateInReceivedData); // send data newer than
             authMessage.put("secret", nsAPIhashCode);
         } catch (JSONException e) {
