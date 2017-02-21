@@ -720,6 +720,9 @@ public class OverviewFragment extends Fragment {
                 deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
                 avgdeltaView.setText("øΔ15m: " + NSProfile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
                         "  øΔ40m: " + NSProfile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
+            } else {
+                deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
+                avgdeltaView.setText("");
             }
 
             BgReading.units = profile.getUnits();

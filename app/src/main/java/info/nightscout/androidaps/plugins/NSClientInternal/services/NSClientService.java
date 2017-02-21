@@ -79,6 +79,7 @@ public class NSClientService extends Service {
     public static boolean isConnected = false;
     public static boolean hasWriteAuth = false;
     private static Integer dataCounter = 0;
+    private static Integer connectCounter = 0;
 
 
     public static String nightscoutVersionName = "";
@@ -222,7 +223,8 @@ public class NSClientService extends Service {
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect event. ID: " + mSocket.id()));
+            connectCounter++;
+            MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "connect #" + connectCounter + " event. ID: " + mSocket.id()));
             sendAuthMessage(new NSAuthAck());
         }
     };
