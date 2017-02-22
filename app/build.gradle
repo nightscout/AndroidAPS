@@ -57,19 +57,7 @@ android {
         }
     }
     productFlavors {
-        flavorDimensions "standard", "limits",  "wear"
-        adult {
-            dimension "limits"
-            buildConfigField "int", "MAXBOLUS", "17"
-        }
-        teenage {
-            dimension "limits"
-            buildConfigField "int", "MAXBOLUS", "10"
-        }
-        child {
-            dimension "limits"
-            buildConfigField "int", "MAXBOLUS", "5"
-        }
+        flavorDimensions "standard", "wear"
         full {
             dimension "standard"
             buildConfigField "boolean", "APS", "true"

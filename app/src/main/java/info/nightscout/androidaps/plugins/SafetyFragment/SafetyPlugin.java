@@ -11,6 +11,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.HardLimits;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 
@@ -176,7 +177,7 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
         } catch (Exception e) {
             insulin = 0d;
         }
-        if (insulin > BuildConfig.MAXBOLUS) insulin = Double.valueOf(BuildConfig.MAXBOLUS);
+        if (insulin > HardLimits.maxBolus()) insulin = HardLimits.maxBolus();
         return insulin;
     }
 
