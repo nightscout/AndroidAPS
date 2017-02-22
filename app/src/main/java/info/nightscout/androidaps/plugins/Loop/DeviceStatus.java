@@ -378,7 +378,7 @@ public class DeviceStatus {
     public JSONObject enacted = null;
     public JSONObject suggested = null;
     public JSONObject iob = null;
-    public JSONObject uploaderBattery = null;
+    public int uploaderBattery = 0;
     public String created_at = null;
 
     public JSONObject mongoRecord () {
@@ -392,9 +392,9 @@ public class DeviceStatus {
                 if (enacted != null) openaps.put("enacted", enacted);
                 if (suggested != null) openaps.put("suggested", suggested);
                 if (iob != null) openaps.put("iob", iob);
-                if (uploaderBattery != null) openaps.put("uploaderBattery", uploaderBattery);
                 record.put("openaps", openaps);
             }
+            if (uploaderBattery != 0) record.put("uploaderBattery", uploaderBattery);
             if (created_at != null) record.put("created_at" , created_at);
         } catch (JSONException e) {
             e.printStackTrace();

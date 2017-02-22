@@ -272,7 +272,7 @@ public class OverviewFragment extends Fragment {
                                         finalLastRun.setByPump = applyResult;
                                         finalLastRun.lastEnact = new Date();
                                         finalLastRun.lastOpenModeAccept = new Date();
-                                        MainApp.getConfigBuilder().uploadDeviceStatus(15);
+                                        MainApp.getConfigBuilder().uploadDeviceStatus();
                                         ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
                                         if (objectivesPlugin != null) {
                                             objectivesPlugin.manualEnacts++;
