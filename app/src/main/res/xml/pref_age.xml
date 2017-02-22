@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/patientage">
+
+        <ListPreference
+            android:defaultValue="adult"
+            android:entries="@array/ageArray"
+            android:entryValues="@array/ageValues"
+            android:key="@string/key_age"
+            android:summary="@string/patientage_summary"
+            android:title="@string/patientage" />
+    </PreferenceCategory>
+</PreferenceScreen>

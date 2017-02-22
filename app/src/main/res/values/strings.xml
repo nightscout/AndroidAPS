@@ -544,4 +544,14 @@
     <string name="notavailable">Not available</string>
     <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
     <string name="key_smscommunicator_remotecommandsallowed" translatable="false">smscommunicator_remotecommandsallowed</string>
+    <string name="patientage">Patient age</string>
+    <string name="child">Child</string>
+    <string name="teenage">Teenage</string>
+    <string name="adult">Adult</string>
+    <string name="key_age" translatable="false">age</string>
+    <string name="key_child" translatable="false">child</string>
+    <string name="key_teenage" translatable="false">teenage</string>
+    <string name="key_adult" translatable="false">adult</string>
+    <string name="patientage_summary">Please select patient age to setup safety limits</string>
+    <string name="key_i_understand">I_understand</string>
 </resources>

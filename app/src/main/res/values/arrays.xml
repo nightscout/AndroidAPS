@@ -28,4 +28,16 @@
         <item>ko</item>
         <item>el</item>
     </string-array>
+
+    <string-array name="ageArray">
+        <item>@string/child</item>
+        <item>@string/teenage</item>
+        <item>@string/adult</item>
+    </string-array>
+    <string-array name="ageValues" translatable="false">
+        <item>@string/key_child</item>
+        <item>@string/key_teenage</item>
+        <item>@string/key_adult</item>
+    </string-array>
+
 </resources>

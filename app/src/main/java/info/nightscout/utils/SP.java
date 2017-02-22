@@ -76,6 +76,12 @@ public class SP {
         editor.apply();
     }
 
+    static public void removeBoolean(int resourceID) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(MainApp.sResources.getString(resourceID));
+        editor.apply();
+    }
+
     static public void putString(String key, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(key, value);
@@ -85,6 +91,12 @@ public class SP {
     static public void putString(int resourceID, String value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putString(MainApp.sResources.getString(resourceID), value);
+        editor.apply();
+    }
+
+    static public void removeString(int resourceID) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(MainApp.sResources.getString(resourceID));
         editor.apply();
     }
 }

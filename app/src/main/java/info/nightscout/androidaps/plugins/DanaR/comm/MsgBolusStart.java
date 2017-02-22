@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.utils.HardLimits;
 
 public class MsgBolusStart extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgBolusStart.class);
@@ -20,7 +21,7 @@ public class MsgBolusStart extends MessageBase {
         // HARDCODED LIMIT
         amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
         if (amount < 0) amount = 0d;
-        if (amount > BuildConfig.MAXBOLUS) amount = BuildConfig.MAXBOLUS;
+        if (amount > HardLimits.maxBolus()) amount = HardLimits.maxBolus();
 
         AddParamInt((int) (amount * 100));
 

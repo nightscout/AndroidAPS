@@ -70,7 +70,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
     }
 
-    private static void initSummary(Preference p) {
+    public static void initSummary(Preference p) {
         if (p instanceof PreferenceGroup) {
             PreferenceGroup pGrp = (PreferenceGroup) p;
             for (int i = 0; i < pGrp.getPreferenceCount(); i++) {
@@ -86,8 +86,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_password);
-            addPreferencesFromResource(R.xml.pref_quickwizard);
+            addPreferencesFromResource(R.xml.pref_age);
             addPreferencesFromResource(R.xml.pref_language);
+            addPreferencesFromResource(R.xml.pref_quickwizard);
             if (Config.CAREPORTALENABLED)
                 addPreferencesFromResource(R.xml.pref_careportal);
             addPreferencesFromResource(R.xml.pref_treatments);

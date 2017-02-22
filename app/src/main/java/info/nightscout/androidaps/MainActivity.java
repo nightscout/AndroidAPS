@@ -198,7 +198,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkEula() {
-        boolean IUnderstand = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean("I_understand", false);
+        //SP.removeBoolean(R.string.key_i_understand);
+        boolean IUnderstand = SP.getBoolean(R.string.key_i_understand, false);
         if (!IUnderstand) {
             Intent intent = new Intent(getApplicationContext(), AgreementActivity.class);
             startActivity(intent);
