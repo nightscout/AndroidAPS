@@ -140,7 +140,8 @@ public class MainActivity extends AppCompatActivity {
                         .setMessage(R.string.reset_db_confirm)
                         .setNegativeButton(android.R.string.cancel, null)
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override public void onClick(DialogInterface dialog, int which) {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
                                 MainApp.getDbHelper().resetDatabases();
                             }
                         })
@@ -208,11 +209,12 @@ public class MainActivity extends AppCompatActivity {
     //check for sms permission if enable in prefernces
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
-            SharedPreferences smssettings = PreferenceManager.getDefaultSharedPreferences(this);
-            synchronized (this){
-                if (smssettings.getBoolean("smscommunicator_remotecommandsallowed", false)) {
-                    setAskForSMS();
+        if (ev.isChanged(R.string.key_smscommunicator_remotecommandsallowed)) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
+                synchronized (this) {
+                    if (SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false)) {
+                        setAskForSMS();
+                    }
                 }
             }
         }
@@ -223,16 +225,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
         askForSMSPermissions();
     }
 
-    private synchronized void askForSMSPermissions(){
+    private synchronized void askForSMSPermissions() {
         if (askForSMS) { //only when settings were changed an MainActivity resumes.
             askForSMS = false;
-            SharedPreferences smssettings = PreferenceManager.getDefaultSharedPreferences(this);
-            if (smssettings.getBoolean("smscommunicator_remotecommandsallowed", false)) {
+            if (SP.getBoolean(R.string.smscommunicator_remotecommandsallowed, false)) {
                 if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
                     askForPermission(new String[]{Manifest.permission.RECEIVE_SMS,
                             Manifest.permission.SEND_SMS,
@@ -244,7 +245,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void askForPermission(String[] permission, Integer requestCode) {
         boolean test = false;
-        for (int i=0; i < permission.length; i++) {
+        for (int i = 0; i < permission.length; i++) {
             test = test || (ContextCompat.checkSelfPermission(this, permission[i]) != PackageManager.PERMISSION_GRANTED);
         }
         if (test) {
@@ -276,10 +277,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             View v = getCurrentFocus();
-            if ( v instanceof EditText) {
+            if (v instanceof EditText) {
                 Rect outRect = new Rect();
                 v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
+                if (!outRect.contains((int) event.getRawX(), (int) event.getRawY())) {
                     v.clearFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

@@ -160,15 +160,17 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
     @Subscribe
     public void processSettings(final EventPreferenceChange ev) {
-        String settings = SP.getString("smscommunicator_allowednumbers", "");
+        if (ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
+            String settings = SP.getString(R.string.key_smscommunicator_allowednumbers, "");
 
-        String pattern = ";";
+            String pattern = ";";
 
-        String[] substrings = settings.split(pattern);
-        for (String number : substrings) {
-            String cleaned = number.replaceAll("\\s+", "");
-            allowedNumbers.add(cleaned);
-            log.debug("Found allowed number: " + cleaned);
+            String[] substrings = settings.split(pattern);
+            for (String number : substrings) {
+                String cleaned = number.replaceAll("\\s+", "");
+                allowedNumbers.add(cleaned);
+                log.debug("Found allowed number: " + cleaned);
+            }
         }
     }
 
@@ -317,7 +319,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     break;
                 case "BASAL":
                     if (splited.length > 1) {
-                        boolean remoteCommandsAllowed = SP.getBoolean("smscommunicator_remotecommandsallowed", false);
+                        boolean remoteCommandsAllowed = SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false);
                         if (splited[1].toUpperCase().equals("CANCEL") || splited[1].toUpperCase().equals("STOP")) {
                             if (remoteCommandsAllowed) {
                                 passCode = generatePasscode();
@@ -353,7 +355,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     } else if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
                         amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);
-                        boolean remoteCommandsAllowed = SP.getBoolean("smscommunicator_remotecommandsallowed", false);
+                        boolean remoteCommandsAllowed = SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false);
                         if (amount > 0d && remoteCommandsAllowed) {
                             passCode = generatePasscode();
                             reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusreplywithcode), amount, passCode);
@@ -370,7 +372,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                 case "CAL":
                     if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
-                        boolean remoteCommandsAllowed = SP.getBoolean("smscommunicator_remotecommandsallowed", false);
+                        boolean remoteCommandsAllowed = SP.getBoolean(R.string.key_smscommunicator_remotecommandsallowed, false);
                         if (amount > 0d && remoteCommandsAllowed) {
                             passCode = generatePasscode();
                             reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_calibrationreplywithcode), amount, passCode);
@@ -478,6 +480,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
         sms.text = stripAccents(sms.text);
         if (sms.text.length() > 140) sms.text = sms.text.substring(0, 139);
         try {
+            log.debug("Sending SMS to " + sms.phoneNumber + ": " + sms.text);
             smsManager.sendTextMessage(sms.phoneNumber, null, sms.text, null, null);
             messages.add(sms);
         } catch (IllegalArgumentException e) {
