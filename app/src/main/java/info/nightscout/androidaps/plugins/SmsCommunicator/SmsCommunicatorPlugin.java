@@ -160,7 +160,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
     @Subscribe
     public void processSettings(final EventPreferenceChange ev) {
-        if (ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
+        if (ev == null || ev.isChanged(R.string.key_smscommunicator_allowednumbers)) {
             String settings = SP.getString(R.string.key_smscommunicator_allowednumbers, "");
 
             String pattern = ";";
