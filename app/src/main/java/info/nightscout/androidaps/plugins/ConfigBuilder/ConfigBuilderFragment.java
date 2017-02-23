@@ -113,6 +113,8 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                     }, null);
                 }
             });
+        } else {
+            unlock.setVisibility(View.GONE);
         }
         return view;
     }
