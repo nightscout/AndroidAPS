@@ -309,12 +309,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
         }
 
         // IOB calculation
-        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
+        TreatmentsInterface treatments = ConfigBuilderPlugin.getActiveTreatments();
         treatments.updateTotalIOB();
-        tempBasals.updateTotalIOB();
         IobTotal bolusIob = treatments.getLastCalculation();
-        IobTotal basalIob = tempBasals.getLastCalculation();
+        TempBasalsInterface tempBasals = ConfigBuilderPlugin.getActiveTempBasals();
+        IobTotal basalIob = new IobTotal(new Date().getTime());
+        if (tempBasals != null) {
+            tempBasals.updateTotalIOB();
+            basalIob = tempBasals.getLastCalculation().round();
+        }
 
         bolusIobInsulin.setText(DecimalFormatter.to2Decimal(-bolusIob.iob) + "U");
         basalIobInsulin.setText(DecimalFormatter.to2Decimal(-basalIob.basaliob) + "U");

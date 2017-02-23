@@ -21,6 +21,7 @@ import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.VirtualPump.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -169,7 +170,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public double getBaseBasalRate() {
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
         if (profile == null)
             return defaultBasalValue;
         return profile.getBasal(profile.secondsFromMidnight());
@@ -182,7 +183,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         if (getTempBasal().isAbsolute) {
             return getTempBasal().absolute;
         } else {
-            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
             if (profile == null)
                 return defaultBasalValue;
             Double baseRate = profile.getBasal(profile.secondsFromMidnight());
@@ -193,12 +194,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public TempBasal getTempBasal() {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
+        return ConfigBuilderPlugin.getActiveTempBasals().getTempBasal(new Date());
     }
 
     @Override
     public TempBasal getExtendedBolus() {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getExtendedBolus(new Date());
+        return ConfigBuilderPlugin.getActiveTempBasals().getExtendedBolus(new Date());
     }
 
     @Override
@@ -210,7 +211,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public TempBasal getTempBasal(Date time) {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(time);
+        return ConfigBuilderPlugin.getActiveTempBasals().getTempBasal(time);
     }
 
     @Override

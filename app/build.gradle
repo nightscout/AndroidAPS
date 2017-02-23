@@ -44,7 +44,8 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1100
-        versionName "1.1g"
+        version "1.1g"
+        buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
     lintOptions {
@@ -60,26 +61,50 @@ android {
         flavorDimensions "standard", "wear"
         full {
             dimension "standard"
+            resValue "string", "app_name", "AndroidAPS"
+            versionName version
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/blueowl"
+            ]
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
-        }
-        pumpcontrol {
-            dimension "standard"
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
-        }
-        careportal {
-            dimension "standard"
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "false"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
         }
         openloop {
             dimension "standard"
+            resValue "string", "app_name", "AndroidAPS"
+            versionName version
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/blueowl"
+            ]
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
+        pumpcontrol {
+            dimension "standard"
+            resValue "string", "app_name", "AndroidAPS"
+            versionName version
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/blueowl"
+            ]
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
+        nsclient {
+            dimension "standard"
+            resValue "string", "app_name", "NSClient"
+            versionName version + "-nsclient"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/yellowowl"
+            ]
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "false"
+            buildConfigField "boolean", "NSCLIENTOLNY", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
         }
         wear {

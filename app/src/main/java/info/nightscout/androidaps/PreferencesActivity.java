@@ -57,7 +57,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getKey().contains("password")) {
+            if (pref.getKey().contains("password")|| pref.getKey().contains("secret")) {
                 pref.setSummary("******");
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
@@ -85,20 +85,28 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         @Override
         public void onCreate(final Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.pref_password);
-            addPreferencesFromResource(R.xml.pref_age);
+            if (Config.ALLPREFERENCES) {
+                addPreferencesFromResource(R.xml.pref_password);
+                addPreferencesFromResource(R.xml.pref_age);
+            }
             addPreferencesFromResource(R.xml.pref_language);
-            addPreferencesFromResource(R.xml.pref_quickwizard);
-            if (Config.CAREPORTALENABLED)
-                addPreferencesFromResource(R.xml.pref_careportal);
-            addPreferencesFromResource(R.xml.pref_treatments);
+            if (Config.ALLPREFERENCES) {
+                addPreferencesFromResource(R.xml.pref_quickwizard);
+            }
+            addPreferencesFromResource(R.xml.pref_careportal);
+            if (Config.ALLPREFERENCES) {
+                addPreferencesFromResource(R.xml.pref_treatments);
+            }
             if (Config.APS)
                 addPreferencesFromResource(R.xml.pref_closedmode);
-            if (Config.OPENAPSENABLED)
+            if (Config.OPENAPSENABLED) {
                 addPreferencesFromResource(R.xml.pref_openapsma);
-            if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
-                addPreferencesFromResource(R.xml.pref_openapsama);
-            addPreferencesFromResource(R.xml.pref_profile);
+                if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
+                    addPreferencesFromResource(R.xml.pref_openapsama);
+            }
+            if (Config.ALLPREFERENCES) {
+                addPreferencesFromResource(R.xml.pref_profile);
+            }
             if (Config.DANAR) {
                 DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
                 DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
@@ -119,13 +127,17 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
             if (Config.SMSCOMMUNICATORENABLED)
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
-            addPreferencesFromResource(R.xml.pref_others);
-            addPreferencesFromResource(R.xml.pref_advanced);
+            if (Config.ALLPREFERENCES) {
+                addPreferencesFromResource(R.xml.pref_others);
+                addPreferencesFromResource(R.xml.pref_advanced);
+            }
             initSummary(getPreferenceScreen());
 
-            WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
-            if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
-                addPreferencesFromResource(R.xml.pref_wear);
+            if (Config.WEAR) {
+                WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
+                if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
+                    addPreferencesFromResource(R.xml.pref_wear);
+                }
             }
         }
 

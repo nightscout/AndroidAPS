@@ -196,7 +196,7 @@ public class LoopPlugin implements PluginBase {
                 if (result.changeRequested && allowNotification) {
                     NotificationCompat.Builder builder =
                             new NotificationCompat.Builder(MainApp.instance().getApplicationContext());
-                    builder.setSmallIcon(R.drawable.notification_icon)
+                    builder.setSmallIcon(R.drawable.notif_icon)
                             .setContentTitle(MainApp.sResources.getString(R.string.openloop_newsuggestion))
                             .setContentText(resultAfterConstraints.toString())
                             .setAutoCancel(true)

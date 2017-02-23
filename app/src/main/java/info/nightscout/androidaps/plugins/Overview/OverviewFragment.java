@@ -741,10 +741,13 @@ public class OverviewFragment extends Fragment {
         timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
 
         // iob
-        MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
-        IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-        MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
-        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
+        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOB();
+        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculation().round();
+        IobTotal basalIob = new IobTotal(new Date().getTime());
+        if (ConfigBuilderPlugin.getActiveTempBasals() != null) {
+            ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOB();
+            basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculation().round();
+        }
 
         String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

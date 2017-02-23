@@ -78,29 +78,28 @@ public class MainApp extends Application {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.getPlugin());
-            pluginsList.add(ActionsFragment.getPlugin());
+            if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANARKOREAN) pluginsList.add(DanaRKoreanFragment.getPlugin());
-            if (Config.CAREPORTALENABLED) pluginsList.add(CareportalFragment.getPlugin());
-            pluginsList.add(MDIFragment.getPlugin());
-            pluginsList.add(VirtualPumpFragment.getPlugin());
+            pluginsList.add(CareportalFragment.getPlugin());
+            if (Config.MDI) pluginsList.add(MDIFragment.getPlugin());
+            if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpFragment.getPlugin());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSAMAFragment.getPlugin());
             pluginsList.add(NSProfileFragment.getPlugin());
-            pluginsList.add(SimpleProfileFragment.getPlugin());
-            pluginsList.add(LocalProfileFragment.getPlugin());
-            pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
+            if (Config.OTHERPROFILES) pluginsList.add(SimpleProfileFragment.getPlugin());
+            if (Config.OTHERPROFILES) pluginsList.add(LocalProfileFragment.getPlugin());
+            if (Config.OTHERPROFILES) pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             if (Config.APS) pluginsList.add(TempTargetRangeFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
-            pluginsList.add(TempBasalsFragment.getPlugin());
-            pluginsList.add(SafetyFragment.getPlugin());
+            if (Config.TEMPBASALS) pluginsList.add(TempBasalsFragment.getPlugin());
+            if (Config.SAFETY) pluginsList.add(SafetyFragment.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
             pluginsList.add(SourceXdripFragment.getPlugin());
             pluginsList.add(SourceNSClientFragment.getPlugin());
             pluginsList.add(SourceMM640gFragment.getPlugin());
-            if (Config.SMSCOMMUNICATORENABLED)
-                pluginsList.add(SmsCommunicatorFragment.getPlugin());
+            if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.getPlugin());
 
             if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
