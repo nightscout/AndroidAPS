@@ -1,22 +1,46 @@
-package info.nightscout.androidaps.plugins.NSClientInternal.data;
+package info.nightscout.androidaps.db;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by mike on 27.02.2016.
  * <p>
  * Allowed actions "dbAdd" || "dbUpdate" || "dbUpdateUnset" || "dbRemove"
  */
+@DatabaseTable(tableName = DatabaseHelper.DATABASE_DBREQUESTS)
 public class DbRequest {
-    public String action = null;
-    public String collection = null;
-    public JSONObject data = null;
-    public String _id = null;
+    private static Logger log = LoggerFactory.getLogger(DbRequest.class);
+
+    public String getNsClientID() {
+        return nsClientID;
+    }
+
+    public void setNsClientID(String nsClientID) {
+        this.nsClientID = nsClientID;
+    }
+
+    @DatabaseField(id = true, useGetSet = true)
     public String nsClientID = null;
+
+    @DatabaseField
+    public String action = null;
+
+    @DatabaseField
+    public String collection = null;
+
+    @DatabaseField
+    public String data = null;
+
+    @DatabaseField
+    public String _id = null;
 
     public DbRequest() {
     }
@@ -25,7 +49,7 @@ public class DbRequest {
     public DbRequest(String action, String collection, String nsClientID, JSONObject data) {
         this.action = action;
         this.collection = collection;
-        this.data = data;
+        this.data = data.toString();
         this.nsClientID = nsClientID;
         this._id = "";
     }
@@ -34,7 +58,7 @@ public class DbRequest {
     public DbRequest(String action, String collection, String nsClientID, String _id, JSONObject data) {
         this.action = action;
         this.collection = collection;
-        this.data = data;
+        this.data = data.toString();
         this.nsClientID = nsClientID;
         this._id = _id;
     }
@@ -43,7 +67,7 @@ public class DbRequest {
     public DbRequest(String action, String collection, String nsClientID, String _id) {
         this.action = action;
         this.collection = collection;
-        this.data = new JSONObject();
+        this.data = new JSONObject().toString();
         this.nsClientID = nsClientID;
         this._id = _id;
     }
@@ -57,7 +81,7 @@ public class DbRequest {
         try {
             object.put("action", action);
             object.put("collection", collection);
-            object.put("data", data);
+            object.put("data", new JSONObject(data));
             if (_id != null) object.put("_id", _id);
             if (nsClientID != null) object.put("nsClientID", nsClientID);
         } catch (JSONException e) {
@@ -74,7 +98,7 @@ public class DbRequest {
             if (jsonObject.has("collection"))
                 result.collection = jsonObject.getString("collection");
             if (jsonObject.has("data"))
-                result.data = jsonObject.getJSONObject("data");
+                result.data = jsonObject.getJSONObject("data").toString();
             if (jsonObject.has("_id"))
                 result._id = jsonObject.getString("_id");
             if (jsonObject.has("nsClientID"))
