@@ -17,7 +17,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.DbRequest;
+import info.nightscout.androidaps.db.DbRequest;
 
 public class DBAccessReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(DBAccessReceiver.class);

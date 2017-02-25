@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
+import com.j256.ormlite.dao.CloseableIterator;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
@@ -47,7 +49,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastP
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastSgvs;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.DbRequest;
+import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSCal;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
@@ -518,7 +520,7 @@ public class NSClientService extends Service {
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
-            message.put("data", dbr.data);
+            message.put("data", new JSONObject(dbr.data));
             mSocket.emit("dbUpdate", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBUPDATE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
@@ -532,7 +534,7 @@ public class NSClientService extends Service {
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
             message.put("_id", dbr._id);
-            message.put("data", dbr.data);
+            message.put("data", new JSONObject(dbr.data));
             mSocket.emit("dbUpdateUnset", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBUPDATEUNSET " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
@@ -568,7 +570,7 @@ public class NSClientService extends Service {
             if (!isConnected || !hasWriteAuth) return;
             JSONObject message = new JSONObject();
             message.put("collection", dbr.collection);
-            message.put("data", dbr.data);
+            message.put("data", new JSONObject(dbr.data));
             mSocket.emit("dbAdd", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
         } catch (JSONException e) {
@@ -632,7 +634,7 @@ public class NSClientService extends Service {
     }
 
     public void resend(final String reason) {
-        if (UploadQueue.queue.size() == 0)
+        if (UploadQueue.size() == 0)
             return;
 
         if (!isConnected || !hasWriteAuth) return;
@@ -643,26 +645,35 @@ public class NSClientService extends Service {
             @Override
             public void run() {
                 Logger log = LoggerFactory.getLogger(UploadQueue.class);
-                Iterator<Map.Entry<String, DbRequest>> iter = UploadQueue.queue.entrySet().iterator();
-
                 if (mSocket == null || !mSocket.connected()) return;
 
-                while (iter.hasNext()) {
-                    DbRequest dbr = iter.next().getValue();
-                    if (dbr.action.equals("dbAdd")) {
-                        NSAddAck addAck = new NSAddAck();
-                        dbAdd(dbr, addAck);
-                    } else if (dbr.action.equals("dbRemove")) {
-                        NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id);
-                        dbRemove(dbr, removeAck);
-                    } else if (dbr.action.equals("dbUpdate")) {
-                        NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id);
-                        dbUpdate(dbr, updateAck);
-                    } else if (dbr.action.equals("dbUpdateUnset")) {
-                        NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id);
-                        dbUpdateUnset(dbr, updateUnsetAck);
+                CloseableIterator<DbRequest> iterator = null;
+                try {
+                    iterator = MainApp.getDbHelper().getDaoDbRequest().closeableIterator();
+                    try {
+                        while (iterator.hasNext()) {
+                            DbRequest dbr = iterator.next();
+                            if (dbr.action.equals("dbAdd")) {
+                                NSAddAck addAck = new NSAddAck();
+                                dbAdd(dbr, addAck);
+                            } else if (dbr.action.equals("dbRemove")) {
+                                NSUpdateAck removeAck = new NSUpdateAck(dbr.action, dbr._id);
+                                dbRemove(dbr, removeAck);
+                            } else if (dbr.action.equals("dbUpdate")) {
+                                NSUpdateAck updateAck = new NSUpdateAck(dbr.action, dbr._id);
+                                dbUpdate(dbr, updateAck);
+                            } else if (dbr.action.equals("dbUpdateUnset")) {
+                                NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id);
+                                dbUpdateUnset(dbr, updateUnsetAck);
+                            }
+                        }
+                    } finally {
+                        iterator.close();
                     }
+                } catch (SQLException e) {
+                    e.printStackTrace();
                 }
+
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));
             }
         });

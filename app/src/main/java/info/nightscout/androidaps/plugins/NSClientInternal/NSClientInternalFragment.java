@@ -106,7 +106,7 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
                 getPlugin().clearLog();
                 break;
             case R.id.nsclientinternal_clearqueue:
-                getPlugin().queue().reset();
+                getPlugin().queue().clearQueue();
                 break;
             case R.id.nsclientinternal_showqueue:
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", getPlugin().queue().textList()));
