@@ -157,12 +157,6 @@ public class NSClientInternalPlugin implements PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventNSClientRestart ev) {
-        if (nsClientService != null)
-            nsClientService.restart();
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventNSClientStatus ev) {
         status = ev.status;
         MainApp.bus().post(new EventNSClientUpdateGUI());

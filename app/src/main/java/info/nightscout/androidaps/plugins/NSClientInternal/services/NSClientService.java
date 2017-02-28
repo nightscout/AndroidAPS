@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
+import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -171,6 +172,12 @@ public class NSClientService extends Service {
             destroy();
             initialize();
         }
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventNSClientRestart ev) {
+        latestDateInReceivedData = 0;
+        restart();
     }
 
     public static void setNsProfile(NSProfile profile) {

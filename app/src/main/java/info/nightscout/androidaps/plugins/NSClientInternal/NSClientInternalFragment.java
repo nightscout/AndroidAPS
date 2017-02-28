@@ -2,6 +2,9 @@ package info.nightscout.androidaps.plugins.NSClientInternal;
 
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -106,7 +109,19 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
                 getPlugin().clearLog();
                 break;
             case R.id.nsclientinternal_clearqueue:
-                getPlugin().queue().clearQueue();
+                final Context context = getContext();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+                builder.setTitle(this.getContext().getString(R.string.confirmation));
+                builder.setMessage("Clear queue? All data in queue will be lost!");
+                builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        getPlugin().queue().clearQueue();
+                        updateGUI();
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.cancel), null);
+                builder.show();
                 break;
             case R.id.nsclientinternal_showqueue:
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", getPlugin().queue().textList()));
