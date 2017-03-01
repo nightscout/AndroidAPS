@@ -54,7 +54,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         okButton.setOnClickListener(this);
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        Double bg = NSProfile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits());
+        Double bg = profile != null ? NSProfile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits()) : 0d;
         if (profile.getUnits().equals(Constants.MMOL))
             bgText = new PlusMinusEditText(view, R.id.overview_calibration_bg, R.id.overview_calibration_bg_plus, R.id.overview_calibration_bg_minus, bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
         else
