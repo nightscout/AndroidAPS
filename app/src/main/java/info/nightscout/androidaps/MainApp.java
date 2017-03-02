@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.ThreadEnforcer;
@@ -71,6 +72,8 @@ public class MainApp extends Application {
         Crashlytics.setString("BUILDVERSION", BuildConfig.BUILDVERSION);
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
+
+        Answers.getInstance().logCustom(new CustomEvent("AppStart"));
 
         sBus = new Bus(ThreadEnforcer.ANY);
         sInstance = this;
