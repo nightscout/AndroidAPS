@@ -1,5 +1,8 @@
 package info.nightscout.androidaps.plugins.NSClientInternal;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.j256.ormlite.dao.CloseableIterator;
 
 import org.json.JSONArray;
@@ -33,7 +36,15 @@ public class UploadQueue {
         return MainApp.getDbHelper().size(DatabaseHelper.DATABASE_DBREQUESTS);
     }
 
+    private static void startService() {
+        if (NSClientService.handler == null) {
+            Context context = MainApp.instance();
+            context.startService(new Intent(context, NSClientService.class));
+        }
+    }
+
     public static void add(final DbRequest dbr) {
+        startService();
         NSClientService.handler.post(new Runnable() {
             @Override
             public void run() {
@@ -44,6 +55,7 @@ public class UploadQueue {
     }
 
     public static void clearQueue() {
+        startService();
         NSClientService.handler.post(new Runnable() {
             @Override
             public void run() {
@@ -55,6 +67,7 @@ public class UploadQueue {
     }
 
     public static void removeID(final JSONObject record) {
+        startService();
         NSClientService.handler.post(new Runnable() {
             @Override
             public void run() {
@@ -76,6 +89,7 @@ public class UploadQueue {
     }
 
     public static void removeID(final String action, final String _id) {
+        startService();
         NSClientService.handler.post(new Runnable() {
             @Override
             public void run() {
