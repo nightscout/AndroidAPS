@@ -1,1 +1,0 @@
-{"temp":"absolute","bg":148,"tick":-21,"eventualBG":-28,"snoozeBG":16,"predBGs":{"IOB":[148,128,109,92,75,60,46,39,39,39,39,39,39]},"COB":0,"IOB":5.248,"reason":"COB: 0, Dev: -64, BGI: -8.2, ISF: 21, Target: 81; Eventual BG -28 < 81, setting -11.3U/hr, but 28m left and 0 ~ req 0U/hr: no action required"}
