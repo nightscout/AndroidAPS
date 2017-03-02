@@ -469,8 +469,8 @@ public class SmsCommunicatorPlugin implements PluginBase {
     }
 
     public void sendSMSToAllNumbers(Sms sms) {
-        for (int i = 0; i < allowedNumbers.size(); i++) {
-            sms.phoneNumber = allowedNumbers.get(i);
+        for (String number: allowedNumbers) {
+            sms.phoneNumber = number;
             sendSMS(sms);
         }
     }
