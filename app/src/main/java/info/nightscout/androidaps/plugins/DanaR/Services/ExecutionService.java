@@ -113,7 +113,7 @@ public class ExecutionService extends Service {
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
                 log.debug("Device has disconnected " + device.getName());//Device has disconnected
-                if (mBTDevice != null && mBTDevice.getName().equals(device.getName())) {
+                if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(device.getName())) {
                     if (mSerialIOThread != null) {
                         mSerialIOThread.disconnect("BT disconnection broadcast");
                     }
