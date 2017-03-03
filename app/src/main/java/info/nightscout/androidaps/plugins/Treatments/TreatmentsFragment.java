@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -149,6 +151,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                                 MainApp.getDbHelper().delete(treatment);
                                 treatmentsPlugin.initializeData();
                                 updateGUI();
+                                Answers.getInstance().logCustom(new CustomEvent("RefreshTreatments"));
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);

@@ -14,6 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
@@ -117,6 +120,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                                     }
                                 }
                             });
+                            Answers.getInstance().logCustom(new CustomEvent("ExtendedBolus"));
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);

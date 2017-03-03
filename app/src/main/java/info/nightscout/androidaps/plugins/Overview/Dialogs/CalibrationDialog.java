@@ -12,6 +12,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,6 +76,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
                 final Double bg = bgText.getValue();
                 XdripCalibrations.confirmAndSendCalibration(bg, parentContext);
                 dismiss();
+                Answers.getInstance().logCustom(new CustomEvent("Calibration"));
                 break;
         }
     }

@@ -28,6 +28,8 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.series.BarGraphSeries;
@@ -236,6 +238,7 @@ public class OverviewFragment extends Fragment {
                         public void run() {
                             pump.cancelTempBasal();
                             MainApp.bus().post(new EventTempBasalChange());
+                            Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
                         }
                     });
                 }
@@ -282,6 +285,7 @@ public class OverviewFragment extends Fragment {
                                     updateGUIIfVisible();
                                 }
                             });
+                            Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
                         }
                     });
                     builder.setNegativeButton(getContext().getString(R.string.cancel), null);
@@ -392,6 +396,7 @@ public class OverviewFragment extends Fragment {
                                     }
                                 }
                             });
+                            Answers.getInstance().logCustom(new CustomEvent("QuickWizard"));
                         }
                     }
                 });

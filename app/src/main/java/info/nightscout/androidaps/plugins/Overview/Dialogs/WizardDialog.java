@@ -24,6 +24,9 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -238,6 +241,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                                             }
                                         }
                                     });
+                                    Answers.getInstance().logCustom(new CustomEvent("Wizard"));
                                 }
                             }
                         });

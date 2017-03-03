@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
@@ -74,6 +76,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
         switch (view.getId()) {
             case R.id.openapsma_run:
                 getPlugin().invoke("OpenAPSAMA button");
+                Answers.getInstance().logCustom(new CustomEvent("OpenAPS_AMA_Run"));
                 break;
         }
 

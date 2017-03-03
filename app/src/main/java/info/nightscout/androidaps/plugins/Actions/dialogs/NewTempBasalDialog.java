@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
@@ -158,7 +161,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                     }
                                 }
                             });
-
+                            Answers.getInstance().logCustom(new CustomEvent("TempBasal"));
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);

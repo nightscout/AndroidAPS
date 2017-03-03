@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -84,6 +86,7 @@ public class LoopFragment extends Fragment implements View.OnClickListener, Frag
                     }
                 });
                 thread.start();
+                Answers.getInstance().logCustom(new CustomEvent("Loop_Run"));
                 break;
         }
 

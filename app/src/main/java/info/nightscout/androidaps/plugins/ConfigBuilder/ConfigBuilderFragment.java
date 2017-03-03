@@ -16,6 +16,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.MainApp;
@@ -214,6 +217,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                         MainApp.bus().post(new EventRefreshGui(true));
                         MainApp.bus().post(new EventConfigBuilderChange());
                         getPlugin().logPluginStatus();
+                        Answers.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
                     }
                 });
 

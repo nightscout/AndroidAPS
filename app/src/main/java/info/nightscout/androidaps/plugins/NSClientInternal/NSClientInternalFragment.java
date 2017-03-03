@@ -18,6 +18,8 @@ import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -101,9 +103,11 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
         switch (view.getId()) {
             case R.id.nsclientinternal_restart:
                 MainApp.bus().post(new EventNSClientRestart());
+                Answers.getInstance().logCustom(new CustomEvent("NSClientRestart"));
                 break;
             case R.id.nsclientinternal_delivernow:
                 getPlugin().resend("GUI");
+                Answers.getInstance().logCustom(new CustomEvent("NSClientDeliverNow"));
                 break;
             case R.id.nsclientinternal_clearlog:
                 getPlugin().clearLog();
@@ -118,6 +122,7 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
                     public void onClick(DialogInterface dialog, int id) {
                         getPlugin().queue().clearQueue();
                         updateGUI();
+                        Answers.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), null);
@@ -125,6 +130,7 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
                 break;
             case R.id.nsclientinternal_showqueue:
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", getPlugin().queue().textList()));
+                Answers.getInstance().logCustom(new CustomEvent("NSClientShowQueue"));
                 break;
         }
     }
@@ -137,6 +143,7 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
                 getPlugin().paused = isChecked;
                 MainApp.bus().post(new EventPreferenceChange(R.string.key_nsclientinternal_paused));
                 updateGUI();
+                Answers.getInstance().logCustom(new CustomEvent("NSClientPause"));
                 break;
             case R.id.nsclientinternal_autoscroll:
                 SP.putBoolean(R.string.key_nsclientinternal_autoscroll, isChecked);

@@ -24,6 +24,8 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.j256.ormlite.dao.Dao;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
@@ -627,6 +629,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         data.put("percentage", cpp.percentage);
                                     }
                                     ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                                    Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -657,6 +660,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         dao.createIfNotExists(tempTarget);
                                         MainApp.bus().post(new EventTempTargetRangeChange());
                                         ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                                        Answers.getInstance().logCustom(new CustomEvent("TempTarget"));
                                     } catch (JSONException | SQLException e) {
                                         e.printStackTrace();
                                     }
@@ -668,6 +672,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     }
                 } else {
                     ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                    Answers.getInstance().logCustom(new CustomEvent("NSTreatment"));
                 }
             }
         });
