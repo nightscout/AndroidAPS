@@ -508,7 +508,7 @@
     <string name="wear_detailedIOB_summary">Раздели IOB на болус и базал IOB на часовника</string>
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
     <string name="wear_settings">Настройки на часовник</string>
-    <string name="smscommunicator_calibrationreplywithcode"formatted="false">To send calibration %.2f reply with code %s</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">To send calibration %.2f reply with code %s</string>
     <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
     <string name="queue">Опашка:</string>
