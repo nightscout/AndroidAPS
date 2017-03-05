@@ -81,6 +81,12 @@ public class Autosens {
             long bgTime = bucketed_data.get(i).timeIndex;
             int secondsFromMidnight = NSProfile.secondsFromMidnight(new Date(bgTime));
 
+            String hour = "";
+            Date d = new Date(secondsFromMidnight);
+            if (secondsFromMidnight % 3600 < 3 * 60 || secondsFromMidnight % 3600 > 57 * 60) {
+                hour += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
+            }
+
             double sens = NSProfile.toMgdl(profile.getIsf(secondsFromMidnight), profile.getUnits());
 
             //console.error(bgTime , bucketed_data[i].glucose);
@@ -122,6 +128,7 @@ public class Autosens {
                 pastSensitivity += ">";
                 //console.error(bgTime);
             }
+            pastSensitivity += hour;
             //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
             // if bgTime is more recent than mealTime
