@@ -212,14 +212,14 @@
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="bolusdelivered" formatted="false">Болус %.2fU беше подаден успешно</string>
-    <string name="smscommunicator_bolusfailed">Болусът не е доставен</string>
+    <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="canceltemp">Откажи временен базал</string>
     <string name="virtualpump_lastconnection_label">Последно свързване:</string>
     <string name="waitingforpumpresult">Изчаква резултат</string>
     <string name="smscommunicator">SMS комуникатор</string>
     <string name="smscommunicator_allowednumbers">Позволени телефонни номера</string>
     <string name="success">Успех</string>
-    <string name="smscommunicator_bolusreplywithcode" formatted="false">За да доставите болус %.2fU отговорете с код  %s</string>
+    <string name="smscommunicator_bolusreplywithcode" formatted="false">To deliver bolus %.2fU reply with code %s</string>
     <string name="smscommunicator_remotebolusnotallowed">Отдалечен болус не е разрешен</string>
     <string name="reloadprofile">Обнови профила</string>
     <string name="percent">Процент</string>
@@ -373,24 +373,24 @@
     <string name="wear">Wear</string>
     <string name="wrongpumpdriverselected">Избран е грешен тип помпа</string>
     <string name="minago" formatted="false">преди %d м.</string>
-    <string name="actions_shortname">"ДЕЙСТВ"</string>
-    <string name="wear_shortname">"Wear"</string>
-    <string name="virtualpump_shortname">"ВП"</string>
-    <string name="treatments_shortname">"ТТ"</string>
-    <string name="temptargetrange_shortname">"ВЦeл"</string>
-    <string name="tempbasals_shortname">"ВБ"</string>
-    <string name="smscommunicator_shortname">"СМС"</string>
-    <string name="simpleprofile_shortname">"ОПРОФ"</string>
-    <string name="profileviewer_shortname">"ПРОф"</string>
-    <string name="overview_shortname">"ОСН"</string>
-    <string name="objectives_shortname">\"ЦЕЛИ"</string>
-    <string name="oaps_shortname">"OAPS"</string>
+    <string name="actions_shortname">ДЕЙСТВ</string>
+    <string name="wear_shortname">WEAR</string>
+    <string name="virtualpump_shortname">ВП</string>
+    <string name="treatments_shortname">TREAT</string>
+    <string name="temptargetrange_shortname">ВЦeл</string>
+    <string name="tempbasals_shortname">ВБ</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="simpleprofile_shortname">ОПРОФ</string>
+    <string name="profileviewer_shortname">ПРОф</string>
+    <string name="overview_shortname">ОСН</string>
+    <string name="objectives_shortname">ЦЕЛИ</string>
+    <string name="oaps_shortname">OAPS</string>
     <string name="loop_shortname">"Loop "</string>
-    <string name="localprofile_shortname">"ЛПр "</string>
-    <string name="danarpump_shortname">"Dana"</string>
-    <string name="configbuilder_shortname">"КОНФ"</string>
-    <string name="circadian_percentage_profile_shortname">"ППр "</string>
-    <string name="careportal_shortname">"CaPr"</string>
+    <string name="localprofile_shortname">ЛПр</string>
+    <string name="danarpump_shortname">Dana</string>
+    <string name="configbuilder_shortname">КОНФ</string>
+    <string name="circadian_percentage_profile_shortname">ППр</string>
+    <string name="careportal_shortname">CaPr</string>
     <string name="activity">Физ.активност</string>
     <string name="danar_stats">DanaR статистика</string>
     <string name="danar_stats_basalrate">Базал</string>
@@ -425,7 +425,7 @@
     <string name="danar_stats_expweight">Експоненциално претеглена TDD</string>
     <string name="danar_stats_cumulative_tdd">Комулативна TDD</string>
     <string name="danar_stats_weight">Тегло</string>
-    <string name="danar_stats_amount_days"># Days</string>
+    <string name="danar_stats_amount_days">Дни</string>
     <string name="MM640g">MM640g</string>
     <string name="array_of_elements" formatted="false">Масив от %d елемента. Актуална стойност:</string>
     <string name="sms_basal">Basal:</string>
@@ -473,4 +473,43 @@
     <string name="pumpsuspendedclicktorefresh">Помпата е спряна. Натиснете за обновяване</string>
     <string name="prefs_delta_title">Настройки на параметър Δ КЗ</string>
     <string name="overview_calibration_bg_label">Калибрация на КЗ</string>
+    <string name="adult">Възрастен</string>
+    <string name="advancedsettings_title">Разширени настройки</string>
+    <string name="child">Дете</string>
+    <string name="clear_queue">Изчисти опашката</string>
+    <string name="clearlog">Изчисти log</string>
+    <string name="danar_model"></string>
+    <string name="deliver_now">Изпрати сега</string>
+    <string name="nosuccess">неуспешно - проверете телефона</string>
+    <string name="notavailable">Недостъпно</string>
+    <string name="nowritepermission">NSCLIENT няма достъп. Грешна API secret?</string>
+    <string name="nsclientinternal">вътрешен NSClient</string>
+    <string name="nsclientinternal_autoscroll">Autoscroll</string>
+    <string name="nsclientinternal_devicename_dialogmessage">Ще бъде използвано в поле въведено от</string>
+    <string name="nsclientinternal_devicename_dialogtitle">Въведи име на устройство</string>
+    <string name="nsclientinternal_devicename_title">Име на устройство</string>
+    <string name="nsclientinternal_secret_dialogmessage">Въведи API secret (мин. 12 символа)</string>
+    <string name="nsclientinternal_title">Вътрешен NSClient</string>
+    <string name="nsclientinternal_url">URL:</string>
+    <string name="nsclientinternal_url_dialogmessage">Въведи Nightscout URL</string>
+    <string name="nsclientinternal_url_title">Nightscout URL</string>
+    <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
+    <string name="nsclientinternal_secret_title">NS API secret</string>
+    <string name="nsclientinternal_shortname">NSCL</string>
+    <string name="patientage">Възраст на потребителя</string>
+    <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
+    <string name="paused">На пауза</string>
+    <string name="profile">Профил</string>
+    <string name="restart">Рестарт</string>
+    <string name="show_queue">Покажи опашката</string>
+    <string name="smscommunicator_calibrationfailed">xDrip не приема калибрация</string>
+    <string name="status">Статус:</string>
+    <string name="teenage">Тийнейджър</string>
+    <string name="wear_detailedIOB_summary">Раздели IOB на болус и базал IOB на часовника</string>
+    <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
+    <string name="wear_settings">Настройки на часовник</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">To send calibration %.2f reply with code %s</string>
+    <string name="smscommunicator_calibrationsent">Calibration sent. Receiving must be enabled in xDrip.</string>
+    <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
+    <string name="queue">Опашка:</string>
 </resources>
