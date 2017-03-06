@@ -47,7 +47,7 @@ public class Autosens {
                 //console.error(elapsed_minutes);
                 long nextbgTime;
                 while (elapsed_minutes > 5) {
-                    nextbgTime = lastbgTime + 5 * 60 * 1000;
+                    nextbgTime = lastbgTime - 5 * 60 * 1000;
                     j++;
                     BgReading newBgreading = new BgReading();
                     newBgreading.timeIndex = nextbgTime;
