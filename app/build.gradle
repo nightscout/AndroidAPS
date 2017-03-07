@@ -170,10 +170,10 @@ dependencies {
     testCompile 'org.json:json:20140107'
     testCompile 'org.mockito:mockito-core:2.+'
     androidTestCompile 'org.mockito:mockito-core:2.+'
-    androidTestCompile "com.google.dexmaker:dexmaker:1.2"
-    androidTestCompile "com.google.dexmaker:dexmaker-mockito:1.2"
-    compile(name:'android-edittext-validator-v1.3.4-mod', ext:'aar')
-    compile ('io.socket:socket.io-client:0.8.3') {
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    compile(name: 'android-edittext-validator-v1.3.4-mod', ext: 'aar')
+    compile('io.socket:socket.io-client:0.8.3') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
