@@ -35,14 +35,16 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
     PlusMinusEditText bgText;
     TextView unitsView;
 
-    Context parentContext;
+    Context context;
 
     public CalibrationDialog() {
         // Required empty public constructor
     }
 
-    public void setContext(Context context) {
-        parentContext = context;
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.context = context;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.overview_calibration_okbutton:
                 final Double bg = bgText.getValue();
-                XdripCalibrations.confirmAndSendCalibration(bg, parentContext);
+                XdripCalibrations.confirmAndSendCalibration(bg, context);
                 dismiss();
                 Answers.getInstance().logCustom(new CustomEvent("Calibration"));
                 break;

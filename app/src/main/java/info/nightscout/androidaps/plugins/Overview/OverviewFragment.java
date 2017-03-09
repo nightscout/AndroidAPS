@@ -249,7 +249,6 @@ public class OverviewFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
                 CalibrationDialog calibrationDialog = new CalibrationDialog();
-                calibrationDialog.setContext(getContext());
                 calibrationDialog.show(manager, "CalibrationDialog");
             }
         });
