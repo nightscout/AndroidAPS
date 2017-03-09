@@ -249,8 +249,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener {
                     builder.setNegativeButton(getString(R.string.cancel), null);
                     builder.show();
                     dismiss();
-                } else {
-                    log.error("parentContext == null");
                 }
                 break;
         }
