@@ -216,7 +216,6 @@ public class OverviewFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
                 WizardDialog wizardDialog = new WizardDialog();
-                wizardDialog.setContext(getContext());
                 wizardDialog.show(manager, "WizardDialog");
             }
         });
