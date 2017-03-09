@@ -59,11 +59,15 @@ public class TempBasal {
         if (profile == null)
             return result;
 
+        Double basalRate = profile.getBasal(profile.secondsFromMidnight(time));
+
+        if (basalRate == null)
+            return result;
+
         int realDuration = getRealDuration();
 
         if (realDuration > 0) {
             Double netBasalRate = 0d;
-            Double basalRate = profile.getBasal(profile.secondsFromMidnight(time));
             Double tempBolusSize = 0.05;
 
             if (isExtended) {

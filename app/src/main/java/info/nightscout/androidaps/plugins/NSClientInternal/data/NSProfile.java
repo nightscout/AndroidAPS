@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.NSClientInternal.data;
 
+import android.support.annotation.Nullable;
+
 import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONArray;
@@ -178,6 +180,7 @@ public class NSProfile {
         return TimeZone.getDefault();
     }
 
+    @Nullable
     public Double getValueToTime(JSONArray array, Integer timeAsSeconds) {
         Double lastValue = null;
 
@@ -221,10 +224,12 @@ public class NSProfile {
         return retValue;
     }
 
+    @Nullable
     public Double getIsf(Integer timeAsSeconds) {
         return getIsf(getDefaultProfile(), timeAsSeconds);
     }
 
+    @Nullable
     public Double getIsf(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
@@ -251,10 +256,12 @@ public class NSProfile {
         return "";
     }
 
+    @Nullable
     public Double getIc(Integer timeAsSeconds) {
         return getIc(getDefaultProfile(), timeAsSeconds);
     }
 
+    @Nullable
     public Double getIc(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
@@ -281,10 +288,12 @@ public class NSProfile {
         return "";
     }
 
+    @Nullable
     public Double getBasal(Integer timeAsSeconds) {
         return getBasal(getDefaultProfile(), timeAsSeconds);
     }
 
+    @Nullable
     public Double getBasal(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
@@ -339,10 +348,12 @@ public class NSProfile {
         return "";
     }
 
+    @Nullable
     public Double getTargetLow(Integer timeAsSeconds) {
         return getTargetLow(getDefaultProfile(), timeAsSeconds);
     }
 
+    @Nullable
     public Double getTargetLow(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
@@ -354,10 +365,12 @@ public class NSProfile {
         return 0D;
     }
 
+    @Nullable
     public Double getTargetHigh(Integer timeAsSeconds) {
         return getTargetHigh(getDefaultProfile(), timeAsSeconds);
     }
 
+    @Nullable
     public Double getTargetHigh(JSONObject profile, Integer timeAsSeconds) {
         if (profile != null) {
             try {
