@@ -35,7 +35,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
         final PumpInterface pump = MainApp.getConfigBuilder();
         final NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (pump != null && profile != null) {
+        if (pump != null && profile != null && profile.getBasal(NSProfile.secondsFromMidnight()) != null) {
             boolean isBasalOutdated = false;
             boolean isStatusOutdated = false;
 
