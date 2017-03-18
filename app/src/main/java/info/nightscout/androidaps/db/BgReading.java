@@ -47,7 +47,7 @@ public class BgReading implements DataPointInterface {
     public BgReading(NSSgv sgv) {
         timeIndex = sgv.getMills();
         value = sgv.getMgdl();
-        raw = sgv.getFiltered();
+        raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
         direction = sgv.getDirection();
     }
 
