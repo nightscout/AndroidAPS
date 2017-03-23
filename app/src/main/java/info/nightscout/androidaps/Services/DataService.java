@@ -44,6 +44,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
+import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
@@ -59,6 +60,7 @@ public class DataService extends IntentService {
     boolean xDripEnabled = false;
     boolean nsClientEnabled = true;
     boolean mm640gEnabled = false;
+    boolean glimpEnabled = false;
 
     public DataService() {
         super("DataService");
@@ -74,14 +76,22 @@ public class DataService extends IntentService {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
+            glimpEnabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
+            glimpEnabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
+            glimpEnabled = false;
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
+            xDripEnabled = false;
+            nsClientEnabled = false;
+            mm640gEnabled = false;
+            glimpEnabled = true;
         }
 
         boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfilePlugin.class);
@@ -98,6 +108,10 @@ public class DataService extends IntentService {
             } else if (Intents.NS_EMULATOR.equals(action)) {
                 if (mm640gEnabled) {
                     handleNewDataFromMM640g(intent);
+                }
+            } else if (Intents.GLIMP_BG.equals(action)) {
+                if (glimpEnabled) {
+                    handleNewDataFromGlimp(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
                 // always handle SGV if NS-Client is the source
@@ -176,6 +190,30 @@ public class DataService extends IntentService {
 
         if (Config.logIncommingBG)
             log.debug("XDRIPREC BG " + bgReading.toString());
+
+        try {
+            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        MainApp.bus().post(new EventNewBG());
+    }
+
+    private void handleNewDataFromGlimp(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        BgReading bgReading = new BgReading();
+
+        bgReading.value = bundle.getDouble("mySGV");
+        bgReading.direction = bundle.getString("myTrend");
+        bgReading.battery_level = bundle.getInt("myBatLvl");
+        bgReading.timeIndex = bundle.getLong("myTimestamp");
+        bgReading.raw = 0;
+
+        if (Config.logIncommingBG)
+            log.debug(bundle.toString());
+            log.debug("GLIMP BG " + bgReading.toString());
 
         try {
             MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);

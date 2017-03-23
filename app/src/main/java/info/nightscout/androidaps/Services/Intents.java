@@ -35,4 +35,6 @@ public interface Intents {
     String NS_EMULATOR = "com.eveningoutpost.dexdrip.NS_EMULATOR";
 
     String ACTION_REMOTE_CALIBRATION = "com.eveningoutpost.dexdrip.NewCalibration";
+
+    String GLIMP_BG = "it.ct.glicemia.ACTION_GLUCOSE_MEASURED";
 }
