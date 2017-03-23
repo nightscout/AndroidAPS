@@ -276,6 +276,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         for (int h = 0; h < basalValues; h++) {
             Double pumpValue = pump.pumpProfiles[pump.activeProfile][h];
             Double profileValue = profile.getBasal(h * basalIncrement);
+            if (profileValue == null) return true;
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
                 log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
                 return false;
