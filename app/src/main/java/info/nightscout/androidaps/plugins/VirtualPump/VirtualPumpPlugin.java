@@ -38,6 +38,8 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     public static Integer batteryPercent = 50;
     public static Integer reservoirInUnits = 50;
 
+    Date lastDataTime = new Date(0);
+
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
 
@@ -150,6 +152,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public int setNewBasalProfile(NSProfile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        lastDataTime = new Date();
         return SUCCESS;
     }
 
@@ -160,12 +163,13 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public Date lastDataTime() {
-        return new Date();
+        return lastDataTime;
     }
 
     @Override
     public void refreshDataFromPump(String reason) {
-        // do nothing
+        MainApp.getConfigBuilder().uploadDeviceStatus();
+        lastDataTime = new Date();
     }
 
     @Override
@@ -251,6 +255,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         if (Config.logPumpComm)
             log.debug("Delivering treatment insulin: " + insulin + "U carbs: " + carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        lastDataTime = new Date();
         return result;
     }
 
@@ -285,6 +290,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        lastDataTime = new Date();
         return result;
     }
 
@@ -318,6 +324,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         if (Config.logPumpComm)
             log.debug("Settings temp basal percent: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        lastDataTime = new Date();
         return result;
     }
 
@@ -349,6 +356,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         if (Config.logPumpComm)
             log.debug("Setting extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        lastDataTime = new Date();
         return result;
     }
 
@@ -375,6 +383,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
                 result.comment = MainApp.instance().getString(R.string.virtualpump_sqlerror);
             }
         }
+        lastDataTime = new Date();
         return result;
     }
 
@@ -399,6 +408,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         if (Config.logPumpComm)
             log.debug("Canceling extended basal: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
+        lastDataTime = new Date();
         return result;
     }
 
