@@ -133,11 +133,23 @@ public class LoopPlugin implements PluginBase {
                 log.debug("invoke");
             ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
             if (!constraintsInterface.isLoopEnabled()) {
+                log.debug(MainApp.sResources.getString(R.string.loopdisabled));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopdisabled)));
+                return;
+            }
+            if (!constraintsInterface.isLoopEnabled()) {
+                log.debug(MainApp.sResources.getString(R.string.loopdisabled));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopdisabled)));
                 return;
             }
             final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
             APSResult result = null;
+
+            if (!configBuilder.isSuspended()) {
+                log.debug(MainApp.sResources.getString(R.string.pumpsuspended));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.pumpsuspended)));
+                return;
+            }
 
             if (configBuilder == null || !isEnabled(PluginBase.LOOP))
                 return;

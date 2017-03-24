@@ -108,6 +108,18 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         pumpDescription.basalMinimumRate = 0.1d;
 
         pumpDescription.isRefillingCapable = true;
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+                refreshDataFromPump("Initialization");
+            }
+        });
+        t.start();
     }
 
     ServiceConnection mConnection = new ServiceConnection() {

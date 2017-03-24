@@ -546,6 +546,8 @@ public class OverviewFragment extends Fragment {
             loopStatusLayout.setVisibility(View.VISIBLE);
         }
 
+        PumpInterface pump = MainApp.getConfigBuilder();
+
         // Skip if not initialized yet
         if (bgGraph == null)
             return;
@@ -560,7 +562,11 @@ public class OverviewFragment extends Fragment {
             apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
             apsModeView.setTextColor(Color.BLACK);
             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-            if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+            if (pump.isSuspended()) {
+                apsModeView.setBackgroundResource(R.drawable.loopmodesuspendedborder);
+                apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
+                apsModeView.setTextColor(Color.WHITE);
+            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
                 if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
                 } else {
@@ -627,8 +633,6 @@ public class OverviewFragment extends Fragment {
         }
 
         // **** Temp button ****
-        PumpInterface pump = MainApp.getConfigBuilder();
-
         boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
         showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
         showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
