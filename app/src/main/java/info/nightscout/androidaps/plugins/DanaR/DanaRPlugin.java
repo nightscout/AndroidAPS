@@ -106,18 +106,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.basalMinimumRate = 0.04d;
 
         pumpDescription.isRefillingCapable = true;
-
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                }
-                refreshDataFromPump("Initialization");
-            }
-        });
-        t.start();
     }
 
     ServiceConnection mConnection = new ServiceConnection() {

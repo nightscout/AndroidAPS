@@ -19,6 +19,7 @@ import java.util.ArrayList;
 
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.CircadianPercentageProfile.CircadianPercentageProfileFragment;
@@ -119,6 +120,20 @@ public class MainApp extends Application {
         MainApp.getConfigBuilder().uploadAppStart();
 
         startKeepAliveService();
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                }
+                PumpInterface pump = MainApp.getConfigBuilder();
+                if (pump != null)
+                    pump.refreshDataFromPump("Initialization");
+            }
+        });
+        t.start();
     }
 
     private void startKeepAliveService() {
