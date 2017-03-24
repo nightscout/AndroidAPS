@@ -43,6 +43,8 @@ public class DanaRKoreanPump {
     public int protocol;
     public int productCode;
 
+    public boolean pumpSuspended;
+
     public boolean isConfigUD;
     public boolean isExtendedBolusEnabled;
     public boolean isEasyModeEnabled;

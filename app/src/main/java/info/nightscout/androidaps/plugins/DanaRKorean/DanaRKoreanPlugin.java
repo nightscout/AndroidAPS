@@ -227,7 +227,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public boolean isSuspended() {
-        return false;
+        return getDanaRPump().pumpSuspended;
     }
 
     @Override
