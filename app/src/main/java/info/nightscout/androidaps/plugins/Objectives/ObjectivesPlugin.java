@@ -153,7 +153,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 MainApp.sResources.getString(R.string.objectives_0_objective),
                 MainApp.sResources.getString(R.string.objectives_0_gate),
                 new Date(0),
-                1, // 1 day
+                0, // 0 day
                 new Date(0)));
         objectives.add(new Objective(1,
                 MainApp.sResources.getString(R.string.objectives_1_objective),
