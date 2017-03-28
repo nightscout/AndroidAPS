@@ -74,6 +74,8 @@
                 <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
                 <!-- Receiver from 640g uploader -->
                 <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
+                <!-- Receiver from glimp -->
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
             </intent-filter>
         </receiver>
 
