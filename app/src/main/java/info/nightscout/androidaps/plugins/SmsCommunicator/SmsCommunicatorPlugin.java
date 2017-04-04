@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -244,6 +246,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
 
                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     receivedSms.processed = true;
+                    Answers.getInstance().logCustom(new CustomEvent("SMS_Bg"));
                     break;
                 case "LOOP":
                     switch (splited[1].toUpperCase()) {
@@ -255,6 +258,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                             receivedSms.processed = true;
+                            Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Stop"));
                             break;
                         case "START":
                             loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
@@ -264,6 +268,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                             receivedSms.processed = true;
+                            Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Start"));
                             break;
                         case "STATUS":
                             loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
@@ -276,6 +281,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             }
                             receivedSms.processed = true;
+                            Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Status"));
                             break;
                     }
                     break;
@@ -289,6 +295,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             reply = "TERATMENTS REFRESH " + q.size() + " receivers";
                             sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             receivedSms.processed = true;
+                            Answers.getInstance().logCustom(new CustomEvent("SMS_Treatments_Refresh"));
                             break;
                     }
                     break;
@@ -301,6 +308,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             reply = "NSCLIENT RESTART " + q.size() + " receivers";
                             sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                             receivedSms.processed = true;
+                            Answers.getInstance().logCustom(new CustomEvent("SMS_Nsclient_Restart"));
                             break;
                     }
                     break;
@@ -316,6 +324,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     }
                     receivedSms.processed = true;
+                    Answers.getInstance().logCustom(new CustomEvent("SMS_Danar"));
                     break;
                 case "BASAL":
                     if (splited.length > 1) {
@@ -327,6 +336,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 receivedSms.processed = true;
                                 resetWaitingMessages();
                                 sendSMS(cancelTempBasalWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Basal"));
                             } else {
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_remotebasalnotallowed);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
@@ -341,6 +351,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 resetWaitingMessages();
                                 sendSMS(tempBasalWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
                                 tempBasalWaitingForConfirmation.tempBasal = tempBasal;
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Basal"));
                             } else {
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_remotebasalnotallowed);
                                 sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
@@ -363,6 +374,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             resetWaitingMessages();
                             sendSMS(bolusWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
                             bolusWaitingForConfirmation.bolusRequested = amount;
+                            Answers.getInstance().logCustom(new CustomEvent("SMS_Bolus"));
                         } else {
                             reply = MainApp.sResources.getString(R.string.smscommunicator_remotebolusnotallowed);
                             sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
@@ -380,6 +392,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             resetWaitingMessages();
                             sendSMS(calibrationWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
                             calibrationWaitingForConfirmation.calibrationRequested = amount;
+                            Answers.getInstance().logCustom(new CustomEvent("SMS_Cal"));
                         } else {
                             reply = MainApp.sResources.getString(R.string.smscommunicator_remotecalibrationnotallowed);
                             sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
