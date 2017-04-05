@@ -507,4 +507,23 @@
     <string name="wear_detailedIOB_summary">Rozepsat IOB do bolusového a bazálního na hodinkách</string>
     <string name="wear_detailedIOB_title">Zobrazit detailní IOB</string>
     <string name="wear_settings">Nastavení hodinek</string>
+    <string name="Glimp">Glimp</string>
+    <string name="batteryoptimalizationerror">Zařízení patrně nepodporuje vyloučení z optimalizace baterie.</string>
+    <string name="disconnectpumpfor10h">Odpojit pumpu na 10 h</string>
+    <string name="disconnectpumpfor1h">Odpojit pumpu na 1 h</string>
+    <string name="disconnectpumpfor2h">Odpojit pumpu na 2 h</string>
+    <string name="disconnectpumpfor30m">Odpojit pumpu na 30 min</string>
+    <string name="disconnectpumpfor3h">Odpojit pumpu na 3 h</string>
+    <string name="enableloop">Povolit smyčku</string>
+    <string name="loopmenu">Menu smyčky</string>
+    <string name="loopsuspended">Smyčka pozastavena</string>
+    <string name="loopsuspendedfor">Pozastaveno (%d min)</string>
+    <string name="needwhitelisting">%s potřebuje vypnout optimalizace baterie pro optimalní výkon</string>
+    <string name="pleaseallowpermission">Prosím povolte oprávnění</string>
+    <string name="resume">Obnovit</string>
+    <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
+    <string name="suspendloopfor1h">Pozastavit smyčku na 1 h</string>
+    <string name="suspendloopfor2h">Pozastavit smyčku na 2 h</string>
+    <string name="suspendloopfor3h">Pozastavit smyčku na 3 h</string>
+    <string name="disableloop">Zakázat smyčku</string>
 </resources>

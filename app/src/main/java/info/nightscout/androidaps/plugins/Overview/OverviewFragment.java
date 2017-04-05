@@ -321,7 +321,7 @@ public class OverviewFragment extends Fragment {
             return;
         menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
         if (activeloop.isEnabled(PluginBase.LOOP)) {
-            menu.add(MainApp.sResources.getString(R.string.disabledloop));
+            menu.add(MainApp.sResources.getString(R.string.disableloop));
             if (!activeloop.isSuspended()) {
                 menu.add(MainApp.sResources.getString(R.string.suspendloopfor1h));
                 menu.add(MainApp.sResources.getString(R.string.suspendloopfor2h));
@@ -336,19 +336,19 @@ public class OverviewFragment extends Fragment {
             }
         }
         if (!activeloop.isEnabled(PluginBase.LOOP))
-            menu.add(MainApp.sResources.getString(R.string.enabledloop));
+            menu.add(MainApp.sResources.getString(R.string.enableloop));
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-        if (item.getTitle() == MainApp.sResources.getString(R.string.disabledloop)) {
+        if (item.getTitle() == MainApp.sResources.getString(R.string.disableloop)) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, false);
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             MainApp.bus().post(new EventRefreshGui(false));
             return true;
-        } else if (item.getTitle() == MainApp.sResources.getString(R.string.enabledloop)) {
+        } else if (item.getTitle() == MainApp.sResources.getString(R.string.enableloop)) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, true);
             activeloop.setFragmentVisible(PluginBase.LOOP, true);
             MainApp.getConfigBuilder().storeSettings();

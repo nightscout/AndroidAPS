@@ -139,7 +139,8 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="disabledloop">Loop Disabled</string>
-    <string name="enabledloop">Loop Enabled</string>
+    <string name="disableloop">Disable loop</string>
+    <string name="enableloop">Enable loop</string>
 
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
@@ -564,7 +565,7 @@
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
     <string name="suspendloopfor3h">Suspend loop for 3h</string>
-    <string name="suspendloopfor10h">Suspend loop for 10h</string>
+    <string name="suspendloopfor10h">Suspend loop for 10 h</string>
     <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
     <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
     <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
