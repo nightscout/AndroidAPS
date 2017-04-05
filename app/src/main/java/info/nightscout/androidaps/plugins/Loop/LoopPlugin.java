@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -44,6 +45,8 @@ public class LoopPlugin implements PluginBase {
 
     private boolean fragmentEnabled = false;
     private boolean fragmentVisible = true;
+
+    private long loopSuspendedTill = 0L; // end of manual loop suspend
 
     public class LastRun {
         public APSResult request = null;
@@ -64,6 +67,7 @@ public class LoopPlugin implements PluginBase {
             sHandler = new Handler(sHandlerThread.getLooper());
         }
         MainApp.bus().register(this);
+        loopSuspendedTill = SP.getLong("loopSuspendedTill", 0L);
     }
 
     @Override
@@ -127,6 +131,44 @@ public class LoopPlugin implements PluginBase {
         invoke("EventNewBG", true);
     }
 
+    public long suspendedTo() {
+        return loopSuspendedTill;
+    }
+
+    public void suspendTo(long endTime) {
+        loopSuspendedTill = endTime;
+        SP.putLong("loopSuspendedTill", loopSuspendedTill);
+    }
+
+    public int minutesToEndOfSuspend() {
+        if (loopSuspendedTill == 0)
+            return 0;
+
+        long now = new Date().getTime();
+        long msecDiff = loopSuspendedTill - now;
+
+        if (loopSuspendedTill <= now) { // time exceeded
+            suspendTo(0L);
+            return 0;
+        }
+
+        return (int) (msecDiff / 60d / 1000d);
+    }
+
+    public boolean isSuspended() {
+        if (loopSuspendedTill == 0)
+            return false;
+
+        long now = new Date().getTime();
+
+        if (loopSuspendedTill <= now) { // time exceeded
+            suspendTo(0L);
+            return false;
+        }
+
+        return true;
+    }
+
     public void invoke(String initiator, boolean allowNotification) {
         try {
             if (Config.logFunctionCalls)
@@ -140,14 +182,20 @@ public class LoopPlugin implements PluginBase {
             final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
             APSResult result = null;
 
+            if (configBuilder == null || !isEnabled(PluginBase.LOOP))
+                return;
+
+            if (isSuspended()) {
+                log.debug(MainApp.sResources.getString(R.string.loopsuspended));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.loopsuspended)));
+                return;
+            }
+
             if (configBuilder.isSuspended()) {
                 log.debug(MainApp.sResources.getString(R.string.pumpsuspended));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.pumpsuspended)));
                 return;
             }
-
-            if (configBuilder == null || !isEnabled(PluginBase.LOOP))
-                return;
 
             // Check if pump info is loaded
             if (configBuilder.getBaseBasalRate() < 0.01d) return;
