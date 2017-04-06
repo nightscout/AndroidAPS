@@ -329,7 +329,9 @@
     <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
     <string name="openapsma_valueoutofrange" formatted="false">Value %s is out of hard limits</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
+    <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">To suspend loop for %d minutes reply with code %s</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
@@ -572,4 +574,7 @@
     <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
     <string name="disconnectpumpfor10h">Disconnect pump for 10 h</string>
     <string name="resume">Resume</string>
+    <string name="smscommunicator_wrongduration">Wrong duration</string>
+    <string name="smscommunicator_loopsuspended">Loop suspended</string>
+    <string name="smscommunicator_loopresumed">Loop resumed</string>
 </resources>

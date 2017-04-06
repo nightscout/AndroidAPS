@@ -526,4 +526,9 @@
     <string name="suspendloopfor2h">Pozastavit smyčku na 2 h</string>
     <string name="suspendloopfor3h">Pozastavit smyčku na 3 h</string>
     <string name="disableloop">Zakázat smyčku</string>
+    <string name="smscommunicator_loopresumed">Smyčka obnovena</string>
+    <string name="smscommunicator_loopsuspended">Smyčka pozastavena</string>
+    <string name="smscommunicator_remotecommandnotallowed">Vzdálení příkaz není povolen</string>
+    <string name="smscommunicator_suspendreplywithcode">K pozastavení smyčky na %d minut odpověz SMS s kódem %s</string>
+    <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
 </resources>

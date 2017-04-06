@@ -713,28 +713,6 @@ public class OverviewFragment extends Fragment {
                 apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
                 apsModeView.setTextColor(Color.WHITE);
             }
-/*
-            apsModeView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    if (activeloop == null) {
-                        log.error("no active loop?");
-                        return true;
-                    } else if (activeloop.isEnabled(PluginBase.LOOP)) {
-                        activeloop.setFragmentEnabled(PluginBase.LOOP, false);
-                        activeloop.setFragmentVisible(PluginBase.LOOP, false);
-                    } else {
-                        activeloop.setFragmentEnabled(PluginBase.LOOP, true);
-                        activeloop.setFragmentVisible(PluginBase.LOOP, true);
-                    }
-                    MainApp.getConfigBuilder().storeSettings();
-                    MainApp.bus().post(new EventRefreshGui(false));
-                    return true;
-                }
-            });
-            apsModeView.setLongClickable(true);
-*/
         } else {
             apsModeView.setVisibility(View.GONE);
         }
