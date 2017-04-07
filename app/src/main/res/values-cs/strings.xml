@@ -369,12 +369,12 @@
     <string name="mdi">Pera</string>
     <string name="sms_actualbg">Glykémie:</string>
     <string name="sms_lastbg">Poslední glykémie:</string>
-    <string name="minago">před %d min</string>
+    <string name="minago" formatted="false">před %d min</string>
     <string name="sms_basal">Bazál:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_delta">Rozdíl:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="sms_minago">před %d min</string>
+    <string name="sms_minago" formatted="false">před %d min</string>
     <string name="smscommunicator_bolusdelivered">Bolus %.2fU aplikován úspěšně</string>
     <string name="ongoingnotificaction">Průběžné oznámení</string>
     <string name="old_data">ZASTARALÉ</string>
@@ -517,7 +517,7 @@
     <string name="enableloop">Povolit smyčku</string>
     <string name="loopmenu">Menu smyčky</string>
     <string name="loopsuspended">Smyčka pozastavena</string>
-    <string name="loopsuspendedfor">Pozastaveno (%d min)</string>
+    <string name="loopsuspendedfor" formatted="false">Pozastaveno (%d min)</string>
     <string name="needwhitelisting">%s potřebuje vypnout optimalizace baterie pro optimalní výkon</string>
     <string name="pleaseallowpermission">Prosím povolte oprávnění</string>
     <string name="resume">Obnovit</string>
@@ -529,6 +529,6 @@
     <string name="smscommunicator_loopresumed">Smyčka obnovena</string>
     <string name="smscommunicator_loopsuspended">Smyčka pozastavena</string>
     <string name="smscommunicator_remotecommandnotallowed">Vzdálení příkaz není povolen</string>
-    <string name="smscommunicator_suspendreplywithcode">K pozastavení smyčky na %d minut odpověz SMS s kódem %s</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">K pozastavení smyčky na %d minut odpověz SMS s kódem %s</string>
     <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
 </resources>
