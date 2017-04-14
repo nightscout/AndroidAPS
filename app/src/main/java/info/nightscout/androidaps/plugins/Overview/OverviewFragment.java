@@ -259,40 +259,42 @@ public class OverviewFragment extends Fragment {
         acceptTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
-                final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-                if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle(getContext().getString(R.string.confirmation));
-                    builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
-                    builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            sHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    hideTempRecommendation();
-                                    PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
-                                    if (applyResult.enacted) {
-                                        finalLastRun.setByPump = applyResult;
-                                        finalLastRun.lastEnact = new Date();
-                                        finalLastRun.lastOpenModeAccept = new Date();
-                                        MainApp.getConfigBuilder().uploadDeviceStatus();
-                                        ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                                        if (objectivesPlugin != null) {
-                                            objectivesPlugin.manualEnacts++;
-                                            objectivesPlugin.saveProgress();
+                if (ConfigBuilderPlugin.getActiveLoop() != null) {
+                    ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
+                    final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+                    if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle(getContext().getString(R.string.confirmation));
+                        builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
+                        builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                sHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideTempRecommendation();
+                                        PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
+                                        if (applyResult.enacted) {
+                                            finalLastRun.setByPump = applyResult;
+                                            finalLastRun.lastEnact = new Date();
+                                            finalLastRun.lastOpenModeAccept = new Date();
+                                            MainApp.getConfigBuilder().uploadDeviceStatus();
+                                            ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                            if (objectivesPlugin != null) {
+                                                objectivesPlugin.manualEnacts++;
+                                                objectivesPlugin.saveProgress();
+                                            }
                                         }
+                                        updateGUIIfVisible();
                                     }
-                                    updateGUIIfVisible();
-                                }
-                            });
-                            Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
-                        }
-                    });
-                    builder.setNegativeButton(getContext().getString(R.string.cancel), null);
-                    builder.show();
+                                });
+                                Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+                            }
+                        });
+                        builder.setNegativeButton(getContext().getString(R.string.cancel), null);
+                        builder.show();
+                    }
+                    updateGUI();
                 }
-                updateGUI();
             }
         });
 
