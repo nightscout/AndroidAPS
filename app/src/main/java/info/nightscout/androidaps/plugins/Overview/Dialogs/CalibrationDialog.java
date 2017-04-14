@@ -60,13 +60,18 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
 
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         Double bg = profile != null ? NSProfile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits()) : 0d;
-        if (profile.getUnits().equals(Constants.MMOL))
+
+        String units = Constants.MGDL;
+        if (profile != null)
+            units = profile.getUnits();
+
+        if (units.equals(Constants.MMOL))
             bgText = new PlusMinusEditText(view, R.id.overview_calibration_bg, R.id.overview_calibration_bg_plus, R.id.overview_calibration_bg_minus, bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
         else
             bgText = new PlusMinusEditText(view, R.id.overview_calibration_bg, R.id.overview_calibration_bg_plus, R.id.overview_calibration_bg_minus, bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
 
         unitsView = (TextView) view.findViewById(R.id.overview_calibration_units);
-        unitsView.setText(profile.getUnits());
+        unitsView.setText(units);
 
         return view;
     }
