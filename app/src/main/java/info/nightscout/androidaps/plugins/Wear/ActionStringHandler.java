@@ -192,7 +192,7 @@ public class ActionStringHandler {
             }
             DecimalFormat format = new DecimalFormat("0.00");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile.getDefaultProfile(), carbsAfterConstraints, useBG?bgReading.valueToUnits(profile.getUnits()):0d, 0d, useBolusIOB, useBasalIOB);
+            bolusWizard.doCalc(profile.getDefaultProfile(), carbsAfterConstraints, 0d, useBG?bgReading.valueToUnits(profile.getUnits()):0d, 0d, useBolusIOB, useBasalIOB, false, false);
 
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(bolusWizard.calculatedTotalInsulin);
             if(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin !=0){

@@ -520,7 +520,7 @@
     <string name="loopsuspendedfor" formatted="false">Pozastaveno (%d min)</string>
     <string name="needwhitelisting">%s potřebuje vypnout optimalizace baterie pro optimalní výkon</string>
     <string name="pleaseallowpermission">Prosím povolte oprávnění</string>
-    <string name="resume">Obnovit</string>
+    <string name="resume">Uvolnit</string>
     <string name="suspendloopfor10h">Pozastavit smyčku na 10 h</string>
     <string name="suspendloopfor1h">Pozastavit smyčku na 1 h</string>
     <string name="suspendloopfor2h">Pozastavit smyčku na 2 h</string>
