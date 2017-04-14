@@ -581,4 +581,6 @@
     <string name="treatments_wizard_bgtrend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="treatments_wizard_sb_label">Superbolus</string>
+    <string name="ns_logappstartedevent">Log app start to NS</string>
+    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
 </resources>
