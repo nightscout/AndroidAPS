@@ -27,6 +27,10 @@
     <color name="colorPumpLabel">#779ECB</color>
     <color name="cardItemLabel">#FF478EFF</color>
 
+    <color name="loopenabled">#47c8ff</color>
+    <color name="loopdisabled">#FFDD7792</color>
+    <color name="looppumpsuspended">#ff0400</color>
+
     <color name="notificationUrgent">#ff0400</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>

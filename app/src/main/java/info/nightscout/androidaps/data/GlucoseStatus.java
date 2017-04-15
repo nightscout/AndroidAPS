@@ -73,13 +73,23 @@ public class GlucoseStatus {
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
         int sizeRecords = data.size();
-        if (sizeRecords < 4 || data.get(0).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {
+        if (sizeRecords < 1 || data.get(0).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {
             return null;
         }
 
         BgReading now = data.get(0);
         long now_date = now.timeIndex;
         double change;
+
+        if (sizeRecords < 2) {
+            GlucoseStatus status = new GlucoseStatus();
+            status.glucose = now.value;
+            status.short_avgdelta = 0d;
+            status.delta = 0d;
+            status.long_avgdelta = 0d;
+            status.avgdelta = 0d; // for OpenAPS MA
+            return status.round();
+        }
 
         ArrayList<Double> last_deltas = new ArrayList<Double>();
         ArrayList<Double> short_deltas = new ArrayList<Double>();
@@ -121,7 +131,7 @@ public class GlucoseStatus {
 
         status.short_avgdelta = average(short_deltas);
 
-        if(prefs.getBoolean("always_use_shortavg",false) || last_deltas.isEmpty()){
+        if (prefs.getBoolean("always_use_shortavg", false) || last_deltas.isEmpty()) {
             status.delta = status.short_avgdelta;
         } else {
             status.delta = average(last_deltas);

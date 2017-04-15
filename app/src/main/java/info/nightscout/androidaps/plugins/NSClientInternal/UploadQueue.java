@@ -40,66 +40,78 @@ public class UploadQueue {
         if (NSClientService.handler == null) {
             Context context = MainApp.instance();
             context.startService(new Intent(context, NSClientService.class));
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+            }
         }
     }
 
     public static void add(final DbRequest dbr) {
         startService();
-        NSClientService.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log.debug("QUEUE adding: " + dbr.data);
-                MainApp.getDbHelper().create(dbr);
-                NSClientInternalPlugin plugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
-                if (plugin != null) {
-                    plugin.resend("newdata");
+        if (NSClientService.handler != null) {
+            NSClientService.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    log.debug("QUEUE adding: " + dbr.data);
+                    MainApp.getDbHelper().create(dbr);
+                    NSClientInternalPlugin plugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+                    if (plugin != null) {
+                        plugin.resend("newdata");
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     public static void clearQueue() {
         startService();
-        NSClientService.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                log.debug("QUEUE ClearQueue");
-                MainApp.getDbHelper().deleteAllDbRequests();
-                log.debug(status());
-            }
-        });
+        if (NSClientService.handler != null) {
+            NSClientService.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    log.debug("QUEUE ClearQueue");
+                    MainApp.getDbHelper().deleteAllDbRequests();
+                    log.debug(status());
+                }
+            });
+        }
     }
 
     public static void removeID(final JSONObject record) {
         startService();
-        NSClientService.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String id;
-                    if (record.has("NSCLIENT_ID")) {
-                        id = record.getString("NSCLIENT_ID");
-                    } else {
-                        return;
+        if (NSClientService.handler != null) {
+            NSClientService.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        String id;
+                        if (record.has("NSCLIENT_ID")) {
+                            id = record.getString("NSCLIENT_ID");
+                        } else {
+                            return;
+                        }
+                        if (MainApp.getDbHelper().deleteDbRequest(id) == 1) {
+                            log.debug("Removed item from UploadQueue. " + UploadQueue.status());
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    if (MainApp.getDbHelper().deleteDbRequest(id) == 1) {
-                        log.debug("Removed item from UploadQueue. " + UploadQueue.status());
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-            }
-        });
+            });
+        }
     }
 
     public static void removeID(final String action, final String _id) {
         startService();
-        NSClientService.handler.post(new Runnable() {
-            @Override
-            public void run() {
-                MainApp.getDbHelper().deleteDbRequestbyMongoId(action, _id);
-            }
-        });
+        if (NSClientService.handler != null) {
+            NSClientService.handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    MainApp.getDbHelper().deleteDbRequestbyMongoId(action, _id);
+                }
+            });
+        }
     }
 
     public String textList() {

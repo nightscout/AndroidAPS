@@ -34,6 +34,7 @@ public class Autosens {
         for (int i = 1; i < glucose_data.size(); ++i) {
             long bgTime = glucose_data.get(i).getTimeIndex();
             long lastbgTime = glucose_data.get(i - 1).getTimeIndex();
+            //log.error("Processing " + i + ": " + new Date(bgTime).toString() + " " + glucose_data.get(i).value + "   Previous: " + new Date(lastbgTime).toString() + " " + glucose_data.get(i - 1).value);
             if (glucose_data.get(i).value < 39 || glucose_data.get(i - 1).value < 39) {
                 continue;
             }
@@ -46,29 +47,38 @@ public class Autosens {
                 //console.error(elapsed_minutes);
                 long nextbgTime;
                 while (elapsed_minutes > 5) {
-                    nextbgTime = lastbgTime + 5 * 60 * 1000;
+                    nextbgTime = lastbgTime - 5 * 60 * 1000;
                     j++;
                     BgReading newBgreading = new BgReading();
                     newBgreading.timeIndex = nextbgTime;
                     double gapDelta = glucose_data.get(i).value - lastbg;
                     //console.error(gapDelta, lastbg, elapsed_minutes);
-                    double nextbg = lastbg + (5 / elapsed_minutes * gapDelta);
+                    double nextbg = lastbg + (5d / elapsed_minutes * gapDelta);
                     newBgreading.value = Math.round(nextbg);
                     //console.error("Interpolated", bucketed_data[j]);
                     bucketed_data.add(newBgreading);
+                    //log.error("******************************************************************************************************* Adding:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
 
                     elapsed_minutes = elapsed_minutes - 5;
                     lastbg = nextbg;
                     lastbgTime = nextbgTime;
                 }
+                j++;
+                BgReading newBgreading = new BgReading();
+                newBgreading.value = glucose_data.get(i).value;
+                newBgreading.timeIndex = bgTime;
+                bucketed_data.add(newBgreading);
+                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
             } else if (Math.abs(elapsed_minutes) > 2) {
                 j++;
                 BgReading newBgreading = new BgReading();
                 newBgreading.value = glucose_data.get(i).value;
                 newBgreading.timeIndex = bgTime;
                 bucketed_data.add(newBgreading);
+                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
             } else {
                 bucketed_data.get(j).value = (bucketed_data.get(j).value + glucose_data.get(i).value) / 2;
+                //log.error("***** Average");
             }
         }
         //console.error(bucketed_data);
@@ -80,6 +90,12 @@ public class Autosens {
         for (int i = 0; i < bucketed_data.size() - 3; ++i) {
             long bgTime = bucketed_data.get(i).timeIndex;
             int secondsFromMidnight = NSProfile.secondsFromMidnight(new Date(bgTime));
+
+            String hour = "";
+            //log.debug(new Date(bgTime).toString());
+            if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
+                hour += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
+            }
 
             double sens = NSProfile.toMgdl(profile.getIsf(secondsFromMidnight), profile.getUnits());
 
@@ -122,6 +138,7 @@ public class Autosens {
                 pastSensitivity += ">";
                 //console.error(bgTime);
             }
+            pastSensitivity += hour;
             //log.debug("TIME: " + new Date(bgTime).toString() + " BG: " + bg + " SENS: " + sens + " DELTA: " + delta + " AVGDELTA: " + avgDelta + " IOB: " + iob.iob + " ACTIVITY: " + iob.activity + " BGI: " + bgi + " DEVIATION: " + deviation);
 
             // if bgTime is more recent than mealTime

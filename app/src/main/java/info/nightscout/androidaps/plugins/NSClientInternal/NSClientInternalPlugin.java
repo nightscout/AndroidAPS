@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -37,12 +38,13 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientS
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 public class NSClientInternalPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalPlugin.class);
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = false;
+    boolean fragmentEnabled = true;
+    boolean fragmentVisible = true;
 
     static public Handler handler;
     static private HandlerThread handlerThread;
@@ -188,12 +190,16 @@ public class NSClientInternalPlugin implements PluginBase {
     }
 
     private void updateLog() {
-        Spanned newTextLog = Html.fromHtml("");
-        for (EventNSClientNewLog log : listLog) {
-            newTextLog = (Spanned) TextUtils.concat(newTextLog, log.toHtml());
+        try {
+            Spanned newTextLog = Html.fromHtml("");
+            for (EventNSClientNewLog log : listLog) {
+                newTextLog = (Spanned) TextUtils.concat(newTextLog, log.toHtml());
+            }
+            textLog = newTextLog;
+            MainApp.bus().post(new EventNSClientUpdateGUI());
+        } catch (OutOfMemoryError e) {
+            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "Out of memory!\nStop using this phone !!!", R.raw.error);
         }
-        textLog = newTextLog;
-        MainApp.bus().post(new EventNSClientUpdateGUI());
     }
 
     public void resend(String reason) {

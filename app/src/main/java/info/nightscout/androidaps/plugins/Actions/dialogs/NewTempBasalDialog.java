@@ -54,7 +54,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
     public static HandlerThread mHandlerThread;
 
     public NewTempBasalDialog() {
-        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+        mHandlerThread = new HandlerThread(NewTempBasalDialog.class.getSimpleName());
         mHandlerThread.start();
         this.mHandler = new Handler(mHandlerThread.getLooper());
     }

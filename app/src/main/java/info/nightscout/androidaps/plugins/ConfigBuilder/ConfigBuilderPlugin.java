@@ -59,6 +59,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.BatteryLevel;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -1025,7 +1026,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 deviceStatus.device = "openaps://" + deviceID();
                 JSONObject pumpstatus = getJSONStatus();
                 if (pumpstatus != null) {
-                    deviceStatus.pump = getJSONStatus();
+                    deviceStatus.pump = pumpstatus;
                 }
             }
 
@@ -1128,24 +1129,26 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public void uploadAppStart() {
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbAdd");
-        bundle.putString("collection", "treatments");
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", "Note");
-            data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (SP.getBoolean(R.string.key_ns_logappstartedevent, true)) {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            JSONObject data = new JSONObject();
+            try {
+                data.put("eventType", "Note");
+                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
         }
-        bundle.putString("data", data.toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
     }
 
 }

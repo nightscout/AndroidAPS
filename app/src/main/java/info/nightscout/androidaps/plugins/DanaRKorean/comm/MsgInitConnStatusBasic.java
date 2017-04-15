@@ -26,13 +26,13 @@ public class MsgInitConnStatusBasic extends MessageBase {
             return;
         }
         DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
-        int isStatusSuspendOn = intFromBuff(bytes, 0, 1);
+        pump.pumpSuspended = intFromBuff(bytes, 0, 1) == 1;
         int isUtilityEnable = intFromBuff(bytes, 1, 1);
         pump.isEasyModeEnabled = intFromBuff(bytes, 2, 1) == 1;
         int easyUIMode = intFromBuff(bytes, 3, 1);
         pump.password = intFromBuff(bytes, 4, 2) ^ 0x3463;
         if (Config.logDanaMessageDetail) {
-            log.debug("isStatusSuspendOn: " + isStatusSuspendOn);
+            log.debug("isStatusSuspendOn: " + pump.pumpSuspended);
             log.debug("isUtilityEnable: " + isUtilityEnable);
             log.debug("Is EasyUI Enabled: " + pump.isEasyModeEnabled);
             log.debug("easyUIMode: " + easyUIMode);

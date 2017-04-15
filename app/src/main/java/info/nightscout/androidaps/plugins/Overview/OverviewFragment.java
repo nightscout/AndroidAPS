@@ -18,8 +18,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextMenu;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -95,6 +97,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 
 public class OverviewFragment extends Fragment {
@@ -216,7 +219,6 @@ public class OverviewFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
                 WizardDialog wizardDialog = new WizardDialog();
-                wizardDialog.setContext(getContext());
                 wizardDialog.show(manager, "WizardDialog");
             }
         });
@@ -250,7 +252,6 @@ public class OverviewFragment extends Fragment {
             public void onClick(View view) {
                 FragmentManager manager = getFragmentManager();
                 CalibrationDialog calibrationDialog = new CalibrationDialog();
-                calibrationDialog.setContext(getContext());
                 calibrationDialog.show(manager, "CalibrationDialog");
             }
         });
@@ -258,40 +259,42 @@ public class OverviewFragment extends Fragment {
         acceptTempButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
-                final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-                if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle(getContext().getString(R.string.confirmation));
-                    builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
-                    builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            sHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    hideTempRecommendation();
-                                    PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
-                                    if (applyResult.enacted) {
-                                        finalLastRun.setByPump = applyResult;
-                                        finalLastRun.lastEnact = new Date();
-                                        finalLastRun.lastOpenModeAccept = new Date();
-                                        MainApp.getConfigBuilder().uploadDeviceStatus();
-                                        ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                                        if (objectivesPlugin != null) {
-                                            objectivesPlugin.manualEnacts++;
-                                            objectivesPlugin.saveProgress();
+                if (ConfigBuilderPlugin.getActiveLoop() != null) {
+                    ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
+                    final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+                    if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle(getContext().getString(R.string.confirmation));
+                        builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
+                        builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                sHandler.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        hideTempRecommendation();
+                                        PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
+                                        if (applyResult.enacted) {
+                                            finalLastRun.setByPump = applyResult;
+                                            finalLastRun.lastEnact = new Date();
+                                            finalLastRun.lastOpenModeAccept = new Date();
+                                            MainApp.getConfigBuilder().uploadDeviceStatus();
+                                            ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                            if (objectivesPlugin != null) {
+                                                objectivesPlugin.manualEnacts++;
+                                                objectivesPlugin.saveProgress();
+                                            }
                                         }
+                                        updateGUIIfVisible();
                                     }
-                                    updateGUIIfVisible();
-                                }
-                            });
-                            Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
-                        }
-                    });
-                    builder.setNegativeButton(getContext().getString(R.string.cancel), null);
-                    builder.show();
+                                });
+                                Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+                            }
+                        });
+                        builder.setNegativeButton(getContext().getString(R.string.cancel), null);
+                        builder.show();
+                    }
+                    updateGUI();
                 }
-                updateGUI();
             }
         });
 
@@ -312,6 +315,133 @@ public class OverviewFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        if (activeloop == null)
+            return;
+        menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
+        if (activeloop.isEnabled(PluginBase.LOOP)) {
+            menu.add(MainApp.sResources.getString(R.string.disableloop));
+            if (!activeloop.isSuspended()) {
+                menu.add(MainApp.sResources.getString(R.string.suspendloopfor1h));
+                menu.add(MainApp.sResources.getString(R.string.suspendloopfor2h));
+                menu.add(MainApp.sResources.getString(R.string.suspendloopfor3h));
+                menu.add(MainApp.sResources.getString(R.string.suspendloopfor10h));
+                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
+                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor1h));
+                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor2h));
+                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor3h));
+            } else {
+                menu.add(MainApp.sResources.getString(R.string.resume));
+            }
+        }
+        if (!activeloop.isEnabled(PluginBase.LOOP))
+            menu.add(MainApp.sResources.getString(R.string.enableloop));
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
+            activeloop.setFragmentEnabled(PluginBase.LOOP, false);
+            activeloop.setFragmentVisible(PluginBase.LOOP, false);
+            MainApp.getConfigBuilder().storeSettings();
+            MainApp.bus().post(new EventRefreshGui(false));
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
+            activeloop.setFragmentEnabled(PluginBase.LOOP, true);
+            activeloop.setFragmentVisible(PluginBase.LOOP, true);
+            MainApp.getConfigBuilder().storeSettings();
+            MainApp.bus().post(new EventRefreshGui(false));
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
+            activeloop.suspendTo(0L);
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    MainApp.bus().post(new EventRefreshGui(false));
+                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
+            activeloop.suspendTo(new Date().getTime() + 60L * 60 * 1000);
+            MainApp.bus().post(new EventRefreshGui(false));
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
+            activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
+            MainApp.bus().post(new EventRefreshGui(false));
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
+            activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
+            MainApp.bus().post(new EventRefreshGui(false));
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
+            activeloop.suspendTo(new Date().getTime() + 10 * 60L * 60 * 1000);
+            MainApp.bus().post(new EventRefreshGui(false));
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
+            activeloop.suspendTo(new Date().getTime() + 30L * 60 * 1000);
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 30);
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                    MainApp.bus().post(new EventRefreshGui(false));
+                }
+            });
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
+            activeloop.suspendTo(new Date().getTime() + 1 * 60L * 60 * 1000);
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    MainApp.bus().post(new EventRefreshGui(false));
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 60);
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
+            activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    MainApp.bus().post(new EventRefreshGui(false));
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 2 * 60);
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
+            return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
+            activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    MainApp.bus().post(new EventRefreshGui(false));
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 3 * 60);
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
+            return true;
+        }
+
+        return super.onContextItemSelected(item);
+    }
+
     void processQuickWizard() {
         final BgReading actualBg = GlucoseStatus.actualBg();
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
@@ -323,7 +453,7 @@ public class OverviewFragment extends Fragment {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText();
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), actualBg.valueToUnits(profile.getUnits()), 0d, true, true);
+            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, true);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -342,6 +472,7 @@ public class OverviewFragment extends Fragment {
                 boluscalcJSON.put("insulincarbs", wizard.insulinFromCarbs);
                 boluscalcJSON.put("carbs", quickWizardEntry.carbs());
                 boluscalcJSON.put("othercorrection", 0d);
+                boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
                 boluscalcJSON.put("insulin", wizard.calculatedTotalInsulin);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -412,6 +543,7 @@ public class OverviewFragment extends Fragment {
         super.onPause();
         MainApp.bus().unregister(this);
         sLoopHandler.removeCallbacksAndMessages(null);
+        unregisterForContextMenu(apsModeView);
     }
 
     @Override
@@ -426,6 +558,7 @@ public class OverviewFragment extends Fragment {
             }
         };
         sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
+        registerForContextMenu(apsModeView);
         updateGUIIfVisible();
     }
 
@@ -548,6 +681,8 @@ public class OverviewFragment extends Fragment {
             loopStatusLayout.setVisibility(View.VISIBLE);
         }
 
+        PumpInterface pump = MainApp.getConfigBuilder();
+
         // Skip if not initialized yet
         if (bgGraph == null)
             return;
@@ -562,7 +697,19 @@ public class OverviewFragment extends Fragment {
             apsModeView.setBackgroundResource(R.drawable.loopmodeborder);
             apsModeView.setTextColor(Color.BLACK);
             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-            if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+            if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuperBolus()) {
+                apsModeView.setBackgroundResource(R.drawable.loopmodesuspendedborder);
+                apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuperbolusfor), activeloop.minutesToEndOfSuspend()));
+                apsModeView.setTextColor(Color.WHITE);
+            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuspended()) {
+                apsModeView.setBackgroundResource(R.drawable.loopmodesuspendedborder);
+                apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuspendedfor), activeloop.minutesToEndOfSuspend()));
+                apsModeView.setTextColor(Color.WHITE);
+            } else if (pump.isSuspended()) {
+                apsModeView.setBackgroundResource(R.drawable.loopmodesuspendedborder);
+                apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
+                apsModeView.setTextColor(Color.WHITE);
+            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
                 if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
                     apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
                 } else {
@@ -572,31 +719,7 @@ public class OverviewFragment extends Fragment {
                 apsModeView.setBackgroundResource(R.drawable.loopmodedisabledborder);
                 apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
                 apsModeView.setTextColor(Color.WHITE);
-
             }
-
-
-            apsModeView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                    if (activeloop == null) {
-                        log.error("no active loop?");
-                        return true;
-                    } else if (activeloop.isEnabled(PluginBase.LOOP)) {
-                        activeloop.setFragmentEnabled(PluginBase.LOOP, false);
-                        activeloop.setFragmentVisible(PluginBase.LOOP, false);
-                    } else {
-                        activeloop.setFragmentEnabled(PluginBase.LOOP, true);
-                        activeloop.setFragmentVisible(PluginBase.LOOP, true);
-                    }
-                    MainApp.getConfigBuilder().storeSettings();
-                    MainApp.bus().post(new EventRefreshGui(false));
-                    return true;
-                }
-            });
-            apsModeView.setLongClickable(true);
-
         } else {
             apsModeView.setVisibility(View.GONE);
         }
@@ -629,8 +752,6 @@ public class OverviewFragment extends Fragment {
         }
 
         // **** Temp button ****
-        PumpInterface pump = MainApp.getConfigBuilder();
-
         boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
         showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
         showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
@@ -706,7 +827,7 @@ public class OverviewFragment extends Fragment {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText() + " " + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), lastBG.valueToUnits(profile.getUnits()), 0d, true, true);
+            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, true);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)

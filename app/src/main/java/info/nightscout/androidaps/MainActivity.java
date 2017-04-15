@@ -1,13 +1,17 @@
 package info.nightscout.androidaps;
 
 import android.Manifest;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -37,8 +41,10 @@ import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
 import info.nightscout.utils.LogDialog;
+import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 public class MainActivity extends AppCompatActivity {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
@@ -59,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
             askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CASE_STORAGE);
         }
+        askForBatteryOptimizationPermission();
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
@@ -226,6 +233,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         askForSMSPermissions();
+    }
+
+    private void askForBatteryOptimizationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            final String packageName = getPackageName();
+
+            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                log.debug("Requesting ignore battery optimization");
+
+                OKDialog.show(this, getString(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), getString(R.string.app_name)), new Runnable() {
+
+                    @Override
+                    public void run() {
+                        try {
+                            final Intent intent = new Intent();
+
+                            // ignoring battery optimizations required for constant connection
+                            intent.setAction(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS);
+                            intent.setData(Uri.parse("package:" + packageName));
+                            startActivity(intent);
+
+                        } catch (ActivityNotFoundException e) {
+                            final String msg = getString(R.string.batteryoptimalizationerror);
+                            ToastUtils.showToastInUiThread(getApplicationContext(), msg);
+                            log.error(msg);
+                        }
+                    }
+                });
+            }
+        }
     }
 
     private synchronized void askForSMSPermissions() {

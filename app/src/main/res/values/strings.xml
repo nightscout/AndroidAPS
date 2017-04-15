@@ -139,6 +139,8 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="disabledloop">Loop Disabled</string>
+    <string name="disableloop">Disable loop</string>
+    <string name="enableloop">Enable loop</string>
 
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
@@ -327,7 +329,9 @@
     <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
     <string name="openapsma_valueoutofrange" formatted="false">Value %s is out of hard limits</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
+    <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">To suspend loop for %d minutes reply with code %s</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
@@ -533,9 +537,9 @@
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
     <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
     <string name="clearlog">Clear log</string>
-    <string name="key_nsclientinternal_autoscroll">nsclientinternal_autoscroll</string>
-    <string name="key_nsclientinternal_paused">nsclientinternal_paused</string>
-    <string name="nowritepermission">NSCLIENT has no write permission</string>
+    <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
+    <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
+    <string name="nowritepermission">NSCLIENT has no write permission. Wrong API secret?</string>
     <string name="wear_settings">Wear settings</string>
     <string name="wear_detailedIOB_title">Show detailed IOB</string>
     <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
@@ -552,5 +556,31 @@
     <string name="key_teenage" translatable="false">teenage</string>
     <string name="key_adult" translatable="false">adult</string>
     <string name="patientage_summary">Please select patient age to setup safety limits</string>
-    <string name="key_i_understand">I_understand</string>
+    <string name="key_i_understand" translatable="false">I_understand</string>
+    <string name="Glimp">Glimp</string>
+    <string name="batteryoptimalizationerror">Device does not appear to support battery optimization whitelisting!</string>
+    <string name="pleaseallowpermission">Please Allow Permission</string>
+    <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
+    <string name="loopsuspended">Loop suspended</string>
+    <string name="loopsuspendedfor" formatted="false">Suspended (%d m)</string>
+    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopmenu">Loop menu</string>
+    <string name="suspendloopfor1h">Suspend loop for 1h</string>
+    <string name="suspendloopfor2h">Suspend loop for 2h</string>
+    <string name="suspendloopfor3h">Suspend loop for 3h</string>
+    <string name="suspendloopfor10h">Suspend loop for 10 h</string>
+    <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
+    <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
+    <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
+    <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
+    <string name="disconnectpumpfor10h">Disconnect pump for 10 h</string>
+    <string name="resume">Resume</string>
+    <string name="smscommunicator_wrongduration">Wrong duration</string>
+    <string name="smscommunicator_loopsuspended">Loop suspended</string>
+    <string name="smscommunicator_loopresumed">Loop resumed</string>
+    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_sb_label">Superbolus</string>
+    <string name="ns_logappstartedevent">Log app start to NS</string>
+    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
 </resources>

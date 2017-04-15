@@ -61,7 +61,11 @@ public class SP {
     }
 
     static public long getLong(String key, Long defaultValue) {
-        return SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()));
+        try {
+            return sharedPreferences.getLong(key, defaultValue);
+        } catch (Exception e) {
+            return SafeParse.stringToLong(sharedPreferences.getString(key, defaultValue.toString()));
+        }
     }
 
     static public void putBoolean(String key, boolean value) {
@@ -82,9 +86,9 @@ public class SP {
         editor.apply();
     }
 
-    static public void putString(String key, String value) {
+    static public void putLong(String key, long value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(key, value);
+        editor.putLong(key, value);
         editor.apply();
     }
 
