@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
@@ -15,6 +16,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -92,7 +94,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     public void initializeData() {
-        double dia = 3;
+        double dia = Constants.defaultDIA;
         if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
             dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
@@ -120,6 +122,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return total;
         NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
         if (profile == null)
             return total;
 
@@ -129,10 +132,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
             if (t.created_at.getTime() > time) continue;
-            Iob tIOB = t.iobCalc(now, dia);
+            Iob tIOB = insulinInterface.iobCalc(t, now, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = t.iobCalc(now, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
+            Iob bIOB = insulinInterface.iobCalc(t, now, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
             total.bolussnooze += bIOB.iobContrib;
         }
         return total;

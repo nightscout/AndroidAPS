@@ -314,6 +314,7 @@ public class WizardDialog extends DialogFragment {
                             @Override
                             public void run() {
                                 PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
+                                        MainApp.getConfigBuilder().getActiveInsulin(),
                                         context,
                                         finalInsulinAfterConstraints,
                                         finalCarbsAfterConstraints,

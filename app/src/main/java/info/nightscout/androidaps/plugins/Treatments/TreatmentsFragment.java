@@ -38,6 +38,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -81,12 +82,13 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
                 return;
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            if (profile == null)
+            InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+            if (profile == null || insulinInterface == null)
                 return;
             holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).created_at));
             holder.insulin.setText(DecimalFormatter.to2Decimal(treatments.get(position).insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(treatments.get(position).carbs) + " g");
-            Iob iob = treatments.get(position).iobCalc(new Date(), profile.getDia());
+            Iob iob = insulinInterface.iobCalc(treatments.get(position), new Date(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(treatments.get(position).mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));

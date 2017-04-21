@@ -1,0 +1,21 @@
+package info.nightscout.androidaps.interfaces;
+
+import java.util.Date;
+
+import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.db.Treatment;
+
+/**
+ * Created by mike on 17.04.2017.
+ */
+
+public interface InsulinInterface {
+    final int FASTACTINGINSULIN = 0;
+
+    int getId();
+    String getFriendlyName();
+    String getComment();
+    int getResourcePicture();
+    double getDia();
+    public Iob iobCalc(Treatment treatment, Date time, Double dia);
+}

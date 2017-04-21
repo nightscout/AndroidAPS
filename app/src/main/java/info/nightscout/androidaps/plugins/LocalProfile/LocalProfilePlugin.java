@@ -120,7 +120,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
 
         mgdl = SP.getBoolean("LocalProfile" + "mgdl", false);
         mmol = SP.getBoolean("LocalProfile" + "mmol", true);
-        dia = SP.getDouble("LocalProfile" + "dia", 3d);
+        dia = SP.getDouble("LocalProfile" + "dia", Constants.defaultDIA);
         try {
             ic = new JSONArray(SP.getString("LocalProfile" + "ic", DEFAULTARRAY));
         } catch (JSONException e1) {

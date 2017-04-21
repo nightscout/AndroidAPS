@@ -27,6 +27,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanFragment;
+import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
 import info.nightscout.androidaps.plugins.LocalProfile.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.MDI.MDIFragment;
@@ -86,6 +87,7 @@ public class MainApp extends Application {
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.getPlugin());
             if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
+            pluginsList.add(InsulinFastactingFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANARKOREAN) pluginsList.add(DanaRKoreanFragment.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());

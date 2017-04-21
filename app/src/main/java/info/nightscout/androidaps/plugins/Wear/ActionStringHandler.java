@@ -384,7 +384,7 @@ public class ActionStringHandler {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(amount, 0, null, false);
+                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), amount, 0, null, false);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror)  +
                             "\n" +
@@ -400,7 +400,7 @@ public class ActionStringHandler {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(amount, carbs, null, true);
+                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), amount, carbs, null, true);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror)  +
                             "\n" +

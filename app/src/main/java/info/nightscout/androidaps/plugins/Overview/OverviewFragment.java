@@ -510,6 +510,7 @@ public class OverviewFragment extends Fragment {
                                 @Override
                                 public void run() {
                                     PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
+                                            MainApp.getConfigBuilder().getActiveInsulin(),
                                             getContext(),
                                             finalInsulinAfterConstraints,
                                             finalCarbsAfterConstraints,

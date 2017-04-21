@@ -15,6 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -183,7 +184,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
+    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.bolusDelivered = insulin;

@@ -129,7 +129,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
         mgdl = SP.getBoolean(SETTINGS_PREFIX + "mgdl", true);
         mmol = SP.getBoolean(SETTINGS_PREFIX + "mmol", false);
-        dia = SP.getDouble(SETTINGS_PREFIX + "dia", 3d);
+        dia = SP.getDouble(SETTINGS_PREFIX + "dia", Constants.defaultDIA);
         targetLow = SP.getDouble(SETTINGS_PREFIX + "targetlow", 80d);
         targetHigh = SP.getDouble(SETTINGS_PREFIX + "targethigh", 120d);
         percentage = SP.getInt(SETTINGS_PREFIX + "percentage", 100);

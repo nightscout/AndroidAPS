@@ -442,7 +442,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
                             danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0, null);
+                            PumpEnactResult result = pumpInterface.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin() ,bolusWaitingForConfirmation.bolusRequested, 0, null);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
                                 if (danaRPlugin != null)

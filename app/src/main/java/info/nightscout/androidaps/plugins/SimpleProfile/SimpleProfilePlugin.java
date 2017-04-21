@@ -118,7 +118,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
 
         mgdl = SP.getBoolean("SimpleProfile" + "mgdl", true);
         mmol = SP.getBoolean("SimpleProfile" + "mmol", false);
-        dia = SP.getDouble("SimpleProfile" + "dia", 3d);
+        dia = SP.getDouble("SimpleProfile" + "dia", Constants.defaultDIA);
         ic = SP.getDouble("SimpleProfile" + "ic", 20d);
         isf = SP.getDouble("SimpleProfile" + "isf", 200d);
         basal = SP.getDouble("SimpleProfile" + "basal", 1d);

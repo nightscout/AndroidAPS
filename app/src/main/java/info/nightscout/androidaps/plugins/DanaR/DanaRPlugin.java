@@ -30,6 +30,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -357,11 +358,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
+    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
         if (insulin > 0 || carbs > 0) {
-            Treatment t = new Treatment();
+            Treatment t = new Treatment(insulinType);
             boolean connectionOK = false;
             if (insulin > 0 || carbs > 0) connectionOK = sExecutionService.bolus(insulin, carbs, t);
             PumpEnactResult result = new PumpEnactResult();

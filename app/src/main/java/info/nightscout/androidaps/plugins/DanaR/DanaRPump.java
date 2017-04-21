@@ -119,7 +119,7 @@ public class DanaRPump {
 //        Evening / 17:00–21:59
 //        Night / 22:00–5:59
 
-        double dia = SP.getDouble(R.string.key_danarprofile_dia, 3d);
+        double dia = SP.getDouble(R.string.key_danarprofile_dia, Constants.defaultDIA);
 
         try {
             json.put("defaultProfile", PROFILE_PREFIX + (activeProfile + 1));
