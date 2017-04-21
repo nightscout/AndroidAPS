@@ -82,11 +82,6 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
     }
 
     @Override
-    public int getResourcePicture() {
-        return R.drawable.insulin0;
-    }
-
-    @Override
     public double getDia() {
         ProfileInterface profileInterface =  MainApp.getConfigBuilder().getActiveProfile();
         if (profileInterface.getProfile() != null)

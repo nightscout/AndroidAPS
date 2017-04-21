@@ -35,12 +35,12 @@
                 android:layout_margin="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <ImageView
-                android:id="@+id/insulin_activity"
+            <info.nightscout.androidaps.plugins.InsulinFastacting.ActivityGraph
+                android:id="@+id/insuling_graph"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                app:srcCompat="@drawable/insulin0" />
+                android:layout_height="200dip" />
+
         </LinearLayout>
     </ScrollView>
 

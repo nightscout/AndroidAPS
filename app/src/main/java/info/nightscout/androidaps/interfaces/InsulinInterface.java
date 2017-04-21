@@ -16,7 +16,6 @@ public interface InsulinInterface {
     int getId();
     String getFriendlyName();
     String getComment();
-    int getResourcePicture();
     double getDia();
     public Iob iobCalc(Treatment treatment, Date time, Double dia);
 }

@@ -33,8 +33,8 @@ public class InsulinFastactingFragment extends Fragment implements FragmentBase 
     TextView insulinComment;
     @BindView(R.id.insulin_dia)
     TextView insulinDia;
-    @BindView(R.id.insulin_activity)
-    ImageView insulinActivity;
+    @BindView(R.id.insuling_graph)
+    ActivityGraph insulinGraph;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class InsulinFastactingFragment extends Fragment implements FragmentBase 
         insulinName.setText(insulinFastactingPlugin.getFriendlyName());
         insulinComment.setText(insulinFastactingPlugin.getComment());
         insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + new Double(insulinFastactingPlugin.getDia()).toString() + "h");
-        insulinActivity.setImageDrawable(MainApp.sResources.getDrawable(insulinFastactingPlugin.getResourcePicture()));
+        insulinGraph.show(insulinFastactingPlugin);
 
         return view;
     }
