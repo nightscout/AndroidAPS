@@ -28,6 +28,13 @@
                 android:layout_margin="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
+            <TextView
+                android:id="@+id/insulin_dia"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
             <ImageView
                 android:id="@+id/insulin_activity"
                 android:layout_width="match_parent"
