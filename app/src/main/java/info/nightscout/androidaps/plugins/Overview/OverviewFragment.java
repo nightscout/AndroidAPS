@@ -86,6 +86,8 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
@@ -930,8 +932,7 @@ public class OverviewFragment extends Fragment {
 
         LineGraphSeries<DataPoint> basalsLineSeries = null;
         BarGraphSeries<DataPoint> basalsSeries = null;
-        LineGraphSeries<DataPoint> seriesLow = null;
-        LineGraphSeries<DataPoint> seriesHigh = null;
+        AreaGraphSeries<DoubleDataPoint> areaSeries = null;
         LineGraphSeries<DataPoint> seriesNow = null;
         PointsGraphSeries<BgReading> seriesInRage = null;
         PointsGraphSeries<BgReading> seriesOutOfRange = null;
@@ -942,18 +943,14 @@ public class OverviewFragment extends Fragment {
         bgGraph.removeAllSeries();
 
         // **** HIGH and LOW targets graph ****
-        DataPoint[] lowDataPoints = new DataPoint[]{
-                new DataPoint(fromTime, lowLine),
-                new DataPoint(endTime, lowLine)
+        DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
+                new DoubleDataPoint(fromTime, lowLine, highLine),
+                new DoubleDataPoint(endTime, lowLine, highLine)
         };
-        DataPoint[] highDataPoints = new DataPoint[]{
-                new DataPoint(fromTime, highLine),
-                new DataPoint(endTime, highLine)
-        };
-        bgGraph.addSeries(seriesLow = new LineGraphSeries<DataPoint>(lowDataPoints));
-        seriesLow.setColor(Color.RED);
-        bgGraph.addSeries(seriesHigh = new LineGraphSeries<DataPoint>(highDataPoints));
-        seriesHigh.setColor(Color.RED);
+        bgGraph.addSeries(areaSeries = new AreaGraphSeries<>(areaDataPoints));
+        areaSeries.setColor(0);
+        areaSeries.setDrawBackground(true);
+        areaSeries.setBackgroundColor(Color.argb(40, 0, 255, 0));
 
         // **** TEMP BASALS graph ****
         class BarDataPoint extends DataPoint {
