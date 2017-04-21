@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 20
-        targetSdkVersion 23
+        targetSdkVersion 25
         versionCode 1
         versionName "1.0.2"
     }
@@ -65,6 +65,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:7.3.0'
     compile files('libs/hellocharts-library-1.5.5.jar')
     compile(name:'ustwo-clockwise-debug', ext:'aar')
-    compile 'com.android.support:support-v4:23.0.1'
+    compile 'com.android.support:support-v4:25.3.1'
     compile 'me.denley.wearpreferenceactivity:wearpreferenceactivity:0.5.0'
 }
