@@ -22,23 +22,23 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
-import info.nightscout.androidaps.plugins.CircadianPercentageProfile.CircadianPercentageProfileFragment;
+import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfileFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.DanaR.DanaRFragment;
-import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanFragment;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanFragment;
 import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
-import info.nightscout.androidaps.plugins.LocalProfile.LocalProfileFragment;
+import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
-import info.nightscout.androidaps.plugins.MDI.MDIFragment;
+import info.nightscout.androidaps.plugins.PumpMDI.MDIFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
-import info.nightscout.androidaps.plugins.NSProfile.NSProfileFragment;
-import info.nightscout.androidaps.plugins.Objectives.ObjectivesFragment;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
-import info.nightscout.androidaps.plugins.SafetyFragment.SafetyFragment;
-import info.nightscout.androidaps.plugins.SimpleProfile.SimpleProfileFragment;
+import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyFragment;
+import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpFragment;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
@@ -47,7 +47,7 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangeFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
-import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpFragment;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
 import info.nightscout.androidaps.plugins.persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
@@ -142,8 +142,8 @@ public class MainApp extends Application {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
             if (Config.DANAR) {
-                startService(new Intent(this, info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService.class));
-                startService(new Intent(this, info.nightscout.androidaps.plugins.DanaRKorean.Services.ExecutionService.class));
+                startService(new Intent(this, info.nightscout.androidaps.plugins.PumpDanaR.Services.ExecutionService.class));
+                startService(new Intent(this, info.nightscout.androidaps.plugins.PumpDanaRKorean.Services.ExecutionService.class));
             }
             keepAliveReceiver.setAlarm(this);
         }

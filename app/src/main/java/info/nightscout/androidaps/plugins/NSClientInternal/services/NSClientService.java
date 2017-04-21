@@ -25,8 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -35,7 +33,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
+import info.nightscout.androidaps.plugins.PumpDanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;

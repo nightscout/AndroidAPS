@@ -37,8 +37,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingPlugin;
-import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.PasswordProtection;
 
 
