@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,15 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
+    public void finishUpdate(ViewGroup container) {
+        try{
+            super.finishUpdate(container);
+        } catch (NullPointerException nullPointerException){
+            System.out.println("Catch the NullPointerException in FragmentStatePagerAdapter.finishUpdate");
+        }
+    }
+
+    @Override
     public CharSequence getPageTitle(int position) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if(preferences.getBoolean("short_tabtitles", false)){
@@ -58,4 +68,6 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
             notifyDataSetChanged();
         }
     }
+
+
 }
