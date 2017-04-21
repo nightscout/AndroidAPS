@@ -588,4 +588,5 @@
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">INS</string>
+    <string name="fastactinginsulinprolonged">Fast Acting Insuin Prolonged</string>
 </resources>

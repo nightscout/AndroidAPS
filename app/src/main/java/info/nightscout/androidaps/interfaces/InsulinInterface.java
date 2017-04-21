@@ -11,6 +11,7 @@ import info.nightscout.androidaps.db.Treatment;
 
 public interface InsulinInterface {
     final int FASTACTINGINSULIN = 0;
+    final int FASTACTINGINSULINPROLONGED = 1;
 
     int getId();
     String getFriendlyName();

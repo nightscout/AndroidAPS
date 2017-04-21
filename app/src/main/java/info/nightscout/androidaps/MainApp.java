@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
+import info.nightscout.androidaps.plugins.InsulinFastactingProlonged.InsulinFastactingProlongedFragment;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfileFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -88,6 +89,7 @@ public class MainApp extends Application {
             pluginsList.add(OverviewFragment.getPlugin());
             if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
             pluginsList.add(InsulinFastactingFragment.getPlugin());
+            pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANARKOREAN) pluginsList.add(DanaRKoreanFragment.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinFastacting;
+package info.nightscout.androidaps.plugins.InsulinFastactingProlonged;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,11 +19,11 @@ import info.nightscout.androidaps.interfaces.FragmentBase;
  * Created by mike on 17.04.2017.
  */
 
-public class InsulinFastactingFragment extends Fragment implements FragmentBase {
-    static InsulinFastactingPlugin insulinFastactingPlugin = new InsulinFastactingPlugin();
+public class InsulinFastactingProlongedFragment extends Fragment implements FragmentBase {
+    static InsulinFastactingProlongedPlugin insulinFastactingProlongedPlugin = new InsulinFastactingProlongedPlugin();
 
-    static public InsulinFastactingPlugin getPlugin() {
-        return insulinFastactingPlugin;
+    static public InsulinFastactingProlongedPlugin getPlugin() {
+        return insulinFastactingProlongedPlugin;
     }
 
     private Unbinder unbinder;
@@ -40,9 +40,9 @@ public class InsulinFastactingFragment extends Fragment implements FragmentBase 
 
         unbinder = ButterKnife.bind(this, view);
 
-        insulinName.setText(insulinFastactingPlugin.getFriendlyName());
-        insulinComment.setText(insulinFastactingPlugin.getComment());
-        insulinActivity.setImageDrawable(MainApp.sResources.getDrawable(insulinFastactingPlugin.getResourcePicture()));
+        insulinName.setText(insulinFastactingProlongedPlugin.getFriendlyName());
+        insulinComment.setText(insulinFastactingProlongedPlugin.getComment());
+        insulinActivity.setImageDrawable(MainApp.sResources.getDrawable(insulinFastactingProlongedPlugin.getResourcePicture()));
 
         return view;
     }
