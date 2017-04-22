@@ -2,13 +2,13 @@ language: android
 jdk: oraclejdk8
 env:
   matrix:
-    - ANDROID_TARGET=android-25 ANDROID_ABI=x86
+    - ANDROID_TARGET=android-23 ANDROID_ABI=x86
 android:
   components:
   - platform-tools
   - tools
   - build-tools-25.0.2
-  - android-25
+  - android-23
   - extra-google-m2repository
   - extra-android-m2repository
   - extra-google-google_play_services
