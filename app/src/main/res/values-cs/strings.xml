@@ -533,4 +533,12 @@
     <string name="smscommunicator_wrongduration">Chybná doba trvání</string>
     <string name="ns_logappstartedevent">Logovat spuštění aplikace do NS</string>
     <string name="restartingapp">Ukončuji aplikaci, aby se nastavení projevilo.</string>
+    <string name="configbuilder_insulin">Inzulín</string>
+    <string name="fastactinginsulin">Rychlý inzulín</string>
+    <string name="fastactinginsulinprolonged">Rychlý inzulín prodloužený</string>
+    <string name="insulin_shortname">INZ</string>
+    <string name="loopsuperbolusfor">Superbolus (%d m)</string>
+    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="treatments_wizard_sb_label">Superbolus</string>
 </resources>
