@@ -120,7 +120,7 @@ public class NSProfile {
                 e.printStackTrace();
             }
         }
-        return 3D;
+        return Constants.defaultDIA;
     }
 /*
     public Double getCarbAbsorbtionRate() {

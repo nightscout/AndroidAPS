@@ -142,7 +142,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        if (profile == null) {
+        if (profile == null || profile.getIc(NSProfile.secondsFromMidnight()) == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getBasal(NSProfile.secondsFromMidnight()) == null ) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noprofile)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
