@@ -3,14 +3,12 @@ package info.nightscout.androidaps.plugins.Overview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
@@ -33,8 +31,6 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.ValueDependentColor;
-import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
@@ -52,6 +48,11 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -76,9 +77,10 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
@@ -93,7 +95,6 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLa
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -111,35 +112,64 @@ public class OverviewFragment extends Fragment {
         return overviewPlugin;
     }
 
+    private Unbinder unbinder;
+
+    @BindView(R.id.overview_bg)
     TextView bgView;
+    @BindView(R.id.overview_arrow)
     TextView arrowView;
+    @BindView(R.id.overview_timeago)
     TextView timeAgoView;
+    @BindView(R.id.overview_delta)
     TextView deltaView;
+    @BindView(R.id.overview_avgdelta)
     TextView avgdeltaView;
+    @BindView(R.id.overview_runningtemp)
     TextView runningTempView;
+    @BindView(R.id.overview_basebasal)
     TextView baseBasalView;
+    @BindView(R.id.overview_basallayout)
     LinearLayout basalLayout;
+    @BindView(R.id.overview_activeprofile)
     TextView activeProfileView;
+    @BindView(R.id.overview_iob)
     TextView iobView;
+    @BindView(R.id.overview_apsmode)
     TextView apsModeView;
+    @BindView(R.id.overview_temptarget)
     TextView tempTargetView;
+    @BindView(R.id.overview_pumpstatus)
     TextView pumpStatusView;
+    @BindView(R.id.overview_looplayout)
     LinearLayout loopStatusLayout;
+    @BindView(R.id.overview_pumpstatuslayout)
     LinearLayout pumpStatusLayout;
+    @BindView(R.id.overview_bggraph)
     GraphView bgGraph;
+    @BindView(R.id.overview_showprediction)
     CheckBox showPredictionView;
-
+    @BindView(R.id.overview_showbasals)
+    CheckBox showBasalsView;
+    @BindView(R.id.overview_notifications)
     RecyclerView notificationsView;
-    LinearLayoutManager llm;
-
+    @BindView(R.id.overview_canceltemplayout)
     LinearLayout cancelTempLayout;
+    @BindView(R.id.overview_accepttemplayout)
     LinearLayout acceptTempLayout;
+    @BindView(R.id.overview_canceltempbutton)
     Button cancelTempButton;
+    @BindView(R.id.overview_treatmentbutton)
     Button treatmentButton;
+    @BindView(R.id.overview_wizardbutton)
     Button wizardButton;
+    @BindView(R.id.overview_calibrationbutton)
     Button calibrationButton;
+    @BindView(R.id.overview_accepttempbutton)
     Button acceptTempButton;
+    @BindView(R.id.overview_quickwizardbutton)
     Button quickWizardButton;
+
+    LinearLayoutManager llm;
 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
@@ -161,160 +191,24 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
-        bgView = (TextView) view.findViewById(R.id.overview_bg);
-        arrowView = (TextView) view.findViewById(R.id.overview_arrow);
-        timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
-        deltaView = (TextView) view.findViewById(R.id.overview_delta);
-        avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
-        runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
-        baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
-        basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
-        activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
-        pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
-        loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
-        pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
-        iobView = (TextView) view.findViewById(R.id.overview_iob);
-        apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
-        tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
-        bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
-        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
-        treatmentButton = (Button) view.findViewById(R.id.overview_treatment);
-        wizardButton = (Button) view.findViewById(R.id.overview_wizard);
-        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltemp);
-        cancelTempLayout = (LinearLayout) view.findViewById(R.id.overview_canceltemplayout);
-        acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
-        acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
-        quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizard);
-        calibrationButton = (Button) view.findViewById(R.id.overview_calibration);
-        showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
+        unbinder = ButterKnife.bind(this, view);
 
-        notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
 
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
+        showBasalsView.setChecked(SP.getBoolean("showbasals", false));
 
-        showPredictionView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("showprediction", showPredictionView.isChecked());
-                editor.apply();
-                updateGUI();
-            }
-        });
-
-        treatmentButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager manager = getFragmentManager();
-                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
-                treatmentDialogFragment.show(manager, "TreatmentDialog");
-            }
-        });
-
-        wizardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager manager = getFragmentManager();
-                WizardDialog wizardDialog = new WizardDialog();
-                wizardDialog.show(manager, "WizardDialog");
-            }
-        });
-
-        quickWizardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                processQuickWizard();
-            }
-        });
-
-        cancelTempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                final PumpInterface pump = MainApp.getConfigBuilder();
-                if (pump.isTempBasalInProgress()) {
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pump.cancelTempBasal();
-                            MainApp.bus().post(new EventTempBasalChange());
-                            Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
-                        }
-                    });
-                }
-            }
-        });
-
-        calibrationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                FragmentManager manager = getFragmentManager();
-                CalibrationDialog calibrationDialog = new CalibrationDialog();
-                calibrationDialog.show(manager, "CalibrationDialog");
-            }
-        });
-
-        acceptTempButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (ConfigBuilderPlugin.getActiveLoop() != null) {
-                    ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
-                    final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-                    if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle(getContext().getString(R.string.confirmation));
-                        builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
-                        builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                sHandler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        hideTempRecommendation();
-                                        PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
-                                        if (applyResult.enacted) {
-                                            finalLastRun.setByPump = applyResult;
-                                            finalLastRun.lastEnact = new Date();
-                                            finalLastRun.lastOpenModeAccept = new Date();
-                                            MainApp.getConfigBuilder().uploadDeviceStatus();
-                                            ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
-                                            if (objectivesPlugin != null) {
-                                                objectivesPlugin.manualEnacts++;
-                                                objectivesPlugin.saveProgress();
-                                            }
-                                        }
-                                        updateGUIIfVisible();
-                                    }
-                                });
-                                Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
-                            }
-                        });
-                        builder.setNegativeButton(getContext().getString(R.string.cancel), null);
-                        builder.show();
-                    }
-                    updateGUI();
-                }
-            }
-        });
-
-        pumpStatusView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
-                        }
-                    });
-            }
-        });
-
-        updateGUI();
+        updateGUI("onCreateView");
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 
     @Override
@@ -444,7 +338,59 @@ public class OverviewFragment extends Fragment {
         return super.onContextItemSelected(item);
     }
 
-    void processQuickWizard() {
+    @OnCheckedChanged(R.id.overview_showprediction)
+    public void onPredictionCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        SP.putBoolean("showprediction", showPredictionView.isChecked());
+        updateGUI("onPredictionCheckedChanged");
+    }
+
+    @OnCheckedChanged(R.id.overview_showbasals)
+    public void onBasalsCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        SP.putBoolean("showbasals", showPredictionView.isChecked());
+        updateGUI("onBasalsCheckedChanged");
+    }
+
+    @OnClick(R.id.overview_accepttempbutton)
+    public void onClickAcceptTemp(View view) {
+        if (ConfigBuilderPlugin.getActiveLoop() != null) {
+            ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
+            final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+            if (finalLastRun != null && finalLastRun.lastAPSRun != null && finalLastRun.constraintsProcessed.changeRequested) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getContext().getString(R.string.confirmation));
+                builder.setMessage(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
+                builder.setPositiveButton(getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        sHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                hideTempRecommendation();
+                                PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
+                                if (applyResult.enacted) {
+                                    finalLastRun.setByPump = applyResult;
+                                    finalLastRun.lastEnact = new Date();
+                                    finalLastRun.lastOpenModeAccept = new Date();
+                                    MainApp.getConfigBuilder().uploadDeviceStatus();
+                                    ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                    if (objectivesPlugin != null) {
+                                        objectivesPlugin.manualEnacts++;
+                                        objectivesPlugin.saveProgress();
+                                    }
+                                }
+                                updateGUIIfVisible("onClickAcceptTemp");
+                            }
+                        });
+                        Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
+                    }
+                });
+                builder.setNegativeButton(getContext().getString(R.string.cancel), null);
+                builder.show();
+            }
+        }
+    }
+
+    @OnClick(R.id.overview_quickwizardbutton)
+    void onClickQuickwizard(View view) {
         final BgReading actualBg = GlucoseStatus.actualBg();
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return;
@@ -541,6 +487,52 @@ public class OverviewFragment extends Fragment {
 
     }
 
+    @OnClick(R.id.overview_wizardbutton)
+    public void onClickWizard(View view) {
+        FragmentManager manager = getFragmentManager();
+        WizardDialog wizardDialog = new WizardDialog();
+        wizardDialog.show(manager, "WizardDialog");
+    }
+
+    @OnClick(R.id.overview_calibrationbutton)
+    public void onClickCalibration(View view) {
+        FragmentManager manager = getFragmentManager();
+        CalibrationDialog calibrationDialog = new CalibrationDialog();
+        calibrationDialog.show(manager, "CalibrationDialog");
+    }
+
+    @OnClick(R.id.overview_treatmentbutton)
+    public void onClickTreatment(View view) {
+        FragmentManager manager = getFragmentManager();
+        NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
+        treatmentDialogFragment.show(manager, "TreatmentDialog");
+    }
+
+    @OnClick(R.id.overview_canceltempbutton)
+    public void onClickCanceltemp(View view) {
+        final PumpInterface pump = MainApp.getConfigBuilder();
+        if (pump.isTempBasalInProgress()) {
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    pump.cancelTempBasal();
+                    Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
+                }
+            });
+        }
+    }
+
+    @OnClick(R.id.overview_pumpstatus)
+    public void onClickPumpstatus(View view) {
+        if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
+                }
+            });
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -556,58 +548,58 @@ public class OverviewFragment extends Fragment {
         sRefreshLoop = new Runnable() {
             @Override
             public void run() {
-                updateGUIIfVisible();
+                updateGUIIfVisible("refreshLoop");
                 sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
             }
         };
         sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
         registerForContextMenu(apsModeView);
-        updateGUIIfVisible();
+        updateGUIIfVisible("onResume");
     }
 
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventInitializationChanged");
     }
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventPreferenceChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventRefreshGui");
     }
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventTreatmentChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventTempBasalChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventTempBasalChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventNewOpenLoopNotification");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventNewBasalProfile");
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempTargetRangeChange ev) {
-        updateGUIIfVisible();
+        updateGUIIfVisible("EventTempTargetRangeChange");
     }
 
     @Subscribe
@@ -643,13 +635,13 @@ public class OverviewFragment extends Fragment {
             });
     }
 
-    private void updateGUIIfVisible() {
+    private void updateGUIIfVisible(final String from) {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateGUI();
+                    updateGUI(from);
                 }
             });
     }
@@ -669,7 +661,8 @@ public class OverviewFragment extends Fragment {
     }
 
     @SuppressLint("SetTextI18n")
-    public void updateGUI() {
+    public void updateGUI(String from) {
+        log.debug("updateGUI entered from: " + from);
         updateNotifications();
         BgReading actualBG = GlucoseStatus.actualBg();
         BgReading lastBG = GlucoseStatus.lastBg();
@@ -931,7 +924,8 @@ public class OverviewFragment extends Fragment {
         }
 
         LineGraphSeries<DataPoint> basalsLineSeries = null;
-        BarGraphSeries<DataPoint> basalsSeries = null;
+        LineGraphSeries<DataPoint> baseBasalsSeries = null;
+        LineGraphSeries<DataPoint> tempBasalsSeries = null;
         AreaGraphSeries<DoubleDataPoint> areaSeries = null;
         LineGraphSeries<DataPoint> seriesNow = null;
         PointsGraphSeries<BgReading> seriesInRage = null;
@@ -939,7 +933,86 @@ public class OverviewFragment extends Fragment {
         PointsGraphSeries<BgReading> predSeries = null;
         PointsWithLabelGraphSeries<Treatment> seriesTreatments = null;
 
+        // **** TEMP BASALS graph ****
+        Double maxBasalValueFound = 0d;
+
+        long now = new Date().getTime();
+        if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
+            List<DataPoint> baseBasalArray = new ArrayList<>();
+            List<DataPoint> tempBasalArray = new ArrayList<>();
+            List<DataPoint> basalLineArray = new ArrayList<>();
+            double lastLineBasal = 0;
+            double lastBaseBasal = 0;
+            double lastTempBasal = 0;
+            for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
+                TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
+                double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
+                double baseLineValue = baseBasalValue;
+                double tempBasalValue = 0;
+                double basal = 0d;
+                if (tb != null) {
+                    tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time));
+                    if (tempBasalValue != lastTempBasal) {
+                        tempBasalArray.add(new DataPoint(time, lastTempBasal));
+                        tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
+                    }
+                    if (lastBaseBasal != 0d) {
+                        baseBasalArray.add(new DataPoint(time, lastBaseBasal));
+                        baseBasalArray.add(new DataPoint(time, 0d));
+                        lastBaseBasal = 0d;
+                    }
+                } else {
+                    if (baseBasalValue != lastBaseBasal) {
+                        baseBasalArray.add(new DataPoint(time, lastBaseBasal));
+                        baseBasalArray.add(new DataPoint(time, basal = baseBasalValue));
+                        lastBaseBasal = baseBasalValue;
+                    }
+                    if (lastTempBasal != 0) {
+                        tempBasalArray.add(new DataPoint(time, lastTempBasal));
+                        tempBasalArray.add(new DataPoint(time, 0d));
+                    }
+                }
+
+                if (baseLineValue != lastLineBasal) {
+                    basalLineArray.add(new DataPoint(time, lastLineBasal));
+                    basalLineArray.add(new DataPoint(time, baseLineValue));
+                }
+
+                lastLineBasal = baseLineValue;
+                lastTempBasal = tempBasalValue;
+                maxBasalValueFound = Math.max(maxBasalValueFound, basal);
+            }
+            basalLineArray.add(new DataPoint(now, lastLineBasal));
+            baseBasalArray.add(new DataPoint(now, lastBaseBasal));
+            tempBasalArray.add(new DataPoint(now, lastTempBasal));
+
+            DataPoint[] baseBasal = new DataPoint[baseBasalArray.size()];
+            baseBasal = baseBasalArray.toArray(baseBasal);
+            baseBasalsSeries = new LineGraphSeries<>(baseBasal);
+            baseBasalsSeries.setDrawBackground(true);
+            baseBasalsSeries.setBackgroundColor(Color.argb(200, 0x3F, 0x51, 0xB5));
+            baseBasalsSeries.setThickness(0);
+
+            DataPoint[] tempBasal = new DataPoint[tempBasalArray.size()];
+            tempBasal = tempBasalArray.toArray(tempBasal);
+            tempBasalsSeries = new LineGraphSeries<>(tempBasal);
+            tempBasalsSeries.setDrawBackground(true);
+            tempBasalsSeries.setBackgroundColor(Color.argb(200, 0x03, 0xA9, 0xF4));
+            tempBasalsSeries.setThickness(0);
+
+            DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
+            basalLine = basalLineArray.toArray(basalLine);
+            basalsLineSeries = new LineGraphSeries<>(basalLine);
+            Paint paint = new Paint();
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(2);
+            paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
+            paint.setColor(Color.CYAN);
+            basalsLineSeries.setCustomPaint(paint);
+        }
+
         // remove old data from graph
+        bgGraph.getSecondScale().getSeries().clear();
         bgGraph.removeAllSeries();
 
         // **** HIGH and LOW targets graph ****
@@ -951,57 +1024,6 @@ public class OverviewFragment extends Fragment {
         areaSeries.setColor(0);
         areaSeries.setDrawBackground(true);
         areaSeries.setBackgroundColor(Color.argb(40, 0, 255, 0));
-
-        // **** TEMP BASALS graph ****
-        class BarDataPoint extends DataPoint {
-            public BarDataPoint(double x, double y, boolean isTempBasal) {
-                super(x, y);
-                this.isTempBasal = isTempBasal;
-            }
-
-            public boolean isTempBasal = false;
-        }
-
-        Double maxBasalValueFound = 0d;
-
-        long now = new Date().getTime();
-        if (pump.getPumpDescription().isTempBasalCapable) {
-            List<BarDataPoint> basalArray = new ArrayList<BarDataPoint>();
-            List<DataPoint> basalLineArray = new ArrayList<DataPoint>();
-            double lastBaseBasal = 0;
-            for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
-                TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
-                double basebasal = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
-                Double basal = 0d;
-                if (tb != null)
-                    basalArray.add(new BarDataPoint(time, basal = tb.tempBasalConvertedToAbsolute(new Date(time)), true));
-                else {
-                    basalArray.add(new BarDataPoint(time, basal = basebasal, false));
-                }
-                if (basebasal != lastBaseBasal)
-                    basalLineArray.add(new DataPoint(time, lastBaseBasal));
-                basalLineArray.add(new DataPoint(time, basebasal));
-                lastBaseBasal = basebasal;
-                maxBasalValueFound = Math.max(maxBasalValueFound, basal);
-            }
-            BarDataPoint[] basal = new BarDataPoint[basalArray.size()];
-            basal = basalArray.toArray(basal);
-            bgGraph.addSeries(basalsSeries = new BarGraphSeries<DataPoint>(basal));
-            basalsSeries.setValueDependentColor(new ValueDependentColor<DataPoint>() {
-                @Override
-                public int get(DataPoint data) {
-                    BarDataPoint point = (BarDataPoint) data;
-                    if (point.isTempBasal) return Color.BLUE;
-                    else return Color.CYAN;
-                }
-            });
-            DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
-            basalLine = basalLineArray.toArray(basalLine);
-            bgGraph.addSeries(basalsLineSeries = new LineGraphSeries<DataPoint>(basalLine));
-            basalsLineSeries.setColor(Color.CYAN);
-            basalsLineSeries.setDrawDataPoints(false);
-            basalsLineSeries.setThickness(2);
-        }
 
         // set manual x bounds to have nice steps
         bgGraph.getViewport().setMaxX(endTime);
@@ -1110,8 +1132,9 @@ public class OverviewFragment extends Fragment {
         bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
 
         // set second scale
-        if (pump.getPumpDescription().isTempBasalCapable) {
-            bgGraph.getSecondScale().addSeries(basalsSeries);
+        if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
+            bgGraph.getSecondScale().addSeries(baseBasalsSeries);
+            bgGraph.getSecondScale().addSeries(tempBasalsSeries);
             bgGraph.getSecondScale().addSeries(basalsLineSeries);
             bgGraph.getSecondScale().setMinY(0);
             bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);

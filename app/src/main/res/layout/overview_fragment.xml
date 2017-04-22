@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -204,8 +205,18 @@
                     android:id="@+id/overview_showprediction"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:buttonTint="@color/magenta"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true" />
+
+                <CheckBox
+                    android:id="@+id/overview_showbasals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true" />
+                    android:layout_alignWithParentIfMissing="false"
+                    android:layout_below="@+id/overview_showprediction"
+                    app:buttonTint="@color/cyan" />
             </RelativeLayout>
 
             <LinearLayout
@@ -235,7 +246,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_canceltemp"
+                    android:id="@+id/overview_canceltempbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -255,7 +266,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_treatment"
+                    android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -268,7 +279,7 @@
                     android:textColor="@color/colorTreatmentButton" />
 
                 <Button
-                    android:id="@+id/overview_wizard"
+                    android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -281,7 +292,7 @@
                     android:textColor="@color/colorWizardButton" />
 
                 <Button
-                    android:id="@+id/overview_calibration"
+                    android:id="@+id/overview_calibrationbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -300,7 +311,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_quickwizard"
+                    android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
