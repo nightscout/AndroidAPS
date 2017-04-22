@@ -540,5 +540,7 @@
     <string name="loopsuperbolusfor">Superbolus (%d m)</string>
     <string name="treatments_wizard_bgtrend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
-    <string name="treatments_wizard_sb_label">Superbolus</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="enablesuperbolus">Povolit superbolus</string>
+    <string name="enablesuperbolus_summary">Povolení superbolusu v kalkulátoru. Nepovolujte, dokud se nenaučíte, co to opravdu dělá. MŮŽE ZPŮSOBIT PŘEDÁVKOVÁNÍ INZULÍNEM PŘI NESPRÁVNÉM POUŽITÍ!</string>
 </resources>

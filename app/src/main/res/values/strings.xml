@@ -580,7 +580,7 @@
     <string name="smscommunicator_loopresumed">Loop resumed</string>
     <string name="treatments_wizard_bgtrend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
-    <string name="treatments_wizard_sb_label">Superbolus</string>
+    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
@@ -589,4 +589,7 @@
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">INS</string>
     <string name="fastactinginsulinprolonged">Fast Acting Insuin Prolonged</string>
+    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
+    <string name="enablesuperbolus">Enable superbolus in wizard</string>
+    <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
 </resources>
