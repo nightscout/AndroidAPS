@@ -210,6 +210,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
         showBasalsView.setChecked(SP.getBoolean("showbasals", false));
 
+        bgGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
+        bgGraph.getGridLabelRenderer().reloadStyles();
+
         return view;
     }
 
