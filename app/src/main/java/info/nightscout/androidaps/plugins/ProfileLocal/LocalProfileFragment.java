@@ -23,14 +23,13 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.TimeListEdit;
 
-public class LocalProfileFragment extends Fragment implements FragmentBase {
+public class LocalProfileFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(LocalProfileFragment.class);
 
     private static LocalProfilePlugin localProfilePlugin = new LocalProfilePlugin();

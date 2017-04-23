@@ -192,32 +192,41 @@
                 android:layout_gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/overview_bggraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dip" />
-
-                <CheckBox
-                    android:id="@+id/overview_showprediction"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:buttonTint="@color/magenta"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentEnd="true" />
+                    android:layout_height="160dip"
+                    android:layout_weight="1" />
 
-                <CheckBox
-                    android:id="@+id/overview_showbasals"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignWithParentIfMissing="false"
-                    android:layout_below="@+id/overview_showprediction"
-                    app:buttonTint="@color/cyan" />
-            </RelativeLayout>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/overview_showprediction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:buttonTint="@color/magenta"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentEnd="true" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showbasals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignWithParentIfMissing="false"
+                        android:layout_below="@+id/overview_showprediction"
+                        app:buttonTint="@color/cyan" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/overview_accepttemplayout"

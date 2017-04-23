@@ -19,11 +19,10 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 
-public class LoopFragment extends Fragment implements View.OnClickListener, FragmentBase {
+public class LoopFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
 
     private static LoopPlugin loopPlugin;

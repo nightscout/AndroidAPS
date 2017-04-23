@@ -9,10 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 
-public class CareportalFragment extends Fragment implements FragmentBase, View.OnClickListener {
+public class CareportalFragment extends Fragment implements View.OnClickListener {
 
     static CareportalPlugin careportalPlugin;
 

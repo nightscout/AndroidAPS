@@ -31,10 +31,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.TempTarget;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
@@ -43,7 +42,7 @@ import info.nightscout.utils.ToastUtils;
  * Created by mike on 13/01/17.
  */
 
-public class TempTargetRangeFragment extends Fragment implements View.OnClickListener, FragmentBase {
+public class TempTargetRangeFragment extends Fragment implements View.OnClickListener {
 
     private static TempTargetRangePlugin tempTargetRangePlugin = new TempTargetRangePlugin();
 

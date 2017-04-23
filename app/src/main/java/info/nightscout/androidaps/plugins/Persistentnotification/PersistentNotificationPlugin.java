@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.persistentnotification;
+package info.nightscout.androidaps.plugins.Persistentnotification;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

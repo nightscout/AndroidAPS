@@ -18,18 +18,17 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.utils.JSONFormatter;
 
-public class OpenAPSMAFragment extends Fragment implements View.OnClickListener, FragmentBase {
+public class OpenAPSMAFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAFragment.class);
 
     private static OpenAPSMAPlugin openAPSMAPlugin;
 
     public static OpenAPSMAPlugin getPlugin() {
-        if(openAPSMAPlugin==null){
+        if (openAPSMAPlugin == null) {
             openAPSMAPlugin = new OpenAPSMAPlugin();
         }
         return openAPSMAPlugin;

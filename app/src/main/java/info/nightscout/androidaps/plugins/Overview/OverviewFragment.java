@@ -31,6 +31,8 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
@@ -1133,10 +1135,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             bgGraph.getSecondScale().addSeries(basalsLineSeries);
             bgGraph.getSecondScale().setMinY(0);
             bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
-            bgGraph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(ContextCompat.getColor(MainApp.instance(), R.color.background_material_dark)); // same color as backround = hide
         }
+        bgGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
+            @Override
+            public String formatLabel(double value, boolean isValueX) {
+                return "";
+            }
 
-        //updatePumpStatus(null);
+            @Override
+            public void setViewport(Viewport viewport) {
+
+            }
+        });
     }
 
     //Notifications

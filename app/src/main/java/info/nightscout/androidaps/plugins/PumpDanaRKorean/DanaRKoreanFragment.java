@@ -26,7 +26,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.History.DanaRHistoryActivity;
@@ -35,7 +34,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
 
-public class DanaRKoreanFragment extends Fragment implements FragmentBase {
+public class DanaRKoreanFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(DanaRKoreanFragment.class);
 
     private static DanaRKoreanPlugin danaRKoreanPlugin = new DanaRKoreanPlugin();

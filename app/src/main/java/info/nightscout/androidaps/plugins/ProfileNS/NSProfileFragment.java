@@ -12,11 +12,10 @@ import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.utils.DecimalFormatter;
 
-public class NSProfileFragment extends Fragment implements FragmentBase {
+public class NSProfileFragment extends Fragment {
     private static NSProfilePlugin nsProfilePlugin = new NSProfilePlugin();
 
     public static NSProfilePlugin getPlugin() {

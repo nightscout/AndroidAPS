@@ -26,7 +26,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRStatsActivity;
@@ -35,13 +34,13 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
 
-public class DanaRFragment extends Fragment implements FragmentBase {
+public class DanaRFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
 
     private static DanaRPlugin danaRPlugin;
 
     public static DanaRPlugin getPlugin() {
-        if(danaRPlugin==null){
+        if (danaRPlugin == null) {
             danaRPlugin = new DanaRPlugin();
         }
         return danaRPlugin;
@@ -211,7 +210,7 @@ public class DanaRFragment extends Fragment implements FragmentBase {
                     }
                     if (pump.lastBolusTime.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - pump.lastBolusTime.getTime();
-                        double agoHours =  agoMsec / 60d / 60d / 1000d;
+                        double agoHours = agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
                             lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getPlugin().getDanaRPump().lastBolusAmount) + " U");
                         else lastBolusView.setText("");

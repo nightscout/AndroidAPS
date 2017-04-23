@@ -18,10 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 
-public class VirtualPumpFragment extends Fragment implements FragmentBase {
+public class VirtualPumpFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(VirtualPumpFragment.class);
 
     private static VirtualPumpPlugin virtualPumpPlugin = new VirtualPumpPlugin();

@@ -21,9 +21,6 @@ import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.ArrayList;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -31,7 +28,6 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -42,7 +38,7 @@ import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.PasswordProtection;
 
 
-public class ConfigBuilderFragment extends Fragment implements FragmentBase {
+public class ConfigBuilderFragment extends Fragment {
 
     static ConfigBuilderPlugin configBuilderPlugin = new ConfigBuilderPlugin();
 
@@ -50,42 +46,26 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
         return configBuilderPlugin;
     }
 
-    @BindView(R.id.configbuilder_insulinlistview)
     ListView insulinListView;
-    @BindView(R.id.configbuilder_bgsourcelistview)
     ListView bgsourceListView;
-    @BindView(R.id.configbuilder_pumplistview)
     ListView pumpListView;
-    @BindView(R.id.configbuilder_pumplabel)
     TextView pumpLabel;
-    @BindView(R.id.configbuilder_looplistview)
     ListView loopListView;
-    @BindView(R.id.configbuilder_looplabel)
     TextView loopLabel;
-    @BindView(R.id.configbuilder_treatmentslistview)
     ListView treatmentsListView;
-    @BindView(R.id.configbuilder_tempslistview)
     ListView tempsListView;
-    @BindView(R.id.configbuilder_tempslabel)
     TextView tempsLabel;
-    @BindView(R.id.configbuilder_profilelistview)
     ListView profileListView;
-    @BindView(R.id.configbuilder_apslistview)
     ListView apsListView;
-    @BindView(R.id.configbuilder_apslabel)
     TextView apsLabel;
-    @BindView(R.id.configbuilder_constraintslistview)
     ListView constraintsListView;
-    @BindView(R.id.configbuilder_constraintslabel)
     TextView constraintsLabel;
-    @BindView(R.id.configbuilder_generallistview)
     ListView generalListView;
-    @BindView(R.id.configbuilder_nsclientversion)
     TextView nsclientVerView;
-    @BindView(R.id.configbuilder_nightscoutversion)
     TextView nightscoutVerView;
 
-    private Unbinder unbinder;
+    LinearLayout mainLayout;
+    Button unlock;
 
     PluginCustomAdapter insulinDataAdapter = null;
     PluginCustomAdapter bgsourceDataAdapter = null;
@@ -98,11 +78,6 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
     PluginCustomAdapter constraintsDataAdapter = null;
     PluginCustomAdapter generalDataAdapter = null;
 
-    @BindView(R.id.configbuilder_mainlayout)
-    LinearLayout mainLayout;
-    @BindView(R.id.configbuilder_unlock)
-    Button unlock;
-
     // TODO: sorting
 
     @Override
@@ -110,7 +85,26 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.configbuilder_fragment, container, false);
 
-        unbinder = ButterKnife.bind(this, view);
+        insulinListView = (ListView) view.findViewById(R.id.configbuilder_insulinlistview);
+        bgsourceListView = (ListView) view.findViewById(R.id.configbuilder_bgsourcelistview);
+        pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
+        pumpLabel = (TextView) view.findViewById(R.id.configbuilder_pumplabel);
+        loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
+        loopLabel = (TextView) view.findViewById(R.id.configbuilder_looplabel);
+        treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
+        tempsListView = (ListView) view.findViewById(R.id.configbuilder_tempslistview);
+        tempsLabel = (TextView) view.findViewById(R.id.configbuilder_tempslabel);
+        profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
+        apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
+        apsLabel = (TextView) view.findViewById(R.id.configbuilder_apslabel);
+        constraintsListView = (ListView) view.findViewById(R.id.configbuilder_constraintslistview);
+        constraintsLabel = (TextView) view.findViewById(R.id.configbuilder_constraintslabel);
+        generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
+        nsclientVerView = (TextView) view.findViewById(R.id.configbuilder_nsclientversion);
+        nightscoutVerView = (TextView) view.findViewById(R.id.configbuilder_nightscoutversion);
+
+        mainLayout = (LinearLayout) view.findViewById(R.id.configbuilder_mainlayout);
+        unlock = (Button) view.findViewById(R.id.configbuilder_unlock);
 
         nsclientVerView.setText(ConfigBuilderPlugin.nsClientVersionName);
         nightscoutVerView.setText(ConfigBuilderPlugin.nightscoutVersionName);
@@ -137,12 +131,6 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
             unlock.setVisibility(View.GONE);
         }
         return view;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 
     void setViews() {

@@ -50,7 +50,7 @@ import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangeFragmen
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
-import info.nightscout.androidaps.plugins.persistentnotification.PersistentNotificationPlugin;
+import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import io.fabric.sdk.android.Fabric;
 

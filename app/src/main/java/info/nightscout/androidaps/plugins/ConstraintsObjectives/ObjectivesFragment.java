@@ -23,9 +23,8 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 
-public class ObjectivesFragment extends Fragment implements View.OnClickListener, FragmentBase {
+public class ObjectivesFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(ObjectivesFragment.class);
 
     private static ObjectivesPlugin objectivesPlugin;
@@ -42,15 +41,6 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
     CheckBox enableFake;
     LinearLayout fake_layout;
     TextView reset;
-
-    @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        switch (id) {
-            default:
-                break;
-        }
-    }
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ObjectiveViewHolder> {
 
@@ -234,18 +224,6 @@ public class ObjectivesFragment extends Fragment implements View.OnClickListener
                     recyclerView.setAdapter(adapter);
                 }
             });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
     }
 
 }

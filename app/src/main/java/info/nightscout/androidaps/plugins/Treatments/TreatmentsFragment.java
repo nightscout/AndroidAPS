@@ -37,14 +37,13 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
-public class TreatmentsFragment extends Fragment implements View.OnClickListener, FragmentBase {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();

@@ -17,17 +17,16 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshGui;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
-import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActionsFragment extends Fragment implements FragmentBase, View.OnClickListener {
+public class ActionsFragment extends Fragment implements View.OnClickListener {
 
     static ActionsPlugin actionsPlugin = new ActionsPlugin();
 

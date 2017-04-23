@@ -21,13 +21,12 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.utils.SafeParse;
 
-public class SimpleProfileFragment extends Fragment implements FragmentBase {
+public class SimpleProfileFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(SimpleProfileFragment.class);
 
     private static SimpleProfilePlugin simpleProfilePlugin = new SimpleProfilePlugin();
