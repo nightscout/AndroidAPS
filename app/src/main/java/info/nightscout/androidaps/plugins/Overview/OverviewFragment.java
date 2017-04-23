@@ -48,11 +48,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
-import butterknife.Unbinder;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -103,7 +98,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 
-public class OverviewFragment extends Fragment {
+public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
     private static OverviewPlugin overviewPlugin = new OverviewPlugin();
@@ -112,64 +107,36 @@ public class OverviewFragment extends Fragment {
         return overviewPlugin;
     }
 
-    private Unbinder unbinder;
-
-    @BindView(R.id.overview_bg)
     TextView bgView;
-    @BindView(R.id.overview_arrow)
     TextView arrowView;
-    @BindView(R.id.overview_timeago)
     TextView timeAgoView;
-    @BindView(R.id.overview_delta)
     TextView deltaView;
-    @BindView(R.id.overview_avgdelta)
     TextView avgdeltaView;
-    @BindView(R.id.overview_runningtemp)
     TextView runningTempView;
-    @BindView(R.id.overview_basebasal)
     TextView baseBasalView;
-    @BindView(R.id.overview_basallayout)
     LinearLayout basalLayout;
-    @BindView(R.id.overview_activeprofile)
     TextView activeProfileView;
-    @BindView(R.id.overview_iob)
     TextView iobView;
-    @BindView(R.id.overview_apsmode)
     TextView apsModeView;
-    @BindView(R.id.overview_temptarget)
     TextView tempTargetView;
-    @BindView(R.id.overview_pumpstatus)
     TextView pumpStatusView;
-    @BindView(R.id.overview_looplayout)
     LinearLayout loopStatusLayout;
-    @BindView(R.id.overview_pumpstatuslayout)
     LinearLayout pumpStatusLayout;
-    @BindView(R.id.overview_bggraph)
     GraphView bgGraph;
-    @BindView(R.id.overview_showprediction)
     CheckBox showPredictionView;
-    @BindView(R.id.overview_showbasals)
     CheckBox showBasalsView;
-    @BindView(R.id.overview_notifications)
-    RecyclerView notificationsView;
-    @BindView(R.id.overview_canceltemplayout)
-    LinearLayout cancelTempLayout;
-    @BindView(R.id.overview_accepttemplayout)
-    LinearLayout acceptTempLayout;
-    @BindView(R.id.overview_canceltempbutton)
-    Button cancelTempButton;
-    @BindView(R.id.overview_treatmentbutton)
-    Button treatmentButton;
-    @BindView(R.id.overview_wizardbutton)
-    Button wizardButton;
-    @BindView(R.id.overview_calibrationbutton)
-    Button calibrationButton;
-    @BindView(R.id.overview_accepttempbutton)
-    Button acceptTempButton;
-    @BindView(R.id.overview_quickwizardbutton)
-    Button quickWizardButton;
 
+    RecyclerView notificationsView;
     LinearLayoutManager llm;
+
+    LinearLayout cancelTempLayout;
+    LinearLayout acceptTempLayout;
+    Button cancelTempButton;
+    Button treatmentButton;
+    Button wizardButton;
+    Button calibrationButton;
+    Button acceptTempButton;
+    Button quickWizardButton;
 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
@@ -192,8 +159,48 @@ public class OverviewFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
 
-        unbinder = ButterKnife.bind(this, view);
+        bgView = (TextView) view.findViewById(R.id.overview_bg);
+        arrowView = (TextView) view.findViewById(R.id.overview_arrow);
+        timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
+        deltaView = (TextView) view.findViewById(R.id.overview_delta);
+        avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
+        runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
+        baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
+        basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
+        activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
+        pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
+        loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
+        pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
+        iobView = (TextView) view.findViewById(R.id.overview_iob);
+        apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
+        tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
+        bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
+
+        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltempbutton);
+        cancelTempButton.setOnClickListener(this);
+        treatmentButton = (Button) view.findViewById(R.id.overview_treatmentbutton);
+        treatmentButton.setOnClickListener(this);
+        wizardButton = (Button) view.findViewById(R.id.overview_wizardbutton);
+        wizardButton.setOnClickListener(this);
+        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltempbutton);
+        cancelTempButton.setOnClickListener(this);
+        acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
+        acceptTempButton.setOnClickListener(this);
+        quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizardbutton);
+        quickWizardButton.setOnClickListener(this);
+        calibrationButton = (Button) view.findViewById(R.id.overview_calibrationbutton);
+        calibrationButton.setOnClickListener(this);
+
+        cancelTempLayout = (LinearLayout) view.findViewById(R.id.overview_canceltemplayout);
+        acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
+
+        showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
+        showPredictionView.setOnCheckedChangeListener(this);
+        showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
+        showBasalsView.setOnCheckedChangeListener(this);
+
+        notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
@@ -201,15 +208,9 @@ public class OverviewFragment extends Fragment {
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
         showBasalsView.setChecked(SP.getBoolean("showbasals", false));
 
-        updateGUI("onCreateView");
         return view;
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -238,19 +239,31 @@ public class OverviewFragment extends Fragment {
     }
 
     @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        switch (buttonView.getId()) {
+            case R.id.overview_showprediction:
+                SP.putBoolean("showprediction", showPredictionView.isChecked());
+                updateGUI("onPredictionCheckedChanged");
+                break;
+            case R.id.overview_showbasals:
+                SP.putBoolean("showbasals", showPredictionView.isChecked());
+                updateGUI("onBasalsCheckedChanged");
+                break;
+        }
+    }
+
+    @Override
     public boolean onContextItemSelected(MenuItem item) {
         final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
         if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, false);
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
-            MainApp.bus().post(new EventRefreshGui(false));
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, true);
             activeloop.setFragmentVisible(PluginBase.LOOP, true);
             MainApp.getConfigBuilder().storeSettings();
-            MainApp.bus().post(new EventRefreshGui(false));
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
             activeloop.suspendTo(0L);
@@ -267,19 +280,15 @@ public class OverviewFragment extends Fragment {
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 60L * 60 * 1000);
-            MainApp.bus().post(new EventRefreshGui(false));
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
-            MainApp.bus().post(new EventRefreshGui(false));
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
             activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
-            MainApp.bus().post(new EventRefreshGui(false));
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
             activeloop.suspendTo(new Date().getTime() + 10 * 60L * 60 * 1000);
-            MainApp.bus().post(new EventRefreshGui(false));
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
             activeloop.suspendTo(new Date().getTime() + 30L * 60 * 1000);
@@ -290,7 +299,6 @@ public class OverviewFragment extends Fragment {
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
-                    MainApp.bus().post(new EventRefreshGui(false));
                 }
             });
             return true;
@@ -338,20 +346,54 @@ public class OverviewFragment extends Fragment {
         return super.onContextItemSelected(item);
     }
 
-    @OnCheckedChanged(R.id.overview_showprediction)
-    public void onPredictionCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        SP.putBoolean("showprediction", showPredictionView.isChecked());
-        updateGUI("onPredictionCheckedChanged");
+    @Override
+    public void onClick(View v) {
+        FragmentManager manager = getFragmentManager();
+        switch (v.getId()) {
+            case R.id.overview_accepttempbutton:
+                onClickAcceptTemp();
+                break;
+            case R.id.overview_quickwizardbutton:
+                onClickQuickwizard();
+                break;
+            case R.id.overview_wizardbutton:
+                WizardDialog wizardDialog = new WizardDialog();
+                wizardDialog.show(manager, "WizardDialog");
+                break;
+            case R.id.overview_calibrationbutton:
+                CalibrationDialog calibrationDialog = new CalibrationDialog();
+                calibrationDialog.show(manager, "CalibrationDialog");
+                break;
+            case R.id.overview_treatmentbutton:
+                NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
+                treatmentDialogFragment.show(manager, "TreatmentDialog");
+                break;
+            case R.id.overview_canceltempbutton:
+                final PumpInterface pump = MainApp.getConfigBuilder();
+                if (pump.isTempBasalInProgress()) {
+                    sHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            pump.cancelTempBasal();
+                            Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
+                        }
+                    });
+                }
+                break;
+            case R.id.overview_pumpstatus:
+                if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
+                    sHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
+                        }
+                    });
+                break;
+        }
+
     }
 
-    @OnCheckedChanged(R.id.overview_showbasals)
-    public void onBasalsCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        SP.putBoolean("showbasals", showPredictionView.isChecked());
-        updateGUI("onBasalsCheckedChanged");
-    }
-
-    @OnClick(R.id.overview_accepttempbutton)
-    public void onClickAcceptTemp(View view) {
+    private void onClickAcceptTemp() {
         if (ConfigBuilderPlugin.getActiveLoop() != null) {
             ConfigBuilderPlugin.getActiveLoop().invoke("Accept temp button", false);
             final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
@@ -389,8 +431,7 @@ public class OverviewFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.overview_quickwizardbutton)
-    void onClickQuickwizard(View view) {
+    void onClickQuickwizard() {
         final BgReading actualBg = GlucoseStatus.actualBg();
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return;
@@ -485,52 +526,6 @@ public class OverviewFragment extends Fragment {
             }
         }
 
-    }
-
-    @OnClick(R.id.overview_wizardbutton)
-    public void onClickWizard(View view) {
-        FragmentManager manager = getFragmentManager();
-        WizardDialog wizardDialog = new WizardDialog();
-        wizardDialog.show(manager, "WizardDialog");
-    }
-
-    @OnClick(R.id.overview_calibrationbutton)
-    public void onClickCalibration(View view) {
-        FragmentManager manager = getFragmentManager();
-        CalibrationDialog calibrationDialog = new CalibrationDialog();
-        calibrationDialog.show(manager, "CalibrationDialog");
-    }
-
-    @OnClick(R.id.overview_treatmentbutton)
-    public void onClickTreatment(View view) {
-        FragmentManager manager = getFragmentManager();
-        NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
-        treatmentDialogFragment.show(manager, "TreatmentDialog");
-    }
-
-    @OnClick(R.id.overview_canceltempbutton)
-    public void onClickCanceltemp(View view) {
-        final PumpInterface pump = MainApp.getConfigBuilder();
-        if (pump.isTempBasalInProgress()) {
-            sHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    pump.cancelTempBasal();
-                    Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
-                }
-            });
-        }
-    }
-
-    @OnClick(R.id.overview_pumpstatus)
-    public void onClickPumpstatus(View view) {
-        if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
-            sHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    MainApp.getConfigBuilder().refreshDataFromPump("RefreshClicked");
-                }
-            });
     }
 
     @Override
