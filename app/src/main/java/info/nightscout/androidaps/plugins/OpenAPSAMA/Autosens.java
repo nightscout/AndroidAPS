@@ -25,6 +25,9 @@ public class Autosens {
 
         //console.error(mealTime);
 
+        if (glucose_data.size() < 3)
+            return new AutosensResult();
+
         double deviationSum = 0;
         double carbsAbsorbed = 0;
 
