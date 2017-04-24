@@ -1045,6 +1045,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         LineGraphSeries<DataPoint> cobSeries;
         Double maxIobValueFound = 0d;
         Double maxCobValueFound = 0d;
+        Long lastTime = 0L;
 
         if (showIobView.isChecked() || showCobView.isChecked()) {
             List<DataPoint> iobArray = new ArrayList<>();
@@ -1060,7 +1061,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     //cobArray.add(new DataPoint(time, mealData.mealCOB));
                     //maxCobValueFound = Math.max(maxCobValueFound, mealData.mealCOB);
                 }
+                lastTime = time;
             }
+            iobArray.add(new DataPoint(lastTime, 0)); // close the path
             iobArray.add(new DataPoint(fromTime, 0)); // close the path
             DataPoint[] iobData = new DataPoint[iobArray.size()];
             iobData = iobArray.toArray(iobData);
