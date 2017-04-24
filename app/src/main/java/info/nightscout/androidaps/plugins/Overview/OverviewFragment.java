@@ -88,6 +88,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
@@ -1041,11 +1042,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** IOB COB graph ****
-        LineGraphSeries<DataPoint> iobSeries;
-        LineGraphSeries<DataPoint> cobSeries;
+        FixedLineGraphSeries<DataPoint> iobSeries;
+        FixedLineGraphSeries<DataPoint> cobSeries;
         Double maxIobValueFound = 0d;
         Double maxCobValueFound = 0d;
-        Long lastTime = 0L;
 
         if (showIobView.isChecked() || showCobView.isChecked()) {
             List<DataPoint> iobArray = new ArrayList<>();
@@ -1061,13 +1061,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     //cobArray.add(new DataPoint(time, mealData.mealCOB));
                     //maxCobValueFound = Math.max(maxCobValueFound, mealData.mealCOB);
                 }
-                lastTime = time;
             }
-            iobArray.add(new DataPoint(lastTime, 0)); // close the path
-            iobArray.add(new DataPoint(fromTime, 0)); // close the path
             DataPoint[] iobData = new DataPoint[iobArray.size()];
             iobData = iobArray.toArray(iobData);
-            iobSeries = new LineGraphSeries<>(iobData);
+            iobSeries = new FixedLineGraphSeries<>(iobData);
             iobSeries.setDrawBackground(true);
             iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.ioborange)); //50%
             iobSeries.setColor(MainApp.sResources.getColor(R.color.ioborange));
@@ -1077,7 +1074,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             DataPoint[] cobData = new DataPoint[cobArray.size()];
             cobData = cobArray.toArray(cobData);
-            cobSeries = new LineGraphSeries<>(cobData);
+            cobSeries = new FixedLineGraphSeries<>(cobData);
             cobSeries.setDrawBackground(true);
             cobSeries.setBackgroundColor(Color.RED);
             cobSeries.setThickness(0);
