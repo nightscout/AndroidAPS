@@ -76,7 +76,7 @@ public class BolusWizard {
 
         // Insulin from 15 min trend
         glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        if (glucoseStatus != null) {
+        if (glucoseStatus != null && trend) {
             insulinFromTrend = (NSProfile.fromMgdlToUnits(glucoseStatus.short_avgdelta, profile.getUnits()) * 3) / sens;
         }
 

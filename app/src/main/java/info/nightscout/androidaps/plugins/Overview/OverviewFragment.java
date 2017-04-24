@@ -477,7 +477,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText();
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, true);
+            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -853,7 +853,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText() + " " + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, true);
+            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
