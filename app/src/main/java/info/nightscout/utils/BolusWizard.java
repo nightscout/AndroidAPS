@@ -83,7 +83,7 @@ public class BolusWizard {
         // Insuling from carbs
         ic = profile.getIc(specificProfile, NSProfile.secondsFromMidnight());
         insulinFromCarbs = carbs / ic;
-        insulinFromCOB = -cob / ic;
+        insulinFromCOB = cob / ic;
 
         // Insulin from IOB
         // IOB calculation
