@@ -1061,7 +1061,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     //maxCobValueFound = Math.max(maxCobValueFound, mealData.mealCOB);
                 }
             }
-            iobArray.add(iobArray.get(0)); // close the path
+            iobArray.add(new DataPoint(fromTime, 0)); // close the path
             DataPoint[] iobData = new DataPoint[iobArray.size()];
             iobData = iobArray.toArray(iobData);
             iobSeries = new LineGraphSeries<>(iobData);
