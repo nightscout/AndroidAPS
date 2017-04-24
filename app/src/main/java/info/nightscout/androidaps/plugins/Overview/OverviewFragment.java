@@ -208,12 +208,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
         showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
-        showPredictionView.setOnCheckedChangeListener(this);
         showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
-        showBasalsView.setOnCheckedChangeListener(this);
         showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
-        showIobView.setOnCheckedChangeListener(this);
         showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
+        showPredictionView.setChecked(SP.getBoolean("showprediction", false));
+        showBasalsView.setChecked(SP.getBoolean("showbasals", false));
+        showIobView.setChecked(SP.getBoolean("showiob", false));
+        showCobView.setChecked(SP.getBoolean("showcob", false));
+        showPredictionView.setOnCheckedChangeListener(this);
+        showBasalsView.setOnCheckedChangeListener(this);
+        showIobView.setOnCheckedChangeListener(this);
         showCobView.setOnCheckedChangeListener(this);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
@@ -221,10 +225,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
 
-        showPredictionView.setChecked(SP.getBoolean("showprediction", false));
-        showBasalsView.setChecked(SP.getBoolean("showbasals", false));
-        showIobView.setChecked(SP.getBoolean("showiob", false));
-        showCobView.setChecked(SP.getBoolean("showcob", false));
 
         bgGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
         bgGraph.getGridLabelRenderer().reloadStyles();
