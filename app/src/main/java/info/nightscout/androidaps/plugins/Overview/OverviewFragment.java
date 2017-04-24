@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -125,8 +126,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayout loopStatusLayout;
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
+    GraphView iobGraph;
+    RelativeLayout iobGraphLayout;
+
     CheckBox showPredictionView;
     CheckBox showBasalsView;
+    CheckBox showIobView;
+    CheckBox showCobView;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -177,7 +183,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
         tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
+
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
+        iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
+        iobGraphLayout = (RelativeLayout) view.findViewById(R.id.overview_iobgraphlayout);
 
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltempbutton);
         cancelTempButton.setOnClickListener(this);
@@ -201,6 +210,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         showPredictionView.setOnCheckedChangeListener(this);
         showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
         showBasalsView.setOnCheckedChangeListener(this);
+        showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
+        showIobView.setOnCheckedChangeListener(this);
+        showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
+        showCobView.setOnCheckedChangeListener(this);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(true);
@@ -209,9 +222,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
         showBasalsView.setChecked(SP.getBoolean("showbasals", false));
+        showIobView.setChecked(SP.getBoolean("showiob", false));
+        showCobView.setChecked(SP.getBoolean("showcob", false));
 
         bgGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
         bgGraph.getGridLabelRenderer().reloadStyles();
+        iobGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
+        iobGraph.getGridLabelRenderer().reloadStyles();
+        iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+        bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+        iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+        iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
         return view;
     }
@@ -253,6 +274,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             case R.id.overview_showbasals:
                 SP.putBoolean("showbasals", showPredictionView.isChecked());
                 updateGUI("onBasalsCheckedChanged");
+                break;
+            case R.id.overview_showiob:
+                SP.putBoolean("showiob", showIobView.isChecked());
+                updateGUI("onIobCheckedChanged");
+                break;
+            case R.id.overview_showcob:
+                SP.putBoolean("showcob", showCobView.isChecked());
+                updateGUI("onCobCheckedChanged");
                 break;
         }
     }
@@ -926,12 +955,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         LineGraphSeries<DataPoint> basalsLineSeries = null;
         LineGraphSeries<DataPoint> baseBasalsSeries = null;
         LineGraphSeries<DataPoint> tempBasalsSeries = null;
-        AreaGraphSeries<DoubleDataPoint> areaSeries = null;
-        LineGraphSeries<DataPoint> seriesNow = null;
-        PointsGraphSeries<BgReading> seriesInRage = null;
-        PointsGraphSeries<BgReading> seriesOutOfRange = null;
-        PointsGraphSeries<BgReading> predSeries = null;
-        PointsWithLabelGraphSeries<Treatment> seriesTreatments = null;
+        AreaGraphSeries<DoubleDataPoint> areaSeries;
+        LineGraphSeries<DataPoint> seriesNow, seriesNow2;
+        PointsGraphSeries<BgReading> seriesInRage;
+        PointsGraphSeries<BgReading> seriesOutOfRange;
+        PointsGraphSeries<BgReading> predSeries;
+        PointsWithLabelGraphSeries<Treatment> seriesTreatments;
 
         // **** TEMP BASALS graph ****
         Double maxBasalValueFound = 0d;
@@ -1011,6 +1040,69 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             basalsLineSeries.setCustomPaint(paint);
         }
 
+        // **** IOB COB graph ****
+        LineGraphSeries<DataPoint> iobSeries;
+        LineGraphSeries<DataPoint> cobSeries;
+        Double maxIobValueFound = 0d;
+        Double maxCobValueFound = 0d;
+
+        if (showIobView.isChecked() || showCobView.isChecked()) {
+            List<DataPoint> iobArray = new ArrayList<>();
+            List<DataPoint> cobArray = new ArrayList<>();
+            for (long time = fromTime; time <= endTime; time += 5 * 60 * 1000L) {
+                if (showIobView.isChecked()) {
+                    IobTotal iob = IobTotal.calulateFromTreatmentsAndTemps(time);
+                    iobArray.add(new DataPoint(time, iob.iob));
+                    maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
+                }
+                if (showCobView.isChecked()) {
+                    //MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
+                    //cobArray.add(new DataPoint(time, mealData.mealCOB));
+                    //maxCobValueFound = Math.max(maxCobValueFound, mealData.mealCOB);
+                }
+            }
+            iobArray.add(iobArray.get(0)); // close the path
+            DataPoint[] iobData = new DataPoint[iobArray.size()];
+            iobData = iobArray.toArray(iobData);
+            iobSeries = new LineGraphSeries<>(iobData);
+            iobSeries.setDrawBackground(true);
+            iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.ioborange)); //50%
+            iobSeries.setColor(MainApp.sResources.getColor(R.color.ioborange));
+            iobSeries.setThickness(3);
+            iobSeries.setTitle("IOB");
+            iobGraph.getGridLabelRenderer().setVerticalLabelsAlign(Paint.Align.LEFT);
+
+            DataPoint[] cobData = new DataPoint[cobArray.size()];
+            cobData = cobArray.toArray(cobData);
+            cobSeries = new LineGraphSeries<>(cobData);
+            cobSeries.setDrawBackground(true);
+            cobSeries.setBackgroundColor(Color.RED);
+            cobSeries.setThickness(0);
+
+            iobGraph.removeAllSeries();
+
+            if (showIobView.isChecked()) {
+                iobGraph.addSeries(iobSeries);
+            }
+            if (showCobView.isChecked()) {
+                iobGraph.getSecondScale().addSeries(cobSeries);
+                iobGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
+                    @Override
+                    public String formatLabel(double value, boolean isValueX) {
+                        return "";
+                    }
+
+                    @Override
+                    public void setViewport(Viewport viewport) {
+
+                    }
+                });
+            }
+            iobGraphLayout.setVisibility(View.VISIBLE);
+        } else {
+            iobGraphLayout.setVisibility(View.GONE);
+        }
+
         // remove old data from graph
         bgGraph.getSecondScale().getSeries().clear();
         bgGraph.removeAllSeries();
@@ -1031,6 +1123,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bgGraph.getViewport().setXAxisBoundsManual(true);
         bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
         bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
+        iobGraph.getViewport().setMaxX(endTime);
+        iobGraph.getViewport().setMinX(fromTime);
+        iobGraph.getViewport().setXAxisBoundsManual(true);
+        iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
+        iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
         // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
@@ -1093,9 +1190,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 new DataPoint(now, 0),
                 new DataPoint(now, maxBgValue)
         };
-        bgGraph.addSeries(seriesNow = new LineGraphSeries<DataPoint>(nowPoints));
-        seriesNow.setColor(Color.GREEN);
+        bgGraph.addSeries(seriesNow = new LineGraphSeries<>(nowPoints));
         seriesNow.setDrawDataPoints(false);
+        DataPoint[] nowPoints2 = new DataPoint[]{
+                new DataPoint(now, 0),
+                new DataPoint(now, maxIobValueFound)
+        };
+        iobGraph.addSeries(seriesNow2 = new LineGraphSeries<>(nowPoints2));
+        seriesNow2.setDrawDataPoints(false);
         //seriesNow.setThickness(1);
         // custom paint to make a dotted line
         Paint paint = new Paint();
@@ -1104,6 +1206,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
+        seriesNow2.setCustomPaint(paint);
 
 
         // Treatments
@@ -1150,6 +1253,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             }
         });
+
+
     }
 
     //Notifications
