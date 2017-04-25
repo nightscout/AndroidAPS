@@ -76,6 +76,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -97,6 +98,7 @@ import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTarget
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
@@ -1053,13 +1055,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         Double maxCobValueFound = 0d;
 
         if (showIobView.isChecked() || showCobView.isChecked()) {
+            Date start = new Date();
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
+            double lastIob = -1000;
             for (long time = fromTime; time <= endTime; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
-                    IobTotal iob = IobTotal.calulateFromTreatmentsAndTemps(time);
-                    iobArray.add(new DataPoint(time, iob.iob));
-                    maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
+                    IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
+                    if (lastIob != iob.iob) {
+                        iobArray.add(new DataPoint(time, iob.iob));
+                        maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
+                        lastIob = iob.iob;
+                    }
                 }
                 if (showCobView.isChecked()) {
                     //MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
@@ -1067,6 +1074,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     //maxCobValueFound = Math.max(maxCobValueFound, mealData.mealCOB);
                 }
             }
+            Profiler.log(log,"IOB precessed", start);
             DataPoint[] iobData = new DataPoint[iobArray.size()];
             iobData = iobArray.toArray(iobData);
             iobSeries = new FixedLineGraphSeries<>(iobData);

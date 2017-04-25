@@ -23,6 +23,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.InsulinFastactingProlonged.InsulinFastactingProlongedFragment;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorFragment;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfileFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -87,6 +88,7 @@ public class MainApp extends Application {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.getPlugin());
+            pluginsList.add(IobCobCalculatorFragment.getPlugin());
             if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
             pluginsList.add(InsulinFastactingFragment.getPlugin());
             pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
@@ -101,7 +103,8 @@ public class MainApp extends Application {
             pluginsList.add(NSProfileFragment.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(SimpleProfileFragment.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(LocalProfileFragment.getPlugin());
-            if (Config.OTHERPROFILES) pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
+            if (Config.OTHERPROFILES)
+                pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             if (Config.APS) pluginsList.add(TempTargetRangeFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
             if (Config.TEMPBASALS) pluginsList.add(TempBasalsFragment.getPlugin());
@@ -152,10 +155,9 @@ public class MainApp extends Application {
     }
 
 
-
-    public void stopKeepAliveService(){
-        if(keepAliveReceiver!=null)
-        keepAliveReceiver.cancelAlarm(this);
+    public void stopKeepAliveService() {
+        if (keepAliveReceiver != null)
+            keepAliveReceiver.cancelAlarm(this);
     }
 
     public static Bus bus() {

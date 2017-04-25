@@ -3,12 +3,12 @@ package info.nightscout.androidaps.plugins.OpenAPSAMA;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -20,70 +20,18 @@ import info.nightscout.utils.SafeParse;
 public class Autosens {
     private static Logger log = LoggerFactory.getLogger(Autosens.class);
 
-    public static AutosensResult detectSensitivityandCarbAbsorption(List<BgReading> glucose_data, Long mealTime) {
+    public static AutosensResult detectSensitivityandCarbAbsorption(long dataFromTime, Long mealTime) {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
         //console.error(mealTime);
 
-        if (glucose_data.size() < 3)
-            return new AutosensResult();
-
         double deviationSum = 0;
         double carbsAbsorbed = 0;
 
-        List<BgReading> bucketed_data = new ArrayList<>();
-        bucketed_data.add(glucose_data.get(0));
-        int j = 0;
-        for (int i = 1; i < glucose_data.size(); ++i) {
-            long bgTime = glucose_data.get(i).getTimeIndex();
-            long lastbgTime = glucose_data.get(i - 1).getTimeIndex();
-            //log.error("Processing " + i + ": " + new Date(bgTime).toString() + " " + glucose_data.get(i).value + "   Previous: " + new Date(lastbgTime).toString() + " " + glucose_data.get(i - 1).value);
-            if (glucose_data.get(i).value < 39 || glucose_data.get(i - 1).value < 39) {
-                continue;
-            }
+        List<BgReading> bucketed_data = IobCobCalculatorPlugin.getBucketedData(dataFromTime);
+        if (bucketed_data == null)
+            return new AutosensResult();
 
-            long elapsed_minutes = (bgTime - lastbgTime) / (60 * 1000);
-            if (Math.abs(elapsed_minutes) > 8) {
-                // interpolate missing data points
-                double lastbg = glucose_data.get(i - 1).value;
-                elapsed_minutes = Math.abs(elapsed_minutes);
-                //console.error(elapsed_minutes);
-                long nextbgTime;
-                while (elapsed_minutes > 5) {
-                    nextbgTime = lastbgTime - 5 * 60 * 1000;
-                    j++;
-                    BgReading newBgreading = new BgReading();
-                    newBgreading.timeIndex = nextbgTime;
-                    double gapDelta = glucose_data.get(i).value - lastbg;
-                    //console.error(gapDelta, lastbg, elapsed_minutes);
-                    double nextbg = lastbg + (5d / elapsed_minutes * gapDelta);
-                    newBgreading.value = Math.round(nextbg);
-                    //console.error("Interpolated", bucketed_data[j]);
-                    bucketed_data.add(newBgreading);
-                    //log.error("******************************************************************************************************* Adding:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
-
-                    elapsed_minutes = elapsed_minutes - 5;
-                    lastbg = nextbg;
-                    lastbgTime = nextbgTime;
-                }
-                j++;
-                BgReading newBgreading = new BgReading();
-                newBgreading.value = glucose_data.get(i).value;
-                newBgreading.timeIndex = bgTime;
-                bucketed_data.add(newBgreading);
-                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
-            } else if (Math.abs(elapsed_minutes) > 2) {
-                j++;
-                BgReading newBgreading = new BgReading();
-                newBgreading.value = glucose_data.get(i).value;
-                newBgreading.timeIndex = bgTime;
-                bucketed_data.add(newBgreading);
-                //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
-            } else {
-                bucketed_data.get(j).value = (bucketed_data.get(j).value + glucose_data.get(i).value) / 2;
-                //log.error("***** Average");
-            }
-        }
         //console.error(bucketed_data);
         double[] avgDeltas = new double[bucketed_data.size() - 2];
         double[] bgis = new double[bucketed_data.size() - 2];
@@ -107,15 +55,15 @@ public class Autosens {
             double avgDelta;
             double delta;
             bg = bucketed_data.get(i).value;
-            if (bg < 40 || bucketed_data.get(i + 3).value < 40) {
-                log.error("! value < 40");
+            if (bg < 39 || bucketed_data.get(i + 3).value < 39) {
+                log.error("! value < 39");
                 continue;
             }
             avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
             delta = (bg - bucketed_data.get(i + 1).value);
 
 //            avgDelta = avgDelta.toFixed(2);
-            IobTotal iob = IobTotal.calulateFromTreatmentsAndTemps(bgTime);
+            IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(bgTime);
 
             double bgi = Math.round((-iob.activity * sens * 5) * 100) / 100d;
 //            bgi = bgi.toFixed(2);

@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -21,11 +18,11 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 
 public class DetermineBasalAdapterAMAJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterAMAJS.class);
@@ -241,7 +238,7 @@ public class DetermineBasalAdapterAMAJS {
 
         mV8rt.add(PARAM_currentTemp, mCurrentTemp);
 
-        mIobData = mV8rt.executeArrayScript(IobTotal.convertToJSONArray(iobArray).toString());
+        mIobData = mV8rt.executeArrayScript(IobCobCalculatorPlugin.convertToJSONArray(iobArray).toString());
         mV8rt.add(PARAM_iobData, mIobData);
 
         mGlucoseStatus = new V8Object(mV8rt);

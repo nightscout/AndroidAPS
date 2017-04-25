@@ -185,7 +185,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
             TempBasal t = tempBasals.get(pos);
             if (t.timeStart.getTime() > time) continue;
             IobTotal calc = t.iobCalc(time);
-            log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
+            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
             total.plus(calc);
         }
         if (useExtendedBoluses) {

@@ -12,6 +12,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -55,13 +56,13 @@ public class TempBasal {
 
     public IobTotal iobCalc(long time) {
         IobTotal result = new IobTotal(time);
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 
         if (profile == null)
             return result;
 
-        Double basalRate = profile.getBasal(profile.secondsFromMidnight(time));
+        Double basalRate = profile.getBasal(NSProfile.secondsFromMidnight(time));
 
         if (basalRate == null)
             return result;
@@ -94,7 +95,7 @@ public class TempBasal {
             Long tempBolusCount = Math.round(netBasalAmount / tempBolusSize);
             if (tempBolusCount > 0) {
                 Long tempBolusSpacing = realDuration / tempBolusCount;
-                for (Long j = 0l; j < tempBolusCount; j++) {
+                for (Long j = 0L; j < tempBolusCount; j++) {
                     Treatment tempBolusPart = new Treatment(insulinInterface);
                     tempBolusPart.insulin = tempBolusSize;
                     Long date = this.timeStart.getTime() + j * tempBolusSpacing * 60 * 1000;

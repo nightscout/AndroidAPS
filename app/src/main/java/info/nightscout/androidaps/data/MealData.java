@@ -25,8 +25,6 @@ public class MealData {
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         if (profile == null) return;
 
-        List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * profile.getDia() * 2), false);
-
         long now = new Date().getTime();
         long dia_ago = now - (new Double(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
         long t = treatment.created_at.getTime();
@@ -34,7 +32,7 @@ public class MealData {
             if (treatment.carbs >= 1) {
                 carbs += treatment.carbs;
                 if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
-                    AutosensResult result = Autosens.detectSensitivityandCarbAbsorption(bgReadings, t);
+                    AutosensResult result = Autosens.detectSensitivityandCarbAbsorption((long) (new Date().getTime() - 60 * 60 * 1000L * profile.getDia() * 2), t);
                     double myCarbsAbsorbed = result.carbsAbsorbed;
                     double myMealCOB = Math.max(0, carbs - myCarbsAbsorbed);
                     mealCOB = Math.max(mealCOB, myMealCOB);

@@ -1,15 +1,11 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -17,11 +13,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.data.IobTotal;
@@ -180,7 +176,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         Date start = new Date();
         Date startPart = new Date();
-        IobTotal[] iobArray = IobTotal.calculateIobArrayInDia();
+        IobTotal[] iobArray = IobCobCalculatorPlugin.calculateIobArrayInDia();
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
@@ -215,15 +211,13 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
-        startPart = new Date();
         long oldestDataAvailable = MainApp.getConfigBuilder().getActiveTempBasals().oldestDataAvaialable();
-        List<BgReading> bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime(Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia()))), false);
-        log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString() + " (" + bgReadings.size() + " records)");
-        Profiler.log(log, "getBgreadingsDataFromTime()", startPart);
+        long getBGDataFrom = Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia())));
+        log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
 
         startPart = new Date();
         if(MainApp.getConfigBuilder().isAMAModeEnabled()){
-            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(bgReadings, null);
+            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(getBGDataFrom, null);
         } else {
             lastAutosensResult = new AutosensResult();
         }
