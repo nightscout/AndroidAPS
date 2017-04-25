@@ -243,7 +243,7 @@
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">식사주입 %.2fU 을 실행하려면 %s 를 입력하고 답장하세요</string>
-    <string name="smscommunicator_calibrationreplywithcode" formatted="false">To send calibration %.2f reply with code %s</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">보정값 %.2f을 전송하려면 %s 를 입력하고 답장하세요</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusrequested" formatted="false">Going to deliver %.2fU</string>
@@ -466,11 +466,11 @@
     <string name="nav_show_logcat">Show log</string>
     <string name="overview_calibration">보정</string>
     <string name="overview_calibration_bg_label">혈당 보정</string>
-    <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
+    <string name="send_calibration" formatted="false">보정값 %.1f을 xDrip에 전송하시겠습니까?</string>
     <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
     <string name="calibrationsent">보정이 xDrip으로 전송되었습니다</string>
     <string name="smscommunicator_remotecalibrationnotallowed">원격보정이 허용되지 않았습니다</string>
-    <string name="smscommunicator_calibrationsent">보정이 전송되었습니다. xDrip에서 수신이 되도록 설정되어 있어야 합니다.</string>
+    <string name="smscommunicator_calibrationsent">보정 전송됨. xDrip에서 수신이 되도록 설정되어 있어야 합니다.</string>
     <string name="smscommunicator_calibrationfailed">xDrip에서 보정을 받지 못합니다.</string>
     <string name="dont_show_again">Don\'t show again</string>
     <string name="pumpsuspendedclicktorefresh">펌프 일시중지. 상태를 새로고치려면 클릭하세요</string>
