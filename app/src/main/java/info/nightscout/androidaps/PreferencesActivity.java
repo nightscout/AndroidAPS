@@ -11,16 +11,15 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
 
-
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.DanaR.BluetoothDevicePreference;
-import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
-import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.LocaleHelper;
 
@@ -50,14 +49,14 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
 
-    private static  void updatePrefSummary(Preference pref) {
+    private static void updatePrefSummary(Preference pref) {
         if (pref instanceof ListPreference || pref instanceof BluetoothDevicePreference) {
             ListPreference listPref = (ListPreference) pref;
             pref.setSummary(listPref.getEntry());
         }
         if (pref instanceof EditTextPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
-            if (pref.getKey().contains("password")|| pref.getKey().contains("secret")) {
+            if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
@@ -119,11 +118,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
             VirtualPumpPlugin virtualPumpPlugin = (VirtualPumpPlugin) MainApp.getSpecificPlugin(VirtualPumpPlugin.class);
             if (virtualPumpPlugin != null && virtualPumpPlugin.isEnabled(PluginBase.PUMP)) {
-                 addPreferencesFromResource(R.xml.pref_virtualpump);
+                addPreferencesFromResource(R.xml.pref_virtualpump);
             }
             NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
             if (nsClientInternalPlugin != null && nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
-                 addPreferencesFromResource(R.xml.pref_nsclientinternal);
+                addPreferencesFromResource(R.xml.pref_nsclientinternal);
             }
             if (Config.SMSCOMMUNICATORENABLED)
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
@@ -131,7 +130,6 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_others);
                 addPreferencesFromResource(R.xml.pref_advanced);
             }
-            initSummary(getPreferenceScreen());
 
             if (Config.WEAR) {
                 WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
@@ -139,9 +137,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResource(R.xml.pref_wear);
                 }
             }
+
+            initSummary(getPreferenceScreen());
         }
 
-        public Preference getPreference (String key) {
+        public Preference getPreference(String key) {
             return findPreference(key);
         }
     }

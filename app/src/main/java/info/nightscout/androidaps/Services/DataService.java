@@ -32,12 +32,14 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -520,7 +522,9 @@ public class DataService extends IntentService {
         } else {
             if (Config.logIncommingData)
                 log.debug("ADD: New treatment: " + trstring);
-            Treatment treatment = new Treatment();
+            InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+            if (insulinInterface == null) insulinInterface = InsulinFastactingFragment.getPlugin();
+            Treatment treatment = new Treatment(insulinInterface);
             treatment._id = _id;
             treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
@@ -575,7 +579,9 @@ public class DataService extends IntentService {
 
         if (Config.logIncommingData)
             log.debug("CHANGE: Adding new treatment: " + trstring);
-        Treatment treatment = new Treatment();
+        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        if (insulinInterface == null) insulinInterface = InsulinFastactingFragment.getPlugin();
+        Treatment treatment = new Treatment(insulinInterface);
         treatment._id = _id;
         treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
         treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;

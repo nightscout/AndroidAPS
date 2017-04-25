@@ -1,9 +1,7 @@
 package info.nightscout.androidaps.plugins.SmsCommunicator;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.ResolveInfo;
-import android.preference.PreferenceManager;
 import android.telephony.SmsManager;
 import android.telephony.SmsMessage;
 
@@ -31,8 +29,8 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
@@ -442,7 +440,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
                             danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.deliverTreatment(bolusWaitingForConfirmation.bolusRequested, 0, null);
+                            PumpEnactResult result = pumpInterface.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin() ,bolusWaitingForConfirmation.bolusRequested, 0, null);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
                                 if (danaRPlugin != null)

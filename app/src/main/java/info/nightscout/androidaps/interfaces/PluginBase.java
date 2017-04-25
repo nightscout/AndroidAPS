@@ -15,7 +15,8 @@ public interface PluginBase {
     int CONSTRAINTS = 7;
     int LOOP = 8;
     int BGSOURCE = 9;
-    int LAST = 10; // keep always highest number
+    int INSULIN = 10;
+    int LAST = 11; // keep always highest number
 
     int getType();
     String getFragmentClass();

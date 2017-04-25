@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -84,10 +85,10 @@
                     android:id="@+id/overview_pumpstatus"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/initializingborder"
-                    android:gravity="center_vertical|center_horizontal"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:background="@drawable/initializingborder"
+                    android:gravity="center_vertical|center_horizontal"
                     android:text="@string/initializing"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
@@ -191,22 +192,78 @@
                 android:layout_gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <com.jjoe64.graphview.GraphView
-                    android:id="@+id/overview_bggraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dip" />
-
-                <CheckBox
-                    android:id="@+id/overview_showprediction"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true" />
-            </RelativeLayout>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/overview_bggraph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="160dip" />
+
+                    <RelativeLayout
+                        android:id="@+id/overview_iobgraphlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.jjoe64.graphview.GraphView
+                            android:id="@+id/overview_iobgraph"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80dip" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentTop="true"
+                            android:paddingRight="10dp"
+                            android:paddingTop="5dp"
+                            android:text="@string/iob"
+                            android:textColor="@color/ioborange"
+                            android:textStyle="bold" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/overview_showprediction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:buttonTint="@color/magenta" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showbasals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:buttonTint="@color/cyan" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showiob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:buttonTint="@color/ioborange" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showcob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        app:buttonTint="@color/cyan" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/overview_accepttemplayout"
@@ -235,7 +292,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_canceltemp"
+                    android:id="@+id/overview_canceltempbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -255,7 +312,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_treatment"
+                    android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -268,7 +325,7 @@
                     android:textColor="@color/colorTreatmentButton" />
 
                 <Button
-                    android:id="@+id/overview_wizard"
+                    android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -281,7 +338,7 @@
                     android:textColor="@color/colorWizardButton" />
 
                 <Button
-                    android:id="@+id/overview_calibration"
+                    android:id="@+id/overview_calibrationbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -300,7 +357,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_quickwizard"
+                    android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

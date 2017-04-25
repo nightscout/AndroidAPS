@@ -39,7 +39,7 @@ public interface PumpInterface {
     TempBasal getTempBasal();
     TempBasal getExtendedBolus();
 
-    PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context);
+    PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context);
     void stopBolusDelivering();
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
     PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes);

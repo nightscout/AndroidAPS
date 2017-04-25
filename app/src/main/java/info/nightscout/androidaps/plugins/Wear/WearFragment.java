@@ -8,19 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 
 /**
  * Created by adrian on 17/11/16.
  */
 
-public class WearFragment extends Fragment implements FragmentBase {
+public class WearFragment extends Fragment {
 
     private static WearPlugin wearPlugin;
 
     public static WearPlugin getPlugin(Context ctx) {
 
-        if (wearPlugin == null){
+        if (wearPlugin == null) {
             wearPlugin = new WearPlugin(ctx);
         }
 

@@ -11,6 +11,9 @@ import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -20,14 +23,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventAppExit;
 
 /**
  * Created by mike on 03.07.2016.
  */
 
 public class ImportExportPrefs {
+    private static Logger log = LoggerFactory.getLogger(ImportExportPrefs.class);
     static File path = new File(Environment.getExternalStorageDirectory().toString());
     static final File file = new File(path, MainApp.sResources.getString(R.string.app_name) + "Preferences");
 
@@ -52,7 +58,7 @@ public class ImportExportPrefs {
         }
     }
 
-    public static void exportSharedPreferences(final Context c) {
+    public static void exportSharedPreferences(final MainActivity c) {
 
         new AlertDialog.Builder(c)
                 .setMessage(MainApp.sResources.getString(R.string.export_to) + " " + file + " ?")
@@ -82,7 +88,7 @@ public class ImportExportPrefs {
                 .show();
     }
 
-    public static void importSharedPreferences(final Context c) {
+    public static void importSharedPreferences(final MainActivity c) {
         new AlertDialog.Builder(c)
                 .setMessage(MainApp.sResources.getString(R.string.import_from) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -109,7 +115,18 @@ public class ImportExportPrefs {
                             }
                             reader.close();
                             editor.commit();
-                            ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.setting_imported));
+                            OKDialog.show(c, MainApp.sResources.getString(R.string.setting_imported), MainApp.sResources.getString(R.string.restartingapp), new Runnable() {
+                                @Override
+                                public void run() {
+                                    log.debug("Exiting");
+                                    MainApp.instance().stopKeepAliveService();
+                                    MainApp.bus().post(new EventAppExit());
+                                    MainApp.closeDbHelper();
+                                    c.finish();
+                                    System.runFinalization();
+                                    System.exit(0);
+                                }
+                            });
                         } catch (FileNotFoundException e) {
                             ToastUtils.showToastInUiThread(c, MainApp.sResources.getString(R.string.filenotfound) + " " + file);
                             e.printStackTrace();

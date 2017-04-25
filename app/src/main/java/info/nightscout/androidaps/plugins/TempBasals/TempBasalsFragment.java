@@ -26,12 +26,11 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
 
-public class TempBasalsFragment extends Fragment implements FragmentBase {
+public class TempBasalsFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(TempBasalsFragment.class);
 
     private static TempBasalsPlugin tempBasalsPlugin = new TempBasalsPlugin();

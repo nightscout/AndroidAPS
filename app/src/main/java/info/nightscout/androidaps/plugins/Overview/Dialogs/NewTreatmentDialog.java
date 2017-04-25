@@ -110,7 +110,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints, context);
+                                        PumpEnactResult result = pump.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), finalInsulinAfterConstraints, finalCarbsAfterConstraints, context);
                                         if (!result.success) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                             builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));

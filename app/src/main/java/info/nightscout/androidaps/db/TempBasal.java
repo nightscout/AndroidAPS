@@ -11,6 +11,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -55,6 +56,7 @@ public class TempBasal {
     public IobTotal iobCalc(Date time) {
         IobTotal result = new IobTotal(time.getTime());
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
 
         if (profile == null)
             return result;
@@ -93,12 +95,12 @@ public class TempBasal {
             if (tempBolusCount > 0) {
                 Long tempBolusSpacing = realDuration / tempBolusCount;
                 for (Long j = 0l; j < tempBolusCount; j++) {
-                    Treatment tempBolusPart = new Treatment();
+                    Treatment tempBolusPart = new Treatment(insulinInterface);
                     tempBolusPart.insulin = tempBolusSize;
                     Long date = this.timeStart.getTime() + j * tempBolusSpacing * 60 * 1000;
                     tempBolusPart.created_at = new Date(date);
 
-                    Iob aIOB = tempBolusPart.iobCalc(time, profile.getDia());
+                    Iob aIOB = insulinInterface.iobCalc(tempBolusPart, time, profile.getDia());
                     result.basaliob += aIOB.iobContrib;
                     result.activity += aIOB.activityContrib;
                     Double dia_ago = time.getTime() - profile.getDia() * 60 * 60 * 1000;

@@ -28,16 +28,17 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.VirtualPump.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingPlugin;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.PasswordProtection;
 
 
-public class ConfigBuilderFragment extends Fragment implements FragmentBase {
+public class ConfigBuilderFragment extends Fragment {
 
     static ConfigBuilderPlugin configBuilderPlugin = new ConfigBuilderPlugin();
 
@@ -45,6 +46,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
         return configBuilderPlugin;
     }
 
+    ListView insulinListView;
     ListView bgsourceListView;
     ListView pumpListView;
     TextView pumpLabel;
@@ -62,6 +64,10 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
     TextView nsclientVerView;
     TextView nightscoutVerView;
 
+    LinearLayout mainLayout;
+    Button unlock;
+
+    PluginCustomAdapter insulinDataAdapter = null;
     PluginCustomAdapter bgsourceDataAdapter = null;
     PluginCustomAdapter pumpDataAdapter = null;
     PluginCustomAdapter loopDataAdapter = null;
@@ -72,15 +78,14 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
     PluginCustomAdapter constraintsDataAdapter = null;
     PluginCustomAdapter generalDataAdapter = null;
 
-    LinearLayout mainLayout;
-    Button unlock;
-
     // TODO: sorting
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.configbuilder_fragment, container, false);
+
+        insulinListView = (ListView) view.findViewById(R.id.configbuilder_insulinlistview);
         bgsourceListView = (ListView) view.findViewById(R.id.configbuilder_bgsourcelistview);
         pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
         pumpLabel = (TextView) view.findViewById(R.id.configbuilder_pumplabel);
@@ -98,15 +103,15 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
         nsclientVerView = (TextView) view.findViewById(R.id.configbuilder_nsclientversion);
         nightscoutVerView = (TextView) view.findViewById(R.id.configbuilder_nightscoutversion);
 
+        mainLayout = (LinearLayout) view.findViewById(R.id.configbuilder_mainlayout);
+        unlock = (Button) view.findViewById(R.id.configbuilder_unlock);
+
         nsclientVerView.setText(ConfigBuilderPlugin.nsClientVersionName);
         nightscoutVerView.setText(ConfigBuilderPlugin.nightscoutVersionName);
         if (ConfigBuilderPlugin.nsClientVersionCode < 117) nsclientVerView.setTextColor(Color.RED);
         if (ConfigBuilderPlugin.nightscoutVersionCode < 900)
             nightscoutVerView.setTextColor(Color.RED);
         setViews();
-
-        unlock = (Button) view.findViewById(R.id.configbuilder_unlock);
-        mainLayout = (LinearLayout) view.findViewById(R.id.configbuilder_mainlayout);
 
         if (PasswordProtection.isLocked("settings_password")) {
             mainLayout.setVisibility(View.GONE);
@@ -129,6 +134,9 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
     }
 
     void setViews() {
+        insulinDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(InsulinInterface.class), PluginBase.INSULIN);
+        insulinListView.setAdapter(insulinDataAdapter);
+        setListViewHeightBasedOnChildren(insulinListView);
         bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
@@ -253,7 +261,7 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
             }
 
             // Hide enabled control and force enabled plugin if there is only one plugin available
-            if (type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
+            if (type == PluginBase.INSULIN || type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
                 if (pluginList.size() < 2) {
                     holder.checkboxEnabled.setEnabled(false);
                     plugin.setFragmentEnabled(type, true);
@@ -299,6 +307,9 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
             case PluginBase.LOOP:
                 break;
             // Single selection allowed
+            case PluginBase.INSULIN:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
+                break;
             case PluginBase.APS:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
                 break;
@@ -328,6 +339,8 @@ public class ConfigBuilderFragment extends Fragment implements FragmentBase {
             } else { // enable first plugin in list
                 if (type == PluginBase.PUMP)
                     MainApp.getSpecificPlugin(VirtualPumpPlugin.class).setFragmentEnabled(type, true);
+                else if (type == PluginBase.INSULIN)
+                    MainApp.getSpecificPlugin(InsulinFastactingPlugin.class).setFragmentEnabled(type, true);
                 else if (type == PluginBase.PROFILE)
                     MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(type, true);
                 else

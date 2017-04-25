@@ -9,8 +9,6 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -18,10 +16,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -31,19 +25,19 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventBolusRequested;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.DanaR.comm.MsgError;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -59,6 +53,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.BatteryLevel;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -73,6 +68,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     static TempBasalsInterface activeTempBasals;
     static APSInterface activeAPS;
     static LoopPlugin activeLoop;
+    static InsulinInterface activeInsulin;
 
     static public String nightscoutVersionName = "";
     static public Integer nightscoutVersionCode = 0;
@@ -204,6 +200,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activeTempBasals;
     }
 
+    public static InsulinInterface getActiveInsulin() {
+        return activeInsulin;
+    }
+
     public static APSInterface getActiveAPS() {
         return activeAPS;
     }
@@ -223,7 +223,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                     (p.isEnabled(6) ? " PUMP" : "") +
                     (p.isEnabled(7) ? " CONSTRAINTS" : "") +
                     (p.isEnabled(8) ? " LOOP" : "") +
-                    (p.isEnabled(9) ? " BGSOURCE" : "")
+                    (p.isEnabled(9) ? " BGSOURCE" : "") +
+                    (p.isEnabled(10) ? " INSULIN" : "")
             );
         }
     }
@@ -244,7 +245,18 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             }
         }
 
-        // PluginBase.PROFILE
+        // PluginBase.INSULIN
+        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
+        activeInsulin = (InsulinInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.INSULIN);
+        if (Config.logConfigBuilder)
+            log.debug("Selected insulin interface: " + ((PluginBase) activeInsulin).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activeInsulin).getName())) {
+                p.setFragmentVisible(PluginBase.INSULIN, false);
+            }
+        }
+
+         // PluginBase.PROFILE
         pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
         activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PROFILE);
         if (Config.logConfigBuilder)
@@ -462,7 +474,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             return null;
     }
 
-    public PumpEnactResult deliverTreatmentFromBolusWizard(Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+    public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
         mWakeLock.acquire();
         PumpEnactResult result;
         if (activePump != null) {
@@ -478,14 +490,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
             MainApp.bus().post(new EventBolusRequested(insulin));
 
-            result = activePump.deliverTreatment(insulin, carbs, context);
+            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
 
             BolusProgressDialog.bolusEnded = true;
 
             MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
 
             if (result.success) {
-                Treatment t = new Treatment();
+                Treatment t = new Treatment(insulinType);
                 t.insulin = result.bolusDelivered;
                 if (carbTime == 0)
                     t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
@@ -499,7 +511,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         } else {
             if (Config.logCongigBuilderActions)
                 log.debug("Creating treatment: " + insulin + " carbs: " + carbs);
-            Treatment t = new Treatment();
+            Treatment t = new Treatment(insulinType);
             t.insulin = insulin;
             t.carbs = (double) carbs;
             t.created_at = new Date();
@@ -517,11 +529,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context) {
-        return deliverTreatment(insulin, carbs, context, true);
+    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
+        return deliverTreatment(insulinType, insulin, carbs, context, true);
     }
 
-    public PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context, boolean createTreatment) {
+    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context, boolean createTreatment) {
         mWakeLock.acquire();
         PumpEnactResult result;
         if (activePump != null) {
@@ -543,7 +555,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
             MainApp.bus().post(new EventBolusRequested(insulin));
 
-            result = activePump.deliverTreatment(insulin, carbs, context);
+            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
 
             BolusProgressDialog.bolusEnded = true;
 
@@ -553,7 +565,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
 
             if (result.success && createTreatment) {
-                Treatment t = new Treatment();
+                Treatment t = new Treatment(insulinType);
                 t.insulin = result.bolusDelivered;
                 t.carbs = (double) result.carbsDelivered;
                 t.created_at = new Date();
@@ -565,7 +577,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         } else {
             if (Config.logCongigBuilderActions)
                 log.debug("Creating treatment: " + insulin + " carbs: " + carbs);
-            Treatment t = new Treatment();
+            Treatment t = new Treatment(insulinType);
             t.insulin = insulin;
             t.carbs = (double) carbs;
             t.created_at = new Date();
@@ -1128,24 +1140,26 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public void uploadAppStart() {
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbAdd");
-        bundle.putString("collection", "treatments");
-        JSONObject data = new JSONObject();
-        try {
-            data.put("eventType", "Note");
-            data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (SP.getBoolean(R.string.key_ns_logappstartedevent, true)) {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            JSONObject data = new JSONObject();
+            try {
+                data.put("eventType", "Note");
+                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
         }
-        bundle.putString("data", data.toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, data.toString(), ConfigBuilderPlugin.class);
     }
 
 }

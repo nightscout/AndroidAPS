@@ -562,7 +562,8 @@
     <string name="pleaseallowpermission">Please Allow Permission</string>
     <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
     <string name="loopsuspended">Loop suspended</string>
-    <string name="loopsuspendedfor">Suspended (%d m)</string>
+    <string name="loopsuspendedfor" formatted="false">Suspended (%d m)</string>
+    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
     <string name="loopmenu">Loop menu</string>
     <string name="suspendloopfor1h">Suspend loop for 1h</string>
     <string name="suspendloopfor2h">Suspend loop for 2h</string>
@@ -577,4 +578,19 @@
     <string name="smscommunicator_wrongduration">Wrong duration</string>
     <string name="smscommunicator_loopsuspended">Loop suspended</string>
     <string name="smscommunicator_loopresumed">Loop resumed</string>
+    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="ns_logappstartedevent">Log app start to NS</string>
+    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="restartingapp">Exiting application to apply settings.</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="fastactinginsulin">Fast Acting Insulin</string>
+    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="fastactinginsulinprolonged">Fast Acting Insuin Prolonged</string>
+    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
+    <string name="enablesuperbolus">Enable superbolus in wizard</string>
+    <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
+    <string name="iob">IOB</string>
 </resources>

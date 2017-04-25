@@ -28,13 +28,12 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.interfaces.FragmentBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.utils.SP;
 
-public class NSClientInternalFragment extends Fragment implements FragmentBase, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class NSClientInternalFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalFragment.class);
 
     static NSClientInternalPlugin nsClientInternalPlugin;
@@ -188,6 +187,5 @@ public class NSClientInternalFragment extends Fragment implements FragmentBase, 
                 }
             });
     }
-
 
 }

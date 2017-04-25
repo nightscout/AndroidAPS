@@ -159,7 +159,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, 0, context, false);
+                                PumpEnactResult result = pump.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), finalInsulinAfterConstraints, 0, context, false);
                                 if (!result.success) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                     builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));

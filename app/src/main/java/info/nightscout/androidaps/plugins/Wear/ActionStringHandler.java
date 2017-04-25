@@ -192,7 +192,7 @@ public class ActionStringHandler {
             }
             DecimalFormat format = new DecimalFormat("0.00");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile.getDefaultProfile(), carbsAfterConstraints, useBG?bgReading.valueToUnits(profile.getUnits()):0d, 0d, useBolusIOB, useBasalIOB);
+            bolusWizard.doCalc(profile.getDefaultProfile(), carbsAfterConstraints, 0d, useBG?bgReading.valueToUnits(profile.getUnits()):0d, 0d, useBolusIOB, useBasalIOB, false, false);
 
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(bolusWizard.calculatedTotalInsulin);
             if(insulinAfterConstraints - bolusWizard.calculatedTotalInsulin !=0){
@@ -384,7 +384,7 @@ public class ActionStringHandler {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(amount, 0, null, false);
+                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), amount, 0, null, false);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror)  +
                             "\n" +
@@ -400,7 +400,7 @@ public class ActionStringHandler {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(amount, carbs, null, true);
+                PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), amount, carbs, null, true);
                 if (!result.success) {
                     sendError(MainApp.sResources.getString(R.string.treatmentdeliveryerror)  +
                             "\n" +

@@ -47,6 +47,7 @@ public class LoopPlugin implements PluginBase {
     private boolean fragmentVisible = true;
 
     private long loopSuspendedTill = 0L; // end of manual loop suspend
+    private boolean isSuperBolus = false;
 
     public class LastRun {
         public APSResult request = null;
@@ -68,6 +69,7 @@ public class LoopPlugin implements PluginBase {
         }
         MainApp.bus().register(this);
         loopSuspendedTill = SP.getLong("loopSuspendedTill", 0L);
+        isSuperBolus = SP.getBoolean("isSuperBolus", false);
     }
 
     @Override
@@ -137,6 +139,13 @@ public class LoopPlugin implements PluginBase {
 
     public void suspendTo(long endTime) {
         loopSuspendedTill = endTime;
+        isSuperBolus = false;
+        SP.putLong("loopSuspendedTill", loopSuspendedTill);
+    }
+
+    public void superBolusTo(long endTime) {
+        loopSuspendedTill = endTime;
+        isSuperBolus = true;
         SP.putLong("loopSuspendedTill", loopSuspendedTill);
     }
 
@@ -167,6 +176,20 @@ public class LoopPlugin implements PluginBase {
         }
 
         return true;
+    }
+
+   public boolean isSuperBolus() {
+        if (loopSuspendedTill == 0)
+            return false;
+
+        long now = new Date().getTime();
+
+        if (loopSuspendedTill <= now) { // time exceeded
+            suspendTo(0L);
+            return false;
+        }
+
+        return isSuperBolus;
     }
 
     public void invoke(String initiator, boolean allowNotification) {
