@@ -87,7 +87,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).created_at));
             holder.insulin.setText(DecimalFormatter.to2Decimal(treatments.get(position).insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(treatments.get(position).carbs) + " g");
-            Iob iob = insulinInterface.iobCalc(treatments.get(position), new Date(), profile.getDia());
+            Iob iob = insulinInterface.iobCalc(treatments.get(position), new Date().getTime(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(treatments.get(position).mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));

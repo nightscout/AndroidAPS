@@ -53,8 +53,8 @@ public class TempBasal {
     public boolean isAbsolute = false; // true if if set as absolute value in U
 
 
-    public IobTotal iobCalc(Date time) {
-        IobTotal result = new IobTotal(time.getTime());
+    public IobTotal iobCalc(long time) {
+        IobTotal result = new IobTotal(time);
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
 
@@ -66,7 +66,7 @@ public class TempBasal {
         if (basalRate == null)
             return result;
 
-        int realDuration = getRealDuration();
+        int realDuration = getDurationToTime(time);
 
         if (realDuration > 0) {
             Double netBasalRate = 0d;
@@ -103,8 +103,8 @@ public class TempBasal {
                     Iob aIOB = insulinInterface.iobCalc(tempBolusPart, time, profile.getDia());
                     result.basaliob += aIOB.iobContrib;
                     result.activity += aIOB.activityContrib;
-                    Double dia_ago = time.getTime() - profile.getDia() * 60 * 60 * 1000;
-                    if (date > dia_ago && date <= time.getTime()) {
+                    Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
+                    if (date > dia_ago && date <= time) {
                         result.netbasalinsulin += tempBolusPart.insulin;
                         if (tempBolusPart.insulin > 0) {
                             result.hightempinsulin += tempBolusPart.insulin;
@@ -117,26 +117,32 @@ public class TempBasal {
     }
 
     // Determine end of basal
-    public Date getTimeEnd() {
-        Date tempBasalTimePlannedEnd = getPlannedTimeEnd();
-        Date now = new Date();
+    public long getTimeEnd() {
+        long tempBasalTimePlannedEnd = getPlannedTimeEnd();
+        long now = new Date().getTime();
 
-        if (timeEnd != null && timeEnd.getTime() < tempBasalTimePlannedEnd.getTime()) {
-            tempBasalTimePlannedEnd = timeEnd;
+        if (timeEnd != null && timeEnd.getTime() < tempBasalTimePlannedEnd) {
+            tempBasalTimePlannedEnd = timeEnd.getTime();
         }
 
-        if (now.getTime() < tempBasalTimePlannedEnd.getTime())
+        if (now < tempBasalTimePlannedEnd)
             tempBasalTimePlannedEnd = now;
 
         return tempBasalTimePlannedEnd;
     }
 
-    public Date getPlannedTimeEnd() {
-        return new Date(timeStart.getTime() + 60 * 1_000 * duration);
+    public long getPlannedTimeEnd() {
+        return timeStart.getTime() + 60 * 1_000 * duration;
     }
 
     public int getRealDuration() {
-        Long msecs = getTimeEnd().getTime() - timeStart.getTime();
+        long msecs = getTimeEnd() - timeStart.getTime();
+        return Math.round(msecs / 60f / 1000);
+    }
+
+    public int getDurationToTime(long time) {
+        long endTime = Math.min(time, getTimeEnd());
+        long msecs = endTime - timeStart.getTime();
         return Math.round(msecs / 60f / 1000);
     }
 
@@ -146,7 +152,7 @@ public class TempBasal {
 
     public int getPlannedRemainingMinutes() {
         if (timeEnd != null) return 0;
-        float remainingMin = (getPlannedTimeEnd().getTime() - new Date().getTime()) / 1000f / 60;
+        float remainingMin = (getPlannedTimeEnd() - new Date().getTime()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 
@@ -172,7 +178,7 @@ public class TempBasal {
     public boolean isInProgress(Date time) {
         if (timeStart.getTime() > time.getTime()) return false; // in the future
         if (timeEnd == null) { // open end
-            if (timeStart.getTime() < time.getTime() && getPlannedTimeEnd().getTime() > time.getTime())
+            if (timeStart.getTime() < time.getTime() && getPlannedTimeEnd() > time.getTime())
                 return true; // in interval
             return false;
         }

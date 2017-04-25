@@ -128,14 +128,13 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
         Double dia = profile.getDia();
 
-        Date now = new Date(time);
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
             if (t.created_at.getTime() > time) continue;
-            Iob tIOB = insulinInterface.iobCalc(t, now, dia);
+            Iob tIOB = insulinInterface.iobCalc(t, time, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = insulinInterface.iobCalc(t, now, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
+            Iob bIOB = insulinInterface.iobCalc(t, time, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
             total.bolussnooze += bIOB.iobContrib;
         }
         return total;

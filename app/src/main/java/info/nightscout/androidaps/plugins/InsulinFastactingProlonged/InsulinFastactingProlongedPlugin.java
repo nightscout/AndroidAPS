@@ -90,7 +90,7 @@ public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInte
     }
 
     @Override
-    public Iob iobCalc(Treatment treatment, Date time, Double dia) {
+    public Iob iobCalc(Treatment treatment, long time, Double dia) {
         Iob result = new Iob();
 
         //Double scaleFactor = 3.0 / dia;
@@ -101,7 +101,7 @@ public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInte
 
         if (treatment.insulin != 0d) {
             Long bolusTime = treatment.created_at.getTime();
-            Double minAgo = (time.getTime() - bolusTime) / 1000d / 60d;
+            Double minAgo = (time - bolusTime) / 1000d / 60d;
 
             if (minAgo < peak) {
                 Double x1 = 6 / dia * minAgo / 5d + 1;

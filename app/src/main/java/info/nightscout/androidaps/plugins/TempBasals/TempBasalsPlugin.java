@@ -128,8 +128,8 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
         for (int position = list.size() - 1; position >= 0; position--) {
             TempBasal t = list.get(position);
             boolean update = false;
-            if (t.timeEnd == null && t.getPlannedTimeEnd().getTime() < now) {
-                t.timeEnd = new Date(t.getPlannedTimeEnd().getTime());
+            if (t.timeEnd == null && t.getPlannedTimeEnd() < now) {
+                t.timeEnd = new Date(t.getPlannedTimeEnd());
                 if (Config.logTempBasalsCut)
                     log.debug("Add timeEnd to old record");
                 update = true;
@@ -137,7 +137,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
             if (position > 0) {
                 Date startofnewer = list.get(position - 1).timeStart;
                 if (t.timeEnd == null) {
-                    t.timeEnd = new Date(Math.min(startofnewer.getTime(), t.getPlannedTimeEnd().getTime()));
+                    t.timeEnd = new Date(Math.min(startofnewer.getTime(), t.getPlannedTimeEnd()));
                     if (Config.logTempBasalsCut)
                         log.debug("Add timeEnd to old record");
                     update = true;
@@ -180,19 +180,19 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
     public IobTotal getCalculationToTime(long time) {
         checkForExpired(tempBasals);
         checkForExpired(extendedBoluses);
-        Date now = new Date(time);
         IobTotal total = new IobTotal(time);
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
             TempBasal t = tempBasals.get(pos);
             if (t.timeStart.getTime() > time) continue;
-            IobTotal calc = t.iobCalc(now);
+            IobTotal calc = t.iobCalc(time);
+            log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
             total.plus(calc);
         }
         if (useExtendedBoluses) {
             for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                 TempBasal t = extendedBoluses.get(pos);
                 if (t.timeStart.getTime() > time) continue;
-                IobTotal calc = t.iobCalc(now);
+                IobTotal calc = t.iobCalc(time);
                 total.plus(calc);
             }
         }
