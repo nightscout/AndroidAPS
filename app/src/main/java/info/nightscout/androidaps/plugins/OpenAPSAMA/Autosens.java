@@ -25,7 +25,6 @@ public class Autosens {
 
         //console.error(mealTime);
 
-        double deviationSum = 0;
         double carbsAbsorbed = 0;
 
         List<BgReading> bucketed_data = IobCobCalculatorPlugin.getBucketedData(dataFromTime);
@@ -33,8 +32,8 @@ public class Autosens {
             return new AutosensResult();
 
         //console.error(bucketed_data);
-        double[] avgDeltas = new double[bucketed_data.size() - 2];
-        double[] bgis = new double[bucketed_data.size() - 2];
+        //double[] avgDeltas = new double[bucketed_data.size() - 2];
+        //double[] bgis = new double[bucketed_data.size() - 2];
         double[] deviations = new double[bucketed_data.size() - 2];
 
         String pastSensitivity = "";
@@ -81,10 +80,9 @@ public class Autosens {
                 } else {
                     pastSensitivity += "-";
                 }
-                avgDeltas[i] = avgDelta;
-                bgis[i] = bgi;
+                //avgDeltas[i] = avgDelta;
+                //bgis[i] = bgi;
                 deviations[i] = deviation;
-                deviationSum += deviation;
             } else {
                 pastSensitivity += ">";
                 //console.error(bgTime);
@@ -112,8 +110,8 @@ public class Autosens {
             log.debug(pastSensitivity);
             //console.log(JSON.stringify(avgDeltas));
             //console.log(JSON.stringify(bgis));
-            Arrays.sort(avgDeltas);
-            Arrays.sort(bgis);
+            //Arrays.sort(avgDeltas);
+            //Arrays.sort(bgis);
             Arrays.sort(deviations);
 
             for (double i = 0.9; i > 0.1; i = i - 0.02) {

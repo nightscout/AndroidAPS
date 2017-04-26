@@ -593,4 +593,7 @@
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
     <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="predictionshortlabel">PRE</string>
+    <string name="basalshortlabel">BAS</string>
 </resources>

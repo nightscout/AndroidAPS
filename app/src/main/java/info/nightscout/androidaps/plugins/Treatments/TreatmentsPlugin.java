@@ -5,6 +5,7 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -161,6 +162,17 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public List<Treatment> getTreatments() {
         return treatments;
+    }
+
+    @Override
+    public List<Treatment> getTreatments5MinBack(long time) {
+        List<Treatment> in5minback = new ArrayList<>();
+        for (Integer pos = 0; pos < treatments.size(); pos++) {
+            Treatment t = treatments.get(pos);
+            if (t.created_at.getTime() <= time && t.created_at.getTime() > time - 5 * 60 * 1000)
+                in5minback.add(t);
+        }
+        return in5minback;
     }
 
     @Subscribe

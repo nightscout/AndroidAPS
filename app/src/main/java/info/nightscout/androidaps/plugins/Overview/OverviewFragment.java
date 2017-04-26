@@ -50,6 +50,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
@@ -76,6 +80,7 @@ import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialo
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
@@ -154,6 +159,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     private static Handler sHandler;
     private static HandlerThread sHandlerThread;
+
+    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledUpdate = null;
 
     public OverviewFragment() {
         super();
@@ -272,19 +280,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         switch (buttonView.getId()) {
             case R.id.overview_showprediction:
                 SP.putBoolean("showprediction", showPredictionView.isChecked());
-                updateGUI("onPredictionCheckedChanged");
+                scheduleUpdateGUI("onPredictionCheckedChanged");
                 break;
             case R.id.overview_showbasals:
                 SP.putBoolean("showbasals", showPredictionView.isChecked());
-                updateGUI("onBasalsCheckedChanged");
+                scheduleUpdateGUI("onBasalsCheckedChanged");
                 break;
             case R.id.overview_showiob:
                 SP.putBoolean("showiob", showIobView.isChecked());
-                updateGUI("onIobCheckedChanged");
+                scheduleUpdateGUI("onIobCheckedChanged");
                 break;
             case R.id.overview_showcob:
                 SP.putBoolean("showcob", showCobView.isChecked());
-                updateGUI("onCobCheckedChanged");
+                scheduleUpdateGUI("onCobCheckedChanged");
                 break;
         }
     }
@@ -296,15 +304,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentEnabled(PluginBase.LOOP, false);
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
+            scheduleUpdateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, true);
             activeloop.setFragmentVisible(PluginBase.LOOP, true);
             MainApp.getConfigBuilder().storeSettings();
+            scheduleUpdateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
             activeloop.suspendTo(0L);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -317,23 +327,23 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 60L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
             activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
             activeloop.suspendTo(new Date().getTime() + 10 * 60L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
             activeloop.suspendTo(new Date().getTime() + 30L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -346,7 +356,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 1 * 60L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -359,7 +369,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -372,7 +382,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
             activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
-            updateGUI("suspendmenu");
+            scheduleUpdateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -461,7 +471,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                         objectivesPlugin.saveProgress();
                                     }
                                 }
-                                updateGUIIfVisible("onClickAcceptTemp");
+                                scheduleUpdateGUI("onClickAcceptTemp");
                             }
                         });
                         Answers.getInstance().logCustom(new CustomEvent("AcceptTemp"));
@@ -585,58 +595,58 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         sRefreshLoop = new Runnable() {
             @Override
             public void run() {
-                updateGUIIfVisible("refreshLoop");
+                scheduleUpdateGUI("refreshLoop");
                 sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
             }
         };
         sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
         registerForContextMenu(apsModeView);
-        updateGUIIfVisible("onResume");
+        updateGUI("onResume");
     }
 
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
-        updateGUIIfVisible("EventInitializationChanged");
+        scheduleUpdateGUI("EventInitializationChanged");
     }
 
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
-        updateGUIIfVisible("EventPreferenceChange");
+        scheduleUpdateGUI("EventPreferenceChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
-        updateGUIIfVisible("EventRefreshGui");
+        scheduleUpdateGUI("EventRefreshGui");
     }
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        updateGUIIfVisible("EventTreatmentChange");
+        scheduleUpdateGUI("EventTreatmentChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        updateGUIIfVisible("EventTempBasalChange");
+        scheduleUpdateGUI("EventTempBasalChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        updateGUIIfVisible("EventTempBasalChange");
+        scheduleUpdateGUI("EventTempBasalChange");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
-        updateGUIIfVisible("EventNewOpenLoopNotification");
+        scheduleUpdateGUI("EventNewOpenLoopNotification");
     }
 
     @Subscribe
     public void onStatusEvent(final EventNewBasalProfile ev) {
-        updateGUIIfVisible("EventNewBasalProfile");
+        scheduleUpdateGUI("EventNewBasalProfile");
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempTargetRangeChange ev) {
-        updateGUIIfVisible("EventTempTargetRangeChange");
+        scheduleUpdateGUI("EventTempTargetRangeChange");
     }
 
     @Subscribe
@@ -672,17 +682,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             });
     }
 
-    private void updateGUIIfVisible(final String from) {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    updateGUI(from);
-                }
-            });
-    }
-
     private void updatePumpStatus(String status) {
         PumpInterface pump = MainApp.getConfigBuilder();
         if (!status.equals("")) {
@@ -695,6 +694,29 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             pumpStatusLayout.setVisibility(View.GONE);
             loopStatusLayout.setVisibility(View.VISIBLE);
         }
+    }
+
+    public void scheduleUpdateGUI(final String from) {
+        class UpdateRunnable implements Runnable {
+            public void run() {
+                Activity activity = getActivity();
+                if (activity != null)
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateGUI(from);
+                            scheduledUpdate = null;
+                        }
+                    });
+            }
+        }
+        // prepare task for execution in 400 msec
+        // cancel waiting task to prevent multiple updates
+        if (scheduledUpdate != null)
+            scheduledUpdate.cancel(false);
+        Runnable task = new UpdateRunnable();
+        final int msec = 400;
+        scheduledUpdate = worker.schedule(task, msec, TimeUnit.MILLISECONDS);
     }
 
     @SuppressLint("SetTextI18n")
@@ -1044,7 +1066,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             paint.setStyle(Paint.Style.STROKE);
             paint.setStrokeWidth(2);
             paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
-            paint.setColor(Color.CYAN);
+            paint.setColor(MainApp.sResources.getColor(R.color.basal));
             basalsLineSeries.setCustomPaint(paint);
         }
 
@@ -1058,48 +1080,56 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             Date start = new Date();
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
-            double lastIob = -1000;
-            for (long time = fromTime; time <= endTime; time += 5 * 60 * 1000L) {
+            for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
                     IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
-                    if (lastIob != iob.iob) {
-                        iobArray.add(new DataPoint(time, iob.iob));
-                        maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
-                        lastIob = iob.iob;
-                    }
+                    iobArray.add(new DataPoint(time, iob.iob));
+                    maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
                 }
                 if (showCobView.isChecked()) {
-                    //MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
-                    //cobArray.add(new DataPoint(time, mealData.mealCOB));
-                    //maxCobValueFound = Math.max(maxCobValueFound, mealData.mealCOB);
+                    AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+                    if (autosensData != null) {
+                        cobArray.add(new DataPoint(time, autosensData.cob));
+                        maxCobValueFound = Math.max(maxCobValueFound, autosensData.cob);
+                    }
                 }
             }
-            Profiler.log(log,"IOB precessed", start);
+            Profiler.log(log, "IOB processed", start);
             DataPoint[] iobData = new DataPoint[iobArray.size()];
             iobData = iobArray.toArray(iobData);
             iobSeries = new FixedLineGraphSeries<>(iobData);
             iobSeries.setDrawBackground(true);
-            iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.ioborange)); //50%
-            iobSeries.setColor(MainApp.sResources.getColor(R.color.ioborange));
+            iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.iob)); //50%
+            iobSeries.setColor(MainApp.sResources.getColor(R.color.iob));
             iobSeries.setThickness(3);
             iobSeries.setTitle("IOB");
             iobGraph.getGridLabelRenderer().setVerticalLabelsAlign(Paint.Align.LEFT);
 
+
+            if (showIobView.isChecked() && showCobView.isChecked()) {
+                List<DataPoint> cobArrayRescaled = new ArrayList<>();
+                for (int ci = 0; ci < cobArray.size(); ci++) {
+                    cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxIobValueFound / maxCobValueFound / 2));
+                }
+                cobArray = cobArrayRescaled;
+            }
             DataPoint[] cobData = new DataPoint[cobArray.size()];
             cobData = cobArray.toArray(cobData);
             cobSeries = new FixedLineGraphSeries<>(cobData);
             cobSeries.setDrawBackground(true);
-            cobSeries.setBackgroundColor(Color.RED);
-            cobSeries.setThickness(0);
+            cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
+            cobSeries.setColor(MainApp.sResources.getColor(R.color.cob));
+            cobSeries.setThickness(3);
+            cobSeries.setTitle("COB");
 
             iobGraph.removeAllSeries();
 
             if (showIobView.isChecked()) {
                 iobGraph.addSeries(iobSeries);
             }
-            if (showCobView.isChecked()) {
-                iobGraph.getSecondScale().addSeries(cobSeries);
-                iobGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
+            if (showCobView.isChecked() && cobData.length > 0) {
+                iobGraph.addSeries(cobSeries);
+ /*               iobGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
                     @Override
                     public String formatLabel(double value, boolean isValueX) {
                         return "";
@@ -1107,10 +1137,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
                     @Override
                     public void setViewport(Viewport viewport) {
-
                     }
                 });
-            }
+*/            }
             iobGraphLayout.setVisibility(View.VISIBLE);
         } else {
             iobGraphLayout.setVisibility(View.GONE);
@@ -1194,7 +1223,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 bgGraph.addSeries(predSeries = new PointsGraphSeries<BgReading>(pred));
                 predSeries.setShape(PointsGraphSeries.Shape.POINT);
                 predSeries.setSize(4);
-                predSeries.setColor(Color.MAGENTA);
+                predSeries.setColor(MainApp.sResources.getColor(R.color.prediction));
             }
         }
 

@@ -218,16 +218,6 @@
                             android:layout_width="wrap_content"
                             android:layout_height="80dip" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentTop="true"
-                            android:paddingRight="10dp"
-                            android:paddingTop="5dp"
-                            android:text="@string/iob"
-                            android:textColor="@color/ioborange"
-                            android:textStyle="bold" />
                     </RelativeLayout>
 
                 </LinearLayout>
@@ -237,30 +227,73 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/predictionshortlabel"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/prediction"
+                        android:textStyle="bold" />
+
                     <CheckBox
                         android:id="@+id/overview_showprediction"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:buttonTint="@color/magenta" />
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/prediction" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/basalshortlabel"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/basal"
+                        android:textStyle="bold" />
 
                     <CheckBox
                         android:id="@+id/overview_showbasals"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:buttonTint="@color/cyan" />
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/basal" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/iob"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/iob"
+                        android:textStyle="bold" />
 
                     <CheckBox
                         android:id="@+id/overview_showiob"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:buttonTint="@color/ioborange" />
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/iob" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/cob"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/cob"
+                        android:textStyle="bold" />
 
                     <CheckBox
                         android:id="@+id/overview_showcob"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        app:buttonTint="@color/cyan" />
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/cob" />
                 </LinearLayout>
 
             </LinearLayout>

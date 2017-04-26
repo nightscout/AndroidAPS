@@ -16,4 +16,5 @@ public interface TreatmentsInterface {
     IobTotal getCalculationToTime(long time);
     MealData getMealData();
     List<Treatment> getTreatments();
+    List<Treatment> getTreatments5MinBack(long time);
 }

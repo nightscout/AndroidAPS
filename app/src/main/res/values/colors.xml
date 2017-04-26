@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="magenta">#ff00ff</color>
-    <color name="cyan">#00ffff</color>
-    <color name="ioborange">#FFFB8C00</color>
+    <color name="prediction">#ff00ff</color>
+    <color name="basal">#00ffff</color>
+    <color name="iob">#FFFB8C00</color>
+    <color name="cob">#fbf300</color>
 
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
