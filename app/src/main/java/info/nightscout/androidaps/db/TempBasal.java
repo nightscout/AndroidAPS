@@ -62,6 +62,64 @@ public class TempBasal {
         if (profile == null)
             return result;
 
+        int realDuration = getDurationToTime(time);
+        Double netBasalAmount = 0d;
+
+        if (realDuration > 0) {
+            Double netBasalRate = 0d;
+
+            int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
+
+            result.netRatio = netBasalRate;
+
+            double tempBolusSpacing = realDuration / aboutFiveMinIntervals;
+            for (Long j = 0L; j < aboutFiveMinIntervals; j++) {
+                // find middle of the interval
+                Long date = (long) (timeStart.getTime() + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
+
+                Double basalRate = profile.getBasal(NSProfile.secondsFromMidnight(date));
+                if (isExtended) {
+                    netBasalRate = this.absolute;
+                } else {
+                    if (this.isAbsolute) {
+                        netBasalRate = this.absolute - basalRate;
+                    } else {
+                        netBasalRate = (this.percent - 100) / 100d * basalRate;
+                    }
+                }
+
+                double tempBolusSize = netBasalRate * tempBolusSpacing / 60d;
+                netBasalAmount += tempBolusSize;
+
+                Treatment tempBolusPart = new Treatment(insulinInterface);
+                tempBolusPart.insulin = tempBolusSize;
+                tempBolusPart.created_at = new Date(date);
+
+                Iob aIOB = insulinInterface.iobCalc(tempBolusPart, time, profile.getDia());
+                result.basaliob += aIOB.iobContrib;
+                result.activity += aIOB.activityContrib;
+                Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
+                if (date > dia_ago && date <= time) {
+                    result.netbasalinsulin += tempBolusPart.insulin;
+                    if (tempBolusPart.insulin > 0) {
+                        result.hightempinsulin += tempBolusPart.insulin;
+                    }
+                }
+            }
+        }
+        result.netInsulin = netBasalAmount;
+        return result;
+    }
+
+/*
+    public IobTotal old_iobCalc(long time) {
+        IobTotal result = new IobTotal(time);
+        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+
+        if (profile == null)
+            return result;
+
         Double basalRate = profile.getBasal(NSProfile.secondsFromMidnight(time));
 
         if (basalRate == null)
@@ -116,6 +174,7 @@ public class TempBasal {
         }
         return result;
     }
+*/
 
     // Determine end of basal
     public long getTimeEnd() {
@@ -184,7 +243,8 @@ public class TempBasal {
             return false;
         }
         // closed end
-        if (timeStart.getTime() < time.getTime() && timeEnd.getTime() > time.getTime()) return true; // in interval
+        if (timeStart.getTime() < time.getTime() && timeEnd.getTime() > time.getTime())
+            return true; // in interval
         return false;
     }
 

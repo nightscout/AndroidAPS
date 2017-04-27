@@ -20,7 +20,7 @@ public class IobTotal {
     public Double hightempinsulin;
 
     public Double netInsulin = 0d; // for calculations from temp basals only
-    public Double netRatio = 0d; // for calculations from temp basals only
+    public Double netRatio = 0d; // net ratio at start of temp basal
 
     long time;
 
