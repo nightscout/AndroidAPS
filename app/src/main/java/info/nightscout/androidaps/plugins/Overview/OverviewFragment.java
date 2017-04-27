@@ -892,10 +892,27 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         String units = profile.getUnits();
 
+        Double lowLine = SP.getDouble("low_mark", 0d);
+        Double highLine = SP.getDouble("high_mark", 0d);
+        if (lowLine < 1) {
+            lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+        }
+        if (highLine < 1) {
+            highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+        }
+
+
         // **** BG value ****
         if (lastBG != null) {
+            int color = MainApp.sResources.getColor(R.color.inrange);
+            if (lastBG.valueToUnits(units) < lowLine)
+                color = MainApp.sResources.getColor(R.color.low);
+            else if (lastBG.valueToUnits(units) > highLine)
+                color = MainApp.sResources.getColor(R.color.high);
             bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
             arrowView.setText(lastBG.directionToSymbol());
+            bgView.setTextColor(color);
+            arrowView.setTextColor(color);
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
             if (glucoseStatus != null) {
                 deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
@@ -971,24 +988,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             endTime = toTime;
         }
 
-        Double lowLine = SP.getDouble("low_mark", 0d);
-        Double highLine = SP.getDouble("high_mark", 0d);
-
-        if (lowLine < 1) {
-            lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
-        }
-
-        if (highLine < 1) {
-            highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
-        }
-
         LineGraphSeries<DataPoint> basalsLineSeries = null;
         LineGraphSeries<DataPoint> baseBasalsSeries = null;
         LineGraphSeries<DataPoint> tempBasalsSeries = null;
         AreaGraphSeries<DoubleDataPoint> areaSeries;
         LineGraphSeries<DataPoint> seriesNow, seriesNow2;
         PointsGraphSeries<BgReading> seriesInRage;
-        PointsGraphSeries<BgReading> seriesOutOfRange;
+        PointsGraphSeries<BgReading> seriesLow;
+        PointsGraphSeries<BgReading> seriesHigh;
         PointsGraphSeries<BgReading> predSeries;
         PointsWithLabelGraphSeries<Treatment> seriesTreatments;
 
@@ -1139,7 +1146,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     public void setViewport(Viewport viewport) {
                     }
                 });
-*/            }
+*/
+            }
             iobGraphLayout.setVisibility(View.VISIBLE);
         } else {
             iobGraphLayout.setVisibility(View.GONE);
@@ -1173,8 +1181,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
-        List<BgReading> inRangeArray = new ArrayList<BgReading>();
-        List<BgReading> outOfRangeArray = new ArrayList<BgReading>();
+        List<BgReading> inRangeArray = new ArrayList<>();
+        List<BgReading> lowArray = new ArrayList<>();
+        List<BgReading> highArray = new ArrayList<>();
 
         if (bgReadingsArray.size() == 0)
             return;
@@ -1184,8 +1193,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         while (it.hasNext()) {
             BgReading bg = it.next();
             if (bg.value > maxBgValue) maxBgValue = bg.value;
-            if (bg.valueToUnits(units) < lowLine || bg.valueToUnits(units) > highLine)
-                outOfRangeArray.add(bg);
+            if (bg.valueToUnits(units) < lowLine)
+                lowArray.add(bg);
+            else if (bg.valueToUnits(units) > highLine)
+                highArray.add(bg);
             else
                 inRangeArray.add(bg);
         }
@@ -1195,23 +1206,32 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
 
         BgReading[] inRange = new BgReading[inRangeArray.size()];
-        BgReading[] outOfRange = new BgReading[outOfRangeArray.size()];
+        BgReading[] low = new BgReading[lowArray.size()];
+        BgReading[] high = new BgReading[highArray.size()];
         inRange = inRangeArray.toArray(inRange);
-        outOfRange = outOfRangeArray.toArray(outOfRange);
+        low = lowArray.toArray(low);
+        high = highArray.toArray(high);
 
 
         if (inRange.length > 0) {
-            bgGraph.addSeries(seriesInRage = new PointsGraphSeries<BgReading>(inRange));
+            bgGraph.addSeries(seriesInRage = new PointsGraphSeries<>(inRange));
             seriesInRage.setShape(PointsGraphSeries.Shape.POINT);
             seriesInRage.setSize(5);
-            seriesInRage.setColor(Color.GREEN);
+            seriesInRage.setColor(MainApp.sResources.getColor(R.color.inrange));
         }
 
-        if (outOfRange.length > 0) {
-            bgGraph.addSeries(seriesOutOfRange = new PointsGraphSeries<BgReading>(outOfRange));
-            seriesOutOfRange.setShape(PointsGraphSeries.Shape.POINT);
-            seriesOutOfRange.setSize(5);
-            seriesOutOfRange.setColor(Color.RED);
+        if (low.length > 0) {
+            bgGraph.addSeries(seriesLow = new PointsGraphSeries<>(low));
+            seriesLow.setShape(PointsGraphSeries.Shape.POINT);
+            seriesLow.setSize(5);
+            seriesLow.setColor(MainApp.sResources.getColor(R.color.low));
+        }
+
+        if (high.length > 0) {
+            bgGraph.addSeries(seriesHigh = new PointsGraphSeries<>(low));
+            seriesHigh.setShape(PointsGraphSeries.Shape.POINT);
+            seriesHigh.setSize(5);
+            seriesHigh.setColor(MainApp.sResources.getColor(R.color.high));
         }
 
         if (showPrediction) {
