@@ -1228,7 +1228,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         if (high.length > 0) {
-            bgGraph.addSeries(seriesHigh = new PointsGraphSeries<>(low));
+            bgGraph.addSeries(seriesHigh = new PointsGraphSeries<>(high));
             seriesHigh.setShape(PointsGraphSeries.Shape.POINT);
             seriesHigh.setSize(5);
             seriesHigh.setColor(MainApp.sResources.getColor(R.color.high));
