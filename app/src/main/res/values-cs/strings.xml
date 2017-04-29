@@ -157,13 +157,13 @@
     <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
     <string name="unsupportedclientver">Nepodporovaná verze NSClient</string>
     <string name="virtualpump">Virtualní pumpa</string>
-    <string name="virtualpump_basebasalrate_label">Základní hodnota bazálu:</string>
-    <string name="virtualpump_battery_label">Baterie:</string>
-    <string name="virtualpump_extendedbolus_label">Kombo bolus:</string>
-    <string name="virtualpump_reservoir_label">Zásobník:</string>
+    <string name="virtualpump_basebasalrate_label">Základní hodnota bazálu</string>
+    <string name="virtualpump_battery_label">Baterie</string>
+    <string name="virtualpump_extendedbolus_label">Kombo bolus</string>
+    <string name="virtualpump_reservoir_label">Zásobník</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Chyba databáze</string>
-    <string name="virtualpump_tempbasal_label">Dočasný bazál:</string>
+    <string name="virtualpump_tempbasal_label">Dočasný bazál</string>
     <string name="vitualpump_label">VIRTUÁLNÍ PUMPA</string>
     <string name="xdrip">xDrip</string>
     <string name="overview_extendedbolus_button">Kombo bolus</string>
@@ -220,7 +220,7 @@
     <string name="reloadprofile">Obnovit profil</string>
     <string name="save">Uložit</string>
     <string name="success">Úspěch</string>
-    <string name="virtualpump_lastconnection_label">Poslední spojení:</string>
+    <string name="virtualpump_lastconnection_label">Poslední spojení</string>
     <string name="canceltemp">Zrušit dočasný bazál</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU aplikován úspěšně</string>
     <string name="smscommunicator_bolusfailed">Chyba při aplikování bolusu</string>
@@ -433,7 +433,7 @@
     <string name="prefs_delta_title">Nastavení parametru delta BG</string>
     <string name="profile">Profil</string>
     <string name="short_tabtitles">Krátké názvy modulů</string>
-    <string name="virtualpump_firmware_label">Firmware:</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
     <string name="smscommunicator_invalidphonennumber">Špatné telefonní číslo</string>
     <string name="tempbasaldeliveryerror">Chyba nastavování dočasného bazálu</string>
     <string name="copied_to_clipboard">Nakopírováno do schránky</string>

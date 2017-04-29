@@ -48,11 +48,11 @@
     <string name="treatments_wizard_total_label">총</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="vitualpump_label">가상 펌프</string>
-    <string name="virtualpump_basebasalrate_label">기본 기초주입량:</string>
-    <string name="virtualpump_tempbasal_label">임시기초주입:</string>
-    <string name="virtualpump_extendedbolus_label">확장 식사주입:</string>
-    <string name="virtualpump_battery_label">배터리:</string>
-    <string name="virtualpump_reservoir_label">인슐린 잔량:</string>
+    <string name="virtualpump_basebasalrate_label">기본 기초주입량</string>
+    <string name="virtualpump_tempbasal_label">임시기초주입</string>
+    <string name="virtualpump_extendedbolus_label">확장 식사주입</string>
+    <string name="virtualpump_battery_label">배터리</string>
+    <string name="virtualpump_reservoir_label">인슐린 잔량</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL 에러</string>
     <string name="openapsma_lastrun_label">최근 실행</string>
@@ -223,7 +223,7 @@
     <string name="nobtadapter">블루투스 어댑터를 찾지 못했습니다</string>
     <string name="devicenotfound">선택된 기기를 찾지 못했습니다</string>
     <string name="connectionerror">펌프 연결 에러</string>
-    <string name="virtualpump_lastconnection_label">최근 연결:</string>
+    <string name="virtualpump_lastconnection_label">최근 연결</string>
     <string name="danar_iob_label">펌프 IOB:</string>
     <string name="danar_dailyunits">Daily units:</string>
     <string name="danar_lastbolus">최근 식사주입:</string>

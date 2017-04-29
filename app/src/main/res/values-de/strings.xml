@@ -23,7 +23,7 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="treatmentdeliveryerror">Bolus Abgabefehler</string>
-    <string name="virtualpump_battery_label">Batterie:</string>
+    <string name="virtualpump_battery_label">Batterie</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="basal">Basal</string>
     <string name="bolus">Bolus</string>
@@ -94,14 +94,14 @@
     <string name="treatments_wizard_unit_label">U</string>
     <string name="up">Up</string>
     <string name="virtualpump">Virtuelle Pumpe</string>
-    <string name="virtualpump_reservoir_label">Reservoir:</string>
+    <string name="virtualpump_reservoir_label">Reservoir</string>
     <string name="xdrip">xDrip</string>
     <string name="vitualpump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
-    <string name="virtualpump_extendedbolus_label">Extended bolus:</string>
-    <string name="virtualpump_tempbasal_label">Temp basal:</string>
+    <string name="virtualpump_extendedbolus_label">Extended bolus</string>
+    <string name="virtualpump_tempbasal_label">Temp basal</string>
     <string name="visible">Sichtbar</string>
-    <string name="virtualpump_basebasalrate_label">Basis Basalrate:</string>
+    <string name="virtualpump_basebasalrate_label">Basis Basalrate</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="unsupportedclientver">Nicht unterstützte Version von NSClient</string>
     <string name="treatments_wizard_bg_label">BZ</string>
@@ -215,7 +215,7 @@
     <string name="reloadprofile">Profil neuladen</string>
     <string name="save">Speichern</string>
     <string name="success">Erfolgreich</string>
-    <string name="virtualpump_lastconnection_label">Letzte Verbindung:</string>
+    <string name="virtualpump_lastconnection_label">Letzte Verbindung</string>
     <string name="danar_lastbolus">Letzter Bolus:</string>
     <string name="danar_viewprofile">Profil anzeigen</string>
     <string name="danarprofile">DanaR Profil Einstellungen</string>
@@ -311,7 +311,7 @@
     <string name="minago">vor %d min</string>
     <string name="actions_shortname">"AKT"</string>
     <string name="wear_shortname">"WEAR"</string>
-    <string name="virtualpump_shortname">"VP"</string>
+    <string name="virtualpump_shortname">VP</string>
     <string name="treatments_shortname">"TREAT"</string>
     <string name="temptargetrange_shortname">"TT"</string>
     <string name="tempbasals_shortname">"TB"</string>
