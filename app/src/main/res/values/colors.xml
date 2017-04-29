@@ -8,6 +8,7 @@
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
     <color name="listdelimiter">#505050</color>
+    <color name="tabBgColor">#f0003f59</color>
 
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>

@@ -3,7 +3,6 @@ package info.nightscout.androidaps;
 import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -17,9 +16,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -32,17 +28,13 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
-import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
-import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -69,23 +61,7 @@ public class MainActivity extends AppCompatActivity {
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
-        // show version in toolbar
-        setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         registerBus();
-
-        try {
-            getSupportActionBar().setDisplayShowHomeEnabled(true);
-            if (BuildConfig.NSCLIENTOLNY)
-                getSupportActionBar().setIcon(R.mipmap.yellowowl);
-            else
-                getSupportActionBar().setIcon(R.mipmap.blueowl);
-        } catch (NullPointerException e) {
-            // no action
-        }
-
-
         setUpTabs(false);
     }
 
@@ -117,79 +93,6 @@ public class MainActivity extends AppCompatActivity {
         mTabs.setViewPager(mPager);
         if (switchToLast)
             mPager.setCurrentItem(pageAdapter.getCount() - 1, false);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.nav_preferences:
-                PasswordProtection.QueryPassword(this, R.string.settings_password, "settings_password", new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(getApplicationContext(), PreferencesActivity.class);
-                        startActivity(i);
-                    }
-                }, null);
-                break;
-            case R.id.nav_resetdb:
-                new AlertDialog.Builder(this)
-                        .setTitle(R.string.nav_resetdb)
-                        .setMessage(R.string.reset_db_confirm)
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                MainApp.getDbHelper().resetDatabases();
-                            }
-                        })
-                        .create()
-                        .show();
-                break;
-            case R.id.nav_export:
-                ImportExportPrefs.verifyStoragePermissions(this);
-                ImportExportPrefs.exportSharedPreferences(this);
-                break;
-            case R.id.nav_import:
-                ImportExportPrefs.verifyStoragePermissions(this);
-                ImportExportPrefs.importSharedPreferences(this);
-                break;
-            case R.id.nav_show_logcat:
-                LogDialog.showLogcat(this);
-                break;
-//            case R.id.nav_test_alarm:
-//                final int REQUEST_CODE_ASK_PERMISSIONS = 2355;
-//                int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.SYSTEM_ALERT_WINDOW);
-//                if (permission != PackageManager.PERMISSION_GRANTED) {
-//                    // We don't have permission so prompt the user
-//                    // On Android 6 give permission for alarming in Settings -> Apps -> Draw over other apps
-//                    ActivityCompat.requestPermissions(
-//                            this,
-//                            new String[]{Manifest.permission.SYSTEM_ALERT_WINDOW},
-//                            REQUEST_CODE_ASK_PERMISSIONS
-//                    );
-//                }
-//                Intent alertServiceIntent = new Intent(getApplicationContext(), AlertService.class);
-//                alertServiceIntent.putExtra("alertText", getString(R.string.nav_test_alert));
-//                getApplicationContext().startService(alertServiceIntent);
-//                break;
-            case R.id.nav_exit:
-                log.debug("Exiting");
-                MainApp.instance().stopKeepAliveService();
-                MainApp.bus().post(new EventAppExit());
-                MainApp.closeDbHelper();
-                finish();
-                System.runFinalization();
-                System.exit(0);
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void registerBus() {

@@ -3,7 +3,6 @@ package info.nightscout.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -23,7 +22,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
 
-import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
@@ -58,7 +56,7 @@ public class ImportExportPrefs {
         }
     }
 
-    public static void exportSharedPreferences(final MainActivity c) {
+    public static void exportSharedPreferences(final Activity c) {
 
         new AlertDialog.Builder(c)
                 .setMessage(MainApp.sResources.getString(R.string.export_to) + " " + file + " ?")
@@ -88,7 +86,7 @@ public class ImportExportPrefs {
                 .show();
     }
 
-    public static void importSharedPreferences(final MainActivity c) {
+    public static void importSharedPreferences(final Activity c) {
         new AlertDialog.Builder(c)
                 .setMessage(MainApp.sResources.getString(R.string.import_from) + " " + file + " ?")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
