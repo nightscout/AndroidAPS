@@ -1084,7 +1084,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         Double maxCobValueFound = 0d;
 
         if (showIobView.isChecked() || showCobView.isChecked()) {
-            Date start = new Date();
+            //Date start = new Date();
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
@@ -1101,7 +1101,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             }
-            Profiler.log(log, "IOB processed", start);
+            //Profiler.log(log, "IOB processed", start);
             DataPoint[] iobData = new DataPoint[iobArray.size()];
             iobData = iobArray.toArray(iobData);
             iobSeries = new FixedLineGraphSeries<>(iobData);

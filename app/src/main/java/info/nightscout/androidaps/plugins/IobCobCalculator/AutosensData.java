@@ -7,8 +7,10 @@ import java.util.Date;
  */
 
 public class AutosensData {
+    long time = 0L;
     String pastSensitivity = "";
     double deviation = 0d;
+    boolean calculateWithDeviation = false;
     double absorbed = 0d;
     double carbsFromBolus = 0d;
     public double cob = 0;

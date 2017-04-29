@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.OpenAPSAMA;
+package info.nightscout.androidaps.plugins.IobCobCalculator;
 
 import org.json.JSONException;
 import org.json.JSONObject;

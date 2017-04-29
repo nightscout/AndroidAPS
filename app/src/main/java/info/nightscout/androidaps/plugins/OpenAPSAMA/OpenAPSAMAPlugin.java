@@ -17,6 +17,7 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -217,7 +218,8 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         startPart = new Date();
         if(MainApp.getConfigBuilder().isAMAModeEnabled()){
-            lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(getBGDataFrom, null);
+            //lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(getBGDataFrom, null);
+            lastAutosensResult = IobCobCalculatorPlugin.detectSensitivity(getBGDataFrom);
         } else {
             lastAutosensResult = new AutosensResult();
         }

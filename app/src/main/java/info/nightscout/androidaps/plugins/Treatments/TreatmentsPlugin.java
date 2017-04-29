@@ -21,6 +21,8 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.SP;
 
@@ -51,7 +53,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.treatments_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -153,8 +155,27 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public MealData getMealData() {
         MealData result = new MealData();
 
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (profile == null) return result;
+
+        long now = new Date().getTime();
+        long dia_ago = now - (new Double(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
+
         for (Treatment treatment : treatments) {
-            result.addTreatment(treatment);
+            long t = treatment.created_at.getTime();
+            if (t > dia_ago && t <= now) {
+                if (treatment.carbs >= 1) {
+                    result.carbs += treatment.carbs;
+                }
+                if (treatment.insulin > 0 && treatment.mealBolus) {
+                    result.boluses += treatment.insulin;
+                }
+            }
+        }
+
+        AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
+        if (autosensData != null) {
+            result.mealCOB = autosensData.cob;
         }
         return result;
     }
