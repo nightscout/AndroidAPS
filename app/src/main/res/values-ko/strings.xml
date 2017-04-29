@@ -224,8 +224,8 @@
     <string name="devicenotfound">선택된 기기를 찾지 못했습니다</string>
     <string name="connectionerror">펌프 연결 에러</string>
     <string name="virtualpump_lastconnection_label">최근 연결</string>
-    <string name="danar_iob_label">펌프 IOB:</string>
-    <string name="danar_dailyunits">Daily units:</string>
+    <string name="danar_iob_label">펌프 IOB</string>
+    <string name="danar_dailyunits">Daily units</string>
     <string name="danar_lastbolus">최근 식사주입:</string>
     <string name="hoursago">시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>

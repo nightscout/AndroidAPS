@@ -219,8 +219,8 @@
     <string name="devicenotfound">El dispositivo seleccionado no se encuentra</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
     <string name="virtualpump_lastconnection_label">Última conexión</string>
-    <string name="danar_iob_label">Bomba IOB:</string>
-    <string name="danar_dailyunits">Unidades diarias:</string>
+    <string name="danar_iob_label">Bomba IOB</string>
+    <string name="danar_dailyunits">Unidades diarias</string>
     <string name="danar_lastbolus">Último bolo:</string>
     <string name="hoursago">h antes</string>
     <string name="danar_invalidinput">Datos invalidos</string>

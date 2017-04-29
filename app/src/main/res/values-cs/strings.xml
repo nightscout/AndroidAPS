@@ -204,9 +204,9 @@
     <string name="absolute">Absolutní</string>
     <string name="comment">Komentář</string>
     <string name="connectionerror">Chyba připojování pumpy</string>
-    <string name="danar_dailyunits">Jednotek za den:</string>
+    <string name="danar_dailyunits">Jednotek za den</string>
     <string name="danar_invalidinput">Chybná vstupní data</string>
-    <string name="danar_iob_label">IOB z pumpy:</string>
+    <string name="danar_iob_label">IOB z pumpy</string>
     <string name="danar_lastbolus">Poslední bolus</string>
     <string name="danar_valuenotsetproperly">Hodnota nenastavena správně</string>
     <string name="danar_viewprofile">Zobrazit profil</string>

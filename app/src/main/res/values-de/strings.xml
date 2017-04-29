@@ -204,7 +204,7 @@
     <string name="connecting">Verbinden</string>
     <string name="connectionerror">Pumpen Verbindungsfehler</string>
     <string name="danar_bt_name_title">DanaR Blueetooth Gerät</string>
-    <string name="danar_iob_label">Pumpen IOB:</string>
+    <string name="danar_iob_label">Pumpen IOB</string>
     <string name="danar_pump_settings">DanaR Pumpen Einstellungen</string>
     <string name="danarpump">DanaR</string>
     <string name="disconnected">Getrennt</string>

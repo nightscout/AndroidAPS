@@ -234,8 +234,8 @@
     <string name="nobtadapter">No bluetooth adapter found</string>
     <string name="devicenotfound">Selected device not found</string>
     <string name="connectionerror">Pump connection error</string>
-    <string name="danar_iob_label">Pump IOB:</string>
-    <string name="danar_dailyunits">Daily units:</string>
+    <string name="danar_iob_label">Pump IOB</string>
+    <string name="danar_dailyunits">Daily units</string>
     <string name="danar_lastbolus">Last bolus:</string>
     <string name="hoursago">h ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
@@ -596,4 +596,5 @@
     <string name="basalshortlabel">BAS</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="virtualpump_lastconnection_label">Last connection</string>
+    <string name="danar_bluetooth_status">Bluetooh status</string>
 </resources>

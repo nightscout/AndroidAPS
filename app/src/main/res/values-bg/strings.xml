@@ -232,7 +232,7 @@
     <string name="danarprofile_dia">DIA (Време на действие на инсулина) ч.:</string>
     <string name="danar_lastbolus">Последен болус:</string>
     <string name="danar_invalidinput">Неправилни входни данни</string>
-    <string name="danar_dailyunits">Единици за деня:</string>
+    <string name="danar_dailyunits">Единици за деня</string>
     <string name="careportal_temporarytarget">Временна цел</string>
     <string name="careportal_temporarytargetcancel">Отакажи временна цел</string>
     <string name="comment">Коментар</string>
