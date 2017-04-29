@@ -57,8 +57,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         return DanaRKoreanFragment.class.getName();
     }
 
-    static boolean fragmentPumpEnabled = true;
-    static boolean fragmentProfileEnabled = true;
+    static boolean fragmentPumpEnabled = false;
+    static boolean fragmentProfileEnabled = false;
     static boolean fragmentPumpVisible = true;
 
     public static ExecutionService sExecutionService;
@@ -186,6 +186,16 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     @Override
     public boolean canBeHidden(int type) {
         return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
+        return type == PUMP;
     }
 
     @Override

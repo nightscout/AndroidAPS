@@ -49,6 +49,16 @@ public class SourceNSClientPlugin implements PluginBase, BgSourceInterface {
     }
 
     @Override
+    public boolean hasFragment() {
+        return false;
+    }
+
+    @Override
+    public boolean showInList(int type) {
+        return true;
+    }
+
+    @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == BGSOURCE) this.fragmentEnabled = fragmentEnabled;
     }

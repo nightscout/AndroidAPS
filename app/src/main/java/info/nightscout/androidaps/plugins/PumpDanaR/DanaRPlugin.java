@@ -57,8 +57,8 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return DanaRFragment.class.getName();
     }
 
-    static boolean fragmentPumpEnabled = true;
-    static boolean fragmentProfileEnabled = true;
+    static boolean fragmentPumpEnabled = false;
+    static boolean fragmentProfileEnabled = false;
     static boolean fragmentPumpVisible = true;
 
     public static ExecutionService sExecutionService;
@@ -184,6 +184,16 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public boolean canBeHidden(int type) {
         return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
+        return type == PUMP;
     }
 
     @Override

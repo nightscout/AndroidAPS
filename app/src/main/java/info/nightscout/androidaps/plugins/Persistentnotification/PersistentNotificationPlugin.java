@@ -86,6 +86,16 @@ public class PersistentNotificationPlugin implements PluginBase{
     }
 
     @Override
+    public boolean hasFragment() {
+        return false;
+    }
+
+    @Override
+    public boolean showInList(int type) {
+        return true;
+    }
+
+    @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
 
         if(getType() == type){

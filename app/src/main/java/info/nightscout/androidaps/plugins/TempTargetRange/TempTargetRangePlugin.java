@@ -19,7 +19,7 @@ import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTarget
 
 public class TempTargetRangePlugin implements PluginBase {
 
-    static boolean fragmentEnabled = true;
+    static boolean fragmentEnabled = false;
     static boolean fragmentVisible = true;
 
     private static List<TempTarget> tempTargets;
@@ -67,6 +67,16 @@ public class TempTargetRangePlugin implements PluginBase {
 
     @Override
     public boolean canBeHidden(int type) {
+        return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
         return true;
     }
 

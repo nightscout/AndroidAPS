@@ -134,44 +134,44 @@ public class ConfigBuilderFragment extends Fragment {
     }
 
     void setViews() {
-        insulinDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(InsulinInterface.class), PluginBase.INSULIN);
+        insulinDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginBase.INSULIN), PluginBase.INSULIN);
         insulinListView.setAdapter(insulinDataAdapter);
         setListViewHeightBasedOnChildren(insulinListView);
-        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class), PluginBase.BGSOURCE);
+        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginBase.BGSOURCE), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
-        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.PUMP), PluginBase.PUMP);
+        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP), PluginBase.PUMP);
         pumpListView.setAdapter(pumpDataAdapter);
-        if (MainApp.getSpecificPluginsList(PluginBase.PUMP).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP).size() == 0)
             pumpLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(pumpListView);
-        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.LOOP), PluginBase.LOOP);
+        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP), PluginBase.LOOP);
         loopListView.setAdapter(loopDataAdapter);
         setListViewHeightBasedOnChildren(loopListView);
-        if (MainApp.getSpecificPluginsList(PluginBase.LOOP).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP).size() == 0)
             loopLabel.setVisibility(View.GONE);
-        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.TREATMENT), PluginBase.TREATMENT);
+        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT), PluginBase.TREATMENT);
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
-        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
+        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
         tempsListView.setAdapter(tempsDataAdapter);
         setListViewHeightBasedOnChildren(tempsListView);
-        if (MainApp.getSpecificPluginsList(PluginBase.TEMPBASAL).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.TEMPBASAL).size() == 0)
             tempsLabel.setVisibility(View.GONE);
-        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(ProfileInterface.class), PluginBase.PROFILE);
+        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginBase.BGSOURCE), PluginBase.PROFILE);
         profileListView.setAdapter(profileDataAdapter);
         setListViewHeightBasedOnChildren(profileListView);
-        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.APS), PluginBase.APS);
+        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.APS), PluginBase.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
-        if (MainApp.getSpecificPluginsList(PluginBase.APS).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.APS).size() == 0)
             apsLabel.setVisibility(View.GONE);
-        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsListByInterface(ConstraintsInterface.class), PluginBase.CONSTRAINTS);
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginBase.BGSOURCE), PluginBase.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
-        if (MainApp.getSpecificPluginsList(PluginBase.CONSTRAINTS).size() == 0)
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.CONSTRAINTS).size() == 0)
             constraintsLabel.setVisibility(View.GONE);
-        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsList(PluginBase.GENERAL), PluginBase.GENERAL);
+        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.GENERAL), PluginBase.GENERAL);
         generalListView.setAdapter(generalDataAdapter);
         setListViewHeightBasedOnChildren(generalListView);
 
@@ -201,18 +201,18 @@ public class ConfigBuilderFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View view, ViewGroup parent) {
 
             PluginViewHolder holder = null;
 
-            if (convertView == null) {
-                convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.configbuilder_simpleitem, null);
+            if (view == null) {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.configbuilder_simpleitem, null);
 
                 holder = new PluginViewHolder();
-                holder.name = (TextView) convertView.findViewById(R.id.configbuilder_simpleitem_name);
-                holder.checkboxEnabled = (CheckBox) convertView.findViewById(R.id.configbuilder_simpleitem_checkboxenabled);
-                holder.checkboxVisible = (CheckBox) convertView.findViewById(R.id.configbuilder_simpleitem_checkboxvisible);
-                convertView.setTag(holder);
+                holder.name = (TextView) view.findViewById(R.id.configbuilder_simpleitem_name);
+                holder.checkboxEnabled = (CheckBox) view.findViewById(R.id.configbuilder_simpleitem_checkboxenabled);
+                holder.checkboxVisible = (CheckBox) view.findViewById(R.id.configbuilder_simpleitem_checkboxvisible);
+                view.setTag(holder);
 
                 holder.checkboxEnabled.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View v) {
@@ -240,7 +240,7 @@ public class ConfigBuilderFragment extends Fragment {
                     }
                 });
             } else {
-                holder = (PluginViewHolder) convertView.getTag();
+                holder = (PluginViewHolder) view.getTag();
             }
 
             PluginBase plugin = pluginList.get(position);
@@ -258,6 +258,10 @@ public class ConfigBuilderFragment extends Fragment {
 
             if (!plugin.isEnabled(type)) {
                 holder.checkboxVisible.setEnabled(false);
+            }
+
+            if (!plugin.hasFragment()) {
+                holder.checkboxVisible.setVisibility(View.INVISIBLE);
             }
 
             // Hide enabled control and force enabled plugin if there is only one plugin available
@@ -292,7 +296,7 @@ public class ConfigBuilderFragment extends Fragment {
                 }
             }
 
-            return convertView;
+            return view;
 
         }
 

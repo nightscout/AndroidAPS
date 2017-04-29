@@ -128,6 +128,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
+        return false;
+    }
+
+    @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         // Always enabled
     }
@@ -174,7 +184,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                     if (SP.contains(settingEnabled))
                         p.setFragmentEnabled(type, SP.getBoolean(settingEnabled, true));
                     if (SP.contains(settingVisible))
-                        p.setFragmentVisible(type, SP.getBoolean(settingVisible, true));
+                        p.setFragmentVisible(type, SP.getBoolean(settingVisible, true) && SP.getBoolean(settingEnabled, true));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

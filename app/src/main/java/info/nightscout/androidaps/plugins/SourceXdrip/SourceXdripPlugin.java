@@ -16,7 +16,7 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
         return SourceNSClientFragment.class.getName();
     }
 
-    private static boolean fragmentEnabled = true;
+    private static boolean fragmentEnabled = false;
 
     @Override
     public int getType() {
@@ -46,6 +46,16 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean canBeHidden(int type) {
+        return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return false;
+    }
+
+    @Override
+    public boolean showInList(int type) {
         return true;
     }
 

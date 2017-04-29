@@ -24,7 +24,7 @@ import info.nightscout.utils.SP;
 public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
 
-    private static boolean fragmentEnabled = true;
+    private static boolean fragmentEnabled = false;
     private static boolean fragmentVisible = true;
 
     private static NSProfile convertedProfile = null;
@@ -82,6 +82,16 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean canBeHidden(int type) {
+        return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
         return true;
     }
 

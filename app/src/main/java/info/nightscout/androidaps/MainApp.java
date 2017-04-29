@@ -204,6 +204,21 @@ public class MainApp extends Application {
         return newList;
     }
 
+    public static ArrayList<PluginBase> getSpecificPluginsVisibleInList(int type) {
+        ArrayList<PluginBase> newList = new ArrayList<>();
+
+        if (pluginsList != null) {
+            for (PluginBase p : pluginsList) {
+                if (p.getType() == type)
+                    if (p.showInList(type))
+                        newList.add(p);
+            }
+        } else {
+            log.error("pluginsList=null");
+        }
+        return newList;
+    }
+
     public static ArrayList<PluginBase> getSpecificPluginsListByInterface(Class interfaceClass) {
         ArrayList<PluginBase> newList = new ArrayList<>();
 
@@ -211,6 +226,21 @@ public class MainApp extends Application {
             for (PluginBase p : pluginsList) {
                 if (p.getClass() != ConfigBuilderPlugin.class && interfaceClass.isAssignableFrom(p.getClass()))
                     newList.add(p);
+            }
+        } else {
+            log.error("pluginsList=null");
+        }
+        return newList;
+    }
+
+    public static ArrayList<PluginBase> getSpecificPluginsVisibleInListByInterface(Class interfaceClass, int type) {
+        ArrayList<PluginBase> newList = new ArrayList<>();
+
+        if (pluginsList != null) {
+            for (PluginBase p : pluginsList) {
+                if (p.getClass() != ConfigBuilderPlugin.class && interfaceClass.isAssignableFrom(p.getClass()))
+                    if (p.showInList(type))
+                        newList.add(p);
             }
         } else {
             log.error("pluginsList=null");

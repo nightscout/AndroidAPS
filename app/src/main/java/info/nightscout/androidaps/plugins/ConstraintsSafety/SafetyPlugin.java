@@ -58,6 +58,16 @@ public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     }
 
     @Override
+    public boolean hasFragment() {
+        return false;
+    }
+
+    @Override
+    public boolean showInList(int type) {
+        return false;
+    }
+
+    @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
 
     }

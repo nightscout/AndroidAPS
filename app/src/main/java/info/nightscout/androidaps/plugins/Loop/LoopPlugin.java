@@ -44,7 +44,7 @@ public class LoopPlugin implements PluginBase {
     private static HandlerThread sHandlerThread;
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     private long loopSuspendedTill = 0L; // end of manual loop suspend
     private boolean isSuperBolus = false;
@@ -110,6 +110,16 @@ public class LoopPlugin implements PluginBase {
 
     @Override
     public boolean canBeHidden(int type) {
+        return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
         return true;
     }
 
