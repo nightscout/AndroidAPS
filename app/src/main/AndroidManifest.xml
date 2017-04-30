@@ -116,11 +116,15 @@
             android:name=".Services.DataService"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaR.Services.ExecutionService"
+            android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRKorean.Services.ExecutionService"
+            android:name=".plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".plugins.PumpDanaRv2.services.DanaRv2ExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service

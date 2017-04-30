@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
  * Created by mike on 05.07.2016.
@@ -17,9 +17,9 @@ public class MsgSettingActiveProfile extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPlugin.getDanaRPump().activeProfile = intFromBuff(bytes, 0, 1);
+        DanaRPump.getInstance().activeProfile = intFromBuff(bytes, 0, 1);
 
         if (Config.logDanaMessageDetail)
-            log.debug("Active profile number: " + DanaRPlugin.getDanaRPump().activeProfile);
+            log.debug("Active profile number: " + DanaRPump.getInstance().activeProfile);
     }
 }

@@ -19,9 +19,9 @@ public class PumpDescription {
     public boolean isTempBasalCapable = true;
     public int lowTempBasalStyle = PERCENT;
     public int highTempBasalStyle = PERCENT;
-    public double maxHighTempPercent = 200;
+    public int maxHighTempPercent = 200;
     public double maxHighTempAbsolute = 0; // zero = no limit
-    public double lowTempPercentStep = 10;
+    public int lowTempPercentStep = 10;
     public double lowTempAbsoluteStep = 0.05d;
     public int lowTempPercentDuration = 30;
     public int lowTempAbsoluteDuration = 30;

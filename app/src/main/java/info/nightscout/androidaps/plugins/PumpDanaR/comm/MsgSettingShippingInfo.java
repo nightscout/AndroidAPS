@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
@@ -18,7 +17,7 @@ public class MsgSettingShippingInfo extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPump pump = DanaRPlugin.getDanaRPump();
+        DanaRPump pump = DanaRPump.getInstance();
         pump.serialNumber = stringFromBuff(bytes, 0, 10);
         pump.shippingDate = dateFromBuff(bytes, 10);
         pump.shippingCountry = asciiStringFromBuff(bytes, 13, 3);

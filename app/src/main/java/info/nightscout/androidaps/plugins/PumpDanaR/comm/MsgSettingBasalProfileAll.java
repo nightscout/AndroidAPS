@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 
@@ -22,8 +21,8 @@ public class MsgSettingBasalProfileAll extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPump pump = DanaRPlugin.getDanaRPump();
-        if (DanaRPlugin.getDanaRPump().basal48Enable) {
+        DanaRPump pump = DanaRPump.getInstance();
+        if (pump.basal48Enable) {
             pump.pumpProfiles = new double[4][];
             for (int profile = 0; profile < 4; profile++) {
                 int position = intFromBuff(bytes, 107 * profile, 1);
@@ -50,10 +49,10 @@ public class MsgSettingBasalProfileAll extends MessageBase {
         }
 
         if (Config.logDanaMessageDetail) {
-            if (DanaRPlugin.getDanaRPump().basal48Enable) {
+            if (pump.basal48Enable) {
                 for (int profile = 0; profile < 4; profile++) {
                     for (int index = 0; index < 24; index++) {
-                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + DanaRPlugin.getDanaRPump().pumpProfiles[profile][index]);
+                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
                     }
                 }
             } else {
@@ -62,7 +61,7 @@ public class MsgSettingBasalProfileAll extends MessageBase {
                         log.debug("Basal profile " + profile + ": " +
                                 String.format("%02d", (index / 2)) +
                                 ":" + String.format("%02d", (index % 2) * 30) + " : " +
-                                DanaRPlugin.getDanaRPump().pumpProfiles[profile][index]);
+                                pump.pumpProfiles[profile][index]);
                     }
                 }
             }
