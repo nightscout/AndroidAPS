@@ -195,7 +195,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screen_width = dm.widthPixels;
-        smallWidth = screen_width < 320;
+        smallWidth = screen_width < Constants.SMALL_WIDTH;
 
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
 
