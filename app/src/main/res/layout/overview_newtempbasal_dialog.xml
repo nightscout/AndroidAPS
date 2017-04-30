@@ -1,193 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
+    tools:context="info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="horizontal">
-
-        <RadioGroup
-            android:id="@+id/overview_newtempbasal_radiogroup"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/overview_newtempbasal_percent_radio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="20dp"
-                android:checked="true"
-                android:text="@string/overview_newtempbasal_percent_label" />
-
-            <RadioButton
-                android:id="@+id/overview_newtempbasal_absolute_radio"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:text="U/h" />
-        </RadioGroup>
-
-    </LinearLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="@string/overview_newtempbasal_basal_label"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <LinearLayout
-            android:id="@+id/overview_newtempbasal_percent_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-
-
-            <ImageView
-                android:id="@+id/overview_newtempbasal_basalpercent_minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/circle"
-                android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_minus"
-                android:tint="#ffffff"
-                android:layout_weight="0.5" />
-
-            <EditText
-                android:id="@+id/overview_newtempbasal_basalpercentinput"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.5"
-                android:inputType="numberDecimal"
-                android:minWidth="100dp"
-                android:padding="10dp"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:gravity="center_horizontal" />
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/overview_newtempbasal_basalpercent_plus"
+                <RadioGroup
+                    android:id="@+id/overview_newtempbasal_radiogroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/overview_newtempbasal_percent_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:checked="true"
+                        android:text="@string/overview_newtempbasal_percent_label" />
+
+                    <RadioButton
+                        android:id="@+id/overview_newtempbasal_absolute_radio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:text="U/h" />
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="@string/overview_newtempbasal_basal_label"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                <LinearLayout
+                    android:id="@+id/overview_newtempbasal_percent_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/overview_newtempbasal_basalpercent_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff"
+                        android:layout_weight="0.5" />
+
+                    <EditText
+                        android:id="@+id/overview_newtempbasal_basalpercentinput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="0.5"
+                        android:inputType="numberDecimal"
+                        android:minWidth="100dp"
+                        android:padding="10dp"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:gravity="center_horizontal" />
+
+                    <ImageView
+                        android:id="@+id/overview_newtempbasal_basalpercent_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff"
+                        android:layout_weight="0.5" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/overview_newtempbasal_absolute_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center_horizontal">
+
+
+                    <ImageView
+                        android:id="@+id/overview_newtempbasal_basalabsolute_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff"
+                        android:layout_weight="0.5" />
+
+                    <EditText
+                        android:id="@+id/overview_newtempbasal_basalabsoluteinput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="0.5"
+                        android:inputType="numberDecimal"
+                        android:minWidth="100dp"
+                        android:padding="10dp"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:gravity="center_horizontal" />
+
+                    <ImageView
+                        android:id="@+id/overview_newtempbasal_basalabsolute_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff"
+                        android:layout_weight="0.5" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/circle"
-                android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_add"
-                android:tint="#ffffff"
-                android:layout_weight="0.5" />
+                android:layout_gravity="center_horizontal">
+
+                <RadioButton
+                    android:id="@+id/overview_newtempbasal_05h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="0.5 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newtempbasal_1h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newtempbasal_2h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newtempbasal_3h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newtempbasal_4h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 h" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/overview_newtempbasal_okbutton"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="OK"
+                android:textSize="20sp" />
 
 
         </LinearLayout>
-
-       <LinearLayout
-            android:id="@+id/overview_newtempbasal_absolute_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_gravity="center_horizontal">
-
-
-            <ImageView
-                android:id="@+id/overview_newtempbasal_basalabsolute_minus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/circle"
-                android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_minus"
-                android:tint="#ffffff"
-                android:layout_weight="0.5" />
-
-            <EditText
-                android:id="@+id/overview_newtempbasal_basalabsoluteinput"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_weight="0.5"
-                android:inputType="numberDecimal"
-                android:minWidth="100dp"
-                android:padding="10dp"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:gravity="center_horizontal" />
-
-            <ImageView
-                android:id="@+id/overview_newtempbasal_basalabsolute_plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/circle"
-                android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_add"
-                android:tint="#ffffff"
-                android:layout_weight="0.5" />
-
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-        <RadioButton
-            android:id="@+id/overview_newtempbasal_05h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="0.5 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newtempbasal_1h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newtempbasal_2h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newtempbasal_3h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newtempbasal_4h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4 h" />
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/overview_newtempbasal_okbutton"
-        style="?android:attr/buttonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="OK"
-        android:textSize="20sp" />
-
-
-</LinearLayout>
+    </ScrollView>
+</FrameLayout>
