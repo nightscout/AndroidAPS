@@ -352,11 +352,22 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return iobTotal;
     }
 
+    private static Long findPreviousTimeFromBucketedData(long time) {
+        for (int index = 0; index < bucketed_data.size(); index++) {
+            if (bucketed_data.get(index).timeIndex < time)
+                return bucketed_data.get(index).timeIndex;
+        }
+        return null;
+    }
+
     public static AutosensData getAutosensData(long time) {
         long now = new Date().getTime();
         if (time > now)
             return null;
-        time = roundUpTime(time);
+        Long previous = findPreviousTimeFromBucketedData(time);
+        if (previous == null)
+            return null;
+        time = roundUpTime(previous);
         AutosensData data = autosensDataTable.get(time);
         if (data != null) {
             //log.debug(">>> Cache hit " + data.log(time));
