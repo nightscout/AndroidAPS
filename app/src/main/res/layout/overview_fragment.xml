@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="0.1"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Open Loop"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="5dp"
-                    android:layout_weight="0.5"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="Profile"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -55,7 +55,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_weight="0.2"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="TempTarget"
                     android:textAppearance="?android:attr/textAppearanceSmall"
