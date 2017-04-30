@@ -32,13 +32,9 @@
                     android:id="@+id/overview_apsmode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0.1"
-                    android:background="@drawable/loopmodeborder"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:text="Open Loop"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -48,29 +44,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0.5"
-                    android:background="@drawable/pillborder"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:text="Profile"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/colorProfileSwitchButton" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <TextView
                     android:id="@+id/overview_temptarget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="0.2"
-                    android:background="@drawable/temptargetborder"
+                    android:layout_weight="1"
                     android:gravity="center_vertical|center_horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:text="TempTarget"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="@color/mdtp_white" />
 
             </LinearLayout>
@@ -86,9 +74,8 @@
                     android:id="@+id/overview_pumpstatus"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@drawable/initializingborder"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/initializing"
                     android:textAppearance="?android:attr/textAppearanceMedium" />
