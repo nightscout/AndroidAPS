@@ -10,6 +10,10 @@
     <color name="listdelimiter">#505050</color>
     <color name="tabBgColor">#f0003f59</color>
 
+    <color name="tempTargetBackground">#77dd77</color>
+    <color name="tempTargetDisabledBackground">#303F9F</color>
+
+
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
