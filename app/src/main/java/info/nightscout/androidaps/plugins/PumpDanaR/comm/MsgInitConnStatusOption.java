@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 /**
  * Created by mike on 28.05.2016.
@@ -28,9 +28,9 @@ public class MsgInitConnStatusOption extends MessageBase {
         int lowReservoirAlarmBoundary = intFromBuff(bytes, 7, 1);
         //int none = intFromBuff(bytes, 8, 1);
         if (bytes.length >= 21) {
-            DanaRPlugin.getDanaRPump().password = intFromBuff(bytes, 9, 2) ^ 0x3463;
+            DanaRPump.getInstance().password = intFromBuff(bytes, 9, 2) ^ 0x3463;
             if (Config.logDanaMessageDetail)
-                log.debug("Pump password: " + DanaRPlugin.getDanaRPump().password);
+                log.debug("Pump password: " + DanaRPump.getInstance().password);
         }
     }
 

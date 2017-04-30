@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpDanaR.Services;
+package info.nightscout.androidaps.plugins.PumpDanaR.services;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
@@ -83,8 +83,8 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
-public class ExecutionService extends Service {
-    private static Logger log = LoggerFactory.getLogger(ExecutionService.class);
+public class DanaRExecutionService extends Service {
+    private static Logger log = LoggerFactory.getLogger(DanaRExecutionService.class);
 
     private String devName;
 
@@ -120,18 +120,18 @@ public class ExecutionService extends Service {
         }
     };
 
-    public ExecutionService() {
+    public DanaRExecutionService() {
         registerBus();
         MainApp.instance().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
         danaRPump = DanaRPlugin.getDanaRPump();
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "ExecutionService");
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "DanaRExecutionService");
     }
 
     public class LocalBinder extends Binder {
-        public ExecutionService getServiceInstance() {
-            return ExecutionService.this;
+        public DanaRExecutionService getServiceInstance() {
+            return DanaRExecutionService.this;
         }
     }
 

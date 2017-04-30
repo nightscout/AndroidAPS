@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 
@@ -16,7 +15,7 @@ public class MsgStatusBasic extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPump pump = DanaRPlugin.getDanaRPump();
+        DanaRPump pump = DanaRPump.getInstance();
 
         pump.pumpSuspended = intFromBuff(bytes, 0, 1) == 1;
         pump.calculatorEnabled = intFromBuff(bytes, 1, 1) == 1;
