@@ -4,8 +4,6 @@ package info.nightscout.androidaps;
  * Created by mike on 07.06.2016.
  */
 public class Config {
-    public static final boolean CACHECALCULATIONS = true;
-
     // MAIN FUCTIONALITY
     public static final boolean APS = BuildConfig.APS;
     // PLUGINS

@@ -27,6 +27,7 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.Round;
@@ -324,13 +325,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 log.debug(autosensData.log(bgTime));
             }
         }
+        MainApp.bus().post(new EventAutosensCalculationFinished());
         //log.debug("Releasing calculateSensitivityData");
     }
 
     public static IobTotal calulateFromTreatmentsAndTemps(long time) {
         long now = new Date().getTime();
         time = roundUpTime(time);
-        if (Config.CACHECALCULATIONS && time < now && iobTable.get(time) != null) {
+        if (time < now && iobTable.get(time) != null) {
             //log.debug(">>> Cache hit");
             return iobTable.get(time);
         } else {
@@ -344,7 +346,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
 */
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
-        if (Config.CACHECALCULATIONS && time < new Date().getTime()) {
+        if (time < new Date().getTime()) {
             iobTable.put(time, iobTotal);
         }
         return iobTotal;
@@ -356,11 +358,11 @@ public class IobCobCalculatorPlugin implements PluginBase {
             return null;
         time = roundUpTime(time);
         AutosensData data = autosensDataTable.get(time);
-        if (Config.CACHECALCULATIONS && data != null) {
-            log.debug(">>> Cache hit " + data.log(time));
+        if (data != null) {
+            //log.debug(">>> Cache hit " + data.log(time));
             return data;
         } else {
-            log.debug(">>> Cache miss " + new Date(time).toLocaleString());
+            //log.debug(">>> Cache miss " + new Date(time).toLocaleString());
             return null;
         }
     }
@@ -541,6 +543,12 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 }
             }
         }
+        sHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                calculateSensitivityData();
+            }
+        });
         //log.debug("Releasing onNewHistoryData");
     }
 

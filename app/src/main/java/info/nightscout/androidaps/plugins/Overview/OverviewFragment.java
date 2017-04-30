@@ -89,6 +89,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -699,6 +700,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
+        scheduleUpdateGUI("EventRefreshGui");
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventAutosensCalculationFinished ev) {
         scheduleUpdateGUI("EventRefreshGui");
     }
 

@@ -29,6 +29,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -43,7 +44,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION = 6;
 
-    private long latestTreatmentChange = 0;
+    private static Long latestTreatmentChange = null;
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledPost = null;
@@ -131,7 +132,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
-            latestTreatmentChange = 0;
+            latestTreatmentChange = 0L;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -141,7 +142,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
-            latestTreatmentChange = 0;
+            latestTreatmentChange = 0L;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -211,7 +212,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public int  delete(DbRequest dbr) {
+    public int delete(DbRequest dbr) {
         try {
             return getDaoDbRequest().delete(dbr);
         } catch (SQLException e) {
@@ -259,16 +260,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // TREATMENT HANDLING
 
-    public boolean isDataUnchanged(long time) {
-        if (time >= latestTreatmentChange) return true;
-        else return false;
+    public boolean affectingIobCob(Treatment t) {
+        Treatment existing = findTreatmentByTimeIndex(t.timeIndex);
+        if (existing == null)
+            return true;
+        if (existing.insulin == t.insulin && existing.carbs == t.carbs)
+            return false;
+        return true;
     }
 
     public int update(Treatment treatment) {
         int updated = 0;
         try {
+            boolean historyChange = affectingIobCob(treatment);
             updated = getDaoTreatments().update(treatment);
-            latestTreatmentChange = treatment.getTimeIndex();
+            if (historyChange)
+                latestTreatmentChange = treatment.getTimeIndex();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -279,8 +286,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public Dao.CreateOrUpdateStatus createOrUpdate(Treatment treatment) {
         Dao.CreateOrUpdateStatus status = null;
         try {
+            boolean historyChange = affectingIobCob(treatment);
             status = getDaoTreatments().createOrUpdate(treatment);
-            latestTreatmentChange = treatment.getTimeIndex();
+            if (historyChange)
+                latestTreatmentChange = treatment.getTimeIndex();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -379,6 +388,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 MainApp.bus().post(new EventTreatmentChange());
+                if (latestTreatmentChange != null)
+                    MainApp.bus().post(new EventNewHistoryData(latestTreatmentChange));
+                latestTreatmentChange = null;
                 scheduledPost = null;
             }
         }
