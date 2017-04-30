@@ -105,7 +105,7 @@
                     android:layout_marginTop="-15dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="-5dp"
-                    android:paddingRight="-10dp"
+                    android:paddingRight="-5dp"
                     android:text="→"
                     android:textSize="70dp"
                     android:textStyle="bold" />

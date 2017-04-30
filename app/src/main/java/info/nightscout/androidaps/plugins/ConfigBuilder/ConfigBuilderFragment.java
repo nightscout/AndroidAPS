@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.crashlytics.android.answers.CustomEvent;
 
 import java.util.ArrayList;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -78,12 +80,20 @@ public class ConfigBuilderFragment extends Fragment {
     PluginCustomAdapter constraintsDataAdapter = null;
     PluginCustomAdapter generalDataAdapter = null;
 
+    boolean smallWidth;
+
     // TODO: sorting
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.configbuilder_fragment, container, false);
+
+        //check screen width
+        final DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screen_width = dm.widthPixels;
+        smallWidth = screen_width < Constants.SMALL_WIDTH;
 
         insulinListView = (ListView) view.findViewById(R.id.configbuilder_insulinlistview);
         bgsourceListView = (ListView) view.findViewById(R.id.configbuilder_bgsourcelistview);
@@ -134,44 +144,44 @@ public class ConfigBuilderFragment extends Fragment {
     }
 
     void setViews() {
-        insulinDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginBase.INSULIN), PluginBase.INSULIN);
+        insulinDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(InsulinInterface.class, PluginBase.INSULIN), PluginBase.INSULIN);
         insulinListView.setAdapter(insulinDataAdapter);
         setListViewHeightBasedOnChildren(insulinListView);
-        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginBase.BGSOURCE), PluginBase.BGSOURCE);
+        bgsourceDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginBase.BGSOURCE), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
         setListViewHeightBasedOnChildren(bgsourceListView);
-        pumpDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP), PluginBase.PUMP);
+        pumpDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP), PluginBase.PUMP);
         pumpListView.setAdapter(pumpDataAdapter);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP).size() == 0)
             pumpLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(pumpListView);
-        loopDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP), PluginBase.LOOP);
+        loopDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP), PluginBase.LOOP);
         loopListView.setAdapter(loopDataAdapter);
         setListViewHeightBasedOnChildren(loopListView);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP).size() == 0)
             loopLabel.setVisibility(View.GONE);
-        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT), PluginBase.TREATMENT);
+        treatmentsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT), PluginBase.TREATMENT);
         treatmentsListView.setAdapter(treatmentsDataAdapter);
         setListViewHeightBasedOnChildren(treatmentsListView);
-        tempsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
+        tempsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
         tempsListView.setAdapter(tempsDataAdapter);
         setListViewHeightBasedOnChildren(tempsListView);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.TEMPBASAL).size() == 0)
             tempsLabel.setVisibility(View.GONE);
-        profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginBase.BGSOURCE), PluginBase.PROFILE);
+        profileDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginBase.BGSOURCE), PluginBase.PROFILE);
         profileListView.setAdapter(profileDataAdapter);
         setListViewHeightBasedOnChildren(profileListView);
-        apsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.APS), PluginBase.APS);
+        apsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.APS), PluginBase.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.APS).size() == 0)
             apsLabel.setVisibility(View.GONE);
-        constraintsDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginBase.BGSOURCE), PluginBase.CONSTRAINTS);
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginBase.BGSOURCE), PluginBase.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.CONSTRAINTS).size() == 0)
             constraintsLabel.setVisibility(View.GONE);
-        generalDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.GENERAL), PluginBase.GENERAL);
+        generalDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.GENERAL), PluginBase.GENERAL);
         generalListView.setAdapter(generalDataAdapter);
         setListViewHeightBasedOnChildren(generalListView);
 
@@ -206,7 +216,7 @@ public class ConfigBuilderFragment extends Fragment {
             PluginViewHolder holder = null;
 
             if (view == null) {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.configbuilder_simpleitem, null);
+                view = LayoutInflater.from(parent.getContext()).inflate(smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, null);
 
                 holder = new PluginViewHolder();
                 holder.name = (TextView) view.findViewById(R.id.configbuilder_simpleitem_name);
