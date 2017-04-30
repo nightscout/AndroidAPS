@@ -128,4 +128,11 @@
         android:title="Prime in Menu"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="singletarget"
+        android:summary="Single temp-target instead of a range."
+        android:title="Single Target"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
 </PreferenceScreen>
