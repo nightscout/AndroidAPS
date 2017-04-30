@@ -18,6 +18,8 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -165,6 +167,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     Button acceptTempButton;
     Button quickWizardButton;
 
+    boolean smallWidth;
+
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
 
@@ -187,10 +191,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //check screen width
+        final DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screen_width = dm.widthPixels;
+        smallWidth = screen_width < 320;
+
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
 
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         arrowView = (TextView) view.findViewById(R.id.overview_arrow);
+        if(smallWidth){
+            arrowView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35);
+        }
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
