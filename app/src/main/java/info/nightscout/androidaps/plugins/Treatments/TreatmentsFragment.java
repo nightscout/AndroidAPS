@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -35,13 +37,13 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.FragmentBase;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
 
-public class TreatmentsFragment extends Fragment implements View.OnClickListener, FragmentBase {
+public class TreatmentsFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
     private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();
@@ -79,12 +81,13 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
                 return;
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            if (profile == null)
+            InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+            if (profile == null || insulinInterface == null)
                 return;
             holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).created_at));
             holder.insulin.setText(DecimalFormatter.to2Decimal(treatments.get(position).insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(treatments.get(position).carbs) + " g");
-            Iob iob = treatments.get(position).iobCalc(new Date(), profile.getDia());
+            Iob iob = insulinInterface.iobCalc(treatments.get(position), new Date().getTime(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(treatments.get(position).mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
@@ -149,6 +152,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                                 MainApp.getDbHelper().delete(treatment);
                                 treatmentsPlugin.initializeData();
                                 updateGUI();
+                                Answers.getInstance().logCustom(new CustomEvent("RefreshTreatments"));
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);

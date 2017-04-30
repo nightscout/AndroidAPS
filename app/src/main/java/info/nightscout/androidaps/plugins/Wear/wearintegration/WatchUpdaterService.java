@@ -28,12 +28,14 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -66,6 +68,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     boolean wear_integration = false;
     SharedPreferences mPrefs;
+    private static boolean lastLoopStatus;
 
     @Override
     public void onCreate() {
@@ -503,6 +506,15 @@ public class WatchUpdaterService extends WearableListenerService implements
             String status = "";
             boolean shortString = true;
 
+            LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+
+            if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
+                status += getString(R.string.disabledloop) + "\n";
+                lastLoopStatus = false;
+            } else if (activeloop != null && activeloop.isEnabled(PluginBase.LOOP)) {
+                lastLoopStatus = true;
+            }
+
             //Temp basal
             PumpInterface pump = MainApp.getConfigBuilder();
 
@@ -520,9 +532,13 @@ public class WatchUpdaterService extends WearableListenerService implements
             IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
             MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
             IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-            status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "("
-                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+
+            if (mPrefs.getBoolean("wear_detailediob", true)) {
+                status += "("
+                        + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
+                        + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            }
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
@@ -549,6 +565,10 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
+
+    public static boolean shouldReportLoopStatus(boolean enabled){
+        return (lastLoopStatus != enabled);
     }
 
     public static int getBatteryLevel(Context context) {

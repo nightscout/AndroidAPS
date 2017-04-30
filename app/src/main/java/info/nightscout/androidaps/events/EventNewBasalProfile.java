@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.events;
 
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 
 /**
  * Created by mike on 04.06.2016.

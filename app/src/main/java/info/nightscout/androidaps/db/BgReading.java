@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
-import info.nightscout.client.data.NSSgv;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
@@ -47,7 +47,7 @@ public class BgReading implements DataPointInterface {
     public BgReading(NSSgv sgv) {
         timeIndex = sgv.getMills();
         value = sgv.getMgdl();
-        raw = sgv.getFiltered();
+        raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
         direction = sgv.getDirection();
     }
 

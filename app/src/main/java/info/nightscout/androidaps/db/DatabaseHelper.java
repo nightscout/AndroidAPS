@@ -29,6 +29,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventTreatmentChange;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -39,10 +40,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_TEMPTARGETS = "TempTargets";
     public static final String DATABASE_TREATMENTS = "Treatments";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
+    public static final String DATABASE_DBREQUESTS = "DBRequests";
 
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
-    private long latestTreatmentChange = 0;
+    private static Long latestTreatmentChange = null;
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledPost = null;
@@ -62,6 +64,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
+            TableUtils.createTableIfNotExists(connectionSource, DbRequest.class);
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -77,6 +80,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
             TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
+            TableUtils.dropTable(connectionSource, DbRequest.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             log.error("Can't drop databases", e);
@@ -122,12 +126,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
             TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
+            //DbRequests can be cleared from NSClient fragment
             TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
             TableUtils.createTableIfNotExists(connectionSource, DanaRHistoryRecord.class);
-            latestTreatmentChange = 0;
+            latestTreatmentChange = 0L;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -137,7 +142,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
-            latestTreatmentChange = 0;
+            latestTreatmentChange = 0L;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -172,6 +177,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(DanaRHistoryRecord.class);
     }
 
+    public Dao<DbRequest, String> getDaoDbRequest() throws SQLException {
+        return getDao(DbRequest.class);
+    }
+
+    public long size(String database) {
+        return DatabaseUtils.queryNumEntries(getReadableDatabase(), database);
+    }
+
     public List<BgReading> getBgreadingsDataFromTime(long mills, boolean ascending) {
         try {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
@@ -189,18 +202,80 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<BgReading>();
     }
 
+    // DbRequests handling
+
+    public void create(DbRequest dbr) {
+        try {
+            getDaoDbRequest().create(dbr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public int delete(DbRequest dbr) {
+        try {
+            return getDaoDbRequest().delete(dbr);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int deleteDbRequest(String nsClientId) {
+        try {
+            return getDaoDbRequest().deleteById(nsClientId);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public int deleteDbRequestbyMongoId(String action, String id) {
+        try {
+            QueryBuilder<DbRequest, String> queryBuilder = getDaoDbRequest().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", id).and().eq("action", action);
+            queryBuilder.limit(10L);
+            PreparedQuery<DbRequest> preparedQuery = queryBuilder.prepare();
+            List<DbRequest> dbList = getDaoDbRequest().query(preparedQuery);
+            if (dbList.size() != 1) {
+                log.error("deleteDbRequestbyMongoId query size: " + dbList.size());
+            } else {
+                //log.debug("Treatment findTreatmentById found: " + trList.get(0).log());
+                return delete(dbList.get(0));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public void deleteAllDbRequests() {
+        try {
+            TableUtils.clearTable(connectionSource, DbRequest.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     // TREATMENT HANDLING
 
-    public boolean isDataUnchanged(long time) {
-        if (time >= latestTreatmentChange) return true;
-        else return false;
+    public boolean affectingIobCob(Treatment t) {
+        Treatment existing = findTreatmentByTimeIndex(t.timeIndex);
+        if (existing == null)
+            return true;
+        if (existing.insulin == t.insulin && existing.carbs == t.carbs)
+            return false;
+        return true;
     }
 
     public int update(Treatment treatment) {
         int updated = 0;
         try {
+            boolean historyChange = affectingIobCob(treatment);
             updated = getDaoTreatments().update(treatment);
-            latestTreatmentChange = treatment.getTimeIndex();
+            if (historyChange)
+                latestTreatmentChange = treatment.getTimeIndex();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -211,8 +286,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public Dao.CreateOrUpdateStatus createOrUpdate(Treatment treatment) {
         Dao.CreateOrUpdateStatus status = null;
         try {
+            boolean historyChange = affectingIobCob(treatment);
             status = getDaoTreatments().createOrUpdate(treatment);
-            latestTreatmentChange = treatment.getTimeIndex();
+            if (historyChange)
+                latestTreatmentChange = treatment.getTimeIndex();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -311,6 +388,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 MainApp.bus().post(new EventTreatmentChange());
+                if (latestTreatmentChange != null)
+                    MainApp.bus().post(new EventNewHistoryData(latestTreatmentChange));
+                latestTreatmentChange = null;
                 scheduledPost = null;
             }
         }

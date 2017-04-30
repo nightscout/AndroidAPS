@@ -43,8 +43,9 @@ android {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1100
-        versionName "1.1g"
+        versionCode 1400
+        version "1.41"
+        buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
     lintOptions {
@@ -57,41 +58,53 @@ android {
         }
     }
     productFlavors {
-        flavorDimensions "standard", "limits",  "wear"
-        adult {
-            dimension "limits"
-            buildConfigField "int", "MAXBOLUS", "17"
-        }
-        teenage {
-            dimension "limits"
-            buildConfigField "int", "MAXBOLUS", "10"
-        }
-        child {
-            dimension "limits"
-            buildConfigField "int", "MAXBOLUS", "5"
-        }
+        flavorDimensions "standard", "wear"
         full {
             dimension "standard"
+            resValue "string", "app_name", "AndroidAPS"
+            versionName version
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/blueowl"
+            ]
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
             buildConfigField "boolean", "CLOSEDLOOP", "true"
-        }
-        pumpcontrol {
-            dimension "standard"
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "true"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
-        }
-        careportal {
-            dimension "standard"
-            buildConfigField "boolean", "APS", "false"
-            buildConfigField "boolean", "PUMPDRIVERS", "false"
-            buildConfigField "boolean", "CLOSEDLOOP", "false"
         }
         openloop {
             dimension "standard"
+            resValue "string", "app_name", "AndroidAPS"
+            versionName version
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/blueowl"
+            ]
             buildConfigField "boolean", "APS", "true"
             buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
+        pumpcontrol {
+            dimension "standard"
+            resValue "string", "app_name", "AndroidAPS"
+            versionName version
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/blueowl"
+            ]
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "true"
+            buildConfigField "boolean", "NSCLIENTOLNY", "false"
+            buildConfigField "boolean", "CLOSEDLOOP", "false"
+        }
+        nsclient {
+            dimension "standard"
+            resValue "string", "app_name", "NSClient"
+            versionName version + "-nsclient"
+            manifestPlaceholders = [
+                    appIcon: "@mipmap/yellowowl"
+            ]
+            buildConfigField "boolean", "APS", "false"
+            buildConfigField "boolean", "PUMPDRIVERS", "false"
+            buildConfigField "boolean", "NSCLIENTOLNY", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
         }
         wear {
@@ -127,7 +140,10 @@ dependencies {
     wearcontrolWearApp project(path: ':wear', configuration: 'fullRelease')
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile('com.crashlytics.sdk.android:crashlytics:2.5.7@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+        transitive = true;
+    }
+    compile('com.crashlytics.sdk.android:answers:1.3.12@aar') {
         transitive = true;
     }
 
@@ -152,10 +168,16 @@ dependencies {
     compile 'com.google.android.gms:play-services-wearable:7.5.0'
     compile 'junit:junit:4.12'
     testCompile 'org.json:json:20140107'
-    testCompile 'org.mockito:mockito-core:2.+'
-    androidTestCompile 'org.mockito:mockito-core:2.+'
-    androidTestCompile "com.google.dexmaker:dexmaker:1.2"
-    androidTestCompile "com.google.dexmaker:dexmaker-mockito:1.2"
-    compile(name:'android-edittext-validator-v1.3.4-mod', ext:'aar')
+    testCompile 'org.mockito:mockito-core:2.7.22'
+    androidTestCompile 'org.mockito:mockito-core:2.7.22'
+    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
+    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    compile(name: 'android-edittext-validator-v1.3.4-mod', ext: 'aar')
+    compile('io.socket:socket.io-client:0.8.3') {
+        // excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
+    compile 'com.google.code.gson:gson:2.7'
+    compile 'com.google.guava:guava:20.0'
 
 }

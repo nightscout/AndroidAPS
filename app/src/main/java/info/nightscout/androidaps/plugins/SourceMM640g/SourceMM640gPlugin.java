@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
  * Created by mike on 05.08.2016.
  */
 public class SourceMM640gPlugin implements PluginBase, BgSourceInterface {
-    boolean fragmentEnabled = true;
+    boolean fragmentEnabled = false;
 
     @Override
     public String getFragmentClass() {
@@ -45,6 +45,16 @@ public class SourceMM640gPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean canBeHidden(int type) {
+        return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return false;
+    }
+
+    @Override
+    public boolean showInList(int type) {
         return true;
     }
 

@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,6 +22,7 @@
             </android.support.v7.widget.RecyclerView>
 
             <LinearLayout
+                android:id="@+id/overview_looplayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -32,13 +34,13 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="0.1"
                     android:background="@drawable/loopmodeborder"
                     android:gravity="center_vertical|center_horizontal"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="Open Loop"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_weight="0.1" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
 
                 <TextView
@@ -62,38 +64,41 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginRight="10dp"
+                    android:layout_weight="0.2"
                     android:background="@drawable/temptargetborder"
                     android:gravity="center_vertical|center_horizontal"
-                    android:text="TempTarget"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
+                    android:text="TempTarget"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/mdtp_white"
-                    android:layout_weight="0.2" />
+                    android:textColor="@color/mdtp_white" />
+
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/overview_pumpstatuslayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
                 android:paddingTop="2dp">
 
                 <TextView
-                    android:id="@+id/overview_initializing"
+                    android:id="@+id/overview_pumpstatus"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:background="@drawable/initializingborder"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/initializing"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:layout_marginTop="10dp" />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/overview_bg"
@@ -126,20 +131,45 @@
                     android:gravity="top"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/overview_timeago"
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
+                        android:layout_height="match_parent"
                         android:layout_weight="0.5"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/overview_delta"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.5"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/overview_timeago"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="0.5"
+                                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                            <TextView
+                                android:id="@+id/overview_delta"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="10dp"
+                                android:layout_weight="0.5"
+                                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        </LinearLayout>
+
+                        <ImageButton
+                            android:id="@+id/overview_menuButton"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="5dp"
+                            android:layout_weight="0.5"
+                            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/overview_avgdelta"
@@ -188,22 +218,111 @@
                 android:layout_gravity="center_horizontal"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                <com.jjoe64.graphview.GraphView
-                    android:id="@+id/overview_bggraph"
-                    android:layout_width="match_parent"
-                    android:layout_height="160dip" />
-
-                <CheckBox
-                    android:id="@+id/overview_showprediction"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentTop="true" />
-            </RelativeLayout>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/overview_bggraph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="160dip" />
+
+                    <RelativeLayout
+                        android:id="@+id/overview_iobgraphlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <com.jjoe64.graphview.GraphView
+                            android:id="@+id/overview_iobgraph"
+                            android:layout_width="wrap_content"
+                            android:layout_height="80dip" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/predictionshortlabel"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/prediction"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showprediction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/prediction" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/basalshortlabel"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/basal"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showbasals"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/basal" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/iob"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/iob"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showiob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/iob" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/cob"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/cob"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showcob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp"
+                        app:buttonTint="@color/cob" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/overview_accepttemplayout"
@@ -232,7 +351,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_canceltemp"
+                    android:id="@+id/overview_canceltempbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -252,7 +371,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_treatment"
+                    android:id="@+id/overview_treatmentbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -265,7 +384,7 @@
                     android:textColor="@color/colorTreatmentButton" />
 
                 <Button
-                    android:id="@+id/overview_wizard"
+                    android:id="@+id/overview_wizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -278,7 +397,7 @@
                     android:textColor="@color/colorWizardButton" />
 
                 <Button
-                    android:id="@+id/overview_calibration"
+                    android:id="@+id/overview_calibrationbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -297,7 +416,7 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/overview_quickwizard"
+                    android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"

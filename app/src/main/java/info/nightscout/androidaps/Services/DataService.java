@@ -32,25 +32,28 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.DanaR.History.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.NSProfile.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.Objectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
+import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.androidaps.receivers.DataReceiver;
-import info.nightscout.client.data.NSProfile;
-import info.nightscout.client.data.NSSgv;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 
 
 public class DataService extends IntentService {
@@ -59,6 +62,7 @@ public class DataService extends IntentService {
     boolean xDripEnabled = false;
     boolean nsClientEnabled = true;
     boolean mm640gEnabled = false;
+    boolean glimpEnabled = false;
 
     public DataService() {
         super("DataService");
@@ -74,14 +78,22 @@ public class DataService extends IntentService {
             xDripEnabled = true;
             nsClientEnabled = false;
             mm640gEnabled = false;
+            glimpEnabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceNSClientPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = true;
             mm640gEnabled = false;
+            glimpEnabled = false;
         } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceMM640gPlugin.class)) {
             xDripEnabled = false;
             nsClientEnabled = false;
             mm640gEnabled = true;
+            glimpEnabled = false;
+        } else if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceGlimpPlugin.class)) {
+            xDripEnabled = false;
+            nsClientEnabled = false;
+            mm640gEnabled = false;
+            glimpEnabled = true;
         }
 
         boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfilePlugin.class);
@@ -98,6 +110,10 @@ public class DataService extends IntentService {
             } else if (Intents.NS_EMULATOR.equals(action)) {
                 if (mm640gEnabled) {
                     handleNewDataFromMM640g(intent);
+                }
+            } else if (Intents.GLIMP_BG.equals(action)) {
+                if (glimpEnabled) {
+                    handleNewDataFromGlimp(intent);
                 }
             } else if (Intents.ACTION_NEW_SGV.equals(action)) {
                 // always handle SGV if NS-Client is the source
@@ -176,6 +192,30 @@ public class DataService extends IntentService {
 
         if (Config.logIncommingBG)
             log.debug("XDRIPREC BG " + bgReading.toString());
+
+        try {
+            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        MainApp.bus().post(new EventNewBG());
+    }
+
+    private void handleNewDataFromGlimp(Intent intent) {
+        Bundle bundle = intent.getExtras();
+        if (bundle == null) return;
+
+        BgReading bgReading = new BgReading();
+
+        bgReading.value = bundle.getDouble("mySGV");
+        bgReading.direction = bundle.getString("myTrend");
+        bgReading.battery_level = bundle.getInt("myBatLvl");
+        bgReading.timeIndex = bundle.getLong("myTimestamp");
+        bgReading.raw = 0;
+
+        if (Config.logIncommingBG)
+            log.debug(bundle.toString());
+            log.debug("GLIMP BG " + bgReading.toString());
 
         try {
             MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
@@ -482,7 +522,9 @@ public class DataService extends IntentService {
         } else {
             if (Config.logIncommingData)
                 log.debug("ADD: New treatment: " + trstring);
-            Treatment treatment = new Treatment();
+            InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+            if (insulinInterface == null) insulinInterface = InsulinFastactingFragment.getPlugin();
+            Treatment treatment = new Treatment(insulinInterface);
             treatment._id = _id;
             treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
@@ -537,7 +579,9 @@ public class DataService extends IntentService {
 
         if (Config.logIncommingData)
             log.debug("CHANGE: Adding new treatment: " + trstring);
-        Treatment treatment = new Treatment();
+        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+        if (insulinInterface == null) insulinInterface = InsulinFastactingFragment.getPlugin();
+        Treatment treatment = new Treatment(insulinInterface);
         treatment._id = _id;
         treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
         treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;

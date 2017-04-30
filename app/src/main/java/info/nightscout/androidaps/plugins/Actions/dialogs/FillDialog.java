@@ -18,6 +18,9 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
@@ -28,6 +31,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.PlusMinusEditText;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 public class FillDialog extends DialogFragment implements OnClickListener {
@@ -72,10 +76,9 @@ public class FillDialog extends DialogFragment implements OnClickListener {
         Button button3 = (Button) view.findViewById(R.id.fill_preset_button3);
         View divider = view.findViewById(R.id.fill_preset_divider);
 
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        amount1 = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button1", "0.3"))));
-        amount2 = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button2", "0"))));
-        amount3 = SafeParse.stringToDouble(DecimalFormatter.to2Decimal(SafeParse.stringToDouble(sp.getString("fill_button3", "0"))));
+        amount1 = SP.getDouble("fill_button1", 0.3);
+        amount2 = SP.getDouble("fill_button2", 0d);
+        amount3 = SP.getDouble("fill_button3", 0d);
 
         if(amount1 >0) {
             button1.setVisibility(View.VISIBLE);
@@ -156,7 +159,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, 0, context, false);
+                                PumpEnactResult result = pump.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), finalInsulinAfterConstraints, 0, context, false);
                                 if (!result.success) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                     builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
@@ -166,6 +169,7 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                                 }
                             }
                         });
+                        Answers.getInstance().logCustom(new CustomEvent("Fill"));
                     }
                 }
             });

@@ -14,7 +14,10 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.SEND_MMS" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+    <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <!-- To receive data from xdrip. -->
     <uses-permission android:name="com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE" />
@@ -22,26 +25,30 @@
     <application
         android:name=".MainApp"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="${appIcon}"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".PreferencesActivity" />
-        <activity android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity" android:theme="@style/Theme.AppCompat.Translucent" />
+        <activity
+            android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
+            android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
-        <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.DanaRKorean.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.DanaR.History.DanaRStatsActivity" />
-        <activity android:name=".plugins.DanaRKorean.History.DanaRStatsActivity" />
+        <activity android:name=".plugins.PumpDanaR.History.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaR.History.DanaRStatsActivity" />
+        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -68,36 +75,70 @@
                 <action android:name="com.eveningoutpost.dexdrip.BgEstimate" />
                 <!-- Receiver from 640g uploader -->
                 <action android:name="com.eveningoutpost.dexdrip.NS_EMULATOR" />
-                <!-- Auto start -->
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- Receiver from glimp -->
+                <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
             </intent-filter>
         </receiver>
 
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
+        <!-- Auto start -->
+        <receiver
+            android:name=".plugins.NSClientInternal.receivers.AutoStartReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- NSClient -->
+        <receiver
+            android:name=".plugins.NSClientInternal.receivers.RestartReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="info.nightscout.client.RESTART" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".plugins.NSClientInternal.receivers.DBAccessReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="info.nightscout.client.DBACCESS" />
+            </intent-filter>
+        </receiver>
+
         <!-- Service processing incomming data -->
         <service
             android:name=".Services.DataService"
             android:exported="false" />
-        <!-- Service showing alert on screen -->
-
         <service
-            android:name=".plugins.DanaR.Services.ExecutionService"
+            android:name=".plugins.PumpDanaR.Services.ExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.DanaRKorean.Services.ExecutionService"
+            android:name=".plugins.PumpDanaRKorean.Services.ExecutionService"
             android:enabled="true"
             android:exported="false" />
-
-        <service android:name=".plugins.Wear.wearintegration.WatchUpdaterService" android:exported="true" >
-            <intent-filter> <action android:name="com.google.android.gms.wearable.BIND_LISTENER" /> </intent-filter>
+        <service
+            android:name=".plugins.Wear.wearintegration.WatchUpdaterService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
+            </intent-filter>
         </service>
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
+
+        <service
+            android:name=".plugins.NSClientInternal.services.NSClientService"
+            android:enabled="true"
+            android:exported="true" />
 
     </application>
 

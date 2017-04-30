@@ -17,6 +17,9 @@
         android:id="@+id/nav_show_logcat"
         android:title="@string/nav_show_logcat" />
     <item
+        android:id="@+id/nav_about"
+        android:title="@string/nav_about" />
+    <item
         android:id="@+id/nav_exit"
         android:title="@string/nav_exit" />
 </menu>

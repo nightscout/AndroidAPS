@@ -11,11 +11,13 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -44,10 +46,32 @@ public class Treatment implements DataPointWithLabelInterface {
     public Double insulin = 0d;
 
     @DatabaseField
+    public int insulinType = InsulinInterface.FASTACTINGINSULIN;
+
+    @DatabaseField
+    public double dia = Constants.defaultDIA;
+
+    @DatabaseField
     public Double carbs = 0d;
 
     @DatabaseField
     public boolean mealBolus = true; // true for meal bolus , false for correction bolus
+
+    public Treatment() {
+        InsulinInterface insulin = MainApp.getConfigBuilder().getActiveInsulin();
+        if (insulin != null) {
+            insulinType = insulin.getId();
+            dia = insulin.getDia();
+        } else {
+            insulinType = InsulinInterface.FASTACTINGINSULIN;
+            dia = Constants.defaultDIA;
+        }
+    }
+
+    public Treatment(InsulinInterface insulin) {
+        insulinType = insulin.getId();
+        dia = insulin.getDia();
+    }
 
     public void copyFrom(Treatment t) {
         this._id = t._id;
@@ -55,32 +79,6 @@ public class Treatment implements DataPointWithLabelInterface {
         this.insulin = t.insulin;
         this.carbs = t.carbs;
         this.mealBolus = t.mealBolus;
-    }
-
-    public Iob iobCalc(Date time, Double dia) {
-        Iob result = new Iob();
-
-        Double scaleFactor = 3.0 / dia;
-        Double peak = 75d;
-        Double end = 180d;
-
-        if (this.insulin != 0d) {
-            Long bolusTime = this.created_at.getTime();
-            Double minAgo = scaleFactor * (time.getTime() - bolusTime) / 1000d / 60d;
-
-            if (minAgo < peak) {
-                Double x1 = minAgo / 5d + 1;
-                result.iobContrib = this.insulin * (1 - 0.001852 * x1 * x1 + 0.001852 * x1);
-                // units: BG (mg/dL)  = (BG/U) *    U insulin     * scalar
-                result.activityContrib = this.insulin * (2 / dia / 60 / peak) * minAgo;
-
-            } else if (minAgo < end) {
-                Double x2 = (minAgo - 75) / 5;
-                result.iobContrib = this.insulin * (0.001323 * x2 * x2 - 0.054233 * x2 + 0.55556);
-                result.activityContrib = this.insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * 3 - peak));
-            }
-        }
-        return result;
     }
 
     public long getMillisecondsFromStart() {

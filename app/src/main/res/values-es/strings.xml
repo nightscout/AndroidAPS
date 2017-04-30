@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="treatmentssafety_title">Seguridad tratamientos</string>
     <string name="treatmentssafety_maxbolus_title">Máximo Bolo permitido [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Máximos carbohidratos permitidos [g]</string>
@@ -47,10 +46,10 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Ejecutar ahora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_basebasalrate_label">Dosis Basal Base:</string>
-    <string name="virtualpump_tempbasal_label">Basal Temporal:</string>
-    <string name="virtualpump_extendedbolus_label">Bolo extendido:</string>
-    <string name="virtualpump_battery_label">Batería:</string>
+    <string name="virtualpump_basebasalrate_label">Dosis Basal Base</string>
+    <string name="virtualpump_tempbasal_label">Basal Temporal</string>
+    <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
+    <string name="virtualpump_battery_label">Batería</string>
     <string name="virtualpump_reservoir_label">Depósito:</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Error de SQL</string>
@@ -219,9 +218,9 @@
     <string name="nobtadapter">No se encuentra adaptador Bluetooth</string>
     <string name="devicenotfound">El dispositivo seleccionado no se encuentra</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
-    <string name="virtualpump_lastconnection_label">Última conexión:</string>
-    <string name="danar_iob_label">Bomba IOB:</string>
-    <string name="danar_dailyunits">Unidades diarias:</string>
+    <string name="virtualpump_lastconnection_label">Última conexión</string>
+    <string name="danar_iob_label">Bomba IOB</string>
+    <string name="danar_dailyunits">Unidades diarias</string>
     <string name="danar_lastbolus">Último bolo:</string>
     <string name="hoursago">h antes</string>
     <string name="danar_invalidinput">Datos invalidos</string>
@@ -275,7 +274,7 @@
     <string name="danar_history_refill">Rellenar</string>
     <string name="danar_history_syspend">Suspender</string>
     <string formatted="false" name="danar_history_connectingfor">Conexión de %d s</string>
-    <string name="danar_password">Contraseña de la bomba</string>
+    <string name="danar_password_title">Contraseña de la bomba</string>
     <string name="wrongpumppassword">Contraseña de la bomba incorrecta!</string>
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="overview_bolusprogress_delivered">Entregado</string>

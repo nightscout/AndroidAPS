@@ -18,14 +18,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.DanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.DanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
@@ -39,11 +35,11 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
         final PumpInterface pump = MainApp.getConfigBuilder();
         final NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (pump != null && profile != null) {
+        if (pump != null && profile != null && profile.getBasal(NSProfile.secondsFromMidnight()) != null) {
             boolean isBasalOutdated = false;
             boolean isStatusOutdated = false;
 
-            Date lastConnection = pump.lastStatusTime();
+            Date lastConnection = pump.lastDataTime();
             if (lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime())
                 isStatusOutdated = true;
             if (Math.abs(profile.getBasal(NSProfile.secondsFromMidnight()) - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep)
@@ -62,7 +58,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        pump.updateStatus("KeepAlive. Status outdated.");
+                        pump.refreshDataFromPump("KeepAlive. Status outdated.");
                     }
                 });
                 t.start();
@@ -70,7 +66,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
                 Thread t = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        pump.updateStatus("KeepAlive. Basal outdated.");
+                        pump.refreshDataFromPump("KeepAlive. Basal outdated.");
                     }
                 });
                 t.start();

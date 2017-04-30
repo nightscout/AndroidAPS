@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:key="ns_api"
+        android:title="@string/nsclientinternal_title">
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            validate:testType="webUrl"
+            android:defaultValue="https://{YOUR-SITE}.azurewebsites.net/"
+            android:selectAllOnFocus="true"
+            android:inputType="textUri"
+            android:title="@string/nsclientinternal_url_title"
+            android:dialogMessage="@string/nsclientinternal_url_dialogmessage"
+            android:key="@string/key_nsclientinternal_url" />
+        <EditTextPreference
+            android:title="@string/nsclientinternal_secret_title"
+            android:key="@string/key_nsclientinternal_api_secret"
+            android:dialogTitle="@string/nsclientinternal_secret_dialogtitle"
+            android:dialogMessage="@string/nsclientinternal_secret_dialogmessage"
+            android:defaultValue=""
+            android:inputType="textPassword">
+        </EditTextPreference>
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_ns_logappstartedevent"
+            android:title="@string/ns_logappstartedevent" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

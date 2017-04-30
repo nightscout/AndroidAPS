@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="wearplugin"
+        android:title="@string/wear_settings">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="wear_detailediob"
+            android:title="@string/wear_detailedIOB_title"
+            android:summary="@string/wear_detailedIOB_summary"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

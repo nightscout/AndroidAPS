@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="treatmentssafety_title">Tratments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -50,11 +49,11 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
-    <string name="virtualpump_basebasalrate_label">Base basal rate:</string>
-    <string name="virtualpump_tempbasal_label">Temp basal:</string>
-    <string name="virtualpump_extendedbolus_label">Extended bolus:</string>
-    <string name="virtualpump_battery_label">Battery:</string>
-    <string name="virtualpump_reservoir_label">Reservoir:</string>
+    <string name="virtualpump_basebasalrate_label">Base basal rate</string>
+    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="virtualpump_extendedbolus_label">Extended bolus</string>
+    <string name="virtualpump_battery_label">Battery</string>
+    <string name="virtualpump_reservoir_label">Reservoir</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="openapsma_lastrun_label">Last run</string>
@@ -140,6 +139,8 @@
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
     <string name="disabledloop">Loop Disabled</string>
+    <string name="disableloop">Disable loop</string>
+    <string name="enableloop">Enable loop</string>
 
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
@@ -233,9 +234,8 @@
     <string name="nobtadapter">No bluetooth adapter found</string>
     <string name="devicenotfound">Selected device not found</string>
     <string name="connectionerror">Pump connection error</string>
-    <string name="virtualpump_lastconnection_label">Last connection:</string>
-    <string name="danar_iob_label">Pump IOB:</string>
-    <string name="danar_dailyunits">Daily units:</string>
+    <string name="danar_iob_label">Pump IOB</string>
+    <string name="danar_dailyunits">Daily units</string>
     <string name="danar_lastbolus">Last bolus:</string>
     <string name="hoursago">h ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
@@ -294,7 +294,7 @@
     <string name="danar_history_refill">Refill</string>
     <string name="danar_history_syspend">Suspend</string>
     <string name="danar_history_connectingfor" formatted="false">Connecting for %d s</string>
-    <string name="danar_password">Pump password</string>
+    <string name="danar_password_title">Pump password</string>
     <string name="wrongpumppassword">Wrong pump password!</string>
     <string name="pumpbusy">Pump is busy</string>
     <string name="overview_bolusprogress_delivered">Delivered</string>
@@ -328,7 +328,9 @@
     <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
     <string name="openapsma_valueoutofrange" formatted="false">Value %s is out of hard limits</string>
     <string name="smscommunicator_remotebasalnotallowed">Remote basal setting is not allowed</string>
+    <string name="smscommunicator_remotecommandnotallowed">Remote command is not allowed</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">To start basal %.2fU/h reply with code %s</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">To suspend loop for %d minutes reply with code %s</string>
     <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min started successfully</string>
     <string name="smscommunicator_tempbasalfailed">Temp basal start failed</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">To stop temp basal reply with code %s</string>
@@ -455,7 +457,6 @@
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
-    <string name="virtualpump_firmware_label">Firmware:</string>
     <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
@@ -507,4 +508,94 @@
     <string name="settings_password">Password for settings</string>
     <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
+    <string name="nsclientinternal">NSClient internal</string>
+    <string name="nsclientinternal_shortname">NSCI</string>
+    <string name="nsclientinternal_url">URL:</string>
+    <string name="nsclientinternal_autoscroll">Autoscroll</string>
+    <string name="restart">Restart</string>
+    <string name="nsclientinternal_title">Internal NSClient</string>
+    <string name="nsclientinternal_url_title">Nightscout URL</string>
+    <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
+    <string name="nsclientinternal_secret_title">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogmessage">Enter NS API secret (min 12 chars)</string>
+    <string name="nsclientinternal_devicename_title">Device name</string>
+    <string name="nsclientinternal_devicename_dialogtitle">Enter device name</string>
+    <string name="nsclientinternal_devicename_dialogmessage">It will be used for enteredBy field</string>
+    <string name="deliver_now">Deliver now</string>
+    <string name="clear_queue">Clear queue</string>
+    <string name="show_queue">Show queue</string>
+    <string name="queue">Queue:</string>
+    <string name="status">Status:</string>
+    <string name="paused">Paused</string>
+    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
+    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
+    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
+    <string name="key_danar_password" translatable="false">danar_password</string>
+    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
+    <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
+    <string name="clearlog">Clear log</string>
+    <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
+    <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
+    <string name="nowritepermission">NSCLIENT has no write permission. Wrong API secret?</string>
+    <string name="wear_settings">Wear settings</string>
+    <string name="wear_detailedIOB_title">Show detailed IOB</string>
+    <string name="wear_detailedIOB_summary">Break down IOB into bolus and basal IOB on the watchface</string>
+    <string name="nosuccess">not successful - please check phone</string>
+    <string name="notavailable">Not available</string>
+    <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
+    <string name="key_smscommunicator_remotecommandsallowed" translatable="false">smscommunicator_remotecommandsallowed</string>
+    <string name="patientage">Patient age</string>
+    <string name="child">Child</string>
+    <string name="teenage">Teenage</string>
+    <string name="adult">Adult</string>
+    <string name="key_age" translatable="false">age</string>
+    <string name="key_child" translatable="false">child</string>
+    <string name="key_teenage" translatable="false">teenage</string>
+    <string name="key_adult" translatable="false">adult</string>
+    <string name="patientage_summary">Please select patient age to setup safety limits</string>
+    <string name="key_i_understand" translatable="false">I_understand</string>
+    <string name="Glimp">Glimp</string>
+    <string name="batteryoptimalizationerror">Device does not appear to support battery optimization whitelisting!</string>
+    <string name="pleaseallowpermission">Please Allow Permission</string>
+    <string name="needwhitelisting">%s needs battery optimalization whitelisting for proper performance</string>
+    <string name="loopsuspended">Loop suspended</string>
+    <string name="loopsuspendedfor" formatted="false">Suspended (%d m)</string>
+    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
+    <string name="loopmenu">Loop menu</string>
+    <string name="suspendloopfor1h">Suspend loop for 1h</string>
+    <string name="suspendloopfor2h">Suspend loop for 2h</string>
+    <string name="suspendloopfor3h">Suspend loop for 3h</string>
+    <string name="suspendloopfor10h">Suspend loop for 10 h</string>
+    <string name="disconnectpumpfor30m">Disconnect pump for 30 min</string>
+    <string name="disconnectpumpfor1h">Disconnect pump for 1 h</string>
+    <string name="disconnectpumpfor2h">Disconnect pump for 2 h</string>
+    <string name="disconnectpumpfor3h">Disconnect pump for 3 h</string>
+    <string name="disconnectpumpfor10h">Disconnect pump for 10 h</string>
+    <string name="resume">Resume</string>
+    <string name="smscommunicator_wrongduration">Wrong duration</string>
+    <string name="smscommunicator_loopsuspended">Loop suspended</string>
+    <string name="smscommunicator_loopresumed">Loop resumed</string>
+    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="ns_logappstartedevent">Log app start to NS</string>
+    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="restartingapp">Exiting application to apply settings.</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="fastactinginsulin">Fast Acting Insulin</string>
+    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="fastactinginsulinprolonged">Fast Acting Insuin Prolonged</string>
+    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
+    <string name="enablesuperbolus">Enable superbolus in wizard</string>
+    <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="predictionshortlabel">PRE</string>
+    <string name="basalshortlabel">BAS</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="virtualpump_lastconnection_label">Last connection</string>
+    <string name="danar_bluetooth_status">Bluetooh status</string>
+    <string name="nav_about">About</string>
 </resources>

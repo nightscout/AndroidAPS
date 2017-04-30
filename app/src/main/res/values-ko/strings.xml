@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="treatmentssafety_title">Treatments 안전설정</string>
     <string name="treatmentssafety_maxbolus_title">최대 허용 식사주입인슐린 [U]</string>
     <string name="treatmentssafety_maxcarbs_title">최대 허용 탄수화물 [g]</string>
-
     <string name="nav_preferences">설정</string>
     <string name="nav_refreshtreatments">NS에서 Treatments 새로고침</string>
     <string name="nav_backup">백업</string>
     <string name="nav_test_alert">테스트 알람</string>
     <string name="nav_resetdb">데이터베이스 초기화</string>
+    <string name="reset_db_confirm">데이터 베이스를 정말 초기화하시겠습니까?</string>
     <string name="nav_exit">종료</string>
     <string name="danar_useextended_title">>200% 주입위한 확장식사주입</string>
     <string name="danar_bt_name_title">다나R 블루투스</string>
     <string name="ns_sync_use_absolute_title">기초주입량 절대값 사용하기</string>
-
+    <string name="alert_dialog_storage_permission_text">폰을 재부팅하고나 AndroidAPS를 재시작하세요 \n그렇지 않으면 로그가 기록이되지 않습니다.(알고리즘이 제대로 작동하는지 확인하기 위해 로그가 필요합니다.)!</string>
     <string name="objectives_objective_label_string">목표:</string>
     <string name="objectives_gate_label_string">방법:</string>
     <string name="objectives_button_start">시작</string>
@@ -30,6 +29,7 @@
     <string name="treatments_insulin_label_string">인슐린:</string>
     <string name="treatments_carbs_label_string">탄수화물:</string>
     <string name="treatments_iob_label_string">IOB:</string>
+    <string name="sms_iob">IOB:</string>
     <string name="treatments_activity_string">활동:</string>
     <string name="treatments_iobtotal_label_string">IOB 총량:</string>
     <string name="treatments_iobactivitytotal_label_string">활동 IOB 총량:</string>
@@ -48,11 +48,11 @@
     <string name="treatments_wizard_total_label">총</string>
     <string name="openapsma_run">지금 실행</string>
     <string name="vitualpump_label">가상 펌프</string>
-    <string name="virtualpump_basebasalrate_label">기본 기초주입량:</string>
-    <string name="virtualpump_tempbasal_label">임시기초주입:</string>
-    <string name="virtualpump_extendedbolus_label">확장 식사주입:</string>
-    <string name="virtualpump_battery_label">배터리:</string>
-    <string name="virtualpump_reservoir_label">인슐린 잔량:</string>
+    <string name="virtualpump_basebasalrate_label">기본 기초주입량</string>
+    <string name="virtualpump_tempbasal_label">임시기초주입</string>
+    <string name="virtualpump_extendedbolus_label">확장 식사주입</string>
+    <string name="virtualpump_battery_label">배터리</string>
+    <string name="virtualpump_reservoir_label">인슐린 잔량</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL 에러</string>
     <string name="openapsma_lastrun_label">최근 실행</string>
@@ -74,8 +74,8 @@
     <string name="reason">근거</string>
     <string name="glucose">혈당</string>
     <string name="delta">Delta</string>
+    <string name="sms_delta">Delta:</string>
     <string name="avgdelta">Avg. delta</string>
-
     <string name="configbuilder">Config Builder</string>
     <string name="objectives">목표</string>
     <string name="openapsma">OpenAPS MA</string>
@@ -86,8 +86,6 @@
     <string name="treatments">Treatments</string>
     <string name="virtualpump">가상펌프</string>
     <string name="careportal">Careportal</string>
-
-
     <string name="configbuilder_pump">펌프</string>
     <string name="configbuilder_treatments">Treatments</string>
     <string name="configbuilder_tempbasals">임시기초주입</string>
@@ -97,7 +95,6 @@
     <string name="days">일</string>
     <string name="objectives_minimalduration">최소기간</string>
     <string name="configbuilder_constraints">제한</string>
-
     <string name="loop">Loop</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
@@ -105,6 +102,7 @@
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">최근 주입</string>
     <string name="refreshtreatmentsfromnightscout">나이트스카우트에서 Treatments를 새로고치시겠습니까</string>
+    <string name="refreshtemptargetsfromnightscout">나이트스카우트에서 Temp Target을 새로고치시겠습니까</string>
     <string name="ok">OK</string>
     <string name="cancel">취소</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -112,6 +110,7 @@
     <string name="openapsma_disabled">플러그인이 사용불가능 합니다</string>
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">식사주입 전송 에러</string>
+    <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
     <string name="overview_newtempbasal_basal_label">기초주입 값</string>
     <string name="overview_newtempbasal_percent_label">% (100% = 현재)</string>
     <string name="setbasalquestion">새 임시기초주입 적용:</string>
@@ -121,7 +120,9 @@
     <string name="confirmation">확인</string>
     <string name="entertreatmentquestion">새 Treatment 입력:</string>
     <string name="bolus">식사주입</string>
+    <string name="sms_bolus">Bolus:</string>
     <string name="basal">기초주입</string>
+    <string name="sms_basal">Basal:</string>
     <string name="carbs">탄수화물</string>
     <string name="changeyourinput">입력값 변경!</string>
     <string name="setextendedbolusquestion">새 확장식사주입 설정:</string>
@@ -129,9 +130,9 @@
     <string name="xdrip">xDrip</string>
     <string name="nsclient">NSClient</string>
     <string name="apsmode_title">APS 모드</string>
-
     <string name="closedloop">Closed Loop</string>
     <string name="openloop">Open Loop</string>
+    <string name="disabledloop">Loop Disabled</string>
     <string name="openloop_newsuggestion">새로운 제안이 있습니다</string>
     <string name="unsupportedclientver">지원하지 않는 NSClient 버전입니다</string>
     <string name="nsclientnotinstalled">NSClient 가 설치되지 않았습니다. 기록이 삭제됩니다!</string>
@@ -162,7 +163,6 @@
     <string name="careportal_tempbasalend">Temp Basal End</string>
     <string name="careportal_carbscorrection">Carbs correction</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-
     <string name="careportal_newnstreatment_eventtype">Event type</string>
     <string name="careportal_newnstreatment_other">Other</string>
     <string name="careportal_newnstreatment_meter">Meter</string>
@@ -199,14 +199,16 @@
     <string name="nav_import">설정 불러오기</string>
     <string name="de_lang">German</string>
     <string name="es_lang">Spanish</string>
+    <string name="el_lang">Greek</string>
     <string name="openapsma_low_summary">목표범위 최소 혈당값</string>
     <string name="openapsma_high_summary">목표범위 최대 혈당값</string>
-    <string name="openapsma_maxbasal_summary">임시기초주입 최대량 [U/hr]</string>
-    <string name="openapsma_maxiob_summary">OpenAPS가 주입할수 있는 최대 기초주입 IOB [U]</string>
+    <string name="openapsma_maxbasal_title">임시기초주입 최대량 [U/hr]</string>
+    <string name="openapsma_maxbasal_summary">이 값은 OpenAPS에서 Max Basal(임시기초주입 최대량)로 설정되는 값입니다</string>
+    <string name="openapsma_maxiob_title">OpenAPS가 주입할수 있는 최대 기초주입 IOB [U]</string>
+    <string name="openapsma_maxiob_summary">이 값은 OpenAPS에서 Max IOB라고 부르는 값입니다\n기본값은 0으로 설정되어 있습니다. 몇일 혹은 몇주 정도 사용 후에 적정한 정도에 따라 값을 조정할 수 있습니다.</string>
     <string name="bg_lang">Bulgarian</string>
-    <string name="dismiss">DISMISS</string>
+    <string name="dismiss">닫기</string>
     <string name="language">언어</string>
-
     <string name="danarpump">다나R</string>
     <string name="connecting">연결중</string>
     <string name="connected">연결됨</string>
@@ -221,9 +223,9 @@
     <string name="nobtadapter">블루투스 어댑터를 찾지 못했습니다</string>
     <string name="devicenotfound">선택된 기기를 찾지 못했습니다</string>
     <string name="connectionerror">펌프 연결 에러</string>
-    <string name="virtualpump_lastconnection_label">최근 연결:</string>
-    <string name="danar_iob_label">펌프 IOB:</string>
-    <string name="danar_dailyunits">Daily units:</string>
+    <string name="virtualpump_lastconnection_label">최근 연결</string>
+    <string name="danar_iob_label">펌프 IOB</string>
+    <string name="danar_dailyunits">Daily units</string>
     <string name="danar_lastbolus">최근 식사주입:</string>
     <string name="hoursago">시간 전</string>
     <string name="danar_invalidinput">사용할수 없는 입력 데이터</string>
@@ -241,8 +243,11 @@
     <string name="smscommunicator_allowednumbers">허가된 전화번호</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">식사주입 %.2fU 을 실행하려면 %s 를 입력하고 답장하세요</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">To send calibration %.2f reply with code %s</string>
     <string name="smscommunicator_bolusfailed">Bolus failed</string>
     <string name="bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
+    <string name="bolusrequested" formatted="false">Going to deliver %.2fU</string>
+    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
     <string name="bolusdelivering" formatted="false">%.2fU 주입중</string>
     <string name="smscommunicator_remotecommandsallowed">SMS 원격 명령 사용하기</string>
     <string name="smscommunicator_remotebolusnotallowed">원격 식사주입 허용되지 않음</string>
@@ -253,6 +258,7 @@
     <string name="careportal_temporarytargetcancel">Temporary Target Cancel</string>
     <string name="danarprofile">DanaR 프로파일 설정</string>
     <string name="danarprofile_dia">인슐린활동시간(DIA) [h]</string>
+    <string name="danarprofile_dia_summary">Duration of Insulin Activity</string>
     <string name="failedupdatebasalprofile">기초주입 프로파일 갱신 실패</string>
     <string name="danar_history">History</string>
     <string name="danar_historyreload">Reload</string>
@@ -278,7 +284,7 @@
     <string name="danar_history_refill">교체</string>
     <string name="danar_history_syspend">중지</string>
     <string name="danar_history_connectingfor" formatted="false">%d 초 동안 연결중</string>
-    <string name="danar_password">펌프 비밀번호</string>
+    <string name="danar_password_title">펌프 비밀번호</string>
     <string name="wrongpumppassword">펌프 비밀번호가 잘못되었습니다!</string>
     <string name="pumpbusy">펌프가 바쁩니다</string>
     <string name="overview_bolusprogress_delivered">주입됨</string>
@@ -286,6 +292,7 @@
     <string name="occlusion">막힘</string>
     <string name="overview_bolusprogress_stop">정지</string>
     <string name="overview_bolusprogress_stoppressed">정지 누름</string>
+    <string name="waitingforpump">Waiting for pump</string>
     <string name="waitingforpumpclicktorefresh">펌프를 기다리고 있습니다. Click to refresh.</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">%.2fU을 주입합니다</string>
     <string name="objectives_0_objective">나이트스카우트를 세팅하고, 기초주입과 비율을 분석한다.</string>
@@ -308,6 +315,7 @@
     <string name="smscommunicator_loophasbeenenabled">Loop가 실행되었습니다.</string>
     <string name="smscommunicator_loopisdisabled">Loop가 중지중입니다.</string>
     <string name="smscommunicator_loopisenabled">Loop가 실행중입니다.</string>
+    <string name="openapsma_valuelimitedto" formatted="false">%.2f limited to %.2f</string>
     <string name="openapsma_valueoutofrange" formatted="false">값 %s 은 하드리밋(Hard Limit)를 벗어났습니다</string>
     <string name="smscommunicator_remotebasalnotallowed">원격 기초주입설정이 허가되지 않았습니다</string>
     <string name="smscommunicator_basalreplywithcode" formatted="false">기초주입 %.2fU/h 을 실행하려면 %s 를 입력하고 답장하세요</string>
@@ -317,10 +325,9 @@
     <string name="smscommunicator_tempbasalcanceled">Temp basal canceled</string>
     <string name="smscommunicator_tempbasalcancelfailed">Canceling temp basal failed</string>
     <string name="smscommunicator_unknowncommand">알려지지 않은 명령이거나 잘못된 답장입니다</string>
-
     <string name="quickwizard">퀵마법사</string>
     <string name="quickwizardsettings">퀵마법사 설정</string>
-    <string name="overview_editquickwizard_buttontext">버튼 글자:</string>
+    <string name="overview_editquickwizard_buttontext">버튼명:</string>
     <string name="overview_editquickwizard_carbs">탄수화물:</string>
     <string name="overview_editquickwizard_valid">유효기간:</string>
     <string name="overview_editquickwizardlistactivity_add">추가</string>
@@ -335,6 +342,7 @@
     <string name="ns_upload_only_summary">NS upload only. 로컬소스(xDrip)가 선택되지 않으면 SGV에는 효력이 없습니다. NS프로파일이 사용중이라면 프로파일에는 효력이 없습니다.</string>
     <string name="ns_upload_only_enabled">이 기능을 사용하시려면 "NS upload only"을 비활성화 하세요.</string>
     <string name="pumpNotInitialized">펌프가 초기화 되지 않았습니다!</string>
+    <string name="pumpNotInitializedProfileNotSet">펌프가 초기화와 프로파일 설정이 되지 않았습니다!</string>
     <string name="primefill">공기/채움</string>
     <string name="fillwarning">Please make sure the amount matches the specification of your infusion set!</string>
     <string name="othersettings_title">기타</string>
@@ -361,7 +369,7 @@
     <string name="prefs_range_summary">Overview/스마트워치 차트 표시용 고/저혈당 선</string>
     <string name="low_mark">저혈당 선</string>
     <string name="high_mark">고혈당 선</string>
-    <string name="wear">Wear</string>
+    <string name="wear">웨어</string>
     <string name="resend_all_data">모든 데이터 다시 보내기</string>
     <string name="open_settings_on_wear">웨어에서 설정 열기</string>
     <string name="pumperror">펌프 에러</string>
@@ -380,27 +388,137 @@
     <string name="sms_actualbg">BG:</string>
     <string name="sms_lastbg">Last BG:</string>
     <string name="mdi">MDI</string>
-    <string name="actions_shortname">" "</string>
-    <string name="wear_shortname">" "</string>
-    <string name="virtualpump_shortname">" "</string>
-    <string name="treatments_shortname">" "</string>
-    <string name="temptargetrange_shortname">" "</string>
-    <string name="tempbasals_shortname">" "</string>
-    <string name="smscommunicator_shortname">" "</string>
-    <string name="simpleprofile_shortname">" "</string>
-    <string name="profileviewer_shortname">" "</string>
-    <string name="overview_shortname">" "</string>
-    <string name="objectives_shortname">" "</string>
-    <string name="oaps_shortname">" "</string>
-    <string name="loop_shortname">" "</string>
-    <string name="localprofile_shortname">" "</string>
-    <string name="danarpump_shortname">" "</string>
-    <string name="configbuilder_shortname">" "</string>
-    <string name="circadian_percentage_profile_shortname">" "</string>
-    <string name="careportal_shortname">" "</string>
-    <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
+    <string name="MM640g">MM640g</string>
+    <string name="ongoingnotificaction">Ongoing Notification</string>
+    <string name="old_data">OLD DATA</string>
+    <string name="minago">%dmin ago</string>
+    <string name="sms_minago">%dmin ago</string>
+    <string name="localprofile">Local Profile</string>
+    <string name="openapsama">OpenAPS AMA</string>
+    <string name="short_avgdelta">Short avg. delta</string>
+    <string name="long_avgdelta">Long avg. delta</string>
+    <string name="array_of_elements">Array of %d elements.\nActual value:</string>
+    <string name="openapsma_autosensdata_label">Autosens data</string>
+    <string name="openapsma_scriptdebugdata_label">Script debug</string>
+    <string name="openapsama_useautosens">AMA autosens 기능 사용하기</string>
+    <string name="temptargetrange">Temp Target</string>
+    <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
+    <string name="eatingsoon">Eating Soon</string>
+    <string name="activity">Activity</string>
+    <string name="removerecord">Remove record:</string>
+    <string name="danar_stats">DanaR Stats</string>
+    <string name="danar_stats_cumulative_tdd">Cumulative TDD</string>
+    <string name="danar_stats_expweight">Exponentially Weighted TDD</string>
+    <string name="danar_stats_basalrate">Basal</string>
+    <string name="danar_stats_bolus">Bolus</string>
+    <string name="danar_stats_tdd">TDD</string>
+    <string name="danar_stats_date">Date</string>
+    <string name="danar_stats_ratio">Ratio</string>
+    <string name="danar_stats_amount_days"># Days</string>
+    <string name="danar_stats_weight">Weight</string>
+    <string name="danar_stats_warning_Message">Possibly inaccurate if using boluses for priming/filling!</string>
+    <string name="danar_stats_olddata_Message">Old Data Please Press "RELOAD"</string>
+    <string name="danar_stats_tbb">Total Base Basal</string>
+    <string name="danar_stats_tbb2">TBB * 2</string>
+    <string name="initializing">Initializing ...</string>
+    <string name="actions_shortname">ACT</string>
+    <string name="configbuilder_shortname">CONF</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="simpleprofile_shortname">SP</string>
+    <string name="oaps_shortname">OAPS</string>
+    <string name="temptargetrange_shortname">TT</string>
+    <string name="localprofile_shortname">LP</string>
+    <string name="danarpump_shortname">DANA</string>
+    <string name="circadian_percentage_profile_shortname">CPP</string>
+    <string name="tempbasals_shortname">TB</string>
+    <string name="overview_shortname">HOME</string>
+    <string name="virtualpump_shortname">VPUMP</string>
+    <string name="profileviewer_shortname">NSPROFILE</string>
+    <string name="treatments_shortname">TREAT</string>
+    <string name="careportal_shortname">CP</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="wear_shortname">WEAR</string>
+    <string name="smscommunicator_shortname">SMS</string>
+    <string name="short_tabtitles">탭 이름 단축</string>
+    <string name="prefs_delta_title">Delta Settings</string>
+    <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
+    <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
+    <string name="advancedsettings_title">고급 설정</string>
+    <string name="virtualpump_firmware_label">Firmware:</string>
+    <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
+    <string name="profile">프로파일</string>
+    <string name="openapsama_max_daily_safety_multiplier_summary">Default value: 3\nThis is a key OpenAPS safety cap. What this does is limit your basals to be 3x (in this people) your biggest basal rate. You likely will not need to change this, but you should be aware that’s what is discussed about “3x max daily; 4x current” for safety caps.</string>
+    <string name="openapsama_current_basal_safety_multiplier_summary">Default value: 4\nThis is the other half of the key OpenAPS safety caps, and the other half of “3x max daily; 4x current” of the safety caps. This means your basal, regardless of max basal set on your pump, cannot be any higher than this number times the current level of your basal. This is to prevent people from getting into dangerous territory by setting excessively high max basals before understanding how the algorithm works. Again, the default is 4x; most people will never need to adjust this and are instead more likely to need to adjust other settings if they feel like they are “running into” this safety cap.</string>
+    <string name="openapsama_autosens_max_summary">Default value: 1.2\nThis is a multiplier cap for autosens (and soon autotune) to set a 20% max limit on how high the autosens ratio can be, which in turn determines how high autosens can adjust basals, how low it can adjust ISF, and how low it can set the BG target.</string>
+    <string name="openapsama_autosens_min_summary">Default value: 0.7\nThe other side of the autosens safety limits, putting a cap on how low autosens can adjust basals, and how high it can adjust ISF and BG targets.</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Default value: true\nThis is used to allow autosens to adjust BG targets, in addition to ISF and basals.</string>
+    <string name="openapsama_bolussnooze_dia_divisor_summary">Default value: 2\nBolus snooze is enacted after you do a meal bolus, so the loop won’t counteract with low temps when you’ve just eaten. The example here and default is 2; so a 3 hour DIA means that bolus snooze will be gradually phased out over 1.5 hours (3DIA/2).</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Default value: 3.0\nThis is a setting for default carb absorption impact per 5 minutes. The default is an expected 3mg/dl/5min. This affects how fast COB are decayed, and how much carb absorption is assumed in calculating future predicted BG, when BG is falling more than expected, or not rising as much as expected.</string>
+    <string name="openapsama_link_to_preferncejson_doc_txt">주의!\n보통의 경우 아래의 값을 변경하면 안됩니다. 이 값들을 변경하기 전에 반드시 이곳을 클릭하고 글을 정독해서 확실하게 이해를 하여야 합니다..</string>
+    <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
     <string name="error_only_numeric_digits_allowed">숫자만 입력가능합니다.</string>
     <string name="error_only_numeric_digits_range_allowed">이 범위(%1$s - %2$s)안에 해당하는 숫자만 입력가능합니다.</string>
-    <string name="error_phone_not_valid">유효한 도메인 이름이 아닙니다.</string>
-    <string name="waitingforpump">펌프를 기다리고 있습니다</string>
+    <string name="error_field_must_not_be_empty">필수 입력 항목입니다.</string>
+    <string name="error_phone_not_valid">폰번호가 유효하지 않습니다</string>
+    <string name="smscommunicator_invalidphonennumber">SMS폰번호가 유효하지 않습니다</string>
+    <string name="copy_to_clipboard">Copy To Clipboard</string>
+    <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="nav_show_logcat">Show log</string>
+    <string name="overview_calibration">보정</string>
+    <string name="overview_calibration_bg_label">혈당 보정</string>
+    <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
+    <string name="xdripnotinstalled">xDrip+가 설치되지 않았습니다</string>
+    <string name="calibrationsent">보정이 xDrip으로 전송되었습니다</string>
+    <string name="smscommunicator_remotecalibrationnotallowed">원격보정이 허용되지 않았습니다</string>
+    <string name="smscommunicator_calibrationsent">보정이 전송되었습니다. xDrip에서 수신이 되도록 설정되어 있어야 합니다.</string>
+    <string name="smscommunicator_calibrationfailed">xDrip에서 보정을 받지 못합니다.</string>
+    <string name="dont_show_again">Don\'t show again</string>
+    <string name="pumpsuspendedclicktorefresh">펌프 일시중지. 상태를 새로고치려면 클릭하세요</string>
+    <string name="pumpsuspended">펌프 일시중지됨</string>
+    <string name="gettingpumpstatus">펌프 상태 가져오는중</string>
+    <string name="settingtempbasal">임시 기초주입 설정중</string>
+    <string name="stoppingtempbasal">임시기초주입 취소중</string>
+    <string name="settingextendedbolus">확장식사주입 설정중</string>
+    <string name="stoppingextendedbolus">확장식사주입 취소중</string>
+    <string name="updatingbasalrates">기초주입량 업데이트중</string>
+    <string name="disconnecting">연결끊기중</string>
+    <string name="executing">실행중</string>
+    <string name="virtualpump_settings">가상펌프 설정</string>
+    <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
+    <string name="wrongpassword">잘못된 비밀번호</string>
+    <string name="settings_password">설정 비밀번호</string>
+    <string name="unlock_settings">설정 잠금해제</string>
+    <string name="approachingdailylimit">인슐린 일 허용량에 근접중</string>
+    <string name="nsclientinternal">내장 NSClient</string>
+    <string name="nsclientinternal_shortname">NSCI</string>
+    <string name="nsclientinternal_url">URL:</string>
+    <string name="nsclientinternal_autoscroll">Autoscroll</string>
+    <string name="restart">Restart</string>
+    <string name="nsclientinternal_title">내장 NSClient</string>
+    <string name="nsclientinternal_url_title">Nightscout URL</string>
+    <string name="nsclientinternal_url_dialogmessage">Nightscout URL 입력</string>
+    <string name="nsclientinternal_secret_title">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogtitle">NS API secret</string>
+    <string name="nsclientinternal_secret_dialogmessage">NS API secret 입력(최소 12글자)</string>
+    <string name="nsclientinternal_devicename_title">Device name</string>
+    <string name="nsclientinternal_devicename_dialogtitle">Enter device name</string>
+    <string name="nsclientinternal_devicename_dialogmessage">It will be used for enteredBy field</string>
+    <string name="deliver_now">Deliver now</string>
+    <string name="clear_queue">Clear queue</string>
+    <string name="show_queue">Show queue</string>
+    <string name="queue">Queue:</string>
+    <string name="status">Status:</string>
+    <string name="paused">Paused</string>
+    <string name="clearlog">Clear log</string>
+    <string name="nowritepermission">NSCLIENT이 쓰기 권한이 없습니다. 잘못된 API secret?</string>
+    <string name="wear_settings">웨어 설정</string>
+    <string name="wear_detailedIOB_title">IOB 자세하게 보여주기</string>
+    <string name="wear_detailedIOB_summary">워치페이스에 IOB를 식사주입IOB와 기초주입IOB로 나누어서 보여줍니다.</string>
+    <string name="nosuccess">not successful - please check phone</string>
+    <string name="notavailable">Not available</string>
+    <string name="patientage">나이</string>
+    <string name="child">어린이</string>
+    <string name="teenage">청소년</string>
+    <string name="adult">성인</string>
+    <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
 </resources>

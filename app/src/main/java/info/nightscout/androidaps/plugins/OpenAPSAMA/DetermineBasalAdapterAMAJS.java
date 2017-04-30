@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -16,18 +13,16 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.client.data.NSProfile;
-import info.nightscout.utils.SafeParse;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterAMAJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterAMAJS.class);
@@ -209,7 +204,6 @@ public class DetermineBasalAdapterAMAJS {
                         double min_5m_carbimpact) {
 
         String units = profile.getUnits();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
         mProfile = new V8Object(mV8rt);
         mProfile.add("max_iob", maxIob);
@@ -222,13 +216,13 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("target_bg", targetBg);
         mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
         mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
-        mProfile.add("max_daily_safety_multiplier", SafeParse.stringToInt(preferences.getString("openapsama_max_daily_safety_multiplier", "3")));
-        mProfile.add("current_basal_safety_multiplier", SafeParse.stringToInt(preferences.getString("openapsama_current_basal_safety_multiplier", "4")));
+        mProfile.add("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
+        mProfile.add("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
         mProfile.add("skip_neutral_temps", true);
         mProfile.add("current_basal", pump.getBaseBasalRate());
         mProfile.add("temptargetSet", tempTargetSet);
-        mProfile.add("autosens_adjust_targets", preferences.getBoolean("openapsama_autosens_adjusttargets", true));
-        mProfile.add("min_5m_carbimpact", SafeParse.stringToDouble(preferences.getString("openapsama_min_5m_carbimpact", "3.0")));
+        mProfile.add("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
+        mProfile.add("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", 3d));
         mV8rt.add(PARAM_profile, mProfile);
 
         mCurrentTemp = new V8Object(mV8rt);
@@ -244,7 +238,7 @@ public class DetermineBasalAdapterAMAJS {
 
         mV8rt.add(PARAM_currentTemp, mCurrentTemp);
 
-        mIobData = mV8rt.executeArrayScript(IobTotal.convertToJSONArray(iobArray).toString());
+        mIobData = mV8rt.executeArrayScript(IobCobCalculatorPlugin.convertToJSONArray(iobArray).toString());
         mV8rt.add(PARAM_iobData, mIobData);
 
         mGlucoseStatus = new V8Object(mV8rt);

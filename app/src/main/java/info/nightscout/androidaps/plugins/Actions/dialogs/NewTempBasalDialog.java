@@ -16,6 +16,9 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
@@ -23,7 +26,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.client.data.NSProfile;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
@@ -51,7 +54,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
     public static HandlerThread mHandlerThread;
 
     public NewTempBasalDialog() {
-        mHandlerThread = new HandlerThread(NewExtendedBolusDialog.class.getSimpleName());
+        mHandlerThread = new HandlerThread(NewTempBasalDialog.class.getSimpleName());
         mHandlerThread.start();
         this.mHandler = new Handler(mHandlerThread.getLooper());
     }
@@ -158,7 +161,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                     }
                                 }
                             });
-
+                            Answers.getInstance().logCustom(new CustomEvent("TempBasal"));
                         }
                     });
                     builder.setNegativeButton(getString(R.string.cancel), null);
