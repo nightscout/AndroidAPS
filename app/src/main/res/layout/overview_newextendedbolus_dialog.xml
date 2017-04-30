@@ -1,109 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="10dp">
+    tools:context="info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:padding="10dp"
-            android:text="@string/treatments_newtreatment_insulinamount_label"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:text="@string/treatments_newtreatment_insulinamount_label"
+                    android:textAppearance="?android:attr/textAppearanceLarge" />
 
-            <ImageView
-                android:id="@+id/overview_newextendedbolus_insulin_minus"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/overview_newextendedbolus_insulin_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff" />
+
+                    <EditText
+                        android:id="@+id/overview_newextendedbolus_insulin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:inputType="numberDecimal"
+                        android:minWidth="100dp"
+                        android:padding="10dp"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:gravity="center_horizontal" />
+
+                    <ImageView
+                        android:id="@+id/overview_newextendedbolus_insulin_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RadioGroup
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/circle"
-                android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_minus"
-                android:tint="#ffffff" />
+                android:layout_gravity="center_horizontal">
 
-            <EditText
-                android:id="@+id/overview_newextendedbolus_insulin"
-                android:layout_width="wrap_content"
+                <RadioButton
+                    android:id="@+id/overview_newextendedbolus_05h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="0.5 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newextendedbolus_1h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newextendedbolus_2h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newextendedbolus_3h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3 h" />
+
+                <RadioButton
+                    android:id="@+id/overview_newextendedbolus_4h"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4 h" />
+            </RadioGroup>
+
+            <Button
+                android:id="@+id/overview_newextendedbolus_okbutton"
+                style="?android:attr/buttonStyle"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:inputType="numberDecimal"
-                android:minWidth="100dp"
                 android:padding="10dp"
-                android:text=""
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:gravity="center_horizontal" />
+                android:text="OK"
+                android:textSize="20sp" />
 
-            <ImageView
-                android:id="@+id/overview_newextendedbolus_insulin_plus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/circle"
-                android:backgroundTint="#ffffff"
-                android:src="@drawable/ic_action_add"
-                android:tint="#ffffff" />
+
         </LinearLayout>
-
-    </LinearLayout>
-
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-
-        <RadioButton
-            android:id="@+id/overview_newextendedbolus_05h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="0.5 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newextendedbolus_1h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newextendedbolus_2h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newextendedbolus_3h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3 h" />
-
-        <RadioButton
-            android:id="@+id/overview_newextendedbolus_4h"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="4 h" />
-    </RadioGroup>
-
-    <Button
-        android:id="@+id/overview_newextendedbolus_okbutton"
-        style="?android:attr/buttonStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="OK"
-        android:textSize="20sp" />
-
-
-</LinearLayout>
+    </ScrollView>
+</FrameLayout>
