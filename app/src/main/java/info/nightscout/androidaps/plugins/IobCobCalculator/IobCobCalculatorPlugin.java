@@ -353,6 +353,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
     private static Long findPreviousTimeFromBucketedData(long time) {
+        if (bucketed_data == null)
+            return null;
         for (int index = 0; index < bucketed_data.size(); index++) {
             if (bucketed_data.get(index).timeIndex < time)
                 return bucketed_data.get(index).timeIndex;
@@ -379,6 +381,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
     public static AutosensData getLastAutosensData() {
+        if (autosensDataTable.size() < 1)
+            return null;
         AutosensData data = autosensDataTable.valueAt(autosensDataTable.size() - 1);
         if (data.time < new Date().getTime() - 5 * 60 * 1000) {
             return null;
