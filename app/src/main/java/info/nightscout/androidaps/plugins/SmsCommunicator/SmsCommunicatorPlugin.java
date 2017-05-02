@@ -262,102 +262,105 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     Answers.getInstance().logCustom(new CustomEvent("SMS_Bg"));
                     break;
                 case "LOOP":
-                    switch (splited[1].toUpperCase()) {
-                        case "DISABLE":
-                        case "STOP":
-                            LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
-                            if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
-                                loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            }
-                            receivedSms.processed = true;
-                            Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Stop"));
-                            break;
-                        case "ENABLE":
-                        case "START":
-                            loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
-                            if (loopPlugin != null && !loopPlugin.isEnabled(PluginBase.LOOP)) {
-                                loopPlugin.setFragmentEnabled(PluginBase.LOOP, true);
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeenenabled);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            }
-                            receivedSms.processed = true;
-                            Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Start"));
-                            break;
-                        case "STATUS":
-                            loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
-                            if (loopPlugin != null) {
-                                if (loopPlugin.isEnabled(PluginBase.LOOP)) {
-                                    if (loopPlugin.isSuspended())
-                                        reply = String.format(MainApp.sResources.getString(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend());
-                                    else
-                                        reply = MainApp.sResources.getString(R.string.smscommunicator_loopisenabled);
-                                } else {
-                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loopisdisabled);
+                    if (splited.length > 1)
+                        switch (splited[1].toUpperCase()) {
+                            case "DISABLE":
+                            case "STOP":
+                                LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                                if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
+                                    loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                 }
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            }
-                            receivedSms.processed = true;
-                            Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Status"));
-                            break;
-                        case "RESUME":
-                            final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-                            activeloop.suspendTo(0);
-                            MainApp.bus().post(new EventRefreshGui(false));
-                            reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_loopresumed));
-                            sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Resume"));
-                            break;
-                        case "SUSPEND":
-                            if (splited.length >= 3)
-                                duration = SafeParse.stringToInt(splited[2]);
-                            duration = Math.max(0, duration);
-                            duration = Math.min(180, duration);
-                            if (duration == 0) {
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_wrongduration);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            } else if (remoteCommandsAllowed) {
-                                passCode = generatePasscode();
-                                reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_suspendreplywithcode), duration, passCode);
                                 receivedSms.processed = true;
-                                resetWaitingMessages();
-                                sendSMS(suspendWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
-                                suspendWaitingForConfirmation.duration = duration;
-                                Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Suspend"));
-                            } else {
-                                reply = MainApp.sResources.getString(R.string.smscommunicator_remotecommandnotallowed);
-                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            }
-                            break;
-                    }
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Stop"));
+                                break;
+                            case "ENABLE":
+                            case "START":
+                                loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                                if (loopPlugin != null && !loopPlugin.isEnabled(PluginBase.LOOP)) {
+                                    loopPlugin.setFragmentEnabled(PluginBase.LOOP, true);
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeenenabled);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
+                                receivedSms.processed = true;
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Start"));
+                                break;
+                            case "STATUS":
+                                loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                                if (loopPlugin != null) {
+                                    if (loopPlugin.isEnabled(PluginBase.LOOP)) {
+                                        if (loopPlugin.isSuspended())
+                                            reply = String.format(MainApp.sResources.getString(R.string.loopsuspendedfor), loopPlugin.minutesToEndOfSuspend());
+                                        else
+                                            reply = MainApp.sResources.getString(R.string.smscommunicator_loopisenabled);
+                                    } else {
+                                        reply = MainApp.sResources.getString(R.string.smscommunicator_loopisdisabled);
+                                    }
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
+                                receivedSms.processed = true;
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Status"));
+                                break;
+                            case "RESUME":
+                                final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+                                activeloop.suspendTo(0);
+                                MainApp.bus().post(new EventRefreshGui(false));
+                                reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_loopresumed));
+                                sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Resume"));
+                                break;
+                            case "SUSPEND":
+                                if (splited.length >= 3)
+                                    duration = SafeParse.stringToInt(splited[2]);
+                                duration = Math.max(0, duration);
+                                duration = Math.min(180, duration);
+                                if (duration == 0) {
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_wrongduration);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                } else if (remoteCommandsAllowed) {
+                                    passCode = generatePasscode();
+                                    reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_suspendreplywithcode), duration, passCode);
+                                    receivedSms.processed = true;
+                                    resetWaitingMessages();
+                                    sendSMS(suspendWaitingForConfirmation = new Sms(receivedSms.phoneNumber, reply, new Date(), passCode));
+                                    suspendWaitingForConfirmation.duration = duration;
+                                    Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Suspend"));
+                                } else {
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_remotecommandnotallowed);
+                                    sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                }
+                                break;
+                        }
                     break;
                 case "TREATMENTS":
-                    switch (splited[1].toUpperCase()) {
-                        case "REFRESH":
-                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                            MainApp.getDbHelper().resetTreatments();
-                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-                            List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-                            reply = "TERATMENTS REFRESH " + q.size() + " receivers";
-                            sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            receivedSms.processed = true;
-                            Answers.getInstance().logCustom(new CustomEvent("SMS_Treatments_Refresh"));
-                            break;
-                    }
+                    if (splited.length > 1)
+                        switch (splited[1].toUpperCase()) {
+                            case "REFRESH":
+                                Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                                MainApp.getDbHelper().resetTreatments();
+                                MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                                List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
+                                reply = "TERATMENTS REFRESH " + q.size() + " receivers";
+                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                receivedSms.processed = true;
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Treatments_Refresh"));
+                                break;
+                        }
                     break;
                 case "NSCLIENT":
-                    switch (splited[1].toUpperCase()) {
-                        case "RESTART":
-                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-                            List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
-                            reply = "NSCLIENT RESTART " + q.size() + " receivers";
-                            sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                            receivedSms.processed = true;
-                            Answers.getInstance().logCustom(new CustomEvent("SMS_Nsclient_Restart"));
-                            break;
-                    }
+                    if (splited.length > 1)
+                        switch (splited[1].toUpperCase()) {
+                            case "RESTART":
+                                Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                                MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                                List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(restartNSClient, 0);
+                                reply = "NSCLIENT RESTART " + q.size() + " receivers";
+                                sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                receivedSms.processed = true;
+                                Answers.getInstance().logCustom(new CustomEvent("SMS_Nsclient_Restart"));
+                                break;
+                        }
                     break;
                 case "DANAR":
                     DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
@@ -450,7 +453,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
                             danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin() ,bolusWaitingForConfirmation.bolusRequested, 0, null);
+                            PumpEnactResult result = pumpInterface.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), bolusWaitingForConfirmation.bolusRequested, 0, null);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
                                 if (danaRPlugin != null)
