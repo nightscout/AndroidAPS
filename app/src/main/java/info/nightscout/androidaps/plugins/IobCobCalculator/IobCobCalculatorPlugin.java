@@ -447,7 +447,19 @@ public class IobCobCalculatorPlugin implements PluginBase {
             Double[] deviations = new Double[deviationsArray.size()];
             deviations = deviationsArray.toArray(deviations);
 
+            if (ConfigBuilderPlugin.getActiveProfile() == null || ConfigBuilderPlugin.getActiveProfile().getProfile() == null) {
+                log.debug("No profile available");
+                return new AutosensResult();
+            }
+
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+
+            Double sens = profile.getIsf(NSProfile.secondsFromMidnight());
+
+            if (sens == null || profile.getMaxDailyBasal() == 0) {
+                log.debug("No profile available");
+                return new AutosensResult();
+            }
 
             double ratio = 1;
             String ratioLimit = "";
@@ -467,10 +479,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
             double basalOff = 0;
 
             if (pSensitive < 0) { // sensitive
-                basalOff = pSensitive * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
+                basalOff = pSensitive * (60 / 5) / NSProfile.toMgdl(sens, profile.getUnits());
                 sensResult = "Excess insulin sensitivity detected";
             } else if (pResistant > 0) { // resistant
-                basalOff = pResistant * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
+                basalOff = pResistant * (60 / 5) / NSProfile.toMgdl(sens, profile.getUnits());
                 sensResult = "Excess insulin resistance detected";
             } else {
                 sensResult = "Sensitivity normal";
@@ -487,9 +499,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 log.debug(ratioLimit);
             }
 
-            double newisf = Math.round(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits()) / ratio);
+            double newisf = Math.round(NSProfile.toMgdl(sens, profile.getUnits()) / ratio);
             if (ratio != 1) {
-                log.debug("ISF adjusted from " + NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits()) + " to " + newisf);
+                log.debug("ISF adjusted from " + NSProfile.toMgdl(sens, profile.getUnits()) + " to " + newisf);
             }
 
             AutosensResult output = new AutosensResult();
