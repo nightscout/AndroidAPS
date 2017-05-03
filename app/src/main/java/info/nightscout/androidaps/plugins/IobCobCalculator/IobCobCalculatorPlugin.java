@@ -234,7 +234,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         synchronized (dataLock) {
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile() != null ? ConfigBuilderPlugin.getActiveProfile().getProfile() : null;
 
-            if (profile == null) {
+            if (profile == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getIc(NSProfile.secondsFromMidnight()) == null) {
                 log.debug("calculateSensitivityData: No profile available");
                 return;
             }
