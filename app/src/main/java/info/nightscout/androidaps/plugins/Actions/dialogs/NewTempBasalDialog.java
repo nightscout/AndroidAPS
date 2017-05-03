@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Actions.dialogs;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -153,6 +154,12 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                         result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes);
                                     }
                                     if (!result.success) {
+                                        if (context instanceof Activity) {
+                                            Activity activity = (Activity) context;
+                                            if (activity.isFinishing()) {
+                                                return;
+                                            }
+                                        }
                                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                         builder.setTitle(MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                                         builder.setMessage(result.comment);
