@@ -586,7 +586,7 @@
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Fast Acting Insuin Prolonged</string>
+    <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
