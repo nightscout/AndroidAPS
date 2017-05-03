@@ -598,4 +598,5 @@
     <string name="virtualpump_lastconnection_label">Last connection</string>
     <string name="danar_bluetooth_status">Bluetooh status</string>
     <string name="nav_about">About</string>
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
 </resources>

@@ -560,6 +560,9 @@ public class SmsCommunicatorPlugin implements PluginBase {
         } catch (IllegalArgumentException e) {
             Notification notification = new Notification(Notification.INVALID_PHONE_NUMBER, MainApp.sResources.getString(R.string.smscommunicator_invalidphonennumber), Notification.NORMAL);
             MainApp.bus().post(new EventNewNotification(notification));
+        } catch (java.lang.SecurityException e) {
+            Notification notification = new Notification(Notification.MISSING_SMS_PERMISSION, MainApp.sResources.getString(R.string.smscommunicator_missingsmspermission), Notification.NORMAL);
+            MainApp.bus().post(new EventNewNotification(notification));
         }
     }
 
