@@ -170,6 +170,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     boolean smallWidth;
 
+    private int rangeToDisplay = 6; // for graph
+
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
 
@@ -273,6 +275,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
+
+        bgGraph.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                rangeToDisplay += 6;
+                rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
+                updateGUI("rangeChange");
+                return false;
+            }
+        });
 
         return view;
     }
@@ -1025,12 +1037,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
-            hoursToFetch = (int) (6 - predHours);
+            hoursToFetch = (int) (rangeToDisplay - predHours);
             toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime + predHours * 60 * 60 * 1000L;
         } else {
-            hoursToFetch = 6;
+            hoursToFetch = rangeToDisplay;
             toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime;
