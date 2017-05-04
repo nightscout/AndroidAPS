@@ -1002,9 +1002,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
         if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
             showPredictionView.setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
         } else {
             showPredictionView.setVisibility(View.GONE);
-        }
+            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);        }
 
         // ****** GRAPH *******
 
