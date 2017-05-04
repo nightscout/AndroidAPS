@@ -238,7 +238,7 @@ public class NSProfile {
                 e.printStackTrace();
             }
         }
-        return 0D;
+        return null;
     }
 
     public String getIsfList() {
@@ -429,7 +429,7 @@ public class NSProfile {
         }
     }
 
-    public Double getMaxDailyBasal() {
+    public double getMaxDailyBasal() {
         Double max = 0d;
         for (Integer hour = 0; hour < 24; hour++) {
             double value = getBasal(hour * 60 * 60);
