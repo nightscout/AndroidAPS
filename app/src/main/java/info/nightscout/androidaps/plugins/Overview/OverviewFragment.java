@@ -252,6 +252,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         showBasalsView.setChecked(SP.getBoolean("showbasals", false));
         showIobView.setChecked(SP.getBoolean("showiob", false));
         showCobView.setChecked(SP.getBoolean("showcob", false));
+        showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
         showPredictionView.setOnCheckedChangeListener(this);
         showBasalsView.setOnCheckedChangeListener(this);
         showIobView.setOnCheckedChangeListener(this);
@@ -1157,7 +1158,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                     if (autosensData != null && showDeviationsView.isChecked()) {
                         int color = Color.BLACK; // "="
-                        if (autosensData.pastSensitivity.equals("C")) color = Color.BLUE;
+                        if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
                         if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
                         if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
                         devArray.add(new DeviationDataPoint(time, autosensData.deviation, color));
