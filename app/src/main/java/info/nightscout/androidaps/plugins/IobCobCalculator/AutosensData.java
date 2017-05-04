@@ -9,14 +9,16 @@ import java.util.Date;
 public class AutosensData {
     long time = 0L;
     String pastSensitivity = "";
-    double deviation = 0d;
+    public double deviation = 0d;
     boolean calculateWithDeviation = false;
     double absorbed = 0d;
     double carbsFromBolus = 0d;
     public double cob = 0;
+    public double bgi = 0d;
+    public double delta = 0d;
 
     public String log(long time) {
-        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Deviation=" + deviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob;
+        return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " Bgi=" + bgi + " Deviation=" + deviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob;
     }
 
 }

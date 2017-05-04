@@ -9,6 +9,7 @@
     <color name="high">#FFFF00</color>
     <color name="listdelimiter">#505050</color>
     <color name="tabBgColor">#f0003f59</color>
+    <color name="deviations">#FF0000</color>
 
     <color name="tempTargetBackground">#77dd77</color>
     <color name="tempTargetDisabledBackground">#303F9F</color>

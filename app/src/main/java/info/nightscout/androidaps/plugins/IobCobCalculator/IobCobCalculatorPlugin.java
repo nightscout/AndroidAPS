@@ -280,12 +280,11 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     log.error("! value < 39");
                     continue;
                 }
-                avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
                 delta = (bg - bucketed_data.get(i + 1).value);
 
                 IobTotal iob = calulateFromTreatmentsAndTemps(bgTime);
 
-                double bgi = Math.round((-iob.activity * sens * 5) * 100) / 100d;
+                double bgi = -iob.activity * sens * 5;
                 double deviation = delta - bgi;
 
                 List<Treatment> recentTreatments = treatmentsInterface.getTreatments5MinBack(bgTime);
@@ -304,6 +303,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 }
                 autosensData.cob += autosensData.carbsFromBolus;
                 autosensData.deviation = deviation;
+                autosensData.bgi = bgi;
+                autosensData.delta = delta;
 
                 // calculate autosens only without COB
                 if (autosensData.cob <= 0) {
