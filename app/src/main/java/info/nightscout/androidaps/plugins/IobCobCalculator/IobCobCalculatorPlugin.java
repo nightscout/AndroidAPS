@@ -308,10 +308,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
                 // calculate autosens only without COB
                 if (autosensData.cob <= 0) {
-                    if (deviation > 0) {
-                        autosensData.pastSensitivity += "+";
-                    } else if (deviation == 0) {
+                    if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
                         autosensData.pastSensitivity += "=";
+                    } else if (deviation > 0) {
+                        autosensData.pastSensitivity += "+";
                     } else {
                         autosensData.pastSensitivity += "-";
                     }
