@@ -78,7 +78,7 @@
                     android:layout_marginRight="5dp"
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/initializing"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
             </LinearLayout>
 
             <LinearLayout
