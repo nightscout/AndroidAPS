@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class AutosensData {
     long time = 0L;
-    String pastSensitivity = "";
+    public String pastSensitivity = "";
     public double deviation = 0d;
     boolean calculateWithDeviation = false;
     double absorbed = 0d;

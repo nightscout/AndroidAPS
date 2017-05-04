@@ -1123,10 +1123,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             basalsLineSeries.setCustomPaint(paint);
         }
 
-        // **** IOB COB graph ****
+        // **** IOB COB DEV graph ****
+        class DeviationDataPoint extends DataPoint {
+            public int color;
+            public DeviationDataPoint(double x, double y, int color) {
+                super(x, y);
+                this.color = color;
+            }
+        }
         FixedLineGraphSeries<DataPoint> iobSeries;
         FixedLineGraphSeries<DataPoint> cobSeries;
-        BarGraphSeries<DataPoint> devSeries;
+        BarGraphSeries<DeviationDataPoint> devSeries;
         Double maxIobValueFound = 0d;
         Double maxCobValueFound = 0d;
         Double maxDevValueFound = 0d;
@@ -1135,7 +1142,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             //Date start = new Date();
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
-            List<DataPoint> devArray = new ArrayList<>();
+            List<DeviationDataPoint> devArray = new ArrayList<>();
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
                     IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
@@ -1149,7 +1156,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         maxCobValueFound = Math.max(maxCobValueFound, autosensData.cob);
                     }
                     if (autosensData != null && showDeviationsView.isChecked()) {
-                        devArray.add(new DataPoint(time, autosensData.deviation));
+                        int color = Color.BLACK; // "="
+                        if (autosensData.pastSensitivity.equals("C")) color = Color.BLUE;
+                        if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
+                        if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
+                        devArray.add(new DeviationDataPoint(time, autosensData.deviation, color));
                         maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
                     }
                 }
@@ -1166,12 +1177,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             if (showIobView.isChecked() && (showCobView.isChecked() || showDeviationsView.isChecked())) {
                 List<DataPoint> cobArrayRescaled = new ArrayList<>();
-                List<DataPoint> devArrayRescaled = new ArrayList<>();
+                List<DeviationDataPoint> devArrayRescaled = new ArrayList<>();
                 for (int ci = 0; ci < cobArray.size(); ci++) {
                     cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxIobValueFound / maxCobValueFound / 2));
                 }
                 for (int ci = 0; ci < devArray.size(); ci++) {
-                    devArrayRescaled.add(new DataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxIobValueFound / maxDevValueFound));
+                    devArrayRescaled.add(new DeviationDataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxIobValueFound / maxDevValueFound, devArray.get(ci).color));
                 }
                 cobArray = cobArrayRescaled;
                 devArray = devArrayRescaled;
@@ -1186,14 +1197,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobSeries.setThickness(3);
 
             // DEVIATIONS
-            DataPoint[] devData = new DataPoint[devArray.size()];
+            DeviationDataPoint[] devData = new DeviationDataPoint[devArray.size()];
             devData = devArray.toArray(devData);
             devSeries = new BarGraphSeries<>(devData);
-            devSeries.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+            devSeries.setValueDependentColor(new ValueDependentColor<DeviationDataPoint>() {
                 @Override
-                public int get(DataPoint data) {
-                    if (data.getY() < 0) return Color.RED;
-                    else return Color.GREEN;
+                public int get(DeviationDataPoint data) {
+                    return data.color;
                 }
             });
             //devSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
