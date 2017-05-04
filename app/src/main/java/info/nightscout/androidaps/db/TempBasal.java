@@ -78,6 +78,9 @@ public class TempBasal {
                 Long date = (long) (timeStart.getTime() + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
 
                 Double basalRate = profile.getBasal(NSProfile.secondsFromMidnight(date));
+
+                if (basalRate == null)
+                    continue;
                 if (isExtended) {
                     netBasalRate = this.absolute;
                 } else {

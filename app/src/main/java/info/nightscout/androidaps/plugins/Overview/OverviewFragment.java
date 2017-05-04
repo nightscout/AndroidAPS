@@ -149,7 +149,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
-    ImageButton menuButton;
 
     CheckBox showPredictionView;
     CheckBox showBasalsView;
@@ -225,9 +224,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
-
-        menuButton = (ImageButton) view.findViewById(R.id.overview_menuButton);
-        menuButton.setOnClickListener(this);
 
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltempbutton);
         cancelTempButton.setOnClickListener(this);
@@ -485,76 +481,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         }
                     });
                 break;
-           case R.id.overview_menuButton:
-               PopupMenu popup = new PopupMenu(getContext(), v);
-               MenuInflater inflater = popup.getMenuInflater();
-               inflater.inflate(R.menu.menu_main, popup.getMenu());
-               popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                   @Override
-                   public boolean onMenuItemClick(MenuItem item) {
-                       int id = item.getItemId();
-                       switch (id) {
-                           case R.id.nav_preferences:
-                               PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       Intent i = new Intent(getContext(), PreferencesActivity.class);
-                                       startActivity(i);
-                                   }
-                               }, null);
-                               break;
-                           case R.id.nav_resetdb:
-                               new AlertDialog.Builder(getContext())
-                                       .setTitle(R.string.nav_resetdb)
-                                       .setMessage(R.string.reset_db_confirm)
-                                       .setNegativeButton(android.R.string.cancel, null)
-                                       .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                           @Override
-                                           public void onClick(DialogInterface dialog, int which) {
-                                               MainApp.getDbHelper().resetDatabases();
-                                           }
-                                       })
-                                       .create()
-                                       .show();
-                               break;
-                           case R.id.nav_export:
-                               ImportExportPrefs.verifyStoragePermissions(getActivity());
-                               ImportExportPrefs.exportSharedPreferences(getActivity());
-                               break;
-                           case R.id.nav_import:
-                               ImportExportPrefs.verifyStoragePermissions(getActivity());
-                               ImportExportPrefs.importSharedPreferences(getActivity());
-                               break;
-                           case R.id.nav_show_logcat:
-                               LogDialog.showLogcat(getContext());
-                               break;
-                           case R.id.nav_about:
-                               AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                               builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
-                               if (BuildConfig.NSCLIENTOLNY)
-                                   builder.setIcon(R.mipmap.yellowowl);
-                               else
-                                   builder.setIcon(R.mipmap.blueowl);
-                               builder.setMessage("Build: " + BuildConfig.BUILDVERSION);
-                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                               AlertDialog alertDialog = builder.create();
-                               alertDialog.show();
-                               break;
-                           case R.id.nav_exit:
-                               log.debug("Exiting");
-                               MainApp.instance().stopKeepAliveService();
-                               MainApp.bus().post(new EventAppExit());
-                               MainApp.closeDbHelper();
-                               getActivity().finish();
-                               System.runFinalization();
-                               System.exit(0);
-                               break;
-                       }
-                       return false;
-                   }
-               });
-               popup.show();
-               break;
         }
 
     }

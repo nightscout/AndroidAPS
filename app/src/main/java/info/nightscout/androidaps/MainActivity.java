@@ -1,8 +1,10 @@
 package info.nightscout.androidaps;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
@@ -16,10 +18,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.PopupMenu;
+import android.util.AttributeSet;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.FontAwesomeModule;
@@ -28,17 +35,21 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
+import info.nightscout.utils.ImportExportPrefs;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.LogDialog;
 import info.nightscout.utils.OKDialog;
+import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(MainActivity.class);
 
     static final int CASE_STORAGE = 0x1;
@@ -46,12 +57,18 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean askForSMS = false;
 
+    ImageButton menuButton;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Iconify.with(new FontAwesomeModule());
         LocaleHelper.onCreate(this, "en");
         setContentView(R.layout.activity_main);
+        menuButton = (ImageButton) findViewById(R.id.overview_menuButton);
+        menuButton.setOnClickListener(this);
+
         checkEula();
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1) {
             askForPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -227,5 +244,82 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    @Override
+    public void onClick(final View v) {
+        final Activity activity = this;
+        switch (v.getId()) {
+            case R.id.overview_menuButton:
+                PopupMenu popup = new PopupMenu(v.getContext(), v);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.menu_main, popup.getMenu());
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        int id = item.getItemId();
+                        switch (id) {
+                            case R.id.nav_preferences:
+                                PasswordProtection.QueryPassword(v.getContext(), R.string.settings_password, "settings_password", new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Intent i = new Intent(v.getContext(), PreferencesActivity.class);
+                                        startActivity(i);
+                                    }
+                                }, null);
+                                break;
+                            case R.id.nav_resetdb:
+                                new AlertDialog.Builder(v.getContext())
+                                        .setTitle(R.string.nav_resetdb)
+                                        .setMessage(R.string.reset_db_confirm)
+                                        .setNegativeButton(android.R.string.cancel, null)
+                                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                MainApp.getDbHelper().resetDatabases();
+                                            }
+                                        })
+                                        .create()
+                                        .show();
+                                break;
+                            case R.id.nav_export:
+                                ImportExportPrefs.verifyStoragePermissions(activity);
+                                ImportExportPrefs.exportSharedPreferences(activity);
+                                break;
+                            case R.id.nav_import:
+                                ImportExportPrefs.verifyStoragePermissions(activity);
+                                ImportExportPrefs.importSharedPreferences(activity);
+                                break;
+                            case R.id.nav_show_logcat:
+                                LogDialog.showLogcat(v.getContext());
+                                break;
+                            case R.id.nav_about:
+                                AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+                                builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
+                                if (BuildConfig.NSCLIENTOLNY)
+                                    builder.setIcon(R.mipmap.yellowowl);
+                                else
+                                    builder.setIcon(R.mipmap.blueowl);
+                                builder.setMessage("Build: " + BuildConfig.BUILDVERSION);
+                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                AlertDialog alertDialog = builder.create();
+                                alertDialog.show();
+                                break;
+                            case R.id.nav_exit:
+                                log.debug("Exiting");
+                                MainApp.instance().stopKeepAliveService();
+                                MainApp.bus().post(new EventAppExit());
+                                MainApp.closeDbHelper();
+                                finish();
+                                System.runFinalization();
+                                System.exit(0);
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                popup.show();
+                break;
+        }
     }
 }

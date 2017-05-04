@@ -122,39 +122,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="0.5"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/overview_timeago"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="0.5"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/overview_timeago"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.5"
-                                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                            <TextView
-                                android:id="@+id/overview_delta"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.5"
-                                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                        </LinearLayout>
-
-                        <ImageButton
-                            android:id="@+id/overview_menuButton"
-                            android:layout_width="60dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginRight="5dp"
+                            android:layout_marginLeft="10dp"
                             android:layout_weight="0.5"
-                            app:srcCompat="@drawable/ic_more_vert_black_24dp" />
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+                        <TextView
+                            android:id="@+id/overview_delta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.5"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     </LinearLayout>
 
