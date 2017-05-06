@@ -600,4 +600,7 @@
     <string name="nav_about">About</string>
     <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
     <string name="dev">DEV</string>
+    <string name="xdripstatus_settings">xDrip Status (watch)</string>
+    <string name="xdripstatus">xDrip Statusline (watch)</string>
+    <string name="xdripstatus_shortname">xds</string>
 </resources>
