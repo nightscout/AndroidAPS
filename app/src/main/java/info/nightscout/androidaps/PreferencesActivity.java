@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugi
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
+import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.utils.LocaleHelper;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -136,6 +137,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
                     addPreferencesFromResource(R.xml.pref_wear);
                 }
+            }
+
+            StatuslinePlugin statuslinePlugin = (StatuslinePlugin) MainApp.getSpecificPlugin(StatuslinePlugin.class);
+            if (statuslinePlugin != null && statuslinePlugin.isEnabled(PluginBase.GENERAL)) {
+                addPreferencesFromResource(R.xml.pref_xdripstatus);
             }
 
             initSummary(getPreferenceScreen());
