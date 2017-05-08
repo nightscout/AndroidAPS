@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 import com.squareup.otto.Subscribe;
 
@@ -21,13 +22,18 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by adrian on 17/11/16.
  */
 
 public class StatuslinePlugin implements PluginBase {
+
+    //broadcast related constants
+    public static final String EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline";
+    public static final String ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline";
+    public static final String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE";
+
 
     static boolean fragmentEnabled = false;
     private static boolean lastLoopStatus;
@@ -37,8 +43,10 @@ public class StatuslinePlugin implements PluginBase {
 
     StatuslinePlugin(Context ctx) {
         this.ctx = ctx;
-        this.mPrefs =  PreferenceManager.getDefaultSharedPreferences(ctx);
-        MainApp.bus().register(this);
+        this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
+
+        if (fragmentEnabled)
+            MainApp.bus().register(this);
     }
 
     @Override
@@ -59,7 +67,7 @@ public class StatuslinePlugin implements PluginBase {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.xdripstatus_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -96,6 +104,11 @@ public class StatuslinePlugin implements PluginBase {
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == GENERAL) {
             this.fragmentEnabled = fragmentEnabled;
+
+            if (fragmentEnabled)
+                MainApp.bus().register(this);
+            else
+                MainApp.bus().unregister(this);
         }
     }
 
@@ -105,52 +118,10 @@ public class StatuslinePlugin implements PluginBase {
     }
 
 
-
     private void sendStatus() {
-        if(!fragmentEnabled) return;
-        
-            String status = "";
-            boolean shortString = true; // make setting?
 
-            LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        String status = buildStatusString();
 
-            if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
-                status += ctx.getString(R.string.disabledloop) + "\n";
-                lastLoopStatus = false;
-            } else if (activeloop != null && activeloop.isEnabled(PluginBase.LOOP)) {
-                lastLoopStatus = true;
-            }
-
-            //Temp basal
-            PumpInterface pump = MainApp.getConfigBuilder();
-
-            if (pump.isTempBasalInProgress()) {
-                TempBasal activeTemp = pump.getTempBasal();
-                if (shortString) {
-                    status += activeTemp.toStringShort();
-                } else {
-                    status += activeTemp.toStringMedium();
-                }
-            }
-
-            //IOB
-            MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
-            IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-            MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
-            IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-            status += (shortString?"":(ctx.getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
-
-
-        if (mPrefs.getBoolean("xdripstatus_detailediob", true)) {
-                status += "("
-                        + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                        + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-            }
-
-        //constants
-        String EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline";
-        String ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline";
-        String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE";
         //sendData
         final Bundle bundle = new Bundle();
         bundle.putString(EXTRA_STATUSLINE, status);
@@ -158,11 +129,49 @@ public class StatuslinePlugin implements PluginBase {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         ctx.sendBroadcast(intent, RECEIVER_PERMISSION);
-
-        ToastUtils.showToastInUiThread(ctx, "status: " + status);
-
     }
 
+    @NonNull
+    private String buildStatusString() {
+        String status = "";
+        boolean shortString = true; // make setting?
+
+        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+
+        if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
+            status += ctx.getString(R.string.disabledloop) + "\n";
+            lastLoopStatus = false;
+        } else if (activeloop != null && activeloop.isEnabled(PluginBase.LOOP)) {
+            lastLoopStatus = true;
+        }
+
+        //Temp basal
+        PumpInterface pump = MainApp.getConfigBuilder();
+
+        if (pump.isTempBasalInProgress()) {
+            TempBasal activeTemp = pump.getTempBasal();
+            if (shortString) {
+                status += activeTemp.toStringShort();
+            } else {
+                status += activeTemp.toStringMedium();
+            }
+        }
+
+        //IOB
+        MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
+        MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
+        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
+        status += (shortString ? "" : (ctx.getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+
+
+        if (mPrefs.getBoolean("xdripstatus_detailediob", true)) {
+            status += "("
+                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
+                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+        }
+        return status;
+    }
 
 
     @Subscribe
@@ -189,14 +198,15 @@ public class StatuslinePlugin implements PluginBase {
     @Subscribe
     public void onStatusEvent(final EventRefreshGui ev) {
 
+        //Filter events where loop is (de)activated
+
         LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
         if (activeloop == null) return;
 
-        if((lastLoopStatus != activeloop.isEnabled(PluginBase.LOOP))) {
+        if ((lastLoopStatus != activeloop.isEnabled(PluginBase.LOOP))) {
             sendStatus();
         }
     }
-
 
 
     public static boolean isEnabled() {
