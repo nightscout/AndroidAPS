@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
+import android.preference.PreferenceManager;
+
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -251,7 +254,11 @@ public class DetermineBasalAdapterMAJS {
         mIobData.add("hightempinsulin", iobData.hightempinsulin);
 
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
-        mGlucoseStatus.add("delta", glucoseStatus.delta);
+        if(PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).getBoolean("always_use_shortavg", false)){
+            mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
+        } else {
+            mGlucoseStatus.add("delta", glucoseStatus.delta);
+        }
         mGlucoseStatus.add("avgdelta", glucoseStatus.avgdelta);
 
         mMealData.add("carbs", mealData.carbs);

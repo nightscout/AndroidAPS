@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
+import android.preference.PreferenceManager;
+
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -243,7 +245,12 @@ public class DetermineBasalAdapterAMAJS {
 
         mGlucoseStatus = new V8Object(mV8rt);
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
-        mGlucoseStatus.add("delta", glucoseStatus.delta);
+
+        if(PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).getBoolean("always_use_shortavg", false)){
+            mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
+        } else {
+            mGlucoseStatus.add("delta", glucoseStatus.delta);
+        }
         mGlucoseStatus.add("short_avgdelta", glucoseStatus.short_avgdelta);
         mGlucoseStatus.add("long_avgdelta", glucoseStatus.long_avgdelta);
         mV8rt.add(PARAM_glucoseStatus, mGlucoseStatus);
