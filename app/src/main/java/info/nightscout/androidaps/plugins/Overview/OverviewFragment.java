@@ -352,18 +352,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (item.getTitle().equals(MainApp.sResources.getString(R.string.disableloop))) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, false);
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             scheduleUpdateGUI("suspendmenu");
+            ConfigBuilderPlugin.uploadOpenAPSOffline(60); // upload 60 min, we don;t know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
             activeloop.setFragmentEnabled(PluginBase.LOOP, true);
             activeloop.setFragmentVisible(PluginBase.LOOP, true);
             MainApp.getConfigBuilder().storeSettings();
             scheduleUpdateGUI("suspendmenu");
+            ConfigBuilderPlugin.uploadOpenAPSOffline(0);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
             activeloop.suspendTo(0L);
@@ -377,22 +379,27 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            ConfigBuilderPlugin.uploadOpenAPSOffline(0);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            ConfigBuilderPlugin.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            ConfigBuilderPlugin.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
             activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            ConfigBuilderPlugin.uploadOpenAPSOffline(180);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
             activeloop.suspendTo(new Date().getTime() + 10 * 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            ConfigBuilderPlugin.uploadOpenAPSOffline(600);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
             activeloop.suspendTo(new Date().getTime() + 30L * 60 * 1000);
@@ -406,6 +413,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            ConfigBuilderPlugin.uploadOpenAPSOffline(30);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 1 * 60L * 60 * 1000);
@@ -419,6 +427,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            ConfigBuilderPlugin.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
@@ -432,6 +441,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            ConfigBuilderPlugin.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
             activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
@@ -445,6 +455,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
             });
+            ConfigBuilderPlugin.uploadOpenAPSOffline(180);
             return true;
         }
 
