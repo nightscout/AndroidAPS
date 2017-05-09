@@ -18,7 +18,6 @@ import info.nightscout.androidaps.interfaces.PluginBase;
  */
 public class TabPageAdapter extends FragmentStatePagerAdapter {
 
-    ArrayList<PluginBase> fragmentList = new ArrayList<>();
     ArrayList<PluginBase> visibleFragmentList = new ArrayList<>();
 
     FragmentManager fm;
@@ -62,7 +61,6 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     }
 
     public void registerNewFragment(PluginBase plugin) {
-        fragmentList.add(plugin);
         if (plugin.isVisibleInTabs(plugin.getType())) {
             visibleFragmentList.add(plugin);
             notifyDataSetChanged();

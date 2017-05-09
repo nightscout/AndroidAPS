@@ -18,6 +18,8 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
@@ -37,7 +39,9 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.LabelFormatter;
+import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.Viewport;
+import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
@@ -145,13 +149,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
-    RelativeLayout iobGraphLayout;
-    ImageButton menuButton;
 
     CheckBox showPredictionView;
     CheckBox showBasalsView;
     CheckBox showIobView;
     CheckBox showCobView;
+    CheckBox showDeviationsView;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -164,6 +167,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     Button calibrationButton;
     Button acceptTempButton;
     Button quickWizardButton;
+
+    boolean smallWidth;
+
+    private int rangeToDisplay = 6; // for graph
 
     Handler sLoopHandler = new Handler();
     Runnable sRefreshLoop = null;
@@ -187,10 +194,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+        //check screen width
+        final DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screen_width = dm.widthPixels;
+        smallWidth = screen_width < Constants.SMALL_WIDTH;
+
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
 
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         arrowView = (TextView) view.findViewById(R.id.overview_arrow);
+        if(smallWidth){
+            arrowView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35);
+        }
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
@@ -210,10 +226,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
-        iobGraphLayout = (RelativeLayout) view.findViewById(R.id.overview_iobgraphlayout);
-
-        menuButton = (ImageButton) view.findViewById(R.id.overview_menuButton);
-        menuButton.setOnClickListener(this);
 
         cancelTempButton = (Button) view.findViewById(R.id.overview_canceltempbutton);
         cancelTempButton.setOnClickListener(this);
@@ -237,14 +249,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
         showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
         showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
+        showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
         showBasalsView.setChecked(SP.getBoolean("showbasals", false));
         showIobView.setChecked(SP.getBoolean("showiob", false));
         showCobView.setChecked(SP.getBoolean("showcob", false));
+        showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
         showPredictionView.setOnCheckedChangeListener(this);
         showBasalsView.setOnCheckedChangeListener(this);
         showIobView.setOnCheckedChangeListener(this);
         showCobView.setOnCheckedChangeListener(this);
+        showDeviationsView.setOnCheckedChangeListener(this);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(true);
@@ -260,6 +275,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
+
+        bgGraph.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                rangeToDisplay += 6;
+                rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
+                updateGUI("rangeChange");
+                return false;
+            }
+        });
 
         return view;
     }
@@ -307,8 +332,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 scheduleUpdateGUI("onIobCheckedChanged");
                 break;
             case R.id.overview_showcob:
+                showDeviationsView.setOnCheckedChangeListener(null);
+                showDeviationsView.setChecked(false);
+                showDeviationsView.setOnCheckedChangeListener(this);
                 SP.putBoolean("showcob", showCobView.isChecked());
+                SP.putBoolean("showdeviations", showDeviationsView.isChecked());
                 scheduleUpdateGUI("onCobCheckedChanged");
+                break;
+            case R.id.overview_showdeviations:
+                showCobView.setOnCheckedChangeListener(null);
+                showCobView.setChecked(false);
+                showCobView.setOnCheckedChangeListener(this);
+                SP.putBoolean("showcob", showCobView.isChecked());
+                SP.putBoolean("showdeviations", showDeviationsView.isChecked());
+                scheduleUpdateGUI("onDeviationsCheckedChanged");
                 break;
         }
     }
@@ -457,76 +494,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         }
                     });
                 break;
-           case R.id.overview_menuButton:
-               PopupMenu popup = new PopupMenu(getContext(), v);
-               MenuInflater inflater = popup.getMenuInflater();
-               inflater.inflate(R.menu.menu_main, popup.getMenu());
-               popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                   @Override
-                   public boolean onMenuItemClick(MenuItem item) {
-                       int id = item.getItemId();
-                       switch (id) {
-                           case R.id.nav_preferences:
-                               PasswordProtection.QueryPassword(getContext(), R.string.settings_password, "settings_password", new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       Intent i = new Intent(getContext(), PreferencesActivity.class);
-                                       startActivity(i);
-                                   }
-                               }, null);
-                               break;
-                           case R.id.nav_resetdb:
-                               new AlertDialog.Builder(getContext())
-                                       .setTitle(R.string.nav_resetdb)
-                                       .setMessage(R.string.reset_db_confirm)
-                                       .setNegativeButton(android.R.string.cancel, null)
-                                       .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                                           @Override
-                                           public void onClick(DialogInterface dialog, int which) {
-                                               MainApp.getDbHelper().resetDatabases();
-                                           }
-                                       })
-                                       .create()
-                                       .show();
-                               break;
-                           case R.id.nav_export:
-                               ImportExportPrefs.verifyStoragePermissions(getActivity());
-                               ImportExportPrefs.exportSharedPreferences(getActivity());
-                               break;
-                           case R.id.nav_import:
-                               ImportExportPrefs.verifyStoragePermissions(getActivity());
-                               ImportExportPrefs.importSharedPreferences(getActivity());
-                               break;
-                           case R.id.nav_show_logcat:
-                               LogDialog.showLogcat(getContext());
-                               break;
-                           case R.id.nav_about:
-                               AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                               builder.setTitle(getString(R.string.app_name) + " " + BuildConfig.VERSION);
-                               if (BuildConfig.NSCLIENTOLNY)
-                                   builder.setIcon(R.mipmap.yellowowl);
-                               else
-                                   builder.setIcon(R.mipmap.blueowl);
-                               builder.setMessage("Build: " + BuildConfig.BUILDVERSION);
-                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                               AlertDialog alertDialog = builder.create();
-                               alertDialog.show();
-                               break;
-                           case R.id.nav_exit:
-                               log.debug("Exiting");
-                               MainApp.instance().stopKeepAliveService();
-                               MainApp.bus().post(new EventAppExit());
-                               MainApp.closeDbHelper();
-                               getActivity().finish();
-                               System.runFinalization();
-                               System.exit(0);
-                               break;
-                       }
-                       return false;
-                   }
-               });
-               popup.show();
-               break;
         }
 
     }
@@ -1047,9 +1014,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
         if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
             showPredictionView.setVisibility(View.VISIBLE);
+            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
         } else {
             showPredictionView.setVisibility(View.GONE);
-        }
+            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);        }
 
         // ****** GRAPH *******
 
@@ -1069,12 +1037,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
-            hoursToFetch = (int) (6 - predHours);
+            hoursToFetch = (int) (rangeToDisplay - predHours);
             toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime + predHours * 60 * 60 * 1000L;
         } else {
-            hoursToFetch = 6;
+            hoursToFetch = rangeToDisplay;
             toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime;
@@ -1169,27 +1137,45 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             basalsLineSeries.setCustomPaint(paint);
         }
 
-        // **** IOB COB graph ****
+        // **** IOB COB DEV graph ****
+        class DeviationDataPoint extends DataPoint {
+            public int color;
+            public DeviationDataPoint(double x, double y, int color) {
+                super(x, y);
+                this.color = color;
+            }
+        }
         FixedLineGraphSeries<DataPoint> iobSeries;
         FixedLineGraphSeries<DataPoint> cobSeries;
+        BarGraphSeries<DeviationDataPoint> devSeries;
         Double maxIobValueFound = 0d;
         Double maxCobValueFound = 0d;
+        Double maxDevValueFound = 0d;
 
-        if (showIobView.isChecked() || showCobView.isChecked()) {
+        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked()) {
             //Date start = new Date();
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
+            List<DeviationDataPoint> devArray = new ArrayList<>();
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
                     IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
                     iobArray.add(new DataPoint(time, iob.iob));
                     maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
                 }
-                if (showCobView.isChecked()) {
+                if (showCobView.isChecked() || showDeviationsView.isChecked()) {
                     AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
-                    if (autosensData != null) {
+                    if (autosensData != null && showCobView.isChecked()) {
                         cobArray.add(new DataPoint(time, autosensData.cob));
                         maxCobValueFound = Math.max(maxCobValueFound, autosensData.cob);
+                    }
+                    if (autosensData != null && showDeviationsView.isChecked()) {
+                        int color = Color.BLACK; // "="
+                        if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
+                        if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
+                        if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
+                        devArray.add(new DeviationDataPoint(time, autosensData.deviation, color));
+                        maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
                     }
                 }
             }
@@ -1201,17 +1187,21 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.iob)); //50%
             iobSeries.setColor(MainApp.sResources.getColor(R.color.iob));
             iobSeries.setThickness(3);
-            iobSeries.setTitle("IOB");
-            iobGraph.getGridLabelRenderer().setVerticalLabelsAlign(Paint.Align.LEFT);
 
 
-            if (showIobView.isChecked() && showCobView.isChecked()) {
+            if (showIobView.isChecked() && (showCobView.isChecked() || showDeviationsView.isChecked())) {
                 List<DataPoint> cobArrayRescaled = new ArrayList<>();
+                List<DeviationDataPoint> devArrayRescaled = new ArrayList<>();
                 for (int ci = 0; ci < cobArray.size(); ci++) {
                     cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxIobValueFound / maxCobValueFound / 2));
                 }
+                for (int ci = 0; ci < devArray.size(); ci++) {
+                    devArrayRescaled.add(new DeviationDataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxIobValueFound / maxDevValueFound, devArray.get(ci).color));
+                }
                 cobArray = cobArrayRescaled;
+                devArray = devArrayRescaled;
             }
+            // COB
             DataPoint[] cobData = new DataPoint[cobArray.size()];
             cobData = cobArray.toArray(cobData);
             cobSeries = new FixedLineGraphSeries<>(cobData);
@@ -1219,7 +1209,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
             cobSeries.setColor(MainApp.sResources.getColor(R.color.cob));
             cobSeries.setThickness(3);
-            cobSeries.setTitle("COB");
+
+            // DEVIATIONS
+            DeviationDataPoint[] devData = new DeviationDataPoint[devArray.size()];
+            devData = devArray.toArray(devData);
+            devSeries = new BarGraphSeries<>(devData);
+            devSeries.setValueDependentColor(new ValueDependentColor<DeviationDataPoint>() {
+                @Override
+                public int get(DeviationDataPoint data) {
+                    return data.color;
+                }
+            });
+            //devSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
+            //devSeries.setColor(MainApp.sResources.getColor(R.color.cob));
+            //devSeries.setThickness(3);
 
             iobGraph.removeAllSeries();
 
@@ -1228,21 +1231,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
             if (showCobView.isChecked() && cobData.length > 0) {
                 iobGraph.addSeries(cobSeries);
- /*               iobGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
-                    @Override
-                    public String formatLabel(double value, boolean isValueX) {
-                        return "";
-                    }
-
-                    @Override
-                    public void setViewport(Viewport viewport) {
-                    }
-                });
-*/
             }
-            iobGraphLayout.setVisibility(View.VISIBLE);
+            if (showDeviationsView.isChecked() && devData.length > 0) {
+                iobGraph.addSeries(devSeries);
+            }
+            iobGraph.setVisibility(View.VISIBLE);
         } else {
-            iobGraphLayout.setVisibility(View.GONE);
+            iobGraph.setVisibility(View.GONE);
         }
 
         // remove old data from graph

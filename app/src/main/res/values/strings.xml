@@ -582,11 +582,12 @@
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
+    <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">INS</string>
-    <string name="fastactinginsulinprolonged">Fast Acting Insuin Prolonged</string>
+    <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Enable superbolus in wizard</string>
     <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
@@ -598,5 +599,9 @@
     <string name="virtualpump_lastconnection_label">Last connection</string>
     <string name="danar_bluetooth_status">Bluetooh status</string>
     <string name="nav_about">About</string>
-    <string name="danarv2pump">DanaRv2</string>
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+    <string name="dev">DEV</string>
+    <string name="xdripstatus_settings">xDrip Status (watch)</string>
+    <string name="xdripstatus">xDrip Statusline (watch)</string>
+    <string name="xdripstatus_shortname">xds</string>
 </resources>

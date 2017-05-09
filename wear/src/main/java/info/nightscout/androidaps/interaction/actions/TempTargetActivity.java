@@ -35,6 +35,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
     PlusMinusEditText highRange;
     PlusMinusEditText time;
     boolean isMGDL;
+    boolean isSingleTarget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
+        isSingleTarget =  sp.getBoolean("singletarget", false);
     }
 
 
@@ -62,7 +64,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return 4;
+            return isSingleTarget?3:4;
         }
 
         @Override
@@ -102,10 +104,14 @@ public class TempTargetActivity extends ViewSelectorActivity {
                      }
                      lowRange = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 4d, 10d, 0.1d, new DecimalFormat("#0.0"), false);
                  }
-                 setLabelToPlusMinusView(view, "low");
+                 if(isSingleTarget){
+                     setLabelToPlusMinusView(view, "target");
+                 } else {
+                     setLabelToPlusMinusView(view, "low");
+                 }
                  container.addView(view);
                  return view;
-             } else if(col == 2){
+             } else if(col == 2 && ! isSingleTarget){
                  final View view = getInflatedPlusMinusView(container);
                  if (isMGDL){
                      double def = 100;
@@ -138,7 +144,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
                                 + " " + isMGDL
                                 + " " + SafeParse.stringToInt(time.editText.getText().toString())
                                 + " " + SafeParse.stringToDouble(lowRange.editText.getText().toString())
-                                + " " + SafeParse.stringToDouble(highRange.editText.getText().toString())
+                                + " " + (isSingleTarget?SafeParse.stringToDouble(lowRange.editText.getText().toString()):SafeParse.stringToDouble(highRange.editText.getText().toString()))
                                 ;
 
                         ListenerService.initiateAction(TempTargetActivity.this, actionstring);

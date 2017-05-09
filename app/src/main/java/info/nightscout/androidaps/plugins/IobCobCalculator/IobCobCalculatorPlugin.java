@@ -234,7 +234,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         synchronized (dataLock) {
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile() != null ? ConfigBuilderPlugin.getActiveProfile().getProfile() : null;
 
-            if (profile == null) {
+            if (profile == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getIc(NSProfile.secondsFromMidnight()) == null) {
                 log.debug("calculateSensitivityData: No profile available");
                 return;
             }
@@ -280,12 +280,11 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     log.error("! value < 39");
                     continue;
                 }
-                avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
                 delta = (bg - bucketed_data.get(i + 1).value);
 
                 IobTotal iob = calulateFromTreatmentsAndTemps(bgTime);
 
-                double bgi = Math.round((-iob.activity * sens * 5) * 100) / 100d;
+                double bgi = -iob.activity * sens * 5;
                 double deviation = delta - bgi;
 
                 List<Treatment> recentTreatments = treatmentsInterface.getTreatments5MinBack(bgTime);
@@ -304,13 +303,15 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 }
                 autosensData.cob += autosensData.carbsFromBolus;
                 autosensData.deviation = deviation;
+                autosensData.bgi = bgi;
+                autosensData.delta = delta;
 
                 // calculate autosens only without COB
                 if (autosensData.cob <= 0) {
-                    if (deviation > 0) {
-                        autosensData.pastSensitivity += "+";
-                    } else if (deviation == 0) {
+                    if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
                         autosensData.pastSensitivity += "=";
+                    } else if (deviation > 0) {
+                        autosensData.pastSensitivity += "+";
                     } else {
                         autosensData.pastSensitivity += "-";
                     }
@@ -352,11 +353,24 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return iobTotal;
     }
 
+    private static Long findPreviousTimeFromBucketedData(long time) {
+        if (bucketed_data == null)
+            return null;
+        for (int index = 0; index < bucketed_data.size(); index++) {
+            if (bucketed_data.get(index).timeIndex < time)
+                return bucketed_data.get(index).timeIndex;
+        }
+        return null;
+    }
+
     public static AutosensData getAutosensData(long time) {
         long now = new Date().getTime();
         if (time > now)
             return null;
-        time = roundUpTime(time);
+        Long previous = findPreviousTimeFromBucketedData(time);
+        if (previous == null)
+            return null;
+        time = roundUpTime(previous);
         AutosensData data = autosensDataTable.get(time);
         if (data != null) {
             //log.debug(">>> Cache hit " + data.log(time));
@@ -368,6 +382,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
     public static AutosensData getLastAutosensData() {
+        if (autosensDataTable.size() < 1)
+            return null;
         AutosensData data = autosensDataTable.valueAt(autosensDataTable.size() - 1);
         if (data.time < new Date().getTime() - 5 * 60 * 1000) {
             return null;
@@ -432,7 +448,19 @@ public class IobCobCalculatorPlugin implements PluginBase {
             Double[] deviations = new Double[deviationsArray.size()];
             deviations = deviationsArray.toArray(deviations);
 
+            if (ConfigBuilderPlugin.getActiveProfile() == null || ConfigBuilderPlugin.getActiveProfile().getProfile() == null) {
+                log.debug("No profile available");
+                return new AutosensResult();
+            }
+
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+
+            Double sens = profile.getIsf(NSProfile.secondsFromMidnight());
+
+            if (sens == null || profile.getMaxDailyBasal() == 0) {
+                log.debug("No profile available");
+                return new AutosensResult();
+            }
 
             double ratio = 1;
             String ratioLimit = "";
@@ -452,10 +480,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
             double basalOff = 0;
 
             if (pSensitive < 0) { // sensitive
-                basalOff = pSensitive * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
+                basalOff = pSensitive * (60 / 5) / NSProfile.toMgdl(sens, profile.getUnits());
                 sensResult = "Excess insulin sensitivity detected";
             } else if (pResistant > 0) { // resistant
-                basalOff = pResistant * (60 / 5) / NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits());
+                basalOff = pResistant * (60 / 5) / NSProfile.toMgdl(sens, profile.getUnits());
                 sensResult = "Excess insulin resistance detected";
             } else {
                 sensResult = "Sensitivity normal";
@@ -472,9 +500,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 log.debug(ratioLimit);
             }
 
-            double newisf = Math.round(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits()) / ratio);
+            double newisf = Math.round(NSProfile.toMgdl(sens, profile.getUnits()) / ratio);
             if (ratio != 1) {
-                log.debug("ISF adjusted from " + NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()), profile.getUnits()) + " to " + newisf);
+                log.debug("ISF adjusted from " + NSProfile.toMgdl(sens, profile.getUnits()) + " to " + newisf);
             }
 
             AutosensResult output = new AutosensResult();

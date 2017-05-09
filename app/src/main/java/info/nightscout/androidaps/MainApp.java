@@ -56,6 +56,8 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
+import info.nightscout.androidaps.plugins.XDripStatusline.StatuslineFragment;
+import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import io.fabric.sdk.android.Fabric;
 
@@ -122,6 +124,7 @@ public class MainApp extends Application {
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.getPlugin());
 
             if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
+            pluginsList.add(StatuslineFragment.getPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
             pluginsList.add(NSClientInternalFragment.getPlugin());
 
