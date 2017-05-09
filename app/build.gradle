@@ -44,7 +44,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 23
         versionCode 1400
-        version "1.42"
+        version "1.43"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
