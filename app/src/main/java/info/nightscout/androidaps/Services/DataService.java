@@ -356,7 +356,7 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
-                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
+                MainApp.bus().post(new EventNewBasalProfile(nsProfile, "NSClient"));
 
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null) {

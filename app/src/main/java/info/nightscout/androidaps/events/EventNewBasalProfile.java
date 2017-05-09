@@ -7,8 +7,10 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
  */
 public class EventNewBasalProfile {
     public NSProfile newNSProfile = null;
+    public String from = "";
 
-    public EventNewBasalProfile(NSProfile newProfile) {
+    public EventNewBasalProfile(NSProfile newProfile, String from) {
         newNSProfile = newProfile;
+        this.from = from;
     }
 }

@@ -618,7 +618,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                     if (pump != null) {
                                         pump.setNewBasalProfile(nsProfile);
                                         log.debug("Setting new profile: " + profile);
-                                        MainApp.bus().post(new EventNewBasalProfile(nsProfile));
+                                        MainApp.bus().post(new EventNewBasalProfile(nsProfile, "NewNSTreatmentDialog"));
                                     } else {
                                         log.error("No active pump selected");
                                     }
