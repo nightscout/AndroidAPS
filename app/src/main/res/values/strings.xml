@@ -19,13 +19,13 @@
     <string name="objectives_gate_label_string">Gate:</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
-    <string name="nsprofileview_units_label">Units:</string>
-    <string name="nsprofileview_dia_label">DIA:</string>
-    <string name="nsprofileview_activeprofile_label">Active profile:</string>
-    <string name="nsprofileview_ic_label">IC:</string>
-    <string name="nsprofileview_isf_label">ISF:</string>
-    <string name="nsprofileview_basal_label">Basal:</string>
-    <string name="nsprofileview_target_label">Target:</string>
+    <string name="nsprofileview_units_label">Units</string>
+    <string name="nsprofileview_dia_label">DIA</string>
+    <string name="nsprofileview_activeprofile_label">Active profile</string>
+    <string name="nsprofileview_ic_label">IC</string>
+    <string name="nsprofileview_isf_label">ISF</string>
+    <string name="nsprofileview_basal_label">Basal</string>
+    <string name="nsprofileview_target_label">Target</string>
     <string name="noprofileset">NO PROFILE SET</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
@@ -508,12 +508,12 @@
     <string name="settings_password">Password for settings</string>
     <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
-    <string name="nsclientinternal">NSClient internal</string>
+    <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
     <string name="restart">Restart</string>
-    <string name="nsclientinternal_title">Internal NSClient</string>
+    <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
@@ -605,4 +605,8 @@
     <string name="xdripstatus_shortname">xds</string>
     <string name="wear_showbgi_title">Show BGI</string>
     <string name="wear_showbgi_summary">Add BGI to status line</string>
+    <string name="ns_noupload">No upload to NS</string>
+    <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
+    <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
+    <string name="key_ns_noupload" translatable="false">ns_noupload</string>
 </resources>

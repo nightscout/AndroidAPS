@@ -391,7 +391,7 @@ public class ExecutionService extends Service {
         return true;
     }
 
-    public boolean bolus(Double amount, int carbs, Treatment t) {
+    public boolean bolus(double amount, int carbs, Treatment t) {
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
@@ -405,6 +405,7 @@ public class ExecutionService extends Service {
         }
         MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
         MainApp.bus().post(new EventDanaRBolusStart());
+        long startTime = new Date().getTime();
 
         if (!stop.stopped) {
             mSerialIOThread.sendMessage(start);
@@ -422,7 +423,23 @@ public class ExecutionService extends Service {
         }
         waitMsec(300);
         bolusingTreatment = null;
-        getPumpStatus();
+        // try to find real amount if bolusing was interrupted or comm failed
+        if (t.insulin != amount) {
+            disconnect("bolusingInterrupted");
+            long now = new Date().getTime();
+            long estimatedBolusEnd = (long) (startTime + amount / 5d * 60 * 1000); // std delivery rate 5 U/min
+            waitMsec(Math.max(5000, estimatedBolusEnd - now + 3000));
+            connect("bolusingInterrupted");
+            getPumpStatus();
+            if (danaRPump.lastBolusTime.getTime() > now - 60 * 1000L) { // last bolus max 1 min old
+                t.insulin = danaRPump.lastBolusAmount;
+                log.debug("Used bolus amount from history: " + danaRPump.lastBolusAmount);
+            } else {
+                log.debug("Bolus amount in history too old: " + danaRPump.lastBolusTime.toLocaleString());
+            }
+        } else {
+            getPumpStatus();
+        }
         return true;
     }
 

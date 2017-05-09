@@ -421,6 +421,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<Treatment>();
     }
 
+    public void delete(TempBasal tempBasal) {
+        try {
+            getDaoTempBasals().delete(tempBasal);
+            latestTreatmentChange = tempBasal.getTimeIndex();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleTreatmentChange();
+    }
+
     public List<TempTarget> getTemptargetsDataFromTime(long mills, boolean ascending) {
         try {
             Dao<TempTarget, Long> daoTempTargets = getDaoTempTargets();

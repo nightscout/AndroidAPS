@@ -45,10 +45,6 @@ public class StatuslinePlugin implements PluginBase {
     StatuslinePlugin(Context ctx) {
         this.ctx = ctx;
         this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
-
-        if (fragmentEnabled) {
-            MainApp.bus().register(this);
-        }
     }
 
     @Override
@@ -108,11 +104,15 @@ public class StatuslinePlugin implements PluginBase {
             this.fragmentEnabled = fragmentEnabled;
 
             if (fragmentEnabled) {
-                MainApp.bus().register(this);
+                try {
+                    MainApp.bus().register(this);
+                } catch (Exception e) {}
                 sendStatus();
             }
             else{
-                MainApp.bus().unregister(this);
+                try {
+                    MainApp.bus().unregister(this);
+                } catch (Exception e) {}
                 sendStatus();
             }
         }
