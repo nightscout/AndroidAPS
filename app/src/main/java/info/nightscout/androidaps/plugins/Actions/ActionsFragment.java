@@ -61,6 +61,9 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
         tempBasal.setOnClickListener(this);
         fill.setOnClickListener(this);
 
+        view.findViewById(R.id.actions_50_30).setOnClickListener(this);
+        view.findViewById(R.id.actions_400_15).setOnClickListener(this);
+
         updateGUIIfVisible();
         return view;
     }
@@ -147,6 +150,10 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
             case R.id.actions_fill:
                 FillDialog fillDialog = new FillDialog();
                 fillDialog.show(manager, "FillDialog");
+                break;
+            case R.id.actions_50_30:
+                break;
+            case R.id.actions_400_15:
                 break;
         }
     }

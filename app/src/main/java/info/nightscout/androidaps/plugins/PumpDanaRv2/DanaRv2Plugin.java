@@ -464,8 +464,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         }
         int durationInHours = Math.max(durationInMinutes / 60, 1);
         boolean connectionOK = false;
-        if (percent < 100) connectionOK = sExecutionService.tempBasal(percent, durationInHours);
-        else connectionOK =sExecutionService.highTempBasal(percent);
+        connectionOK = sExecutionService.tempBasal(percent, durationInHours);
         if (connectionOK && getDanaRPump().isTempBasalInProgress && getDanaRPump().tempBasalPercent == percent) {
             result.enacted = true;
             result.success = true;
@@ -482,6 +481,28 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
         log.error("setTempBasalPercent: Failed to set temp basal");
+        return result;
+    }
+
+    public PumpEnactResult setHighTempBasalPercent(Integer percent) {
+        PumpEnactResult result = new PumpEnactResult();
+        boolean connectionOK = sExecutionService.highTempBasal(percent);
+        if (connectionOK && getDanaRPump().isTempBasalInProgress && getDanaRPump().tempBasalPercent == percent) {
+            result.enacted = true;
+            result.success = true;
+            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            result.isTempCancel = false;
+            result.duration = getDanaRPump().tempBasalRemainingMin;
+            result.percent = getDanaRPump().tempBasalPercent;
+            result.isPercent = true;
+            if (Config.logPumpActions)
+                log.debug("setHighTempBasalPercent: OK");
+            return result;
+        }
+        result.enacted = false;
+        result.success = false;
+        result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+        log.error("setHighTempBasalPercent: Failed to set temp basal");
         return result;
     }
 
