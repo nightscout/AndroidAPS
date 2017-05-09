@@ -18,9 +18,9 @@
     <string name="objectives_gate_label_string">방법:</string>
     <string name="objectives_button_start">시작</string>
     <string name="objectives_button_verify">확인</string>
-    <string name="nsprofileview_units_label">단위:</string>
+    <string name="nsprofileview_units_label">단위</string>
     <string name="nsprofileview_dia_label">인슐린활동시간(DIA):</string>
-    <string name="nsprofileview_activeprofile_label">활성 프로파일:</string>
+    <string name="nsprofileview_activeprofile_label">활성 프로파일</string>
     <string name="nsprofileview_ic_label">인슐린 대 탄수화물 비율(IC):</string>
     <string name="nsprofileview_isf_label">인슐린 민감도(ISF):</string>
     <string name="nsprofileview_basal_label">기초주입:</string>
