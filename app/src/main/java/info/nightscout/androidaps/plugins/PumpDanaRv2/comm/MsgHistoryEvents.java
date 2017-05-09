@@ -85,6 +85,9 @@ public class MsgHistoryEvents extends MessageBase {
             case 13:
                 log.debug("EVENT PROFILECHANGE (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " No: " + param1 + "U CurrentRate: " + param2 + "U/h");
                 break;
+            case 14:
+                log.debug("EVENT CARBS (" + recordCode + ") " + DateUtil.dateAndTimeString(datetime) + " Carbs: " + param1 + "g");
+                break;
             default:
                 log.debug("Event: " + recordCode + " " + DateUtil.dateAndTimeString(datetime) + " Param1: " + param1 + " Param2: " + param2);
                 break;

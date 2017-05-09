@@ -16,17 +16,13 @@ public class MsgStatusAPSTempBasal extends MessageBase {
 
     public void handleMessage(byte[] bytes) {
         double iob = intFromBuff(bytes, 0, 2) / 100d;
-        int tempBasalPercent = intFromBuff(bytes, 2, 2);
+        double deliveredSoFar = intFromBuff(bytes, 2, 2) / 100d;
 
         DanaRPump pump = DanaRPump.getInstance();
-        pump.isTempBasalInProgress = tempBasalPercent != 100;
-        pump.tempBasalPercent = tempBasalPercent;
         pump.iob = iob;
 
-
         if (Config.logDanaMessageDetail) {
-            log.debug("Is APS temp basal running: " + pump.isTempBasalInProgress);
-            log.debug("Current APS temp basal percent: " + tempBasalPercent);
+            log.debug("Delivered so far: " + deliveredSoFar);
             log.debug("Current pump IOB: " + iob);
         }
     }

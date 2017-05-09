@@ -21,9 +21,16 @@ public class MsgSetAPSTempBasalStart extends MessageBase {
         if (percent > 500) percent = 500;
 
         AddParamInt(percent);
+        if (percent < 100) {
+            AddParamByte((byte) 0xA0); // 160
+            if (Config.logDanaMessageDetail)
+                log.debug("APS Temp basal start percent: " + percent + " duration 30 min");
+        } else {
+            AddParamByte((byte) 0x96); // 150
+            if (Config.logDanaMessageDetail)
+                log.debug("APS Temp basal start percent: " + percent + " duration 15 min");
+        }
 
-        if (Config.logDanaMessageDetail)
-            log.debug("APS Temp basal start percent: " + percent + " duration 15 min");
     }
 
     public void handleMessage(byte[] bytes) {
