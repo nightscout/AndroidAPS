@@ -603,4 +603,6 @@
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">xDrip Statusline (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
+    <string name="wear_showbgi_title">Show BGI</string>
+    <string name="wear_showbgi_summary">Add BGI to status line</string>
 </resources>
