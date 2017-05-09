@@ -14,10 +14,12 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.db.DbRequest;
+import info.nightscout.utils.SP;
 
 public class DBAccessReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(DBAccessReceiver.class);
@@ -30,6 +32,10 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 "sendQueue");
         NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
         if (!nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
+            return;
+        }
+        if (SP.getBoolean(R.string.key_ns_noupload, false)) {
+            log.debug("Upload disabled. Message dropped");
             return;
         }
         wakeLock.acquire();

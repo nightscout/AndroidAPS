@@ -41,6 +41,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 public class TreatmentsFragment extends Fragment implements View.OnClickListener {
@@ -192,8 +193,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
-                SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getContext());
-                boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
+                boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
                 if (nsUploadOnly) {
                     ToastUtils.showToastInUiThread(getContext(), this.getContext().getString(R.string.ns_upload_only_enabled));
                 } else {
