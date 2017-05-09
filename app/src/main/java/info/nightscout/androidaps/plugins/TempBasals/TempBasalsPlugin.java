@@ -112,7 +112,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
         return PluginBase.TEMPBASAL;
     }
 
-    private void initializeData() {
+    public void initializeData() {
         double dia = 3;
         if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
             dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();

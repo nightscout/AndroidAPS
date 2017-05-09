@@ -38,6 +38,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -73,16 +74,15 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         @Override
         public TreatmentsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_item, viewGroup, false);
-            TreatmentsViewHolder treatmentsViewHolder = new TreatmentsViewHolder(v);
-            return treatmentsViewHolder;
+            return new TreatmentsViewHolder(v);
         }
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
-            if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null) // app not initialized yet
+            if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
                 return;
-            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
+            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+            InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
             if (profile == null || insulinInterface == null)
                 return;
             holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).created_at));
@@ -138,7 +138,6 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 final Treatment treatment = (Treatment) v.getTag();
-                final Context finalContext = context;
                 switch (v.getId()) {
                     case R.id.treatments_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -153,7 +152,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                                 MainApp.getDbHelper().delete(treatment);
                                 treatmentsPlugin.initializeData();
                                 updateGUI();
-                                Answers.getInstance().logCustom(new CustomEvent("RefreshTreatments"));
+                                Answers.getInstance().logCustom(new CustomEvent("RemoveTreatment"));
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);
