@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.TempBasals;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.j256.ormlite.dao.Dao;
@@ -20,12 +18,13 @@ import java.util.List;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
-import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -45,8 +44,7 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
     private static boolean fragmentVisible = true;
 
     public TempBasalsPlugin() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
+        useExtendedBoluses = SP.getBoolean("danar_useextended", false);
         initializeData();
         MainApp.bus().register(this);
     }
@@ -271,9 +269,10 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
     }
 
     public void onStatusEvent(final EventPreferenceChange s) {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-        useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
-        initializeData();
+        if (s.isChanged("danar_useextended")) {
+            useExtendedBoluses = SP.getBoolean("danar_useextended", false);
+            initializeData();
+        }
     }
 
 
