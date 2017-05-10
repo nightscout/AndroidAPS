@@ -246,7 +246,7 @@ public class DetermineBasalAdapterAMAJS {
         mGlucoseStatus = new V8Object(mV8rt);
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
 
-        if(PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).getBoolean("always_use_shortavg", false)){
+        if(SP.getBoolean("always_use_shortavg", false)){
             mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.add("delta", glucoseStatus.delta);

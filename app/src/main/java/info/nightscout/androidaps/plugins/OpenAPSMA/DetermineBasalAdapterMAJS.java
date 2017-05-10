@@ -22,6 +22,7 @@ import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterMAJS.class);
@@ -254,7 +255,7 @@ public class DetermineBasalAdapterMAJS {
         mIobData.add("hightempinsulin", iobData.hightempinsulin);
 
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
-        if(PreferenceManager.getDefaultSharedPreferences(MainApp.instance()).getBoolean("always_use_shortavg", false)){
+        if(SP.getBoolean("always_use_shortavg", false)){
             mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.add("delta", glucoseStatus.delta);
