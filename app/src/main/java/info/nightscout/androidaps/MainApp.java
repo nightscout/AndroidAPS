@@ -100,7 +100,7 @@ public class MainApp extends Application {
             pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRv2Fragment.getPlugin());
+            if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIFragment.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpFragment.getPlugin());
