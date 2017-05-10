@@ -603,6 +603,8 @@
     <string name="xdripstatus_settings">xDrip Status (watch)</string>
     <string name="xdripstatus">xDrip Statusline (watch)</string>
     <string name="xdripstatus_shortname">xds</string>
+    <string name="wear_showbgi_title">Show BGI</string>
+    <string name="wear_showbgi_summary">Add BGI to status line</string>
     <string name="ns_noupload">No upload to NS</string>
     <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
     <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>

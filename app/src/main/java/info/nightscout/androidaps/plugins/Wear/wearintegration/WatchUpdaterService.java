@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -503,42 +504,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private void sendStatus() {
         if (googleApiClient.isConnected()) {
 
-            String status = "";
-            boolean shortString = true;
-
-            LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-
-            if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
-                status += getString(R.string.disabledloop) + "\n";
-                lastLoopStatus = false;
-            } else if (activeloop != null && activeloop.isEnabled(PluginBase.LOOP)) {
-                lastLoopStatus = true;
-            }
-
-            //Temp basal
-            PumpInterface pump = MainApp.getConfigBuilder();
-
-            if (pump.isTempBasalInProgress()) {
-                TempBasal activeTemp = pump.getTempBasal();
-                if (shortString) {
-                    status += activeTemp.toStringShort();
-                } else {
-                    status += activeTemp.toStringMedium();
-                }
-            }
-
-            //IOB
-            MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
-            IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
-            MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
-            IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
-            status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
-
-            if (mPrefs.getBoolean("wear_detailediob", true)) {
-                status += "("
-                        + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                        + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
-            }
+            String status = generateStatusString();
 
             PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_STATUS_PATH);
             //unique content
@@ -549,6 +515,56 @@ public class WatchUpdaterService extends WearableListenerService implements
         } else {
             Log.e("SendStatus", "No connection to wearable available!");
         }
+    }
+
+    @NonNull
+    private String generateStatusString() {
+        String status = "";
+        boolean shortString = true;
+
+        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+
+        if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
+            status += getString(R.string.disabledloop) + "\n";
+            lastLoopStatus = false;
+        } else if (activeloop != null && activeloop.isEnabled(PluginBase.LOOP)) {
+            lastLoopStatus = true;
+        }
+
+        //Temp basal
+        PumpInterface pump = MainApp.getConfigBuilder();
+
+        if (pump.isTempBasalInProgress()) {
+            TempBasal activeTemp = pump.getTempBasal();
+            if (shortString) {
+                status += activeTemp.toStringShort();
+            } else {
+                status += activeTemp.toStringMedium();
+            }
+        }
+
+        //IOB
+        MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOB();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculation().round();
+        MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOB();
+        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculation().round();
+        status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+
+        if (mPrefs.getBoolean("wear_detailediob", true)) {
+            status += "("
+                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
+                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+        }
+        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        if (!mPrefs.getBoolean("wear_showbgi", false) ||profile == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getIc(NSProfile.secondsFromMidnight()) == null) {
+            return status;
+        }
+
+        double bgi = -(bolusIob.activity + basalIob.activity)*5*profile.getIsf(NSProfile.secondsFromMidnight());
+
+        status += " " + ((bgi>=0)?"+":"") + DecimalFormatter.to2Decimal(bgi);
+
+        return status;
     }
 
     @Override
