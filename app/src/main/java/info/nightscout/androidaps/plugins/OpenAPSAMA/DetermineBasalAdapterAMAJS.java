@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import android.preference.PreferenceManager;
-
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
