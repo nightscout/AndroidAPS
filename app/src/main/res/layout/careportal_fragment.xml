@@ -19,6 +19,7 @@
 
             <Button
                 android:id="@+id/careportal_bgcheck"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_bgcheck"
@@ -29,6 +30,7 @@
 
             <Button
                 android:id="@+id/careportal_exercise"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_exercise"
@@ -39,6 +41,7 @@
 
             <Button
                 android:id="@+id/careportal_note"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_note"
@@ -49,6 +52,7 @@
 
             <Button
                 android:id="@+id/careportal_snackbolus"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_snackbolus"
@@ -59,6 +63,7 @@
 
             <Button
                 android:id="@+id/careportal_mealbolus"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_mealbolus"
@@ -69,6 +74,7 @@
 
             <Button
                 android:id="@+id/careportal_correctionbolus"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_correctionbolus"
@@ -79,6 +85,7 @@
 
            <Button
                 android:id="@+id/careportal_carbscorrection"
+               style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_carbscorrection"
@@ -89,6 +96,7 @@
 
              <Button
                 android:id="@+id/careportal_combobolus"
+                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_combobolus"
@@ -99,6 +107,7 @@
 
              <Button
                 android:id="@+id/careportal_tempbasalstart"
+                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_tempbasalstart"
@@ -109,6 +118,7 @@
 
              <Button
                 android:id="@+id/careportal_tempbasalend"
+                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_tempbasalend"
@@ -119,6 +129,7 @@
 
             <Button
                 android:id="@+id/careportal_announcement"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_announcement"
@@ -129,6 +140,7 @@
 
             <Button
                 android:id="@+id/careportal_question"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_question"
@@ -139,6 +151,7 @@
 
             <Button
                 android:id="@+id/careportal_pumpsitechange"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_pumpsitechange"
@@ -149,6 +162,7 @@
 
             <Button
                 android:id="@+id/careportal_cgmsensorinsert"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_cgmsensorinsert"
@@ -159,6 +173,7 @@
 
             <Button
                 android:id="@+id/careportal_cgmsensorstart"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_cgmsensorstart"
@@ -169,6 +184,7 @@
 
             <Button
                 android:id="@+id/careportal_insulincartridgechange"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_insulincartridgechange"
@@ -179,6 +195,7 @@
 
             <Button
                 android:id="@+id/careportal_profileswitch"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_profileswitch"
@@ -189,6 +206,7 @@
 
             <Button
                 android:id="@+id/careportal_openapsoffline"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_openapsoffline"
@@ -199,6 +217,7 @@
 
             <Button
                 android:id="@+id/careportal_temporarytarget"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="70dp"
                 android:text="@string/careportal_temporarytarget"

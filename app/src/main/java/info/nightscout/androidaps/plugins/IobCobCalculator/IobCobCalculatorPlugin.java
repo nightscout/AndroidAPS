@@ -156,7 +156,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     private void loadBgData() {
         //log.debug("Locking loadBgData");
         synchronized (dataLock) {
-            onNewProfile(new EventNewBasalProfile(null));
+            onNewProfile(new EventNewBasalProfile(null, "IobCobCalculator init"));
             bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia)), false);
             log.debug("BG data loaded. Size: " + bgReadings.size());
         }
@@ -545,6 +545,20 @@ public class IobCobCalculatorPlugin implements PluginBase {
         if (profile != null) {
             dia = profile.getDia();
         }
+        if (ev.newNSProfile == null) { // on init no need of reset
+            return;
+        }
+        synchronized (dataLock) {
+            log.debug("Invalidating cached data because of new profile from " + ev.from + ". IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+            iobTable = new LongSparseArray<>();
+            autosensDataTable = new LongSparseArray<>();
+        }
+        sHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                calculateSensitivityData();
+            }
+        });
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated

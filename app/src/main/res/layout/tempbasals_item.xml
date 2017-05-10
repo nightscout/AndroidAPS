@@ -168,6 +168,15 @@
                 android:text="0.12 U"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/tempbasals_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/overview_quickwizard_item_remove_button"
+                android:textAlignment="viewEnd"
+                android:textColor="@android:color/holo_orange_light" />
+
         </LinearLayout>
 
     </LinearLayout>

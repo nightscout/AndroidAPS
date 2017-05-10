@@ -54,6 +54,7 @@ import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTarget
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
+import info.nightscout.utils.SP;
 
 
 public class DataService extends IntentService {
@@ -98,8 +99,7 @@ public class DataService extends IntentService {
 
         boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfilePlugin.class);
 
-        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        boolean nsUploadOnly = SP.getBoolean("ns_upload_only", false);
+        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
 
         if (intent != null) {
             final String action = intent.getAction();
@@ -356,7 +356,7 @@ public class DataService extends IntentService {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
                 NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
-                MainApp.bus().post(new EventNewBasalProfile(nsProfile));
+                MainApp.bus().post(new EventNewBasalProfile(nsProfile, "NSClient"));
 
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null) {

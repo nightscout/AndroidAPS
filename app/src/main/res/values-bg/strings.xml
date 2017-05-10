@@ -84,13 +84,13 @@
     <string name="noprofile">Не е зареден профил от NS</string>
     <string name="ns_sync_use_absolute_title">Използване на абсолютни стойности</string>
     <string name="nsclient">NSClient</string>
-    <string name="nsprofileview_activeprofile_label">Активен профил:</string>
+    <string name="nsprofileview_activeprofile_label">Активен профил</string>
     <string name="nsprofileview_basal_label">Базални стойности:</string>
     <string name="nsprofileview_dia_label">DIA (Време на действие на инсулина):</string>
     <string name="nsprofileview_ic_label">IC (Инсулин/въглехидр.):</string>
     <string name="noprofileset">НЕ Е ЗАДАДЕН ПРОФИЛ</string>
     <string name="nsprofileview_target_label">Целeва КЗ:</string>
-    <string name="nsprofileview_units_label">Единици:</string>
+    <string name="nsprofileview_units_label">Единици</string>
     <string name="objectives">Цели</string>
     <string name="objectives_button_start">Старт</string>
     <string name="objectives_button_verify">Проверка</string>
