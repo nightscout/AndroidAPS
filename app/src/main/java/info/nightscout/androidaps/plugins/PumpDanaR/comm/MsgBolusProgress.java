@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
+import com.squareup.otto.Bus;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

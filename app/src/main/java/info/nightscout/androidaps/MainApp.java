@@ -28,10 +28,14 @@ import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPe
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanFragment;
 import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Fragment;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
@@ -95,7 +99,8 @@ public class MainApp extends Application {
             pluginsList.add(InsulinFastactingFragment.getPlugin());
             pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
-            if (Config.DANARKOREAN) pluginsList.add(DanaRKoreanFragment.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRv2Fragment.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIFragment.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpFragment.getPlugin());
@@ -150,8 +155,9 @@ public class MainApp extends Application {
         if (keepAliveReceiver == null) {
             keepAliveReceiver = new KeepAliveReceiver();
             if (Config.DANAR) {
-                startService(new Intent(this, info.nightscout.androidaps.plugins.PumpDanaR.Services.ExecutionService.class));
-                startService(new Intent(this, info.nightscout.androidaps.plugins.PumpDanaRKorean.Services.ExecutionService.class));
+                startService(new Intent(this, DanaRExecutionService.class));
+                startService(new Intent(this, DanaRKoreanExecutionService.class));
+                startService(new Intent(this, DanaRv2ExecutionService.class));
             }
             keepAliveReceiver.setAlarm(this);
         }

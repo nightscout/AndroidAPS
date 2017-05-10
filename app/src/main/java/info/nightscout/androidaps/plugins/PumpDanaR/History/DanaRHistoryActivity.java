@@ -40,7 +40,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.Services.ExecutionService;
+import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -52,7 +52,7 @@ public class DanaRHistoryActivity extends Activity {
     private static Logger log = LoggerFactory.getLogger(DanaRHistoryActivity.class);
 
     private boolean mBounded;
-    private static ExecutionService mExecutionService;
+    private static DanaRExecutionService mExecutionService;
 
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
@@ -95,7 +95,7 @@ public class DanaRHistoryActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        Intent intent = new Intent(this, ExecutionService.class);
+        Intent intent = new Intent(this, DanaRExecutionService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
     }
 
@@ -131,7 +131,7 @@ public class DanaRHistoryActivity extends Activity {
         public void onServiceConnected(ComponentName name, IBinder service) {
             log.debug("Service is connected");
             mBounded = true;
-            ExecutionService.LocalBinder mLocalBinder = (ExecutionService.LocalBinder) service;
+            DanaRExecutionService.LocalBinder mLocalBinder = (DanaRExecutionService.LocalBinder) service;
             mExecutionService = mLocalBinder.getServiceInstance();
         }
     };

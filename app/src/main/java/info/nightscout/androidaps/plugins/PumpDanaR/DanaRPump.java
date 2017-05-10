@@ -16,6 +16,13 @@ import info.nightscout.utils.SP;
  * Created by mike on 04.07.2016.
  */
 public class DanaRPump {
+    private static DanaRPump instance = null;
+
+    public static DanaRPump getInstance() {
+        if (instance == null) instance = new DanaRPump();
+        return instance;
+    }
+
     public static final int UNITS_MGDL = 0;
     public static final int UNITS_MMOL = 1;
 

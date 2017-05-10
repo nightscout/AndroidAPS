@@ -36,7 +36,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.Services.ExecutionService;
+import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -61,10 +61,10 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     static boolean fragmentProfileEnabled = false;
     static boolean fragmentPumpVisible = true;
 
-    public static ExecutionService sExecutionService;
+    public static DanaRExecutionService sExecutionService;
 
 
-    private static DanaRPump sDanaRPump = new DanaRPump();
+    private static DanaRPump sDanaRPump = DanaRPump.getInstance();
     private static boolean useExtendedBoluses = false;
 
     public static PumpDescription pumpDescription = new PumpDescription();
@@ -78,7 +78,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         useExtendedBoluses = sharedPreferences.getBoolean("danar_useextended", false);
 
         Context context = MainApp.instance().getApplicationContext();
-        Intent intent = new Intent(context, ExecutionService.class);
+        Intent intent = new Intent(context, DanaRExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
 
@@ -118,7 +118,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         public void onServiceConnected(ComponentName name, IBinder service) {
             log.debug("Service is connected");
-            ExecutionService.LocalBinder mLocalBinder = (ExecutionService.LocalBinder) service;
+            DanaRExecutionService.LocalBinder mLocalBinder = (DanaRExecutionService.LocalBinder) service;
             sExecutionService = mLocalBinder.getServiceInstance();
         }
     };
@@ -566,7 +566,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             log.error("setTempBasalPercent: Invalid input");
             return result;
         }
-        if (percent > 200) percent = 200;
+        if (percent > getPumpDescription().maxHighTempPercent) percent = getPumpDescription().maxHighTempPercent;
         if (getDanaRPump().isTempBasalInProgress && getDanaRPump().tempBasalPercent == percent) {
             result.enacted = false;
             result.success = true;
@@ -811,7 +811,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
         if (percentRate < 0) percentRate = 0;
-        if (percentRate > 200) percentRate = 200;
+        if (percentRate > getPumpDescription().maxHighTempPercent) percentRate = getPumpDescription().maxHighTempPercent;
         if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
             log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
         return percentRate;

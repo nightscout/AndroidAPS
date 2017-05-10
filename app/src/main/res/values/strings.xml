@@ -582,6 +582,7 @@
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
+    <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>

@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -27,7 +26,7 @@ public class MsgInitConnStatusBolus extends MessageBase {
         if (bytes.length - 10 > 12) {
             return;
         }
-        DanaRPump pump = DanaRPlugin.getDanaRPump();
+        DanaRPump pump = DanaRPump.getInstance();
         int bolusConfig = intFromBuff(bytes, 0, 1);
         pump.isExtendedBolusEnabled = (bolusConfig & 0x01) != 0;
 

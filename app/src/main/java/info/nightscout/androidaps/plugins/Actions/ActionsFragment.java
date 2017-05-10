@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +61,9 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
         extendedBolus.setOnClickListener(this);
         tempBasal.setOnClickListener(this);
         fill.setOnClickListener(this);
+
+        view.findViewById(R.id.actions_50_30).setOnClickListener(this);
+        view.findViewById(R.id.actions_400_15).setOnClickListener(this);
 
         updateGUIIfVisible();
         return view;
@@ -147,6 +151,14 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
             case R.id.actions_fill:
                 FillDialog fillDialog = new FillDialog();
                 fillDialog.show(manager, "FillDialog");
+                break;
+            case R.id.actions_50_30:
+                DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+                danaRv2Plugin.setHighTempBasalPercent(50);
+                break;
+            case R.id.actions_400_15:
+                danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+                danaRv2Plugin.setHighTempBasalPercent(400);
                 break;
         }
     }

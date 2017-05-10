@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpDanaR.comm;
+package info.nightscout.androidaps.plugins.PumpDanaRv2.comm;
 
 import android.support.annotation.NonNull;
 
@@ -12,8 +12,9 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 
 public class MsgStatusBolusExtended extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgStatusBolusExtended.class);
@@ -63,7 +64,7 @@ public class MsgStatusBolusExtended extends MessageBase {
     }
 
     public static void updateExtendedBolusInDB() {
-        DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+        DanaRv2Plugin danaRPlugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
         DanaRPump pump = DanaRPump.getInstance();
         Date now = new Date();
 
