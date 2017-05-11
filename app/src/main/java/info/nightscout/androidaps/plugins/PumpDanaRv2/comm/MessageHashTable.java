@@ -117,9 +117,10 @@ public class MessageHashTable {
             put(new MsgHistoryNewDone());            // 0x42F1 CMD_HISTORY_NEW_DONE
             put(new MsgHistoryNew());                // 0x42F2 CMD_HISTORY_NEW
             put(new MsgCheckValue());                // 0xF0F1 CMD_PUMP_CHECK_VALUE
-            put(new MsgStatusAPSTempBasal());        // 0xE001 CMD_PUMP_APSTEMP_VALUE
+            put(new MsgStatusAPS());                 // 0xE001 CMD_PUMP_APS
             put(new MsgSetAPSTempBasalStart());      // 0xE002 CMD_PUMPSET_APSTEMP
             put(new MsgHistoryEvents());             // 0xE003 CMD_HISTORY_EVENTS
+            put(new MsgStatusAPSTempBasal());        // 0xE004 CMD_PUMP_APSTEMP
         }
     }
 

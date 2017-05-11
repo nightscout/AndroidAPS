@@ -82,6 +82,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.SerialIOThread;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgHistoryEvents;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetAPSTempBasalStart;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusAPS;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusAPSTempBasal;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
@@ -284,6 +285,7 @@ public class DanaRv2ExecutionService extends Service {
             MsgStatus statusMsg = new MsgStatus();
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
+            MsgStatusAPSTempBasal tempAPSStatusMsg = new MsgStatusAPSTempBasal();
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
             MsgCheckValue checkValue = new MsgCheckValue();
 
@@ -295,6 +297,7 @@ public class DanaRv2ExecutionService extends Service {
             }
 
             mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
+            mSerialIOThread.sendMessage(tempAPSStatusMsg);
             mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
@@ -309,13 +312,17 @@ public class DanaRv2ExecutionService extends Service {
                 // Load of status of current basal rate failed, give one more try
                 mSerialIOThread.sendMessage(tempStatusMsg);
             }
+            if (!tempAPSStatusMsg.received) {
+                // Load of status of current basal rate failed, give one more try
+                mSerialIOThread.sendMessage(tempAPSStatusMsg);
+            }
             if (!exStatusMsg.received) {
                 // Load of status of current extended bolus failed, give one more try
                 mSerialIOThread.sendMessage(exStatusMsg);
             }
 
             // Check we have really current status of pump
-            if (!statusMsg.received || !statusBasicMsg.received || !tempStatusMsg.received || !exStatusMsg.received) {
+            if (!statusMsg.received || !statusBasicMsg.received || !tempStatusMsg.received || !tempAPSStatusMsg.received || !exStatusMsg.received) {
                 waitMsec(10 * 1000);
                 log.debug("getPumpStatus failed");
                 return false;
@@ -362,6 +369,7 @@ public class DanaRv2ExecutionService extends Service {
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
+        mSerialIOThread.sendMessage(new MsgStatusAPSTempBasal());
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -371,8 +379,9 @@ public class DanaRv2ExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart(percent));
-        mSerialIOThread.sendMessage(new MsgStatusAPSTempBasal());
+        mSerialIOThread.sendMessage(new MsgStatusAPS());
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
+        mSerialIOThread.sendMessage(new MsgStatusAPSTempBasal());
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
