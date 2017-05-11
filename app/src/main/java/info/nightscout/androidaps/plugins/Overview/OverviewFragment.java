@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.Overview;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
@@ -16,23 +15,19 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -63,11 +58,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.PreferencesActivity;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -76,7 +69,6 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
@@ -115,9 +107,6 @@ import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTarget
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.ImportExportPrefs;
-import info.nightscout.utils.LogDialog;
-import info.nightscout.utils.PasswordProtection;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
@@ -1009,12 +998,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
 
         // iob
-        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOB();
-        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculation().round();
+        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTreatments();
+        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTreatments().round();
         IobTotal basalIob = new IobTotal(new Date().getTime());
         if (ConfigBuilderPlugin.getActiveTempBasals() != null) {
-            ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOB();
-            basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculation().round();
+            ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOBTempBasals();
+            basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculationTempBasals().round();
         }
 
         String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("

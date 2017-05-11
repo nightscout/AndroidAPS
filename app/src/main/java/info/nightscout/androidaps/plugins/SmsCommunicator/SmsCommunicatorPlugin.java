@@ -43,8 +43,6 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.XdripCalibrations;
 
-import static info.nightscout.androidaps.R.string.profile;
-
 /**
  * Created by mike on 05.08.2016.
  */
@@ -256,10 +254,10 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (glucoseStatus != null)
                         reply += MainApp.sResources.getString(R.string.sms_delta) + " " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
 
-                    ConfigBuilderPlugin.getActiveTreatments().updateTotalIOB();
-                    IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculation().round();
-                    ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOB();
-                    IobTotal basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculation().round();
+                    ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTreatments();
+                    IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTreatments().round();
+                    ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOBTempBasals();
+                    IobTotal basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculationTempBasals().round();
 
                     reply += MainApp.sResources.getString(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                             + MainApp.sResources.getString(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

@@ -11,9 +11,9 @@ import info.nightscout.androidaps.data.IobTotal;
  */
 public interface TreatmentsInterface {
 
-    void updateTotalIOB();
-    IobTotal getLastCalculation();
-    IobTotal getCalculationToTime(long time);
+    void updateTotalIOBTreatments();
+    IobTotal getLastCalculationTreatments();
+    IobTotal getCalculationToTimeTreatments(long time);
     MealData getMealData();
     List<Treatment> getTreatments();
     List<Treatment> getTreatments5MinBack(long time);

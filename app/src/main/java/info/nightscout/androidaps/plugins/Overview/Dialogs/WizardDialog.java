@@ -34,7 +34,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -52,10 +51,8 @@ import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.utils.BolusWizard;
@@ -414,13 +411,13 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
 
         // IOB calculation
         TreatmentsInterface treatments = ConfigBuilderPlugin.getActiveTreatments();
-        treatments.updateTotalIOB();
-        IobTotal bolusIob = treatments.getLastCalculation();
+        treatments.updateTotalIOBTreatments();
+        IobTotal bolusIob = treatments.getLastCalculationTreatments();
         TempBasalsInterface tempBasals = ConfigBuilderPlugin.getActiveTempBasals();
         IobTotal basalIob = new IobTotal(new Date().getTime());
         if (tempBasals != null) {
-            tempBasals.updateTotalIOB();
-            basalIob = tempBasals.getLastCalculation().round();
+            tempBasals.updateTotalIOBTempBasals();
+            basalIob = tempBasals.getLastCalculationTempBasals().round();
         }
 
         bolusIobInsulin.setText(DecimalFormatter.to2Decimal(-bolusIob.iob) + "U");

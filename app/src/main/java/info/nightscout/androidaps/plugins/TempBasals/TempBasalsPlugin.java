@@ -176,16 +176,16 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
     public void updateTotalIOBIfNeeded() {
         if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
             return;
-        updateTotalIOB();
+        updateTotalIOBTempBasals();
     }
 
     @Override
-    public IobTotal getLastCalculation() {
+    public IobTotal getLastCalculationTempBasals() {
         return lastCalculation;
     }
 
     @Override
-    public IobTotal getCalculationToTime(long time) {
+    public IobTotal getCalculationToTimeTempBasals(long time) {
         checkForExpired(tempBasals);
         checkForExpired(extendedBoluses);
         IobTotal total = new IobTotal(time);
@@ -208,8 +208,8 @@ public class TempBasalsPlugin implements PluginBase, TempBasalsInterface {
     }
 
     @Override
-    public void updateTotalIOB() {
-        IobTotal total = getCalculationToTime(new Date().getTime());
+    public void updateTotalIOBTempBasals() {
+        IobTotal total = getCalculationToTimeTempBasals(new Date().getTime());
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;

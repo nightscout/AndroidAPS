@@ -120,16 +120,16 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public void updateTotalIOBIfNeeded() {
         if (lastCalculationTimestamp > new Date().getTime() - 60 * 1000)
             return;
-        updateTotalIOB();
+        updateTotalIOBTreatments();
     }
 
     @Override
-    public IobTotal getLastCalculation() {
+    public IobTotal getLastCalculationTreatments() {
         return lastCalculation;
     }
 
     @Override
-    public IobTotal getCalculationToTime(long time) {
+    public IobTotal getCalculationToTimeTreatments(long time) {
         IobTotal total = new IobTotal(time);
 
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
@@ -154,8 +154,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void updateTotalIOB() {
-        IobTotal total = getCalculationToTime(new Date().getTime());
+    public void updateTotalIOBTreatments() {
+        IobTotal total = getCalculationToTimeTreatments(new Date().getTime());
 
         lastCalculationTimestamp = new Date().getTime();
         lastCalculation = total;
@@ -209,7 +209,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         initializeData();
-        updateTotalIOB();
+        updateTotalIOBTreatments();
     }
 
 }

@@ -189,10 +189,10 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         Date start = new Date();
         TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
         TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOB();
-        tempBasals.updateTotalIOB();
-        IobTotal bolusIob = treatments.getLastCalculation();
-        IobTotal basalIob = tempBasals.getLastCalculation();
+        treatments.updateTotalIOBTreatments();
+        tempBasals.updateTotalIOBTempBasals();
+        IobTotal bolusIob = treatments.getLastCalculationTreatments();
+        IobTotal basalIob = tempBasals.getLastCalculationTempBasals();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
