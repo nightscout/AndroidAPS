@@ -512,4 +512,38 @@
     <string name="smscommunicator_invalidphonennumber">Invalid SMS phone number</string>
     <string name="queue">Опашка:</string>
     <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="Glimp">Glimp</string>
+    <string name="batteryoptimalizationerror">Устройството изглежда не подържа изключване на оптимизиране на батерията</string>
+    <string name="cob">COB</string>
+    <string name="configbuilder_insulin">Инсулин</string>
+    <string name="danar_bluetooth_status">Bluetooh статус</string>
+    <string name="dev">DEV</string>
+    <string name="disableloop">Деактивиран Loop</string>
+    <string name="disconnectpumpfor10h">Изключи помпата за 10 часа</string>
+    <string name="disconnectpumpfor1h">Изключи помпата за 1 час</string>
+    <string name="disconnectpumpfor2h">Изключи помпата за 2 часа</string>
+    <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
+    <string name="disconnectpumpfor3h">Изключи помпата за 3 часа</string>
+    <string name="enableloop">Разреши Loop</string>
+    <string name="enablesuperbolus">Разреши суперболус</string>
+    <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
+    <string name="fastactinginsulin">Бързодействащ инсулин</string>
+    <string name="fastactinginsulinprolonged">Бързодействащ инсулин с удължаване</string>
+    <string name="insulin_shortname">ИНС</string>
+    <string name="loopmenu">Loop меню</string>
+    <string name="loopsuspended">Loop спрян</string>
+    <string name="loopsuperbolusfor" formatted="false"> Суперболус (%d м.)</string>
+    <string name="nav_about">За приложението</string>
+    <string name="loopsuspendedfor" formatted="false">Спрян (%d м.)</string>
+    <string name="needwhitelisting" formatted="false">%s трябва да изключите оптимизация на батерията за оптимална работа</string>
+    <string name="ns_logappstartedevent">Отбелязвай старт на програмата в NS</string>
+    <string name="pleaseallowpermission">Моля, позволете рарешение</string>
+    <string name="smscommunicator_loopresumed"></string>
+    <string name="suspendloopfor10h">Изключи Loop за 10 ч.</string>
+    <string name="superbolus">Суперболус</string>
+    <string name="suspendloopfor1h">"Изключи Loop за 1ч. "</string>
+    <string name="suspendloopfor2h">Изключи Loop за 2ч.</string>
+    <string name="suspendloopfor3h">Изключи Loop за 3ч.</string>
+    <string name="treatments_wizard_bgtrend_label">15min trend</string>
+    <string name="treatments_wizard_cob_label">COB</string>
 </resources>
