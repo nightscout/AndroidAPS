@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpDanaRv2.comm;
+package info.nightscout.androidaps.plugins.PumpDanaRKorean.comm;
 
 import android.support.annotation.NonNull;
 
@@ -15,29 +15,30 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 
-public class MsgStatusBolusExtended extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusBolusExtended.class);
+public class MsgStatusBolusExtended_k extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgStatusBolusExtended_k.class);
 
-    public MsgStatusBolusExtended() {
+    public MsgStatusBolusExtended_k() {
         SetCommand(0x0207);
     }
 
     public void handleMessage(byte[] bytes) {
+        DanaRPump pump = DanaRPump.getInstance();
         boolean isExtendedInProgress = intFromBuff(bytes, 0, 1) == 1;
         int extendedBolusHalfHours = intFromBuff(bytes, 1, 1);
         int extendedBolusMinutes = extendedBolusHalfHours * 30;
 
         double extendedBolusAmount = intFromBuff(bytes, 2, 2) / 100d;
         int extendedBolusSoFarInSecs = intFromBuff(bytes, 4, 3);
+        int extendedBolusDeliveryPulse = intFromBuff(bytes, 7, 2);
+        int isEasyUIUserSleep = intFromBuff(bytes, 9, 1);
 
         int extendedBolusSoFarInMinutes = extendedBolusSoFarInSecs / 60;
         double extendedBolusAbsoluteRate = isExtendedInProgress ? extendedBolusAmount / extendedBolusMinutes * 60 : 0d;
         Date extendedBolusStart = isExtendedInProgress ? getDateFromSecAgo(extendedBolusSoFarInSecs) : new Date(0);
         int extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes;
 
-        DanaRPump pump = DanaRPump.getInstance();
         pump.isExtendedInProgress = isExtendedInProgress;
         pump.extendedBolusMinutes = extendedBolusMinutes;
         pump.extendedBolusAmount = extendedBolusAmount;

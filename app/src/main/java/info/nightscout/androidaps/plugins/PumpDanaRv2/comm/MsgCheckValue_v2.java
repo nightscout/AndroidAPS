@@ -18,10 +18,10 @@ import info.nightscout.utils.ToastUtils;
 /**
  * Created by mike on 30.06.2016.
  */
-public class MsgCheckValue extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgCheckValue.class);
+public class MsgCheckValue_v2 extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgCheckValue_v2.class);
 
-    public MsgCheckValue() {
+    public MsgCheckValue_v2() {
         SetCommand(0xF0F1);
     }
 
@@ -37,13 +37,13 @@ public class MsgCheckValue extends MessageBase {
         pump.productCode = intFromBuff(bytes, 2, 1);
         if (pump.model != DanaRPump.EXPORT_MODEL) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
-            ((DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class)).doDisconnect("Wrong Model");
+            DanaRv2Plugin.doDisconnect("Wrong Model");
             log.debug("Wrong model selected");
         }
 
         if (pump.protocol != 2) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
-            ((DanaRv2Plugin)MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).doDisconnect("Wrong Model");
+            DanaRKoreanPlugin.doDisconnect("Wrong Model");
             log.debug("Wrong model selected. Switching to non APS DanaR");
             (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setFragmentEnabled(PluginBase.PUMP, false);
             (MainApp.getSpecificPlugin(DanaRv2Plugin.class)).setFragmentVisible(PluginBase.PUMP, false);

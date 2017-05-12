@@ -6,32 +6,32 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPump;
 import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 30.06.2016.
  */
-public class MsgCheckValue extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgCheckValue.class);
+public class MsgCheckValue_k extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgCheckValue_k.class);
 
-    public MsgCheckValue() {
+    public MsgCheckValue_k() {
         SetCommand(0xF0F1);
     }
 
     @Override
     public void handleMessage(byte[] bytes) {
-        DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
+        DanaRPump pump = DanaRPump.getInstance();
 
-        DanaRKoreanPlugin.getDanaRPump().isNewPump = true;
+        pump.isNewPump = true;
         log.debug("New firmware confirmed");
 
         pump.model = intFromBuff(bytes, 0, 1);
         pump.protocol = intFromBuff(bytes, 1, 1);
         pump.productCode = intFromBuff(bytes, 2, 1);
-        if (pump.model != DanaRKoreanPump.DOMESTIC_MODEL) {
+        if (pump.model != DanaRPump.DOMESTIC_MODEL) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.wrongpumpdriverselected), R.raw.error);
             ((DanaRKoreanPlugin)MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).doDisconnect("Wrong Model");
             log.debug("Wrong model selected");

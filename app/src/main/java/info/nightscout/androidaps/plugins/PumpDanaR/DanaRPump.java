@@ -52,7 +52,7 @@ public class DanaRPump {
 
     public boolean isConfigUD;
     public boolean isExtendedBolusEnabled;
-
+    public boolean isEasyModeEnabled;
 
     // Status
     public boolean pumpSuspended;

@@ -26,6 +26,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.History.DanaRHistoryActivity;
@@ -199,7 +200,7 @@ public class DanaRKoreanFragment extends Fragment {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
-                    DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
+                    DanaRPump pump = DanaRPump.getInstance();
                     if (pump.lastConnection.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - pump.lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);

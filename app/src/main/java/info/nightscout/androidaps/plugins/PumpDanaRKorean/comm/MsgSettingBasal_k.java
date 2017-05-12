@@ -4,22 +4,22 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPump;
 
 /**
  * Created by mike on 05.07.2016.
  */
-public class MsgSettingBasal extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSettingBasal.class);
+public class MsgSettingBasal_k extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgSettingBasal_k.class);
 
-    public MsgSettingBasal() {
+    public MsgSettingBasal_k() {
         SetCommand(0x3202);
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
+        DanaRPump pump = DanaRPump.getInstance();
         if (pump.pumpProfiles == null) pump.pumpProfiles = new double[4][];
         pump.pumpProfiles[pump.activeProfile] = new double[24];
         for (int index = 0; index < 24; index++) {
@@ -30,7 +30,7 @@ public class MsgSettingBasal extends MessageBase {
 
         if (Config.logDanaMessageDetail)
             for (int index = 0; index < 24; index++) {
-                log.debug("Basal " + String.format("%02d", index) + "h: " + DanaRKoreanPlugin.getDanaRPump().pumpProfiles[DanaRKoreanPlugin.getDanaRPump().activeProfile][index]);
+                log.debug("Basal " + String.format("%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
             }
     }
 }

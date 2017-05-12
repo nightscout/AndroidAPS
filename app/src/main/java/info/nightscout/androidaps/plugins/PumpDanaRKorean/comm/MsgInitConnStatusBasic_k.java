@@ -6,17 +6,16 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPump;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
-public class MsgInitConnStatusBasic extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBasic.class);
+public class MsgInitConnStatusBasic_k extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgInitConnStatusBasic_k.class);
 
-    public MsgInitConnStatusBasic() {
+    public MsgInitConnStatusBasic_k() {
         SetCommand(0x0303);
     }
 
@@ -25,7 +24,7 @@ public class MsgInitConnStatusBasic extends MessageBase {
         if (bytes.length - 10 > 6) {
             return;
         }
-        DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
+        DanaRPump pump = DanaRPump.getInstance();
         pump.pumpSuspended = intFromBuff(bytes, 0, 1) == 1;
         int isUtilityEnable = intFromBuff(bytes, 1, 1);
         pump.isEasyModeEnabled = intFromBuff(bytes, 2, 1) == 1;

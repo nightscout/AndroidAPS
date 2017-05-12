@@ -42,12 +42,10 @@ import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.SerialIOThread;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgHistoryEvents;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetAPSTempBasalStart;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusAPS;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgCheckValue;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusBolusExtended;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusTempBasal;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgHistoryEvents_v2;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetAPSTempBasalStart_v2;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusAPS_v2;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgCheckValue_v2;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -250,7 +248,7 @@ public class DanaRv2ExecutionService extends Service {
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
             MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
-            MsgCheckValue checkValue = new MsgCheckValue();
+            MsgCheckValue_v2 checkValue = new MsgCheckValue_v2();
 
             if (danaRPump.isNewPump) {
                 mSerialIOThread.sendMessage(checkValue);
@@ -335,8 +333,8 @@ public class DanaRv2ExecutionService extends Service {
         connect("highTempBasal");
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
-        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart(percent));
-        mSerialIOThread.sendMessage(new MsgStatusAPS());
+        mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent));
+        mSerialIOThread.sendMessage(new MsgStatusAPS_v2());
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
@@ -479,7 +477,7 @@ public class DanaRv2ExecutionService extends Service {
 
     public boolean loadEvents() {
         if (!isConnected()) return false;
-        MsgHistoryEvents msg = new MsgHistoryEvents();
+        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2();
         mSerialIOThread.sendMessage(msg);
         while (!msg.done && mRfcommSocket.isConnected()) {
             waitMsec(100);

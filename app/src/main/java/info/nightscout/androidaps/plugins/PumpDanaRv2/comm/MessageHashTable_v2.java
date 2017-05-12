@@ -12,8 +12,8 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
 /**
  * Created by mike on 28.05.2016.
  */
-public class MessageHashTable {
-    private static Logger log = LoggerFactory.getLogger(MessageHashTable.class);
+public class MessageHashTable_v2 {
+    private static Logger log = LoggerFactory.getLogger(MessageHashTable_v2.class);
 
     public static HashMap<Integer, MessageBase> messages = null;
 
@@ -68,10 +68,10 @@ public class MessageHashTable {
             put(new MsgHistoryAll());                // 0x41F2 CMD_HISTORY_ALL
             put(new MsgHistoryNewDone());            // 0x42F1 CMD_HISTORY_NEW_DONE
             put(new MsgHistoryNew());                // 0x42F2 CMD_HISTORY_NEW
-            put(new MsgCheckValue());                // 0xF0F1 CMD_PUMP_CHECK_VALUE
-            put(new MsgStatusAPS());                 // 0xE001 CMD_PUMP_APS
-            put(new MsgSetAPSTempBasalStart());      // 0xE002 CMD_PUMPSET_APSTEMP
-            put(new MsgHistoryEvents());             // 0xE003 CMD_HISTORY_EVENTS
+            put(new MsgCheckValue_v2());                // 0xF0F1 CMD_PUMP_CHECK_VALUE
+            put(new MsgStatusAPS_v2());                 // 0xE001 CMD_PUMP_APS
+            put(new MsgSetAPSTempBasalStart_v2());      // 0xE002 CMD_PUMPSET_APSTEMP
+            put(new MsgHistoryEvents_v2());             // 0xE003 CMD_HISTORY_EVENTS
         }
     }
 

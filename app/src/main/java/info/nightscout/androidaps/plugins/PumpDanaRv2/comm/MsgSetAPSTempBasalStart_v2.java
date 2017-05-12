@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
-public class MsgSetAPSTempBasalStart extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSetAPSTempBasalStart.class);
+public class MsgSetAPSTempBasalStart_v2 extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgSetAPSTempBasalStart_v2.class);
 
-    public MsgSetAPSTempBasalStart() {
+    public MsgSetAPSTempBasalStart_v2() {
         SetCommand(0xE002);
     }
 
-    public MsgSetAPSTempBasalStart(int percent) {
+    public MsgSetAPSTempBasalStart_v2(int percent) {
         this();
 
         //HARDCODED LIMITS

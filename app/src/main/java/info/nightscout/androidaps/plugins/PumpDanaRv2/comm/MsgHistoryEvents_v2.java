@@ -9,11 +9,11 @@ import java.util.GregorianCalendar;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.utils.DateUtil;
 
-public class MsgHistoryEvents extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgHistoryEvents.class);
+public class MsgHistoryEvents_v2 extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgHistoryEvents_v2.class);
     public boolean done;
 
-    public MsgHistoryEvents(Date from) {
+    public MsgHistoryEvents_v2(Date from) {
         SetCommand(0xE003);
         GregorianCalendar gfrom = new GregorianCalendar();
         gfrom.setTimeInMillis(from.getTime());
@@ -21,7 +21,7 @@ public class MsgHistoryEvents extends MessageBase {
         done = false;
     }
 
-    public MsgHistoryEvents() {
+    public MsgHistoryEvents_v2() {
         SetCommand(0xE003);
         AddParamByte((byte) 0);
         AddParamByte((byte) 1);

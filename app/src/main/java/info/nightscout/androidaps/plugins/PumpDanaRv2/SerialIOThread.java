@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MessageHashTable;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MessageHashTable_v2;
 import info.nightscout.utils.CRC;
 
 /**
@@ -72,7 +72,7 @@ public class SerialIOThread extends Thread {
                         message = processedMessage;
                     } else {
                         // get it from hash table
-                        message = MessageHashTable.findMessage(command);
+                        message = MessageHashTable_v2.findMessage(command);
                     }
 
                     if (Config.logDanaMessageDetail)

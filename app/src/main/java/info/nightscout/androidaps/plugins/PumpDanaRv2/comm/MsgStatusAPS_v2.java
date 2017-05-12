@@ -7,10 +7,10 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
-public class MsgStatusAPS extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusAPS.class);
+public class MsgStatusAPS_v2 extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgStatusAPS_v2.class);
 
-    public MsgStatusAPS() {
+    public MsgStatusAPS_v2() {
         SetCommand(0xE001);
     }
 

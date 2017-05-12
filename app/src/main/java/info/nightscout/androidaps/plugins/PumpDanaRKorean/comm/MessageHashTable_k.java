@@ -11,8 +11,8 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
 /**
  * Created by mike on 28.05.2016.
  */
-public class MessageHashTable {
-    private static Logger log = LoggerFactory.getLogger(MessageHashTable.class);
+public class MessageHashTable_k {
+    private static Logger log = LoggerFactory.getLogger(MessageHashTable_k.class);
 
     public static HashMap<Integer, MessageBase> messages = null;
 
@@ -24,12 +24,12 @@ public class MessageHashTable {
             put(new MsgBolusProgress());             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
             put(new MsgStatusProfile());             // 0x0204 CMD_PUMP_CALCULATION_SETTING
             put(new MsgStatusTempBasal());           // 0x0205 CMD_PUMP_EXERCISE_MODE
-            put(new MsgStatusBolusExtended());       // 0x0207 CMD_PUMP_EXPANS_INS_I
-            put(new MsgStatusBasic());               // 0x020A CMD_PUMP_INITVIEW_I
-            put(new MsgStatus());                    // 0x020B CMD_PUMP_STATUS
-            put(new MsgInitConnStatusTime());        // 0x0301 CMD_PUMPINIT_TIME_INFO
-            put(new MsgInitConnStatusBolus());       // 0x0302 CMD_PUMPINIT_BOLUS_INFO
-            put(new MsgInitConnStatusBasic());       // 0x0303 CMD_PUMPINIT_INIT_INFO
+            put(new MsgStatusBolusExtended_k());       // 0x0207 CMD_PUMP_EXPANS_INS_I
+            put(new MsgStatusBasic_k());               // 0x020A CMD_PUMP_INITVIEW_I
+            put(new MsgStatus_k());                    // 0x020B CMD_PUMP_STATUS
+            put(new MsgInitConnStatusTime_k());        // 0x0301 CMD_PUMPINIT_TIME_INFO
+            put(new MsgInitConnStatusBolus_k());       // 0x0302 CMD_PUMPINIT_BOLUS_INFO
+            put(new MsgInitConnStatusBasic_k());       // 0x0303 CMD_PUMPINIT_INIT_INFO
             put(new MsgSetTempBasalStart());         // 0x0401 CMD_PUMPSET_EXERCISE_S
             put(new MsgSetCarbsEntry());             // 0x0402 CMD_PUMPSET_HIS_S
             put(new MsgSetTempBasalStop());          // 0x0403 CMD_PUMPSET_EXERCISE_STOP
@@ -43,11 +43,11 @@ public class MessageHashTable {
             put(new MsgHistoryGlucose());            // 0x3104 CMD_HISTORY_GLUCOSE
             put(new MsgHistoryAlarm());              // 0x3105 CMD_HISTORY_ALARM
             put(new MsgHistoryCarbo());              // 0x3107 CMD_HISTORY_CARBOHY
-            put(new MsgSettingBasal());              // 0x3202 CMD_SETTING_V_BASAL_INS_I
+            put(new MsgSettingBasal_k());              // 0x3202 CMD_SETTING_V_BASAL_INS_I
             put(new MsgSettingMeal());               // 0x3203 CMD_SETTING_V_MEAL_SETTING_I
             put(new MsgSettingProfileRatios());      // 0x3204 CMD_SETTING_V_CCC_I
             put(new MsgSettingMaxValues());          // 0x3205 CMD_SETTING_V_MAX_VALUE_I
-            put(new MsgSettingBasalProfileAll());    // 0x3206 CMD_SETTING_V_BASAL_PROFILE_ALL
+            put(new MsgSettingBasalProfileAll_k());    // 0x3206 CMD_SETTING_V_BASAL_PROFILE_ALL
             put(new MsgSettingShippingInfo());       // 0x3207 CMD_SETTING_V_SHIPPING_I
             put(new MsgSettingGlucose());            // 0x3209 CMD_SETTING_V_GLUCOSEandEASY
             put(new MsgSettingPumpTime());           // 0x320A CMD_SETTING_V_TIME_I
@@ -55,7 +55,7 @@ public class MessageHashTable {
             put(new MsgHistoryAll());                // 0x41F2 CMD_HISTORY_ALL
             put(new MsgHistoryNewDone());            // 0x42F1 CMD_HISTORY_NEW_DONE
             put(new MsgHistoryNew());                // 0x42F2 CMD_HISTORY_NEW
-            put(new MsgCheckValue());                // 0xF0F1 CMD_PUMP_CHECK_VALUE
+            put(new MsgCheckValue_k());                // 0xF0F1 CMD_PUMP_CHECK_VALUE
         }
     }
 

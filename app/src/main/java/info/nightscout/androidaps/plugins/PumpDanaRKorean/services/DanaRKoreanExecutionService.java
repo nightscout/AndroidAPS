@@ -33,6 +33,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusProgress;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStart;
@@ -56,26 +57,25 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetSingleBasalProfil
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStop;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTime;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingGlucose;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingMaxValues;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingMeal;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingProfileRatios;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingPumpTime;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingShippingInfo;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.SerialIOThread;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgCheckValue;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingBasal;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingGlucose;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingMaxValues;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingMeal;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingProfileRatios;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingPumpTime;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingShippingInfo;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBasic;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBolusExtended;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusTempBasal;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgCheckValue_k;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingBasal_k;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBasic_k;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBolusExtended_k;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -91,7 +91,7 @@ public class DanaRKoreanExecutionService extends Service {
     private PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new LocalBinder();
 
-    private DanaRKoreanPump danaRKoreanPump;
+    private DanaRPump danaRPump = DanaRPump.getInstance();
     private Treatment bolusingTreatment = null;
 
     private static Boolean connectionInProgress = false;
@@ -119,7 +119,6 @@ public class DanaRKoreanExecutionService extends Service {
     public DanaRKoreanExecutionService() {
         registerBus();
         MainApp.instance().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
-        danaRKoreanPump = DanaRKoreanPlugin.getDanaRPump();
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "DanaRKoreanExecutionService");
@@ -180,7 +179,7 @@ public class DanaRKoreanExecutionService extends Service {
     }
 
     public void connect(String from) {
-        if (danaRKoreanPump.password != -1 && danaRKoreanPump.password != SP.getInt(R.string.key_danar_password, -1)) {
+        if (danaRPump.password != -1 && danaRPump.password != SP.getInt(R.string.key_danar_password, -1)) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.wrongpumppassword), R.raw.error);
             return;
         }
@@ -274,13 +273,13 @@ public class DanaRKoreanExecutionService extends Service {
     private boolean getPumpStatus() {
         try {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpstatus)));
-            //MsgStatus statusMsg = new MsgStatus();
-            MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
+            //MsgStatus_k statusMsg = new MsgStatus_k();
+            MsgStatusBasic_k statusBasicMsg = new MsgStatusBasic_k();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
-            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
-            MsgCheckValue checkValue = new MsgCheckValue();
+            MsgStatusBolusExtended_k exStatusMsg = new MsgStatusBolusExtended_k();
+            MsgCheckValue_k checkValue = new MsgCheckValue_k();
 
-            if (danaRKoreanPump.isNewPump) {
+            if (danaRPump.isNewPump) {
                 mSerialIOThread.sendMessage(checkValue);
                 if (!checkValue.received) {
                     return false;
@@ -316,28 +315,28 @@ public class DanaRKoreanExecutionService extends Service {
             }
 
             Date now = new Date();
-            if (danaRKoreanPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !((DanaRKoreanPlugin)MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).isInitialized()) {
+            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !((DanaRKoreanPlugin)MainApp.getSpecificPlugin(DanaRKoreanPlugin.class)).isInitialized()) {
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
-                mSerialIOThread.sendMessage(new MsgSettingBasal());
+                mSerialIOThread.sendMessage(new MsgSettingBasal_k());
                 //0x3201
                 mSerialIOThread.sendMessage(new MsgSettingMaxValues());
                 mSerialIOThread.sendMessage(new MsgSettingGlucose());
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
-                danaRKoreanPump.lastSettingsRead = now;
+                danaRPump.lastSettingsRead = now;
             }
 
-            danaRKoreanPump.lastConnection = now;
+            danaRPump.lastConnection = now;
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             MainApp.getConfigBuilder().uploadDeviceStatus();
-            if (danaRKoreanPump.dailyTotalUnits > danaRKoreanPump.maxDailyTotalUnits * Constants.dailyLimitWarning ) {
-                log.debug("Approaching daily limit: " + danaRKoreanPump.dailyTotalUnits + "/" + danaRKoreanPump.maxDailyTotalUnits);
+            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning ) {
+                log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
                 Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.sResources.getString(R.string.approachingdailylimit), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(reportFail));
-                MainApp.getConfigBuilder().uploadError(MainApp.sResources.getString(R.string.approachingdailylimit) + ": " + danaRKoreanPump.dailyTotalUnits + "/" + danaRKoreanPump.maxDailyTotalUnits + "U");
+                MainApp.getConfigBuilder().uploadError(MainApp.sResources.getString(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -370,7 +369,7 @@ public class DanaRKoreanExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended_k());
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -380,7 +379,7 @@ public class DanaRKoreanExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended_k());
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -498,7 +497,7 @@ public class DanaRKoreanExecutionService extends Service {
         double[] basal = buildDanaRProfileRecord(profile);
         MsgSetSingleBasalProfile msgSet = new MsgSetSingleBasalProfile(basal);
         mSerialIOThread.sendMessage(msgSet);
-        danaRKoreanPump.lastSettingsRead = new Date(0); // force read full settings
+        danaRPump.lastSettingsRead = new Date(0); // force read full settings
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;

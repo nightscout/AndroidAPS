@@ -4,29 +4,30 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 
 
-public class MsgStatusBasic extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgStatusBasic.class);
+public class MsgStatusBasic_k extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgStatusBasic_k.class);
 
-    public MsgStatusBasic() {
+    public MsgStatusBasic_k() {
         SetCommand(0x020A);
     }
 
     public void handleMessage(byte[] bytes) {
+        DanaRPump pump = DanaRPump.getInstance();
         double currentBasal = intFromBuff(bytes, 0, 2) / 100d;
         int batteryRemaining = intFromBuff(bytes, 2, 1);
         double reservoirRemainingUnits = intFromBuff(bytes, 3, 3) / 750d;
         double dailyTotalUnits = intFromBuff(bytes, 6, 3) / 750d;
         int maxDailyTotalUnits = intFromBuff(bytes, 9, 2) / 100;
 
-        DanaRKoreanPlugin.getDanaRPump().dailyTotalUnits = dailyTotalUnits;
-        DanaRKoreanPlugin.getDanaRPump().maxDailyTotalUnits = maxDailyTotalUnits;
-        DanaRKoreanPlugin.getDanaRPump().reservoirRemainingUnits = reservoirRemainingUnits;
-        DanaRKoreanPlugin.getDanaRPump().currentBasal = currentBasal;
-        DanaRKoreanPlugin.getDanaRPump().batteryRemaining = batteryRemaining;
+        pump.dailyTotalUnits = dailyTotalUnits;
+        pump.maxDailyTotalUnits = maxDailyTotalUnits;
+        pump.reservoirRemainingUnits = reservoirRemainingUnits;
+        pump.currentBasal = currentBasal;
+        pump.batteryRemaining = batteryRemaining;
 
         if (Config.logDanaMessageDetail) {
             log.debug("Daily total units: " + dailyTotalUnits);

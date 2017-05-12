@@ -4,9 +4,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPump;
 
 
 /**
@@ -15,16 +14,16 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPump;
  * <p/>
  * THIS IS BROKEN IN PUMP... SENDING ONLY 1 PROFILE
  */
-public class MsgSettingBasalProfileAll extends MessageBase {
-    private static Logger log = LoggerFactory.getLogger(MsgSettingBasalProfileAll.class);
+public class MsgSettingBasalProfileAll_k extends MessageBase {
+    private static Logger log = LoggerFactory.getLogger(MsgSettingBasalProfileAll_k.class);
 
-    public MsgSettingBasalProfileAll() {
+    public MsgSettingBasalProfileAll_k() {
         SetCommand(0x3206);
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRKoreanPump pump = DanaRKoreanPlugin.getDanaRPump();
-        if (DanaRKoreanPlugin.getDanaRPump().basal48Enable) {
+        DanaRPump pump = DanaRPump.getInstance();
+        if (pump.basal48Enable) {
             pump.pumpProfiles = new double[4][];
             for (int profile = 0; profile < 4; profile++) {
                 int position = intFromBuff(bytes, 107 * profile, 1);
@@ -51,10 +50,10 @@ public class MsgSettingBasalProfileAll extends MessageBase {
         }
 
         if (Config.logDanaMessageDetail) {
-            if (DanaRKoreanPlugin.getDanaRPump().basal48Enable) {
+            if (pump.basal48Enable) {
                 for (int profile = 0; profile < 4; profile++) {
                     for (int index = 0; index < 24; index++) {
-                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + DanaRKoreanPlugin.getDanaRPump().pumpProfiles[profile][index]);
+                        log.debug("Basal profile " + profile + ": " + String.format("%02d", index) + "h: " + pump.pumpProfiles[profile][index]);
                     }
                 }
             } else {
@@ -63,7 +62,7 @@ public class MsgSettingBasalProfileAll extends MessageBase {
                         log.debug("Basal profile " + profile + ": " +
                                 String.format("%02d", (index / 2)) +
                                 ":" + String.format("%02d", (index % 2) * 30) + " : " +
-                                DanaRKoreanPlugin.getDanaRPump().pumpProfiles[profile][index]);
+                                pump.pumpProfiles[profile][index]);
                     }
                 }
             }
