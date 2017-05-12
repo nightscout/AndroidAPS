@@ -13,7 +13,7 @@ public class Config {
 
 
     public static final boolean DANAR = true && BuildConfig.PUMPDRIVERS;
-    public static final boolean DANARv2 = false;
+    public static final boolean DANARv2 = true;
 
     public static final boolean ACTION = !BuildConfig.NSCLIENTOLNY;
     public static final boolean VIRTUALPUMP = !BuildConfig.NSCLIENTOLNY;

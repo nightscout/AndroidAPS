@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -133,6 +134,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public int getType() {
         return PluginBase.PUMP;
+    }
+
+    @Override
+    public String treatmentPlugin() {
+        return TreatmentsPlugin.class.getName();
     }
 
     @Override

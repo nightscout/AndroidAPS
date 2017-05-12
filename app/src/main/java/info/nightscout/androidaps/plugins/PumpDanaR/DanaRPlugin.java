@@ -42,6 +42,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -215,6 +216,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PluginBase.PUMP)
             this.fragmentPumpVisible = fragmentVisible;
+    }
+
+    @Override
+    public String treatmentPlugin() {
+        return TreatmentsPlugin.class.getName();
     }
 
     @Override
@@ -875,6 +881,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         ret += "Batt: " + getDanaRPump().batteryRemaining + "\n";
         return ret;
     }
+
     // TODO: daily total constraint
 
 }

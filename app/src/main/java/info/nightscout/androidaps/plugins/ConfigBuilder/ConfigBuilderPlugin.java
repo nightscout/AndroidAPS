@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogr
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.BatteryLevel;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
@@ -768,6 +769,15 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             return activePump.shortStatus(veryShort);
         } else {
             return "No Pump active!";
+        }
+    }
+
+    @Override
+    public String treatmentPlugin() {
+        if (activePump != null) {
+            return activePump.treatmentPlugin();
+        } else {
+            return null;
         }
     }
 

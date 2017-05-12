@@ -53,6 +53,7 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangeFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpFragment;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslineFragment;
@@ -112,6 +113,7 @@ public class MainApp extends Application {
                 pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             if (Config.APS) pluginsList.add(TempTargetRangeFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
+            pluginsList.add(TreatmentsFromHistoryFragment.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyFragment.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
             pluginsList.add(SourceXdripFragment.getPlugin());

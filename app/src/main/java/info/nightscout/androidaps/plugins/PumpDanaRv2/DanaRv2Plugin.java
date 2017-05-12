@@ -42,6 +42,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -198,6 +199,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PluginBase.PUMP)
             this.fragmentPumpVisible = fragmentVisible;
+    }
+
+    @Override
+    public String treatmentPlugin() {
+        return TreatmentsFromHistoryPlugin.class.getName();
     }
 
     @Override

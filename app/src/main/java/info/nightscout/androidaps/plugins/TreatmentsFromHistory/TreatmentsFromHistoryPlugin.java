@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Treatments;
+package info.nightscout.androidaps.plugins.TreatmentsFromHistory;
 
 import android.support.annotation.Nullable;
 
@@ -34,13 +34,14 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
  */
-public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsPlugin.class);
+public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterface {
+    private static Logger log = LoggerFactory.getLogger(TreatmentsFromHistoryPlugin.class);
 
     public static IobTotal lastTreatmentCalculation;
     public static IobTotal lastTempBasalsCalculation;
@@ -49,20 +50,18 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     private static List<TempBasal> tempBasals;
     private static List<TempBasal> extendedBoluses;
 
-    private static boolean useExtendedBoluses = false;
-
     private static boolean fragmentEnabled = true;
     private static boolean fragmentVisible = true;
 
-    private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();
+    private static TreatmentsFromHistoryPlugin treatmentsPlugin = new TreatmentsFromHistoryPlugin();
 
-    public static TreatmentsPlugin getPlugin() {
+    public static TreatmentsFromHistoryPlugin getPlugin() {
         return treatmentsPlugin;
     }
 
     @Override
     public String getFragmentClass() {
-        return TreatmentsFragment.class.getName();
+        return TreatmentsFromHistoryFragment.class.getName();
     }
 
     @Override
@@ -123,8 +122,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         return PluginBase.TREATMENT;
     }
 
-    public TreatmentsPlugin() {
-        useExtendedBoluses = SP.getBoolean("danar_useextended", false);
+    public TreatmentsFromHistoryPlugin() {
         MainApp.bus().register(this);
         initializeData();
     }
@@ -220,6 +218,14 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             Iob bIOB = insulinInterface.iobCalc(t, time, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
             total.bolussnooze += bIOB.iobContrib;
         }
+
+        checkForExpired(extendedBoluses);
+        for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
+            TempBasal t = extendedBoluses.get(pos);
+            if (t.timeStart.getTime() > time) continue;
+            IobTotal calc = t.iobCalc(time);
+            total.plus(calc);
+        }
         return total;
     }
 
@@ -289,7 +295,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public IobTotal getCalculationToTimeTempBasals(long time) {
         checkForExpired(tempBasals);
-        checkForExpired(extendedBoluses);
         IobTotal total = new IobTotal(time);
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
             TempBasal t = tempBasals.get(pos);
@@ -297,14 +302,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             IobTotal calc = t.iobCalc(time);
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
             total.plus(calc);
-        }
-        if (useExtendedBoluses) {
-            for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
-                TempBasal t = extendedBoluses.get(pos);
-                if (t.timeStart.getTime() > time) continue;
-                IobTotal calc = t.iobCalc(time);
-                total.plus(calc);
-            }
         }
         return total;
     }
@@ -346,33 +343,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         return oldestTemp;
     }
 
-    public static List<TempBasal> getMergedList() {
-        if (useExtendedBoluses) {
-            List<TempBasal> merged = new ArrayList<TempBasal>();
-            merged.addAll(tempBasals);
-            merged.addAll(extendedBoluses);
-
-            class CustomComparator implements Comparator<TempBasal> {
-                public int compare(TempBasal object1, TempBasal object2) {
-                    return (int) (object2.timeIndex - object1.timeIndex);
-                }
-            }
-            Collections.sort(merged, new CustomComparator());
-            return merged;
-        } else {
-            return tempBasals;
-        }
-    }
-
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
         initializeData();
+        updateTotalIOBTempBasals();
     }
 
-    public void onStatusEvent(final EventPreferenceChange s) {
-        if (s.isChanged("danar_useextended")) {
-            useExtendedBoluses = SP.getBoolean("danar_useextended", false);
-            initializeData();
-        }
-    }
 }
