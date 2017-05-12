@@ -41,9 +41,9 @@ public class MsgHistoryEvents extends MessageBase {
             return;
         }
 
-        Date datetime = dateTimeFromBuff(bytes, 1);             // 5 bytes
-        int param1 = intFromBuff(bytes, 6, 2);
-        int param2 = intFromBuff(bytes, 8, 2);
+        Date datetime = dateTimeSecFromBuff(bytes, 1);             // 6 bytes
+        int param1 = intFromBuff(bytes, 7, 2);
+        int param2 = intFromBuff(bytes, 9, 2);
 
         switch (recordCode) {
             case 1:

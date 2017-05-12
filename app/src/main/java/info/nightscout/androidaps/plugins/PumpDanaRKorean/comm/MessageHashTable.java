@@ -6,26 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusProgress;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStop;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryAlarm;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryAll;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryBolus;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryCarbo;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryDailyInsulin;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryGlucose;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryNew;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryNewDone;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStop;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetCarbsEntry;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetExtendedBolusStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetExtendedBolusStop;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetSingleBasalProfile;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStop;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
 
 /**
  * Created by mike on 28.05.2016.

@@ -6,55 +6,7 @@ import org.slf4j.LoggerFactory;
 import java.util.HashMap;
 
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusProgress;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStop;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgCheckValue;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryAlarm;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryAll;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryAllDone;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryBasalHour;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryBolus;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryCarbo;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryDailyInsulin;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryDone;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryError;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryGlucose;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryNew;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryNewDone;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryRefill;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistorySuspend;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgInitConnStatusBasic;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgInitConnStatusBolus;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgInitConnStatusOption;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgInitConnStatusTime;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgPCCommStop;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetActivateBasalProfile;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetBasalProfile;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetCarbsEntry;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetExtendedBolusStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetExtendedBolusStop;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetSingleBasalProfile;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStart;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSetTempBasalStop;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingActiveProfile;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingBasal;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingBasalProfileAll;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingGlucose;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingMaxValues;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingMeal;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingProfileRatios;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingProfileRatiosAll;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingPumpTime;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingShippingInfo;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingUserOptions;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatus;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBasic;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBolusExtended;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusProfile;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
 
 
 /**
@@ -120,7 +72,6 @@ public class MessageHashTable {
             put(new MsgStatusAPS());                 // 0xE001 CMD_PUMP_APS
             put(new MsgSetAPSTempBasalStart());      // 0xE002 CMD_PUMPSET_APSTEMP
             put(new MsgHistoryEvents());             // 0xE003 CMD_HISTORY_EVENTS
-            put(new MsgStatusAPSTempBasal());        // 0xE004 CMD_PUMP_APSTEMP
         }
     }
 
