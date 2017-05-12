@@ -50,7 +50,7 @@ public class ActivityGraph extends GraphView {
         List<DataPoint> iobArray = new ArrayList<DataPoint>();
 
         for (long time = 0; time <= hours * 60 * 60 * 1000; time += 5 * 60 * 1000L) {
-            Iob iob = insulin.iobCalc(t, time, dia);
+            Iob iob = t.iobCalc(time, dia);
             activityArray.add(new DataPoint(time / 60 / 1000, iob.activityContrib));
             iobArray.add(new DataPoint(time / 60 / 1000, iob.iobContrib));
         }

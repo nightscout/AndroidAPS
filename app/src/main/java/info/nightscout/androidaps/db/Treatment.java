@@ -14,6 +14,7 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -147,4 +148,11 @@ public class Treatment implements DataPointWithLabelInterface {
         ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
     }
 
+    public Iob iobCalc(long time, double dia) {
+        InsulinInterface insulinInterface = MainApp.getInsulinIterfaceById(insulinType);
+        if (insulinInterface == null)
+            insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+
+        return insulinInterface.iobCalcForTreatment(this, time, dia);
+    }
 }

@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
@@ -210,6 +211,21 @@ public class MainApp extends Application {
             log.error("pluginsList=null");
         }
         return newList;
+    }
+
+    @Nullable
+    public static InsulinInterface getInsulinIterfaceById(int id) {
+        ArrayList<PluginBase> newList = new ArrayList<>();
+
+        if (pluginsList != null) {
+            for (PluginBase p : pluginsList) {
+                if (p.getType() == PluginBase.INSULIN && ((InsulinInterface)p).getId() == id)
+                    return (InsulinInterface) p;
+            }
+        } else {
+            log.error("InsulinInterface not found");
+        }
+        return null;
     }
 
     public static ArrayList<PluginBase> getSpecificPluginsVisibleInList(int type) {

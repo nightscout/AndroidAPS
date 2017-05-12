@@ -205,7 +205,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return total;
         NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
-        InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
         if (profile == null)
             return total;
 
@@ -214,10 +213,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
             if (t.created_at.getTime() > time) continue;
-            Iob tIOB = insulinInterface.iobCalc(t, time, dia);
+            Iob tIOB = t.iobCalc(time, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = insulinInterface.iobCalc(t, time, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
+            Iob bIOB = t.iobCalc(time, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
             total.bolussnooze += bIOB.iobContrib;
         }
         return total;

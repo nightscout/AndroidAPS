@@ -98,7 +98,7 @@ public class TempBasal {
                 tempBolusPart.insulin = tempBolusSize;
                 tempBolusPart.created_at = new Date(date);
 
-                Iob aIOB = insulinInterface.iobCalc(tempBolusPart, time, profile.getDia());
+                Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
                 result.basaliob += aIOB.iobContrib;
                 result.activity += aIOB.activityContrib;
                 Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
