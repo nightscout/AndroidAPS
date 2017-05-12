@@ -71,8 +71,7 @@ public class EditQuickWizardDialog extends DialogFragment implements View.OnClic
         timeList.add(DateUtil.timeString(DateUtil.toDate(24 * 60 * 60 - 60)));
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
-                android.R.layout.simple_spinner_item, timeList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_centered, timeList);
         fromSpinner.setAdapter(adapter);
         toSpinner.setAdapter(adapter);
 

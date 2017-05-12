@@ -233,8 +233,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             profileList = profile.getProfileList();
         }
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
-                android.R.layout.simple_spinner_item, profileList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_centered, profileList);
         profileSpinner.setAdapter(adapter);
         if (profile != null) {
             // set selected to actual profile
@@ -250,8 +249,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         reasonList.add(MainApp.sResources.getString(R.string.activity));
         reasonList.add(MainApp.sResources.getString(R.string.manual));
         ArrayAdapter<CharSequence> adapterReason = new ArrayAdapter<CharSequence>(getContext(),
-                android.R.layout.simple_spinner_item, reasonList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_centered, reasonList);
         reasonSpinner.setAdapter(adapterReason);
 
         // bg
