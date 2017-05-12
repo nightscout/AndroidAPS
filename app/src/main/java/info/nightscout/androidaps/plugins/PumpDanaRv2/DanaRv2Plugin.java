@@ -177,7 +177,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
 
     @Override
     public boolean showInList(int type) {
-        return true;
+        return type == PUMP;
     }
 
     @Override
