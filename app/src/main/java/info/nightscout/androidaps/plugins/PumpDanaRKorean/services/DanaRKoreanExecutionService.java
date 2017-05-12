@@ -62,6 +62,9 @@ import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.SerialIOThread;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgCheckValue;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingBasal;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingGlucose;
@@ -73,9 +76,6 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingShippin
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBasic;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusTempBasal;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.Overview.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
