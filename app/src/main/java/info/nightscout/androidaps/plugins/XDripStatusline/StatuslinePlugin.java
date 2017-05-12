@@ -140,7 +140,7 @@ public class StatuslinePlugin implements PluginBase {
         Intent intent = new Intent(ACTION_NEW_EXTERNAL_STATUSLINE);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        ctx.sendBroadcast(intent, RECEIVER_PERMISSION);
+        ctx.sendBroadcast(intent, null);
     }
 
     @NonNull
