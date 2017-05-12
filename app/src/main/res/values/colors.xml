@@ -26,14 +26,15 @@
     <color name="linearBlockBackground">#3e3d3d</color>
 
     <color name="colorAcceptTempButton">#f4d700</color>
-    <color name="colorTreatmentButton">#FFB347</color>
-    <color name="colorWizardButton">#77dd77</color>
-    <color name="colorCancelTempButton">#47c8ff</color>
+    <color name="colorTreatmentButton">#67dfe8</color>
+    <color name="colorCalibrationButton">#e93057</color>
+    <color name="colorCalculatorButton">#67e86a</color>
+    <color name="colorQuickWizardButton">#ffae01</color>
+    <color name="colorCancelTempButton">#d08cff</color>
     <color name="colorSetTempButton">#FF478EFF</color>
     <color name="colorSetExtendedButton">#FFDD7792</color>
     <color name="colorProfileSwitchButton">#ca77dd</color>
     <color name="colorTempTargetButton">#d43429</color>
-    <color name="colorCalibrationButton">#ceb812</color>
 
     <color name="colorInProgress">#c45026</color>
     <color name="colorAffectingIOB">#830400</color>

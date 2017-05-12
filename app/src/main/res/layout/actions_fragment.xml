@@ -37,7 +37,7 @@
             android:layout_marginTop="3dp"
             android:layout_weight="0.5"
             android:text="@string/careportal_temporarytarget"
-            android:textColor="@color/colorWizardButton" />
+            android:textColor="@color/colorCalculatorButton" />
 
         <Button
             android:id="@+id/actions_settempbasal"

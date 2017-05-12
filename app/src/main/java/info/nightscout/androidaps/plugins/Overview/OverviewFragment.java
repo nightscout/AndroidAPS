@@ -159,7 +159,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
 
-    LinearLayout cancelTempLayout;
     LinearLayout acceptTempLayout;
     Button cancelTempButton;
     Button treatmentButton;
@@ -242,7 +241,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         calibrationButton = (Button) view.findViewById(R.id.overview_calibrationbutton);
         calibrationButton.setOnClickListener(this);
 
-        cancelTempLayout = (LinearLayout) view.findViewById(R.id.overview_canceltemplayout);
         acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
 
         showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
@@ -896,12 +894,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         TempBasal activeTemp = pump.getTempBasal();
         if (pump.isTempBasalInProgress()) {
-            cancelTempLayout.setVisibility(View.VISIBLE);
-            cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + ": " + activeTemp.toString());
+            cancelTempButton.setVisibility(View.VISIBLE);
+            cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
             runningTempView.setVisibility(View.VISIBLE);
             runningTempView.setText(activeTemp.toString());
         } else {
-            cancelTempLayout.setVisibility(View.GONE);
+            cancelTempButton.setVisibility(View.GONE);
             runningTempView.setVisibility(View.GONE);
         }
 
@@ -950,7 +948,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
-            String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText() + " " + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
+            String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
             wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
