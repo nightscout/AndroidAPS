@@ -47,12 +47,6 @@ import info.nightscout.utils.ToastUtils;
 public class TreatmentsBolusFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsBolusFragment.class);
 
-    private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();
-
-    public static TreatmentsPlugin getPlugin() {
-        return treatmentsPlugin;
-    }
-
     RecyclerView recyclerView;
     LinearLayoutManager llm;
 
@@ -149,7 +143,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                                     MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
                                 }
                                 MainApp.getDbHelper().delete(treatment);
-                                treatmentsPlugin.initializeData();
+                                TreatmentsPlugin.initializeData();
                                 updateGUI();
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveTreatment"));
                             }
@@ -201,7 +195,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                     builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             MainApp.getDbHelper().resetTreatments();
-                            treatmentsPlugin.initializeData();
+                            TreatmentsPlugin.initializeData();
                             updateGUI();
                             Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
                             MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
@@ -242,10 +236,10 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                 @Override
                 public void run() {
                     recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.treatments), false);
-                    if (TreatmentsPlugin.lastCalculation != null)
-                        iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.lastCalculation.iob) + " U");
-                    if (TreatmentsPlugin.lastCalculation != null)
-                        activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.lastCalculation.activity) + " U");
+                    if (TreatmentsPlugin.lastTreatmentCalculation != null)
+                        iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.lastTreatmentCalculation.iob) + " U");
+                    if (TreatmentsPlugin.lastTreatmentCalculation != null)
+                        activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.lastTreatmentCalculation.activity) + " U");
                 }
             });
     }

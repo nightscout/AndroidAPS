@@ -35,12 +35,12 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -309,17 +309,17 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
     }
 
     public TempBasal getTempBasal(Date time) {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(time);
+        return MainApp.getConfigBuilder().getActiveTreatments().getTempBasal(time);
     }
 
     @Override
     public TempBasal getTempBasal() {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
+        return MainApp.getConfigBuilder().getActiveTreatments().getTempBasal(new Date());
     }
 
     @Override
     public TempBasal getExtendedBolus() {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getExtendedBolus(new Date());
+        return MainApp.getConfigBuilder().getActiveTreatments().getExtendedBolus(new Date());
     }
 
     @Override

@@ -50,14 +50,12 @@ import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpFragment;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
-import info.nightscout.androidaps.plugins.TempBasals.TempBasalsFragment;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangeFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslineFragment;
-import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import io.fabric.sdk.android.Fabric;
 
@@ -114,7 +112,6 @@ public class MainApp extends Application {
                 pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             if (Config.APS) pluginsList.add(TempTargetRangeFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
-            if (Config.TEMPBASALS) pluginsList.add(TempBasalsFragment.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyFragment.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
             pluginsList.add(SourceXdripFragment.getPlugin());

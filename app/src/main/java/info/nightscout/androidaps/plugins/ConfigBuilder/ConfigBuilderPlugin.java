@@ -35,12 +35,12 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
@@ -49,8 +49,7 @@ import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
 import info.nightscout.utils.BatteryLevel;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
@@ -65,7 +64,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     static PumpInterface activePump;
     static ProfileInterface activeProfile;
     static TreatmentsInterface activeTreatments;
-    static TempBasalsInterface activeTempBasals;
     static APSInterface activeAPS;
     static LoopPlugin activeLoop;
     static InsulinInterface activeInsulin;
@@ -206,10 +204,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activeTreatments;
     }
 
-    public static TempBasalsInterface getActiveTempBasals() {
-        return activeTempBasals;
-    }
-
     public static InsulinInterface getActiveInsulin() {
         return activeInsulin;
     }
@@ -309,17 +303,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 if (!p.getName().equals(activeLoop.getName())) {
                     p.setFragmentVisible(PluginBase.LOOP, false);
                 }
-            }
-        }
-
-        // PluginBase.TEMPBASAL
-        pluginsInCategory = MainApp.getSpecificPluginsList(PluginBase.TEMPBASAL);
-        activeTempBasals = (TempBasalsInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.TEMPBASAL);
-        if (Config.logConfigBuilder && activeTempBasals != null)
-            log.debug("Selected tempbasal interface: " + ((PluginBase) activeTempBasals).getName());
-        for (PluginBase p : pluginsInCategory) {
-            if (!p.getName().equals(((PluginBase) activeTempBasals).getName())) {
-                p.setFragmentVisible(PluginBase.TEMPBASAL, false);
             }
         }
 

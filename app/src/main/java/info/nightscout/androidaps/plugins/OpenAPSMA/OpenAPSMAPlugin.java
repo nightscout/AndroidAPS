@@ -18,7 +18,6 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -188,11 +187,10 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         Date start = new Date();
         TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
         treatments.updateTotalIOBTreatments();
-        tempBasals.updateTotalIOBTempBasals();
+        treatments.updateTotalIOBTempBasals();
         IobTotal bolusIob = treatments.getLastCalculationTreatments();
-        IobTotal basalIob = tempBasals.getLastCalculationTempBasals();
+        IobTotal basalIob = treatments.getLastCalculationTempBasals();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 

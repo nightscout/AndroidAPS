@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TempBasals;
+package info.nightscout.androidaps.plugins.Treatments.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -32,18 +32,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
 
-public class TempBasalsFragment extends Fragment {
-    private static Logger log = LoggerFactory.getLogger(TempBasalsFragment.class);
-
-    private static TempBasalsPlugin tempBasalsPlugin = new TempBasalsPlugin();
-
-    public static TempBasalsPlugin getPlugin() {
-        return tempBasalsPlugin;
-    }
+public class TreatmentsTempBasalsFragment extends Fragment {
+    private static Logger log = LoggerFactory.getLogger(TreatmentsTempBasalsFragment.class);
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -157,7 +152,7 @@ public class TempBasalsFragment extends Fragment {
                                 //    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
                                 //}
                                 MainApp.getDbHelper().delete(tempBasal);
-                                tempBasalsPlugin.initializeData();
+                                TreatmentsPlugin.initializeData();
                                 updateGUI();
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));
                             }
@@ -180,7 +175,7 @@ public class TempBasalsFragment extends Fragment {
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tempBasalsPlugin.getMergedList());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getMergedList());
         recyclerView.setAdapter(adapter);
 
         tempBasalTotalView = (TextView) view.findViewById(R.id.tempbasals_totaltempiob);
@@ -214,9 +209,9 @@ public class TempBasalsFragment extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(tempBasalsPlugin.getMergedList()), false);
-                    if (tempBasalsPlugin.lastCalculation != null) {
-                        String totalText = DecimalFormatter.to2Decimal(tempBasalsPlugin.lastCalculation.basaliob) + " U";
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getMergedList()), false);
+                    if (TreatmentsPlugin.lastTempBasalsCalculation != null) {
+                        String totalText = DecimalFormatter.to2Decimal(TreatmentsPlugin.lastTempBasalsCalculation.basaliob) + " U";
                         tempBasalTotalView.setText(totalText);
                     }
                 }

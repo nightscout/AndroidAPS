@@ -47,7 +47,6 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshGui;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.data.IobTotal;
@@ -413,11 +412,10 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
         TreatmentsInterface treatments = ConfigBuilderPlugin.getActiveTreatments();
         treatments.updateTotalIOBTreatments();
         IobTotal bolusIob = treatments.getLastCalculationTreatments();
-        TempBasalsInterface tempBasals = ConfigBuilderPlugin.getActiveTempBasals();
         IobTotal basalIob = new IobTotal(new Date().getTime());
-        if (tempBasals != null) {
-            tempBasals.updateTotalIOBTempBasals();
-            basalIob = tempBasals.getLastCalculationTempBasals().round();
+        if (treatments != null) {
+            treatments.updateTotalIOBTempBasals();
+            basalIob = treatments.getLastCalculationTempBasals().round();
         }
 
         bolusIobInsulin.setText(DecimalFormatter.to2Decimal(-bolusIob.iob) + "U");

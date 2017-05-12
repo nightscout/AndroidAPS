@@ -351,20 +351,20 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     public TempBasal getTempBasal(Date time) {
-        TempBasal temp = MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(time);
+        TempBasal temp = MainApp.getConfigBuilder().getActiveTreatments().getTempBasal(time);
         if (temp != null) return temp;
         if (useExtendedBoluses)
-            return MainApp.getConfigBuilder().getActiveTempBasals().getExtendedBolus(time);
+            return MainApp.getConfigBuilder().getActiveTreatments().getExtendedBolus(time);
         return null;
     }
 
     public TempBasal getRealTempBasal() {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getTempBasal(new Date());
+        return MainApp.getConfigBuilder().getActiveTreatments().getTempBasal(new Date());
     }
 
     @Override
     public TempBasal getExtendedBolus() {
-        return MainApp.getConfigBuilder().getActiveTempBasals().getExtendedBolus(new Date());
+        return MainApp.getConfigBuilder().getActiveTreatments().getExtendedBolus(new Date());
     }
 
     @Override

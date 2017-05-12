@@ -339,7 +339,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
             //log.debug(">>> Cache miss " + new Date(time).toLocaleString());
         }
         IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getCalculationToTimeTreatments(time).round();
-        IobTotal basalIob = ConfigBuilderPlugin.getActiveTempBasals().getCalculationToTimeTempBasals(time).round();
+        IobTotal basalIob = ConfigBuilderPlugin.getActiveTreatments().getCalculationToTimeTempBasals(time).round();
 /*
         if (basalIob.basaliob > 0) {
             log.debug(new Date(time).toLocaleString() + " basaliob: " + basalIob.basaliob );

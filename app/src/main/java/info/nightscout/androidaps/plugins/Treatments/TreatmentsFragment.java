@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempBasalsFragment;
 
 public class TreatmentsFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
@@ -32,6 +33,7 @@ public class TreatmentsFragment extends Fragment {
     Context context;
 
     Fragment bolusFragment;
+    Fragment tempBasalsFragment;
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -46,7 +48,7 @@ public class TreatmentsFragment extends Fragment {
                 case 0:
                     return bolusFragment;
                 case 1:
-                    return new Fragment();
+                    return tempBasalsFragment;
 /*
                 case 2:
                     return iobcobActiveFragmentObject;
@@ -70,7 +72,7 @@ public class TreatmentsFragment extends Fragment {
                 case 0:
                     return getString(R.string.bolus);
                 case 1:
-                    return "Empty";
+                    return getString(R.string.tempbasals);
             }
             return null;
         }
@@ -82,6 +84,7 @@ public class TreatmentsFragment extends Fragment {
         View view = inflater.inflate(R.layout.treatments_fragment, container, false);
 
         bolusFragment = new TreatmentsBolusFragment();
+        tempBasalsFragment = new TreatmentsTempBasalsFragment();
 
         sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
         viewPager = (ViewPager) view.findViewById(R.id.treatments_pager);

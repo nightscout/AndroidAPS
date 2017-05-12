@@ -546,8 +546,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         //IOB
         MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOBTreatments();
         IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculationTreatments().round();
-        MainApp.getConfigBuilder().getActiveTempBasals().updateTotalIOBTempBasals();
-        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTempBasals().getLastCalculationTempBasals().round();
+        MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOBTempBasals();
+        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculationTempBasals().round();
         status += (shortString?"":(getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
 
         if (mPrefs.getBoolean("wear_detailediob", true)) {

@@ -209,12 +209,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public TempBasal getTempBasal() {
-        return ConfigBuilderPlugin.getActiveTempBasals().getTempBasal(new Date());
+        return ConfigBuilderPlugin.getActiveTreatments().getTempBasal(new Date());
     }
 
     @Override
     public TempBasal getExtendedBolus() {
-        return ConfigBuilderPlugin.getActiveTempBasals().getExtendedBolus(new Date());
+        return ConfigBuilderPlugin.getActiveTreatments().getExtendedBolus(new Date());
     }
 
     @Override
@@ -226,7 +226,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public TempBasal getTempBasal(Date time) {
-        return ConfigBuilderPlugin.getActiveTempBasals().getTempBasal(time);
+        return ConfigBuilderPlugin.getActiveTreatments().getTempBasal(time);
     }
 
     @Override

@@ -145,12 +145,10 @@ public class PersistentNotificationPlugin implements PluginBase{
 
         //IOB
         ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTreatments();
+        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTempBasals();
         IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTreatments().round();
-        IobTotal basalIob = new IobTotal(new Date().getTime());
-        if (ConfigBuilderPlugin.getActiveTempBasals() != null) {
-            ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOBTempBasals();
-            basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculationTempBasals().round();
-        }
+        IobTotal basalIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTempBasals().round();
+
         String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + ctx.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + ctx.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";

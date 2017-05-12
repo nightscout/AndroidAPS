@@ -192,7 +192,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         arrowView = (TextView) view.findViewById(R.id.overview_arrow);
-        if(smallWidth){
+        if (smallWidth) {
             arrowView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35);
         }
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
@@ -997,12 +997,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // iob
         ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTreatments();
+        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTempBasals();
         IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTreatments().round();
-        IobTotal basalIob = new IobTotal(new Date().getTime());
-        if (ConfigBuilderPlugin.getActiveTempBasals() != null) {
-            ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOBTempBasals();
-            basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculationTempBasals().round();
-        }
+        IobTotal basalIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTempBasals().round();
 
         String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
@@ -1015,7 +1012,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
         } else {
             showPredictionView.setVisibility(View.GONE);
-            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);        }
+            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);
+        }
 
         // ****** GRAPH *******
 
@@ -1138,6 +1136,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // **** IOB COB DEV graph ****
         class DeviationDataPoint extends DataPoint {
             public int color;
+
             public DeviationDataPoint(double x, double y, int color) {
                 super(x, y);
                 this.color = color;
