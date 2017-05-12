@@ -62,7 +62,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
-public class WizardDialog extends DialogFragment  implements OnClickListener, CompoundButton.OnCheckedChangeListener, Spinner.OnItemSelectedListener {
+public class WizardDialog extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener, Spinner.OnItemSelectedListener {
     private static Logger log = LoggerFactory.getLogger(WizardDialog.class);
 
     Button wizardDialogDeliverButton;
@@ -123,7 +123,7 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
         this.context = context;
     }
 
-     @Override
+    @Override
     public void onResume() {
         super.onResume();
         if (getDialog() != null)
@@ -211,8 +211,10 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
         bgTrend = (TextView) view.findViewById(R.id.treatments_wizard_bgtrend);
         bgTrendInsulin = (TextView) view.findViewById(R.id.treatments_wizard_bgtrendinsulin);
         cobLayout = (LinearLayout) view.findViewById(R.id.treatments_wizard_cob_layout);
-        cob = (TextView) view.findViewById(R.id.treatments_wizard_cob);;
-        cobInsulin = (TextView) view.findViewById(R.id.treatments_wizard_cobinsulin);;
+        cob = (TextView) view.findViewById(R.id.treatments_wizard_cob);
+        ;
+        cobInsulin = (TextView) view.findViewById(R.id.treatments_wizard_cobinsulin);
+        ;
 
         bgCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgcheckbox);
         bolusIobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bolusiobcheckbox);
@@ -409,14 +411,10 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
         }
 
         // IOB calculation
-        TreatmentsInterface treatments = ConfigBuilderPlugin.getActiveTreatments();
-        treatments.updateTotalIOBTreatments();
-        IobTotal bolusIob = treatments.getLastCalculationTreatments();
-        IobTotal basalIob = new IobTotal(new Date().getTime());
-        if (treatments != null) {
-            treatments.updateTotalIOBTempBasals();
-            basalIob = treatments.getLastCalculationTempBasals().round();
-        }
+        MainApp.getConfigBuilder().updateTotalIOBTreatments();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
+        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
 
         bolusIobInsulin.setText(DecimalFormatter.to2Decimal(-bolusIob.iob) + "U");
         basalIobInsulin.setText(DecimalFormatter.to2Decimal(-basalIob.basaliob) + "U");

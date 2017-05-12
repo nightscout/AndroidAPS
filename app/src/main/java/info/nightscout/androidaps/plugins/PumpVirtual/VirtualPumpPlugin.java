@@ -157,16 +157,6 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public boolean isTempBasalInProgress() {
-        return getTempBasal() != null;
-    }
-
-    @Override
-    public boolean isExtendedBoluslInProgress() {
-        return getExtendedBolus() != null;
-    }
-
-    @Override
     public int setNewBasalProfile(NSProfile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         lastDataTime = new Date();
@@ -199,40 +189,25 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public double getTempBasalAbsoluteRate() {
-        if (!isTempBasalInProgress())
+        if (!MainApp.getConfigBuilder().isTempBasalInProgress())
             return 0;
-        if (getTempBasal().isAbsolute) {
-            return getTempBasal().absolute;
+        if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).isAbsolute) {
+            return MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).absolute;
         } else {
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
             if (profile == null)
                 return defaultBasalValue;
             Double baseRate = profile.getBasal(profile.secondsFromMidnight());
-            Double tempRate = baseRate * (getTempBasal().percent / 100d);
+            Double tempRate = baseRate * (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percent / 100d);
             return baseRate + tempRate;
         }
     }
 
     @Override
-    public TempBasal getTempBasal() {
-        return ConfigBuilderPlugin.getActiveTreatments().getTempBasal(new Date());
-    }
-
-    @Override
-    public TempBasal getExtendedBolus() {
-        return ConfigBuilderPlugin.getActiveTreatments().getExtendedBolus(new Date());
-    }
-
-    @Override
     public double getTempBasalRemainingMinutes() {
-        if (!isTempBasalInProgress())
+        if (!MainApp.getConfigBuilder().isTempBasalInProgress())
             return 0;
-        return getTempBasal().getPlannedRemainingMinutes();
-    }
-
-    @Override
-    public TempBasal getTempBasal(Date time) {
-        return ConfigBuilderPlugin.getActiveTreatments().getTempBasal(time);
+        return MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
     }
 
     @Override
@@ -314,7 +289,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         PumpEnactResult result = new PumpEnactResult();
-        if (isTempBasalInProgress()) {
+        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             result = cancelTempBasal();
             if (!result.success)
                 return result;
@@ -383,9 +358,9 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.success = true;
         result.isTempCancel = true;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        if (isTempBasalInProgress()) {
+        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             result.enacted = true;
-            TempBasal tb = getTempBasal();
+            TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
             tb.timeEnd = new Date();
             try {
                 MainApp.instance().getDbHelper().getDaoTempBasals().update(tb);
@@ -407,8 +382,8 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
-        if (isExtendedBoluslInProgress()) {
-            TempBasal extendedBolus = getExtendedBolus();
+        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
+            TempBasal extendedBolus = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
             extendedBolus.timeEnd = new Date();
             try {
                 MainApp.instance().getDbHelper().getDaoTempBasals().update(extendedBolus);
@@ -447,7 +422,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
             } catch (Exception e) {}
             TempBasal tb;
-            if ((tb = getTempBasal()) != null) {
+            if ((tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime())) != null) {
                 status.put("tempbasalpct", tb.percent);
                 status.put("tempbasalstart", DateUtil.toISOString(tb.timeStart));
                 status.put("tempbasalremainmin", tb.getPlannedRemainingMinutes());

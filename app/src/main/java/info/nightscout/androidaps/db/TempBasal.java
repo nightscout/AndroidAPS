@@ -114,71 +114,6 @@ public class TempBasal {
         return result;
     }
 
-/*
-    public IobTotal old_iobCalc(long time) {
-        IobTotal result = new IobTotal(time);
-        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
-        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
-
-        if (profile == null)
-            return result;
-
-        Double basalRate = profile.getBasal(NSProfile.secondsFromMidnight(time));
-
-        if (basalRate == null)
-            return result;
-
-        int realDuration = getDurationToTime(time);
-
-        if (realDuration > 0) {
-            Double netBasalRate = 0d;
-            Double tempBolusSize = 0.05;
-
-            if (isExtended) {
-                netBasalRate = this.absolute;
-            } else {
-                if (this.isAbsolute) {
-                    netBasalRate = this.absolute - basalRate;
-                } else {
-                    netBasalRate = (this.percent - 100) / 100d * basalRate;
-                }
-            }
-
-            result.netRatio = netBasalRate;
-            Double netBasalAmount = Math.round(netBasalRate * realDuration * 10 / 6) / 100d;
-            result.netInsulin = netBasalAmount;
-            if (netBasalAmount < 0.1) {
-                tempBolusSize = 0.01;
-            }
-            if (netBasalRate < 0) {
-                tempBolusSize = -tempBolusSize;
-            }
-            Long tempBolusCount = Math.round(netBasalAmount / tempBolusSize);
-            if (tempBolusCount > 0) {
-                Long tempBolusSpacing = realDuration / tempBolusCount;
-                for (Long j = 0L; j < tempBolusCount; j++) {
-                    Treatment tempBolusPart = new Treatment(insulinInterface);
-                    tempBolusPart.insulin = tempBolusSize;
-                    Long date = this.timeStart.getTime() + j * tempBolusSpacing * 60 * 1000;
-                    tempBolusPart.created_at = new Date(date);
-
-                    Iob aIOB = insulinInterface.iobCalc(tempBolusPart, time, profile.getDia());
-                    result.basaliob += aIOB.iobContrib;
-                    result.activity += aIOB.activityContrib;
-                    Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
-                    if (date > dia_ago && date <= time) {
-                        result.netbasalinsulin += tempBolusPart.insulin;
-                        if (tempBolusPart.insulin > 0) {
-                            result.hightempinsulin += tempBolusPart.insulin;
-                        }
-                    }
-                }
-            }
-        }
-        return result;
-    }
-*/
-
     // Determine end of basal
     public long getTimeEnd() {
         long tempBasalTimePlannedEnd = getPlannedTimeEnd();
@@ -203,7 +138,7 @@ public class TempBasal {
         return Math.round(msecs / 60f / 1000);
     }
 
-    public int getDurationToTime(long time) {
+    private int getDurationToTime(long time) {
         long endTime = Math.min(time, getTimeEnd());
         long msecs = endTime - timeStart.getTime();
         return Math.round(msecs / 60f / 1000);
@@ -220,33 +155,31 @@ public class TempBasal {
     }
 
     public boolean isInProgress() {
-        return isInProgress(new Date());
+        return isInProgress(new Date().getTime());
     }
 
     public double tempBasalConvertedToAbsolute(Date time) {
         if (isExtended) {
-            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            double absval = profile.getBasal(NSProfile.secondsFromMidnight(time)) + absolute;
-            return absval;
+            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+            return profile.getBasal(NSProfile.secondsFromMidnight(time)) + absolute;
         } else {
             if (isAbsolute) return absolute;
             else {
-                NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-                double absval = profile.getBasal(NSProfile.secondsFromMidnight(time)) * percent / 100;
-                return absval;
+                NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+                return profile.getBasal(NSProfile.secondsFromMidnight(time)) * percent / 100;
             }
         }
     }
 
-    public boolean isInProgress(Date time) {
-        if (timeStart.getTime() > time.getTime()) return false; // in the future
+    public boolean isInProgress(long time) {
+        if (timeStart.getTime() > time) return false; // in the future
         if (timeEnd == null) { // open end
-            if (timeStart.getTime() < time.getTime() && getPlannedTimeEnd() > time.getTime())
+            if (timeStart.getTime() < time && getPlannedTimeEnd() > time)
                 return true; // in interval
             return false;
         }
         // closed end
-        if (timeStart.getTime() < time.getTime() && timeEnd.getTime() > time.getTime())
+        if (timeStart.getTime() < time && timeEnd.getTime() > time)
             return true; // in interval
         return false;
     }

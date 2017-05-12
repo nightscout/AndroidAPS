@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -231,7 +232,7 @@ public class DetermineBasalAdapterAMAJS {
         mCurrentTemp.add("rate", pump.getTempBasalAbsoluteRate());
 
         // as we have non default temps longer than 30 mintues
-        TempBasal tempBasal = pump.getTempBasal();
+        TempBasal tempBasal = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
         if(tempBasal != null){
             mCurrentTemp.add("minutesrunning", tempBasal.getRealDuration());
         }

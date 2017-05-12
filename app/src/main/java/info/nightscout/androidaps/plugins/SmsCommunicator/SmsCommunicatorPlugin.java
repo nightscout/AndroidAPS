@@ -254,10 +254,10 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (glucoseStatus != null)
                         reply += MainApp.sResources.getString(R.string.sms_delta) + " " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
 
-                    ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTreatments();
-                    IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTreatments().round();
-                    ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTempBasals();
-                    IobTotal basalIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTempBasals().round();
+                    MainApp.getConfigBuilder().updateTotalIOBTreatments();
+                    IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
+                    MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+                    IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
 
                     reply += MainApp.sResources.getString(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                             + MainApp.sResources.getString(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

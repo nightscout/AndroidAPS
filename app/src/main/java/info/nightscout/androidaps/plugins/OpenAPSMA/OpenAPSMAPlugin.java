@@ -186,15 +186,14 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         maxBg = Round.roundTo(maxBg, 0.1d);
 
         Date start = new Date();
-        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
-        treatments.updateTotalIOBTreatments();
-        treatments.updateTotalIOBTempBasals();
-        IobTotal bolusIob = treatments.getLastCalculationTreatments();
-        IobTotal basalIob = treatments.getLastCalculationTempBasals();
+        MainApp.getConfigBuilder().updateTotalIOBTreatments();
+        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments();
+        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        MealData mealData = treatments.getMealData();
+        MealData mealData = MainApp.getConfigBuilder().getMealData();
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
         Profiler.log(log, "MA data gathering", start);

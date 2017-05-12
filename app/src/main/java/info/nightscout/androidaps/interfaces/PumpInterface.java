@@ -19,9 +19,6 @@ public interface PumpInterface {
     boolean isSuspended();
     boolean isBusy();
 
-    boolean isTempBasalInProgress();
-    boolean isExtendedBoluslInProgress();
-
     // Upload to pump new basal profile
     int SUCCESS = 0;
     int FAILED = 1;
@@ -35,9 +32,6 @@ public interface PumpInterface {
     double getBaseBasalRate(); // base basal rate, not temp basal
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();
-    TempBasal getTempBasal(Date time);
-    TempBasal getTempBasal();
-    TempBasal getExtendedBolus();
 
     PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context);
     void stopBolusDelivering();

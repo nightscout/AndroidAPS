@@ -238,12 +238,6 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 return;
             }
 
-            if (ConfigBuilderPlugin.getActiveTreatments() == null) {
-                log.debug("calculateSensitivityData: No treatments plugin");
-                return;
-            }
-
-            TreatmentsInterface treatmentsInterface = ConfigBuilderPlugin.getActiveTreatments();
             if (bucketed_data == null || bucketed_data.size() < 3) {
                 log.debug("calculateSensitivityData: No bucketed data available");
                 return;
@@ -286,7 +280,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 double bgi = -iob.activity * sens * 5;
                 double deviation = delta - bgi;
 
-                List<Treatment> recentTreatments = treatmentsInterface.getTreatments5MinBack(bgTime);
+                List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBack(bgTime);
                 for (int ir = 0; ir < recentTreatments.size(); ir++) {
                     autosensData.carbsFromBolus += recentTreatments.get(ir).carbs;
                 }
@@ -338,8 +332,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
         } else {
             //log.debug(">>> Cache miss " + new Date(time).toLocaleString());
         }
-        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getCalculationToTimeTreatments(time).round();
-        IobTotal basalIob = ConfigBuilderPlugin.getActiveTreatments().getCalculationToTimeTempBasals(time).round();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getCalculationToTimeTreatments(time).round();
+        IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
 /*
         if (basalIob.basaliob > 0) {
             log.debug(new Date(time).toLocaleString() + " basaliob: " + basalIob.basaliob );

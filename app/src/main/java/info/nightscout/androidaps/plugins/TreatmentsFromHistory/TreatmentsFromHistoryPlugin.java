@@ -280,6 +280,16 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
         return in5minback;
     }
 
+    @Override
+    public boolean isTempBasalInProgress() {
+        return getTempBasal(new Date().getTime()) != null;
+    }
+
+    @Override
+    public boolean isExtendedBoluslInProgress() {
+        return getExtendedBolus(new Date().getTime()) != null; //TODO:  crosscheck here
+    }
+
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         initializeData();
@@ -314,7 +324,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Nullable
     @Override
-    public TempBasal getTempBasal(Date time) {
+    public TempBasal getTempBasal(long time) {
         checkForExpired(tempBasals);
         for (TempBasal t : tempBasals) {
             if (t.isInProgress(time)) return t;
@@ -323,7 +333,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     }
 
     @Override
-    public TempBasal getExtendedBolus(Date time) {
+    public TempBasal getExtendedBolus(long time) {
         checkForExpired(extendedBoluses);
         for (TempBasal t : extendedBoluses) {
             if (t.isInProgress(time)) return t;

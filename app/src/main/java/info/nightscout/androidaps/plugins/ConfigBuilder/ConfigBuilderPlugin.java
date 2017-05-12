@@ -16,11 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -58,7 +61,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class ConfigBuilderPlugin implements PluginBase, PumpInterface, ConstraintsInterface {
+public class ConfigBuilderPlugin implements PluginBase, PumpInterface, ConstraintsInterface, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
     static BgSourceInterface activeBgSource;
@@ -201,10 +204,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activeProfile;
     }
 
-    public static TreatmentsInterface getActiveTreatments() {
-        return activeTreatments;
-    }
-
     public static InsulinInterface getActiveInsulin() {
         return activeInsulin;
     }
@@ -222,7 +221,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             log.debug(p.getName() + ":" +
                     (p.isEnabled(1) ? " GENERAL" : "") +
                     (p.isEnabled(2) ? " TREATMENT" : "") +
-                    (p.isEnabled(3) ? " TEMPBASAL" : "") +
                     (p.isEnabled(4) ? " PROFILE" : "") +
                     (p.isEnabled(5) ? " APS" : "") +
                     (p.isEnabled(6) ? " PUMP" : "") +
@@ -363,20 +361,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public boolean isTempBasalInProgress() {
-        if (activePump != null)
-            return activePump.isTempBasalInProgress();
-        else return false;
-    }
-
-    @Override
-    public boolean isExtendedBoluslInProgress() {
-        if (activePump != null)
-            return activePump.isExtendedBoluslInProgress();
-        else return false;
-    }
-
-    @Override
     public int setNewBasalProfile(NSProfile profile) {
         // Compare with pump limits
         NSProfile.BasalValue[] basalValues = profile.getBasalValues();
@@ -442,30 +426,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             return activePump.getTempBasalRemainingMinutes();
         else
             return 0d;
-    }
-
-    @Override
-    public TempBasal getTempBasal(Date time) {
-        if (activePump != null)
-            return activePump.getTempBasal(time);
-        else
-            return null;
-    }
-
-    @Override
-    public TempBasal getTempBasal() {
-        if (activePump != null)
-            return activePump.getTempBasal();
-        else
-            return null;
-    }
-
-    @Override
-    public TempBasal getExtendedBolus() {
-        if (activePump != null)
-            return activePump.getExtendedBolus();
-        else
-            return null;
     }
 
     public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
@@ -719,7 +679,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.05) {
             result = new PumpEnactResult();
             result.absolute = getTempBasalAbsoluteRate();
-            result.duration = activePump.getTempBasal().getPlannedRemainingMinutes();
+            result.duration = getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
             result.enacted = false;
             result.comment = "Temp basal set correctly";
             result.success = true;
@@ -1187,4 +1147,74 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         }
     }
 
+    // Treatments interface
+    @Override
+    public void updateTotalIOBTreatments() {
+        activeTreatments.updateTotalIOBTreatments();
+    }
+
+    @Override
+    public void updateTotalIOBTempBasals() {
+        activeTreatments.updateTotalIOBTempBasals();
+    }
+
+    @Override
+    public IobTotal getLastCalculationTreatments() {
+        return activeTreatments.getLastCalculationTreatments();
+    }
+
+    @Override
+    public IobTotal getCalculationToTimeTreatments(long time) {
+        return activeTreatments.getCalculationToTimeTreatments(time);
+    }
+
+    @Override
+    public IobTotal getLastCalculationTempBasals() {
+        return activeTreatments.getLastCalculationTempBasals();
+    }
+
+    @Override
+    public IobTotal getCalculationToTimeTempBasals(long time) {
+        return activeTreatments.getCalculationToTimeTempBasals(time);
+    }
+
+    @Override
+    public MealData getMealData() {
+        return activeTreatments.getMealData();
+    }
+
+    @Override
+    public List<Treatment> getTreatments() {
+        return activeTreatments.getTreatments();
+    }
+
+    @Override
+    public List<Treatment> getTreatments5MinBack(long time) {
+        return activeTreatments.getTreatments5MinBack(time);
+    }
+
+    @Override
+    public boolean isTempBasalInProgress() {
+        return activeTreatments.isTempBasalInProgress();
+    }
+
+    @Override
+    public boolean isExtendedBoluslInProgress() {
+        return activeTreatments.isExtendedBoluslInProgress();
+    }
+
+    @Override
+    public TempBasal getTempBasal(long time) {
+        return activeTreatments.getTempBasal(time);
+    }
+
+    @Override
+    public TempBasal getExtendedBolus(long time) {
+        return activeTreatments.getExtendedBolus(time);
+    }
+
+    @Override
+    public long oldestDataAvaialable() {
+        return activeTreatments.oldestDataAvaialable();
+    }
 }

@@ -12,6 +12,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -54,14 +55,14 @@ public class MsgStatusTempBasal extends MessageBase {
     }
 
     public static void updateTempBasalInDB() {
-        DanaRPlugin DanaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         DanaRPump danaRPump = DanaRPump.getInstance();
         Date now = new Date();
 
         try {
 
-            if (DanaRPlugin.isRealTempBasalInProgress()) {
-                TempBasal tempBasal = DanaRPlugin.getRealTempBasal();
+            if (treatmentsInterface.isTempBasalInProgress()) {
+                TempBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
                 if (danaRPump.isTempBasalInProgress) {
                     if (tempBasal.percent != danaRPump.tempBasalPercent) {
                         // Close current temp basal

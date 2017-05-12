@@ -139,16 +139,6 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public boolean isTempBasalInProgress() {
-        return false;
-    }
-
-    @Override
-    public boolean isExtendedBoluslInProgress() {
-        return false;
-    }
-
-    @Override
     public int setNewBasalProfile(NSProfile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         return SUCCESS;
@@ -180,23 +170,8 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public TempBasal getTempBasal() {
-        return null;
-    }
-
-    @Override
-    public TempBasal getExtendedBolus() {
-        return null;
-    }
-
-    @Override
     public double getTempBasalRemainingMinutes() {
         return 0d;
-    }
-
-    @Override
-    public TempBasal getTempBasal(Date time) {
-        return null;
     }
 
     @Override

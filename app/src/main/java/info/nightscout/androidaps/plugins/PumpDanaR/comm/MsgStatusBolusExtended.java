@@ -12,6 +12,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -63,14 +64,14 @@ public class MsgStatusBolusExtended extends MessageBase {
     }
 
     public static void updateExtendedBolusInDB() {
-        DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         DanaRPump pump = DanaRPump.getInstance();
         Date now = new Date();
 
         try {
 
-            if (danaRPlugin.isExtendedBoluslInProgress()) {
-                TempBasal extendedBolus = danaRPlugin.getExtendedBolus();
+            if (treatmentsInterface.isExtendedBoluslInProgress()) {
+                TempBasal extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
                 if (pump.isExtendedInProgress) {
                     if (extendedBolus.absolute != pump.extendedBolusAbsoluteRate) {
                         // Close current extended

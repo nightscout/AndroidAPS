@@ -138,16 +138,16 @@ public class PersistentNotificationPlugin implements PluginBase{
 
         PumpInterface pump = MainApp.getConfigBuilder();
 
-        if (pump.isTempBasalInProgress()) {
-            TempBasal activeTemp = pump.getTempBasal();
+        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            TempBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
             line1 += "  " + activeTemp.toStringShort();
         }
 
         //IOB
-        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTreatments();
-        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTempBasals();
-        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTreatments().round();
-        IobTotal basalIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTempBasals().round();
+        MainApp.getConfigBuilder().updateTotalIOBTreatments();
+        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
+        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
 
         String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + ctx.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "

@@ -16,6 +16,8 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
@@ -92,13 +94,13 @@ public class VirtualPumpFragment extends Fragment {
                 public void run() {
 
                     basaBasalRateView.setText(virtualPumpPlugin.getBaseBasalRate() + "U");
-                    if (virtualPumpPlugin.isTempBasalInProgress()) {
-                        tempBasalView.setText(virtualPumpPlugin.getTempBasal().toString());
+                    if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).toString());
                     } else {
                         tempBasalView.setText("");
                     }
-                    if (virtualPumpPlugin.isExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(virtualPumpPlugin.getExtendedBolus().toString());
+                    if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
+                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()).toString());
                     } else {
                         extendedBolusView.setText("");
                     }

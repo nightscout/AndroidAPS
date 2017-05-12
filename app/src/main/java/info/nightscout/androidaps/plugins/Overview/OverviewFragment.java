@@ -483,7 +483,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 break;
             case R.id.overview_canceltempbutton:
                 final PumpInterface pump = MainApp.getConfigBuilder();
-                if (pump.isTempBasalInProgress()) {
+                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                     sHandler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -891,8 +891,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             calibrationButton.setVisibility(View.GONE);
         }
 
-        TempBasal activeTemp = pump.getTempBasal();
-        if (pump.isTempBasalInProgress()) {
+        TempBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             cancelTempButton.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
             runningTempView.setVisibility(View.VISIBLE);
@@ -1006,10 +1006,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
 
         // iob
-        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTreatments();
-        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOBTempBasals();
-        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTreatments().round();
-        IobTotal basalIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculationTempBasals().round();
+        MainApp.getConfigBuilder().updateTotalIOBTreatments();
+        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
+        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
 
         String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
@@ -1077,7 +1077,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
-                TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date(time));
+                TempBasal tb = MainApp.getConfigBuilder().getTempBasal(time);
                 double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
                 double baseLineValue = baseBasalValue;
                 double tempBasalValue = 0;
@@ -1366,7 +1366,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
 
         // Treatments
-        List<Treatment> treatments = MainApp.getConfigBuilder().getActiveTreatments().getTreatments();
+        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatments();
         List<Treatment> filteredTreatments = new ArrayList<Treatment>();
 
         for (int tx = 0; tx < treatments.size(); tx++) {

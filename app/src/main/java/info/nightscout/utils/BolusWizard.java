@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.data.IobTotal;
@@ -85,7 +86,7 @@ public class BolusWizard {
 
         // Insulin from IOB
         // IOB calculation
-        TreatmentsInterface treatments = ConfigBuilderPlugin.getActiveTreatments();
+        TreatmentsInterface treatments = MainApp.getConfigBuilder();
         treatments.updateTotalIOBTreatments();
         IobTotal bolusIob = treatments.getLastCalculationTreatments().round();
         treatments.updateTotalIOBTempBasals();

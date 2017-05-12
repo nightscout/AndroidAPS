@@ -191,7 +191,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         Profiler.log(log, "calculateIobArrayInDia()", startPart);
 
         startPart = new Date();
-        MealData mealData = MainApp.getConfigBuilder().getActiveTreatments().getMealData();
+        MealData mealData = MainApp.getConfigBuilder().getMealData();
         Profiler.log(log, "getMealData()", startPart);
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
@@ -222,7 +222,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
-        long oldestDataAvailable = MainApp.getConfigBuilder().getActiveTreatments().oldestDataAvaialable();
+        long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvaialable();
         long getBGDataFrom = Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia())));
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
 

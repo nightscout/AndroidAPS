@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.Date;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -20,6 +22,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
@@ -158,10 +161,10 @@ public class StatuslinePlugin implements PluginBase {
         }
 
         //Temp basal
-        PumpInterface pump = MainApp.getConfigBuilder();
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
-        if (pump.isTempBasalInProgress()) {
-            TempBasal activeTemp = pump.getTempBasal();
+        if (treatmentsInterface.isTempBasalInProgress()) {
+            TempBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
             if (shortString) {
                 status += activeTemp.toStringShort();
             } else {
@@ -170,10 +173,10 @@ public class StatuslinePlugin implements PluginBase {
         }
 
         //IOB
-        MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOBTreatments();
-        IobTotal bolusIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculationTreatments().round();
-        MainApp.getConfigBuilder().getActiveTreatments().updateTotalIOBTempBasals();
-        IobTotal basalIob = MainApp.getConfigBuilder().getActiveTreatments().getLastCalculationTempBasals().round();
+        treatmentsInterface.updateTotalIOBTreatments();
+        IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
+        treatmentsInterface.updateTotalIOBTempBasals();
+        IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
         status += (shortString ? "" : (ctx.getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
 
 
