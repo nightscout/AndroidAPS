@@ -188,29 +188,6 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public double getTempBasalAbsoluteRate() {
-        if (!MainApp.getConfigBuilder().isTempBasalInProgress())
-            return 0;
-        if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).isAbsolute) {
-            return MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).absolute;
-        } else {
-            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
-            if (profile == null)
-                return defaultBasalValue;
-            Double baseRate = profile.getBasal(profile.secondsFromMidnight());
-            Double tempRate = baseRate * (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percent / 100d);
-            return baseRate + tempRate;
-        }
-    }
-
-    @Override
-    public double getTempBasalRemainingMinutes() {
-        if (!MainApp.getConfigBuilder().isTempBasalInProgress())
-            return 0;
-        return MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
-    }
-
-    @Override
     public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;

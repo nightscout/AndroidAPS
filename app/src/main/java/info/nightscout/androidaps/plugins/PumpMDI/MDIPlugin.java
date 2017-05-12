@@ -165,16 +165,6 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public double getTempBasalAbsoluteRate() {
-        return 0;
-    }
-
-    @Override
-    public double getTempBasalRemainingMinutes() {
-        return 0d;
-    }
-
-    @Override
     public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;

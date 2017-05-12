@@ -27,9 +27,11 @@ public interface TreatmentsInterface {
     List<Treatment> getTreatments5MinBack(long time);
 
     boolean isTempBasalInProgress();
-    boolean isExtendedBoluslInProgress();
-
     TempBasal getTempBasal (long time);
+    double getTempBasalAbsoluteRate();
+    double getTempBasalRemainingMinutes();
+
+    boolean isExtendedBoluslInProgress();
     TempBasal getExtendedBolus (long time);
 
     long oldestDataAvaialable();

@@ -228,8 +228,8 @@ public class DetermineBasalAdapterAMAJS {
 
         mCurrentTemp = new V8Object(mV8rt);
         mCurrentTemp.add("temp", "absolute");
-        mCurrentTemp.add("duration", pump.getTempBasalRemainingMinutes());
-        mCurrentTemp.add("rate", pump.getTempBasalAbsoluteRate());
+        mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutes());
+        mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
 
         // as we have non default temps longer than 30 mintues
         TempBasal tempBasal = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());

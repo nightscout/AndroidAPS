@@ -310,34 +310,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         return getDanaRPump().currentBasal;
     }
 
-    @Override
-    public double getTempBasalAbsoluteRate() {
-        TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
-        if (tb != null) {
-            if (tb.isAbsolute) {
-                return tb.absolute;
-            } else {
-                Double baseRate = getBaseBasalRate();
-                Double tempRate = baseRate * (tb.percent / 100d);
-                return tempRate;
-            }
-        }
-        TempBasal eb = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
-        if (eb != null && useExtendedBoluses) {
-            return getBaseBasalRate() + eb.absolute;
-        }
-        return 0;
-    }
-
-    @Override
-    public double getTempBasalRemainingMinutes() {
-        if (MainApp.getConfigBuilder().isTempBasalInProgress())
-            return MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
-        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses)
-            return MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()).getPlannedRemainingMinutes();
-        return 0;
-    }
-
     public TempBasal getTempBasal(long time) {
         TempBasal temp = MainApp.getConfigBuilder().getTempBasal(time);
         if (temp != null) return temp;
@@ -446,9 +418,9 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
                 if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percent == percentRate) {
                     result.success = true;
                     result.percent = percentRate;
-                    result.absolute = getTempBasalAbsoluteRate();
+                    result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRate();
                     result.enacted = false;
-                    result.duration = ((Double) getTempBasalRemainingMinutes()).intValue();
+                    result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutes()).intValue();
                     result.isPercent = true;
                     result.isTempCancel = false;
                     if (Config.logPumpActions)
@@ -715,7 +687,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
 //            extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
             TempBasal tb = getTempBasal(new Date().getTime());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
+                extended.put("TempBasalAbsoluteRate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", tb.timeStart.toLocaleString());
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
                 extended.put("IsExtended", tb.isExtended);

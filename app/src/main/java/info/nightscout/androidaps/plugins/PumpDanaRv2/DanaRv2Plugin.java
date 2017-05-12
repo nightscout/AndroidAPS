@@ -287,24 +287,6 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
     }
 
     @Override
-    public double getTempBasalAbsoluteRate() {
-        TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
-        if (tb != null) {
-            Double baseRate = getBaseBasalRate();
-            Double tempRate = baseRate * (tb.percent / 100d);
-            return tempRate;
-        }
-        return 0;
-    }
-
-    @Override
-    public double getTempBasalRemainingMinutes() {
-        if (MainApp.getConfigBuilder().isTempBasalInProgress())
-            return MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
-        return 0;
-    }
-
-    @Override
     public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
@@ -386,9 +368,9 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
                 if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percent == percentRate) {
                     result.success = true;
                     result.percent = percentRate;
-                    result.absolute = getTempBasalAbsoluteRate();
+                    result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRate();
                     result.enacted = false;
-                    result.duration = ((Double) getTempBasalRemainingMinutes()).intValue();
+                    result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutes()).intValue();
                     result.isPercent = true;
                     result.isTempCancel = false;
                     if (Config.logPumpActions)
@@ -611,7 +593,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
             TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", getTempBasalAbsoluteRate());
+                extended.put("TempBasalAbsoluteRate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", tb.timeStart.toLocaleString());
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
                 extended.put("IsExtended", tb.isExtended);

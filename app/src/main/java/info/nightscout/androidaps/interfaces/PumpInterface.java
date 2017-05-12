@@ -30,8 +30,6 @@ public interface PumpInterface {
     void refreshDataFromPump(String reason);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
-    double getTempBasalAbsoluteRate();
-    double getTempBasalRemainingMinutes();
 
     PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context);
     void stopBolusDelivering();

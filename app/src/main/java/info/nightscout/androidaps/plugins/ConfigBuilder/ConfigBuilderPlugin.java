@@ -259,7 +259,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             }
         }
 
-         // PluginBase.PROFILE
+        // PluginBase.PROFILE
         pluginsInCategory = MainApp.getSpecificPluginsListByInterface(ProfileInterface.class);
         activeProfile = (ProfileInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.PROFILE);
         if (Config.logConfigBuilder)
@@ -414,18 +414,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public double getTempBasalAbsoluteRate() {
-        if (activePump != null)
-            return activePump.getTempBasalAbsoluteRate();
-        else
-            return 0d;
+        return activeTreatments.getTempBasalAbsoluteRate();
     }
 
     @Override
     public double getTempBasalRemainingMinutes() {
-        if (activePump != null)
-            return activePump.getTempBasalRemainingMinutes();
-        else
-            return 0d;
+        return activeTreatments.getTempBasalRemainingMinutes();
     }
 
     public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {

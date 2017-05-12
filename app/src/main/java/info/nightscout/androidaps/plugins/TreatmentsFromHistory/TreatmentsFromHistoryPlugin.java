@@ -29,6 +29,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
@@ -339,6 +340,30 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
             if (t.isInProgress(time)) return t;
         }
         return null;
+    }
+
+    @Override
+    public double getTempBasalAbsoluteRate() {
+        PumpInterface pump = MainApp.getConfigBuilder();
+
+        TempBasal tb = getTempBasal(new Date().getTime());
+        if (tb != null) {
+            if (tb.isAbsolute) {
+                return tb.absolute;
+            } else {
+                Double baseRate = pump.getBaseBasalRate();
+                Double tempRate = baseRate * (tb.percent / 100d);
+                return tempRate;
+            }
+        }
+        return 0;
+    }
+
+    @Override
+    public double getTempBasalRemainingMinutes() {
+        if (isTempBasalInProgress())
+            return getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
+        return 0;
     }
 
     @Override
