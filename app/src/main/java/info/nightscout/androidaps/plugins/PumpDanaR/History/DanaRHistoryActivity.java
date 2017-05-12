@@ -169,8 +169,7 @@ public class DanaRHistoryActivity extends Activity {
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, getString(R.string.danar_history_refill)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, getString(R.string.danar_history_syspend)));
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, typeList);
-        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_centered, typeList);
         historyTypeSpinner.setAdapter(spinnerAdapter);
 
         reloadButton.setOnClickListener(new View.OnClickListener() {
