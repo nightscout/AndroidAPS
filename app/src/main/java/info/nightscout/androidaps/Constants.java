@@ -58,8 +58,9 @@ public class Constants {
     //NSClientInternal
     public static final int MAX_LOG_LINES = 100;
 
-    //Screen: Threshold for width to go into small width layout
+    //Screen: Threshold for width/height to go into small width/height layout
     public static final int SMALL_WIDTH = 320;
+    public static final int SMALL_HEIGHT = 320;
 
     //Autosens
     public static final double DEVIATION_TO_BE_EQUAL = 2.0;

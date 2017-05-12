@@ -157,6 +157,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     Button quickWizardButton;
 
     boolean smallWidth;
+    boolean smallHeight;
+
 
     private int rangeToDisplay = 6; // for graph
 
@@ -186,9 +188,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         int screen_width = dm.widthPixels;
+        int screen_height = dm.heightPixels;
         smallWidth = screen_width < Constants.SMALL_WIDTH;
+        smallHeight = screen_height < Constants.SMALL_HEIGHT;
 
-        View view = inflater.inflate(R.layout.overview_fragment, container, false);
+        View view;
+
+        if(smallHeight){
+            view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
+        } else {
+            view = inflater.inflate(R.layout.overview_fragment, container, false);
+        }
 
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         arrowView = (TextView) view.findViewById(R.id.overview_arrow);
