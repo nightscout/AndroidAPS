@@ -20,6 +20,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
@@ -235,6 +236,11 @@ public class PersistentNotificationPlugin implements PluginBase{
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
+        updateNotification();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
         updateNotification();
     }
 

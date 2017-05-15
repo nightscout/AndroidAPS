@@ -5,13 +5,11 @@ import android.support.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -62,48 +60,38 @@ public class MsgStatusTempBasal extends MessageBase {
     public static void updateTempBasalInDB() {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         DanaRPump danaRPump = DanaRPump.getInstance();
-        Date now = new Date();
+        long now = new Date().getTime();
 
-        try {
-
-            if (treatmentsInterface.isTempBasalInProgress()) {
-                TempBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
-                if (danaRPump.isTempBasalInProgress) {
-                    if (tempBasal.percent != danaRPump.tempBasalPercent) {
-                        // Close current temp basal
-                        tempBasal.timeEnd = now;
-                        MainApp.getDbHelper().getDaoTempBasals().update(tempBasal);
-                        // Create new
-                        TempBasal newTempBasal = new TempBasal();
-                        newTempBasal.timeStart = now;
-                        newTempBasal.percent = danaRPump.tempBasalPercent;
-                        newTempBasal.isAbsolute = false;
-                        newTempBasal.duration = danaRPump.tempBasalTotalSec / 60;
-                        newTempBasal.isExtended = false;
-                        MainApp.getDbHelper().getDaoTempBasals().create(newTempBasal);
-                        MainApp.bus().post(new EventTempBasalChange());
-                    }
-                } else {
+        if (treatmentsInterface.isTempBasalInProgress()) {
+            TempBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
+            if (danaRPump.isTempBasalInProgress) {
+                if (tempBasal.percent != danaRPump.tempBasalPercent) {
                     // Close current temp basal
-                    tempBasal.timeEnd = now;
-                    MainApp.getDbHelper().getDaoTempBasals().update(tempBasal);
-                    MainApp.bus().post(new EventTempBasalChange());
-                }
-            } else {
-                if (danaRPump.isTempBasalInProgress) {
+                    treatmentsInterface.tempBasalStop(now);
                     // Create new
                     TempBasal newTempBasal = new TempBasal();
-                    newTempBasal.timeStart = now;
+                    newTempBasal.timeStart = new Date(now);
                     newTempBasal.percent = danaRPump.tempBasalPercent;
                     newTempBasal.isAbsolute = false;
                     newTempBasal.duration = danaRPump.tempBasalTotalSec / 60;
                     newTempBasal.isExtended = false;
-                    MainApp.getDbHelper().getDaoTempBasals().create(newTempBasal);
-                    MainApp.bus().post(new EventTempBasalChange());
+                    treatmentsInterface.tempBasalStart(newTempBasal);
                 }
+            } else {
+                // Close current temp basal
+                treatmentsInterface.tempBasalStop(now);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            if (danaRPump.isTempBasalInProgress) {
+                // Create new
+                TempBasal newTempBasal = new TempBasal();
+                newTempBasal.timeStart = new Date(now);
+                newTempBasal.percent = danaRPump.tempBasalPercent;
+                newTempBasal.isAbsolute = false;
+                newTempBasal.duration = danaRPump.tempBasalTotalSec / 60;
+                newTempBasal.isExtended = false;
+                treatmentsInterface.tempBasalStart(newTempBasal);
+            }
         }
     }
 }

@@ -63,6 +63,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingMeal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingProfileRatios;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingPumpTime;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingShippingInfo;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
@@ -75,7 +76,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgCheckValue_k;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgSettingBasal_k;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBasic_k;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgStatusBolusExtended_k;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
@@ -276,7 +276,7 @@ public class DanaRKoreanExecutionService extends Service {
             //MsgStatus_k statusMsg = new MsgStatus_k();
             MsgStatusBasic_k statusBasicMsg = new MsgStatusBasic_k();
             MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
-            MsgStatusBolusExtended_k exStatusMsg = new MsgStatusBolusExtended_k();
+            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
             MsgCheckValue_k checkValue = new MsgCheckValue_k();
 
             if (danaRPump.isNewPump) {
@@ -369,7 +369,7 @@ public class DanaRKoreanExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended_k());
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -379,7 +379,7 @@ public class DanaRKoreanExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended_k());
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }

@@ -28,6 +28,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -410,16 +411,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             return activePump.getBaseBasalRate();
         else
             return 0d;
-    }
-
-    @Override
-    public double getTempBasalAbsoluteRate() {
-        return activeTreatments.getTempBasalAbsoluteRate();
-    }
-
-    @Override
-    public double getTempBasalRemainingMinutes() {
-        return activeTreatments.getTempBasalRemainingMinutes();
     }
 
     public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
@@ -1141,7 +1132,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         }
     }
 
-    // Treatments interface
+    //  ****** Treatments interface *****
     @Override
     public void updateTotalIOBTreatments() {
         activeTreatments.updateTotalIOBTreatments();
@@ -1193,18 +1184,52 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public boolean isExtendedBoluslInProgress() {
-        return activeTreatments.isExtendedBoluslInProgress();
-    }
-
-    @Override
     public TempBasal getTempBasal(long time) {
         return activeTreatments.getTempBasal(time);
     }
 
     @Override
+    public double getTempBasalAbsoluteRate() {
+        return activeTreatments.getTempBasalAbsoluteRate();
+    }
+
+    @Override
+    public double getTempBasalRemainingMinutes() {
+        return activeTreatments.getTempBasalRemainingMinutes();
+    }
+
+    @Override
+    public void tempBasalStart(TempBasal tempBasal) {
+        activeTreatments.tempBasalStart(tempBasal);
+        MainApp.bus().post(new EventTempBasalChange());
+    }
+
+    @Override
+    public void tempBasalStop(long time) {
+        activeTreatments.tempBasalStop(time);
+        MainApp.bus().post(new EventTempBasalChange());
+    }
+
+    @Override
+    public boolean isExtendedBoluslInProgress() {
+        return activeTreatments.isExtendedBoluslInProgress();
+    }
+
+    @Override
     public TempBasal getExtendedBolus(long time) {
         return activeTreatments.getExtendedBolus(time);
+    }
+
+    @Override
+    public void extendedBolusStart(TempBasal tempBasal) {
+        activeTreatments.extendedBolusStart(tempBasal);
+        MainApp.bus().post(new EventExtendedBolusChange());
+    }
+
+    @Override
+    public void extendedBolusStop(long time) {
+        activeTreatments.extendedBolusStop(time);
+        MainApp.bus().post(new EventExtendedBolusChange());
     }
 
     @Override

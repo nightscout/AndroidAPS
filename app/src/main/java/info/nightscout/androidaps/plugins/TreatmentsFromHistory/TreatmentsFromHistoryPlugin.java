@@ -177,12 +177,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
                 }
             }
             if (update) {
-                try {
-                    Dao<TempBasal, Long> dao = MainApp.getDbHelper().getDaoTempBasals();
-                    dao.update(t);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                MainApp.getDbHelper().update(t);
                 if (Config.logTempBasalsCut) {
                     log.debug("Fixing unfinished temp end: " + t.log());
                     if (position > 0)
@@ -343,6 +338,16 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     }
 
     @Override
+    public void extendedBolusStart(TempBasal extendedBolus) {
+
+    }
+
+    @Override
+    public void extendedBolusStop(long time) {
+
+    }
+
+    @Override
     public double getTempBasalAbsoluteRate() {
         PumpInterface pump = MainApp.getConfigBuilder();
 
@@ -367,6 +372,16 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     }
 
     @Override
+    public void tempBasalStart(TempBasal tempBasal) {
+
+    }
+
+    @Override
+    public void tempBasalStop(long time) {
+
+    }
+
+    @Override
     public long oldestDataAvaialable() {
         long oldestTemp = new Date().getTime();
         if (tempBasals.size() > 0)
@@ -375,12 +390,6 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
             oldestTemp = Math.min(oldestTemp, extendedBoluses.get(extendedBoluses.size() - 1).timeStart.getTime());
         oldestTemp -= 15 * 60 * 1000L; // allow 15 min before
         return oldestTemp;
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        initializeData();
-        updateTotalIOBTempBasals();
     }
 
 }

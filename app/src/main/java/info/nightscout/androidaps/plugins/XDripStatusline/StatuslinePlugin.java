@@ -15,6 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -211,6 +212,11 @@ public class StatuslinePlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
+        sendStatus();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
         sendStatus();
     }
 

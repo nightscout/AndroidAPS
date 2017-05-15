@@ -22,6 +22,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
@@ -235,6 +236,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = cancelTempBasal();
         if (!result.success)
             return result;
@@ -249,13 +251,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.absolute = absoluteRate;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        try {
-            MainApp.instance().getDbHelper().getDaoTempBasals().create(tempBasal);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            result.success = false;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_sqlerror);
-        }
+        treatmentsInterface.tempBasalStart(tempBasal);
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
@@ -265,6 +261,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             result = cancelTempBasal();
@@ -283,13 +280,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.isTempCancel = false;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        try {
-            MainApp.instance().getDbHelper().getDaoTempBasals().create(tempBasal);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            result.success = false;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_sqlerror);
-        }
+        treatmentsInterface.tempBasalStart(tempBasal);
         if (Config.logPumpComm)
             log.debug("Settings temp basal percent: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
@@ -299,6 +290,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = cancelExtendedBolus();
         if (!result.success)
             return result;
@@ -314,14 +306,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.isTempCancel = false;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        try {
-            MainApp.instance().getDbHelper().getDaoTempBasals().create(extendedBolus);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            result.success = false;
-            result.enacted = false;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_sqlerror);
-        }
+        treatmentsInterface.extendedBolusStart(extendedBolus);
         if (Config.logPumpComm)
             log.debug("Setting extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
@@ -331,26 +316,18 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult cancelTempBasal() {
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.isTempCancel = true;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (treatmentsInterface.isTempBasalInProgress()) {
             result.enacted = true;
-            TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
-            tb.timeEnd = new Date();
-            try {
-                MainApp.instance().getDbHelper().getDaoTempBasals().update(tb);
-                //tempBasal = null;
-                if (Config.logPumpComm)
-                    log.debug("Canceling temp basal: " + result);
-                MainApp.bus().post(new EventVirtualPumpUpdateGui());
-            } catch (SQLException e) {
-                e.printStackTrace();
-                result.success = false;
-                result.enacted = false;
-                result.comment = MainApp.instance().getString(R.string.virtualpump_sqlerror);
-            }
+            treatmentsInterface.tempBasalStop(new Date().getTime());
+            //tempBasal = null;
+            if (Config.logPumpComm)
+                log.debug("Canceling temp basal: " + result);
+            MainApp.bus().post(new EventVirtualPumpUpdateGui());
         }
         lastDataTime = new Date();
         return result;
@@ -358,17 +335,10 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult cancelExtendedBolus() {
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
-        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
-            TempBasal extendedBolus = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
-            extendedBolus.timeEnd = new Date();
-            try {
-                MainApp.instance().getDbHelper().getDaoTempBasals().update(extendedBolus);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                result.success = false;
-                result.comment = MainApp.instance().getString(R.string.virtualpump_sqlerror);
-            }
+        if (treatmentsInterface.isExtendedBoluslInProgress()) {
+            treatmentsInterface.extendedBolusStop(new Date().getTime());
         }
         result.success = true;
         result.enacted = true;

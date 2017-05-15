@@ -24,6 +24,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -188,6 +189,11 @@ public class DanaRKoreanFragment extends Fragment {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange s) {
+        updateGUI();
+    }
+
+   @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange s) {
         updateGUI();
     }
 

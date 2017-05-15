@@ -24,6 +24,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -179,12 +180,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 }
             }
             if (update) {
-                try {
-                    Dao<TempBasal, Long> dao = MainApp.getDbHelper().getDaoTempBasals();
-                    dao.update(t);
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
+                MainApp.getDbHelper().update(t);
                 if (Config.logTempBasalsCut) {
                     log.debug("Fixing unfinished temp end: " + t.log());
                     if (position > 0)
@@ -347,6 +343,20 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
+    public void extendedBolusStart(TempBasal extendedBolus) {
+
+    }
+
+    @Override
+    public void extendedBolusStop(long time) {
+        TempBasal extendedBolus = getExtendedBolus(time);
+        if (extendedBolus != null) {
+            extendedBolus.timeEnd = new Date(time);
+            MainApp.getDbHelper().update(extendedBolus);
+        }
+    }
+
+    @Override
     public double getTempBasalAbsoluteRate() {
         PumpInterface pump = MainApp.getConfigBuilder();
 
@@ -374,6 +384,21 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (isExtendedBoluslInProgress() && useExtendedBoluses)
             return getExtendedBolus(new Date().getTime()).getPlannedRemainingMinutes();
         return 0;
+    }
+
+    @Override
+    public void tempBasalStart(TempBasal tempBasal) {
+        MainApp.getDbHelper().create(tempBasal);
+    }
+
+    @Override
+    public void tempBasalStop(long time) {
+        TempBasal tempBasal = getTempBasal(time);
+        if (tempBasal != null) {
+            tempBasal.timeEnd = new Date(time);
+            MainApp.getDbHelper().update(tempBasal);
+        }
+
     }
 
     @Override
@@ -407,6 +432,11 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
+        initializeData();
+    }
+
+   @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
         initializeData();
     }
 

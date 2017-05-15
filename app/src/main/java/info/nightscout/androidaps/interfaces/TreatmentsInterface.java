@@ -30,9 +30,13 @@ public interface TreatmentsInterface {
     TempBasal getTempBasal (long time);
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();
+    void tempBasalStart(TempBasal tempBasal);
+    void tempBasalStop(long time);
 
     boolean isExtendedBoluslInProgress();
     TempBasal getExtendedBolus (long time);
+    void extendedBolusStart(TempBasal extendedBolus);
+    void extendedBolusStop(long time);
 
     long oldestDataAvaialable();
 

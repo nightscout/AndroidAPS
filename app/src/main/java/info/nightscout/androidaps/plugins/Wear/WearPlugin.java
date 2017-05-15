@@ -9,6 +9,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -146,6 +147,11 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
+        sendDataToWatch(true, true, false);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
         sendDataToWatch(true, true, false);
     }
 

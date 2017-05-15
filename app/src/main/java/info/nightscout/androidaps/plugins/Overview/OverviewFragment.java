@@ -69,6 +69,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
@@ -696,8 +697,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
+        scheduleUpdateGUI("EventExtendedBolusChange");
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
-        scheduleUpdateGUI("EventTempBasalChange");
+        scheduleUpdateGUI("EventNewBG");
     }
 
     @Subscribe

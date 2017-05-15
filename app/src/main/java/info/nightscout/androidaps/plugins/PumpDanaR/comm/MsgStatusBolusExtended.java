@@ -5,15 +5,12 @@ import android.support.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class MsgStatusBolusExtended extends MessageBase {
@@ -30,6 +27,9 @@ public class MsgStatusBolusExtended extends MessageBase {
 
         double extendedBolusAmount = intFromBuff(bytes, 2, 2) / 100d;
         int extendedBolusSoFarInSecs = intFromBuff(bytes, 4, 3);
+// This is available only on korean, but not needed now
+//        int extendedBolusDeliveryPulse = intFromBuff(bytes, 7, 2);
+//        int isEasyUIUserSleep = intFromBuff(bytes, 9, 1);
 
         int extendedBolusSoFarInMinutes = extendedBolusSoFarInSecs / 60;
         double extendedBolusAbsoluteRate = isExtendedInProgress ? extendedBolusAmount / extendedBolusMinutes * 60 : 0d;
@@ -66,48 +66,38 @@ public class MsgStatusBolusExtended extends MessageBase {
     public static void updateExtendedBolusInDB() {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         DanaRPump pump = DanaRPump.getInstance();
-        Date now = new Date();
+        long now = new Date().getTime();
 
-        try {
-
-            if (treatmentsInterface.isExtendedBoluslInProgress()) {
-                TempBasal extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
-                if (pump.isExtendedInProgress) {
-                    if (extendedBolus.absolute != pump.extendedBolusAbsoluteRate) {
-                        // Close current extended
-                        extendedBolus.timeEnd = now;
-                        MainApp.getDbHelper().getDaoTempBasals().update(extendedBolus);
-                        // Create new
-                        TempBasal newExtended = new TempBasal();
-                        newExtended.timeStart = now;
-                        newExtended.absolute = pump.extendedBolusAbsoluteRate;
-                        newExtended.isAbsolute = true;
-                        newExtended.duration = pump.extendedBolusMinutes;
-                        newExtended.isExtended = true;
-                        MainApp.getDbHelper().getDaoTempBasals().create(newExtended);
-                        MainApp.bus().post(new EventTempBasalChange());
-                    }
-                } else {
-                    // Close curent temp basal
-                    extendedBolus.timeEnd = now;
-                    MainApp.getDbHelper().getDaoTempBasals().update(extendedBolus);
-                    MainApp.bus().post(new EventTempBasalChange());
-                }
-            } else {
-                if (pump.isExtendedInProgress) {
+        if (treatmentsInterface.isExtendedBoluslInProgress()) {
+            TempBasal extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
+            if (pump.isExtendedInProgress) {
+                if (extendedBolus.absolute != pump.extendedBolusAbsoluteRate) {
+                    // Close current extended
+                    treatmentsInterface.extendedBolusStop(now);
                     // Create new
                     TempBasal newExtended = new TempBasal();
-                    newExtended.timeStart = now;
+                    newExtended.timeStart = new Date(now);
                     newExtended.absolute = pump.extendedBolusAbsoluteRate;
                     newExtended.isAbsolute = true;
                     newExtended.duration = pump.extendedBolusMinutes;
                     newExtended.isExtended = true;
-                    MainApp.getDbHelper().getDaoTempBasals().create(newExtended);
-                    MainApp.bus().post(new EventTempBasalChange());
+                    treatmentsInterface.extendedBolusStart(newExtended);
                 }
+            } else {
+                // Close curent temp basal
+                treatmentsInterface.extendedBolusStop(now);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            if (pump.isExtendedInProgress) {
+                // Create new
+                TempBasal newExtended = new TempBasal();
+                newExtended.timeStart = new Date(now);
+                newExtended.absolute = pump.extendedBolusAbsoluteRate;
+                newExtended.isAbsolute = true;
+                newExtended.duration = pump.extendedBolusMinutes;
+                newExtended.isExtended = true;
+                treatmentsInterface.extendedBolusStart(newExtended);
+            }
         }
     }
 }
