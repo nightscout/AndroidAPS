@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
@@ -16,74 +17,81 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/careportal_newnstreatment_bg_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:visibility="gone">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:width="100dp"
-                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toStartOf="@+id/careportal_newnstreatment_bg_layout"
                     android:text="@string/treatments_wizard_bg_label"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_bg_minus"
+                <LinearLayout
+                    android:id="@+id/careportal_newnstreatment_bg_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_minus"
-                    android:tint="#ffffff" />
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
-                <EditText
-                    android:id="@+id/careportal_newnstreatment_bginput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:width="80dp"
-                    android:gravity="center_horizontal"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_bg_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff" />
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_bg_plus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_add"
-                    android:tint="#ffffff" />
+                    <EditText
+                        android:id="@+id/careportal_newnstreatment_bginput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:width="80dp"
+                        android:gravity="center_horizontal"
+                        android:inputType="numberDecimal"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_bg_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/careportal_newnstreatment_bgunits"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/careportal_newnstreatment_bg_layout"
                     android:gravity="left"
-                    android:minWidth="40dp"
                     android:paddingLeft="5dp"
                     android:text="mg/dl"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/careportal_newnstreatment_bgsource_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="right"
+                android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <RadioGroup
                     android:layout_width="wrap_content"
@@ -101,8 +109,8 @@
                         android:id="@+id/careportal_newnstreatment_sensor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/careportal_newnstreatment_sensor"
-                        android:checked="true" />
+                        android:checked="true"
+                        android:text="@string/careportal_newnstreatment_sensor" />
 
                     <RadioButton
                         android:id="@+id/careportal_newnstreatment_other"
@@ -112,237 +120,268 @@
                 </RadioGroup>
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/careportal_newnstreatment_carbs_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:visibility="gone">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:width="100dp"
-                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/careportal_newnstreatment_carbs_layout"
                     android:text="@string/careportal_newnstreatment_carbs_label"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_carbs_minus"
+                <LinearLayout
+                    android:id="@+id/careportal_newnstreatment_carbs_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_minus"
-                    android:tint="#ffffff" />
-
-
-                <EditText
-                    android:id="@+id/careportal_newnstreatment_carbsinput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
                     android:layout_gravity="center_horizontal"
-                    android:width="80dp"
-                    android:gravity="center_horizontal"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:orientation="horizontal"
+                    android:visibility="visible">
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_carbs_plus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_add"
-                    android:tint="#ffffff" />
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_carbs_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff" />
+
+
+                    <EditText
+                        android:id="@+id/careportal_newnstreatment_carbsinput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:width="80dp"
+                        android:gravity="center_horizontal"
+                        android:inputType="numberDecimal"
+                        android:padding="10dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_carbs_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff" />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
+                    android:layout_toRightOf="@+id/careportal_newnstreatment_carbs_layout"
                     android:gravity="left"
-                    android:minWidth="40dp"
                     android:paddingLeft="5dp"
                     android:text="g"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/careportal_newnstreatment_insulin_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:visibility="gone">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:width="100dp"
-                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toStartOf="@+id/careportal_newnstreatment_insulin_layout"
                     android:text="@string/careportal_newnstreatment_insulin_label"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_insulin_minus"
+                <LinearLayout
+                    android:id="@+id/careportal_newnstreatment_insulin_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_minus"
-                    android:tint="#ffffff" />
-
-
-                <EditText
-                    android:id="@+id/careportal_newnstreatment_insulininput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center_horizontal"
-                    android:width="80dp"
-                    android:gravity="center_horizontal"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_insulin_plus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_add"
-                    android:tint="#ffffff" />
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_insulin_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff" />
+
+
+                    <EditText
+                        android:id="@+id/careportal_newnstreatment_insulininput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:width="80dp"
+                        android:gravity="center_horizontal"
+                        android:inputType="numberDecimal"
+                        android:padding="10dp"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_insulin_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff" />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
+                    android:layout_toEndOf="@+id/careportal_newnstreatment_insulin_layout"
                     android:gravity="left"
-                    android:minWidth="40dp"
                     android:paddingLeft="5dp"
                     android:text="U"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/careportal_newnstreatment_split_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:visibility="gone">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:width="100dp"
-                    android:padding="10dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="10dp"
+                    android:layout_toStartOf="@+id/careportal_newnstreatment_split_layout"
                     android:text="@string/careportal_newnstreatment_split_label"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_split_minus"
+                <LinearLayout
+                    android:id="@+id/careportal_newnstreatment_split_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_minus"
-                    android:tint="#ffffff" />
+                    android:layout_centerInParent="true"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_split_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff" />
 
 
-                <EditText
-                    android:id="@+id/careportal_newnstreatment_splitinput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:width="80dp"
-                    android:gravity="center_horizontal"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    <EditText
+                        android:id="@+id/careportal_newnstreatment_splitinput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:width="80dp"
+                        android:gravity="center_horizontal"
+                        android:inputType="numberDecimal"
+                        android:padding="10dp"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_split_plus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_add"
-                    android:tint="#ffffff" />
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_split_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff" />
+
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/careportal_newnstreatment_split_layout"
                     android:gravity="left"
-                    android:minWidth="40dp"
                     android:paddingLeft="5dp"
                     android:text="%"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/careportal_newnstreatment_duration_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="horizontal"
-                android:visibility="gone">
+            </RelativeLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:width="100dp"
-                    android:padding="10dp"
-                    android:text="@string/careportal_newnstreatment_duration_label"
-                    android:textAppearance="?android:attr/textAppearanceMedium" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_duration_minus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_minus"
-                    android:tint="#ffffff" />
-
-
-                <EditText
-                    android:id="@+id/careportal_newnstreatment_durationinput"
+                <LinearLayout
+                    android:id="@+id/careportal_newnstreatment_duration_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:width="80dp"
-                    android:gravity="center_horizontal"
-                    android:inputType="numberDecimal"
-                    android:padding="10dp"
-                    android:text=""
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+                    android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/careportal_newnstreatment_duration_plus"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/circle"
-                    android:backgroundTint="#ffffff"
-                    android:src="@drawable/ic_action_add"
-                    android:tint="#ffffff" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:width="100dp"
+                        android:padding="10dp"
+                        android:text="@string/careportal_newnstreatment_duration_label"
+                        android:textAppearance="?android:attr/textAppearanceMedium" />
 
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_duration_minus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_minus"
+                        android:tint="#ffffff" />
+
+
+                    <EditText
+                        android:id="@+id/careportal_newnstreatment_durationinput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:width="80dp"
+                        android:gravity="center_horizontal"
+                        android:inputType="numberDecimal"
+                        android:padding="10dp"
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+                    <ImageView
+                        android:id="@+id/careportal_newnstreatment_duration_plus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle"
+                        android:backgroundTint="#ffffff"
+                        android:src="@drawable/ic_action_add"
+                        android:tint="#ffffff" />
+
+                </LinearLayout>
                 <TextView
                     android:id="@+id/careportal_newnstreatment_duration_min"
                     android:layout_width="wrap_content"
@@ -353,8 +392,7 @@
                     android:paddingLeft="5dp"
                     android:text="@string/careportal_newnstreatment_duration_min"
                     android:textAppearance="?android:attr/textAppearanceSmall" />
-            </LinearLayout>
-
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/careportal_newnstreatment_percent_layout"
@@ -605,21 +643,20 @@
                         android:textAppearance="?android:attr/textAppearanceMedium" />
 
                     <EditText
+                        android:id="@+id/careportal_temptarget_low"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
                         android:width="70dp"
                         android:ems="10"
-                        android:id="@+id/careportal_temptarget_low" />
+                        android:inputType="numberDecimal" />
 
                     <EditText
+                        android:id="@+id/careportal_temptarget_high"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="numberDecimal"
                         android:width="70dp"
                         android:ems="10"
-                        android:id="@+id/careportal_temptarget_high" />
-
+                        android:inputType="numberDecimal" />
 
 
                 </LinearLayout>
@@ -681,29 +718,10 @@
 
             </LinearLayout>
 
-            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:orientation="horizontal"
-                android:padding="10dp">
-
-                <Button
-                    android:id="@+id/careportal_newnstreatment_ok"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:padding="10dp"
-                    android:text="@string/ok"
-                    android:textAllCaps="false"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
+            <include layout="@layout/mdtp_done_button" />
 
         </LinearLayout>
+
     </ScrollView>
 
 </LinearLayout>

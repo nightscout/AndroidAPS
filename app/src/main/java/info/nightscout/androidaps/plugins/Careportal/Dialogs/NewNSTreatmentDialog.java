@@ -85,6 +85,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     Button dateButton;
     Button timeButton;
     Button okButton;
+    Button cancelButton;
 
     TextView bgUnitsView;
     RadioButton meterRadioButton;
@@ -218,8 +219,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         dateButton.setOnClickListener(this);
         timeButton.setOnClickListener(this);
 
-        okButton = (Button) view.findViewById(R.id.careportal_newnstreatment_ok);
+        okButton = (Button) view.findViewById(R.id.ok);
         okButton.setOnClickListener(this);
+        cancelButton = (Button) view.findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(this);
 
         // profile
         profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
@@ -359,8 +362,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 tpd.dismissOnPause(true);
                 tpd.show(context.getFragmentManager(), "Timepickerdialog");
                 break;
-            case R.id.careportal_newnstreatment_ok:
+            case R.id.ok:
                 createNSTreatment();
+                dismiss();
+                break;
+            case R.id.cancel:
                 dismiss();
                 break;
         }
