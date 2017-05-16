@@ -26,7 +26,7 @@
     <string name="careportal_newnstreatment_carbs_label">Sacharidy</string>
     <string name="careportal_newnstreatment_carbtime_label">Čas jídla</string>
     <string name="careportal_newnstreatment_duration_label">Trvání</string>
-    <string name="careportal_newnstreatment_duration_min">min</string>
+    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_enteredby_title">Zadal</string>
     <string name="careportal_newnstreatment_eventtime_label">Čas</string>
     <string name="careportal_newnstreatment_insulin_label">Inzulín</string>
@@ -545,4 +545,5 @@
     <string name="enablesuperbolus_summary">Povolení superbolusu v kalkulátoru. Nepovolujte, dokud se nenaučíte, co to opravdu dělá. MŮŽE ZPŮSOBIT PŘEDÁVKOVÁNÍ INZULÍNEM PŘI NESPRÁVNÉM POUŽITÍ!</string>
     <string name="nav_about">O aplikaci</string>
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
+    <string name="it_lang">Italian</string>
 </resources>

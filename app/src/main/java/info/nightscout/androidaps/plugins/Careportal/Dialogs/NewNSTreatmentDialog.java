@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -70,20 +71,21 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     NSProfile profile;
     String units;
 
-    LinearLayout layoutBg;
+    RelativeLayout layoutBg;
     LinearLayout layoutBgSource;
-    LinearLayout layoutInsulin;
-    LinearLayout layoutCarbs;
-    LinearLayout layoutSplit;
-    LinearLayout layoutDuration;
-    LinearLayout layoutPercent;
-    LinearLayout layoutAbsolute;
-    LinearLayout layoutCarbTime;
-    LinearLayout layoutProfile;
+    RelativeLayout layoutInsulin;
+    RelativeLayout layoutCarbs;
+    RelativeLayout layoutSplit;
+    RelativeLayout layoutDuration;
+    RelativeLayout layoutPercent;
+    RelativeLayout layoutAbsolute;
+    RelativeLayout layoutCarbTime;
+    RelativeLayout layoutProfile;
     LinearLayout layoutTempTarget;
     Button dateButton;
     Button timeButton;
     Button okButton;
+    Button cancelButton;
 
     TextView bgUnitsView;
     RadioButton meterRadioButton;
@@ -141,18 +143,19 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getDialog().setTitle(getString(options.eventName));
+        setStyle(DialogFragment.STYLE_NORMAL, getTheme());
         View view = inflater.inflate(R.layout.careportal_newnstreatment_dialog, container, false);
 
-        layoutBg = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_bg_layout);
+        layoutBg = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_bg_layout);
         layoutBgSource = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_bgsource_layout);
-        layoutInsulin = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_insulin_layout);
-        layoutCarbs = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_carbs_layout);
-        layoutSplit = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_split_layout);
-        layoutDuration = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_duration_layout);
-        layoutPercent = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_percent_layout);
-        layoutAbsolute = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_absolute_layout);
-        layoutCarbTime = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_carbtime_layout);
-        layoutProfile = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_profile_layout);
+        layoutInsulin = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_insulin_layout);
+        layoutCarbs = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_carbs_layout);
+        layoutSplit = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_split_layout);
+        layoutDuration = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_duration_layout);
+        layoutPercent = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_percent_layout);
+        layoutAbsolute = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_absolute_layout);
+        layoutCarbTime = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_carbtime_layout);
+        layoutProfile = (RelativeLayout) view.findViewById(R.id.careportal_newnstreatment_profile_layout);
         layoutTempTarget = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout);
 
         bgUnitsView = (TextView) view.findViewById(R.id.careportal_newnstreatment_bgunits);
@@ -217,8 +220,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         dateButton.setOnClickListener(this);
         timeButton.setOnClickListener(this);
 
-        okButton = (Button) view.findViewById(R.id.careportal_newnstreatment_ok);
+        okButton = (Button) view.findViewById(R.id.ok);
         okButton.setOnClickListener(this);
+        cancelButton = (Button) view.findViewById(R.id.cancel);
+        cancelButton.setOnClickListener(this);
 
         // profile
         profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
@@ -358,14 +363,17 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 tpd.dismissOnPause(true);
                 tpd.show(context.getFragmentManager(), "Timepickerdialog");
                 break;
-            case R.id.careportal_newnstreatment_ok:
+            case R.id.ok:
                 createNSTreatment();
+                dismiss();
+                break;
+            case R.id.cancel:
                 dismiss();
                 break;
         }
     }
 
-    private void showOrHide(LinearLayout layout, boolean visible) {
+    private void showOrHide(ViewGroup layout, boolean visible) {
         if (visible) layout.setVisibility(View.VISIBLE);
         else layout.setVisibility(View.GONE);
     }

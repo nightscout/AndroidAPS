@@ -184,7 +184,7 @@
     <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
-    <string name="careportal_newnstreatment_duration_min">min</string>
+    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
@@ -210,6 +210,7 @@
     <string name="de_lang">German</string>
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
+    <string name="it_lang">Italian</string>
     <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
     <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
@@ -610,4 +611,6 @@
     <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
     <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
+    <string name="basal_step">Basal Step</string>
+    <string name="bolus_step">Bolus Step</string>
 </resources>
