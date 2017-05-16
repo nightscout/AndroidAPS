@@ -5,18 +5,39 @@
     tools:context=".plugins.Treatments.TreatmentsFragment">
 
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/treatments_pager"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <android.support.v4.view.PagerTabStrip
-            android:id="@+id/treatments_tabstrip"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v4.view.PagerTabStrip>
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    </android.support.v4.view.ViewPager>
+            <TextView
+                android:id="@+id/treatments_treatments"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/treatments" />
 
+            <TextView
+                android:id="@+id/treatments_tempbasals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/tempbasals" />
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/treatments_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
 </FrameLayout>

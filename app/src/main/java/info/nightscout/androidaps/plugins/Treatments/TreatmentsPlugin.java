@@ -429,7 +429,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (useExtendedBoluses) {
             List<TempBasal> merged = new ArrayList<TempBasal>();
             merged.addAll(tempBasals);
-            merged.addAll(extendedBoluses);
+            if (useExtendedBoluses)
+                merged.addAll(extendedBoluses);
 
             class CustomComparator implements Comparator<TempBasal> {
                 public int compare(TempBasal object1, TempBasal object2) {

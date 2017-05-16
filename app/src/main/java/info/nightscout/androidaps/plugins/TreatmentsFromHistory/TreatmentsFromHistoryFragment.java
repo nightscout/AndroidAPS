@@ -27,56 +27,10 @@ public class TreatmentsFromHistoryFragment extends Fragment {
         return treatmentsPlugin;
     }
 
-    SectionsPagerAdapter sectionsPagerAdapter;
-    ViewPager viewPager;
-
     Context context;
 
     Fragment bolusFragment;
     Fragment tempBasalsFragment;
-
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-
-        public SectionsPagerAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            switch (position){
-                case 0:
-                    return bolusFragment;
-                case 1:
-                    return tempBasalsFragment;
-/*
-                case 2:
-                    return iobcobActiveFragmentObject;
-                case 3:
-                    return basalvsTempBasalObject;
-*/
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            // Show 1 total pages.
-            return 2;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return getString(R.string.bolus);
-                case 1:
-                    return getString(R.string.tempbasals);
-            }
-            return null;
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -86,9 +40,6 @@ public class TreatmentsFromHistoryFragment extends Fragment {
         bolusFragment = new TreatmentsBolusFragment();
         tempBasalsFragment = new TreatmentsTempBasalsFragment();
 
-        sectionsPagerAdapter = new SectionsPagerAdapter(getChildFragmentManager());
-        viewPager = (ViewPager) view.findViewById(R.id.treatments_pager);
-        viewPager.setAdapter(sectionsPagerAdapter);
         context = getContext();
 
         return view;

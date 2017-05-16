@@ -71,7 +71,7 @@ public class TreatmentsTempBasalsFragment extends Fragment {
             }
             holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.duration) + " min");
             if (tempBasal.isAbsolute) {
-                holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.absolute) + " U/h");
+                holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.timeStart)) + " U/h");
                 holder.percent.setText("");
             } else {
                 holder.absolute.setText("");
