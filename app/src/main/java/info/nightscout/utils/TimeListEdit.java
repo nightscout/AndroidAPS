@@ -229,8 +229,7 @@ public class TimeListEdit {
         }
 
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(context,
-                android.R.layout.simple_spinner_item, timeList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.spinner_centered, timeList);
         spinner.setAdapter(adapter);
         spinner.setSelection(posInList, false);
     }
