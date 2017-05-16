@@ -68,11 +68,10 @@ public class TempBasal {
         if (realDuration > 0) {
             Double netBasalRate = 0d;
 
+            Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
-
-            result.netRatio = netBasalRate;
-
             double tempBolusSpacing = realDuration / aboutFiveMinIntervals;
+
             for (Long j = 0L; j < aboutFiveMinIntervals; j++) {
                 // find middle of the interval
                 Long date = (long) (timeStart.getTime() + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
@@ -91,23 +90,23 @@ public class TempBasal {
                     }
                 }
 
-                double tempBolusSize = netBasalRate * tempBolusSpacing / 60d;
-                netBasalAmount += tempBolusSize;
-
-                Treatment tempBolusPart = new Treatment(insulinInterface);
-                tempBolusPart.insulin = tempBolusSize;
-                tempBolusPart.created_at = new Date(date);
-
-                Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
-                result.basaliob += aIOB.iobContrib;
-                result.activity += aIOB.activityContrib;
-                Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
                 if (date > dia_ago && date <= time) {
+                    double tempBolusSize = netBasalRate * tempBolusSpacing / 60d;
+                    netBasalAmount += tempBolusSize;
+
+                    Treatment tempBolusPart = new Treatment(insulinInterface);
+                    tempBolusPart.insulin = tempBolusSize;
+                    tempBolusPart.created_at = new Date(date);
+
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
+                    result.basaliob += aIOB.iobContrib;
+                    result.activity += aIOB.activityContrib;
                     result.netbasalinsulin += tempBolusPart.insulin;
                     if (tempBolusPart.insulin > 0) {
                         result.hightempinsulin += tempBolusPart.insulin;
                     }
                 }
+                result.netRatio = netBasalRate; // ratio at the end of interval
             }
         }
         result.netInsulin = netBasalAmount;
