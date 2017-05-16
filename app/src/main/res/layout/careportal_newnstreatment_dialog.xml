@@ -207,16 +207,6 @@
                     android:layout_marginTop="5dp"
                     android:background="@color/listdelimiter" />
 
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/listdelimiter" />
-
             </RelativeLayout>
 
             <RelativeLayout
