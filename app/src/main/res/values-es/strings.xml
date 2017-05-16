@@ -172,7 +172,7 @@
     <string name="careportal_newnstreatment_duration_label">Duración</string>
     <string name="careportal_newnstreatment_percent_label">Dosis</string>
     <string name="careportal_newnstreatment_absolute_label">Absoluto</string>
-    <string name="careportal_newnstreatment_duration_min"> min</string>
+    <string name="careportal_newnstreatment_minutes"> min</string>
     <string name="careportal_newnstreatment_notes_label">Notas</string>
     <string name="careportal_newnstreatment_eventtime_label">Fecha Hora</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>

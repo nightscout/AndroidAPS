@@ -26,7 +26,7 @@
     <string name="careportal_newnstreatment_carbs_label">ВХ</string>
     <string name="careportal_newnstreatment_carbtime_label">ВХ след</string>
     <string name="careportal_newnstreatment_duration_label">Продължителност</string>
-    <string name="careportal_newnstreatment_duration_min">min</string>
+    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_enteredby_title">Въведено от</string>
     <string name="careportal_newnstreatment_eventtime_label">Време</string>
     <string name="careportal_newnstreatment_insulin_label">Инсулин</string>

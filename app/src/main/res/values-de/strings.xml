@@ -33,7 +33,7 @@
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
     <string name="careportal_newnstreatment_absolute_label">Absolut</string>
     <string name="careportal_newnstreatment_carbs_label">Kohlehydrate</string>
-    <string name="careportal_newnstreatment_duration_min">min</string>
+    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_insulin_label">Insulin</string>
     <string name="careportal_newnstreatment_glucosetype">Glukose-Art</string>
     <string name="careportal_newnstreatment_eventtype">Ereignis-Typ</string>

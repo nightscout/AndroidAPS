@@ -26,7 +26,7 @@
     <string name="careportal_newnstreatment_carbs_label">Sacharidy</string>
     <string name="careportal_newnstreatment_carbtime_label">Čas jídla</string>
     <string name="careportal_newnstreatment_duration_label">Trvání</string>
-    <string name="careportal_newnstreatment_duration_min">min</string>
+    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_enteredby_title">Zadal</string>
     <string name="careportal_newnstreatment_eventtime_label">Čas</string>
     <string name="careportal_newnstreatment_insulin_label">Inzulín</string>
