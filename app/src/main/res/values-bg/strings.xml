@@ -546,4 +546,5 @@
     <string name="suspendloopfor3h">Изключи Loop за 3ч.</string>
     <string name="treatments_wizard_bgtrend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
+    <string name="it_lang">Italian</string>
 </resources>

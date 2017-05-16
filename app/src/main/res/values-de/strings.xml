@@ -360,4 +360,5 @@
     <string name="wear_detailedIOB_title">Zeige detailliertes IOB</string>
     <string name="wear_detailedIOB_summary">Trenne IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="wrongpassword">Falsches Passwort</string>
+    <string name="it_lang">Italian</string>
 </resources>

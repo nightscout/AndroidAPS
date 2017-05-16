@@ -405,4 +405,5 @@
     <string name="error_field_must_not_be_empty">Este campo no puede estar vacío</string>
     <string name="error_phone_not_valid">Número de teléfono inválido</string>
     <string name="waitingforpump">Esperando bomba</string>
+    <string name="it_lang">Italian</string>
 </resources>
