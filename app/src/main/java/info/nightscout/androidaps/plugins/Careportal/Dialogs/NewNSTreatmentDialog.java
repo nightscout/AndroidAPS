@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,9 +49,9 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
-import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.PlusMinusEditText;
@@ -64,7 +63,7 @@ import info.nightscout.utils.Translator;
 public class NewNSTreatmentDialog extends DialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
     private static Logger log = LoggerFactory.getLogger(NewNSTreatmentDialog.class);
 
-    private FragmentActivity context;
+    private Activity context;
 
     private static OptionsToShow options;
 
@@ -134,7 +133,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     @Override
     public void onAttach(Activity activity) {
-        context = (FragmentActivity) activity;
+        context = activity;
         super.onAttach(activity);
     }
 
