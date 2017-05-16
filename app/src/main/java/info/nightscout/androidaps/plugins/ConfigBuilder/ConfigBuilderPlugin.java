@@ -1179,6 +1179,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
+    public boolean isRealTempBasalInProgress() {
+        return activeTreatments.isRealTempBasalInProgress();
+    }
+
+    @Override
+    public TempBasal getRealTempBasal(long time) {
+        return activeTreatments.getRealTempBasal(time);
+    }
+
+    @Override
     public boolean isTempBasalInProgress() {
         return activeTreatments.isTempBasalInProgress();
     }

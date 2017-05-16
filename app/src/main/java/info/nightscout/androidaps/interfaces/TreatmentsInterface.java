@@ -26,12 +26,18 @@ public interface TreatmentsInterface {
     List<Treatment> getTreatments();
     List<Treatment> getTreatments5MinBack(long time);
 
+    // real basals on pump
+    boolean isRealTempBasalInProgress();
+    TempBasal getRealTempBasal (long time);
+
+    void tempBasalStart(TempBasal tempBasal);
+    void tempBasalStop(long time);
+
+    // basal that can be faked by extended boluses
     boolean isTempBasalInProgress();
     TempBasal getTempBasal (long time);
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();
-    void tempBasalStart(TempBasal tempBasal);
-    void tempBasalStop(long time);
 
     boolean isExtendedBoluslInProgress();
     TempBasal getExtendedBolus (long time);

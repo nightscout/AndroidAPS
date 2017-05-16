@@ -312,18 +312,31 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         lastTempBasalsCalculation = total;
     }
 
+    public boolean isRealTempBasalInProgress() {
+        return getRealTempBasal(new Date().getTime()) != null;
+    }
+
     @Override
     public boolean isTempBasalInProgress() {
         return getTempBasal(new Date().getTime()) != null;
     }
 
     @Nullable
-    @Override
-    public TempBasal getTempBasal(long time) {
+    public TempBasal getRealTempBasal(long time) {
         checkForExpired(tempBasals);
         for (TempBasal t : tempBasals) {
             if (t.isInProgress(time)) return t;
         }
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public TempBasal getTempBasal(long time) {
+        if (isRealTempBasalInProgress())
+            return getRealTempBasal(time);
+        if (isExtendedBoluslInProgress() && useExtendedBoluses)
+            return getExtendedBolus(time);
         return null;
     }
 
@@ -344,7 +357,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void extendedBolusStart(TempBasal extendedBolus) {
-
+        MainApp.getDbHelper().create(extendedBolus);
     }
 
     @Override

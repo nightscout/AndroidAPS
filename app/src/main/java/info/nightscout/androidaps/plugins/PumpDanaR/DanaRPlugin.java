@@ -35,6 +35,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
@@ -301,14 +302,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public double getBaseBasalRate() {
         return getDanaRPump().currentBasal;
-    }
-
-    public TempBasal getTempBasal(long time) {
-        TempBasal temp = MainApp.getConfigBuilder().getTempBasal(time);
-        if (temp != null) return temp;
-        if (useExtendedBoluses)
-            return MainApp.getConfigBuilder().getExtendedBolus(time);
-        return null;
     }
 
     @Override
@@ -678,7 +671,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             extended.put("PumpIOB", getDanaRPump().iob);
             extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
             extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
-            TempBasal tb = getTempBasal(new Date().getTime());
+            TempBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", tb.timeStart.toLocaleString());

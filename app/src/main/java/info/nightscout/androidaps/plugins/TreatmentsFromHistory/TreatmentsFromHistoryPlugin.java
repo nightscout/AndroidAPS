@@ -277,6 +277,16 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     }
 
     @Override
+    public boolean isRealTempBasalInProgress() {
+        return false;
+    }
+
+    @Override
+    public TempBasal getRealTempBasal(long time) {
+        return null;
+    }
+
+    @Override
     public boolean isTempBasalInProgress() {
         return getTempBasal(new Date().getTime()) != null;
     }
