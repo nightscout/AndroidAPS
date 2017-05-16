@@ -412,7 +412,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         //log.debug("Locking detectSensitivity");
         synchronized (dataLock) {
             if (autosensDataTable == null || autosensDataTable.size() < 4) {
-                log.debug("No bucketed data available");
+                log.debug("No autosens data available");
                 return new AutosensResult();
             }
 
