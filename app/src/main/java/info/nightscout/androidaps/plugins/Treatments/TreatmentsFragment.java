@@ -33,16 +33,10 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     TextView treatmentsTab;
     TextView tempBasalsTab;
 
-    Fragment bolusFragment;
-    Fragment tempBasalsFragment;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.treatments_fragment, container, false);
-
-        bolusFragment = new TreatmentsBolusFragment();
-        tempBasalsFragment = new TreatmentsTempBasalsFragment();
 
         treatmentsTab = (TextView) view.findViewById(R.id.treatments_treatments);
         tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
@@ -50,7 +44,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         tempBasalsTab.setOnClickListener(this);
         context = getContext();
 
-        setFragment(bolusFragment);
+        setFragment(new TreatmentsBolusFragment());
 
         return view;
     }
@@ -60,10 +54,10 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
 
         switch (v.getId()) {
             case R.id.treatments_treatments:
-                setFragment(bolusFragment);
+                setFragment(new TreatmentsBolusFragment());
                 break;
             case R.id.treatments_tempbasals:
-                setFragment(tempBasalsFragment);
+                setFragment(new TreatmentsTempBasalsFragment());
                 break;
 
         }
