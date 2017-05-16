@@ -20,12 +20,10 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
 
     ArrayList<PluginBase> visibleFragmentList = new ArrayList<>();
 
-    FragmentManager fm;
     Context context;
 
     public TabPageAdapter(FragmentManager fm, Context context) {
         super(fm);
-        this.fm = fm;
         this.context = context;
     }
 
