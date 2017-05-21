@@ -123,7 +123,7 @@ public class DataService extends IntentService {
                 // Objectives 0
                 ObjectivesPlugin.bgIsAvailableInNS = true;
                 ObjectivesPlugin.saveProgress();
-            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action)) {
+            } else if (isNSProfile && Intents.ACTION_NEW_PROFILE.equals(action) || Intents.ACTION_NEW_DEVICESTATUS.equals(action)) {
                 // always handle Profile if NSProfile is enabled without looking at nsUploadOnly
                 handleNewDataFromNSClient(intent);
             } else if (!nsUploadOnly &&
