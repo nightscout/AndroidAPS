@@ -10,26 +10,25 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPTARGETS)
-public class TempTarget {
+public class TempTarget implements Interval {
     private static Logger log = LoggerFactory.getLogger(TempTarget.class);
 
-    public long getTimeIndex() {
-        return timeStart.getTime() - timeStart.getTime() % 1000;
-    }
-
-    public void setTimeIndex(long timeIndex) {
-        this.timeIndex = timeIndex;
-    }
-
-    @DatabaseField(id = true, useGetSet = true)
-    public long timeIndex;
+    @DatabaseField(id = true)
+    public long date;
 
     @DatabaseField
-    public Date timeStart;
+    public boolean isValid = true;
+
+    @DatabaseField
+    public int source = Source.NONE;
+    @DatabaseField
+    public String _id = null; // NS _id
 
     @DatabaseField
     public double low; // in mgdl
@@ -41,14 +40,55 @@ public class TempTarget {
     public String reason;
 
     @DatabaseField
-    public int duration;    // in minutes
+    public int durationInMinutes;
 
-    @DatabaseField
-    public String _id;    // NS _id
+    // -------- Interval interface ---------
 
-    public Date getPlannedTimeEnd() {
-        return new Date(timeStart.getTime() + 60 * 1_000 * duration);
+    Long cuttedEnd = null;
+
+    public long durationInMsec() {
+        return durationInMinutes * 60 * 1000L;
     }
+
+    public long start() {
+        return date;
+    }
+
+    // planned end time at time of creation
+    public long originalEnd() {
+        return date + durationInMinutes * 60 * 1000L;
+    }
+
+    // end time after cut
+    public long end() {
+        if (cuttedEnd != null)
+            return cuttedEnd;
+        return originalEnd();
+    }
+
+    public void cutEndTo(long end) {
+        cuttedEnd = end;
+    }
+
+    public boolean match(long time) {
+        if (start() <= time && end() >= time)
+            return true;
+        return false;
+    }
+
+    public boolean before(long time) {
+        if (end() < time)
+            return true;
+        return false;
+    }
+
+    public boolean after(long time) {
+        if (start() > time)
+            return true;
+        return false;
+    }
+
+    // -------- Interval interface end ---------
 
     public String lowValueToUnitsToString(String units) {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(low);
@@ -61,14 +101,15 @@ public class TempTarget {
     }
 
     public boolean isInProgress() {
-        return ((TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class)).getTempTargetInProgress(new Date().getTime()) == this;
+        return match(new Date().getTime());
     }
 
     public String log() {
-        return "TempTarget{" +
-                "timeIndex=" + timeIndex +
-                ", timeStart=" + timeStart +
-                ", duration=" + duration +
+        return "TemporaryTarget{" +
+                "date=" + date +
+                "date=" + DateUtil.dateAndTimeString(date) +
+                ", isValid=" + isValid +
+                ", duration=" + durationInMinutes +
                 ", reason=" + reason +
                 ", low=" + low +
                 ", high=" + high +

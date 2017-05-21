@@ -1,10 +1,9 @@
 package info.nightscout.androidaps.interfaces;
 
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.data.IobTotal;
 
@@ -28,20 +27,20 @@ public interface TreatmentsInterface {
 
     // real basals on pump
     boolean isRealTempBasalInProgress();
-    TempBasal getRealTempBasal (long time);
+    TempExBasal getRealTempBasal (long time);
 
-    void tempBasalStart(TempBasal tempBasal);
+    void tempBasalStart(TempExBasal tempBasal);
     void tempBasalStop(long time);
 
     // basal that can be faked by extended boluses
     boolean isTempBasalInProgress();
-    TempBasal getTempBasal (long time);
+    TempExBasal getTempBasal (long time);
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();
 
     boolean isExtendedBoluslInProgress();
-    TempBasal getExtendedBolus (long time);
-    void extendedBolusStart(TempBasal extendedBolus);
+    TempExBasal getExtendedBolus (long time);
+    void extendedBolusStart(TempExBasal extendedBolus);
     void extendedBolusStop(long time);
 
     long oldestDataAvaialable();

@@ -17,7 +17,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
@@ -232,7 +232,7 @@ public class DetermineBasalAdapterAMAJS {
         mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
 
         // as we have non default temps longer than 30 mintues
-        TempBasal tempBasal = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+        TempExBasal tempBasal = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
         if(tempBasal != null){
             mCurrentTemp.add("minutesrunning", tempBasal.getRealDuration());
         }

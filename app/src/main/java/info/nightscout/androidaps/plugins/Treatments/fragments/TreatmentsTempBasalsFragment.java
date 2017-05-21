@@ -30,7 +30,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
@@ -49,9 +49,9 @@ public class TreatmentsTempBasalsFragment extends Fragment {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 
-        List<TempBasal> tempBasalList;
+        List<TempExBasal> tempBasalList;
 
-        RecyclerViewAdapter(List<TempBasal> tempBasalList) {
+        RecyclerViewAdapter(List<TempExBasal> tempBasalList) {
             this.tempBasalList = tempBasalList;
         }
 
@@ -63,7 +63,7 @@ public class TreatmentsTempBasalsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
-            TempBasal tempBasal = tempBasalList.get(position);
+            TempExBasal tempBasal = tempBasalList.get(position);
             if (tempBasal.timeEnd != null) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempBasal.timeStart) + " - " + DateUtil.timeString(tempBasalList.get(position).timeEnd));
             } else {
@@ -138,7 +138,7 @@ public class TreatmentsTempBasalsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                final TempBasal tempBasal = (TempBasal) v.getTag();
+                final TempExBasal tempBasal = (TempExBasal) v.getTag();
                 switch (v.getId()) {
                     case R.id.tempbasals_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);

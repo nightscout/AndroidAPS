@@ -180,11 +180,10 @@ public class DataService extends IntentService {
 
         bgReading.value = bundle.getDouble(Intents.EXTRA_BG_ESTIMATE);
         bgReading.direction = bundle.getString(Intents.EXTRA_BG_SLOPE_NAME);
-        bgReading.battery_level = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY);
-        bgReading.timeIndex = bundle.getLong(Intents.EXTRA_TIMESTAMP);
+        bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
 
-        if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
+        if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
             if (Config.logIncommingBG)
                 log.debug("Ignoring old XDRIPREC BG " + bgReading.toString());
             return;
@@ -209,8 +208,7 @@ public class DataService extends IntentService {
 
         bgReading.value = bundle.getDouble("mySGV");
         bgReading.direction = bundle.getString("myTrend");
-        bgReading.battery_level = bundle.getInt("myBatLvl");
-        bgReading.timeIndex = bundle.getLong("myTimestamp");
+        bgReading.date = bundle.getLong("myTimestamp");
         bgReading.raw = 0;
 
         if (Config.logIncommingBG)
@@ -247,10 +245,10 @@ public class DataService extends IntentService {
 
                                 bgReading.value = json_object.getDouble("sgv");
                                 bgReading.direction = json_object.getString("direction");
-                                bgReading.timeIndex = json_object.getLong("date");
+                                bgReading.date = json_object.getLong("date");
                                 bgReading.raw = json_object.getDouble("sgv");
 
-                                if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
+                                if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
                                     if (Config.logIncommingBG)
                                         log.debug("Ignoring old MM640g BG " + bgReading.toString());
                                     return;
@@ -451,7 +449,7 @@ public class DataService extends IntentService {
                     JSONObject sgvJson = new JSONObject(sgvstring);
                     NSSgv nsSgv = new NSSgv(sgvJson);
                     BgReading bgReading = new BgReading(nsSgv);
-                    if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                    if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
                         if (Config.logIncommingData)
                             log.debug("Ignoring old BG: " + bgReading.toString());
                         return;
@@ -468,7 +466,7 @@ public class DataService extends IntentService {
                         JSONObject sgvJson = jsonArray.getJSONObject(i);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
-                        if (bgReading.timeIndex < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                        if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
                             if (Config.logIncommingData)
                                 log.debug("Ignoring old BG: " + bgReading.toString());
                         } else {
@@ -502,10 +500,10 @@ public class DataService extends IntentService {
         Treatment stored = null;
         String _id = trJson.getString("_id");
 
-        if (trJson.has("timeIndex")) {
+        if (trJson.has("date")) {
             if (Config.logIncommingData)
-                log.debug("ADD: timeIndex found: " + trstring);
-            stored = MainApp.getDbHelper().findTreatmentByTimeIndex(trJson.getLong("timeIndex"));
+                log.debug("ADD: date found: " + trstring);
+            stored = MainApp.getDbHelper().findTreatmentByTimeIndex(trJson.getLong("date"));
         } else {
             stored = MainApp.getDbHelper().findTreatmentById(_id);
         }
@@ -513,7 +511,7 @@ public class DataService extends IntentService {
         if (stored != null) {
             if (Config.logIncommingData)
                 log.debug("ADD: Existing treatment: " + trstring);
-            if (trJson.has("timeIndex")) {
+            if (trJson.has("date")) {
                 stored._id = _id;
                 int updated = MainApp.getDbHelper().update(stored);
                 if (Config.logIncommingData)
@@ -528,7 +526,7 @@ public class DataService extends IntentService {
             treatment._id = _id;
             treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
-            treatment.created_at = new Date(trJson.getLong("mills"));
+            treatment.date = trJson.getLong("mills");
             if (trJson.has("eventType")) {
                 treatment.mealBolus = true;
                 if (trJson.get("eventType").equals("Correction Bolus"))
@@ -543,7 +541,6 @@ public class DataService extends IntentService {
                 if (carbs <= 0)
                     treatment.mealBolus = false;
             }
-            treatment.setTimeIndex(treatment.getTimeIndex());
             MainApp.getDbHelper().createOrUpdate(treatment);
             if (Config.logIncommingData)
                 log.debug("ADD: Stored treatment: " + treatment.log());
@@ -563,10 +560,10 @@ public class DataService extends IntentService {
 
         Treatment stored;
 
-        if (trJson.has("timeIndex")) {
+        if (trJson.has("date")) {
             if (Config.logIncommingData)
-                log.debug("ADD: timeIndex found: " + trstring);
-            stored = MainApp.getDbHelper().findTreatmentByTimeIndex(trJson.getLong("timeIndex"));
+                log.debug("ADD: date found: " + trstring);
+            stored = MainApp.getDbHelper().findTreatmentByTimeIndex(trJson.getLong("date"));
         } else {
             stored = MainApp.getDbHelper().findTreatmentById(_id);
         }
@@ -586,7 +583,7 @@ public class DataService extends IntentService {
         treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
         treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
         //treatment.created_at = DateUtil.fromISODateString(trJson.getString("created_at"));
-        treatment.created_at = new Date(trJson.getLong("mills"));
+        treatment.date = trJson.getLong("mills");
         if (trJson.has("eventType")) {
             treatment.mealBolus = true;
             if (trJson.get("eventType").equals("Correction Bolus"))
@@ -601,7 +598,6 @@ public class DataService extends IntentService {
             if (carbs <= 0)
                 treatment.mealBolus = false;
         }
-        treatment.setTimeIndex(treatment.getTimeIndex());
         Dao.CreateOrUpdateStatus status = MainApp.getDbHelper().createOrUpdate(treatment);
         if (Config.logIncommingData)
             log.debug("Records updated: " + status.getNumLinesChanged());
@@ -621,10 +617,10 @@ public class DataService extends IntentService {
                 // Record does not exists. Ignore
             } else if (list.size() == 1) {
                 DanaRHistoryRecord record = list.get(0);
-                if (record.get_id() == null || record.get_id() != trJson.getString("_id")) {
+                if (record._id == null || !record._id.equals(trJson.getString("_id"))) {
                     if (Config.logIncommingData)
                         log.debug("Updating _id in DanaR history database: " + trJson.getString("_id"));
-                    record.set_id(trJson.getString("_id"));
+                    record._id = trJson.getString("_id");
                     daoHistoryRecords.update(record);
                 } else {
                     // already set
@@ -655,7 +651,7 @@ public class DataService extends IntentService {
             Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
             QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
             Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("timeIndex", trJson.getLong("mills"));
+            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
             PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
             List<TempTarget> list = daoTempTargets.query(preparedQuery);
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
@@ -664,13 +660,12 @@ public class DataService extends IntentService {
             if (list.size() == 0) {
                 // Record does not exists. add
                 TempTarget newRecord = new TempTarget();
-                newRecord.timeStart = new Date(trJson.getLong("mills"));
-                newRecord.duration = trJson.getInt("duration");
+                newRecord.date = trJson.getLong("mills");
+                newRecord.durationInMinutes = trJson.getInt("duration");
                 newRecord.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
                 newRecord.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
                 newRecord.reason = trJson.getString("reason");
                 newRecord._id = trJson.getString("_id");
-                newRecord.setTimeIndex(newRecord.getTimeIndex());
                 daoTempTargets.createIfNotExists(newRecord);
                 if (Config.logIncommingData)
                     log.debug("Adding TempTarget record to database: " + newRecord.log());
@@ -679,8 +674,8 @@ public class DataService extends IntentService {
                 if (Config.logIncommingData)
                     log.debug("Updating TempTarget record in database: " + trJson.getString("_id"));
                 TempTarget record = list.get(0);
-                record.timeStart = new Date(trJson.getLong("mills"));
-                record.duration = trJson.getInt("duration");
+                record.date = trJson.getLong("mills");
+                record.durationInMinutes = trJson.getInt("duration");
                 record.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
                 record.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
                 record.reason = trJson.getString("reason");

@@ -285,7 +285,7 @@ public class ActionStringHandler {
             TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
             if (tempTarget != null) {
                 ret += "Temp Target: " + NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits());
-                ret += "\nuntil: " + DateUtil.timeString(tempTarget.getPlannedTimeEnd());
+                ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
                 ret += "\n\n";
             }
         }
@@ -354,17 +354,16 @@ public class ActionStringHandler {
 
     private static void generateTempTarget(int duration, double low, double high) {
         TempTarget tempTarget = new TempTarget();
-        tempTarget.timeStart = new Date();
-        tempTarget.duration = duration;
+        tempTarget.date = new Date().getTime();
+        tempTarget.durationInMinutes = duration;
         tempTarget.reason = "WearPlugin";
-        if(tempTarget.duration != 0) {
+        if(tempTarget.durationInMinutes != 0) {
             tempTarget.low = low;
             tempTarget.high = high;
         } else {
             tempTarget.low = 0;
             tempTarget.high = 0;
         }
-        tempTarget.setTimeIndex(tempTarget.getTimeIndex());
         Dao<TempTarget, Long> dao = null;
         try {
             dao = MainApp.getDbHelper().getDaoTempTargets();

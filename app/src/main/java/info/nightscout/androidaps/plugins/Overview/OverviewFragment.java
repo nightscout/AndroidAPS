@@ -66,7 +66,7 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -897,7 +897,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             calibrationButton.setVisibility(View.GONE);
         }
 
-        TempBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+        TempExBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             cancelTempButton.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
@@ -1007,7 +1007,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
         bgView.setPaintFlags(flag);
 
-        Long agoMsec = new Date().getTime() - lastBG.timeIndex;
+        Long agoMsec = new Date().getTime() - lastBG.date;
         int agoMin = (int) (agoMsec / 60d / 1000d);
         timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
 
@@ -1083,7 +1083,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
-                TempBasal tb = MainApp.getConfigBuilder().getTempBasal(time);
+                TempExBasal tb = MainApp.getConfigBuilder().getTempBasal(time);
                 double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
                 double baseLineValue = baseBasalValue;
                 double tempBasalValue = 0;
@@ -1377,7 +1377,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
-            if (t.getTimeIndex() < fromTime || t.getTimeIndex() > now) continue;
+            if (t.date < fromTime || t.date > now) continue;
             t.setYValue(bgReadingsArray);
             filteredTreatments.add(t);
         }

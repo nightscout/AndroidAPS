@@ -25,7 +25,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventBolusRequested;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
@@ -54,7 +54,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogr
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.BatteryLevel;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
@@ -440,10 +439,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 t.insulin = result.bolusDelivered;
                 if (carbTime == 0)
                     t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
-                t.created_at = new Date();
+                t.date = new Date().getDate();
                 t.mealBolus = result.carbsDelivered > 0;
                 MainApp.getDbHelper().create(t);
-                t.setTimeIndex(t.getTimeIndex());
                 t.carbs = (double) result.carbsDelivered;
                 uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
             }
@@ -453,10 +451,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             Treatment t = new Treatment(insulinType);
             t.insulin = insulin;
             t.carbs = (double) carbs;
-            t.created_at = new Date();
+            t.date = new Date().getDate();
             t.mealBolus = t.carbs > 0;
             MainApp.getDbHelper().create(t);
-            t.setTimeIndex(t.getTimeIndex());
             t.sendToNSClient();
             result = new PumpEnactResult();
             result.success = true;
@@ -507,10 +504,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 Treatment t = new Treatment(insulinType);
                 t.insulin = result.bolusDelivered;
                 t.carbs = (double) result.carbsDelivered;
-                t.created_at = new Date();
+                t.date = new Date().getDate();
                 t.mealBolus = t.carbs > 0;
                 MainApp.getDbHelper().create(t);
-                t.setTimeIndex(t.getTimeIndex());
                 t.sendToNSClient();
             }
         } else {
@@ -519,10 +515,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             Treatment t = new Treatment(insulinType);
             t.insulin = insulin;
             t.carbs = (double) carbs;
-            t.created_at = new Date();
+            t.date = new Date().getDate();
             t.mealBolus = t.carbs > 0;
             MainApp.getDbHelper().create(t);
-            t.setTimeIndex(t.getTimeIndex());
             t.sendToNSClient();
             result = new PumpEnactResult();
             result.success = true;
@@ -1027,8 +1022,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             data.put("eventType", "Bolus Wizard");
             if (t.insulin != 0d) data.put("insulin", t.insulin);
             if (t.carbs != 0d) data.put("carbs", t.carbs.intValue());
-            data.put("created_at", DateUtil.toISOString(t.created_at));
-            data.put("timeIndex", t.timeIndex);
+            data.put("created_at", DateUtil.toISOString(t.date));
+            data.put("date", t.date);
             if (glucose != 0d) data.put("glucose", glucose);
             data.put("glucoseType", glucoseType);
             data.put("boluscalc", boluscalc);
@@ -1184,7 +1179,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public TempBasal getRealTempBasal(long time) {
+    public TempExBasal getRealTempBasal(long time) {
         return activeTreatments.getRealTempBasal(time);
     }
 
@@ -1194,7 +1189,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public TempBasal getTempBasal(long time) {
+    public TempExBasal getTempBasal(long time) {
         return activeTreatments.getTempBasal(time);
     }
 
@@ -1209,7 +1204,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void tempBasalStart(TempBasal tempBasal) {
+    public void tempBasalStart(TempExBasal tempBasal) {
         activeTreatments.tempBasalStart(tempBasal);
         MainApp.bus().post(new EventTempBasalChange());
     }
@@ -1226,12 +1221,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public TempBasal getExtendedBolus(long time) {
+    public TempExBasal getExtendedBolus(long time) {
         return activeTreatments.getExtendedBolus(time);
     }
 
     @Override
-    public void extendedBolusStart(TempBasal tempBasal) {
+    public void extendedBolusStart(TempExBasal tempBasal) {
         activeTreatments.extendedBolusStart(tempBasal);
         MainApp.bus().post(new EventExtendedBolusChange());
     }

@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 import com.eclipsesource.v8.V8Object;
 
 import org.json.JSONArray;
@@ -102,7 +99,7 @@ public class DetermineBasalResultAMA extends APSResult {
                     for (int i = 1; i < iob.length(); i ++) {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
-                        bg.timeIndex = startTime + i * 5 * 60 * 1000L;
+                        bg.date = startTime + i * 5 * 60 * 1000L;
                         array.add(bg);
                     }
                 }
@@ -111,7 +108,7 @@ public class DetermineBasalResultAMA extends APSResult {
                     for (int i = 1; i < iob.length(); i ++) {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
-                        bg.timeIndex = startTime + i * 5 * 60 * 1000L;
+                        bg.date = startTime + i * 5 * 60 * 1000L;
                         array.add(bg);
                     }
                 }
@@ -120,7 +117,7 @@ public class DetermineBasalResultAMA extends APSResult {
                     for (int i = 1; i < iob.length(); i ++) {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
-                        bg.timeIndex = startTime + i * 5 * 60 * 1000L;
+                        bg.date = startTime + i * 5 * 60 * 1000L;
                         array.add(bg);
                     }
                 }

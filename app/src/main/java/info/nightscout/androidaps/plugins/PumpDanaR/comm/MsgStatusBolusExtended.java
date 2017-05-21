@@ -9,7 +9,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -69,13 +69,13 @@ public class MsgStatusBolusExtended extends MessageBase {
         long now = new Date().getTime();
 
         if (treatmentsInterface.isExtendedBoluslInProgress()) {
-            TempBasal extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
+            TempExBasal extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
             if (pump.isExtendedInProgress) {
                 if (extendedBolus.absolute != pump.extendedBolusAbsoluteRate) {
                     // Close current extended
                     treatmentsInterface.extendedBolusStop(now);
                     // Create new
-                    TempBasal newExtended = new TempBasal();
+                    TempExBasal newExtended = new TempExBasal();
                     newExtended.timeStart = new Date(now);
                     newExtended.absolute = pump.extendedBolusAbsoluteRate;
                     newExtended.isAbsolute = true;
@@ -90,7 +90,7 @@ public class MsgStatusBolusExtended extends MessageBase {
         } else {
             if (pump.isExtendedInProgress) {
                 // Create new
-                TempBasal newExtended = new TempBasal();
+                TempExBasal newExtended = new TempExBasal();
                 newExtended.timeStart = new Date(now);
                 newExtended.absolute = pump.extendedBolusAbsoluteRate;
                 newExtended.isAbsolute = true;

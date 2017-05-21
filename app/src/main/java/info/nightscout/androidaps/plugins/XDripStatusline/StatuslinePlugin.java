@@ -14,7 +14,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -22,7 +22,6 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -165,7 +164,7 @@ public class StatuslinePlugin implements PluginBase {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TempBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
+            TempExBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
             if (shortString) {
                 status += activeTemp.toStringShort();
             } else {

@@ -36,13 +36,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
     public static final String DATABASE_BGREADINGS = "BgReadings";
-    public static final String DATABASE_TEMPBASALS = "TempBasals";
+    public static final String DATABASE_TEMPEXBASALS = "TempBasals";
+    public static final String DATABASE_TEMPORARYBASALS = "TemporaryBasals";
+    public static final String DATABASE_EXTENDEDBOLUSES = "ExtendedBoluses";
     public static final String DATABASE_TEMPTARGETS = "TempTargets";
     public static final String DATABASE_TREATMENTS = "Treatments";
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
     public static final String DATABASE_DBREQUESTS = "DBRequests";
 
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     private static Long latestTreatmentChange = null;
 
@@ -59,7 +61,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             log.info("onCreate");
-            TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
+            TableUtils.createTableIfNotExists(connectionSource, TempExBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
@@ -75,7 +77,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             log.info(DatabaseHelper.class.getName(), "onUpgrade");
-            TableUtils.dropTable(connectionSource, TempBasal.class, true);
+            TableUtils.dropTable(connectionSource, TempExBasal.class, true);
             TableUtils.dropTable(connectionSource, TempTarget.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
@@ -99,19 +101,19 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void cleanUpDatabases() {
         // TODO: call it somewhere
         log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
-        getWritableDatabase().delete(DATABASE_BGREADINGS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        getWritableDatabase().delete(DATABASE_BGREADINGS, "date" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
 
-        log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPBASALS));
-        getWritableDatabase().delete(DATABASE_TEMPBASALS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPBASALS));
+        log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPEXBASALS));
+        getWritableDatabase().delete(DATABASE_TEMPEXBASALS, "date" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPEXBASALS));
 
         log.debug("Before TempTargets size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPTARGETS));
-        getWritableDatabase().delete(DATABASE_TEMPTARGETS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        getWritableDatabase().delete(DATABASE_TEMPTARGETS, "date" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After TempTargets size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPTARGETS));
 
         log.debug("Before Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
-        getWritableDatabase().delete(DATABASE_TREATMENTS, "timeIndex" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
+        getWritableDatabase().delete(DATABASE_TREATMENTS, "date" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After Treatments size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TREATMENTS));
 
         log.debug("Before History size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_DANARHISTORY));
@@ -121,13 +123,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void resetDatabases() {
         try {
-            TableUtils.dropTable(connectionSource, TempBasal.class, true);
+            TableUtils.dropTable(connectionSource, TempExBasal.class, true);
             TableUtils.dropTable(connectionSource, TempTarget.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
             TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
             //DbRequests can be cleared from NSClient fragment
-            TableUtils.createTableIfNotExists(connectionSource, TempBasal.class);
+            TableUtils.createTableIfNotExists(connectionSource, TempExBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
@@ -157,8 +159,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public Dao<TempBasal, Long> getDaoTempBasals() throws SQLException {
-        return getDao(TempBasal.class);
+    public Dao<TempExBasal, Long> getDaoTempBasals() throws SQLException {
+        return getDao(TempExBasal.class);
     }
 
     public Dao<TempTarget, Long> getDaoTempTargets() throws SQLException {
@@ -190,9 +192,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Dao<BgReading, Long> daoBgreadings = getDaoBgReadings();
             List<BgReading> bgReadings;
             QueryBuilder<BgReading, Long> queryBuilder = daoBgreadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", ascending);
+            queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("timeIndex", mills).and().gt("value", 38);
+            where.ge("date", mills).and().gt("value", 38);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
             bgReadings = daoBgreadings.query(preparedQuery);
             return bgReadings;
@@ -261,7 +263,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     // TREATMENT HANDLING
 
     public boolean affectingIobCob(Treatment t) {
-        Treatment existing = findTreatmentByTimeIndex(t.timeIndex);
+        Treatment existing = findTreatmentByTimeIndex(t.date);
         if (existing == null)
             return true;
         if (existing.insulin == t.insulin && existing.carbs == t.carbs)
@@ -275,7 +277,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             boolean historyChange = affectingIobCob(treatment);
             updated = getDaoTreatments().update(treatment);
             if (historyChange)
-                latestTreatmentChange = treatment.getTimeIndex();
+                latestTreatmentChange = treatment.date;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -289,7 +291,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             boolean historyChange = affectingIobCob(treatment);
             status = getDaoTreatments().createOrUpdate(treatment);
             if (historyChange)
-                latestTreatmentChange = treatment.getTimeIndex();
+                latestTreatmentChange = treatment.date;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -300,7 +302,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void create(Treatment treatment) {
         try {
             getDaoTreatments().create(treatment);
-            latestTreatmentChange = treatment.getTimeIndex();
+            latestTreatmentChange = treatment.date;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -310,7 +312,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(Treatment treatment) {
         try {
             getDaoTreatments().delete(treatment);
-            latestTreatmentChange = treatment.getTimeIndex();
+            latestTreatmentChange = treatment.date;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -329,7 +331,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             if (Config.logIncommingData)
                 log.debug("Records removed: " + removed);
-            latestTreatmentChange = stored.getTimeIndex();
+            latestTreatmentChange = stored.date;
             scheduleTreatmentChange();
         } else {
             log.debug("REMOVE: Not stored treatment (ignoring): " + _id);
@@ -367,7 +369,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Dao<Treatment, Long> daoTreatments = getDaoTreatments();
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
             Where where = queryBuilder.where();
-            where.eq("timeIndex", timeIndex);
+            where.eq("date", timeIndex);
             queryBuilder.limit(10L);
             PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
             List<Treatment> trList = daoTreatments.query(preparedQuery);
@@ -409,9 +411,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Dao<Treatment, Long> daoTreatments = getDaoTreatments();
             List<Treatment> treatments;
             QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            queryBuilder.orderBy("timeIndex", ascending);
+            queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("timeIndex", mills);
+            where.ge("date", mills);
             PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
             treatments = daoTreatments.query(preparedQuery);
             return treatments;
@@ -421,11 +423,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<Treatment>();
     }
 
-    public int update(TempBasal tempBasal) {
+    public int update(TempExBasal tempBasal) {
         int updated = 0;
         try {
             updated = getDaoTempBasals().update(tempBasal);
-            latestTreatmentChange = tempBasal.getTimeIndex();
+            latestTreatmentChange = tempBasal.timeIndex;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -433,20 +435,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return updated;
     }
 
-    public void create(TempBasal tempBasal) {
+    public void create(TempExBasal tempBasal) {
         try {
             getDaoTempBasals().create(tempBasal);
-            latestTreatmentChange = tempBasal.getTimeIndex();
+            latestTreatmentChange = tempBasal.timeIndex;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         scheduleTreatmentChange();
     }
 
-    public void delete(TempBasal tempBasal) {
+    public void delete(TempExBasal tempBasal) {
         try {
             getDaoTempBasals().delete(tempBasal);
-            latestTreatmentChange = tempBasal.getTimeIndex();
+            latestTreatmentChange = tempBasal.timeIndex;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -458,9 +460,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Dao<TempTarget, Long> daoTempTargets = getDaoTempTargets();
             List<TempTarget> tempTargets;
             QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
-            queryBuilder.orderBy("timeIndex", ascending);
+            queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("timeIndex", mills);
+            where.ge("date", mills);
             PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
             tempTargets = daoTempTargets.query(preparedQuery);
             return tempTargets;
@@ -471,21 +473,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
 
-    public List<TempBasal> getTempbasalsDataFromTime(long mills, boolean ascending, boolean isExtended) {
+    public List<TempExBasal> getTempbasalsDataFromTime(long mills, boolean ascending, boolean isExtended) {
         try {
-            Dao<TempBasal, Long> daoTempbasals = getDaoTempBasals();
-            List<TempBasal> tempbasals;
-            QueryBuilder<TempBasal, Long> queryBuilder = daoTempbasals.queryBuilder();
-            queryBuilder.orderBy("timeIndex", ascending);
+            Dao<TempExBasal, Long> daoTempbasals = getDaoTempBasals();
+            List<TempExBasal> tempbasals;
+            QueryBuilder<TempExBasal, Long> queryBuilder = daoTempbasals.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
             Where where = queryBuilder.where();
-            where.ge("timeIndex", mills).and().eq("isExtended", isExtended);
-            PreparedQuery<TempBasal> preparedQuery = queryBuilder.prepare();
+            where.ge("date", mills).and().eq("isExtended", isExtended);
+            PreparedQuery<TempExBasal> preparedQuery = queryBuilder.prepare();
             tempbasals = daoTempbasals.query(preparedQuery);
             return tempbasals;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new ArrayList<TempBasal>();
+        return new ArrayList<TempExBasal>();
     }
 
 }

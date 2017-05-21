@@ -649,17 +649,16 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                 public void run() {
                                     try {
                                         TempTarget tempTarget = new TempTarget();
-                                        tempTarget.timeStart = eventTime;
-                                        tempTarget.duration = data.getInt("duration");
+                                        tempTarget.date = eventTime.getTime();
+                                        tempTarget.durationInMinutes = data.getInt("duration");
                                         tempTarget.reason = data.getString("reason");
-                                        if(tempTarget.duration != 0) {
+                                        if(tempTarget.durationInMinutes != 0) {
                                             tempTarget.low = NSProfile.toMgdl(data.getDouble("targetBottom"), ConfigBuilderPlugin.getActiveProfile().getProfile().getUnits());
                                             tempTarget.high = NSProfile.toMgdl(data.getDouble("targetTop"), ConfigBuilderPlugin.getActiveProfile().getProfile().getUnits());
                                         } else {
                                             tempTarget.low = 0;
                                             tempTarget.high = 0;
                                         }
-                                        tempTarget.setTimeIndex(tempTarget.getTimeIndex());
                                         Dao<TempTarget, Long> dao = MainApp.getDbHelper().getDaoTempTargets();
                                         log.debug("Creating new TempTarget db record: " + tempTarget.log());
                                         dao.createIfNotExists(tempTarget);

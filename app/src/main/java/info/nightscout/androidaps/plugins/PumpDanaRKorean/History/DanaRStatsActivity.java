@@ -379,7 +379,7 @@ public class DanaRStatsActivity extends Activity {
                 double weighted07 = 0d;
 
                 for (DanaRHistoryRecord record : historyList) {
-                    double tdd = record.getRecordDailyBolus() + record.getRecordDailyBasal();
+                    double tdd = record.recordDailyBolus + record.recordDailyBasal;
 
                     // Create the table row
                     TableRow tr = new TableRow(DanaRStatsActivity.this);
@@ -392,19 +392,19 @@ public class DanaRStatsActivity extends Activity {
                     // Here create the TextView dynamically
                     TextView labelDATE = new TextView(DanaRStatsActivity.this);
                     labelDATE.setId(200 + i);
-                    labelDATE.setText(df.format(new Date(record.getRecordDate())));
+                    labelDATE.setText(df.format(new Date(record.recordDate)));
                     labelDATE.setTextColor(Color.WHITE);
                     tr.addView(labelDATE);
 
                     TextView labelBASAL = new TextView(DanaRStatsActivity.this);
                     labelBASAL.setId(300 + i);
-                    labelBASAL.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + " U");
+                    labelBASAL.setText(DecimalFormatter.to2Decimal(record.recordDailyBasal) + " U");
                     labelBASAL.setTextColor(Color.WHITE);
                     tr.addView(labelBASAL);
 
                     TextView labelBOLUS = new TextView(DanaRStatsActivity.this);
                     labelBOLUS.setId(400 + i);
-                    labelBOLUS.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + " U");
+                    labelBOLUS.setText(DecimalFormatter.to2Decimal(record.recordDailyBolus) + " U");
                     labelBOLUS.setTextColor(Color.WHITE);
                     tr.addView(labelBOLUS);
 
@@ -461,7 +461,7 @@ public class DanaRStatsActivity extends Activity {
                             TableLayout.LayoutParams.WRAP_CONTENT));
                 }
 
-                if (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).getRecordDate())).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))))) {
+                if (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).recordDate)).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24))))) {
                     statsMessage.setVisibility(View.VISIBLE);
                     statsMessage.setText(getString(R.string.danar_stats_olddata_Message));
 
@@ -474,7 +474,7 @@ public class DanaRStatsActivity extends Activity {
                 i = 0;
 
                 for (DanaRHistoryRecord record : historyList) {
-                    double tdd = record.getRecordDailyBolus() + record.getRecordDailyBasal();
+                    double tdd = record.recordDailyBolus + record.recordDailyBasal;
                     if (i == 0) {
                         weighted03 = tdd;
                         weighted05 = tdd;

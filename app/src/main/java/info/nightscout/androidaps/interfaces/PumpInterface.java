@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempBasal;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 
 /**

@@ -11,41 +11,38 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
 public class BgReading implements DataPointInterface {
     private static Logger log = LoggerFactory.getLogger(BgReading.class);
 
-    public long getTimeIndex() {
-        return timeIndex;
-    }
+    @DatabaseField(id = true)
+    public long date;
 
-    public void setTimeIndex(long timeIndex) {
-        this.timeIndex = timeIndex;
-    }
-
-    @DatabaseField(id = true, useGetSet = true)
-    public long timeIndex;
+    @DatabaseField
+    public boolean isValid = true;
 
     @DatabaseField
     public double value;
-
     @DatabaseField
     public String direction;
-
     @DatabaseField
     public double raw;
 
     @DatabaseField
-    public int battery_level;
+    public int source = Source.NONE;
+    @DatabaseField
+    public String _id = null; // NS _id
+
 
     public static String units = Constants.MGDL;
 
     public BgReading() {}
 
     public BgReading(NSSgv sgv) {
-        timeIndex = sgv.getMills();
+        date = sgv.getMills();
         value = sgv.getMgdl();
         raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
         direction = sgv.getDirection();
@@ -101,18 +98,17 @@ public class BgReading implements DataPointInterface {
     @Override
     public String toString() {
         return "BgReading{" +
-                "timeIndex=" + timeIndex +
-                ", date=" + new Date(timeIndex) +
+                "date=" + date +
+                ", date=" + DateUtil.dateAndTimeString(date) +
                 ", value=" + value +
                 ", direction=" + direction +
                 ", raw=" + raw +
-                ", battery_level=" + battery_level +
                 '}';
     }
 
     @Override
     public double getX() {
-        return timeIndex;
+        return date;
     }
 
     @Override

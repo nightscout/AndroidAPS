@@ -77,7 +77,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
             if (profile == null)
                 return;
-            holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).created_at));
+            holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).date));
             holder.insulin.setText(DecimalFormatter.to2Decimal(treatments.get(position).insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(treatments.get(position).carbs) + " g");
             Iob iob = treatments.get(position).iobCalc(new Date().getTime(), profile.getDia());
@@ -134,7 +134,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                     case R.id.treatments_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(treatment.created_at));
+                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(treatment.date));
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = treatment._id;

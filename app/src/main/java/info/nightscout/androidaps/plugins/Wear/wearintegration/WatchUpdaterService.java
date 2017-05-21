@@ -28,7 +28,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.IobTotal;
@@ -237,7 +237,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         int battery = getBatteryLevel(getApplicationContext());
         dataMap.putString("sgvString", lastBG.valueToUnitsToString(profile.getUnits()));
-        dataMap.putDouble("timestamp", lastBG.getTimeIndex());
+        dataMap.putDouble("timestamp", lastBG.date);
         if(glucoseStatus == null) {
             dataMap.putString("slopeArrow", "" );
             dataMap.putString("delta", "");
@@ -346,8 +346,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         double beginBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(beginBasalSegmentTime)));
         double endBasalValue = beginBasalValue;
 
-        TempBasal tb1 = MainApp.getConfigBuilder().getTempBasal(runningTime);
-        TempBasal tb2 = MainApp.getConfigBuilder().getTempBasal(runningTime);
+        TempExBasal tb1 = MainApp.getConfigBuilder().getTempBasal(runningTime);
+        TempExBasal tb2 = MainApp.getConfigBuilder().getTempBasal(runningTime);
         double tb_before = beginBasalValue;
         double tb_amount = beginBasalValue;
         long tb_start = runningTime;
@@ -536,7 +536,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TempBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
+            TempExBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
             if (shortString) {
                 status += activeTemp.toStringShort();
             } else {

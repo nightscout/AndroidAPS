@@ -14,7 +14,6 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
-import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -26,81 +25,67 @@ import info.nightscout.utils.DecimalFormatter;
 public class Treatment implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(Treatment.class);
 
-    public long getTimeIndex() {
-        return created_at.getTime();
-    }
+    @DatabaseField(id = true)
+    public long date;
 
-    public void setTimeIndex(long timeIndex) {
-        this.timeIndex = timeIndex;
-    }
+    @DatabaseField
+    public boolean isValid = true;
 
-    @DatabaseField(id = true, useGetSet = true)
-    public long timeIndex;
-
+    @DatabaseField
+    public int source = Source.NONE;
     @DatabaseField
     public String _id;
 
     @DatabaseField
-    public Date created_at;
-
-    @DatabaseField
     public Double insulin = 0d;
-
-    @DatabaseField
-    public int insulinType = InsulinInterface.FASTACTINGINSULIN;
-
-    @DatabaseField
-    public double dia = Constants.defaultDIA;
-
     @DatabaseField
     public Double carbs = 0d;
-
     @DatabaseField
     public boolean mealBolus = true; // true for meal bolus , false for correction bolus
 
+    @DatabaseField
+    public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN;
+    @DatabaseField
+    public double dia = Constants.defaultDIA;
+
     public Treatment() {
-        InsulinInterface insulin = MainApp.getConfigBuilder().getActiveInsulin();
-        if (insulin != null) {
-            insulinType = insulin.getId();
-            dia = insulin.getDia();
-        } else {
-            insulinType = InsulinInterface.FASTACTINGINSULIN;
-            dia = Constants.defaultDIA;
-        }
     }
 
     public Treatment(InsulinInterface insulin) {
-        insulinType = insulin.getId();
+        insulinInterfaceID = insulin.getId();
         dia = insulin.getDia();
     }
 
     public void copyFrom(Treatment t) {
+        this.date = t.date;
+        this.isValid = t.isValid;
+        this.source = t.source;
         this._id = t._id;
-        this.created_at = t.created_at;
         this.insulin = t.insulin;
         this.carbs = t.carbs;
         this.mealBolus = t.mealBolus;
     }
 
     public long getMillisecondsFromStart() {
-        return new Date().getTime() - created_at.getTime();
+        return new Date().getTime() - date;
     }
 
     public String log() {
         return "Treatment{" +
-                "timeIndex: " + timeIndex +
-                ", _id: " + _id +
-                ", insulin: " + insulin +
-                ", carbs: " + carbs +
-                ", mealBolus: " + mealBolus +
-                ", created_at: " +
+                "date= " + date +
+                "date= " + DateUtil.dateAndTimeString(date) +
+                ", isValid= " + isValid +
+                ", _id= " + _id +
+                ", insulin= " + insulin +
+                ", carbs= " + carbs +
+                ", mealBolus= " + mealBolus +
                 "}";
     }
 
-    // DataPointInterface
+    //  ----------------- DataPointInterface --------------------
     @Override
     public double getX() {
-        return timeIndex;
+        return date;
     }
 
     // default when no sgv around available
@@ -125,11 +110,13 @@ public class Treatment implements DataPointWithLabelInterface {
         if (profile == null) return;
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
-            if (reading.timeIndex > timeIndex) continue;
+            if (reading.date > date) continue;
             yValue = NSProfile.fromMgdlToUnits(reading.value, profile.getUnits());
             break;
         }
     }
+
+    //  ----------------- DataPointInterface end --------------------
 
     public void sendToNSClient() {
         JSONObject data = new JSONObject();
@@ -140,8 +127,8 @@ public class Treatment implements DataPointWithLabelInterface {
                 data.put("eventType", "Correction Bolus");
             if (insulin != 0d) data.put("insulin", insulin);
             if (carbs != 0d) data.put("carbs", carbs.intValue());
-            data.put("created_at", DateUtil.toISOString(created_at));
-            data.put("timeIndex", timeIndex);
+            data.put("created_at", DateUtil.toISOString(date));
+            data.put("timeIndex", date);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -149,7 +136,7 @@ public class Treatment implements DataPointWithLabelInterface {
     }
 
     public Iob iobCalc(long time, double dia) {
-        InsulinInterface insulinInterface = MainApp.getInsulinIterfaceById(insulinType);
+        InsulinInterface insulinInterface = MainApp.getInsulinIterfaceById(insulinInterfaceID);
         if (insulinInterface == null)
             insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 

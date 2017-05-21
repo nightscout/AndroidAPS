@@ -77,14 +77,14 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
             if (profile == null) return;
             TempTarget tempTarget = tempTargetList.get(position);
-            if (tempTarget.duration != 0) {
-                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.timeStart) + " - " + DateUtil.timeString(tempTargetList.get(position).getPlannedTimeEnd()));
-                holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.duration) + " min");
+            if (tempTarget.durationInMinutes != 0) {
+                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTargetList.get(position).originalEnd()));
+                holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
                 holder.low.setText(tempTarget.lowValueToUnitsToString(profile.getUnits()));
                 holder.high.setText(tempTarget.highValueToUnitsToString(profile.getUnits()));
                 holder.reason.setText(tempTarget.reason);
             } else {
-                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.timeStart));
+                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date));
                 holder.duration.setText(R.string.cancel);
                 holder.low.setText("");
                 holder.high.setText("");
@@ -145,7 +145,7 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
                     case R.id.temptargetrange_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempTarget.timeStart));
+                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempTarget.date));
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = tempTarget._id;

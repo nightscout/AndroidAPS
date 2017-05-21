@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
@@ -17,19 +16,11 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
-@DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPBASALS)
-public class TempBasal {
-    private static Logger log = LoggerFactory.getLogger(TempBasal.class);
+@DatabaseTable(tableName = DatabaseHelper.DATABASE_TEMPEXBASALS)
+public class TempExBasal {
+    private static Logger log = LoggerFactory.getLogger(TempExBasal.class);
 
-    public long getTimeIndex() {
-        return timeStart.getTime();
-    }
-
-    public void setTimeIndex(long timeIndex) {
-        this.timeIndex = timeIndex;
-    }
-
-    @DatabaseField(id = true, useGetSet = true)
+    @DatabaseField(id = true)
     public long timeIndex;
 
     @DatabaseField
@@ -96,7 +87,7 @@ public class TempBasal {
 
                     Treatment tempBolusPart = new Treatment(insulinInterface);
                     tempBolusPart.insulin = tempBolusSize;
-                    tempBolusPart.created_at = new Date(date);
+                    tempBolusPart.date = date;
 
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
                     result.basaliob += aIOB.iobContrib;
@@ -184,7 +175,7 @@ public class TempBasal {
     }
 
     public String log() {
-        return "TempBasal{" +
+        return "TempExBasal{" +
                 "timeIndex=" + timeIndex +
                 ", timeStart=" + timeStart +
                 ", timeEnd=" + timeEnd +

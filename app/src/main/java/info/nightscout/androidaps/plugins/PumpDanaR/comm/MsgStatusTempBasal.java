@@ -9,7 +9,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -63,13 +63,13 @@ public class MsgStatusTempBasal extends MessageBase {
         long now = new Date().getTime();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TempBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
+            TempExBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percent != danaRPump.tempBasalPercent) {
                     // Close current temp basal
                     treatmentsInterface.tempBasalStop(now);
                     // Create new
-                    TempBasal newTempBasal = new TempBasal();
+                    TempExBasal newTempBasal = new TempExBasal();
                     newTempBasal.timeStart = new Date(now);
                     newTempBasal.percent = danaRPump.tempBasalPercent;
                     newTempBasal.isAbsolute = false;
@@ -84,7 +84,7 @@ public class MsgStatusTempBasal extends MessageBase {
         } else {
             if (danaRPump.isTempBasalInProgress) {
                 // Create new
-                TempBasal newTempBasal = new TempBasal();
+                TempExBasal newTempBasal = new TempExBasal();
                 newTempBasal.timeStart = new Date(now);
                 newTempBasal.percent = danaRPump.tempBasalPercent;
                 newTempBasal.isAbsolute = false;

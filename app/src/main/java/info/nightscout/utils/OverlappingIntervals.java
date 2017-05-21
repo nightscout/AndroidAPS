@@ -8,6 +8,8 @@ import android.support.v4.util.LongSparseArray;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.nightscout.androidaps.interfaces.Interval;
+
 /**
  * Created by mike on 09.05.2017.
  */
@@ -18,59 +20,6 @@ public class OverlappingIntervals {
     private HandlerThread sHandlerThread = null;
     private Object dataLock = new Object();
 
-
-    public abstract class Interval {
-        Long start = null;
-        Long duration = null;
-        Long cuttedEnd = null;
-
-        public Interval(long start, long duration) {
-            this.start = start;
-            this.duration = duration;
-        }
-
-        long durationInMsec() {
-            return duration;
-        }
-
-        long start() {
-            return start;
-        }
-
-        // planned end time at time of creation
-        long originalEnd() {
-            return start + duration;
-        }
-
-        // end time after cut
-        long end() {
-            if (cuttedEnd != null)
-                return cuttedEnd;
-            return originalEnd();
-        }
-
-        void cutEndTo(long end) {
-            cuttedEnd = end;
-        }
-
-        boolean match(long time) {
-            if (start() <= time && end() >= time)
-                return true;
-            return false;
-        }
-
-        boolean before(long time) {
-            if (end() < time)
-                return true;
-            return false;
-        }
-
-        boolean after(long time) {
-            if (start() > time)
-                return true;
-            return false;
-        }
-    }
 
     private static LongSparseArray<Interval> rawData = new LongSparseArray<>(); // oldest at index 0
 

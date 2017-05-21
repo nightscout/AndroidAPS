@@ -24,7 +24,6 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
@@ -139,7 +138,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     private static int indexNewerThan(long time) {
         for (int index = 0; index < bucketed_data.size(); index++) {
-            if (bucketed_data.get(index).timeIndex < time)
+            if (bucketed_data.get(index).date < time)
                 return index - 1;
         }
         return -1;
@@ -174,8 +173,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
             bucketed_data.add(bgReadings.get(0));
             int j = 0;
             for (int i = 1; i < bgReadings.size(); ++i) {
-                long bgTime = bgReadings.get(i).getTimeIndex();
-                long lastbgTime = bgReadings.get(i - 1).getTimeIndex();
+                long bgTime = bgReadings.get(i).date;
+                long lastbgTime = bgReadings.get(i - 1).date;
                 //log.error("Processing " + i + ": " + new Date(bgTime).toString() + " " + bgReadings.get(i).value + "   Previous: " + new Date(lastbgTime).toString() + " " + bgReadings.get(i - 1).value);
                 if (bgReadings.get(i).value < 39 || bgReadings.get(i - 1).value < 39) {
                     continue;
@@ -192,14 +191,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
                         nextbgTime = lastbgTime - 5 * 60 * 1000;
                         j++;
                         BgReading newBgreading = new BgReading();
-                        newBgreading.timeIndex = nextbgTime;
+                        newBgreading.date = nextbgTime;
                         double gapDelta = bgReadings.get(i).value - lastbg;
                         //console.error(gapDelta, lastbg, elapsed_minutes);
                         double nextbg = lastbg + (5d / elapsed_minutes * gapDelta);
                         newBgreading.value = Math.round(nextbg);
                         //console.error("Interpolated", bucketed_data[j]);
                         bucketed_data.add(newBgreading);
-                        //log.error("******************************************************************************************************* Adding:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
+                        //log.error("******************************************************************************************************* Adding:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
 
                         elapsed_minutes = elapsed_minutes - 5;
                         lastbg = nextbg;
@@ -208,16 +207,16 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     j++;
                     BgReading newBgreading = new BgReading();
                     newBgreading.value = bgReadings.get(i).value;
-                    newBgreading.timeIndex = bgTime;
+                    newBgreading.date = bgTime;
                     bucketed_data.add(newBgreading);
-                    //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
+                    //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
                 } else if (Math.abs(elapsed_minutes) > 2) {
                     j++;
                     BgReading newBgreading = new BgReading();
                     newBgreading.value = bgReadings.get(i).value;
-                    newBgreading.timeIndex = bgTime;
+                    newBgreading.date = bgTime;
                     bucketed_data.add(newBgreading);
-                    //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.timeIndex).toString() + " " + newBgreading.value);
+                    //log.error("******************************************************************************************************* Copying:" + new Date(newBgreading.date).toString() + " " + newBgreading.value);
                 } else {
                     bucketed_data.get(j).value = (bucketed_data.get(j).value + bgReadings.get(i).value) / 2;
                     //log.error("***** Average");
@@ -243,13 +242,13 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 return;
             }
 
-            long prevDataTime = roundUpTime(bucketed_data.get(bucketed_data.size() - 3).timeIndex);
+            long prevDataTime = roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
             log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
             AutosensData previous = autosensDataTable.get(prevDataTime);
             // start from oldest to be able sub cob
             for (int i = bucketed_data.size() - 4; i >= 0; i--) {
                 // check if data already exists
-                long bgTime = bucketed_data.get(i).timeIndex;
+                long bgTime = bucketed_data.get(i).date;
                 bgTime = roundUpTime(bgTime);
 
                 AutosensData existing;
@@ -350,8 +349,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
         if (bucketed_data == null)
             return null;
         for (int index = 0; index < bucketed_data.size(); index++) {
-            if (bucketed_data.get(index).timeIndex < time)
-                return bucketed_data.get(index).timeIndex;
+            if (bucketed_data.get(index).date < time)
+                return bucketed_data.get(index).date;
         }
         return null;
     }

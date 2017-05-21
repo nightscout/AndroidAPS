@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
@@ -17,7 +16,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -240,7 +239,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         PumpEnactResult result = cancelTempBasal();
         if (!result.success)
             return result;
-        TempBasal tempBasal = new TempBasal();
+        TempExBasal tempBasal = new TempExBasal();
         tempBasal.timeStart = new Date();
         tempBasal.isAbsolute = true;
         tempBasal.absolute = absoluteRate;
@@ -268,7 +267,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             if (!result.success)
                 return result;
         }
-        TempBasal tempBasal = new TempBasal();
+        TempExBasal tempBasal = new TempExBasal();
         tempBasal.timeStart = new Date();
         tempBasal.isAbsolute = false;
         tempBasal.percent = percent;
@@ -294,7 +293,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         PumpEnactResult result = cancelExtendedBolus();
         if (!result.success)
             return result;
-        TempBasal extendedBolus = new TempBasal();
+        TempExBasal extendedBolus = new TempExBasal();
         extendedBolus.timeStart = new Date();
         extendedBolus.isExtended = true;
         extendedBolus.absolute = insulin * 60d / durationInMinutes;
@@ -368,7 +367,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             try {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
             } catch (Exception e) {}
-            TempBasal tb;
+            TempExBasal tb;
             if ((tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime())) != null) {
                 status.put("tempbasalpct", tb.percent);
                 status.put("tempbasalstart", DateUtil.toISOString(tb.timeStart));

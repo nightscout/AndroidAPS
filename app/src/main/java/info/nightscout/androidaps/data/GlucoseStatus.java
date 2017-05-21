@@ -73,12 +73,12 @@ public class GlucoseStatus {
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
         int sizeRecords = data.size();
-        if (sizeRecords < 1 || data.get(0).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {
+        if (sizeRecords < 1 || data.get(0).date < new Date().getTime() - 7 * 60 * 1000L) {
             return null;
         }
 
         BgReading now = data.get(0);
-        long now_date = now.timeIndex;
+        long now_date = now.date;
         double change;
 
         if (sizeRecords < 2) {
@@ -98,7 +98,7 @@ public class GlucoseStatus {
         for (int i = 1; i < data.size(); i++) {
             if (data.get(i).value > 38) {
                 BgReading then = data.get(i);
-                long then_date = then.timeIndex;
+                long then_date = then.date;
                 double avgdelta = 0;
                 long minutesago;
 
@@ -153,7 +153,7 @@ public class GlucoseStatus {
         try {
             Dao<BgReading, Long> daoBgReadings = MainApp.getDbHelper().getDaoBgReadings();
             QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
+            queryBuilder.orderBy("date", false);
             queryBuilder.limit(1L);
             queryBuilder.where().gt("value", 38);
             PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
@@ -179,7 +179,7 @@ public class GlucoseStatus {
         if (lastBg == null)
             return null;
 
-        if (lastBg.timeIndex > new Date().getTime() - 9 * 60 * 1000)
+        if (lastBg.date > new Date().getTime() - 9 * 60 * 1000)
             return lastBg;
 
         return null;

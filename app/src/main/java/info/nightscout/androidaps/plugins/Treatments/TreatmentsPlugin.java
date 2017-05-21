@@ -2,13 +2,11 @@ package info.nightscout.androidaps.plugins.Treatments;
 
 import android.support.annotation.Nullable;
 
-import com.j256.ormlite.dao.Dao;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,13 +20,12 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -48,8 +45,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public static IobTotal lastTempBasalsCalculation;
 
     public static List<Treatment> treatments;
-    private static List<TempBasal> tempBasals;
-    private static List<TempBasal> extendedBoluses;
+    private static List<TempExBasal> tempBasals;
+    private static List<TempExBasal> extendedBoluses;
 
     private static boolean useExtendedBoluses = false;
 
@@ -156,10 +153,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         checkForExpired(extendedBoluses);
     }
 
-    private static void checkForExpired(List<TempBasal> list) {
+    private static void checkForExpired(List<TempExBasal> list) {
         long now = new Date().getTime();
         for (int position = list.size() - 1; position >= 0; position--) {
-            TempBasal t = list.get(position);
+            TempExBasal t = list.get(position);
             boolean update = false;
             if (t.timeEnd == null && t.getPlannedTimeEnd() < now) {
                 t.timeEnd = new Date(t.getPlannedTimeEnd());
@@ -209,7 +206,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
-            if (t.created_at.getTime() > time) continue;
+            if (t.date > time) continue;
             Iob tIOB = t.iobCalc(time, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
@@ -237,7 +234,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         long dia_ago = now - (new Double(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
 
         for (Treatment treatment : treatments) {
-            long t = treatment.created_at.getTime();
+            long t = treatment.date;
             if (t > dia_ago && t <= now) {
                 if (treatment.carbs >= 1) {
                     result.carbs += treatment.carbs;
@@ -265,7 +262,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         List<Treatment> in5minback = new ArrayList<>();
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
-            if (t.created_at.getTime() <= time && t.created_at.getTime() > time - 5 * 60 * 1000)
+            if (t.date <= time && t.date > time - 5 * 60 * 1000)
                 in5minback.add(t);
         }
         return in5minback;
@@ -288,7 +285,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         checkForExpired(extendedBoluses);
         IobTotal total = new IobTotal(time);
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
-            TempBasal t = tempBasals.get(pos);
+            TempExBasal t = tempBasals.get(pos);
             if (t.timeStart.getTime() > time) continue;
             IobTotal calc = t.iobCalc(time);
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
@@ -296,7 +293,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         }
         if (useExtendedBoluses) {
             for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
-                TempBasal t = extendedBoluses.get(pos);
+                TempExBasal t = extendedBoluses.get(pos);
                 if (t.timeStart.getTime() > time) continue;
                 IobTotal calc = t.iobCalc(time);
                 total.plus(calc);
@@ -322,9 +319,9 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Nullable
-    public TempBasal getRealTempBasal(long time) {
+    public TempExBasal getRealTempBasal(long time) {
         checkForExpired(tempBasals);
-        for (TempBasal t : tempBasals) {
+        for (TempExBasal t : tempBasals) {
             if (t.isInProgress(time)) return t;
         }
         return null;
@@ -332,7 +329,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Nullable
     @Override
-    public TempBasal getTempBasal(long time) {
+    public TempExBasal getTempBasal(long time) {
         if (isRealTempBasalInProgress())
             return getRealTempBasal(time);
         if (isExtendedBoluslInProgress() && useExtendedBoluses)
@@ -347,22 +344,22 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Nullable
     @Override
-    public TempBasal getExtendedBolus(long time) {
+    public TempExBasal getExtendedBolus(long time) {
         checkForExpired(extendedBoluses);
-        for (TempBasal t : extendedBoluses) {
+        for (TempExBasal t : extendedBoluses) {
             if (t.isInProgress(time)) return t;
         }
         return null;
     }
 
     @Override
-    public void extendedBolusStart(TempBasal extendedBolus) {
+    public void extendedBolusStart(TempExBasal extendedBolus) {
         MainApp.getDbHelper().create(extendedBolus);
     }
 
     @Override
     public void extendedBolusStop(long time) {
-        TempBasal extendedBolus = getExtendedBolus(time);
+        TempExBasal extendedBolus = getExtendedBolus(time);
         if (extendedBolus != null) {
             extendedBolus.timeEnd = new Date(time);
             MainApp.getDbHelper().update(extendedBolus);
@@ -373,7 +370,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public double getTempBasalAbsoluteRate() {
         PumpInterface pump = MainApp.getConfigBuilder();
 
-        TempBasal tb = getTempBasal(new Date().getTime());
+        TempExBasal tb = getTempBasal(new Date().getTime());
         if (tb != null) {
             if (tb.isAbsolute) {
                 return tb.absolute;
@@ -383,7 +380,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 return tempRate;
             }
         }
-        TempBasal eb = getExtendedBolus(new Date().getTime());
+        TempExBasal eb = getExtendedBolus(new Date().getTime());
         if (eb != null && useExtendedBoluses) {
             return pump.getBaseBasalRate() + eb.absolute;
         }
@@ -400,13 +397,13 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void tempBasalStart(TempBasal tempBasal) {
+    public void tempBasalStart(TempExBasal tempBasal) {
         MainApp.getDbHelper().create(tempBasal);
     }
 
     @Override
     public void tempBasalStop(long time) {
-        TempBasal tempBasal = getTempBasal(time);
+        TempExBasal tempBasal = getTempBasal(time);
         if (tempBasal != null) {
             tempBasal.timeEnd = new Date(time);
             MainApp.getDbHelper().update(tempBasal);
@@ -425,15 +422,15 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         return oldestTemp;
     }
 
-    public static List<TempBasal> getMergedList() {
+    public static List<TempExBasal> getMergedList() {
         if (useExtendedBoluses) {
-            List<TempBasal> merged = new ArrayList<TempBasal>();
+            List<TempExBasal> merged = new ArrayList<TempExBasal>();
             merged.addAll(tempBasals);
             if (useExtendedBoluses)
                 merged.addAll(extendedBoluses);
 
-            class CustomComparator implements Comparator<TempBasal> {
-                public int compare(TempBasal object1, TempBasal object2) {
+            class CustomComparator implements Comparator<TempExBasal> {
+                public int compare(TempExBasal object1, TempExBasal object2) {
                     return (int) (object2.timeIndex - object1.timeIndex);
                 }
             }

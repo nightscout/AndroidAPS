@@ -15,7 +15,6 @@ import java.util.List;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 
 /**
  * Created by mike on 21.04.2017.
@@ -40,8 +39,7 @@ public class ActivityGraph extends GraphView {
         int hours = (int) Math.floor(dia + 1);
 
         Treatment t = new Treatment(insulin);
-        t.created_at = new Date(0);
-        t.timeIndex = 0;
+        t.date = 0;
         t.insulin = 1d;
 
         LineGraphSeries<DataPoint> activitySeries = null;

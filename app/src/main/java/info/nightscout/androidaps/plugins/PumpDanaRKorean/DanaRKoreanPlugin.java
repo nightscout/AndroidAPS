@@ -25,7 +25,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -306,8 +306,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         return pump.currentBasal;
     }
 
-    public TempBasal getTempBasal(long time) {
-        TempBasal temp = MainApp.getConfigBuilder().getTempBasal(time);
+    public TempExBasal getTempBasal(long time) {
+        TempExBasal temp = MainApp.getConfigBuilder().getTempBasal(time);
         if (temp != null) return temp;
         if (useExtendedBoluses)
             return MainApp.getConfigBuilder().getExtendedBolus(time);
@@ -681,7 +681,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             extended.put("PumpIOB", pump.iob);
 //            extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
 //            extended.put("LastBolusAmount", pump.lastBolusAmount);
-            TempBasal tb = getTempBasal(new Date().getTime());
+            TempExBasal tb = getTempBasal(new Date().getTime());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
                 extended.put("TempBasalStart", tb.timeStart.toLocaleString());

@@ -273,12 +273,12 @@ public class DanaRHistoryActivity extends Activity {
         @Override
         public void onBindViewHolder(HistoryViewHolder holder, int position) {
             DanaRHistoryRecord record = historyList.get(position);
-            holder.time.setText(DateUtil.dateAndTimeString(record.getRecordDate()));
-            holder.value.setText(DecimalFormatter.to2Decimal(record.getRecordValue()));
-            holder.stringvalue.setText(record.getStringRecordValue());
-            holder.bolustype.setText(record.getBolusType());
-            holder.duration.setText(DecimalFormatter.to0Decimal(record.getRecordDuration()));
-            holder.alarm.setText(record.getRecordAlarm());
+            holder.time.setText(DateUtil.dateAndTimeString(record.recordDate));
+            holder.value.setText(DecimalFormatter.to2Decimal(record.recordValue));
+            holder.stringvalue.setText(record.stringRecordValue);
+            holder.bolustype.setText(record.bolusType);
+            holder.duration.setText(DecimalFormatter.to0Decimal(record.recordDuration));
+            holder.alarm.setText(record.recordAlarm);
             switch (showingType) {
                 case RecordTypes.RECORD_TYPE_ALARM:
                     holder.time.setVisibility(View.VISIBLE);
@@ -303,10 +303,10 @@ public class DanaRHistoryActivity extends Activity {
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_DAILY:
-                    holder.dailybasal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBasal()) + "U");
-                    holder.dailybolus.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus()) + "U");
-                    holder.dailytotal.setText(DecimalFormatter.to2Decimal(record.getRecordDailyBolus() + record.getRecordDailyBasal()) + "U");
-                    holder.time.setText(DateUtil.dateString(record.getRecordDate()));
+                    holder.dailybasal.setText(DecimalFormatter.to2Decimal(record.recordDailyBasal) + "U");
+                    holder.dailybolus.setText(DecimalFormatter.to2Decimal(record.recordDailyBolus) + "U");
+                    holder.dailytotal.setText(DecimalFormatter.to2Decimal(record.recordDailyBolus + record.recordDailyBasal) + "U");
+                    holder.time.setText(DateUtil.dateString(record.recordDate));
                     holder.time.setVisibility(View.VISIBLE);
                     holder.value.setVisibility(View.GONE);
                     holder.stringvalue.setVisibility(View.GONE);
@@ -318,7 +318,7 @@ public class DanaRHistoryActivity extends Activity {
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_GLUCOSE:
-                    holder.value.setText(NSProfile.toUnitsString(record.getRecordValue(), record.getRecordValue() * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+                    holder.value.setText(NSProfile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profile.getUnits()));
                     // rest is the same
                 case RecordTypes.RECORD_TYPE_CARBO:
                 case RecordTypes.RECORD_TYPE_BASALHOUR:

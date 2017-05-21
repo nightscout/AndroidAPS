@@ -246,7 +246,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (actualBG != null) {
                         reply = MainApp.sResources.getString(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";
                     } else if (lastBG != null) {
-                        Long agoMsec = new Date().getTime() - lastBG.timeIndex;
+                        Long agoMsec = new Date().getTime() - lastBG.date;
                         int agoMin = (int) (agoMsec / 60d / 1000d);
                         reply = MainApp.sResources.getString(R.string.sms_lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(MainApp.sResources.getString(R.string.sms_minago), agoMin) + ", ";
                     }
