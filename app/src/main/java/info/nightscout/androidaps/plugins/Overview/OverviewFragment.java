@@ -357,6 +357,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             scheduleUpdateGUI("suspendmenu");
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
             ConfigBuilderPlugin.uploadOpenAPSOffline(60); // upload 60 min, we don;t know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {
@@ -383,21 +392,57 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
             ConfigBuilderPlugin.uploadOpenAPSOffline(60);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
             ConfigBuilderPlugin.uploadOpenAPSOffline(120);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor3h))) {
             activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
             ConfigBuilderPlugin.uploadOpenAPSOffline(180);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
             activeloop.suspendTo(new Date().getTime() + 10 * 60L * 60 * 1000);
             scheduleUpdateGUI("suspendmenu");
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
             ConfigBuilderPlugin.uploadOpenAPSOffline(600);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
