@@ -14,35 +14,22 @@ import info.nightscout.androidaps.interfaces.Interval;
  * Created by mike on 09.05.2017.
  */
 
-public class OverlappingIntervals {
+public class OverlappingIntervals<T extends Interval> {
 
-    private Handler sHandler = null;
-    private HandlerThread sHandlerThread = null;
-    private Object dataLock = new Object();
+    private LongSparseArray<T> rawData = new LongSparseArray<>(); // oldest at index 0
 
-
-    private static LongSparseArray<Interval> rawData = new LongSparseArray<>(); // oldest at index 0
-
-    public OverlappingIntervals() {
-        if (sHandlerThread == null) {
-            sHandlerThread = new HandlerThread(OverlappingIntervals.class.getSimpleName());
-            sHandlerThread.start();
-            sHandler = new Handler(sHandlerThread.getLooper());
-        }
-    }
-
-    public OverlappingIntervals resetData() {
+    public OverlappingIntervals reset() {
         rawData = new LongSparseArray<>();
         return this;
     }
 
-    public void add(Interval newInterval) {
+    public void add(T newInterval) {
         rawData.put(newInterval.start(), newInterval);
         merge();
     }
 
-    public void add(List<Interval> list) {
-        for (Interval interval : list) {
+    public void add(List<T> list) {
+        for (T interval : list) {
             rawData.put(interval.start(), interval);
         }
         merge();
@@ -50,8 +37,8 @@ public class OverlappingIntervals {
 
     private void merge() {
         for (int index = 0; index < rawData.size() - 1; index++) {
-            Interval i = rawData.get(index);
-            long startOfNewer = rawData.get(index + 1).start();
+            Interval i = rawData.valueAt(index);
+            long startOfNewer = rawData.valueAt(index + 1).start();
             if (i.originalEnd() > startOfNewer) {
                 i.cutEndTo(startOfNewer);
             }
@@ -61,18 +48,25 @@ public class OverlappingIntervals {
     @Nullable
     public Interval getValueByInterval(long time) {
         int index = binarySearch(time);
-        if (index >= 0) return rawData.get(index);
+        if (index >= 0) return rawData.valueAt(index);
         return null;
     }
 
-    public List<Interval> getList() {
-        List<Interval> list = new ArrayList<>();
+    public List<T> getList() {
+        List<T> list = new ArrayList<>();
         for (int i = 0; i < rawData.size(); i++)
             list.add(rawData.valueAt(i));
         return list;
     }
 
-    private static int binarySearch(long value) {
+    public List<T> getReversedList() {
+        List<T> list = new ArrayList<>();
+        for (int i = rawData.size() -1; i>=0; i--)
+            list.add(rawData.valueAt(i));
+        return list;
+    }
+
+    private int binarySearch(long value) {
         int lo = 0;
         int hi = rawData.size() - 1;
 
@@ -91,4 +85,15 @@ public class OverlappingIntervals {
         return ~lo;  // value not present
     }
 
+    public int size() {
+        return rawData.size();
+    }
+
+    public T get(int index) {
+        return rawData.valueAt(index);
+    }
+
+    public T getReversed(int index) {
+        return rawData.valueAt(size() - 1 - index);
+    }
 }

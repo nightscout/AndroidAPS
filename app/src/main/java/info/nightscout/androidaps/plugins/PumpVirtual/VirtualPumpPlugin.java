@@ -16,7 +16,8 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -26,7 +27,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryPlugin;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -138,7 +139,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public String treatmentPlugin() {
-        return TreatmentsPlugin.class.getName();
+        return TreatmentsFromHistoryPlugin.class.getName();
     }
 
     @Override
@@ -236,14 +237,12 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
-        PumpEnactResult result = cancelTempBasal();
-        if (!result.success)
-            return result;
-        TempExBasal tempBasal = new TempExBasal();
-        tempBasal.timeStart = new Date();
+        TemporaryBasal tempBasal = new TemporaryBasal();
+        tempBasal.date = new Date().getTime();
         tempBasal.isAbsolute = true;
-        tempBasal.absolute = absoluteRate;
-        tempBasal.duration = durationInMinutes;
+        tempBasal.absoluteRate = absoluteRate;
+        tempBasal.durationInMinutes = durationInMinutes;
+        PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.enacted = true;
         result.isTempCancel = false;
@@ -267,11 +266,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             if (!result.success)
                 return result;
         }
-        TempExBasal tempBasal = new TempExBasal();
-        tempBasal.timeStart = new Date();
+        TemporaryBasal tempBasal = new TemporaryBasal();
+        tempBasal.date = new Date().getTime();
         tempBasal.isAbsolute = false;
-        tempBasal.percent = percent;
-        tempBasal.duration = durationInMinutes;
+        tempBasal.percentRate = percent;
+        tempBasal.durationInMinutes = durationInMinutes;
         result.success = true;
         result.enacted = true;
         result.percent = percent;
@@ -293,12 +292,10 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         PumpEnactResult result = cancelExtendedBolus();
         if (!result.success)
             return result;
-        TempExBasal extendedBolus = new TempExBasal();
-        extendedBolus.timeStart = new Date();
-        extendedBolus.isExtended = true;
-        extendedBolus.absolute = insulin * 60d / durationInMinutes;
-        extendedBolus.duration = durationInMinutes;
-        extendedBolus.isAbsolute = true;
+        ExtendedBolus extendedBolus = new ExtendedBolus();
+        extendedBolus.date = new Date().getTime();
+        extendedBolus.insulin = insulin;
+        extendedBolus.durationInMinutes = durationInMinutes;
         result.success = true;
         result.enacted = true;
         result.bolusDelivered = insulin;
@@ -367,11 +364,17 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             try {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
             } catch (Exception e) {}
-            TempExBasal tb;
-            if ((tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime())) != null) {
-                status.put("tempbasalpct", tb.percent);
-                status.put("tempbasalstart", DateUtil.toISOString(tb.timeStart));
-                status.put("tempbasalremainmin", tb.getPlannedRemainingMinutes());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+            if (tb != null) {
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
+                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
+                extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
+            }
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
+            if (eb != null) {
+                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
+                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
             status.put("timestamp", DateUtil.toISOString(new Date()));
 

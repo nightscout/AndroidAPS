@@ -112,7 +112,7 @@ public class ExtendedBolus implements Interval {
                 "}";
     }
 
-    double absoluteRate() {
+    public double absoluteRate() {
         return Round.roundTo(insulin / durationInMinutes * 60, 0.01);
     }
 

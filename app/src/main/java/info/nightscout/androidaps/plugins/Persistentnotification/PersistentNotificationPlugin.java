@@ -18,9 +18,10 @@ import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -31,7 +32,6 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -140,7 +140,7 @@ public class PersistentNotificationPlugin implements PluginBase{
         PumpInterface pump = MainApp.getConfigBuilder();
 
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            TempExBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
             line1 += "  " + activeTemp.toStringShort();
         }
 

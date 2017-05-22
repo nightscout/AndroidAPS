@@ -25,7 +25,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -42,7 +43,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -220,7 +221,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public String treatmentPlugin() {
-        return TreatmentsPlugin.class.getName();
+        return TreatmentsFromHistoryPlugin.class.getName();
     }
 
     @Override
@@ -400,7 +401,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percent == percentRate) {
+                if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percentRate == percentRate) {
                     result.success = true;
                     result.percent = percentRate;
                     result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRate();
@@ -670,12 +671,17 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             extended.put("PumpIOB", getDanaRPump().iob);
             extended.put("LastBolus", getDanaRPump().lastBolusTime.toLocaleString());
             extended.put("LastBolusAmount", getDanaRPump().lastBolusAmount);
-            TempExBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
-                extended.put("TempBasalStart", tb.timeStart.toLocaleString());
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
+                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
-                extended.put("IsExtended", tb.isExtended);
+            }
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
+            if (eb != null) {
+                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
+                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {

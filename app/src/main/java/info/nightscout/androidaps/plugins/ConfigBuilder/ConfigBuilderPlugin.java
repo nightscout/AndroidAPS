@@ -25,11 +25,10 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventBolusRequested;
-import info.nightscout.androidaps.events.EventExtendedBolusChange;
-import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
@@ -56,6 +55,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgError;
 import info.nightscout.utils.BatteryLevel;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.OverlappingIntervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -553,7 +553,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             } else {
                 uploadTempBasalStartAbsolute(result.absolute, result.duration);
             }
-            MainApp.bus().post(new EventTempBasalChange());
         }
         return result;
     }
@@ -573,7 +572,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             log.debug("setTempBasalPercent percent: " + percentAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
         if (result.enacted && result.success) {
             uploadTempBasalStartPercent(result.percent, result.duration);
-            MainApp.bus().post(new EventTempBasalChange());
         }
         return result;
     }
@@ -598,7 +596,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
         if (result.enacted && result.success) {
             uploadTempBasalEnd();
-            MainApp.bus().post(new EventTempBasalChange());
         }
         return result;
     }
@@ -1179,7 +1176,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public TempExBasal getRealTempBasal(long time) {
+    public TemporaryBasal getRealTempBasal(long time) {
         return activeTreatments.getRealTempBasal(time);
     }
 
@@ -1189,7 +1186,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public TempExBasal getTempBasal(long time) {
+    public TemporaryBasal getTempBasal(long time) {
         return activeTreatments.getTempBasal(time);
     }
 
@@ -1204,15 +1201,18 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void tempBasalStart(TempExBasal tempBasal) {
+    public OverlappingIntervals<TemporaryBasal> getTemporaryBasals() {
+        return activeTreatments.getTemporaryBasals();
+    }
+
+    @Override
+    public void tempBasalStart(TemporaryBasal tempBasal) {
         activeTreatments.tempBasalStart(tempBasal);
-        MainApp.bus().post(new EventTempBasalChange());
     }
 
     @Override
     public void tempBasalStop(long time) {
         activeTreatments.tempBasalStop(time);
-        MainApp.bus().post(new EventTempBasalChange());
     }
 
     @Override
@@ -1221,20 +1221,23 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public TempExBasal getExtendedBolus(long time) {
+    public ExtendedBolus getExtendedBolus(long time) {
         return activeTreatments.getExtendedBolus(time);
     }
 
     @Override
-    public void extendedBolusStart(TempExBasal tempBasal) {
-        activeTreatments.extendedBolusStart(tempBasal);
-        MainApp.bus().post(new EventExtendedBolusChange());
+    public void extendedBolusStart(ExtendedBolus extendedBolus) {
+        activeTreatments.extendedBolusStart(extendedBolus);
     }
 
     @Override
     public void extendedBolusStop(long time) {
         activeTreatments.extendedBolusStop(time);
-        MainApp.bus().post(new EventExtendedBolusChange());
+    }
+
+    @Override
+    public OverlappingIntervals<ExtendedBolus> getExtendedBoluses() {
+        return activeTreatments.getExtendedBoluses();
     }
 
     @Override

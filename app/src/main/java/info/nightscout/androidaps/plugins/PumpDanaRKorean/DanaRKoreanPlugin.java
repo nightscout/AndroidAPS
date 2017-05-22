@@ -25,7 +25,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -36,14 +37,14 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
-import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -158,7 +159,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.danarpump_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -219,7 +220,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
 
     @Override
     public String treatmentPlugin() {
-        return TreatmentsPlugin.class.getName();
+        return TreatmentsFromHistoryPlugin.class.getName();
     }
 
     @Override
@@ -241,7 +242,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     // Pump interface
     public boolean isTempBasalInProgress() {
         if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()) != null) return true;
-        if (MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()) != null && useExtendedBoluses) return true;
+        if (MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()) != null && useExtendedBoluses)
+            return true;
         return false;
     }
 
@@ -306,11 +308,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         return pump.currentBasal;
     }
 
-    public TempExBasal getTempBasal(long time) {
-        TempExBasal temp = MainApp.getConfigBuilder().getTempBasal(time);
+    public TemporaryBasal getTempBasal(long time) {
+        TemporaryBasal temp = MainApp.getConfigBuilder().getTempBasal(time);
         if (temp != null) return temp;
         if (useExtendedBoluses)
-            return MainApp.getConfigBuilder().getExtendedBolus(time);
+            return new TemporaryBasal(MainApp.getConfigBuilder().getExtendedBolus(time));
         return null;
     }
 
@@ -411,7 +413,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percent == percentRate) {
+                if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).percentRate == percentRate) {
                     result.success = true;
                     result.percent = percentRate;
                     result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRate();
@@ -513,7 +515,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             log.error("setTempBasalPercent: Invalid input");
             return result;
         }
-        if (percent > getPumpDescription().maxHighTempPercent) percent = getPumpDescription().maxHighTempPercent;
+        if (percent > getPumpDescription().maxHighTempPercent)
+            percent = getPumpDescription().maxHighTempPercent;
         if (pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = false;
             result.success = true;
@@ -681,12 +684,17 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             extended.put("PumpIOB", pump.iob);
 //            extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
 //            extended.put("LastBolusAmount", pump.lastBolusAmount);
-            TempExBasal tb = getTempBasal(new Date().getTime());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
-                extended.put("TempBasalStart", tb.timeStart.toLocaleString());
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
+                extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
-                extended.put("IsExtended", tb.isExtended);
+            }
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
+            if (eb != null) {
+                extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
+                extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
+                extended.put("ExtendedBolusRemaining", eb.getPlannedRemainingMinutes());
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
@@ -758,7 +766,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
         if (percentRate < 0) percentRate = 0;
-        if (percentRate > getPumpDescription().maxHighTempPercent) percentRate = getPumpDescription().maxHighTempPercent;
+        if (percentRate > getPumpDescription().maxHighTempPercent)
+            percentRate = getPumpDescription().maxHighTempPercent;
         if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
             log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
         return percentRate;
@@ -813,7 +822,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
             ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()).toString() + "\n";
         }
-        if (!veryShort){
+        if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";
         }
         ret += "IOB: " + pump.iob + "U\n";

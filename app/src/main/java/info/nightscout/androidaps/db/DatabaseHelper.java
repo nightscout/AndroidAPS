@@ -31,7 +31,9 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -43,7 +45,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public static final String DATABASE_NAME = "AndroidAPSDb";
     public static final String DATABASE_BGREADINGS = "BgReadings";
-    public static final String DATABASE_TEMPEXBASALS = "TempBasals";
     public static final String DATABASE_TEMPORARYBASALS = "TemporaryBasals";
     public static final String DATABASE_EXTENDEDBOLUSES = "ExtendedBoluses";
     public static final String DATABASE_TEMPTARGETS = "TempTargets";
@@ -55,8 +56,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Long latestTreatmentChange = null;
 
-    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledPost = null;
+    private static final ScheduledExecutorService treatmentsWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledTratmentPost = null;
+
+    private static final ScheduledExecutorService tempBasalsWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledTemBasalsPost = null;
+
+    private static final ScheduledExecutorService extendedBolusWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledExtendedBolusPost = null;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,7 +74,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase database, ConnectionSource connectionSource) {
         try {
             log.info("onCreate");
-            TableUtils.createTableIfNotExists(connectionSource, TempExBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
@@ -85,7 +91,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
             log.info(DatabaseHelper.class.getName(), "onUpgrade");
-            TableUtils.dropTable(connectionSource, TempExBasal.class, true);
             TableUtils.dropTable(connectionSource, TempTarget.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
@@ -113,10 +118,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         log.debug("Before BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
         getWritableDatabase().delete(DATABASE_BGREADINGS, "date" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
         log.debug("After BgReadings size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_BGREADINGS));
-
-        log.debug("Before TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPEXBASALS));
-        getWritableDatabase().delete(DATABASE_TEMPEXBASALS, "date" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
-        log.debug("After TempBasals size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPEXBASALS));
 
         log.debug("Before TempTargets size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_TEMPTARGETS));
         getWritableDatabase().delete(DATABASE_TEMPTARGETS, "date" + " < '" + (new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) + "'", null);
@@ -147,7 +148,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void resetDatabases() {
         try {
-            TableUtils.dropTable(connectionSource, TempExBasal.class, true);
             TableUtils.dropTable(connectionSource, TempTarget.class, true);
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.dropTable(connectionSource, BgReading.class, true);
@@ -156,7 +156,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             //DbRequests can be cleared from NSClient fragment
-            TableUtils.createTableIfNotExists(connectionSource, TempExBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
@@ -178,6 +177,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        scheduleTreatmentChange();
     }
 
     public void resetTempTargets() {
@@ -196,6 +196,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        scheduleTemporaryBasalChange();
     }
 
     public void resetExtededBoluses() {
@@ -205,13 +206,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        scheduleExtendedBolusChange();
     }
 
     // ------------------ getDao -------------------------------------------
-
-    private Dao<TempExBasal, Long> getDaoTempBasals() throws SQLException {
-        return getDao(TempExBasal.class);
-    }
 
     private Dao<TempTarget, Long> getDaoTempTargets() throws SQLException {
         return getDao(TempTarget.class);
@@ -233,11 +231,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(DbRequest.class);
     }
 
-    private Dao<TemporaryBasal, String> getDaoTemporaryBasal() throws SQLException {
+    private Dao<TemporaryBasal, Long> getDaoTemporaryBasal() throws SQLException {
         return getDao(TemporaryBasal.class);
     }
 
-    private Dao<ExtendedBolus, String> getDaoExtendedBolus() throws SQLException {
+    private Dao<ExtendedBolus, Long> getDaoExtendedBolus() throws SQLException {
         return getDao(ExtendedBolus.class);
     }
 
@@ -510,16 +508,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (latestTreatmentChange != null)
                     MainApp.bus().post(new EventNewHistoryData(latestTreatmentChange));
                 latestTreatmentChange = null;
-                scheduledPost = null;
+                scheduledTratmentPost = null;
             }
         }
         // prepare task for execution in 5 sec
         // cancel waiting task to prevent sending multiple posts
-        if (scheduledPost != null)
-            scheduledPost.cancel(false);
+        if (scheduledTratmentPost != null)
+            scheduledTratmentPost.cancel(false);
         Runnable task = new PostRunnable();
         final int sec = 5;
-        scheduledPost = worker.schedule(task, sec, TimeUnit.SECONDS);
+        scheduledTratmentPost = treatmentsWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
 
@@ -538,57 +536,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return new ArrayList<Treatment>();
-    }
-
-    // ------------ TempExBasal handling ---------------
-
-    public int update(TempExBasal tempBasal) {
-        int updated = 0;
-        try {
-            updated = getDaoTempBasals().update(tempBasal);
-            latestTreatmentChange = tempBasal.timeIndex;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleTreatmentChange();
-        return updated;
-    }
-
-    public void create(TempExBasal tempBasal) {
-        try {
-            getDaoTempBasals().create(tempBasal);
-            latestTreatmentChange = tempBasal.timeIndex;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleTreatmentChange();
-    }
-
-    public void delete(TempExBasal tempBasal) {
-        try {
-            getDaoTempBasals().delete(tempBasal);
-            latestTreatmentChange = tempBasal.timeIndex;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleTreatmentChange();
-    }
-
-    public List<TempExBasal> getTempbasalsDataFromTime(long mills, boolean ascending, boolean isExtended) {
-        try {
-            Dao<TempExBasal, Long> daoTempbasals = getDaoTempBasals();
-            List<TempExBasal> tempbasals;
-            QueryBuilder<TempExBasal, Long> queryBuilder = daoTempbasals.queryBuilder();
-            queryBuilder.orderBy("timeIndex", ascending);
-            Where where = queryBuilder.where();
-            where.ge("timeIndex", mills).and().eq("isExtended", isExtended);
-            PreparedQuery<TempExBasal> preparedQuery = queryBuilder.prepare();
-            tempbasals = daoTempbasals.query(preparedQuery);
-            return tempbasals;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<TempExBasal>();
     }
 
     // ---------------- TempTargets handling ---------------
@@ -744,6 +691,140 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+    }
+
+    // ------------ TemporaryBasal handling ---------------
+
+    public int update(TemporaryBasal tempBasal) {
+        int updated = 0;
+        try {
+            updated = getDaoTemporaryBasal().update(tempBasal);
+            latestTreatmentChange = tempBasal.date;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleTemporaryBasalChange();
+        return updated;
+    }
+
+    public void create(TemporaryBasal tempBasal) {
+        try {
+            getDaoTemporaryBasal().create(tempBasal);
+            latestTreatmentChange = tempBasal.date;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleTemporaryBasalChange();
+    }
+
+    public void delete(TemporaryBasal tempBasal) {
+        try {
+            getDaoTemporaryBasal().delete(tempBasal);
+            latestTreatmentChange = tempBasal.date;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleTemporaryBasalChange();
+    }
+
+    public List<TemporaryBasal> getTemporaryBasalsDataFromTime(long mills, boolean ascending) {
+        try {
+            List<TemporaryBasal> tempbasals;
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.ge("date", mills);
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            tempbasals = getDaoTemporaryBasal().query(preparedQuery);
+            return tempbasals;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<TemporaryBasal>();
+    }
+
+    static public void scheduleTemporaryBasalChange() {
+        class PostRunnable implements Runnable {
+            public void run() {
+                MainApp.bus().post(new EventTempBasalChange());
+                scheduledTemBasalsPost = null;
+            }
+        }
+        // prepare task for execution in 5 sec
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledTemBasalsPost != null)
+            scheduledTemBasalsPost.cancel(false);
+        Runnable task = new PostRunnable();
+        final int sec = 5;
+        scheduledTemBasalsPost = tempBasalsWorker.schedule(task, sec, TimeUnit.SECONDS);
+
+    }
+
+    // ------------ ExtendedBolus handling ---------------
+
+    public int update(ExtendedBolus extendedBolus) {
+        int updated = 0;
+        try {
+            updated = getDaoExtendedBolus().update(extendedBolus);
+            latestTreatmentChange = extendedBolus.date;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleExtendedBolusChange();
+        return updated;
+    }
+
+    public void create(ExtendedBolus extendedBolus) {
+        try {
+            getDaoExtendedBolus().create(extendedBolus);
+            latestTreatmentChange = extendedBolus.date;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleExtendedBolusChange();
+    }
+
+    public void delete(ExtendedBolus extendedBolus) {
+        try {
+            getDaoExtendedBolus().delete(extendedBolus);
+            latestTreatmentChange = extendedBolus.date;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleExtendedBolusChange();
+    }
+
+    public List<ExtendedBolus> getExtendedBolusDataFromTime(long mills, boolean ascending) {
+        try {
+            List<ExtendedBolus> extendedBoluses;
+            QueryBuilder<ExtendedBolus, Long> queryBuilder = getDaoExtendedBolus().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.ge("date", mills);
+            PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+            extendedBoluses = getDaoExtendedBolus().query(preparedQuery);
+            return extendedBoluses;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<ExtendedBolus>();
+    }
+
+    static public void scheduleExtendedBolusChange() {
+        class PostRunnable implements Runnable {
+            public void run() {
+                MainApp.bus().post(new EventExtendedBolusChange());
+                scheduledExtendedBolusPost = null;
+            }
+        }
+        // prepare task for execution in 5 sec
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledExtendedBolusPost != null)
+            scheduledExtendedBolusPost.cancel(false);
+        Runnable task = new PostRunnable();
+        final int sec = 5;
+        scheduledExtendedBolusPost = extendedBolusWorker.schedule(task, sec, TimeUnit.SECONDS);
+
     }
 
 

@@ -9,7 +9,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -69,18 +69,16 @@ public class MsgStatusBolusExtended extends MessageBase {
         long now = new Date().getTime();
 
         if (treatmentsInterface.isExtendedBoluslInProgress()) {
-            TempExBasal extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
+            ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
             if (pump.isExtendedInProgress) {
-                if (extendedBolus.absolute != pump.extendedBolusAbsoluteRate) {
+                if (extendedBolus.absoluteRate() != pump.extendedBolusAbsoluteRate) {
                     // Close current extended
-                    treatmentsInterface.extendedBolusStop(now);
+                    treatmentsInterface.extendedBolusStop(now - 1000);
                     // Create new
-                    TempExBasal newExtended = new TempExBasal();
-                    newExtended.timeStart = new Date(now);
-                    newExtended.absolute = pump.extendedBolusAbsoluteRate;
-                    newExtended.isAbsolute = true;
-                    newExtended.duration = pump.extendedBolusMinutes;
-                    newExtended.isExtended = true;
+                    ExtendedBolus newExtended = new ExtendedBolus();
+                    newExtended.date = new Date(now).getTime();
+                    newExtended.insulin = pump.extendedBolusAmount;
+                    newExtended.durationInMinutes = pump.extendedBolusMinutes;
                     treatmentsInterface.extendedBolusStart(newExtended);
                 }
             } else {
@@ -90,12 +88,10 @@ public class MsgStatusBolusExtended extends MessageBase {
         } else {
             if (pump.isExtendedInProgress) {
                 // Create new
-                TempExBasal newExtended = new TempExBasal();
-                newExtended.timeStart = new Date(now);
-                newExtended.absolute = pump.extendedBolusAbsoluteRate;
-                newExtended.isAbsolute = true;
-                newExtended.duration = pump.extendedBolusMinutes;
-                newExtended.isExtended = true;
+                ExtendedBolus newExtended = new ExtendedBolus();
+                newExtended.date = new Date(now).getTime();
+                newExtended.insulin = pump.extendedBolusAmount;
+                newExtended.durationInMinutes = pump.extendedBolusMinutes;
                 treatmentsInterface.extendedBolusStart(newExtended);
             }
         }

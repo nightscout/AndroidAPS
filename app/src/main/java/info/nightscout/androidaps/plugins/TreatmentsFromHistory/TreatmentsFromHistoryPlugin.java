@@ -11,15 +11,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
+import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -28,6 +30,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.utils.OverlappingIntervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -40,8 +43,8 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     public static IobTotal lastTempBasalsCalculation;
 
     public static List<Treatment> treatments;
-    private static List<TempExBasal> tempBasals;
-    private static List<TempExBasal> extendedBoluses;
+    private static OverlappingIntervals<TemporaryBasal> tempBasals = new OverlappingIntervals<>();
+    private static OverlappingIntervals<ExtendedBolus> extendedBoluses = new OverlappingIntervals<>();
 
     private static boolean fragmentEnabled = true;
     private static boolean fragmentVisible = true;
@@ -59,7 +62,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Override
     public String getName() {
-        return MainApp.instance().getString(R.string.treatments);
+        return MainApp.instance().getString(R.string.treatments) + "FromHistory"; // TODO: remove later
     }
 
     @Override
@@ -117,66 +120,41 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     public TreatmentsFromHistoryPlugin() {
         MainApp.bus().register(this);
-        initializeData();
+        initializeTempBasalData();
+        initializeTreatmentData();
+        initializeExtendedBolusData();
     }
 
-    public static void initializeData() {
+     public static void initializeTreatmentData() {
         // Treatments
         double dia = Constants.defaultDIA;
         if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
             dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
+
         treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
-
-        // Temp basals
-        tempBasals = MainApp.getDbHelper().getTempbasalsDataFromTime(fromMills, false, false);
-        extendedBoluses = MainApp.getDbHelper().getTempbasalsDataFromTime(fromMills, false, true);
-
-        // Update ended
-        checkForExpiredExtended();
-        checkForExpiredTemps();
     }
 
-    public static void checkForExpiredTemps() {
-        checkForExpired(tempBasals);
+     public static void initializeTempBasalData() {
+        // Treatments
+        double dia = Constants.defaultDIA;
+        if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
+            dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
+        long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
+
+        tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(fromMills, false));
+
     }
 
-    public static void checkForExpiredExtended() {
-        checkForExpired(extendedBoluses);
-    }
+     public static void initializeExtendedBolusData() {
+        // Treatments
+        double dia = Constants.defaultDIA;
+        if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
+            dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
+        long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
 
-    private static void checkForExpired(List<TempExBasal> list) {
-        long now = new Date().getTime();
-        for (int position = list.size() - 1; position >= 0; position--) {
-            TempExBasal t = list.get(position);
-            boolean update = false;
-            if (t.timeEnd == null && t.getPlannedTimeEnd() < now) {
-                t.timeEnd = new Date(t.getPlannedTimeEnd());
-                if (Config.logTempBasalsCut)
-                    log.debug("Add timeEnd to old record");
-                update = true;
-            }
-            if (position > 0) {
-                Date startofnewer = list.get(position - 1).timeStart;
-                if (t.timeEnd == null) {
-                    t.timeEnd = new Date(Math.min(startofnewer.getTime(), t.getPlannedTimeEnd()));
-                    if (Config.logTempBasalsCut)
-                        log.debug("Add timeEnd to old record");
-                    update = true;
-                } else if (t.timeEnd.getTime() > startofnewer.getTime()) {
-                    t.timeEnd = startofnewer;
-                    update = true;
-                }
-            }
-            if (update) {
-                MainApp.getDbHelper().update(t);
-                if (Config.logTempBasalsCut) {
-                    log.debug("Fixing unfinished temp end: " + t.log());
-                    if (position > 0)
-                        log.debug("Previous: " + list.get(position - 1).log());
-                }
-            }
-        }
+        extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(fromMills, false));
+
     }
 
     @Override
@@ -206,11 +184,10 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
             total.bolussnooze += bIOB.iobContrib;
         }
 
-        checkForExpired(extendedBoluses);
         for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
-            TempExBasal t = extendedBoluses.get(pos);
-            if (t.timeStart.getTime() > time) continue;
-            IobTotal calc = t.iobCalc(time);
+            ExtendedBolus e = extendedBoluses.get(pos);
+            if (e.date > time) continue;
+            IobTotal calc = e.iobCalc(time);
             total.plus(calc);
         }
         return total;
@@ -274,7 +251,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     }
 
     @Override
-    public TempExBasal getRealTempBasal(long time) {
+    public TemporaryBasal getRealTempBasal(long time) {
         return null;
     }
 
@@ -290,7 +267,19 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
-        initializeData();
+        initializeTreatmentData();
+        updateTotalIOBTreatments();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventTempBasalChange ev) {
+        initializeTempBasalData();
+        updateTotalIOBTempBasals();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
+        initializeExtendedBolusData();
         updateTotalIOBTreatments();
     }
 
@@ -301,11 +290,10 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Override
     public IobTotal getCalculationToTimeTempBasals(long time) {
-        checkForExpired(tempBasals);
         IobTotal total = new IobTotal(time);
         for (Integer pos = 0; pos < tempBasals.size(); pos++) {
-            TempExBasal t = tempBasals.get(pos);
-            if (t.timeStart.getTime() > time) continue;
+            TemporaryBasal t = tempBasals.get(pos);
+            if (t.date > time) continue;
             IobTotal calc = t.iobCalc(time);
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
             total.plus(calc);
@@ -322,44 +310,44 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Nullable
     @Override
-    public TempExBasal getTempBasal(long time) {
-        checkForExpired(tempBasals);
-        for (TempExBasal t : tempBasals) {
-            if (t.isInProgress(time)) return t;
-        }
-        return null;
+    public TemporaryBasal getTempBasal(long time) {
+        return (TemporaryBasal) tempBasals.getValueByInterval(time);
     }
 
     @Override
-    public TempExBasal getExtendedBolus(long time) {
-        checkForExpired(extendedBoluses);
-        for (TempExBasal t : extendedBoluses) {
-            if (t.isInProgress(time)) return t;
-        }
-        return null;
+    public ExtendedBolus getExtendedBolus(long time) {
+        return (ExtendedBolus) extendedBoluses.getValueByInterval(time);
     }
 
     @Override
-    public void extendedBolusStart(TempExBasal extendedBolus) {
-
+    public void extendedBolusStart(ExtendedBolus extendedBolus) {
+        MainApp.getDbHelper().create(extendedBolus);
     }
 
     @Override
     public void extendedBolusStop(long time) {
+        ExtendedBolus extendedBolus = new ExtendedBolus();
+        extendedBolus.date = time;
+        extendedBolus.durationInMinutes = 0;
+        MainApp.getDbHelper().create(extendedBolus);
+    }
 
+    @Override
+    public OverlappingIntervals<ExtendedBolus> getExtendedBoluses() {
+        return extendedBoluses;
     }
 
     @Override
     public double getTempBasalAbsoluteRate() {
         PumpInterface pump = MainApp.getConfigBuilder();
 
-        TempExBasal tb = getTempBasal(new Date().getTime());
+        TemporaryBasal tb = getTempBasal(new Date().getTime());
         if (tb != null) {
             if (tb.isAbsolute) {
-                return tb.absolute;
+                return tb.absoluteRate;
             } else {
                 Double baseRate = pump.getBaseBasalRate();
-                Double tempRate = baseRate * (tb.percent / 100d);
+                Double tempRate = baseRate * (tb.percentRate / 100d);
                 return tempRate;
             }
         }
@@ -374,24 +362,34 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     }
 
     @Override
-    public void tempBasalStart(TempExBasal tempBasal) {
+    public OverlappingIntervals<TemporaryBasal> getTemporaryBasals() {
+        return tempBasals;
+    }
 
+    @Override
+    public void tempBasalStart(TemporaryBasal tempBasal) {
+        MainApp.getDbHelper().create(tempBasal);
     }
 
     @Override
     public void tempBasalStop(long time) {
-
+        TemporaryBasal temporaryBasal = new TemporaryBasal();
+        temporaryBasal.date = time;
+        temporaryBasal.durationInMinutes = 0;
+        MainApp.getDbHelper().create(temporaryBasal);
     }
 
     @Override
     public long oldestDataAvaialable() {
-        long oldestTemp = new Date().getTime();
+        long oldestTime = new Date().getTime();
         if (tempBasals.size() > 0)
-            oldestTemp = Math.min(oldestTemp, tempBasals.get(tempBasals.size() - 1).timeStart.getTime());
+            oldestTime = Math.min(oldestTime, tempBasals.get(0).date);
         if (extendedBoluses.size() > 0)
-            oldestTemp = Math.min(oldestTemp, extendedBoluses.get(extendedBoluses.size() - 1).timeStart.getTime());
-        oldestTemp -= 15 * 60 * 1000L; // allow 15 min before
-        return oldestTemp;
+            oldestTime = Math.min(oldestTime, extendedBoluses.get(0).date);
+        if (treatments.size() > 0)
+            oldestTime = Math.min(oldestTime, extendedBoluses.get(treatments.size() - 1).date);
+        oldestTime -= 15 * 60 * 1000L; // allow 15 min before
+        return oldestTime;
     }
 
 }

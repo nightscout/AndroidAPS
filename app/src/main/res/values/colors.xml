@@ -37,7 +37,7 @@
     <color name="colorTempTargetButton">#d43429</color>
 
     <color name="colorInProgress">#c45026</color>
-    <color name="colorAffectingIOB">#830400</color>
+    <color name="colorActive">#1b5e20</color>
     <color name="colorNotEnded">#190084</color>
 
     <color name="colorPumpLabel">#779ECB</color>

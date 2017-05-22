@@ -2,10 +2,12 @@ package info.nightscout.androidaps.interfaces;
 
 import java.util.List;
 
-import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.TempExBasal;
-import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.utils.OverlappingIntervals;
 
 /**
  * Created by mike on 14.06.2016.
@@ -27,21 +29,23 @@ public interface TreatmentsInterface {
 
     // real basals on pump
     boolean isRealTempBasalInProgress();
-    TempExBasal getRealTempBasal (long time);
+    TemporaryBasal getRealTempBasal (long time);
 
-    void tempBasalStart(TempExBasal tempBasal);
+    void tempBasalStart(TemporaryBasal tempBasal);
     void tempBasalStop(long time);
 
     // basal that can be faked by extended boluses
     boolean isTempBasalInProgress();
-    TempExBasal getTempBasal (long time);
+    TemporaryBasal getTempBasal (long time);
     double getTempBasalAbsoluteRate();
     double getTempBasalRemainingMinutes();
+    OverlappingIntervals<TemporaryBasal> getTemporaryBasals();
 
     boolean isExtendedBoluslInProgress();
-    TempExBasal getExtendedBolus (long time);
-    void extendedBolusStart(TempExBasal extendedBolus);
+    ExtendedBolus getExtendedBolus (long time);
+    void extendedBolusStart(ExtendedBolus extendedBolus);
     void extendedBolusStop(long time);
+    OverlappingIntervals<ExtendedBolus> getExtendedBoluses();
 
     long oldestDataAvaialable();
 

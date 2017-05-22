@@ -45,6 +45,18 @@ public class TemporaryBasal implements Interval {
     @DatabaseField
     public double absoluteRate = 0d;
 
+    public TemporaryBasal() {}
+
+    public TemporaryBasal(ExtendedBolus extendedBolus) {
+        this.date = extendedBolus.date;
+        this.isValid = extendedBolus.isValid;
+        this.source = extendedBolus.source;
+        this._id = extendedBolus._id;
+        this.durationInMinutes = extendedBolus.durationInMinutes;
+        this.isAbsolute = true;
+        this.absoluteRate = extendedBolus.absoluteRate();
+    }
+
     // -------- Interval interface ---------
 
     Long cuttedEnd = null;
@@ -167,7 +179,7 @@ public class TemporaryBasal implements Interval {
         return match(new Date().getTime());
     }
 
-    public double tempBasalConvertedToAbsolute(Date time) {
+    public double tempBasalConvertedToAbsolute(long time) {
         if (isAbsolute) return absoluteRate;
         else {
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();

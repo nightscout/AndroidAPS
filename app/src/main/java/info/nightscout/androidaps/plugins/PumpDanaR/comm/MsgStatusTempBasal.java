@@ -9,7 +9,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -63,18 +63,17 @@ public class MsgStatusTempBasal extends MessageBase {
         long now = new Date().getTime();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TempExBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
+            TemporaryBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
             if (danaRPump.isTempBasalInProgress) {
-                if (tempBasal.percent != danaRPump.tempBasalPercent) {
+                if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal
-                    treatmentsInterface.tempBasalStop(now);
+                    treatmentsInterface.tempBasalStop(now - 1000);
                     // Create new
-                    TempExBasal newTempBasal = new TempExBasal();
-                    newTempBasal.timeStart = new Date(now);
-                    newTempBasal.percent = danaRPump.tempBasalPercent;
+                    TemporaryBasal newTempBasal = new TemporaryBasal();
+                    newTempBasal.date = new Date(now).getTime();
+                    newTempBasal.percentRate = danaRPump.tempBasalPercent;
                     newTempBasal.isAbsolute = false;
-                    newTempBasal.duration = danaRPump.tempBasalTotalSec / 60;
-                    newTempBasal.isExtended = false;
+                    newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
                     treatmentsInterface.tempBasalStart(newTempBasal);
                 }
             } else {
@@ -84,12 +83,11 @@ public class MsgStatusTempBasal extends MessageBase {
         } else {
             if (danaRPump.isTempBasalInProgress) {
                 // Create new
-                TempExBasal newTempBasal = new TempExBasal();
-                newTempBasal.timeStart = new Date(now);
-                newTempBasal.percent = danaRPump.tempBasalPercent;
+                TemporaryBasal newTempBasal = new TemporaryBasal();
+                newTempBasal.date = new Date(now).getTime();
+                newTempBasal.percentRate = danaRPump.tempBasalPercent;
                 newTempBasal.isAbsolute = false;
-                newTempBasal.duration = danaRPump.tempBasalTotalSec / 60;
-                newTempBasal.isExtended = false;
+                newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
                 treatmentsInterface.tempBasalStart(newTempBasal);
             }
         }

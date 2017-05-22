@@ -14,7 +14,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -109,13 +109,14 @@ public class StatuslinePlugin implements PluginBase {
             if (fragmentEnabled) {
                 try {
                     MainApp.bus().register(this);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
                 sendStatus();
-            }
-            else{
+            } else {
                 try {
                     MainApp.bus().unregister(this);
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
                 sendStatus();
             }
         }
@@ -130,9 +131,9 @@ public class StatuslinePlugin implements PluginBase {
     private void sendStatus() {
 
 
-        String status =  ""; // sent once on disable
+        String status = ""; // sent once on disable
 
-        if(fragmentEnabled) {
+        if (fragmentEnabled) {
             status = buildStatusString();
         }
 
@@ -164,7 +165,7 @@ public class StatuslinePlugin implements PluginBase {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TempExBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
+            TemporaryBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
             if (shortString) {
                 status += activeTemp.toStringShort();
             } else {
@@ -186,13 +187,13 @@ public class StatuslinePlugin implements PluginBase {
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (!mPrefs.getBoolean("xdripstatus_showbgi", false) ||profile == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getIc(NSProfile.secondsFromMidnight()) == null) {
+        if (!mPrefs.getBoolean("xdripstatus_showbgi", false) || profile == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getIc(NSProfile.secondsFromMidnight()) == null) {
             return status;
         }
 
-        double bgi = -(bolusIob.activity + basalIob.activity)*5*profile.getIsf(NSProfile.secondsFromMidnight());
+        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf(NSProfile.secondsFromMidnight());
 
-        status += " " + ((bgi>=0)?"+":"") + DecimalFormatter.to2Decimal(bgi);
+        status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
 
         return status;
     }

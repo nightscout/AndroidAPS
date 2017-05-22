@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.Treatments.fragments;
+package info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,20 +25,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
-import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.db.TempExBasal;
+import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.OverlappingIntervals;
 
 
-public class TreatmentsTempBasalsFragment extends Fragment {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsTempBasalsFragment.class);
+public class TreatmentsTemporaryBasalsFragment extends Fragment {
+    private static Logger log = LoggerFactory.getLogger(TreatmentsTemporaryBasalsFragment.class);
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -49,9 +50,9 @@ public class TreatmentsTempBasalsFragment extends Fragment {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 
-        List<TempExBasal> tempBasalList;
+        OverlappingIntervals<TemporaryBasal> tempBasalList;
 
-        RecyclerViewAdapter(List<TempExBasal> tempBasalList) {
+        RecyclerViewAdapter(OverlappingIntervals<TemporaryBasal> tempBasalList) {
             this.tempBasalList = tempBasalList;
         }
 
@@ -63,34 +64,31 @@ public class TreatmentsTempBasalsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
-            TempExBasal tempBasal = tempBasalList.get(position);
-            if (tempBasal.timeEnd != null) {
-                holder.date.setText(DateUtil.dateAndTimeString(tempBasal.timeStart) + " - " + DateUtil.timeString(tempBasalList.get(position).timeEnd));
+            TemporaryBasal tempBasal = tempBasalList.getReversed(position);
+            if (tempBasal.isInProgress()) {
+                holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
             } else {
-                holder.date.setText(DateUtil.dateAndTimeString(tempBasal.timeStart));
+                holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date) + " - " + DateUtil.timeString(tempBasalList.get(position).end()));
             }
-            holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.duration) + " min");
+            holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
             if (tempBasal.isAbsolute) {
-                holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.timeStart)) + " U/h");
+                holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date)) + " U/h");
                 holder.percent.setText("");
             } else {
                 holder.absolute.setText("");
-                holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percent) + "%");
+                holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");
             }
             holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
             IobTotal iob = tempBasal.iobCalc(new Date().getTime());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
             holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
             holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
-            holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
+            //holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
+            holder.extendedFlag.setVisibility(View.GONE);
             if (tempBasal.isInProgress())
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
-            else if (tempBasal.timeEnd == null)
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorNotEnded));
-            else if (tempBasal.iobCalc(new Date().getTime()).basaliob != 0)
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorAffectingIOB));
-            else
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.cardColorBackground));
+                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+            if (tempBasal.iobCalc(new Date().getTime()).basaliob != 0)
+                holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             holder.remove.setTag(tempBasal);
         }
 
@@ -115,7 +113,6 @@ public class TreatmentsTempBasalsFragment extends Fragment {
             TextView netInsulin;
             TextView iob;
             TextView extendedFlag;
-            LinearLayout dateLinearLayout;
             TextView remove;
 
             TempBasalsViewHolder(View itemView) {
@@ -130,7 +127,6 @@ public class TreatmentsTempBasalsFragment extends Fragment {
                 netInsulin = (TextView) itemView.findViewById(R.id.tempbasals_netinsulin);
                 iob = (TextView) itemView.findViewById(R.id.tempbasals_iob);
                 extendedFlag = (TextView) itemView.findViewById(R.id.tempbasals_extendedflag);
-                dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.tempbasals_datelinearlayout);
                 remove = (TextView) itemView.findViewById(R.id.tempbasals_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -138,12 +134,12 @@ public class TreatmentsTempBasalsFragment extends Fragment {
 
             @Override
             public void onClick(View v) {
-                final TempExBasal tempBasal = (TempExBasal) v.getTag();
+                final TemporaryBasal tempBasal = (TemporaryBasal) v.getTag();
                 switch (v.getId()) {
                     case R.id.tempbasals_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                         builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempBasal.timeStart));
+                        builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempBasal.date));
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 // TODO: handle this in NS too
@@ -152,8 +148,6 @@ public class TreatmentsTempBasalsFragment extends Fragment {
                                 //    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
                                 //}
                                 MainApp.getDbHelper().delete(tempBasal);
-                                TreatmentsPlugin.initializeData();
-                                updateGUI();
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));
                             }
                         });
@@ -175,7 +169,7 @@ public class TreatmentsTempBasalsFragment extends Fragment {
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.getMergedList());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getTemporaryBasals());
         recyclerView.setAdapter(adapter);
 
         tempBasalTotalView = (TextView) view.findViewById(R.id.tempbasals_totaltempiob);
@@ -203,15 +197,20 @@ public class TreatmentsTempBasalsFragment extends Fragment {
         updateGUI();
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventNewBG ev) {
+        updateGUI();
+    }
+
     public void updateGUI() {
         Activity activity = getActivity();
         if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.getMergedList()), false);
-                    if (TreatmentsPlugin.lastTempBasalsCalculation != null) {
-                        String totalText = DecimalFormatter.to2Decimal(TreatmentsPlugin.lastTempBasalsCalculation.basaliob) + " U";
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getTemporaryBasals()), false);
+                    if (MainApp.getConfigBuilder().getLastCalculationTempBasals() != null) {
+                        String totalText = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getLastCalculationTempBasals().basaliob) + " U";
                         tempBasalTotalView.setText(totalText);
                     }
                 }

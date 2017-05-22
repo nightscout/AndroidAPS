@@ -67,8 +67,8 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
-import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -898,7 +898,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             calibrationButton.setVisibility(View.GONE);
         }
 
-        TempExBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             cancelTempButton.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
@@ -1084,13 +1084,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
-                TempExBasal tb = MainApp.getConfigBuilder().getTempBasal(time);
+                TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasal(time);
                 double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
                 double baseLineValue = baseBasalValue;
                 double tempBasalValue = 0;
                 double basal = 0d;
                 if (tb != null) {
-                    tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time));
+                    tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time).getTime());
                     if (tempBasalValue != lastTempBasal) {
                         tempBasalArray.add(new DataPoint(time, lastTempBasal));
                         tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
