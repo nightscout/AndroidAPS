@@ -530,9 +530,11 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         suspendWaitingForConfirmation.processed = true;
                         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
                         activeloop.suspendTo(new Date().getTime() + suspendWaitingForConfirmation.duration * 60L * 1000);
+                        PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
                         ConfigBuilderPlugin.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
                         MainApp.bus().post(new EventRefreshGui(false));
-                        reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended);
+                        reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +
+                                MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);
                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else {
                         sendSMS(new Sms(receivedSms.phoneNumber, MainApp.sResources.getString(R.string.smscommunicator_unknowncommand), new Date()));
