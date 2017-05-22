@@ -377,7 +377,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     //  -------------------- TREATMENT HANDLING -------------------
 
-    public boolean affectingIobCob(Treatment t) {
+    public boolean changeAffectingIobCob(Treatment t) {
         Treatment existing = findTreatmentByTimeIndex(t.date);
         if (existing == null)
             return true;
@@ -387,9 +387,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public int update(Treatment treatment) {
+        treatment.date = treatment.date - treatment.date % 1000;
         int updated = 0;
         try {
-            boolean historyChange = affectingIobCob(treatment);
+            boolean historyChange = changeAffectingIobCob(treatment);
             updated = getDaoTreatments().update(treatment);
             if (historyChange)
                 latestTreatmentChange = treatment.date;
@@ -401,9 +402,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public Dao.CreateOrUpdateStatus createOrUpdate(Treatment treatment) {
+        treatment.date = treatment.date - treatment.date % 1000;
         Dao.CreateOrUpdateStatus status = null;
         try {
-            boolean historyChange = affectingIobCob(treatment);
+            boolean historyChange = changeAffectingIobCob(treatment);
             status = getDaoTreatments().createOrUpdate(treatment);
             if (historyChange)
                 latestTreatmentChange = treatment.date;
@@ -415,6 +417,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public void create(Treatment treatment) {
+        treatment.date = treatment.date - treatment.date % 1000;
         try {
             getDaoTreatments().create(treatment);
             latestTreatmentChange = treatment.date;
@@ -511,12 +514,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 scheduledTratmentPost = null;
             }
         }
-        // prepare task for execution in 5 sec
+        // prepare task for execution in 1 sec
         // cancel waiting task to prevent sending multiple posts
         if (scheduledTratmentPost != null)
             scheduledTratmentPost.cancel(false);
         Runnable task = new PostRunnable();
-        final int sec = 5;
+        final int sec = 1;
         scheduledTratmentPost = treatmentsWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
@@ -708,6 +711,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     public void create(TemporaryBasal tempBasal) {
+        tempBasal.date = tempBasal.date - tempBasal.date % 1000;
         try {
             getDaoTemporaryBasal().create(tempBasal);
             latestTreatmentChange = tempBasal.date;
@@ -750,12 +754,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 scheduledTemBasalsPost = null;
             }
         }
-        // prepare task for execution in 5 sec
+        // prepare task for execution in 1 sec
         // cancel waiting task to prevent sending multiple posts
         if (scheduledTemBasalsPost != null)
             scheduledTemBasalsPost.cancel(false);
         Runnable task = new PostRunnable();
-        final int sec = 5;
+        final int sec = 1;
         scheduledTemBasalsPost = tempBasalsWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }
@@ -817,12 +821,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 scheduledExtendedBolusPost = null;
             }
         }
-        // prepare task for execution in 5 sec
+        // prepare task for execution in 1 sec
         // cancel waiting task to prevent sending multiple posts
         if (scheduledExtendedBolusPost != null)
             scheduledExtendedBolusPost.cancel(false);
         Runnable task = new PostRunnable();
-        final int sec = 5;
+        final int sec = 1;
         scheduledExtendedBolusPost = extendedBolusWorker.schedule(task, sec, TimeUnit.SECONDS);
 
     }

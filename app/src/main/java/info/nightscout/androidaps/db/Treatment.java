@@ -73,7 +73,7 @@ public class Treatment implements DataPointWithLabelInterface {
     public String log() {
         return "Treatment{" +
                 "date= " + date +
-                "date= " + DateUtil.dateAndTimeString(date) +
+                ", date= " + DateUtil.dateAndTimeString(date) +
                 ", isValid= " + isValid +
                 ", _id= " + _id +
                 ", insulin= " + insulin +

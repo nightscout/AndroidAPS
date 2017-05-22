@@ -32,7 +32,7 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
     <string name="treatments_activity_string">Activity:</string>
-    <string name="treatments_iobtotal_label_string">Toal IOB:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Total IOB activity:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>

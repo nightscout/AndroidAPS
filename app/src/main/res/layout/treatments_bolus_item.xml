@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/cardColorBackground"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:contentPadding="6dp">
+    card_view:cardBackgroundColor="?android:colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +13,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/treatments_datelinearlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
@@ -28,29 +24,22 @@
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical|right"
                 android:paddingLeft="10dp"
-                android:text="{fa-clock-o}"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/cardItemLabel" />
+                android:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/treatments_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textColor="@color/cardItemLabel"
-                android:textStyle="bold" />
+                android:paddingLeft="5dp" />
 
             <TextView
-                android:text="Meal"
+                android:id="@+id/treatments_mealorcorrection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/treatments_mealorcorrection"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                android:textAlignment="textEnd"
-                android:textColor="@color/mdtp_red"
-                android:layout_marginRight="5dp" />
+                android:text="Meal"
+                android:textAlignment="textEnd" />
 
 
         </LinearLayout>
@@ -138,12 +127,23 @@
                 android:id="@+id/treatments_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
 
     </LinearLayout>
 

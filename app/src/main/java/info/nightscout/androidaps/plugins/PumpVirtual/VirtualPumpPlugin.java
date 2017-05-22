@@ -221,7 +221,6 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
         }
-
         if (Config.logPumpComm)
             log.debug("Delivering treatment insulin: " + insulin + "U carbs: " + carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());

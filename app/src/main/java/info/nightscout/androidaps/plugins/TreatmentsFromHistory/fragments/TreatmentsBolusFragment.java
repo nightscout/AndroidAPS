@@ -16,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -34,6 +33,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
@@ -65,7 +65,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
 
         @Override
         public TreatmentsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_bolus_item, viewGroup, false);
             return new TreatmentsViewHolder(v);
         }
 
@@ -84,9 +84,9 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(treatments.get(position).mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
             if (iob.iobContrib != 0)
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+                holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.cardColorBackground));
+                holder.iob.setTextColor(holder.carbs.getCurrentTextColor());
             holder.remove.setTag(treatments.get(position));
         }
 
@@ -108,7 +108,6 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             TextView iob;
             TextView activity;
             TextView mealOrCorrection;
-            LinearLayout dateLinearLayout;
             TextView remove;
 
             TreatmentsViewHolder(View itemView) {
@@ -120,7 +119,6 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                 iob = (TextView) itemView.findViewById(R.id.treatments_iob);
                 activity = (TextView) itemView.findViewById(R.id.treatments_activity);
                 mealOrCorrection = (TextView) itemView.findViewById(R.id.treatments_mealorcorrection);
-                dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.treatments_datelinearlayout);
                 remove = (TextView) itemView.findViewById(R.id.treatments_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -218,6 +216,11 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
 
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
+        updateGUI();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventNewBG ev) {
         updateGUI();
     }
 

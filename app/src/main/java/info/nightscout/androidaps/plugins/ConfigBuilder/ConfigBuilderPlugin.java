@@ -504,25 +504,15 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 Treatment t = new Treatment(insulinType);
                 t.insulin = result.bolusDelivered;
                 t.carbs = (double) result.carbsDelivered;
-                t.date = new Date().getDate();
+                t.date = new Date().getTime();
                 t.mealBolus = t.carbs > 0;
                 MainApp.getDbHelper().create(t);
                 t.sendToNSClient();
             }
         } else {
-            if (Config.logCongigBuilderActions)
-                log.debug("Creating treatment: " + insulin + " carbs: " + carbs);
-            Treatment t = new Treatment(insulinType);
-            t.insulin = insulin;
-            t.carbs = (double) carbs;
-            t.date = new Date().getDate();
-            t.mealBolus = t.carbs > 0;
-            MainApp.getDbHelper().create(t);
-            t.sendToNSClient();
+            log.error("activePump==null");
             result = new PumpEnactResult();
-            result.success = true;
-            result.bolusDelivered = insulin;
-            result.carbsDelivered = carbs;
+            result.success = false;
         }
         mWakeLock.release();
         return result;

@@ -14,7 +14,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -32,7 +31,6 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.OverlappingIntervals;
@@ -58,7 +56,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
 
         @Override
         public TempBasalsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.tempbasals_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_tempbasals_item, viewGroup, false);
             return new TempBasalsViewHolder(v);
         }
 
@@ -87,8 +85,12 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
             holder.extendedFlag.setVisibility(View.GONE);
             if (tempBasal.isInProgress())
                 holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+            else
+                holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
             if (tempBasal.iobCalc(new Date().getTime()).basaliob != 0)
                 holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+            else
+                holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
             holder.remove.setTag(tempBasal);
         }
 
@@ -162,7 +164,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.tempbasals_fragment, container, false);
+        View view = inflater.inflate(R.layout.treatments_tempbasals_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.tempbasals_recyclerview);
         recyclerView.setHasFixedSize(true);
