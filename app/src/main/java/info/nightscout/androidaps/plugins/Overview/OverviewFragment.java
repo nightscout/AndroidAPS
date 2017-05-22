@@ -366,6 +366,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
             scheduleUpdateGUI("suspendmenu");
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                    if (!result.success) {
+                        ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
+                    }
+                }
+            });
             ConfigBuilderPlugin.uploadOpenAPSOffline(60); // upload 60 min, we don;t know real duration
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.enableloop))) {

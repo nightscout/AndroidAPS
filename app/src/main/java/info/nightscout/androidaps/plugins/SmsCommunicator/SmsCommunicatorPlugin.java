@@ -277,7 +277,10 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
-                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled);
+                                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                                    MainApp.bus().post(new EventRefreshGui(false));
+                                    reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled)+ " " +
+                                            MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                 }
                                 receivedSms.processed = true;
