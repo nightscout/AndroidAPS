@@ -28,7 +28,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
-import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
@@ -50,7 +49,6 @@ import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
@@ -192,12 +190,7 @@ public class DataService extends IntentService {
         if (Config.logIncommingBG)
             log.debug("XDRIPREC BG " + bgReading.toString());
 
-        try {
-            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        MainApp.bus().post(new EventNewBG());
+        MainApp.getDbHelper().createIfNotExists(bgReading);
     }
 
     private void handleNewDataFromGlimp(Intent intent) {
@@ -215,12 +208,7 @@ public class DataService extends IntentService {
             log.debug(bundle.toString());
             log.debug("GLIMP BG " + bgReading.toString());
 
-        try {
-            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        MainApp.bus().post(new EventNewBG());
+        MainApp.getDbHelper().createIfNotExists(bgReading);
     }
 
     private void handleNewDataFromMM640g(Intent intent) {
@@ -257,11 +245,7 @@ public class DataService extends IntentService {
                                 if (Config.logIncommingBG)
                                     log.debug("MM640g BG " + bgReading.toString());
 
-                                try {
-                                    MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
-                                }
+                                MainApp.getDbHelper().createIfNotExists(bgReading);
                                 break;
                             default:
                                 log.debug("Unknown entries type: " + type);
@@ -272,7 +256,6 @@ public class DataService extends IntentService {
                 }
             }
         }
-        MainApp.bus().post(new EventNewBG());
     }
 
     private void handleNewDataFromNSClient(Intent intent) {
@@ -423,7 +406,7 @@ public class DataService extends IntentService {
                     String trstring = bundles.getString("treatment");
                     JSONObject trJson = new JSONObject(trstring);
                     String _id = trJson.getString("_id");
-                    MainApp.getDbHelper().delete(_id);
+                    MainApp.getDbHelper().deleteTreatmentById(_id);
                     handleRemoveTempTargetRecord(trJson);
                 }
 
@@ -433,7 +416,7 @@ public class DataService extends IntentService {
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject trJson = jsonArray.getJSONObject(i);
                         String _id = trJson.getString("_id");
-                        MainApp.getDbHelper().delete(_id);
+                        MainApp.getDbHelper().deleteTreatmentById(_id);
                         handleRemoveTempTargetRecord(trJson);
                     }
                 }
@@ -454,7 +437,7 @@ public class DataService extends IntentService {
                             log.debug("Ignoring old BG: " + bgReading.toString());
                         return;
                     }
-                    MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+                    MainApp.getDbHelper().createIfNotExists(bgReading);
                     if (Config.logIncommingData)
                         log.debug("ADD: Stored new BG: " + bgReading.toString());
                 }
@@ -470,7 +453,7 @@ public class DataService extends IntentService {
                             if (Config.logIncommingData)
                                 log.debug("Ignoring old BG: " + bgReading.toString());
                         } else {
-                            MainApp.getDbHelper().getDaoBgReadings().createIfNotExists(bgReading);
+                            MainApp.getDbHelper().createIfNotExists(bgReading);
                             if (Config.logIncommingData)
                                 log.debug("ADD: Stored new BG: " + bgReading.toString());
                         }
@@ -479,7 +462,6 @@ public class DataService extends IntentService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            MainApp.bus().post(new EventNewBG());
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_MBG)) {
@@ -571,7 +553,7 @@ public class DataService extends IntentService {
         if (stored != null) {
             if (Config.logIncommingData)
                 log.debug("CHANGE: Removing old: " + trstring);
-            MainApp.getDbHelper().delete(_id);
+            MainApp.getDbHelper().deleteTreatmentById(_id);
         }
 
         if (Config.logIncommingData)
@@ -605,27 +587,9 @@ public class DataService extends IntentService {
             log.debug("CHANGE: Stored treatment: " + treatment.log());
     }
 
-    public void handleDanaRHistoryRecords(JSONObject trJson) throws JSONException, SQLException {
+    public void handleDanaRHistoryRecords(JSONObject trJson) {
         if (trJson.has(DanaRNSHistorySync.DANARSIGNATURE)) {
-            Dao<DanaRHistoryRecord, String> daoHistoryRecords = MainApp.getDbHelper().getDaoDanaRHistory();
-            QueryBuilder<DanaRHistoryRecord, String> queryBuilder = daoHistoryRecords.queryBuilder();
-            Where where = queryBuilder.where();
-            where.ge("bytes", trJson.get(DanaRNSHistorySync.DANARSIGNATURE));
-            PreparedQuery<DanaRHistoryRecord> preparedQuery = queryBuilder.prepare();
-            List<DanaRHistoryRecord> list = daoHistoryRecords.query(preparedQuery);
-            if (list.size() == 0) {
-                // Record does not exists. Ignore
-            } else if (list.size() == 1) {
-                DanaRHistoryRecord record = list.get(0);
-                if (record._id == null || !record._id.equals(trJson.getString("_id"))) {
-                    if (Config.logIncommingData)
-                        log.debug("Updating _id in DanaR history database: " + trJson.getString("_id"));
-                    record._id = trJson.getString("_id");
-                    daoHistoryRecords.update(record);
-                } else {
-                    // already set
-                }
-            }
+            MainApp.getDbHelper().updateDanaRHistoryRecordId(trJson);
         }
     }
 
@@ -648,62 +612,16 @@ public class DataService extends IntentService {
         if (trJson.has("eventType") && trJson.getString("eventType").equals("Temporary Target")) {
             if (Config.logIncommingData)
                 log.debug("Processing TempTarget record: " + trJson.toString());
-            Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
-            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
-            List<TempTarget> list = daoTempTargets.query(preparedQuery);
-            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            if (profile == null) return; // no profile data, better ignore than do something wrong
-            String units = profile.getUnits();
-            if (list.size() == 0) {
-                // Record does not exists. add
-                TempTarget newRecord = new TempTarget();
-                newRecord.date = trJson.getLong("mills");
-                newRecord.durationInMinutes = trJson.getInt("duration");
-                newRecord.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
-                newRecord.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
-                newRecord.reason = trJson.getString("reason");
-                newRecord._id = trJson.getString("_id");
-                daoTempTargets.createIfNotExists(newRecord);
-                if (Config.logIncommingData)
-                    log.debug("Adding TempTarget record to database: " + newRecord.log());
-                MainApp.bus().post(new EventTempTargetRangeChange());
-            } else if (list.size() == 1) {
-                if (Config.logIncommingData)
-                    log.debug("Updating TempTarget record in database: " + trJson.getString("_id"));
-                TempTarget record = list.get(0);
-                record.date = trJson.getLong("mills");
-                record.durationInMinutes = trJson.getInt("duration");
-                record.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
-                record.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
-                record.reason = trJson.getString("reason");
-                record._id = trJson.getString("_id");
-                daoTempTargets.update(record);
-                MainApp.bus().post(new EventTempTargetRangeChange());
-            }
+            MainApp.getDbHelper().createFromJsonIfNotExists(trJson);
         }
     }
 
-    public void handleRemoveTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
+    public void handleRemoveTempTargetRecord(JSONObject trJson) {
         if (trJson.has("_id")) {
-            Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
-            QueryBuilder<TempTarget, Long> queryBuilder = daoTempTargets.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id"));
-            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
-            List<TempTarget> list = daoTempTargets.query(preparedQuery);
-
-            if (list.size() == 1) {
-                TempTarget record = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Removing TempTarget record from database: " + record.log());
-                daoTempTargets.delete(record);
-                MainApp.bus().post(new EventTempTargetRangeChange());
-            } else {
-                if (Config.logIncommingData)
-                    log.debug("TempTarget not found database: " + trJson.toString());
+            try {
+                MainApp.getDbHelper().deleteTempTargetById(trJson.getString("_id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         }
     }

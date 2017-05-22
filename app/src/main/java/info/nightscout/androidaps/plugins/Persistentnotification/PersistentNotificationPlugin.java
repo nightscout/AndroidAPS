@@ -19,6 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
@@ -121,7 +122,7 @@ public class PersistentNotificationPlugin implements PluginBase{
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
 
 
-        BgReading lastBG = GlucoseStatus.lastBg();
+        BgReading lastBG = DatabaseHelper.lastBg();
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
         if(profile != null && lastBG != null) {

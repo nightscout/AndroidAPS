@@ -152,13 +152,7 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
                                 if (_id != null && !_id.equals("")) {
                                     MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
                                 }
-                                try {
-                                    Dao<TempTarget, Long> daoTempTargets = MainApp.getDbHelper().getDaoTempTargets();
-                                    daoTempTargets.delete(tempTarget);
-                                    MainApp.bus().post(new EventTempTargetRangeChange());
-                                } catch (SQLException e) {
-                                    e.printStackTrace();
-                                }
+                                MainApp.getDbHelper().delete(tempTarget);
                             }
                         });
                         builder.setNegativeButton(MainApp.sResources.getString(R.string.cancel), null);

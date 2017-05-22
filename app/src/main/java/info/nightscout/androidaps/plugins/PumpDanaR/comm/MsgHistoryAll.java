@@ -143,12 +143,7 @@ public class MsgHistoryAll extends MessageBase {
                 break;
         }
 
-        try {
-            Dao<DanaRHistoryRecord, String> daoHistoryRecords = MainApp.getDbHelper().getDaoDanaRHistory();
-            daoHistoryRecords.createIfNotExists(danaRHistoryRecord);
-        } catch (SQLException e) {
-            log.error(e.getMessage(), e);
-        }
+        MainApp.getDbHelper().createIfNotExists(danaRHistoryRecord);
 
         ev.message = DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate);
         ev.message += " " + messageType;

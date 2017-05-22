@@ -28,6 +28,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -187,7 +188,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private void sendData() {
 
-        BgReading lastBG = GlucoseStatus.lastBg();
+        BgReading lastBG = DatabaseHelper.lastBg();
         if (lastBG != null) {
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
@@ -295,7 +296,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     private void resendData() {
         if(googleApiClient != null && !googleApiClient.isConnected() && !googleApiClient.isConnecting()) { googleApiConnect(); }
         long startTime = System.currentTimeMillis() - (long)(60000 * 60 * 5.5);
-        BgReading last_bg = GlucoseStatus.lastBg();
+        BgReading last_bg = DatabaseHelper.lastBg();
 
         if (last_bg == null) return;
 

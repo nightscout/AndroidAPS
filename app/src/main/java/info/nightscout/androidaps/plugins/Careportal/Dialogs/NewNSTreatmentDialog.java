@@ -53,7 +53,6 @@ import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SP;
@@ -659,13 +658,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                             tempTarget.low = 0;
                                             tempTarget.high = 0;
                                         }
-                                        Dao<TempTarget, Long> dao = MainApp.getDbHelper().getDaoTempTargets();
                                         log.debug("Creating new TempTarget db record: " + tempTarget.log());
-                                        dao.createIfNotExists(tempTarget);
-                                        MainApp.bus().post(new EventTempTargetRangeChange());
+                                        MainApp.getDbHelper().createIfNotExists(tempTarget);
                                         ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                                         Answers.getInstance().logCustom(new CustomEvent("TempTarget"));
-                                    } catch (JSONException | SQLException e) {
+                                    } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
                                 }

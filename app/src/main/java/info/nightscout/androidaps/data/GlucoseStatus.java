@@ -66,8 +66,6 @@ public class GlucoseStatus {
 
     @Nullable
     public static GlucoseStatus getGlucoseStatusData() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
-
         // load 45min
         long fromtime = (long) (new Date().getTime() - 60 * 1000L * 45);
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
@@ -141,48 +139,6 @@ public class GlucoseStatus {
         status.avgdelta = status.short_avgdelta; // for OpenAPS MA
 
         return status.round();
-    }
-
-    /*
-     * Return last BgReading from database or null if db is empty
-     */
-    @Nullable
-    public static BgReading lastBg() {
-        List<BgReading> bgList = null;
-
-        try {
-            Dao<BgReading, Long> daoBgReadings = MainApp.getDbHelper().getDaoBgReadings();
-            QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
-            queryBuilder.orderBy("date", false);
-            queryBuilder.limit(1L);
-            queryBuilder.where().gt("value", 38);
-            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
-            bgList = daoBgReadings.query(preparedQuery);
-
-        } catch (SQLException e) {
-            log.debug(e.getMessage(), e);
-        }
-        if (bgList != null && bgList.size() > 0)
-            return bgList.get(0);
-        else
-            return null;
-    }
-
-    /*
-     * Return bg reading if not old ( <9 min )
-     * or null if older
-     */
-    @Nullable
-    public static BgReading actualBg() {
-        BgReading lastBg = lastBg();
-
-        if (lastBg == null)
-            return null;
-
-        if (lastBg.date > new Date().getTime() - 9 * 60 * 1000)
-            return lastBg;
-
-        return null;
     }
 
     public static double average(ArrayList<Double> array) {

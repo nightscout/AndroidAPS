@@ -388,19 +388,8 @@ public class DanaRHistoryActivity extends Activity {
     }
 
     private void loadDataFromDB(byte type) {
-        try {
-            Dao<DanaRHistoryRecord, String> dao = MainApp.getDbHelper().getDaoDanaRHistory();
-            QueryBuilder<DanaRHistoryRecord, String> queryBuilder = dao.queryBuilder();
-            queryBuilder.orderBy("recordDate", false);
-            Where where = queryBuilder.where();
-            where.eq("recordCode", type);
-            queryBuilder.limit(200L);
-            PreparedQuery<DanaRHistoryRecord> preparedQuery = queryBuilder.prepare();
-            historyList = dao.query(preparedQuery);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            historyList = new ArrayList<>();
-        }
+        historyList = MainApp.getDbHelper().getDanaRHistoryRecordsByType(type);
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {

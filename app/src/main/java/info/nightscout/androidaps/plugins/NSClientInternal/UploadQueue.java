@@ -118,7 +118,7 @@ public class UploadQueue {
         String result = "";
         CloseableIterator<DbRequest> iterator = null;
         try {
-            iterator = MainApp.getDbHelper().getDaoDbRequest().closeableIterator();
+            iterator = MainApp.getDbHelper().getDbRequestInterator();
             try {
                 while (iterator.hasNext()) {
                     DbRequest dbr = iterator.next();

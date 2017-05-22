@@ -66,6 +66,7 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempExBasal;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.Treatment;
@@ -546,7 +547,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     void onClickQuickwizard() {
-        final BgReading actualBg = GlucoseStatus.actualBg();
+        final BgReading actualBg = DatabaseHelper.actualBg();
         if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
             return;
         final NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
@@ -794,8 +795,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void updateGUI(String from) {
         log.debug("updateGUI entered from: " + from);
         updateNotifications();
-        BgReading actualBG = GlucoseStatus.actualBg();
-        BgReading lastBG = GlucoseStatus.lastBg();
+        BgReading actualBG = DatabaseHelper.actualBg();
+        BgReading lastBG = DatabaseHelper.lastBg();
 
         if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
             pumpStatusView.setText(R.string.noprofileset);
@@ -891,7 +892,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** Calibration button ****
-        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && GlucoseStatus.actualBg() != null) {
+        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
             calibrationButton.setVisibility(View.VISIBLE);
         } else {
             calibrationButton.setVisibility(View.GONE);

@@ -25,6 +25,7 @@ import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -231,8 +232,8 @@ public class SmsCommunicatorPlugin implements PluginBase {
         if (splited.length > 0) {
             switch (splited[0].toUpperCase()) {
                 case "BG":
-                    BgReading actualBG = GlucoseStatus.actualBg();
-                    BgReading lastBG = GlucoseStatus.lastBg();
+                    BgReading actualBG = DatabaseHelper.actualBg();
+                    BgReading lastBG = DatabaseHelper.lastBg();
 
                     if (ConfigBuilderPlugin.getActiveProfile() == null || ConfigBuilderPlugin.getActiveProfile().getProfile() == null) {
                         reply = MainApp.sResources.getString(R.string.noprofile);
