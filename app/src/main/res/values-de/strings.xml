@@ -114,7 +114,6 @@
     <string name="treatmentssafety_maxbolus_title">Max erlaubter Bolus</string>
     <string name="treatmentssafety_maxcarbs_title">Max erlaubte Kohlehydrate</string>
     <string name="treatmentssafety_title">Tratments Sicherheit</string>
-    <string name="tempbasals">Temp Basals</string>
     <string name="simpleprofile">Einfaches Profil</string>
     <string name="setextendedbolusquestion">Setze neuen extended Bolus:</string>
     <string name="setbasalquestion">Akzeptiere neue temp Basalrate:</string>
@@ -278,7 +277,6 @@
     <string name="fillbolus_title">Vorfüll-Standardmengen</string>
     <string name="fillwarning">Bitte vergewissern Sie sich, dass die Menge der Spezifikation des Katheters entspricht.</string>
     <string name="ns_upload_only">Zu NightScout nur hochladen (kein sync)</string>
-    <string name="ns_upload_only_enabled">Bitte deaktivieren Sie \"Zu NightScout nur hochladen\" um dieses Feature zu nutzen.</string>
     <string name="ns_upload_only_summary">Zu NightScout nur hochladen. Nicht wirksam bei SGV wenn nicht eine lokale Quelle wie xDrip gewählt wird.  Nicht wirksam bei Profilen, wenn NS-Profile verwendet werden.</string>
     <string name="othersettings_title">Andere</string>
     <string name="occlusion">Verstopfung</string>

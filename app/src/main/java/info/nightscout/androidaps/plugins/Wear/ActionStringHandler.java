@@ -21,7 +21,6 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -111,11 +110,6 @@ public class ActionStringHandler {
             boolean isMGDL = Boolean.parseBoolean(act[1]);
 
             NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
-            if (!(Config.APS && tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL))) {
-                sendError("TempTargets not possible! Please check your configuration.");
-                return;
-            }
             if (profile == null) {
                 sendError("No profile found!");
                 return;
@@ -281,14 +275,11 @@ public class ActionStringHandler {
         }
 
         //Check for Temp-Target:
-        TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
-        if (Config.APS && tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
-            TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
-            if (tempTarget != null) {
-                ret += "Temp Target: " + NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits());
-                ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
-                ret += "\n\n";
-            }
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTarget(new Date().getTime());
+        if (tempTarget != null) {
+            ret += "Temp Target: " + NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits());
+            ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
+            ret += "\n\n";
         }
 
         //Default Range/Target

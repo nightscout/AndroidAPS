@@ -128,7 +128,6 @@
     <string name="setextendedbolusquestion">Задай нов удължен болусs:</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="simpleprofile">Обикновен профил</string>
-    <string name="tempbasals">Временен базал</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Общо IOB:</string>
     <string name="tempbasals_netinsulin_label_string">Инс:</string>
@@ -344,7 +343,6 @@
     <string name="timeshift_hint">Брой часове, с които ще бъде преместен профила!</string>
     <string name="units">Мерни единици:</string>
     <string name="ns_upload_only">NS upload only (изключва синхронизацията)</string>
-    <string name="ns_upload_only_enabled">Моля изключете "NS upload only" за да използвате това.</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
     <string name="alert_dialog_storage_permission_text">Моля рестартирайте телефона или AndroidAPS, в противен случай информацията за грешки няма да се запише(важно за да се потвърди, че алгоритъмът работи правилно)</string>
     <string name="androidaps_tempbasalendnote">Край на временен базал</string>
@@ -420,7 +418,6 @@
     <string name="short_avgdelta">Краткоср. Δ:</string>
     <string name="short_tabtitles">Къси имена</string>
     <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
-    <string name="temptargetrange">Временна цел</string>
     <string name="temptargetrange_refreshfromnightscout">Обнови временни цели от NS</string>
     <string name="danar_stats_expweight">Експоненциално претеглена TDD</string>
     <string name="danar_stats_cumulative_tdd">Комулативна TDD</string>

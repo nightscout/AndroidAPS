@@ -34,11 +34,11 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -64,6 +64,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final ScheduledExecutorService tempBasalsWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTemBasalsPost = null;
+
+    private static final ScheduledExecutorService tempTargetWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledTemTargetPost = null;
 
     private static final ScheduledExecutorService extendedBolusWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledExtendedBolusPost = null;
@@ -173,6 +176,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTemporaryBasalChange();
         scheduleTreatmentChange();
         scheduleExtendedBolusChange();
+        scheduleTemporaryTargetChange();
     }
 
     public void resetTreatments() {
@@ -193,6 +197,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        scheduleTemporaryTargetChange();
     }
 
     public void resetTemporaryBasals() {
@@ -586,7 +591,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         tempTarget.date = tempTarget.date - tempTarget.date % 1000;
         try {
             getDaoTempTargets().createOrUpdate(tempTarget);
-            MainApp.bus().post(new EventTempTargetRangeChange());
+            scheduleTemporaryTargetChange();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -595,10 +600,27 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(TempTarget tempTarget) {
         try {
             getDaoTempTargets().delete(tempTarget);
-            MainApp.bus().post(new EventTempTargetRangeChange());
+            scheduleTemporaryTargetChange();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    static public void scheduleTemporaryTargetChange() {
+        class PostRunnable implements Runnable {
+            public void run() {
+                MainApp.bus().post(new EventTempTargetChange());
+                scheduledTemTargetPost = null;
+            }
+        }
+        // prepare task for execution in 1 sec
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledTemTargetPost != null)
+            scheduledTemTargetPost.cancel(false);
+        Runnable task = new PostRunnable();
+        final int sec = 1;
+        scheduledTemTargetPost = tempTargetWorker.schedule(task, sec, TimeUnit.SECONDS);
+
     }
 
  /*
@@ -648,7 +670,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             tempTarget.reason = trJson.getString("reason");
             tempTarget._id = trJson.getString("_id");
             createOrUpdate(tempTarget);
-            MainApp.bus().post(new EventTempTargetRangeChange());
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -669,7 +690,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (Config.logIncommingData)
                     log.debug("Removing TempTarget record from database: " + record.log());
                 getDaoTempTargets().delete(record);
-                MainApp.bus().post(new EventTempTargetRangeChange());
             } else {
                 if (Config.logIncommingData)
                     log.debug("TempTarget not found database: " + _id);
@@ -876,7 +896,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 if (Config.logIncommingData)
                     log.debug("Removing TempBasal record from database: " + record.log());
                 getDaoTemporaryBasal().delete(record);
-                MainApp.bus().post(new EventTempTargetRangeChange());
+                MainApp.bus().post(new EventTempTargetChange());
             } else {
                 if (Config.logIncommingData)
                     log.debug("TempBasal not found database: " + _id);

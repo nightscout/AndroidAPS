@@ -80,7 +80,6 @@
     <string name="overview">Sinopsis</string>
     <string name="profileviewer">Perfil NS</string>
     <string name="simpleprofile">Perfil simple</string>
-    <string name="tempbasals">Temp basales</string>
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Careportal</string>
@@ -327,7 +326,6 @@
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="es_lang">Español</string>
     <string name="ns_upload_only">NS solo subida (sinc. inactiva)</string>
-    <string name="ns_upload_only_enabled">Por favor desactiva \"NS solo subida\" para usar esta característica.</string>
     <string name="ns_upload_only_summary">NS solo subida. No efectivo con SGV salvo que este seleccionada una fuente local como xDrip. No efectivo en perfiles usando perfiles NS</string>
     <string name="othersettings_title">Otros</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
@@ -396,7 +394,6 @@
     <string name="sms_minago">%dmin antes</string>
     <string name="smscommunicator_bolusdelivered">Bolo %.2fU enviado correctamente</string>
     <string name="target_range">Rango Objetivo:</string>
-    <string name="temptargetrange">Objetivo Temp</string>
     <string name="temptargetrange_refreshfromnightscout">Actualizar objetivo temporal desde NS</string>
     <string name="timeshift_hint"></string>
     <string name="units">Unidades:</string>

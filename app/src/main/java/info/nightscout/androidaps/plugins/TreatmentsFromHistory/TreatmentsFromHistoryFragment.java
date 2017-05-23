@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsBolusFragment;
 import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsExtendedBolusesFragment;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsTempTargetFragment;
 import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsTemporaryBasalsFragment;
 
 public class TreatmentsFromHistoryFragment extends Fragment implements View.OnClickListener {
@@ -30,6 +31,7 @@ public class TreatmentsFromHistoryFragment extends Fragment implements View.OnCl
     TextView treatmentsTab;
     TextView extendedBolusesTab;
     TextView tempBasalsTab;
+    TextView tempTargetTab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -39,9 +41,11 @@ public class TreatmentsFromHistoryFragment extends Fragment implements View.OnCl
         treatmentsTab = (TextView) view.findViewById(R.id.treatments_treatments);
         extendedBolusesTab = (TextView) view.findViewById(R.id.treatments_extendedboluses);
         tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
+        tempTargetTab = (TextView) view.findViewById(R.id.treatments_temptargets);
         treatmentsTab.setOnClickListener(this);
         extendedBolusesTab.setOnClickListener(this);
         tempBasalsTab.setOnClickListener(this);
+        tempTargetTab.setOnClickListener(this);
         context = getContext();
 
         setFragment(new TreatmentsBolusFragment());
@@ -62,7 +66,9 @@ public class TreatmentsFromHistoryFragment extends Fragment implements View.OnCl
             case R.id.treatments_tempbasals:
                 setFragment(new TreatmentsTemporaryBasalsFragment());
                 break;
-
+            case R.id.treatments_temptargets:
+                setFragment(new TreatmentsTempTargetFragment());
+                break;
         }
     }
 

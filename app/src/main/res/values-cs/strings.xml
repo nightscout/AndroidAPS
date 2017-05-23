@@ -129,7 +129,6 @@
     <string name="setextendedbolusquestion">Spustit nový kombo bolus:</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="simpleprofile">Jednoduchý profil</string>
-    <string name="tempbasals">Dočasné bazály</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Celkové IOB:</string>
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
@@ -338,7 +337,6 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="ns_upload_only">Pouze náhráváni do NS (zakázaná synchronizace)</string>
-    <string name="ns_upload_only_enabled">Prosím deaktivujte \"Pouze nahrávání do NS\", abyste mohli použít tuto funkci.</string>
     <string name="ns_upload_only_summary">Pouze náhrávání dat do NS. Neplatí pro glykémie, dokud není vybraní místní zdroj dat jako xDrip. Neplatí pro profily, pokud se používá NS profil.</string>
     <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
     <string name="othersettings_title">Jiné</string>
@@ -393,7 +391,6 @@
     <string name="refreshtemptargetsfromnightscout">Opravdu aktualizovat dočasné cíle z NS</string>
     <string name="removerecord">Odstranit záznam:</string>
     <string name="short_avgdelta">Krátkodobý průměr</string>
-    <string name="temptargetrange">Dočasný cíl</string>
     <string name="temptargetrange_refreshfromnightscout">Obnovit dočasné cíle z NS</string>
     <string name="actions_shortname">"AKCE"</string>
     <string name="wear_shortname">"WEAR"</string>

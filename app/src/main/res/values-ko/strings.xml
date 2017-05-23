@@ -82,7 +82,6 @@
     <string name="overview">Overview</string>
     <string name="profileviewer">NS 프로파일</string>
     <string name="simpleprofile">Simple 프로파일</string>
-    <string name="tempbasals">임시기초주입</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">가상펌프</string>
     <string name="careportal">Careportal</string>
@@ -340,7 +339,6 @@
     <string name="androidaps_start">AndroidAPS 시작</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
     <string name="ns_upload_only_summary">NS upload only. 로컬소스(xDrip)가 선택되지 않으면 SGV에는 효력이 없습니다. NS프로파일이 사용중이라면 프로파일에는 효력이 없습니다.</string>
-    <string name="ns_upload_only_enabled">이 기능을 사용하시려면 "NS upload only"을 비활성화 하세요.</string>
     <string name="pumpNotInitialized">펌프가 초기화 되지 않았습니다!</string>
     <string name="pumpNotInitializedProfileNotSet">펌프가 초기화와 프로파일 설정이 되지 않았습니다!</string>
     <string name="primefill">공기/채움</string>
@@ -401,7 +399,6 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">AMA autosens 기능 사용하기</string>
-    <string name="temptargetrange">Temp Target</string>
     <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>

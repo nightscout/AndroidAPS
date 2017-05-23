@@ -386,7 +386,6 @@
     <string name="syncprofiletopump_title">Sincronizza profilo sul micro</string>
     <string name="target_range">Target range:</string>
     <string name="teenage">Adolescente</string>
-    <string name="tempbasals">Basale temporanea</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
@@ -412,7 +411,6 @@
     <string name="openapsma_mealdata_label">Data Pranzo</string>
     <string name="overview_bolusprogress_stoped">Stoppato</string>
     <string name="tempbasals_netratio_label_string">rapporto:</string>
-    <string name="temptargetrange">Target temp</string>
     <string name="temptargetrange_refreshfromnightscout">Aggiornare i target di temp da NS</string>
     <string name="treatmentdeliveryerror">Errore di erogazione del bolo</string>
     <string name="treatments_activity_string">attività</string>

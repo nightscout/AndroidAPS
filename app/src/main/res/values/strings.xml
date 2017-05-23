@@ -84,7 +84,7 @@
     <string name="overview">Overview</string>
     <string name="profileviewer">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
-    <string name="tempbasals">Temp Basals</string>
+    <string name="tempbasal">TempBasal</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
     <string name="careportal">Careportal</string>
@@ -354,7 +354,6 @@
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
-    <string name="ns_upload_only_enabled">Please deactivate "NS upload only" to use this feature.</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
     <string name="primefill">Prime/Fill</string>
@@ -415,7 +414,6 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
-    <string name="temptargetrange">Temp Target</string>
     <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
@@ -615,4 +613,5 @@
     <string name="bolus_step">Bolus Step</string>
     <string name="stopevent">STOP</string>
     <string name="extendedbolus">ExtendedBolus</string>
+    <string name="temptarget">TempTarget</string>
 </resources>

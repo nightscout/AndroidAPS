@@ -26,6 +26,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventBolusRequested;
@@ -1228,6 +1229,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     @Override
     public OverlappingIntervals<ExtendedBolus> getExtendedBoluses() {
         return activeTreatments.getExtendedBoluses();
+    }
+
+    @Override
+    public TempTarget getTempTarget(long time) {
+        return activeTreatments.getTempTarget(time);
+    }
+
+    @Override
+    public OverlappingIntervals<TempTarget> getTempTargets() {
+        return activeTreatments.getTempTargets();
     }
 
     @Override

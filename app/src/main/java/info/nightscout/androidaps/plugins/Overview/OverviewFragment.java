@@ -78,6 +78,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -104,8 +105,6 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGrap
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
-import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -196,7 +195,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         View view;
 
-        if(smallHeight){
+        if (smallHeight) {
             view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
@@ -763,8 +762,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTempTargetRangeChange ev) {
-        scheduleUpdateGUI("EventTempTargetRangeChange");
+    public void onStatusEvent(final EventTempTargetChange ev) {
+        scheduleUpdateGUI("EventTempTargetChange");
     }
 
     @Subscribe
@@ -898,29 +897,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // temp target
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
-        if (Config.APS && tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
-            TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
-            if (tempTarget != null) {
-                tempTargetView.setTextColor(Color.BLACK);
-                tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
-                tempTargetView.setVisibility(View.VISIBLE);
-                tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
-            } else {
-
-                Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-                Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-                if (!profile.getUnits().equals(Constants.MGDL)) {
-                    maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
-                    minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
-                }
-                tempTargetView.setTextColor(Color.WHITE);
-                tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-                tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
-                tempTargetView.setVisibility(View.VISIBLE);
-            }
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTarget(new Date().getTime());
+        if (tempTarget != null) {
+            tempTargetView.setTextColor(Color.BLACK);
+            tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
+            tempTargetView.setVisibility(View.VISIBLE);
+            tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
         } else {
-            tempTargetView.setVisibility(View.GONE);
+
+            Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+            Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+            if (!profile.getUnits().equals(Constants.MGDL)) {
+                maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
+                minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
+            }
+            tempTargetView.setTextColor(Color.WHITE);
+            tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
+            tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
+            tempTargetView.setVisibility(View.VISIBLE);
         }
 
         // **** Temp button ****

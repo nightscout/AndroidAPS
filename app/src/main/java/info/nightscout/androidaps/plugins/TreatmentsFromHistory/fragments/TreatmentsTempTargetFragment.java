@@ -1,13 +1,11 @@
-package info.nightscout.androidaps.plugins.TempTargetRange;
+package info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -21,35 +19,25 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
 import com.squareup.otto.Subscribe;
-
-import java.sql.SQLException;
-import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.TempTargetRange.events.EventTempTargetRangeChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.OverlappingIntervals;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 13/01/17.
  */
 
-public class TempTargetRangeFragment extends Fragment implements View.OnClickListener {
-
-    private static TempTargetRangePlugin tempTargetRangePlugin = new TempTargetRangePlugin();
-
-    public static TempTargetRangePlugin getPlugin() {
-        return tempTargetRangePlugin;
-    }
+public class TreatmentsTempTargetFragment extends Fragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -59,15 +47,15 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
 
-        List<TempTarget> tempTargetList;
+        OverlappingIntervals<TempTarget> tempTargetList;
 
-        RecyclerViewAdapter(List<TempTarget> TempTargetList) {
+        RecyclerViewAdapter(OverlappingIntervals<TempTarget> TempTargetList) {
             this.tempTargetList = TempTargetList;
         }
 
         @Override
         public TempTargetsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.temptargetrange_item, viewGroup, false);
+            View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.treatments_temptarget_item, viewGroup, false);
             TempTargetsViewHolder TempTargetsViewHolder = new TempTargetsViewHolder(v);
             return TempTargetsViewHolder;
         }
@@ -166,20 +154,24 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.temptargetrange_fragment, container, false);
+        View view = inflater.inflate(R.layout.treatments_temptarget_fragment, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.temptargetrange_recyclerview);
         recyclerView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tempTargetRangePlugin.getList());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getTempTargets());
         recyclerView.setAdapter(adapter);
 
         refreshFromNS = (Button) view.findViewById(R.id.temptargetrange_refreshfromnightscout);
         refreshFromNS.setOnClickListener(this);
 
         context = getContext();
+
+        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
+        if (nsUploadOnly)
+            refreshFromNS.setVisibility(View.GONE);
 
         updateGUI();
         return view;
@@ -189,27 +181,21 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.temptargetrange_refreshfromnightscout:
-                boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
-                if (nsUploadOnly) {
-                    ToastUtils.showToastInUiThread(getContext(), this.getContext().getString(R.string.ns_upload_only_enabled));
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                    builder.setTitle(this.getContext().getString(R.string.confirmation));
-                    builder.setMessage(this.getContext().getString(R.string.refreshtemptargetsfromnightscout));
-                    builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            MainApp.getDbHelper().resetTempTargets();
-                            tempTargetRangePlugin.initializeData();
-                            updateGUI();
-                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-                        }
-                    });
-                    builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
-                    builder.show();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle(this.getContext().getString(R.string.confirmation));
+                builder.setMessage(this.getContext().getString(R.string.refreshtemptargetsfromnightscout));
+                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MainApp.getDbHelper().resetTempTargets();
+                        Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                        MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                    }
+                });
+                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                builder.show();
                 break;
         }
+
     }
 
     @Override
@@ -225,7 +211,7 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTempTargetRangeChange ev) {
+    public void onStatusEvent(final EventTempTargetChange ev) {
         updateGUI();
     }
 
@@ -235,7 +221,7 @@ public class TempTargetRangeFragment extends Fragment implements View.OnClickLis
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(tempTargetRangePlugin.getList()), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getTempTargets()), false);
                 }
             });
     }

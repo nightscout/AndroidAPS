@@ -12,6 +12,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
@@ -21,11 +22,9 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
-import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
@@ -56,7 +55,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     @Override
     public String getNameShort() {
         String name = MainApp.sResources.getString(R.string.oaps_shortname);
-        if (!name.trim().isEmpty()){
+        if (!name.trim().isEmpty()) {
             //only if translation exists
             return name;
         }
@@ -149,7 +148,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        if (profile == null || profile.getIc(NSProfile.secondsFromMidnight()) == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getBasal(NSProfile.secondsFromMidnight()) == null ) {
+        if (profile == null || profile.getIc(NSProfile.secondsFromMidnight()) == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getBasal(NSProfile.secondsFromMidnight()) == null) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noprofile)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
@@ -201,15 +200,12 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         targetBg = verifyHardLimits(targetBg, "targetBg", Constants.VERY_HARD_LIMIT_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TARGET_BG[1]);
 
         boolean isTempTarget = false;
-        TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
-        if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
-            TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
-            if (tempTarget != null) {
-                isTempTarget = true;
-                minBg = verifyHardLimits(tempTarget.low, "minBg", Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
-                maxBg = verifyHardLimits(tempTarget.high, "maxBg", Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
-                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
-            }
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTarget(new Date().getTime());
+        if (tempTarget != null) {
+            isTempTarget = true;
+            minBg = verifyHardLimits(tempTarget.low, "minBg", Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
+            maxBg = verifyHardLimits(tempTarget.high, "maxBg", Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
+            targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
         }
 
 
@@ -217,8 +213,10 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
-        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100)) return;
-        if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900)) return;
+        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100))
+            return;
+        if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900))
+            return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
@@ -227,7 +225,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
 
         startPart = new Date();
-        if(MainApp.getConfigBuilder().isAMAModeEnabled()){
+        if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
             //lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(getBGDataFrom, null);
             lastAutosensResult = IobCobCalculatorPlugin.detectSensitivity(getBGDataFrom);
         } else {
@@ -241,7 +239,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
                 lastAutosensResult.ratio, //autosensDataRatio
                 isTempTarget,
                 SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
-                );
+        );
 
 
         DetermineBasalResultAMA determineBasalResultAMA = determineBasalAdapterAMAJS.invoke();

@@ -5,6 +5,7 @@ import java.util.List;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.utils.OverlappingIntervals;
@@ -46,6 +47,9 @@ public interface TreatmentsInterface {
     void extendedBolusStart(ExtendedBolus extendedBolus);
     void extendedBolusStop(long time);
     OverlappingIntervals<ExtendedBolus> getExtendedBoluses();
+
+    TempTarget getTempTarget (long time);
+    OverlappingIntervals<TempTarget> getTempTargets();
 
     long oldestDataAvaialable();
 

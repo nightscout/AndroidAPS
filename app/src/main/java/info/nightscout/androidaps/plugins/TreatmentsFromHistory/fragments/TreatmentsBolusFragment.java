@@ -170,6 +170,10 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
         refreshFromNS = (Button) view.findViewById(R.id.treatments_reshreshfromnightscout);
         refreshFromNS.setOnClickListener(this);
 
+        boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
+        if (nsUploadOnly)
+            refreshFromNS.setVisibility(View.GONE);
+
         context = getContext();
 
         updateGUI();
@@ -180,23 +184,18 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.treatments_reshreshfromnightscout:
-                boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
-                if (nsUploadOnly) {
-                    ToastUtils.showToastInUiThread(getContext(), this.getContext().getString(R.string.ns_upload_only_enabled));
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-                    builder.setTitle(this.getContext().getString(R.string.confirmation));
-                    builder.setMessage(this.getContext().getString(R.string.refreshtreatmentsfromnightscout));
-                    builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            MainApp.getDbHelper().resetTreatments();
-                            Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
-                            MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
-                        }
-                    });
-                    builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
-                    builder.show();
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+                builder.setTitle(this.getContext().getString(R.string.confirmation));
+                builder.setMessage(this.getContext().getString(R.string.refreshtreatmentsfromnightscout));
+                builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        MainApp.getDbHelper().resetTreatments();
+                        Intent restartNSClient = new Intent(Intents.ACTION_RESTART);
+                        MainApp.instance().getApplicationContext().sendBroadcast(restartNSClient);
+                    }
+                });
+                builder.setNegativeButton(this.getContext().getString(R.string.cancel), null);
+                builder.show();
                 break;
         }
     }

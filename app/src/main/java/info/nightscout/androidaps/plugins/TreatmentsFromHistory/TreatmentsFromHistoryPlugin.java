@@ -18,10 +18,12 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -45,6 +47,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
     public static List<Treatment> treatments;
     private static OverlappingIntervals<TemporaryBasal> tempBasals = new OverlappingIntervals<>();
     private static OverlappingIntervals<ExtendedBolus> extendedBoluses = new OverlappingIntervals<>();
+    private static OverlappingIntervals<TempTarget> tempTargets = new OverlappingIntervals<>();
 
     private static boolean fragmentEnabled = true;
     private static boolean fragmentVisible = true;
@@ -123,6 +126,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
         initializeTempBasalData();
         initializeTreatmentData();
         initializeExtendedBolusData();
+        initializeTempTargetData();
     }
 
      public static void initializeTreatmentData() {
@@ -155,6 +159,11 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
         extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(fromMills, false));
 
+    }
+
+    public void initializeTempTargetData() {
+        long fromMills = new Date().getTime() - 60 * 60 * 1000L * 24;
+        tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(fromMills, false));
     }
 
     @Override
@@ -391,5 +400,23 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
         oldestTime -= 15 * 60 * 1000L; // allow 15 min before
         return oldestTime;
     }
+
+    // TempTargets
+    @Subscribe
+    public void onStatusEvent(final EventTempTargetChange ev) {
+        initializeTempTargetData();
+    }
+
+    @Nullable
+    @Override
+    public TempTarget getTempTarget(long time) {
+        return (TempTarget) tempTargets.getValueByInterval(time);
+    }
+
+    @Override
+    public OverlappingIntervals<TempTarget> getTempTargets() {
+        return tempTargets;
+    }
+
 
 }
