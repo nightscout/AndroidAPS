@@ -1,11 +1,8 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
-import com.j256.ormlite.dao.Dao;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
@@ -143,7 +140,7 @@ public class MsgHistoryAll extends MessageBase {
                 break;
         }
 
-        MainApp.getDbHelper().createIfNotExists(danaRHistoryRecord);
+        MainApp.getDbHelper().createOrUpdate(danaRHistoryRecord);
 
         ev.message = DateUtil.dateAndTimeString(danaRHistoryRecord.recordDate);
         ev.message += " " + messageType;

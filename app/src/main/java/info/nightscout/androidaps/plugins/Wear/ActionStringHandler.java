@@ -365,7 +365,7 @@ public class ActionStringHandler {
             tempTarget.low = 0;
             tempTarget.high = 0;
         }
-        MainApp.getDbHelper().createIfNotExists(tempTarget);
+        MainApp.getDbHelper().createOrUpdate(tempTarget);
 
         //TODO: Nightscout-Treatment for Temp-Target!
         //ConfigBuilderPlugin.uploadCareportalEntryToNS(data);

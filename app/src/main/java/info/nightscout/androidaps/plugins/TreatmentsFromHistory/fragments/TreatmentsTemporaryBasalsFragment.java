@@ -156,11 +156,10 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                         builder.setMessage(MainApp.sResources.getString(R.string.removerecord) + "\n" + DateUtil.dateAndTimeString(tempBasal.date));
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // TODO: handle this in NS too
-                                //final String _id = tempBasal._id;
-                                //if (_id != null && !_id.equals("")) {
-                                //    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
-                                //}
+                                final String _id = tempBasal._id;
+                                if (_id != null && !_id.equals("")) {
+                                    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
+                                }
                                 MainApp.getDbHelper().delete(tempBasal);
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));
                             }

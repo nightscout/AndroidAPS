@@ -126,6 +126,10 @@ public class ExtendedBolus implements Interval {
         return Round.roundTo(insulin / durationInMinutes * 60, 0.01);
     }
 
+    public double insulinSoFar() {
+        return absoluteRate() * getRealDuration() / 60d;
+    }
+
     public IobTotal iobCalc(long time) {
         IobTotal result = new IobTotal(time);
         NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();

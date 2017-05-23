@@ -401,7 +401,9 @@ public class DataService extends IntentService {
                     JSONObject trJson = new JSONObject(trstring);
                     String _id = trJson.getString("_id");
                     MainApp.getDbHelper().deleteTreatmentById(_id);
-                    handleRemoveTempTargetRecord(trJson);
+                    MainApp.getDbHelper().deleteTempTargetById(trJson.getString("_id"));
+                    MainApp.getDbHelper().deleteTempBasalById(trJson.getString("_id"));
+                    MainApp.getDbHelper().deleteExtendedBolusById(trJson.getString("_id"));
                 }
 
                 if (bundles.containsKey("treatments")) {
@@ -411,7 +413,9 @@ public class DataService extends IntentService {
                         JSONObject trJson = jsonArray.getJSONObject(i);
                         String _id = trJson.getString("_id");
                         MainApp.getDbHelper().deleteTreatmentById(_id);
-                        handleRemoveTempTargetRecord(trJson);
+                        MainApp.getDbHelper().deleteTempTargetById(trJson.getString("_id"));
+                        MainApp.getDbHelper().deleteTempBasalById(trJson.getString("_id"));
+                        MainApp.getDbHelper().deleteExtendedBolusById(trJson.getString("_id"));
                     }
                 }
             } catch (Exception e) {
@@ -468,9 +472,10 @@ public class DataService extends IntentService {
         handleDanaRHistoryRecords(trJson); // update record _id in history
         handleAddChangeTempTargetRecord(trJson);
         handleAddChangeTempBasalRecord(trJson);
+        handleAddChangeExtendedBolusRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
-                log.debug("ADD: Uninterested treatment: " + trstring);
+                log.debug("Ignoring non insulin/carbs record: " + trstring);
             return;
         }
 
@@ -588,21 +593,6 @@ public class DataService extends IntentService {
         }
     }
 
- /*
- {
-    "_id": "58795998aa86647ba4d68ce7",
-    "enteredBy": "",
-    "eventType": "Temporary Target",
-    "reason": "Eating Soon",
-    "targetTop": 80,
-    "targetBottom": 80,
-    "duration": 120,
-    "created_at": "2017-01-13T22:50:00.782Z",
-    "carbs": null,
-    "insulin": null
-}
-  */
-
     public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals("Temporary Target")) {
             if (Config.logIncommingData)
@@ -611,31 +601,6 @@ public class DataService extends IntentService {
         }
     }
 
-    public void handleRemoveTempTargetRecord(JSONObject trJson) {
-        if (trJson.has("_id")) {
-            try {
-                MainApp.getDbHelper().deleteTempTargetById(trJson.getString("_id"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-/*
-{
-    "_id": "59232e1ddd032d04218dab00",
-    "eventType": "Temp Basal",
-    "duration": 60,
-    "percent": -50,
-    "created_at": "2017-05-22T18:29:57Z",
-    "enteredBy": "AndroidAPS",
-    "notes": "Basal Temp Start 50% 60.0 min",
-    "NSCLIENT_ID": 1495477797863,
-    "mills": 1495477797000,
-    "mgdl": 194.5,
-    "endmills": 1495481397000
-}
-*/
     public void handleAddChangeTempBasalRecord(JSONObject trJson) throws JSONException, SQLException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals("Temp Basal")) {
             if (Config.logIncommingData)
@@ -644,13 +609,11 @@ public class DataService extends IntentService {
         }
     }
 
-    public void handleRemoveTempBasalRecord(JSONObject trJson) {
-        if (trJson.has("_id")) {
-            try {
-                MainApp.getDbHelper().deleteTempBasalById(trJson.getString("_id"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+    public void handleAddChangeExtendedBolusRecord(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals("Combo Bolus")) {
+            if (Config.logIncommingData)
+                log.debug("Processing Extended Bolus record: " + trJson.toString());
+            MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(trJson);
         }
     }
 

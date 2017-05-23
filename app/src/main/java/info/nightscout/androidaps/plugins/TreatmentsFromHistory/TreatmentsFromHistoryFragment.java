@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsBolusFragment;
+import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsExtendedBolusesFragment;
 import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsTemporaryBasalsFragment;
 
 public class TreatmentsFromHistoryFragment extends Fragment implements View.OnClickListener {
@@ -27,6 +28,7 @@ public class TreatmentsFromHistoryFragment extends Fragment implements View.OnCl
 
     Context context;
     TextView treatmentsTab;
+    TextView extendedBolusesTab;
     TextView tempBasalsTab;
 
     @Override
@@ -35,8 +37,10 @@ public class TreatmentsFromHistoryFragment extends Fragment implements View.OnCl
         View view = inflater.inflate(R.layout.treatments_fragment, container, false);
 
         treatmentsTab = (TextView) view.findViewById(R.id.treatments_treatments);
+        extendedBolusesTab = (TextView) view.findViewById(R.id.treatments_extendedboluses);
         tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
         treatmentsTab.setOnClickListener(this);
+        extendedBolusesTab.setOnClickListener(this);
         tempBasalsTab.setOnClickListener(this);
         context = getContext();
 
@@ -51,6 +55,9 @@ public class TreatmentsFromHistoryFragment extends Fragment implements View.OnCl
         switch (v.getId()) {
             case R.id.treatments_treatments:
                 setFragment(new TreatmentsBolusFragment());
+                break;
+            case R.id.treatments_extendedboluses:
+                setFragment(new TreatmentsExtendedBolusesFragment());
                 break;
             case R.id.treatments_tempbasals:
                 setFragment(new TreatmentsTemporaryBasalsFragment());

@@ -24,6 +24,14 @@
                 android:text="@string/bolus" />
 
             <TextView
+                android:id="@+id/treatments_extendedboluses"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"
+                android:text="@string/extendedbolus" />
+
+            <TextView
                 android:id="@+id/treatments_tempbasals"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

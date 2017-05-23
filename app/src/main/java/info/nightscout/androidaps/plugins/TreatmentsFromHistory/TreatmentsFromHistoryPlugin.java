@@ -321,7 +321,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Override
     public void extendedBolusStart(ExtendedBolus extendedBolus) {
-        MainApp.getDbHelper().create(extendedBolus);
+        MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
     @Override
@@ -329,7 +329,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = time;
         extendedBolus.durationInMinutes = 0;
-        MainApp.getDbHelper().create(extendedBolus);
+        MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
     @Override
@@ -368,7 +368,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Override
     public void tempBasalStart(TemporaryBasal tempBasal) {
-        MainApp.getDbHelper().createIfNotExists(tempBasal);
+        MainApp.getDbHelper().createOrUpdate(tempBasal);
     }
 
     @Override
@@ -376,7 +376,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
         TemporaryBasal temporaryBasal = new TemporaryBasal();
         temporaryBasal.date = time;
         temporaryBasal.durationInMinutes = 0;
-        MainApp.getDbHelper().createIfNotExists(temporaryBasal);
+        MainApp.getDbHelper().createOrUpdate(temporaryBasal);
     }
 
     @Override

@@ -26,7 +26,6 @@ import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
-import com.j256.ormlite.dao.Dao;
 import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
 import com.wdullaer.materialdatetimepicker.time.RadialPickerLayout;
 import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
@@ -36,7 +35,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -659,7 +657,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                             tempTarget.high = 0;
                                         }
                                         log.debug("Creating new TempTarget db record: " + tempTarget.log());
-                                        MainApp.getDbHelper().createIfNotExists(tempTarget);
+                                        MainApp.getDbHelper().createOrUpdate(tempTarget);
                                         ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
                                         Answers.getInstance().logCustom(new CustomEvent("TempTarget"));
                                     } catch (JSONException e) {
