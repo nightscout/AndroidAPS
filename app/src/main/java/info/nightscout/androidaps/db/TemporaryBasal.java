@@ -103,6 +103,16 @@ public class TemporaryBasal implements Interval {
         return false;
     }
 
+    @Override
+    public boolean isInProgress() {
+        return match(new Date().getTime());
+    }
+
+    @Override
+    public boolean isEndingEvent() {
+        return durationInMinutes == 0;
+    }
+
     // -------- Interval interface end ---------
 
     public IobTotal iobCalc(long time) {
@@ -173,10 +183,6 @@ public class TemporaryBasal implements Interval {
     public int getPlannedRemainingMinutes() {
         float remainingMin = (end() - new Date().getTime()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
-    }
-
-    public boolean isInProgress() {
-        return match(new Date().getTime());
     }
 
     public double tempBasalConvertedToAbsolute(long time) {

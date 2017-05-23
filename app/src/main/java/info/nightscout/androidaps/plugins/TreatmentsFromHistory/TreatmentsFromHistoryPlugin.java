@@ -368,7 +368,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
 
     @Override
     public void tempBasalStart(TemporaryBasal tempBasal) {
-        MainApp.getDbHelper().create(tempBasal);
+        MainApp.getDbHelper().createIfNotExists(tempBasal);
     }
 
     @Override
@@ -376,7 +376,7 @@ public class TreatmentsFromHistoryPlugin implements PluginBase, TreatmentsInterf
         TemporaryBasal temporaryBasal = new TemporaryBasal();
         temporaryBasal.date = time;
         temporaryBasal.durationInMinutes = 0;
-        MainApp.getDbHelper().create(temporaryBasal);
+        MainApp.getDbHelper().createIfNotExists(temporaryBasal);
     }
 
     @Override

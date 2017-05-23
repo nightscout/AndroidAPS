@@ -63,34 +63,46 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         @Override
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
             TemporaryBasal tempBasal = tempBasalList.getReversed(position);
-            if (tempBasal.isInProgress()) {
+            if (tempBasal.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
-            } else {
-                holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date) + " - " + DateUtil.timeString(tempBasalList.get(position).end()));
-            }
-            holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
-            if (tempBasal.isAbsolute) {
-                holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date)) + " U/h");
-                holder.percent.setText("");
-            } else {
+                holder.duration.setText(MainApp.sResources.getString(R.string.stopevent));
                 holder.absolute.setText("");
-                holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");
+                holder.percent.setText("");
+                holder.realDuration.setText("");
+                holder.iob.setText("");
+                holder.netInsulin.setText("");
+                holder.netRatio.setText("");
+                holder.extendedFlag.setVisibility(View.GONE);
+            } else {
+                if (tempBasal.isInProgress()) {
+                    holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
+                } else {
+                    holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date) + " - " + DateUtil.timeString(tempBasal.end()));
+                }
+                holder.duration.setText(DecimalFormatter.to0Decimal(tempBasal.durationInMinutes) + " min");
+                if (tempBasal.isAbsolute) {
+                    holder.absolute.setText(DecimalFormatter.to0Decimal(tempBasal.tempBasalConvertedToAbsolute(tempBasal.date)) + " U/h");
+                    holder.percent.setText("");
+                } else {
+                    holder.absolute.setText("");
+                    holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");
+                }
+                holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
+                IobTotal iob = tempBasal.iobCalc(new Date().getTime());
+                holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
+                holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
+                holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
+                //holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
+                holder.extendedFlag.setVisibility(View.GONE);
+                if (tempBasal.isInProgress())
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+                else
+                    holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
+                if (tempBasal.iobCalc(new Date().getTime()).basaliob != 0)
+                    holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+                else
+                    holder.iob.setTextColor(holder.netRatio.getCurrentTextColor());
             }
-            holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
-            IobTotal iob = tempBasal.iobCalc(new Date().getTime());
-            holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
-            holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
-            holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
-            //holder.extendedFlag.setVisibility(tempBasal.isExtended ? View.VISIBLE : View.GONE);
-            holder.extendedFlag.setVisibility(View.GONE);
-            if (tempBasal.isInProgress())
-                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-            else
-                holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
-            if (tempBasal.iobCalc(new Date().getTime()).basaliob != 0)
-                holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-            else
-                holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
             holder.remove.setTag(tempBasal);
         }
 

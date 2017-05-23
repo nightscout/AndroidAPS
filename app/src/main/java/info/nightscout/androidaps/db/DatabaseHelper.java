@@ -56,6 +56,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static Long latestTreatmentChange = null;
 
+    private static final ScheduledExecutorService bgWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledBgPost = null;
+
     private static final ScheduledExecutorService treatmentsWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledTratmentPost = null;
 
@@ -167,6 +170,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        scheduleBgChange(); // trigger refresh
     }
 
     public void resetTreatments() {
@@ -247,7 +251,24 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        MainApp.bus().post(new EventNewBG());
+        scheduleBgChange();
+    }
+
+    static public void scheduleBgChange() {
+        class PostRunnable implements Runnable {
+            public void run() {
+                MainApp.bus().post(new EventNewBG());
+                scheduledBgPost = null;
+            }
+        }
+        // prepare task for execution in 1 sec
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledBgPost != null)
+            scheduledBgPost.cancel(false);
+        Runnable task = new PostRunnable();
+        final int sec = 1;
+        scheduledBgPost = bgWorker.schedule(task, sec, TimeUnit.SECONDS);
+
     }
 
     /*
@@ -578,7 +599,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    public void createFromJsonIfNotExists(JSONObject trJson) {
+    public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
             QueryBuilder<TempTarget, Long> queryBuilder = null;
             queryBuilder = getDaoTempTargets().queryBuilder();
@@ -710,10 +731,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return updated;
     }
 
-    public void create(TemporaryBasal tempBasal) {
+    public void createIfNotExists(TemporaryBasal tempBasal) {
         tempBasal.date = tempBasal.date - tempBasal.date % 1000;
         try {
-            getDaoTemporaryBasal().create(tempBasal);
+            getDaoTemporaryBasal().createIfNotExists(tempBasal);
             latestTreatmentChange = tempBasal.date;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -762,6 +783,77 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         final int sec = 1;
         scheduledTemBasalsPost = tempBasalsWorker.schedule(task, sec, TimeUnit.SECONDS);
 
+    }
+
+    public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
+        try {
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
+            queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            List<TemporaryBasal> list = getDaoTemporaryBasal().query(preparedQuery);
+            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+            if (profile == null) return; // no profile data, better ignore than do something wrong
+            String units = profile.getUnits();
+            TemporaryBasal tempBasal;
+            if (list.size() == 0) {
+                tempBasal = new TemporaryBasal();
+                tempBasal.source = Source.NIGHTSCOUT;
+                if (Config.logIncommingData)
+                    log.debug("Adding TemporaryBasal record to database: " + trJson.toString());
+                // Record does not exists. add
+            } else if (list.size() == 1) {
+                tempBasal = list.get(0);
+                if (Config.logIncommingData)
+                    log.debug("Updating TemporaryBasal record in database: " + trJson.toString());
+            } else {
+                log.error("Somthing went wrong");
+                return;
+            }
+            tempBasal.date = trJson.getLong("mills");
+            if (trJson.has("duration")) {
+                tempBasal.durationInMinutes = trJson.getInt("duration");
+            }
+            if (trJson.has("percent")) {
+                tempBasal.percentRate = trJson.getInt("percent") + 100;
+                tempBasal.isAbsolute = false;
+            }
+            if (trJson.has("absolute")) {
+                tempBasal.absoluteRate = trJson.getDouble("absolute");
+                tempBasal.isAbsolute = true;
+            }
+            tempBasal._id = trJson.getString("_id");
+            createIfNotExists(tempBasal);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteTempBasalById(String _id) {
+        try {
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
+            queryBuilder = getDaoTemporaryBasal().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", _id);
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            List<TemporaryBasal> list = getDaoTemporaryBasal().query(preparedQuery);
+
+            if (list.size() == 1) {
+                TemporaryBasal record = list.get(0);
+                if (Config.logIncommingData)
+                    log.debug("Removing TempBasal record from database: " + record.log());
+                getDaoTemporaryBasal().delete(record);
+                MainApp.bus().post(new EventTempTargetRangeChange());
+            } else {
+                if (Config.logIncommingData)
+                    log.debug("TempTarget not found database: " + _id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // ------------ ExtendedBolus handling ---------------

@@ -613,4 +613,5 @@
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="basal_step">Basal Step</string>
     <string name="bolus_step">Bolus Step</string>
+    <string name="stopevent">STOP</string>
 </resources>

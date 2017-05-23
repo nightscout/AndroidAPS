@@ -8,9 +8,6 @@ import android.preference.PreferenceManager;
 import android.provider.Telephony;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,16 +17,13 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -473,6 +467,7 @@ public class DataService extends IntentService {
         JSONObject trJson = new JSONObject(trstring);
         handleDanaRHistoryRecords(trJson); // update record _id in history
         handleAddChangeTempTargetRecord(trJson);
+        handleAddChangeTempBasalRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("ADD: Uninterested treatment: " + trstring);
@@ -612,7 +607,7 @@ public class DataService extends IntentService {
         if (trJson.has("eventType") && trJson.getString("eventType").equals("Temporary Target")) {
             if (Config.logIncommingData)
                 log.debug("Processing TempTarget record: " + trJson.toString());
-            MainApp.getDbHelper().createFromJsonIfNotExists(trJson);
+            MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(trJson);
         }
     }
 
@@ -620,6 +615,39 @@ public class DataService extends IntentService {
         if (trJson.has("_id")) {
             try {
                 MainApp.getDbHelper().deleteTempTargetById(trJson.getString("_id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+/*
+{
+    "_id": "59232e1ddd032d04218dab00",
+    "eventType": "Temp Basal",
+    "duration": 60,
+    "percent": -50,
+    "created_at": "2017-05-22T18:29:57Z",
+    "enteredBy": "AndroidAPS",
+    "notes": "Basal Temp Start 50% 60.0 min",
+    "NSCLIENT_ID": 1495477797863,
+    "mills": 1495477797000,
+    "mgdl": 194.5,
+    "endmills": 1495481397000
+}
+*/
+    public void handleAddChangeTempBasalRecord(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals("Temp Basal")) {
+            if (Config.logIncommingData)
+                log.debug("Processing TempBasal record: " + trJson.toString());
+            MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(trJson);
+        }
+    }
+
+    public void handleRemoveTempBasalRecord(JSONObject trJson) {
+        if (trJson.has("_id")) {
+            try {
+                MainApp.getDbHelper().deleteTempBasalById(trJson.getString("_id"));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

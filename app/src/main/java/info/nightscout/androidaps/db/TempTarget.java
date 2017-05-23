@@ -88,6 +88,16 @@ public class TempTarget implements Interval {
         return false;
     }
 
+    @Override
+    public boolean isInProgress() {
+        return match(new Date().getTime());
+    }
+
+    @Override
+    public boolean isEndingEvent() {
+        return durationInMinutes == 0;
+    }
+
     // -------- Interval interface end ---------
 
     public String lowValueToUnitsToString(String units) {
@@ -98,10 +108,6 @@ public class TempTarget implements Interval {
     public String highValueToUnitsToString(String units) {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(high);
         else return DecimalFormatter.to1Decimal(low * Constants.MGDL_TO_MMOLL);
-    }
-
-    public boolean isInProgress() {
-        return match(new Date().getTime());
     }
 
     public String log() {

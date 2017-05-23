@@ -99,6 +99,16 @@ public class ExtendedBolus implements Interval {
         return false;
     }
 
+    @Override
+    public boolean isInProgress() {
+        return match(new Date().getTime());
+    }
+
+    @Override
+    public boolean isEndingEvent() {
+        return durationInMinutes == 0;
+    }
+
     // -------- Interval interface end ---------
 
     public String log() {
@@ -164,10 +174,6 @@ public class ExtendedBolus implements Interval {
     public int getPlannedRemainingMinutes() {
         float remainingMin = (end() - new Date().getTime()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
-    }
-
-    public boolean isInProgress() {
-        return match(new Date().getTime());
     }
 
     public String toString() {

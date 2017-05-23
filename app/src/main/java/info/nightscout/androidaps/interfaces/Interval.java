@@ -18,4 +18,7 @@ public interface Interval {
     boolean match(long time);
     boolean before(long time);
     boolean after(long time);
+
+    boolean isInProgress();
+    boolean isEndingEvent();
 }
