@@ -685,4 +685,6 @@
     <string name="cpp_valuesnotstored">Values not stored!</string>
     <string name="wear_overviewnotifications">Overview Notifications</string>
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
+    <string name="combopump">Accu-Chek Combo</string>
+    <string name="combopump_settings">Accu-Chek Combo settings</string>
 </resources>
