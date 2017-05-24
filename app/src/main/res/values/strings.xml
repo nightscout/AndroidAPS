@@ -614,4 +614,5 @@
     <string name="bolus_step">Bolus Step</string>
     <string name="extendedbolus">ExtendedBolus</string>
     <string name="temptarget">TempTarget</string>
+    <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
 </resources>

@@ -232,8 +232,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         treatmentButton.setOnClickListener(this);
         wizardButton = (Button) view.findViewById(R.id.overview_wizardbutton);
         wizardButton.setOnClickListener(this);
-        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltempbutton);
-        cancelTempButton.setOnClickListener(this);
         acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
         acceptTempButton.setOnClickListener(this);
         quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizardbutton);
