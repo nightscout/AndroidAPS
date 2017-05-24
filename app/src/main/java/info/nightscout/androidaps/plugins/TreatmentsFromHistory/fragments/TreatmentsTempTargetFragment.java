@@ -64,8 +64,8 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
         public void onBindViewHolder(TempTargetsViewHolder holder, int position) {
             NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
             if (profile == null) return;
-            TempTarget tempTarget = tempTargetList.get(position);
-            if (tempTarget.durationInMinutes != 0) {
+            TempTarget tempTarget = tempTargetList.getReversed(position);
+            if (!tempTarget.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTargetList.get(position).originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
                 holder.low.setText(tempTarget.lowValueToUnitsToString(profile.getUnits()));
@@ -81,9 +81,9 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
                 holder.reasonColon.setText("");
             }
             if (tempTarget.isInProgress())
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
+                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else
-                holder.dateLinearLayout.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.cardColorBackground));
+                holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
             holder.remove.setTag(tempTarget);
         }
 
@@ -107,7 +107,6 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
             TextView reasonLabel;
             TextView reasonColon;
             TextView remove;
-            LinearLayout dateLinearLayout;
 
             TempTargetsViewHolder(View itemView) {
                 super(itemView);
@@ -122,7 +121,6 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
                 remove = (TextView) itemView.findViewById(R.id.temptargetrange_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
-                dateLinearLayout = (LinearLayout) itemView.findViewById(R.id.temptargetrange_datelinearlayout);
             }
 
             @Override

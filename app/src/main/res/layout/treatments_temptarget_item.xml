@@ -5,10 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    card_view:cardBackgroundColor="@color/cardColorBackground"
-    card_view:cardCornerRadius="6dp"
-    card_view:cardUseCompatPadding="true"
-    card_view:contentPadding="6dp">
+    card_view:cardBackgroundColor="?android:colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,7 +13,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/temptargetrange_datelinearlayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:baselineAligned="true"
@@ -28,10 +24,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical|right"
-                android:paddingLeft="5dp"
+                android:paddingLeft="10dp"
                 android:paddingRight="5dp"
-                android:text="{fa-clock-o}"
-                android:textColor="@color/cardItemLabel" />
+                android:text="{fa-clock-o}" />
 
             <TextView
                 android:id="@+id/temptargetrange_date"
@@ -39,8 +34,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="1.1.2000 18:00"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardItemLabel" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/temptargetrange_low"
@@ -48,16 +42,14 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="80"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardItemLabel" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:text="-"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardItemLabel" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/temptargetrange_high"
@@ -65,8 +57,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:text="100"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardItemLabel" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView
                 android:id="@+id/temptargetrange_duration"
@@ -74,8 +65,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dp"
                 android:text="30 min"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@color/cardItemLabel" />
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </LinearLayout>
 
@@ -105,20 +95,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:paddingRight="10dp"
                 android:text="Activity"
-                android:layout_weight="1"
                 android:textStyle="bold" />
 
             <TextView
-                android:text="@string/overview_quickwizard_item_remove_button"
+                android:id="@+id/temptargetrange_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/temptargetrange_remove"
+                android:layout_marginRight="10dp"
+                android:text="@string/overview_quickwizard_item_remove_button"
                 android:textAlignment="viewEnd"
                 android:textColor="@android:color/holo_orange_light" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
 
     </LinearLayout>
 

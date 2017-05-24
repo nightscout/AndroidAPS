@@ -1122,7 +1122,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastLineBasal = 0;
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
-            for (long time = fromTime; time < now; time += 5 * 60 * 1000L) {
+            for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
                 TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasal(time);
                 double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
                 double baseLineValue = baseBasalValue;

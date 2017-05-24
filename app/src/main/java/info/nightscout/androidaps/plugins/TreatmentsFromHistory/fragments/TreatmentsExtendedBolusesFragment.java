@@ -63,7 +63,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
             ExtendedBolus extendedBolus = extendedBolusList.getReversed(position);
             if (extendedBolus.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(extendedBolus.date));
-                holder.duration.setText(MainApp.sResources.getString(R.string.stopevent));
+                holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
                 holder.insulin.setText("");
                 holder.realDuration.setText("");
                 holder.iob.setText("");

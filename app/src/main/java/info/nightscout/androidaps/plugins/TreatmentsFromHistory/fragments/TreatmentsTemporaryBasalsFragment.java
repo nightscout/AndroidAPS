@@ -65,7 +65,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
             TemporaryBasal tempBasal = tempBasalList.getReversed(position);
             if (tempBasal.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
-                holder.duration.setText(MainApp.sResources.getString(R.string.stopevent));
+                holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
                 holder.absolute.setText("");
                 holder.percent.setText("");
                 holder.realDuration.setText("");
