@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments;
+package info.nightscout.androidaps.plugins.Treatments.fragments;
 
 import android.app.Activity;
 import android.content.Context;

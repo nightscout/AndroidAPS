@@ -50,4 +50,6 @@ public interface PumpInterface {
 
     // Enforced Treatment plugin
     String treatmentPlugin();
+
+    boolean isFakingTempsByExtendedBoluses();
 }

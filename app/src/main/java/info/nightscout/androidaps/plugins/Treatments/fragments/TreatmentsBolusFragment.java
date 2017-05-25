@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments;
+package info.nightscout.androidaps.plugins.Treatments.fragments;
 
 import android.app.Activity;
 import android.content.Context;
@@ -37,11 +37,10 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.TreatmentsFromHistory.TreatmentsFromHistoryPlugin;
+import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
 
 public class TreatmentsBolusFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsBolusFragment.class);
@@ -161,7 +160,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsFromHistoryPlugin.treatments);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(TreatmentsPlugin.treatments);
         recyclerView.setAdapter(adapter);
 
         iobTotal = (TextView) view.findViewById(R.id.treatments_iobtotal);
@@ -232,11 +231,11 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsFromHistoryPlugin.treatments), false);
-                    if (TreatmentsFromHistoryPlugin.lastTreatmentCalculation != null)
-                        iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsFromHistoryPlugin.lastTreatmentCalculation.iob) + " U");
-                    if (TreatmentsFromHistoryPlugin.lastTreatmentCalculation != null)
-                        activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsFromHistoryPlugin.lastTreatmentCalculation.activity) + " U");
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(TreatmentsPlugin.treatments), false);
+                    if (TreatmentsPlugin.lastTreatmentCalculation != null)
+                        iobTotal.setText(DecimalFormatter.to2Decimal(TreatmentsPlugin.lastTreatmentCalculation.iob) + " U");
+                    if (TreatmentsPlugin.lastTreatmentCalculation != null)
+                        activityTotal.setText(DecimalFormatter.to3Decimal(TreatmentsPlugin.lastTreatmentCalculation.activity) + " U");
                 }
             });
     }

@@ -62,8 +62,8 @@ public class MsgStatusTempBasal extends MessageBase {
         DanaRPump danaRPump = DanaRPump.getInstance();
         long now = new Date().getTime();
 
-        if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal tempBasal = treatmentsInterface.getTempBasal(new Date().getTime());
+        if (treatmentsInterface.isRealTempBasalInProgress()) {
+            TemporaryBasal tempBasal = treatmentsInterface.getRealTempBasal(new Date().getTime());
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal

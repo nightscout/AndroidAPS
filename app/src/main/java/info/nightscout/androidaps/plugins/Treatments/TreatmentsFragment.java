@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.TreatmentsFromHistory;
+package info.nightscout.androidaps.plugins.Treatments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,17 +13,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsBolusFragment;
-import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsExtendedBolusesFragment;
-import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsTempTargetFragment;
-import info.nightscout.androidaps.plugins.TreatmentsFromHistory.fragments.TreatmentsTemporaryBasalsFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtendedBolusesFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempTargetFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTemporaryBasalsFragment;
 
-public class TreatmentsFromHistoryFragment extends Fragment implements View.OnClickListener {
-    private static Logger log = LoggerFactory.getLogger(TreatmentsFromHistoryFragment.class);
+public class TreatmentsFragment extends Fragment implements View.OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
-    private static TreatmentsFromHistoryPlugin treatmentsPlugin = new TreatmentsFromHistoryPlugin();
+    private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();
 
-    public static TreatmentsFromHistoryPlugin getPlugin() {
+    public static TreatmentsPlugin getPlugin() {
         return treatmentsPlugin;
     }
 

@@ -709,6 +709,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         }
     }
 
+    @Override
+    public boolean isFakingTempsByExtendedBoluses() {
+        return activePump.isFakingTempsByExtendedBoluses();
+    }
+
     /**
      * Constraints interface
      **/
