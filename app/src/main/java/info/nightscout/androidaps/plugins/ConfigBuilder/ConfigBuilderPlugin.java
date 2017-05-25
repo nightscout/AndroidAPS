@@ -25,6 +25,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -834,7 +835,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
-            data.put("eventType", "Temp Basal");
+            data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("duration", durationInMinutes);
             data.put("absolute", absolute);
             data.put("created_at", DateUtil.toISOString(new Date()));
@@ -886,7 +887,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             } else {
                 Context context = MainApp.instance().getApplicationContext();
                 JSONObject data = new JSONObject();
-                data.put("eventType", "Temp Basal");
+                data.put("eventType", CareportalEvent.TEMPBASAL);
                 data.put("duration", durationInMinutes);
                 data.put("percent", percent - 100);
                 data.put("created_at", DateUtil.toISOString(new Date()));
@@ -911,7 +912,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
-            data.put("eventType", "Temp Basal");
+            data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("created_at", DateUtil.toISOString(new Date()));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalendnote)); // ECOR
@@ -933,7 +934,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
-            data.put("eventType", "Combo Bolus");
+            data.put("eventType", CareportalEvent.COMBOBOLUS);
             data.put("duration", durationInMinutes);
             data.put("splitNow", 0);
             data.put("splitExt", 100);

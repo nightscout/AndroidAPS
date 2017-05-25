@@ -1,19 +1,30 @@
 package info.nightscout.androidaps.plugins.Careportal;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.squareup.otto.Subscribe;
+
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 
 public class CareportalFragment extends Fragment implements View.OnClickListener {
 
     static CareportalPlugin careportalPlugin;
+
+    TextView iage;
+    TextView cage;
+    TextView sage;
 
     static public CareportalPlugin getPlugin() {
         if (careportalPlugin == null) {
@@ -67,6 +78,12 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
         view.findViewById(R.id.careportal_tempbasalstart).setOnClickListener(this);
         view.findViewById(R.id.careportal_openapsoffline).setOnClickListener(this);
         view.findViewById(R.id.careportal_temporarytarget).setOnClickListener(this);
+
+        iage = (TextView) view.findViewById(R.id.careportal_insulinage);
+        cage = (TextView) view.findViewById(R.id.careportal_canulaage);
+        sage = (TextView) view.findViewById(R.id.careportal_sensorage);
+
+        updateGUI();
         return view;
     }
 
@@ -137,6 +154,43 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
         }
         if (newDialog != null)
             newDialog.show(manager, "NewNSTreatmentDialog");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        MainApp.bus().unregister(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        MainApp.bus().register(this);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventCareportalEventChange c) {
+        updateGUI();
+    }
+
+    void updateGUI() {
+        Activity activity = getActivity();
+        if (activity != null) {
+            activity.runOnUiThread(
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            CareportalEvent careportalEvent;
+                            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
+                            sage.setText(careportalEvent != null ? careportalEvent.age() : MainApp.sResources.getString(R.string.notavailable));
+                            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
+                            iage.setText(careportalEvent != null ? careportalEvent.age() : MainApp.sResources.getString(R.string.notavailable));
+                            careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
+                            cage.setText(careportalEvent != null ? careportalEvent.age() : MainApp.sResources.getString(R.string.notavailable));
+                        }
+                    }
+            );
+        }
     }
 
 }

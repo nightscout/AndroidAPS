@@ -23,6 +23,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
@@ -404,6 +405,7 @@ public class DataService extends IntentService {
                     MainApp.getDbHelper().deleteTempTargetById(trJson.getString("_id"));
                     MainApp.getDbHelper().deleteTempBasalById(trJson.getString("_id"));
                     MainApp.getDbHelper().deleteExtendedBolusById(trJson.getString("_id"));
+                    MainApp.getDbHelper().deleteCareportalEventById(trJson.getString("_id"));
                 }
 
                 if (bundles.containsKey("treatments")) {
@@ -416,6 +418,7 @@ public class DataService extends IntentService {
                         MainApp.getDbHelper().deleteTempTargetById(trJson.getString("_id"));
                         MainApp.getDbHelper().deleteTempBasalById(trJson.getString("_id"));
                         MainApp.getDbHelper().deleteExtendedBolusById(trJson.getString("_id"));
+                        MainApp.getDbHelper().deleteCareportalEventById(trJson.getString("_id"));
                     }
                 }
             } catch (Exception e) {
@@ -473,6 +476,7 @@ public class DataService extends IntentService {
         handleAddChangeTempTargetRecord(trJson);
         handleAddChangeTempBasalRecord(trJson);
         handleAddChangeExtendedBolusRecord(trJson);
+        handleAddChangeCareportalEventRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("Ignoring non insulin/carbs record: " + trstring);
@@ -533,6 +537,9 @@ public class DataService extends IntentService {
         JSONObject trJson = new JSONObject(trstring);
         handleDanaRHistoryRecords(trJson); // update record _id in history
         handleAddChangeTempTargetRecord(trJson);
+        handleAddChangeTempBasalRecord(trJson);
+        handleAddChangeExtendedBolusRecord(trJson);
+        handleAddChangeCareportalEventRecord(trJson);
         if (!trJson.has("insulin") && !trJson.has("carbs")) {
             if (Config.logIncommingData)
                 log.debug("CHANGE: Uninterested treatment: " + trstring);
@@ -594,7 +601,7 @@ public class DataService extends IntentService {
     }
 
     public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException, SQLException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals("Temporary Target")) {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPORARYTARGET)) {
             if (Config.logIncommingData)
                 log.debug("Processing TempTarget record: " + trJson.toString());
             MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(trJson);
@@ -602,7 +609,7 @@ public class DataService extends IntentService {
     }
 
     public void handleAddChangeTempBasalRecord(JSONObject trJson) throws JSONException, SQLException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals("Temp Basal")) {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPBASAL)) {
             if (Config.logIncommingData)
                 log.debug("Processing TempBasal record: " + trJson.toString());
             MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(trJson);
@@ -610,10 +617,22 @@ public class DataService extends IntentService {
     }
 
     public void handleAddChangeExtendedBolusRecord(JSONObject trJson) throws JSONException, SQLException {
-        if (trJson.has("eventType") && trJson.getString("eventType").equals("Combo Bolus")) {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.COMBOBOLUS)) {
             if (Config.logIncommingData)
                 log.debug("Processing Extended Bolus record: " + trJson.toString());
             MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(trJson);
+        }
+    }
+
+    public void handleAddChangeCareportalEventRecord(JSONObject trJson) throws JSONException, SQLException {
+        if (trJson.has("eventType") && (
+                trJson.getString("eventType").equals(CareportalEvent.SITECHANGE) ||
+                trJson.getString("eventType").equals(CareportalEvent.INSULINCHANGE) ||
+                trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE)
+        )) {
+            if (Config.logIncommingData)
+                log.debug("Processing CareportalEvent record: " + trJson.toString());
+            MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
         }
     }
 

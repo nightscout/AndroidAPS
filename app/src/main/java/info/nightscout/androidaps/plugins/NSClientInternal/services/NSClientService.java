@@ -89,7 +89,7 @@ public class NSClientService extends Service {
     static public String nsURL = "";
     private String nsAPISecret = "";
     private String nsDevice = "";
-    private Integer nsHours = 24;
+    private Integer nsHours = 48;
 
     private final Integer timeToWaitForResponseInMs = 30000;
     private boolean uploading = false;

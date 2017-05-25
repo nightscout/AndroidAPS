@@ -228,7 +228,7 @@ public class DanaRKoreanFragment extends Fragment {
                     dailyUnitsView.setText(DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U");
                     SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
                     basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(danaRKoreanPlugin.getBaseBasalRate()) + " U/h");
-                    if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                    if (MainApp.getConfigBuilder().isRealTempBasalInProgress()) {
                         tempBasalView.setText(MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime()).toString());
                     } else {
                         tempBasalView.setText("");

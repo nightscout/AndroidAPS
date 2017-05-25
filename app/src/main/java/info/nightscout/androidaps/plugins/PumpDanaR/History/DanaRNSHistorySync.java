@@ -10,6 +10,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
@@ -81,7 +82,7 @@ public class DanaRNSHistorySync {
                                 if (record.recordDuration > 0) {
                                     log.debug("Syncing extended bolus record " + record.recordValue + "U " + DateUtil.toISOString(record.recordDate));
                                     nsrec.put(DANARSIGNATURE, record.bytes);
-                                    nsrec.put("eventType", "Combo Bolus");
+                                    nsrec.put("eventType", CareportalEvent.COMBOBOLUS);
                                     nsrec.put("insulin", 0);
                                     nsrec.put("duration", record.recordDuration);
                                     nsrec.put("relative", record.recordValue / record.recordDuration * 60);
@@ -101,7 +102,7 @@ public class DanaRNSHistorySync {
                             case "DS":
                                 log.debug("Syncing dual(S) bolus record " + record.recordValue + "U " + DateUtil.toISOString(record.recordDate));
                                 nsrec.put(DANARSIGNATURE, record.bytes);
-                                nsrec.put("eventType", "Combo Bolus");
+                                nsrec.put("eventType", CareportalEvent.COMBOBOLUS);
                                 nsrec.put("insulin", record.recordValue);
                                 nsrec.put("splitNow", 100);
                                 nsrec.put("splitExt", 0);
@@ -114,7 +115,7 @@ public class DanaRNSHistorySync {
                             case "DE":
                                 log.debug("Syncing dual(E) bolus record " + record.recordValue + "U " + DateUtil.toISOString(record.recordDate));
                                 nsrec.put(DANARSIGNATURE, record.bytes);
-                                nsrec.put("eventType", "Combo Bolus");
+                                nsrec.put("eventType", CareportalEvent.COMBOBOLUS);
                                 nsrec.put("duration", record.recordDuration);
                                 nsrec.put("relative", record.recordValue / record.recordDuration * 60);
                                 nsrec.put("splitNow", 0);
@@ -160,7 +161,7 @@ public class DanaRNSHistorySync {
                         if ((what & SYNC_BASALHOURS) == 0) break;
                         log.debug("Syncing basal hour record " + record.recordValue + " " + DateUtil.toISOString(record.recordDate));
                         nsrec.put(DANARSIGNATURE, record.bytes);
-                        nsrec.put("eventType", "Temp Basal");
+                        nsrec.put("eventType", CareportalEvent.TEMPBASAL);
                         nsrec.put("absolute", record.recordValue);
                         nsrec.put("duration", 60);
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));

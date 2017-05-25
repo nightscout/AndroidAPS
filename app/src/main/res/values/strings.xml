@@ -615,4 +615,8 @@
     <string name="extendedbolus">ExtendedBolus</string>
     <string name="temptarget">TempTarget</string>
     <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
+    <string name="careportal_sensorage_label">Sensor age</string>
+    <string name="careportal_canulaage_label">Canula age</string>
+    <string name="careportal_insulinage_label">Insulin age</string>
+    <string name="hours">hours</string>
 </resources>
