@@ -12,6 +12,7 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtendedBolusesFragment;
@@ -49,6 +50,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         context = getContext();
 
         setFragment(new TreatmentsBolusFragment());
+        setBackgroundColorOnSelected(treatmentsTab);
 
         return view;
     }
@@ -59,15 +61,19 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         switch (v.getId()) {
             case R.id.treatments_treatments:
                 setFragment(new TreatmentsBolusFragment());
+                setBackgroundColorOnSelected(treatmentsTab);
                 break;
             case R.id.treatments_extendedboluses:
                 setFragment(new TreatmentsExtendedBolusesFragment());
+                setBackgroundColorOnSelected(extendedBolusesTab);
                 break;
             case R.id.treatments_tempbasals:
                 setFragment(new TreatmentsTemporaryBasalsFragment());
+                setBackgroundColorOnSelected(tempBasalsTab);
                 break;
             case R.id.treatments_temptargets:
                 setFragment(new TreatmentsTempTargetFragment());
+                setBackgroundColorOnSelected(tempTargetTab);
                 break;
         }
     }
@@ -78,5 +84,13 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.addToBackStack(null);
         ft.commit();
+    }
+
+    private void setBackgroundColorOnSelected(TextView selected) {
+        treatmentsTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
+        extendedBolusesTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
+        tempBasalsTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
+        tempTargetTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
+        selected.setBackgroundColor(MainApp.sResources.getColor(R.color.tabBgColorSelected));
     }
 }
