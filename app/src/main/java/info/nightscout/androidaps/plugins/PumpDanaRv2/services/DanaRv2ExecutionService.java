@@ -90,7 +90,7 @@ public class DanaRv2ExecutionService extends Service {
     public DanaRv2ExecutionService() {
         registerBus();
         MainApp.instance().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
-        danaRPump = DanaRv2Plugin.getDanaRPump();
+        danaRPump = DanaRPump.getInstance();
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "DanaRv2ExecutionService");

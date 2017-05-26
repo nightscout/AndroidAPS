@@ -14,6 +14,7 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MessageHashTable_v2;
 import info.nightscout.utils.CRC;
@@ -177,7 +178,7 @@ public class SerialIOThread extends Thread {
         if (!message.received) {
             log.warn("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
-                DanaRv2Plugin.getDanaRPump().isNewPump = false;
+                DanaRPump.getInstance().isNewPump = false;
                 log.debug("Old firmware detected");
             }
         }

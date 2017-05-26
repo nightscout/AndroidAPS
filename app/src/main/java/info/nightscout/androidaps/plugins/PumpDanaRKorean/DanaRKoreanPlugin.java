@@ -804,7 +804,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (MainApp.getConfigBuilder().isRealTempBasalInProgress()) {
             ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime()).toString() + "\n";
         }
         if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {

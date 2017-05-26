@@ -376,8 +376,8 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
-            if (percentRate > 200) {
-                percentRate = 200;
+            if (percentRate > getPumpDescription().maxHighTempPercent) {
+                percentRate = getPumpDescription().maxHighTempPercent;
             }
             // If extended in progress
             if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses) {
@@ -801,7 +801,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (MainApp.getConfigBuilder().isRealTempBasalInProgress()) {
             ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime()).toString() + "\n";
         }
         if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
