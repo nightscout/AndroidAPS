@@ -15,7 +15,7 @@
     <string name="always_use_shortavg_summary">полезно когда данные из нефильтруемых источников вроде Xdrip зашумляются</string>
     <string name="androidaps_tempbasalendnote">конец действия временного базала</string>
     <string name="androidaps_tempbasalstartnote">начало действия временного базала</string>
-    <string name="approachingdailylimit">"приближается суточный лимит инсулина "</string>
+    <string name="approachingdailylimit">приближается суточный лимит инсулина</string>
     <string name="apsmode_title">режим APS</string>
     <string name="array_of_elements" formatted="false">массив %d элементов. актуальная величина:</string>
     <string name="avgdelta">среднее изменение</string>
@@ -70,12 +70,12 @@
     <string name="careportal_newnstreatment_profile_label">профиль</string>
     <string name="careportal_newnstreatment_sensor">сенсор</string>
     <string name="careportal_newnstreatment_split_label">разбивка</string>
-    <string name="careportal_note">пояснение</string>
+    <string name="careportal_note">заметка</string>
     <string name="careportal_openapsoffline">OpenAPS оффлайн</string>
     <string name="careportal_profileswitch">смена профиля</string>
     <string name="careportal_pumpsitechange">смена места катетера помпы</string>
     <string name="careportal_question">вопрос</string>
-    <string name="careportal_shortname">ПНазн</string>
+    <string name="careportal_shortname">ПОРТНаз</string>
     <string name="careportal_snackbolus">болюс на перекус</string>
     <string name="careportal_tempbasalend">оконч действия врем базала</string>
     <string name="careportal_tempbasalstart">начало действия врем базала</string>
@@ -88,7 +88,7 @@
     <string name="clear_queue">очистка очереди</string>
     <string name="clearlog">очистка лога</string>
     <string name="closedloop">замкнутый цикл</string>
-    <string name="cob">действующие углеводы</string>
+    <string name="cob">акт углев</string>
     <string name="comment">комментарий</string>
     <string name="configbuilder">конфигуратор</string>
     <string name="configbuilder_aps">APS</string>
@@ -230,7 +230,7 @@
     <string name="import_from">импортировать настройки из</string>
     <string name="initializing">инициализация...</string>
     <string name="insulin_shortname">ИНС</string>
-    <string name="iob">действующий инсулин</string>
+    <string name="iob">IOB акт инс</string>
     <string name="it_lang">итальянский</string>
     <string name="ko_lang">корейский</string>
     <string name="language">язык</string>
@@ -293,7 +293,7 @@
     <string name="nsclientinternal_secret_dialogmessage">введите API secret для NS (мин 12 знаков)</string>
     <string name="nsclientinternal_secret_dialogtitle">API secret для NS</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
-    <string name="nsclientinternal_shortname">клNS</string>
+    <string name="nsclientinternal_shortname">клиентNS</string>
     <string name="nsclientinternal_title">клиент NS</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_url_dialogmessage">введите URL адрес Nightscout</string>
@@ -377,7 +377,7 @@
     <string name="openloop">открытый цикл</string>
     <string name="openloop_newsuggestion">есть новое предложение</string>
     <string name="othersettings_title">другое</string>
-    <string name="overview">синопсис</string>
+    <string name="overview">начало</string>
     <string name="overview_bolus_label">болюс</string>
     <string name="overview_bolusprogress_delivered">доставлено</string>
     <string name="overview_bolusprogress_goingtodeliver" formatted="false">будет доставлено %.2 fU е инс</string>
@@ -396,7 +396,7 @@
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="overview_quickwizard_item_edit_button">редактировать</string>
     <string name="overview_quickwizard_item_remove_button">удалить</string>
-    <string name="overview_shortname">К НАЧАЛУ</string>
+    <string name="overview_shortname">НАЧАЛО</string>
     <string name="overview_tempbasal_button">ВремБазал</string>
     <string name="patientage">Возраст пациента</string>
     <string name="patientage_summary">выберите возраст пациента для определения ограничителей безопасности</string>
@@ -465,24 +465,24 @@
     <string name="smscommunicator_basalreplywithcode" formatted="false">чтобы начать базал %.2fU/h ответьте кодом %s</string>
     <string name="smscommunicator_basalstopreplywithcode" formatted="false">чтобы прекратить врем базал ответьте кодом %s</string>
     <string name="smscommunicator_bolusdelivered" formatted="false">болюс %.2fU доставлен успешно</string>
-    <string name="smscommunicator_bolusfailed">неуспех доставки болюса</string>
+    <string name="smscommunicator_bolusfailed">доставка болюса не состоялась</string>
     <string name="smscommunicator_bolusreplywithcode" formatted="false">чтобы доставить болюс %.2fU ответьте кодом %s</string>
     <string name="smscommunicator_calibrationfailed">xdrip не получает калибровок</string>
     <string name="smscommunicator_calibrationreplywithcode" formatted="false">чтобы отправить калибровку %.2f ответьте кодом %s</string>
     <string name="smscommunicator_calibrationsent">калибровка отправлена. в xdrip должен быть активирован прием</string>
     <string name="smscommunicator_invalidphonennumber">неверный номер телефона для смс</string>
-    <string name="smscommunicator_loophasbeendisabled">цикл был деактивирован</string>
-    <string name="smscommunicator_loophasbeenenabled">цикл был активирован</string>
-    <string name="smscommunicator_loopisdisabled">цикл не работает</string>
-    <string name="smscommunicator_loopisenabled">цикл работает</string>
-    <string name="smscommunicator_loopresumed">цикл возобновлен</string>
-    <string name="smscommunicator_loopsuspended">цикл приостановлен</string>
+    <string name="smscommunicator_loophasbeendisabled">зцикл был деактивирован</string>
+    <string name="smscommunicator_loophasbeenenabled">зцикл был активирован</string>
+    <string name="smscommunicator_loopisdisabled">зцикл не работает</string>
+    <string name="smscommunicator_loopisenabled">зцикл работает</string>
+    <string name="smscommunicator_loopresumed">зцикл возобновлен</string>
+    <string name="smscommunicator_loopsuspended">зцикл приостановлен</string>
     <string name="smscommunicator_missingsmspermission">отсутствует смс подтверждение</string>
     <string name="smscommunicator_remotebasalnotallowed">удаленная настройка базала не разрешена</string>
     <string name="smscommunicator_remotebolusnotallowed">удаленный болюс не разрешен</string>
     <string name="smscommunicator_remotecalibrationnotallowed">удаленная калибровка не разрешена</string>
     <string name="smscommunicator_remotecommandnotallowed">удаленная команда не разрешена</string>
-    <string name="smscommunicator_remotecommandsallowed">разрешить отправку команд через смс</string>
+    <string name="smscommunicator_remotecommandsallowed">разрешить команды через смс</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="smscommunicator_suspendreplywithcode" formatted="false">для приостановки цикла на %d мин ответьте кодом %s</string>
     <string name="smscommunicator_tempbasalcanceled">врем базал отменен</string>
@@ -514,7 +514,7 @@
     <string name="temptargetrange">врем цель</string>
     <string name="temptargetrange_refreshfromnightscout">обновить врем цели из NS</string>
     <string name="temptargetrange_shortname">ВремЦель</string>
-    <string name="timeshift_hint">Время в часах к которому профиль будет смещен по кругу</string>
+    <string name="timeshift_hint">Время в часах к которому профиль перейдет на след сутки</string>
     <string name="treatmentdeliveryerror">ошибка доставки болюса</string>
     <string name="treatments">назначения</string>
     <string name="treatments_activity_string">нагрузка:</string>
