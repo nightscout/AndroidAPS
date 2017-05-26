@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="Glimp">Glimp</string>
     <string name="MM640g">MM640g</string>
     <string name="absolute">абсолют</string>
@@ -282,7 +281,6 @@
     <string name="ns_noupload_summary">данные передаваемые в NS не доходят. AAPS соединяется с NS но изменения туда не вносятся</string>
     <string name="ns_sync_use_absolute_title">только абсолютные величины для базала</string>
     <string name="ns_upload_only">только передача в NS (синхронизация отсутствует)</string>
-    <string name="ns_upload_only_enabled">отключите \"только передача в NS\" чтобы активировать эту опцию</string>
     <string name="ns_upload_only_summary">только передача в NS. работает в SGV только если выбран местный источник вроде xdrip. не работает в профилях при действующем профиле NS</string>
     <string name="nsclient">NSClient</string>
     <string name="nsclientinternal">внутренний клиент NS</string>
@@ -504,14 +502,12 @@
     <string name="target_range">целевой диапазон</string>
     <string name="teenage">подросток</string>
     <string name="tempbasaldeliveryerror">ошибка доставки врем базала</string>
-    <string name="tempbasals">врем базалы</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">общий IOB</string>
     <string name="tempbasals_netinsulin_label_string">инс:</string>
     <string name="tempbasals_netratio_label_string">соотношение:</string>
     <string name="tempbasals_realduration_label_string">длит:</string>
     <string name="tempbasals_shortname">ВремБаз</string>
-    <string name="temptargetrange">врем цель</string>
     <string name="temptargetrange_refreshfromnightscout">обновить врем цели из NS</string>
     <string name="temptargetrange_shortname">ВремЦель</string>
     <string name="timeshift_hint">Время в часах к которому профиль будет смещен по кругу</string>
