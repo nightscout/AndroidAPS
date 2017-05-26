@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
 /**
@@ -316,7 +317,7 @@ public class LoopPlugin implements PluginBase {
             }
 
             MainApp.bus().post(new EventLoopUpdateGui());
-            MainApp.getConfigBuilder().uploadDeviceStatus();
+            NSUpload.uploadDeviceStatus();
         } finally {
             if (Config.logFunctionCalls)
                 log.debug("invoke end");

@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OverlappingIntervals;
 import info.nightscout.utils.SP;
 
@@ -135,7 +136,7 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = tempTarget._id;
                                 if (_id != null && !_id.equals("")) {
-                                    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
+                                    NSUpload.removeCareportalEntryFromNS(_id);
                                 }
                                 MainApp.getDbHelper().delete(tempTarget);
                             }

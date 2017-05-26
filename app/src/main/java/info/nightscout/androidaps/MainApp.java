@@ -57,6 +57,7 @@ import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslineFragment;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
+import info.nightscout.utils.NSUpload;
 import io.fabric.sdk.android.Fabric;
 
 
@@ -128,7 +129,7 @@ public class MainApp extends Application {
 
             MainApp.getConfigBuilder().initialize();
         }
-        MainApp.getConfigBuilder().uploadAppStart();
+        NSUpload.uploadAppStart();
 
         startKeepAliveService();
 

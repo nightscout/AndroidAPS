@@ -33,6 +33,7 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OverlappingIntervals;
 
 
@@ -158,7 +159,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = tempBasal._id;
                                 if (_id != null && !_id.equals("")) {
-                                    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
+                                    NSUpload.removeCareportalEntryFromNS(_id);
                                 }
                                 MainApp.getDbHelper().delete(tempBasal);
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveTempBasal"));

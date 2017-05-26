@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
@@ -287,7 +288,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             msg += ".\n";
             msg += String.format(MainApp.sResources.getString(R.string.openapsma_valuelimitedto), value, newvalue);
             log.error(msg);
-            MainApp.getConfigBuilder().uploadError(msg);
+            NSUpload.uploadError(msg);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), msg, R.raw.error);
         }
         return newvalue;

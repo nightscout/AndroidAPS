@@ -20,6 +20,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWith
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.NSUpload;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
@@ -117,23 +118,6 @@ public class Treatment implements DataPointWithLabelInterface {
     }
 
     //  ----------------- DataPointInterface end --------------------
-
-    public void sendToNSClient() {
-        JSONObject data = new JSONObject();
-        try {
-            if (mealBolus)
-                data.put("eventType", "Meal Bolus");
-            else
-                data.put("eventType", "Correction Bolus");
-            if (insulin != 0d) data.put("insulin", insulin);
-            if (carbs != 0d) data.put("carbs", carbs.intValue());
-            data.put("created_at", DateUtil.toISOString(date));
-            data.put("timeIndex", date);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
-    }
 
     public Iob iobCalc(long time, double dia) {
         InsulinInterface insulinInterface = MainApp.getInsulinIterfaceById(insulinInterfaceID);

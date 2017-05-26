@@ -410,7 +410,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (extendedBoluses.size() > 0)
             oldestTime = Math.min(oldestTime, extendedBoluses.get(0).date);
         if (treatments.size() > 0)
-            oldestTime = Math.min(oldestTime, extendedBoluses.get(treatments.size() - 1).date);
+            oldestTime = Math.min(oldestTime, treatments.get(treatments.size() - 1).date);
         oldestTime -= 15 * 60 * 1000L; // allow 15 min before
         return oldestTime;
     }

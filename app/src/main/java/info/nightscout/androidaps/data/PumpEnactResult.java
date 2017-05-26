@@ -27,6 +27,9 @@ public class PumpEnactResult extends Object {
     public Double bolusDelivered = 0d; // real value of delivered insulin
     public Integer carbsDelivered = 0; // real value of delivered carbs
 
+    public Double originalExtendedAmount = null; // amount of extended bolus insulin if uploading as temp basal
+    public Boolean isFakedTempBasal = null; // true if canceling extended bolus but uploading as temp basal
+
     public boolean queued = false;
 
      public String log() {

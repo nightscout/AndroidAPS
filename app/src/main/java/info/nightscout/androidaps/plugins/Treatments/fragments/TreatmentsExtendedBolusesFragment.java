@@ -33,6 +33,7 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OverlappingIntervals;
 
 
@@ -142,7 +143,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = extendedBolus._id;
                                 if (_id != null && !_id.equals("")) {
-                                    MainApp.getConfigBuilder().removeCareportalEntryFromNS(_id);
+                                    NSUpload.removeCareportalEntryFromNS(_id);
                                 }
                                 MainApp.getDbHelper().delete(extendedBolus);
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveExtendedBolus"));

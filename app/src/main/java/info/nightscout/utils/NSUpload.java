@@ -1,0 +1,378 @@
+package info.nightscout.utils;
+
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
+import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
+import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
+
+/**
+ * Created by mike on 26.05.2017.
+ */
+
+public class NSUpload {
+    private static Logger log = LoggerFactory.getLogger(NSUpload.class);
+
+    public static void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes, Double originalExtendedAmount) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.TEMPBASAL);
+            data.put("duration", durationInMinutes);
+            data.put("absolute", absolute);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + absolute + "u/h " + durationInMinutes + " min"); // ECOR
+            if (originalExtendedAmount != null)
+                data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void uploadTempBasalStartPercent(Integer percent, double durationInMinutes) {
+        try {
+            SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
+            boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
+            if (useAbsolute) {
+                double absolute = MainApp.getConfigBuilder().getBaseBasalRate() * percent / 100d;
+                uploadTempBasalStartAbsolute(absolute, durationInMinutes, null);
+            } else {
+                Context context = MainApp.instance().getApplicationContext();
+                JSONObject data = new JSONObject();
+                data.put("eventType", CareportalEvent.TEMPBASAL);
+                data.put("duration", durationInMinutes);
+                data.put("percent", percent - 100);
+                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + percent + "% " + durationInMinutes + " min"); // ECOR
+                Bundle bundle = new Bundle();
+                bundle.putString("action", "dbAdd");
+                bundle.putString("collection", "treatments");
+                bundle.putString("data", data.toString());
+                Intent intent = new Intent(Intents.ACTION_DATABASE);
+                intent.putExtras(bundle);
+                intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+                context.sendBroadcast(intent);
+                DbLogger.dbAdd(intent, data.toString());
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void uploadTempBasalEnd(Boolean isFakedTempBasal) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.TEMPBASAL);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalendnote)); // ECOR
+            if (isFakedTempBasal != null)
+                data.put("isFakedTempBasal", isFakedTempBasal);
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void uploadExtendedBolus(Double insulin, double durationInMinutes) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.COMBOBOLUS);
+            data.put("duration", durationInMinutes);
+            data.put("splitNow", 0);
+            data.put("splitExt", 100);
+            data.put("enteredinsulin", insulin);
+            data.put("relative", insulin);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void uploadExtendedBolusEnd() {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.COMBOBOLUS);
+            data.put("duration", 0);
+            data.put("splitNow", 0);
+            data.put("splitExt", 100);
+            data.put("enteredinsulin", 0);
+            data.put("relative", 0);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void uploadTreatment(Treatment treatment) {
+        JSONObject data = new JSONObject();
+        try {
+            if (treatment.mealBolus)
+                data.put("eventType", "Meal Bolus");
+            else
+                data.put("eventType", "Correction Bolus");
+            if (treatment.insulin != 0d) data.put("insulin", treatment.insulin);
+            if (treatment.carbs != 0d) data.put("carbs", treatment.carbs.intValue());
+            data.put("created_at", DateUtil.toISOString(treatment.date));
+            data.put("timeIndex", treatment.date);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        NSUpload.uploadCareportalEntryToNS(data);
+    }
+
+    public static void uploadDeviceStatus() {
+        DeviceStatus deviceStatus = new DeviceStatus();
+        try {
+            LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
+            if (lastRun != null && lastRun.lastAPSRun.getTime() > new Date().getTime() - 300 * 1000L) {
+                // do not send if result is older than 1 min
+                APSResult apsResult = lastRun.request;
+                apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
+                deviceStatus.suggested = apsResult.json();
+
+                if (lastRun.request instanceof DetermineBasalResultMA) {
+                    DetermineBasalResultMA result = (DetermineBasalResultMA) lastRun.request;
+                    deviceStatus.iob = result.iob.json();
+                    deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                }
+
+                if (lastRun.request instanceof DetermineBasalResultAMA) {
+                    DetermineBasalResultAMA result = (DetermineBasalResultAMA) lastRun.request;
+                    deviceStatus.iob = result.iob.json();
+                    deviceStatus.iob.put("time", DateUtil.toISOString(lastRun.lastAPSRun));
+                }
+
+                if (lastRun.setByPump != null && lastRun.setByPump.enacted) { // enacted
+                    deviceStatus.enacted = lastRun.request.json();
+                    deviceStatus.enacted.put("rate", lastRun.setByPump.json().get("rate"));
+                    deviceStatus.enacted.put("duration", lastRun.setByPump.json().get("duration"));
+                    deviceStatus.enacted.put("recieved", true);
+                    JSONObject requested = new JSONObject();
+                    requested.put("duration", lastRun.request.duration);
+                    requested.put("rate", lastRun.request.rate);
+                    requested.put("temp", "absolute");
+                    deviceStatus.enacted.put("requested", requested);
+                }
+            } else {
+                log.debug("OpenAPS data too old to upload");
+            }
+            deviceStatus.device = "openaps://" + MainApp.getConfigBuilder().deviceID();
+            JSONObject pumpstatus = MainApp.getConfigBuilder().getJSONStatus();
+            if (pumpstatus != null) {
+                deviceStatus.pump = pumpstatus;
+            }
+
+            int batteryLevel = BatteryLevel.getBatteryLevel();
+            deviceStatus.uploaderBattery = batteryLevel;
+
+            deviceStatus.created_at = DateUtil.toISOString(new Date());
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "devicestatus");
+            bundle.putString("data", deviceStatus.mongoRecord().toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, deviceStatus.mongoRecord().toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void uploadBolusWizardRecord(Treatment t, double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", "Bolus Wizard");
+            if (t.insulin != 0d) data.put("insulin", t.insulin);
+            if (t.carbs != 0d) data.put("carbs", t.carbs.intValue());
+            data.put("created_at", DateUtil.toISOString(t.date));
+            data.put("date", t.date);
+            if (glucose != 0d) data.put("glucose", glucose);
+            data.put("glucoseType", glucoseType);
+            data.put("boluscalc", boluscalc);
+            if (carbTime != 0) data.put("preBolus", carbTime);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        uploadCareportalEntryToNS(data);
+    }
+
+    public static void uploadCareportalEntryToNS(JSONObject data) {
+        try {
+            if (data.has("preBolus") && data.has("carbs")) {
+                JSONObject prebolus = new JSONObject();
+                prebolus.put("carbs", data.get("carbs"));
+                data.remove("carbs");
+                prebolus.put("eventType", data.get("eventType"));
+                if (data.has("enteredBy")) prebolus.put("enteredBy", data.get("enteredBy"));
+                if (data.has("notes")) prebolus.put("notes", data.get("notes"));
+                long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
+                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L);
+                prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
+                uploadCareportalEntryToNS(prebolus);
+            }
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void removeCareportalEntryFromNS(String _id) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbRemove");
+            bundle.putString("collection", "treatments");
+            bundle.putString("_id", _id);
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbRemove(intent, _id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static void uploadOpenAPSOffline(double durationInMinutes) {
+        try {
+            Context context = MainApp.instance().getApplicationContext();
+            JSONObject data = new JSONObject();
+            data.put("eventType", "OpenAPS Offline");
+            data.put("duration", durationInMinutes);
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void uploadError(String error) {
+        Context context = MainApp.instance().getApplicationContext();
+        Bundle bundle = new Bundle();
+        bundle.putString("action", "dbAdd");
+        bundle.putString("collection", "treatments");
+        JSONObject data = new JSONObject();
+        try {
+            data.put("eventType", "Announcement");
+            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("notes", error);
+            data.put("isAnnouncement", true);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        bundle.putString("data", data.toString());
+        Intent intent = new Intent(Intents.ACTION_DATABASE);
+        intent.putExtras(bundle);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+        context.sendBroadcast(intent);
+        DbLogger.dbAdd(intent, data.toString());
+    }
+
+    public static void uploadAppStart() {
+        if (SP.getBoolean(R.string.key_ns_logappstartedevent, true)) {
+            Context context = MainApp.instance().getApplicationContext();
+            Bundle bundle = new Bundle();
+            bundle.putString("action", "dbAdd");
+            bundle.putString("collection", "treatments");
+            JSONObject data = new JSONObject();
+            try {
+                data.put("eventType", "Note");
+                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            bundle.putString("data", data.toString());
+            Intent intent = new Intent(Intents.ACTION_DATABASE);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            DbLogger.dbAdd(intent, data.toString());
+        }
+    }
+}

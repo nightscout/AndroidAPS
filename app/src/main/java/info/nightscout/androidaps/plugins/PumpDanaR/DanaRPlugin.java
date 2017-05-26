@@ -483,6 +483,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Extended bolus set ok");
             result.absolute = result.absolute + getBaseBasalRate();
+            result.originalExtendedAmount = extendedAmount;
             return result;
         }
         // We should never end here
@@ -585,8 +586,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public PumpEnactResult cancelTempBasal() {
         if (MainApp.getConfigBuilder().isRealTempBasalInProgress())
             return cancelRealTempBasal();
-        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses)
-            return cancelExtendedBolus();
+        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses) {
+            PumpEnactResult cancelEx = cancelExtendedBolus();
+            cancelEx.isFakedTempBasal = true;
+            return cancelEx;
+        }
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.enacted = false;

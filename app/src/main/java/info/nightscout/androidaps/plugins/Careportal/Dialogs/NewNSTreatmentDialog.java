@@ -53,6 +53,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -631,7 +632,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         data.put("timeshift", cpp.timeshift);
                                         data.put("percentage", cpp.percentage);
                                     }
-                                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                                    NSUpload.uploadCareportalEntryToNS(data);
                                     Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -659,7 +660,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         }
                                         log.debug("Creating new TempTarget db record: " + tempTarget.log());
                                         MainApp.getDbHelper().createOrUpdate(tempTarget);
-                                        ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                                        NSUpload.uploadCareportalEntryToNS(data);
                                         Answers.getInstance().logCustom(new CustomEvent("TempTarget"));
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -671,7 +672,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                         e.printStackTrace();
                     }
                 } else {
-                    ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+                    NSUpload.uploadCareportalEntryToNS(data);
                     Answers.getInstance().logCustom(new CustomEvent("NSTreatment"));
                 }
             }

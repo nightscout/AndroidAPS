@@ -29,6 +29,7 @@ import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpd
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.NSUpload;
 
 /**
  * Created by mike on 05.08.2016.
@@ -181,7 +182,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void refreshDataFromPump(String reason) {
-        MainApp.getConfigBuilder().uploadDeviceStatus();
+        NSUpload.uploadDeviceStatus();
         lastDataTime = new Date();
     }
 

@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.XdripCalibrations;
@@ -316,7 +317,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
                                 activeloop.suspendTo(0);
                                 MainApp.bus().post(new EventRefreshGui(false));
-                                ConfigBuilderPlugin.uploadOpenAPSOffline(0);
+                                NSUpload.uploadOpenAPSOffline(0);
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_loopresumed);
                                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
                                 Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Resume"));
@@ -533,7 +534,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
                         activeloop.suspendTo(new Date().getTime() + suspendWaitingForConfirmation.duration * 60L * 1000);
                         PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
-                        ConfigBuilderPlugin.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
+                        NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
                         MainApp.bus().post(new EventRefreshGui(false));
                         reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +
                                 MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);

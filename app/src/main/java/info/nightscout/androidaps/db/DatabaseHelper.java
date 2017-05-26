@@ -867,42 +867,100 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createTempBasalFromJsonIfNotExists(JSONObject trJson) {
         try {
-            QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
-            queryBuilder = getDaoTemporaryBasal().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
-            List<TemporaryBasal> list = getDaoTemporaryBasal().query(preparedQuery);
-            TemporaryBasal tempBasal;
-            if (list.size() == 0) {
-                tempBasal = new TemporaryBasal();
-                tempBasal.source = Source.NIGHTSCOUT;
-                if (Config.logIncommingData)
-                    log.debug("Adding TemporaryBasal record to database: " + trJson.toString());
-                // Record does not exists. add
-            } else if (list.size() == 1) {
-                tempBasal = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Updating TemporaryBasal record in database: " + trJson.toString());
+            if (trJson.has("originalExtendedAmount")) { // extended bolus uploaded as temp basal
+                QueryBuilder<ExtendedBolus, Long> queryBuilder = null;
+                queryBuilder = getDaoExtendedBolus().queryBuilder();
+                Where where = queryBuilder.where();
+                where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
+                PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+                List<ExtendedBolus> list = getDaoExtendedBolus().query(preparedQuery);
+                ExtendedBolus extendedBolus;
+                if (list.size() == 0) {
+                    extendedBolus = new ExtendedBolus();
+                    extendedBolus.source = Source.NIGHTSCOUT;
+                    if (Config.logIncommingData)
+                        log.debug("Adding ExtendedBolus record to database: " + trJson.toString());
+                    // Record does not exists. add
+                } else if (list.size() == 1) {
+                    extendedBolus = list.get(0);
+                    if (Config.logIncommingData)
+                        log.debug("Updating ExtendedBolus record in database: " + trJson.toString());
+                } else {
+                    log.error("Something went wrong");
+                    return;
+                }
+                extendedBolus.date = trJson.getLong("mills");
+                extendedBolus.durationInMinutes = trJson.getInt("duration");
+                extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
+                extendedBolus._id = trJson.getString("_id");
+                createOrUpdate(extendedBolus);
+                scheduleExtendedBolusChange();
+            } else if (trJson.has("isFakedTempBasal")) { // extended bolus end uploaded as temp basal end
+                QueryBuilder<ExtendedBolus, Long> queryBuilder = null;
+                queryBuilder = getDaoExtendedBolus().queryBuilder();
+                Where where = queryBuilder.where();
+                where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
+                PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+                List<ExtendedBolus> list = getDaoExtendedBolus().query(preparedQuery);
+                ExtendedBolus extendedBolus;
+                if (list.size() == 0) {
+                    extendedBolus = new ExtendedBolus();
+                    extendedBolus.source = Source.NIGHTSCOUT;
+                    if (Config.logIncommingData)
+                        log.debug("Adding ExtendedBolus record to database: " + trJson.toString());
+                    // Record does not exists. add
+                } else if (list.size() == 1) {
+                    extendedBolus = list.get(0);
+                    if (Config.logIncommingData)
+                        log.debug("Updating ExtendedBolus record in database: " + trJson.toString());
+                } else {
+                    log.error("Something went wrong");
+                    return;
+                }
+                extendedBolus.date = trJson.getLong("mills");
+                extendedBolus.durationInMinutes = 0;
+                extendedBolus.insulin = 0;
+                extendedBolus._id = trJson.getString("_id");
+                createOrUpdate(extendedBolus);
+                scheduleExtendedBolusChange();
             } else {
-                log.error("Something went wrong");
-                return;
+                QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
+                queryBuilder = getDaoTemporaryBasal().queryBuilder();
+                Where where = queryBuilder.where();
+                where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
+                PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+                List<TemporaryBasal> list = getDaoTemporaryBasal().query(preparedQuery);
+                TemporaryBasal tempBasal;
+                if (list.size() == 0) {
+                    tempBasal = new TemporaryBasal();
+                    tempBasal.source = Source.NIGHTSCOUT;
+                    if (Config.logIncommingData)
+                        log.debug("Adding TemporaryBasal record to database: " + trJson.toString());
+                    // Record does not exists. add
+                } else if (list.size() == 1) {
+                    tempBasal = list.get(0);
+                    if (Config.logIncommingData)
+                        log.debug("Updating TemporaryBasal record in database: " + trJson.toString());
+                } else {
+                    log.error("Something went wrong");
+                    return;
+                }
+                tempBasal.date = trJson.getLong("mills");
+                if (trJson.has("duration")) {
+                    tempBasal.durationInMinutes = trJson.getInt("duration");
+                }
+                if (trJson.has("percent")) {
+                    tempBasal.percentRate = trJson.getInt("percent") + 100;
+                    tempBasal.isAbsolute = false;
+                }
+                if (trJson.has("absolute")) {
+                    tempBasal.absoluteRate = trJson.getDouble("absolute");
+                    tempBasal.isAbsolute = true;
+                }
+                tempBasal._id = trJson.getString("_id");
+                createOrUpdate(tempBasal);
+                scheduleTemporaryBasalChange();
             }
-            tempBasal.date = trJson.getLong("mills");
-            if (trJson.has("duration")) {
-                tempBasal.durationInMinutes = trJson.getInt("duration");
-            }
-            if (trJson.has("percent")) {
-                tempBasal.percentRate = trJson.getInt("percent") + 100;
-                tempBasal.isAbsolute = false;
-            }
-            if (trJson.has("absolute")) {
-                tempBasal.absoluteRate = trJson.getDouble("absolute");
-                tempBasal.isAbsolute = true;
-            }
-            tempBasal._id = trJson.getString("_id");
-            createOrUpdate(tempBasal);
-            scheduleTemporaryBasalChange();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {
