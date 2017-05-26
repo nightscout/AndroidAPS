@@ -42,7 +42,6 @@ import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -237,13 +236,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     // Pump interface
-    public boolean isTempBasalInProgress() {
-        if (MainApp.getConfigBuilder().getTempBasal(new Date().getTime()) != null) return true;
-        if (MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()) != null && useExtendedBoluses)
-            return true;
-        return false;
-    }
-
     @Override
     public int setNewBasalProfile(NSProfile profile) {
         if (sExecutionService == null) {
@@ -280,6 +272,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         for (int h = 0; h < basalValues; h++) {
             Double pumpValue = pump.pumpProfiles[pump.activeProfile][h];
             Double profileValue = profile.getBasal(h * basalIncrement);
+            if (profileValue == null) return true;
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
                 log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
                 return false;
@@ -303,14 +296,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     @Override
     public double getBaseBasalRate() {
         return pump.currentBasal;
-    }
-
-    public TemporaryBasal getTempBasal(long time) {
-        TemporaryBasal temp = MainApp.getConfigBuilder().getTempBasal(time);
-        if (temp != null) return temp;
-        if (useExtendedBoluses)
-            return new TemporaryBasal(MainApp.getConfigBuilder().getExtendedBolus(time));
-        return null;
     }
 
     @Override
@@ -490,6 +475,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Extended bolus set ok");
             result.absolute = result.absolute + getBaseBasalRate();
+            result.originalExtendedAmount = extendedAmount;
             return result;
         }
         // We should never end here
@@ -593,8 +579,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     public PumpEnactResult cancelTempBasal() {
         if (MainApp.getConfigBuilder().isRealTempBasalInProgress())
             return cancelRealTempBasal();
-        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses)
-            return cancelExtendedBolus();
+        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses) {
+            PumpEnactResult cancelEx = cancelExtendedBolus();
+            cancelEx.isFakedTempBasal = true;
+            return cancelEx;
+        }
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
         result.enacted = false;
@@ -675,12 +664,14 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         JSONObject extended = new JSONObject();
         try {
             battery.put("percent", pump.batteryRemaining);
-            status.put("status", "normal");
+            status.put("status", pump.pumpSuspended ? "suspended" : "normal");
             status.put("timestamp", DateUtil.toISOString(pump.lastConnection));
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             extended.put("PumpIOB", pump.iob);
-//            extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
-//            extended.put("LastBolusAmount", pump.lastBolusAmount);
+            if (pump.lastBolusTime.getTime() != 0) {
+                extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
+                extended.put("LastBolusAmount", pump.lastBolusAmount);
+            }
             TemporaryBasal tb = MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
@@ -810,9 +801,9 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " minago\n";
         }
-//        if (pump.lastBolusTime.getTime() != 0) {
-//            ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
-//        }
+        if (pump.lastBolusTime.getTime() != 0) {
+            ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
+        }
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime()).toString() + "\n";
         }

@@ -211,7 +211,7 @@ public class DanaRFragment extends Fragment {
                 @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
-                    DanaRPump pump = DanaRPlugin.getDanaRPump();
+                    DanaRPump pump = DanaRPump.getInstance();
                     if (pump.lastConnection.getTime() != 0) {
                         Long agoMsec = new Date().getTime() - pump.lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);
@@ -222,7 +222,7 @@ public class DanaRFragment extends Fragment {
                         Long agoMsec = new Date().getTime() - pump.lastBolusTime.getTime();
                         double agoHours = agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
-                            lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(getPlugin().getDanaRPump().lastBolusAmount) + " U");
+                            lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(DanaRPump.getInstance().lastBolusAmount) + " U");
                         else lastBolusView.setText("");
                     }
 
