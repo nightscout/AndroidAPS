@@ -48,8 +48,5 @@ public interface PumpInterface {
     // Short info for SMS, Wear etc
     String shortStatus(boolean veryShort);
 
-    // Enforced Treatment plugin
-    String treatmentPlugin();
-
     boolean isFakingTempsByExtendedBoluses();
 }

@@ -216,11 +216,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     }
 
     @Override
-    public String treatmentPlugin() {
-        return TreatmentsPlugin.class.getName();
-    }
-
-    @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return useExtendedBoluses;
     }

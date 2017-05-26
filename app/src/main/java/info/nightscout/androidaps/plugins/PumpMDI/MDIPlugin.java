@@ -118,11 +118,6 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public String treatmentPlugin() {
-        return TreatmentsPlugin.class.getName();
-    }
-
-    @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
     }

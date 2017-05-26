@@ -695,15 +695,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public String treatmentPlugin() {
-        if (activePump != null) {
-            return activePump.treatmentPlugin();
-        } else {
-            return null;
-        }
-    }
-
-    @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return activePump.isFakingTempsByExtendedBoluses();
     }

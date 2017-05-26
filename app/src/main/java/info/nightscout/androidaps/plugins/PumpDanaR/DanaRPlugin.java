@@ -217,11 +217,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public String treatmentPlugin() {
-        return TreatmentsPlugin.class.getName();
-    }
-
-    @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return useExtendedBoluses;
     }

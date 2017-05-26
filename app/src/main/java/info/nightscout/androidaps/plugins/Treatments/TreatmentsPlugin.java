@@ -81,8 +81,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        boolean canBeEnabled = MainApp.getConfigBuilder().treatmentPlugin() == null ? true : MainApp.getConfigBuilder().treatmentPlugin().equals(getClass().getName());
-        return type == TREATMENT && fragmentEnabled && canBeEnabled;
+        return type == TREATMENT && fragmentEnabled;
     }
 
     @Override
@@ -102,8 +101,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public boolean showInList(int type) {
-        boolean canBeEnabled = MainApp.getConfigBuilder().treatmentPlugin() == null ? true : MainApp.getConfigBuilder().treatmentPlugin().equals(getClass().getName());
-        return canBeEnabled;
+        return true;
     }
 
     @Override

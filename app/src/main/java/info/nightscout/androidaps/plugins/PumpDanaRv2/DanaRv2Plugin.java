@@ -203,11 +203,6 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
     }
 
     @Override
-    public String treatmentPlugin() {
-        return TreatmentsPlugin.class.getName();
-    }
-
-    @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
     }
