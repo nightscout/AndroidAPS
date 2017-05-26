@@ -330,6 +330,10 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
                                         }
                                         if (useSuperBolus) {
                                             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+                                            if (activeloop != null) {
+                                                activeloop.superBolusTo(new Date().getTime() + 2 * 60L * 60 * 1000);
+                                                MainApp.bus().post(new EventRefreshGui(false));
+                                            }
                                             result = pump.setTempBasalAbsolute(0d, 120);
                                             if (!result.success) {
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -337,10 +341,6 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
                                                 builder.setMessage(result.comment);
                                                 builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                                 builder.show();
-                                            }
-                                            if (activeloop != null) {
-                                                activeloop.superBolusTo(new Date().getTime() + 2 * 60L * 60 * 1000);
-                                                MainApp.bus().post(new EventRefreshGui(false));
                                             }
                                         }
                                     }
