@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/objectives_fake_layout"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <CheckBox
                 android:layout_width="wrap_content"
