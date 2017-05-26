@@ -159,6 +159,7 @@ public class ExtendedBolus implements Interval {
                     Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
                     result.iob += aIOB.iobContrib;
                     result.activity += aIOB.activityContrib;
+                    result.extendedBolusInsulin += tempBolusPart.insulin;
                 }
             }
         }

@@ -306,13 +306,21 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
             total.plus(calc);
         }
-        if (MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
+        if (MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+            IobTotal totalExt = new IobTotal(time);
             for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
                 ExtendedBolus e = extendedBoluses.get(pos);
                 if (e.date > time) continue;
                 IobTotal calc = e.iobCalc(time);
-                total.plus(calc);
+                totalExt.plus(calc);
             }
+            // Convert to basal iob
+            totalExt.basaliob = totalExt.iob;
+            totalExt.iob = 0d;
+            totalExt.netbasalinsulin = totalExt.extendedBolusInsulin;
+            totalExt.hightempinsulin = totalExt.extendedBolusInsulin;
+            total.plus(totalExt);
+        }
         return total;
     }
 

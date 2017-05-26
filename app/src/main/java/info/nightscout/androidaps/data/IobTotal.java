@@ -22,6 +22,8 @@ public class IobTotal {
     public Double netInsulin = 0d; // for calculations from temp basals only
     public Double netRatio = 0d; // net ratio at start of temp basal
 
+    public Double extendedBolusInsulin = 0d; // total insulin for extended bolus
+
     long time;
 
     public IobTotal(long time) {
@@ -42,7 +44,7 @@ public class IobTotal {
         netbasalinsulin += other.netbasalinsulin;
         hightempinsulin += other.hightempinsulin;
         netInsulin += other.netInsulin;
-        netRatio += other.netRatio;
+        extendedBolusInsulin += other.extendedBolusInsulin;
         return this;
     }
 
