@@ -896,7 +896,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // temp target
         NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTarget(new Date().getTime());
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(new Date().getTime());
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
@@ -936,7 +936,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             calibrationButton.setVisibility(View.GONE);
         }
 
-        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
             cancelTempButton.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
@@ -1122,7 +1122,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
-                TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasal(time);
+                TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
                 double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
                 double baseLineValue = baseBasalValue;
                 double tempBasalValue = 0;
@@ -1411,7 +1411,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
 
         // Treatments
-        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatments();
+        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
         List<Treatment> filteredTreatments = new ArrayList<Treatment>();
 
         for (int tx = 0; tx < treatments.size(); tx++) {

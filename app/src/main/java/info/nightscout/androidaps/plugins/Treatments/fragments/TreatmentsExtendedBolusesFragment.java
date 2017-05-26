@@ -167,7 +167,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
         llm = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getExtendedBoluses());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getConfigBuilder().getExtendedBolusesFromHistory());
         recyclerView.setAdapter(adapter);
 
         context = getContext();
@@ -204,7 +204,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getExtendedBoluses()), false);
+                    recyclerView.swapAdapter(new RecyclerViewAdapter(MainApp.getConfigBuilder().getExtendedBolusesFromHistory()), false);
                 }
             });
     }

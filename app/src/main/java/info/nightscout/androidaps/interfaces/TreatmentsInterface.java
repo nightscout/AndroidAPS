@@ -25,31 +25,31 @@ public interface TreatmentsInterface {
 
     MealData getMealData();
 
-    List<Treatment> getTreatments();
-    List<Treatment> getTreatments5MinBack(long time);
+    List<Treatment> getTreatmentsFromHistory();
+    List<Treatment> getTreatments5MinBackFromHistory(long time);
 
-    // real basals on pump
-    boolean isRealTempBasalInProgress();
-    TemporaryBasal getRealTempBasal (long time);
+    // real basals (not faked by extended bolus)
+    boolean isInHistoryRealTempBasalInProgress();
+    TemporaryBasal getRealTempBasalFromHistory(long time);
 
-    void tempBasalStart(TemporaryBasal tempBasal);
-    void tempBasalStop(long time);
+    void addToHistoryTempBasalStart(TemporaryBasal tempBasal);
+    void addToHistoryTempBasalStop(long time);
 
     // basal that can be faked by extended boluses
     boolean isTempBasalInProgress();
-    TemporaryBasal getTempBasal (long time);
-    double getTempBasalAbsoluteRate();
-    double getTempBasalRemainingMinutes();
-    OverlappingIntervals<TemporaryBasal> getTemporaryBasals();
+    TemporaryBasal getTempBasalFromHistory(long time);
+    double getTempBasalAbsoluteRateHistory();
+    double getTempBasalRemainingMinutesFromHistory();
+    OverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory();
 
-    boolean isExtendedBoluslInProgress();
-    ExtendedBolus getExtendedBolus (long time);
-    void extendedBolusStart(ExtendedBolus extendedBolus);
-    void extendedBolusStop(long time);
-    OverlappingIntervals<ExtendedBolus> getExtendedBoluses();
+    boolean isInHistoryExtendedBoluslInProgress();
+    ExtendedBolus getExtendedBolusFromHistory(long time);
+    void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus);
+    void addToHistoryExtendedBolusStop(long time);
+    OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory();
 
-    TempTarget getTempTarget (long time);
-    OverlappingIntervals<TempTarget> getTempTargets();
+    TempTarget getTempTargetFromHistory(long time);
+    OverlappingIntervals<TempTarget> getTempTargetsFromHistory();
 
     long oldestDataAvaialable();
 

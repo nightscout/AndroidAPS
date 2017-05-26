@@ -238,12 +238,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public List<Treatment> getTreatments() {
+    public List<Treatment> getTreatmentsFromHistory() {
         return treatments;
     }
 
     @Override
-    public List<Treatment> getTreatments5MinBack(long time) {
+    public List<Treatment> getTreatments5MinBackFromHistory(long time) {
         List<Treatment> in5minback = new ArrayList<>();
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
@@ -254,23 +254,23 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public boolean isRealTempBasalInProgress() {
-        return getRealTempBasal(new Date().getTime()) != null;
+    public boolean isInHistoryRealTempBasalInProgress() {
+        return getRealTempBasalFromHistory(new Date().getTime()) != null;
     }
 
     @Override
-    public TemporaryBasal getRealTempBasal(long time) {
+    public TemporaryBasal getRealTempBasalFromHistory(long time) {
         return (TemporaryBasal) tempBasals.getValueByInterval(time);
     }
 
     @Override
     public boolean isTempBasalInProgress() {
-        return getTempBasal(new Date().getTime()) != null;
+        return getTempBasalFromHistory(new Date().getTime()) != null;
     }
 
     @Override
-    public boolean isExtendedBoluslInProgress() {
-        return getExtendedBolus(new Date().getTime()) != null; //TODO:  crosscheck here
+    public boolean isInHistoryExtendedBoluslInProgress() {
+        return getExtendedBolusFromHistory(new Date().getTime()) != null; //TODO:  crosscheck here
     }
 
     @Subscribe
@@ -333,28 +333,28 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Nullable
     @Override
-    public TemporaryBasal getTempBasal(long time) {
-        TemporaryBasal tb = getRealTempBasal(time);
+    public TemporaryBasal getTempBasalFromHistory(long time) {
+        TemporaryBasal tb = getRealTempBasalFromHistory(time);
         if (tb != null)
             return tb;
-        ExtendedBolus eb = getExtendedBolus(time);
+        ExtendedBolus eb = getExtendedBolusFromHistory(time);
         if (eb != null && MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
             return new TemporaryBasal(eb);
         return null;
     }
 
     @Override
-    public ExtendedBolus getExtendedBolus(long time) {
+    public ExtendedBolus getExtendedBolusFromHistory(long time) {
         return (ExtendedBolus) extendedBoluses.getValueByInterval(time);
     }
 
     @Override
-    public void extendedBolusStart(ExtendedBolus extendedBolus) {
+    public void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus) {
         MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
     @Override
-    public void extendedBolusStop(long time) {
+    public void addToHistoryExtendedBolusStop(long time) {
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = time;
         extendedBolus.durationInMinutes = 0;
@@ -362,15 +362,15 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public OverlappingIntervals<ExtendedBolus> getExtendedBoluses() {
+    public OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory() {
         return extendedBoluses;
     }
 
     @Override
-    public double getTempBasalAbsoluteRate() {
+    public double getTempBasalAbsoluteRateHistory() {
         PumpInterface pump = MainApp.getConfigBuilder();
 
-        TemporaryBasal tb = getTempBasal(new Date().getTime());
+        TemporaryBasal tb = getTempBasalFromHistory(new Date().getTime());
         if (tb != null) {
             if (tb.isAbsolute) {
                 return tb.absoluteRate;
@@ -384,24 +384,24 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public double getTempBasalRemainingMinutes() {
+    public double getTempBasalRemainingMinutesFromHistory() {
         if (isTempBasalInProgress())
-            return getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
+            return getTempBasalFromHistory(new Date().getTime()).getPlannedRemainingMinutes();
         return 0;
     }
 
     @Override
-    public OverlappingIntervals<TemporaryBasal> getTemporaryBasals() {
+    public OverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
         return tempBasals;
     }
 
     @Override
-    public void tempBasalStart(TemporaryBasal tempBasal) {
+    public void addToHistoryTempBasalStart(TemporaryBasal tempBasal) {
         MainApp.getDbHelper().createOrUpdate(tempBasal);
     }
 
     @Override
-    public void tempBasalStop(long time) {
+    public void addToHistoryTempBasalStop(long time) {
         TemporaryBasal temporaryBasal = new TemporaryBasal();
         temporaryBasal.date = time;
         temporaryBasal.durationInMinutes = 0;
@@ -429,12 +429,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Nullable
     @Override
-    public TempTarget getTempTarget(long time) {
+    public TempTarget getTempTargetFromHistory(long time) {
         return (TempTarget) tempTargets.getValueByInterval(time);
     }
 
     @Override
-    public OverlappingIntervals<TempTarget> getTempTargets() {
+    public OverlappingIntervals<TempTarget> getTempTargetsFromHistory() {
         return tempTargets;
     }
 

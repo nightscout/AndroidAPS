@@ -62,23 +62,23 @@ public class MsgStatusTempBasal extends MessageBase {
         DanaRPump danaRPump = DanaRPump.getInstance();
         long now = new Date().getTime();
 
-        if (treatmentsInterface.isRealTempBasalInProgress()) {
-            TemporaryBasal tempBasal = treatmentsInterface.getRealTempBasal(new Date().getTime());
+        if (treatmentsInterface.isInHistoryRealTempBasalInProgress()) {
+            TemporaryBasal tempBasal = treatmentsInterface.getRealTempBasalFromHistory(new Date().getTime());
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal
-                    treatmentsInterface.tempBasalStop(now - 1000);
+                    treatmentsInterface.addToHistoryTempBasalStop(now - 1000);
                     // Create new
                     TemporaryBasal newTempBasal = new TemporaryBasal();
                     newTempBasal.date = new Date(now).getTime();
                     newTempBasal.percentRate = danaRPump.tempBasalPercent;
                     newTempBasal.isAbsolute = false;
                     newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
-                    treatmentsInterface.tempBasalStart(newTempBasal);
+                    treatmentsInterface.addToHistoryTempBasalStart(newTempBasal);
                 }
             } else {
                 // Close current temp basal
-                treatmentsInterface.tempBasalStop(now);
+                treatmentsInterface.addToHistoryTempBasalStop(now);
             }
         } else {
             if (danaRPump.isTempBasalInProgress) {
@@ -88,7 +88,7 @@ public class MsgStatusTempBasal extends MessageBase {
                 newTempBasal.percentRate = danaRPump.tempBasalPercent;
                 newTempBasal.isAbsolute = false;
                 newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
-                treatmentsInterface.tempBasalStart(newTempBasal);
+                treatmentsInterface.addToHistoryTempBasalStart(newTempBasal);
             }
         }
     }

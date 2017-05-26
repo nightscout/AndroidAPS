@@ -279,7 +279,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 double bgi = -iob.activity * sens * 5;
                 double deviation = delta - bgi;
 
-                List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBack(bgTime);
+                List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBackFromHistory(bgTime);
                 for (int ir = 0; ir < recentTreatments.size(); ir++) {
                     autosensData.carbsFromBolus += recentTreatments.get(ir).carbs;
                 }

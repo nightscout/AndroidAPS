@@ -351,8 +351,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         double beginBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(beginBasalSegmentTime)));
         double endBasalValue = beginBasalValue;
 
-        TemporaryBasal tb1 = MainApp.getConfigBuilder().getTempBasal(runningTime);
-        TemporaryBasal tb2 = MainApp.getConfigBuilder().getTempBasal(runningTime);
+        TemporaryBasal tb1 = MainApp.getConfigBuilder().getTempBasalFromHistory(runningTime);
+        TemporaryBasal tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(runningTime);
         double tb_before = beginBasalValue;
         double tb_amount = beginBasalValue;
         long tb_start = runningTime;
@@ -378,7 +378,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             }
 
             //temps
-            tb2 = MainApp.getConfigBuilder().getTempBasal(runningTime);
+            tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(runningTime);
 
             if (tb1 == null && tb2 == null) {
                 //no temp stays no temp
@@ -411,7 +411,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
         }
         if (tb1 != null) {
-            tb2 = MainApp.getConfigBuilder().getTempBasal(now); //use "now" to express current situation
+            tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 == null) {
                 //express the cancelled temp by painting it down one minute early
                 temps.add(tempDatamap(tb_start, tb_before, now - 1 * 60 * 1000, endBasalValue, tb_amount));
@@ -426,7 +426,7 @@ public class WatchUpdaterService extends WearableListenerService implements
                 }
             }
         } else {
-            tb2 = MainApp.getConfigBuilder().getTempBasal(now); //use "now" to express current situation
+            tb2 = MainApp.getConfigBuilder().getTempBasalFromHistory(now); //use "now" to express current situation
             if (tb2 != null) {
                 //onset at the end
                 double currentAmount = tb2.tempBasalConvertedToAbsolute(runningTime);
@@ -541,7 +541,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = treatmentsInterface.getTempBasal(new Date().getTime());
+            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(new Date().getTime());
             if (shortString) {
                 status += activeTemp.toStringShort();
             } else {

@@ -68,22 +68,22 @@ public class MsgStatusBolusExtended extends MessageBase {
         DanaRPump pump = DanaRPump.getInstance();
         long now = new Date().getTime();
 
-        if (treatmentsInterface.isExtendedBoluslInProgress()) {
-            ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolus(new Date().getTime());
+        if (treatmentsInterface.isInHistoryExtendedBoluslInProgress()) {
+            ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolusFromHistory(new Date().getTime());
             if (pump.isExtendedInProgress) {
                 if (extendedBolus.absoluteRate() != pump.extendedBolusAbsoluteRate) {
                     // Close current extended
-                    treatmentsInterface.extendedBolusStop(now - 1000);
+                    treatmentsInterface.addToHistoryExtendedBolusStop(now - 1000);
                     // Create new
                     ExtendedBolus newExtended = new ExtendedBolus();
                     newExtended.date = new Date(now).getTime();
                     newExtended.insulin = pump.extendedBolusAmount;
                     newExtended.durationInMinutes = pump.extendedBolusMinutes;
-                    treatmentsInterface.extendedBolusStart(newExtended);
+                    treatmentsInterface.addToHistoryExtendedBolusStart(newExtended);
                 }
             } else {
                 // Close curent temp basal
-                treatmentsInterface.extendedBolusStop(now);
+                treatmentsInterface.addToHistoryExtendedBolusStop(now);
             }
         } else {
             if (pump.isExtendedInProgress) {
@@ -92,7 +92,7 @@ public class MsgStatusBolusExtended extends MessageBase {
                 newExtended.date = new Date(now).getTime();
                 newExtended.insulin = pump.extendedBolusAmount;
                 newExtended.durationInMinutes = pump.extendedBolusMinutes;
-                treatmentsInterface.extendedBolusStart(newExtended);
+                treatmentsInterface.addToHistoryExtendedBolusStart(newExtended);
             }
         }
     }

@@ -242,8 +242,8 @@ public class DetermineBasalAdapterMAJS {
         mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
 
         mProfile.add("current_basal", pump.getBaseBasalRate());
-        mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutes());
-        mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRate());
+        mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
+        mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
 
         mIobData.add("iob", iobData.iob); //netIob
         mIobData.add("activity", iobData.activity); //netActivity

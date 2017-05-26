@@ -27,7 +27,6 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 
@@ -249,7 +248,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.absolute = absoluteRate;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        treatmentsInterface.tempBasalStart(tempBasal);
+        treatmentsInterface.addToHistoryTempBasalStart(tempBasal);
         if (Config.logPumpComm)
             log.debug("Setting temp basal absolute: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
@@ -278,7 +277,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.isTempCancel = false;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        treatmentsInterface.tempBasalStart(tempBasal);
+        treatmentsInterface.addToHistoryTempBasalStart(tempBasal);
         if (Config.logPumpComm)
             log.debug("Settings temp basal percent: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
@@ -302,7 +301,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.isTempCancel = false;
         result.duration = durationInMinutes;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        treatmentsInterface.extendedBolusStart(extendedBolus);
+        treatmentsInterface.addToHistoryExtendedBolusStart(extendedBolus);
         if (Config.logPumpComm)
             log.debug("Setting extended bolus: " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
@@ -319,7 +318,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
         if (treatmentsInterface.isTempBasalInProgress()) {
             result.enacted = true;
-            treatmentsInterface.tempBasalStop(new Date().getTime());
+            treatmentsInterface.addToHistoryTempBasalStop(new Date().getTime());
             //tempBasal = null;
             if (Config.logPumpComm)
                 log.debug("Canceling temp basal: " + result);
@@ -333,8 +332,8 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     public PumpEnactResult cancelExtendedBolus() {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
-        if (treatmentsInterface.isExtendedBoluslInProgress()) {
-            treatmentsInterface.extendedBolusStop(new Date().getTime());
+        if (treatmentsInterface.isInHistoryExtendedBoluslInProgress()) {
+            treatmentsInterface.addToHistoryExtendedBolusStop(new Date().getTime());
         }
         result.success = true;
         result.enacted = true;
@@ -364,13 +363,13 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             try {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
             } catch (Exception e) {}
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasal(new Date().getTime());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));

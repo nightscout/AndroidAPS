@@ -95,12 +95,12 @@ public class VirtualPumpFragment extends Fragment {
 
                     basaBasalRateView.setText(virtualPumpPlugin.getBaseBasalRate() + "U");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasal(new Date().getTime()).toString());
+                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toString());
                     } else {
                         tempBasalView.setText("");
                     }
-                    if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()).toString());
+                    if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime()).toString());
                     } else {
                         extendedBolusView.setText("");
                     }

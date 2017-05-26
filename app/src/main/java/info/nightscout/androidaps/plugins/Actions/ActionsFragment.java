@@ -133,16 +133,16 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isExtendedBoluslInProgress())
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress())
                         extendedBolus.setVisibility(View.GONE);
                     else {
                         extendedBolus.setVisibility(View.VISIBLE);
                     }
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isExtendedBoluslInProgress())
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress())
                         extendedBolusCancel.setVisibility(View.GONE);
                     else {
                         extendedBolusCancel.setVisibility(View.VISIBLE);
-                        ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
+                        ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
                         extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + running.toString());
                     }
                     if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isTempBasalInProgress())
@@ -186,7 +186,7 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                 newExtendedDialog.show(manager, "NewExtendedDialog");
                 break;
             case R.id.actions_extendedbolus_cancel:
-                if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
+                if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
                     sHandler.post(new Runnable() {
                         @Override
                         public void run() {

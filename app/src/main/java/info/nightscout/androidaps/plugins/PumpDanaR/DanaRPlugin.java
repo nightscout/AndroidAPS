@@ -132,7 +132,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
 
-            if (useExtendedBoluses != previousValue && MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
+            if (useExtendedBoluses != previousValue && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
                 sExecutionService.extendedBolusStop();
             }
         }
@@ -351,13 +351,13 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         if (doTempOff) {
             // If extended in progress
-            if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses) {
+            if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping extended bolus (doTempOff)");
                 return cancelExtendedBolus();
             }
             // If temp in progress
-            if (MainApp.getConfigBuilder().isRealTempBasalInProgress()) {
+            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doTempOff)");
                 return cancelRealTempBasal();
@@ -380,7 +380,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 percentRate = getPumpDescription().maxHighTempPercent;
             }
             // If extended in progress
-            if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses) {
+            if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping extended bolus (doLowTemp || doHighTemp)");
                 result = cancelExtendedBolus();
@@ -390,14 +390,14 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 }
             }
             // Check if some temp is already in progress
-            if (MainApp.getConfigBuilder().isRealTempBasalInProgress()) {
+            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime()).percentRate == percentRate) {
+                if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime()).percentRate == percentRate) {
                     result.success = true;
                     result.percent = percentRate;
-                    result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRate();
+                    result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
                     result.enacted = false;
-                    result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutes()).intValue();
+                    result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
                     result.isPercent = true;
                     result.isTempCancel = false;
                     if (Config.logPumpActions)
@@ -421,7 +421,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
         if (doExtendedTemp) {
             // Check if some temp is already in progress
-            if (MainApp.getConfigBuilder().isRealTempBasalInProgress()) {
+            if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doExtendedTemp)");
                 result = cancelRealTempBasal();
@@ -442,12 +442,12 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
             // What is current rate of extended bolusing in u/h?
             if (Config.logPumpActions) {
-                log.debug("setTempBasalAbsolute: Extended bolus in progress: " + MainApp.getConfigBuilder().isExtendedBoluslInProgress() + " rate: " + pump.extendedBolusAbsoluteRate + "U/h duration remaining: " + pump.extendedBolusRemainingMinutes + "min");
+                log.debug("setTempBasalAbsolute: Extended bolus in progress: " + MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() + " rate: " + pump.extendedBolusAbsoluteRate + "U/h duration remaining: " + pump.extendedBolusRemainingMinutes + "min");
                 log.debug("setTempBasalAbsolute: Rate to set: " + extendedRateToSet + "U/h");
             }
 
             // Compare with extended rate in progress
-            if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && Math.abs(pump.extendedBolusAbsoluteRate - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
+            if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && Math.abs(pump.extendedBolusAbsoluteRate - extendedRateToSet) < getPumpDescription().extendedBolusStep) {
                 // correct extended already set
                 result.success = true;
                 result.absolute = pump.extendedBolusAbsoluteRate;
@@ -574,9 +574,9 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public PumpEnactResult cancelTempBasal() {
-        if (MainApp.getConfigBuilder().isRealTempBasalInProgress())
+        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
-        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress() && useExtendedBoluses) {
+        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
             PumpEnactResult cancelEx = cancelExtendedBolus();
             cancelEx.isFakedTempBasal = true;
             return cancelEx;
@@ -669,13 +669,13 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
                 extended.put("LastBolusAmount", pump.lastBolusAmount);
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime());
             if (tb != null) {
                 extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime());
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -801,11 +801,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         if (pump.lastBolusTime.getTime() != 0) {
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
-        if (MainApp.getConfigBuilder().isRealTempBasalInProgress()) {
-            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasal(new Date().getTime()).toString() + "\n";
+        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime()).toString() + "\n";
         }
-        if (MainApp.getConfigBuilder().isExtendedBoluslInProgress()) {
-            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolus(new Date().getTime()).toString() + "\n";
+        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime()).toString() + "\n";
         }
         if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";

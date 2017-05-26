@@ -638,10 +638,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: Basal set correctly");
             }
-        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRate()) < 0.05) {
+        } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < 0.05) {
             result = new PumpEnactResult();
-            result.absolute = getTempBasalAbsoluteRate();
-            result.duration = getTempBasal(new Date().getTime()).getPlannedRemainingMinutes();
+            result.absolute = getTempBasalAbsoluteRateHistory();
+            result.duration = getTempBasalFromHistory(new Date().getTime()).getPlannedRemainingMinutes();
             result.enacted = false;
             result.comment = "Temp basal set correctly";
             result.success = true;
@@ -852,23 +852,23 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public List<Treatment> getTreatments() {
-        return activeTreatments.getTreatments();
+    public List<Treatment> getTreatmentsFromHistory() {
+        return activeTreatments.getTreatmentsFromHistory();
     }
 
     @Override
-    public List<Treatment> getTreatments5MinBack(long time) {
-        return activeTreatments.getTreatments5MinBack(time);
+    public List<Treatment> getTreatments5MinBackFromHistory(long time) {
+        return activeTreatments.getTreatments5MinBackFromHistory(time);
     }
 
     @Override
-    public boolean isRealTempBasalInProgress() {
-        return activeTreatments.isRealTempBasalInProgress();
+    public boolean isInHistoryRealTempBasalInProgress() {
+        return activeTreatments.isInHistoryRealTempBasalInProgress();
     }
 
     @Override
-    public TemporaryBasal getRealTempBasal(long time) {
-        return activeTreatments.getRealTempBasal(time);
+    public TemporaryBasal getRealTempBasalFromHistory(long time) {
+        return activeTreatments.getRealTempBasalFromHistory(time);
     }
 
     @Override
@@ -877,68 +877,68 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public TemporaryBasal getTempBasal(long time) {
-        return activeTreatments.getTempBasal(time);
+    public TemporaryBasal getTempBasalFromHistory(long time) {
+        return activeTreatments.getTempBasalFromHistory(time);
     }
 
     @Override
-    public double getTempBasalAbsoluteRate() {
-        return activeTreatments.getTempBasalAbsoluteRate();
+    public double getTempBasalAbsoluteRateHistory() {
+        return activeTreatments.getTempBasalAbsoluteRateHistory();
     }
 
     @Override
-    public double getTempBasalRemainingMinutes() {
-        return activeTreatments.getTempBasalRemainingMinutes();
+    public double getTempBasalRemainingMinutesFromHistory() {
+        return activeTreatments.getTempBasalRemainingMinutesFromHistory();
     }
 
     @Override
-    public OverlappingIntervals<TemporaryBasal> getTemporaryBasals() {
-        return activeTreatments.getTemporaryBasals();
+    public OverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
+        return activeTreatments.getTemporaryBasalsFromHistory();
     }
 
     @Override
-    public void tempBasalStart(TemporaryBasal tempBasal) {
-        activeTreatments.tempBasalStart(tempBasal);
+    public void addToHistoryTempBasalStart(TemporaryBasal tempBasal) {
+        activeTreatments.addToHistoryTempBasalStart(tempBasal);
     }
 
     @Override
-    public void tempBasalStop(long time) {
-        activeTreatments.tempBasalStop(time);
+    public void addToHistoryTempBasalStop(long time) {
+        activeTreatments.addToHistoryTempBasalStop(time);
     }
 
     @Override
-    public boolean isExtendedBoluslInProgress() {
-        return activeTreatments.isExtendedBoluslInProgress();
+    public boolean isInHistoryExtendedBoluslInProgress() {
+        return activeTreatments.isInHistoryExtendedBoluslInProgress();
     }
 
     @Override
-    public ExtendedBolus getExtendedBolus(long time) {
-        return activeTreatments.getExtendedBolus(time);
+    public ExtendedBolus getExtendedBolusFromHistory(long time) {
+        return activeTreatments.getExtendedBolusFromHistory(time);
     }
 
     @Override
-    public void extendedBolusStart(ExtendedBolus extendedBolus) {
-        activeTreatments.extendedBolusStart(extendedBolus);
+    public void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus) {
+        activeTreatments.addToHistoryExtendedBolusStart(extendedBolus);
     }
 
     @Override
-    public void extendedBolusStop(long time) {
-        activeTreatments.extendedBolusStop(time);
+    public void addToHistoryExtendedBolusStop(long time) {
+        activeTreatments.addToHistoryExtendedBolusStop(time);
     }
 
     @Override
-    public OverlappingIntervals<ExtendedBolus> getExtendedBoluses() {
-        return activeTreatments.getExtendedBoluses();
+    public OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory() {
+        return activeTreatments.getExtendedBolusesFromHistory();
     }
 
     @Override
-    public TempTarget getTempTarget(long time) {
-        return activeTreatments.getTempTarget(time);
+    public TempTarget getTempTargetFromHistory(long time) {
+        return activeTreatments.getTempTargetFromHistory(time);
     }
 
     @Override
-    public OverlappingIntervals<TempTarget> getTempTargets() {
-        return activeTreatments.getTempTargets();
+    public OverlappingIntervals<TempTarget> getTempTargetsFromHistory() {
+        return activeTreatments.getTempTargetsFromHistory();
     }
 
     @Override
