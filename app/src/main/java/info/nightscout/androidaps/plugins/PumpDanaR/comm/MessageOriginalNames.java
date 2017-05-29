@@ -151,10 +151,10 @@ public class MessageOriginalNames {
         messageNames.put(0x43F2, "CMD_HISTORY_DATEOVER_ALL");
         messageNames.put(0x4300, "CMD_HISTORY_DATEOVER_DONE");
 
-        messageNames.put(0xE001, "CMD_PUMP_APS");
-        messageNames.put(0xE002, "CMD_PUMPSET_APS");
-        messageNames.put(0xE003, "CMD_HISTORY_APS");
-        messageNames.put(0xE004, "CMD_PUMPSET_APSTEMP");
+        messageNames.put(0xE001, "CMD_PUMPSTATUS_APS");
+        messageNames.put(0xE002, "CMD_PUMPSET_APSTEMP");
+        messageNames.put(0xE003, "CMD_GET_HISTORY");
+        messageNames.put(0xE004, "CMD_SET_HISTORY_ENTRY");
     }
 
 
