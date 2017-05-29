@@ -21,7 +21,6 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
@@ -51,12 +50,6 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     private static boolean fragmentEnabled = true;
     private static boolean fragmentVisible = true;
-
-    private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();
-
-    public static TreatmentsPlugin getPlugin() {
-        return treatmentsPlugin;
-    }
 
     @Override
     public String getFragmentClass() {
@@ -347,6 +340,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus) {
+        log.debug("Adding new ExtentedBolus record" + extendedBolus);
         MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
@@ -355,6 +349,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = time;
         extendedBolus.durationInMinutes = 0;
+        log.debug("Adding new ExtentedBolus stop record" + extendedBolus);
         MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
@@ -394,6 +389,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void addToHistoryTempBasalStart(TemporaryBasal tempBasal) {
+        log.debug("Adding new TemporaryBasal record" + tempBasal);
         MainApp.getDbHelper().createOrUpdate(tempBasal);
     }
 
@@ -402,7 +398,14 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         TemporaryBasal temporaryBasal = new TemporaryBasal();
         temporaryBasal.date = time;
         temporaryBasal.durationInMinutes = 0;
+        log.debug("Adding new TemporaryBasal stop record" + temporaryBasal);
         MainApp.getDbHelper().createOrUpdate(temporaryBasal);
+    }
+
+    @Override
+    public void addTreatmentToHistory(Treatment treatment) {
+        log.debug("Adding new Treatment record" + treatment);
+        MainApp.getDbHelper().createOrUpdate(treatment);
     }
 
     @Override

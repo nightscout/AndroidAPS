@@ -48,6 +48,8 @@ public interface TreatmentsInterface {
     void addToHistoryExtendedBolusStop(long time);
     OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory();
 
+    void addTreatmentToHistory(Treatment treatment);
+
     TempTarget getTempTargetFromHistory(long time);
     OverlappingIntervals<TempTarget> getTempTargetsFromHistory();
 

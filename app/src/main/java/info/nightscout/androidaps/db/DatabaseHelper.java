@@ -295,6 +295,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleBgChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                log.debug("Firing EventNewBg");
                 MainApp.bus().post(new EventNewBG());
                 scheduledBgPost = null;
             }
@@ -445,21 +446,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return true;
     }
 
-    public int update(Treatment treatment) {
-        treatment.date = treatment.date - treatment.date % 1000;
-        int updated = 0;
-        try {
-            boolean historyChange = changeAffectingIobCob(treatment);
-            updated = getDaoTreatments().update(treatment);
-            if (historyChange)
-                latestTreatmentChange = treatment.date;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleTreatmentChange();
-        return updated;
-    }
-
     public Dao.CreateOrUpdateStatus createOrUpdate(Treatment treatment) {
         treatment.date = treatment.date - treatment.date % 1000;
         Dao.CreateOrUpdateStatus status = null;
@@ -473,17 +459,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
         scheduleTreatmentChange();
         return status;
-    }
-
-    public void create(Treatment treatment) {
-        treatment.date = treatment.date - treatment.date % 1000;
-        try {
-            getDaoTreatments().create(treatment);
-            latestTreatmentChange = treatment.date;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleTreatmentChange();
     }
 
     public void delete(Treatment treatment) {
@@ -564,6 +539,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleTreatmentChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                log.debug("Firing EventTreatmentChange");
                 MainApp.bus().post(new EventReloadTreatmentData());
                 MainApp.bus().post(new EventTreatmentChange());
                 if (latestTreatmentChange != null)
@@ -641,7 +617,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     treatment.mealBolus = false;
             }
             createOrUpdate(treatment);
-            scheduleTreatmentChange();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -690,6 +665,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleTemporaryTargetChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                log.debug("Firing EventTempTargetChange");
                 MainApp.bus().post(new EventTempTargetChange());
                 scheduledTemTargetPost = null;
             }
@@ -836,18 +812,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // ------------ TemporaryBasal handling ---------------
 
-    public int update(TemporaryBasal tempBasal) {
-        int updated = 0;
-        try {
-            updated = getDaoTemporaryBasal().update(tempBasal);
-            latestTreatmentChange = tempBasal.date;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleTemporaryBasalChange();
-        return updated;
-    }
-
     public void createOrUpdate(TemporaryBasal tempBasal) {
         tempBasal.date = tempBasal.date - tempBasal.date % 1000;
         try {
@@ -888,6 +852,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleTemporaryBasalChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                log.debug("Firing EventTempBasalChange");
                 MainApp.bus().post(new EventReloadTempBasalData());
                 MainApp.bus().post(new EventTempBasalChange());
                 scheduledTemBasalsPost = null;
@@ -948,7 +913,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
                 extendedBolus._id = trJson.getString("_id");
                 createOrUpdate(extendedBolus);
-                scheduleExtendedBolusChange();
             } else if (trJson.has("isFakedTempBasal")) { // extended bolus end uploaded as temp basal end
                 QueryBuilder<ExtendedBolus, Long> queryBuilder = null;
                 queryBuilder = getDaoExtendedBolus().queryBuilder();
@@ -976,7 +940,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
                 createOrUpdate(extendedBolus);
-                scheduleExtendedBolusChange();
             } else {
                 QueryBuilder<TemporaryBasal, Long> queryBuilder = null;
                 queryBuilder = getDaoTemporaryBasal().queryBuilder();
@@ -1013,7 +976,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 }
                 tempBasal._id = trJson.getString("_id");
                 createOrUpdate(tempBasal);
-                scheduleTemporaryBasalChange();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -1047,18 +1009,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     // ------------ ExtendedBolus handling ---------------
-
-    public int update(ExtendedBolus extendedBolus) {
-        int updated = 0;
-        try {
-            updated = getDaoExtendedBolus().update(extendedBolus);
-            latestTreatmentChange = extendedBolus.date;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleExtendedBolusChange();
-        return updated;
-    }
 
     public void createOrUpdate(ExtendedBolus extendedBolus) {
         extendedBolus.date = extendedBolus.date - extendedBolus.date % 1000;
@@ -1166,7 +1116,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             extendedBolus.insulin = trJson.getDouble("relative");
             extendedBolus._id = trJson.getString("_id");
             createOrUpdate(extendedBolus);
-            scheduleExtendedBolusChange();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -1177,10 +1126,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleExtendedBolusChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                log.debug("Firing EventExtendedBolusChange");
                 MainApp.bus().post(new EventReloadTreatmentData());
                 MainApp.bus().post(new EventExtendedBolusChange());
                 scheduledExtendedBolusPost = null;
-                log.debug("Firing EventExtendedBolusChange");
             }
         }
         // prepare task for execution in 1 sec
@@ -1195,17 +1144,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
 
     // ------------ CareportalEvent handling ---------------
-
-    public int update(CareportalEvent careportalEvent) {
-        int updated = 0;
-        try {
-            updated = getDaoCareportalEvents().update(careportalEvent);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        scheduleCareportalEventChange();
-        return updated;
-    }
 
     public void createOrUpdate(CareportalEvent careportalEvent) {
         careportalEvent.date = careportalEvent.date - careportalEvent.date % 1000;
@@ -1299,7 +1237,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvent.json = trJson.toString();
             careportalEvent._id = trJson.getString("_id");
             createOrUpdate(careportalEvent);
-            scheduleCareportalEventChange();
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (JSONException e) {
@@ -1310,9 +1247,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleCareportalEventChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                log.debug("Firing scheduleCareportalEventChange");
                 MainApp.bus().post(new EventCareportalEventChange());
                 scheduledCareportalEventPost = null;
-                log.debug("Firing scheduleCareportalEventChange");
             }
         }
         // prepare task for execution in 1 sec

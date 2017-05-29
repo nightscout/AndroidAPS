@@ -432,7 +432,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                     t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
                 t.date = new Date().getDate();
                 t.mealBolus = result.carbsDelivered > 0;
-                MainApp.getDbHelper().create(t);
+                addTreatmentToHistory(t);
                 t.carbs = (double) result.carbsDelivered;
                 NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
             }
@@ -444,7 +444,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             t.carbs = (double) carbs;
             t.date = new Date().getDate();
             t.mealBolus = t.carbs > 0;
-            MainApp.getDbHelper().create(t);
+            addTreatmentToHistory(t);
             NSUpload.uploadTreatment(t);
             result = new PumpEnactResult();
             result.success = true;
@@ -497,7 +497,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 t.carbs = (double) result.carbsDelivered;
                 t.date = new Date().getTime();
                 t.mealBolus = t.carbs > 0;
-                MainApp.getDbHelper().create(t);
+                addTreatmentToHistory(t);
                 NSUpload.uploadTreatment(t);
             }
         } else {
@@ -928,6 +928,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     @Override
     public OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory() {
         return activeTreatments.getExtendedBolusesFromHistory();
+    }
+
+    @Override
+    public void addTreatmentToHistory(Treatment treatment) {
+        activeTreatments.addTreatmentToHistory(treatment);
     }
 
     @Override
