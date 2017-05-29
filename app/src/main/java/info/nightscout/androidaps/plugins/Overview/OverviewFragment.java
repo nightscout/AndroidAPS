@@ -332,7 +332,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 scheduleUpdateGUI("onPredictionCheckedChanged");
                 break;
             case R.id.overview_showbasals:
-                SP.putBoolean("showbasals", showPredictionView.isChecked());
+                SP.putBoolean("showbasals", showBasalsView.isChecked());
                 scheduleUpdateGUI("onBasalsCheckedChanged");
                 break;
             case R.id.overview_showiob:
