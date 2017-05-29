@@ -40,6 +40,10 @@ public class CareportalEvent {
     @DatabaseField
     public String json;
 
+    public static final String CARBCORRECTION = "Carb Correction";
+    public static final String BOLUSWIZARD = "Bolus Wizard";
+    public static final String CORRECTIONBOLUS = "Correction Bolus";
+    public static final String MEALBOLUS = "Meal Bolus";
     public static final String COMBOBOLUS = "Combo Bolus";
     public static final String TEMPBASAL = "Temp Basal";
     public static final String TEMPORARYTARGET = "Temporary Target";

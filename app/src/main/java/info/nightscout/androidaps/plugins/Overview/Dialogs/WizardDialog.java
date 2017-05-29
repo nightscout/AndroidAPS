@@ -42,8 +42,10 @@ import java.util.Date;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -308,16 +310,16 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
-                                                MainApp.getConfigBuilder().getActiveInsulin(),
-                                                context,
-                                                finalInsulinAfterConstraints,
-                                                finalCarbsAfterConstraints,
-                                                bg,
-                                                "Manual",
-                                                carbTime,
-                                                boluscalcJSON
-                                        );
+                                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                        detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                        detailedBolusInfo.context = context;
+                                        detailedBolusInfo.glucose = bg;
+                                        detailedBolusInfo.glucoseType = "Manual";
+                                        detailedBolusInfo.carbTime = carbTime;
+                                        detailedBolusInfo.boluscalc = boluscalcJSON;
+                                        PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                         if (!result.success) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                             builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));

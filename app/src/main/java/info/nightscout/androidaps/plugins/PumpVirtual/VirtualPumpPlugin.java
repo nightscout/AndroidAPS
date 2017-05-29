@@ -15,6 +15,7 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -189,23 +190,23 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
+    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
-        result.bolusDelivered = insulin;
-        result.carbsDelivered = carbs;
+        result.bolusDelivered = detailedBolusInfo.insulin;
+        result.carbsDelivered = detailedBolusInfo.carbs;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
 
         Double delivering = 0d;
 
-        while (delivering < insulin) {
+        while (delivering < detailedBolusInfo.insulin) {
             try {
                 Thread.sleep(200);
             } catch (InterruptedException e) {
             }
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
             bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivering);
-            bolusingEvent.percent = Math.min((int) (delivering / insulin * 100), 100);
+            bolusingEvent.percent = Math.min((int) (delivering / detailedBolusInfo.insulin * 100), 100);
             MainApp.bus().post(bolusingEvent);
             delivering += 0.1d;
         }
@@ -214,7 +215,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         } catch (InterruptedException e) {
         }
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-        bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), insulin);
+        bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), detailedBolusInfo.insulin);
         bolusingEvent.percent = 100;
         MainApp.bus().post(bolusingEvent);
         try {
@@ -222,9 +223,10 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         } catch (InterruptedException e) {
         }
         if (Config.logPumpComm)
-            log.debug("Delivering treatment insulin: " + insulin + "U carbs: " + carbs + "g " + result);
+            log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());
         lastDataTime = new Date();
+        MainApp.getConfigBuilder().addTreatmentToHistory(detailedBolusInfo);
         return result;
     }
 

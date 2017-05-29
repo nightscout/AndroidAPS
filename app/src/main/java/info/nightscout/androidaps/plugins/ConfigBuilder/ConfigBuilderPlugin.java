@@ -19,6 +19,7 @@ import java.util.List;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -402,7 +403,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         else
             return 0d;
     }
-
+/*
     public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
         mWakeLock.acquire();
         PumpEnactResult result;
@@ -438,7 +439,32 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         mWakeLock.release();
         return result;
     }
+*/
+    @Override
+    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+        mWakeLock.acquire();
+        PumpEnactResult result;
+        detailedBolusInfo.insulin = applyBolusConstraints(detailedBolusInfo.insulin);
+        detailedBolusInfo.carbs = applyCarbsConstraints((int) detailedBolusInfo.carbs);
 
+        BolusProgressDialog bolusProgressDialog = null;
+        if (detailedBolusInfo.context != null) {
+            bolusProgressDialog = new BolusProgressDialog();
+            bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
+            bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
+        }
+
+        MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
+
+        result = activePump.deliverTreatment(detailedBolusInfo);
+
+        BolusProgressDialog.bolusEnded = true;
+        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
+
+        mWakeLock.release();
+        return result;
+    }
+/*
     @Override
     public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
         return deliverTreatment(insulinType, insulin, carbs, context, true);
@@ -487,7 +513,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return result;
     }
 
-
+*/
     @Override
     public void stopBolusDelivering() {
         activePump.stopBolusDelivering();
@@ -904,8 +930,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void addTreatmentToHistory(Treatment treatment) {
-        activeTreatments.addTreatmentToHistory(treatment);
+    public void addTreatmentToHistory(DetailedBolusInfo detailedBolusInfo) {
+        if (!detailedBolusInfo.addToTreatments)
+            return;
+        activeTreatments.addTreatmentToHistory(detailedBolusInfo);
+        NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
     }
 
     @Override

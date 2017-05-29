@@ -24,7 +24,9 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
@@ -86,7 +88,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
                 try {
                     Double insulin = SafeParse.stringToDouble(this.insulin.getText().toString());
-                    Integer carbs = SafeParse.stringToInt(this.carbs.getText().toString());
+                    final Integer carbs = SafeParse.stringToInt(this.carbs.getText().toString());
 
                     String confirmMessage = getString(R.string.entertreatmentquestion) + "\n";
 
@@ -98,8 +100,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     if (insulinAfterConstraints - insulin != 0 || carbsAfterConstraints != carbs)
                         confirmMessage += "\n" + getString(R.string.constraintapllied);
 
-                    final Double finalInsulinAfterConstraints = insulinAfterConstraints;
-                    final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
+                    final double finalInsulinAfterConstraints = insulinAfterConstraints;
+                    final int finalCarbsAfterConstraints = carbsAfterConstraints;
 
                     final Context context = getContext();
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -113,7 +115,13 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        PumpEnactResult result = pump.deliverTreatment(MainApp.getConfigBuilder().getActiveInsulin(), finalInsulinAfterConstraints, finalCarbsAfterConstraints, context);
+                                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                        if (finalInsulinAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
+                                        if (finalCarbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                        detailedBolusInfo.context = context;
+                                        PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                         if (!result.success) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                             builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));

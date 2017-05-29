@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 
@@ -30,7 +31,7 @@ public interface PumpInterface {
 
     double getBaseBasalRate(); // base basal rate, not temp basal
 
-    PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context);
+    PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo);
     void stopBolusDelivering();
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
     PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes);

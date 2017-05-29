@@ -14,6 +14,7 @@ import java.util.List;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
@@ -403,9 +404,24 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void addTreatmentToHistory(Treatment treatment) {
-        log.debug("Adding new Treatment record" + treatment);
+    public void addTreatmentToHistory(DetailedBolusInfo detailedBolusInfo) {
+        Treatment treatment = new Treatment(detailedBolusInfo.insulinInterface);
+        treatment.date = detailedBolusInfo.date;
+        treatment.insulin = detailedBolusInfo.insulin;
+        if (detailedBolusInfo.carbTime == 0)
+            treatment.carbs = detailedBolusInfo.carbs;
+        treatment.source = detailedBolusInfo.source;
+        treatment.mealBolus = treatment.carbs > 0;
         MainApp.getDbHelper().createOrUpdate(treatment);
+        log.debug("Adding new Treatment record" + treatment);
+        if (detailedBolusInfo.carbTime != 0) {
+            Treatment carbsTreatment = new Treatment(detailedBolusInfo.insulinInterface);
+            carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L;
+            carbsTreatment.carbs = detailedBolusInfo.carbs;
+            carbsTreatment.source = detailedBolusInfo.source;
+            MainApp.getDbHelper().createOrUpdate(carbsTreatment);
+            log.debug("Adding new Treatment record" + carbsTreatment);
+        }
     }
 
     @Override

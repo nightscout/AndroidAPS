@@ -21,6 +21,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -465,7 +466,9 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
                             danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.deliverTreatment(ConfigBuilderPlugin.getActiveInsulin(), bolusWaitingForConfirmation.bolusRequested, 0, null);
+                            DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                            detailedBolusInfo.insulin = bolusWaitingForConfirmation.bolusRequested;
+                            PumpEnactResult result = pumpInterface.deliverTreatment(detailedBolusInfo);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_bolusdelivered), result.bolusDelivered);
                                 if (danaRPlugin != null)

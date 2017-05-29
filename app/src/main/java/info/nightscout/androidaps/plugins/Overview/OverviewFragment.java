@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.Overview;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -62,10 +63,12 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -645,8 +648,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
                 final Double finalInsulinAfterConstraints = insulinAfterConstraints;
                 final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                final Context context = getContext();
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
                 builder.setMessage(confirmMessage);
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -656,16 +659,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             sHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
-                                            MainApp.getConfigBuilder().getActiveInsulin(),
-                                            getContext(),
-                                            finalInsulinAfterConstraints,
-                                            finalCarbsAfterConstraints,
-                                            actualBg.valueToUnits(profile.getUnits()),
-                                            "Manual",
-                                            0,
-                                            boluscalcJSON
-                                    );
+                                    DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                    detailedBolusInfo.eventType = CareportalEvent.BOLUSWIZARD;
+                                    detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                    detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                    detailedBolusInfo.context = context;
+                                    detailedBolusInfo.boluscalc = boluscalcJSON;
+                                    PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                     if (!result.success) {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                         builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));

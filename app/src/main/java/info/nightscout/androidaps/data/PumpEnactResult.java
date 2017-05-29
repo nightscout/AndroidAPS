@@ -25,7 +25,7 @@ public class PumpEnactResult extends Object {
     public boolean isTempCancel = false; // if true we are caceling temp basal
     // Result of treatment delivery
     public Double bolusDelivered = 0d; // real value of delivered insulin
-    public Integer carbsDelivered = 0; // real value of delivered carbs
+    public Double carbsDelivered = 0d; // real value of delivered carbs
 
     public boolean queued = false;
 

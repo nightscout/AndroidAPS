@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interfaces;
 
 import java.util.List;
 
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -48,7 +49,7 @@ public interface TreatmentsInterface {
     void addToHistoryExtendedBolusStop(long time);
     OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory();
 
-    void addTreatmentToHistory(Treatment treatment);
+    void addTreatmentToHistory(DetailedBolusInfo detailedBolusInfo);
 
     TempTarget getTempTargetFromHistory(long time);
     OverlappingIntervals<TempTarget> getTempTargetsFromHistory();

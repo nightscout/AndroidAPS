@@ -16,6 +16,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -251,18 +252,22 @@ public class NSUpload {
         }
     }
 
-    public static void uploadBolusWizardRecord(Treatment t, double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+    public static void uploadBolusWizardRecord(DetailedBolusInfo detailedBolusInfo) {
         JSONObject data = new JSONObject();
         try {
-            data.put("eventType", "Bolus Wizard");
-            if (t.insulin != 0d) data.put("insulin", t.insulin);
-            if (t.carbs != 0d) data.put("carbs", t.carbs.intValue());
-            data.put("created_at", DateUtil.toISOString(t.date));
-            data.put("date", t.date);
-            if (glucose != 0d) data.put("glucose", glucose);
-            data.put("glucoseType", glucoseType);
-            data.put("boluscalc", boluscalc);
-            if (carbTime != 0) data.put("preBolus", carbTime);
+            data.put("eventType", detailedBolusInfo.eventType);
+            if (detailedBolusInfo.insulin != 0d) data.put("insulin", detailedBolusInfo.insulin);
+            if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
+            data.put("created_at", DateUtil.toISOString(detailedBolusInfo.date));
+            data.put("date", detailedBolusInfo.date);
+            if (detailedBolusInfo.glucose != 0d)
+                data.put("glucose", detailedBolusInfo.glucose);
+            if (!detailedBolusInfo.glucoseType.equals(""))
+                data.put("glucoseType", detailedBolusInfo.glucoseType);
+            if (detailedBolusInfo.boluscalc != null)
+                data.put("boluscalc", detailedBolusInfo.boluscalc);
+            if (detailedBolusInfo.carbTime != 0)
+                data.put("preBolus", detailedBolusInfo.carbTime);
         } catch (JSONException e) {
             e.printStackTrace();
         }
