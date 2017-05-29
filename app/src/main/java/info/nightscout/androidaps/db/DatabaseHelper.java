@@ -34,6 +34,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventReloadTempBasalData;
+import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -562,6 +564,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleTreatmentChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                MainApp.bus().post(new EventReloadTreatmentData());
                 MainApp.bus().post(new EventTreatmentChange());
                 if (latestTreatmentChange != null)
                     MainApp.bus().post(new EventNewHistoryData(latestTreatmentChange));
@@ -594,6 +597,56 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return new ArrayList<Treatment>();
+    }
+
+    public void createTreatmentFromJsonIfNotExists(JSONObject trJson) {
+        try {
+            QueryBuilder<Treatment, Long> queryBuilder = null;
+            queryBuilder = getDaoTreatments().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
+            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
+            List<Treatment> list = getDaoTreatments().query(preparedQuery);
+            Treatment treatment;
+            if (list.size() == 0) {
+                treatment = new Treatment();
+                treatment.source = Source.NIGHTSCOUT;
+                if (Config.logIncommingData)
+                    log.debug("Adding Treatment record to database: " + trJson.toString());
+                // Record does not exists. add
+            } else if (list.size() == 1) {
+                treatment = list.get(0);
+                if (Config.logIncommingData)
+                    log.debug("Updating Treatment record in database: " + trJson.toString());
+            } else {
+                log.error("Something went wrong");
+                return;
+            }
+            treatment.date = trJson.getLong("mills");
+            treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
+            treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
+            treatment._id = trJson.getString("_id");
+            if (trJson.has("eventType")) {
+                treatment.mealBolus = true;
+                if (trJson.get("eventType").equals("Correction Bolus"))
+                    treatment.mealBolus = false;
+                double carbs = treatment.carbs;
+                if (trJson.has("boluscalc")) {
+                    JSONObject boluscalc = trJson.getJSONObject("boluscalc");
+                    if (boluscalc.has("carbs")) {
+                        carbs = Math.max(boluscalc.getDouble("carbs"), carbs);
+                    }
+                }
+                if (carbs <= 0)
+                    treatment.mealBolus = false;
+            }
+            createOrUpdate(treatment);
+            scheduleTreatmentChange();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     // ---------------- TempTargets handling ---------------
@@ -835,6 +888,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleTemporaryBasalChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                MainApp.bus().post(new EventReloadTempBasalData());
                 MainApp.bus().post(new EventTempBasalChange());
                 scheduledTemBasalsPost = null;
             }
@@ -1123,6 +1177,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     static public void scheduleExtendedBolusChange() {
         class PostRunnable implements Runnable {
             public void run() {
+                MainApp.bus().post(new EventReloadTreatmentData());
                 MainApp.bus().post(new EventExtendedBolusChange());
                 scheduledExtendedBolusPost = null;
                 log.debug("Firing EventExtendedBolusChange");

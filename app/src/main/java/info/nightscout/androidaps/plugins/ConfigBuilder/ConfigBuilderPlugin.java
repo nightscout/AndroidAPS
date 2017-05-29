@@ -565,7 +565,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             log.debug("setExtendedBolus rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
         if (result.enacted && result.success) {
             NSUpload.uploadExtendedBolus(result.bolusDelivered, result.duration);
-            MainApp.bus().post(new EventTreatmentChange());
         }
         return result;
     }

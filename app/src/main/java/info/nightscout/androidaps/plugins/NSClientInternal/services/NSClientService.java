@@ -57,7 +57,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientS
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
-import info.nightscout.androidaps.plugins.PumpDanaR.Services.ExecutionService;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 import io.socket.client.IO;

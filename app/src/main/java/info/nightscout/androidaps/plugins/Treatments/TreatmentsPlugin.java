@@ -22,9 +22,9 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
-import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.events.EventReloadTempBasalData;
+import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
@@ -274,21 +274,18 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventTreatmentChange ev) {
+    public void onStatusEvent(final EventReloadTreatmentData ev) {
+        log.debug("EventReloadTreatmentData");
         initializeTreatmentData();
-        updateTotalIOBTreatments();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventTempBasalChange ev) {
-        initializeTempBasalData();
-        updateTotalIOBTempBasals();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventExtendedBolusChange ev) {
         initializeExtendedBolusData();
         updateTotalIOBTreatments();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventReloadTempBasalData ev) {
+        log.debug("EventReloadTempBasalData");
+        initializeTempBasalData();
+        updateTotalIOBTempBasals();
     }
 
     @Override
