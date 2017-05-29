@@ -183,7 +183,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
-            latestTreatmentChange = 0L;
+            updateLatestTreatmentChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -199,7 +199,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
-            latestTreatmentChange = 0L;
+            updateLatestTreatmentChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -220,6 +220,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
+            updateLatestTreatmentChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -230,13 +231,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
+            updateLatestTreatmentChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         scheduleExtendedBolusChange();
     }
 
-   public void resetCareportalEvents() {
+    public void resetCareportalEvents() {
         try {
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
@@ -453,7 +455,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             boolean historyChange = changeAffectingIobCob(treatment);
             status = getDaoTreatments().createOrUpdate(treatment);
             if (historyChange)
-                latestTreatmentChange = treatment.date;
+                updateLatestTreatmentChange(treatment.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -464,29 +466,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(Treatment treatment) {
         try {
             getDaoTreatments().delete(treatment);
-            latestTreatmentChange = treatment.date;
+            updateLatestTreatmentChange(treatment.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
         scheduleTreatmentChange();
     }
 
-    public int deleteTreatmentById(String _id) {
-        int removed = 0;
-        try {
-            Treatment stored = findTreatmentById(_id);
-            if (stored != null) {
-                log.debug("Removing TempTarget record from database: " + stored.log());
-                removed = getDaoTreatments().delete(stored);
-                latestTreatmentChange = stored.date;
-                scheduleTreatmentChange();
-            } else {
-                log.debug("Treatment not found database: " + _id);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public void deleteTreatmentById(String _id) {
+        Treatment stored = findTreatmentById(_id);
+        if (stored != null) {
+            log.debug("Removing TempTarget record from database: " + stored.log());
+            delete(stored);
+        } else {
+            log.debug("Treatment not found database: " + _id);
         }
-        return removed;
     }
 
     @Nullable
@@ -534,6 +528,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return null;
+    }
+
+    void updateLatestTreatmentChange(long newDate) {
+        if (latestTreatmentChange == null) {
+            latestTreatmentChange = newDate;
+            return;
+        }
+        if (newDate < latestTreatmentChange) {
+            latestTreatmentChange = newDate;
+        }
     }
 
     static public void scheduleTreatmentChange() {
@@ -746,7 +750,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TempTarget record = list.get(0);
                 if (Config.logIncommingData)
                     log.debug("Removing TempTarget record from database: " + record.log());
-                getDaoTempTargets().delete(record);
+                delete(record);
             } else {
                 if (Config.logIncommingData)
                     log.debug("TempTarget not found database: " + _id);
@@ -816,7 +820,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         tempBasal.date = tempBasal.date - tempBasal.date % 1000;
         try {
             getDaoTemporaryBasal().createOrUpdate(tempBasal);
-            latestTreatmentChange = tempBasal.date;
+            updateLatestTreatmentChange(tempBasal.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -826,7 +830,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(TemporaryBasal tempBasal) {
         try {
             getDaoTemporaryBasal().delete(tempBasal);
-            latestTreatmentChange = tempBasal.date;
+            updateLatestTreatmentChange(tempBasal.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -997,8 +1001,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 TemporaryBasal record = list.get(0);
                 if (Config.logIncommingData)
                     log.debug("Removing TempBasal record from database: " + record.log());
-                getDaoTemporaryBasal().delete(record);
-                MainApp.bus().post(new EventTempTargetChange());
+                delete(record);
             } else {
                 if (Config.logIncommingData)
                     log.debug("TempBasal not found database: " + _id);
@@ -1014,7 +1017,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         extendedBolus.date = extendedBolus.date - extendedBolus.date % 1000;
         try {
             getDaoExtendedBolus().createOrUpdate(extendedBolus);
-            latestTreatmentChange = extendedBolus.date;
+            updateLatestTreatmentChange(extendedBolus.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1024,7 +1027,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(ExtendedBolus extendedBolus) {
         try {
             getDaoExtendedBolus().delete(extendedBolus);
-            latestTreatmentChange = extendedBolus.date;
+            updateLatestTreatmentChange(extendedBolus.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1060,8 +1063,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 ExtendedBolus record = list.get(0);
                 if (Config.logIncommingData)
                     log.debug("Removing ExtendedBolus record from database: " + record.log());
-                getDaoExtendedBolus().delete(record);
-                scheduleExtendedBolusChange();
+                delete(record);
             } else {
                 if (Config.logIncommingData)
                     log.debug("ExtendedBolus not found database: " + _id);
@@ -1198,8 +1200,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 CareportalEvent record = list.get(0);
                 if (Config.logIncommingData)
                     log.debug("Removing CareportalEvent record from database: " + record.log());
-                getDaoCareportalEvents().delete(record);
-                scheduleCareportalEventChange();
+                delete(record);
             } else {
                 if (Config.logIncommingData)
                     log.debug("CareportalEvent not found database: " + _id);
