@@ -29,6 +29,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -37,7 +38,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugi
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAuthAck;
-import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSPingAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSUpdateAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastCals;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastDeviceStatus;
@@ -46,7 +46,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastP
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastSgvs;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
-import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSCal;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
@@ -58,6 +57,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientS
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.PumpDanaR.Services.ExecutionService;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 import io.socket.client.IO;
@@ -91,9 +91,7 @@ public class NSClientService extends Service {
     private String nsDevice = "";
     private Integer nsHours = 48;
 
-    private final Integer timeToWaitForResponseInMs = 30000;
-    private boolean uploading = false;
-    public Date lastReception = new Date();
+    public long lastResendTime = 0;
 
     public long latestDateInReceivedData = 0;
 
@@ -292,7 +290,6 @@ public class NSClientService extends Service {
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
         }
-        lastReception = new Date();
     }
 
     public void readPreferences() {
@@ -315,7 +312,6 @@ public class NSClientService extends Service {
     private Emitter.Listener onDataUpdate = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            lastReception = new Date();
             NSClientService.handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -592,40 +588,6 @@ public class NSClientService extends Service {
         }
     }
 
-    public void doPing() {
-        if (!isConnected || !hasWriteAuth) return;
-        MainApp.bus().post(new EventNSClientNewLog("PING", "Sending"));
-        uploading = true;
-        JSONObject message = new JSONObject();
-        try {
-            message.put("mills", new Date().getTime());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        NSPingAck ack = new NSPingAck();
-        mSocket.emit("nsping", message, ack);
-        synchronized (ack) {
-            try {
-                ack.wait(timeToWaitForResponseInMs);
-            } catch (InterruptedException e) {
-            }
-        }
-        if (ack.received) {
-            String connectionStatus = "Pong received";
-            if (ack.auth_received) {
-                connectionStatus += ": ";
-                if (ack.read) connectionStatus += "R";
-                if (ack.write) connectionStatus += "W";
-                if (ack.write_treatment) connectionStatus += "T";
-            }
-            if (!ack.read) sendAuthMessage(new NSAuthAck());
-            MainApp.bus().post(new EventNSClientNewLog("AUTH ", connectionStatus));
-        } else {
-            MainApp.bus().post(new EventNSClientNewLog("PING", "Ping lost"));
-        }
-        uploading = false;
-    }
-
     private boolean isCurrent(NSTreatment treatment) {
         long now = (new Date()).getTime();
         long minPast = now - nsHours * 60L * 60 * 1000;
@@ -643,13 +605,18 @@ public class NSClientService extends Service {
 
         if (!isConnected || !hasWriteAuth) return;
 
-        MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
-
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Logger log = LoggerFactory.getLogger(UploadQueue.class);
                 if (mSocket == null || !mSocket.connected()) return;
+
+                if (lastResendTime  > new Date().getTime() - 30 * 1000L) {
+                    log.debug("Skipping resend by lastResendTime: " + ((new Date().getTime() - lastResendTime) / 1000L) + " sec");
+                    return;
+                }
+                lastResendTime = new Date().getTime();
+
+                MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
                 CloseableIterator<DbRequest> iterator = null;
                 try {
