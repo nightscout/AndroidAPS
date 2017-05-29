@@ -24,7 +24,6 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
-import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientStatus;
@@ -148,11 +147,6 @@ public class NSClientInternalPlugin implements PluginBase {
     public void onStatusEvent(final EventAppExit e) {
         if (nsClientService != null)
             MainApp.instance().getApplicationContext().unbindService(mConnection);
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventPreferenceChange s) {
-        //TODO
     }
 
     @Subscribe
