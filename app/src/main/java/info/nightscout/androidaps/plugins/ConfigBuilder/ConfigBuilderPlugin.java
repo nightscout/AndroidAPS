@@ -406,50 +406,34 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
         mWakeLock.acquire();
         PumpEnactResult result;
-        if (activePump != null) {
-            insulin = applyBolusConstraints(insulin);
-            carbs = applyCarbsConstraints(carbs);
+        insulin = applyBolusConstraints(insulin);
+        carbs = applyCarbsConstraints(carbs);
 
-            BolusProgressDialog bolusProgressDialog = null;
-            if (context != null) {
-                bolusProgressDialog = new BolusProgressDialog();
-                bolusProgressDialog.setInsulin(insulin);
-                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
-            }
+        BolusProgressDialog bolusProgressDialog = null;
+        if (context != null) {
+            bolusProgressDialog = new BolusProgressDialog();
+            bolusProgressDialog.setInsulin(insulin);
+            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+        }
 
-            MainApp.bus().post(new EventBolusRequested(insulin));
+        MainApp.bus().post(new EventBolusRequested(insulin));
 
-            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
+        result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
 
-            BolusProgressDialog.bolusEnded = true;
+        BolusProgressDialog.bolusEnded = true;
 
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
+        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
 
-            if (result.success) {
-                Treatment t = new Treatment(insulinType);
-                t.insulin = result.bolusDelivered;
-                if (carbTime == 0)
-                    t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
-                t.date = new Date().getDate();
-                t.mealBolus = result.carbsDelivered > 0;
-                addTreatmentToHistory(t);
-                t.carbs = (double) result.carbsDelivered;
-                NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
-            }
-        } else {
-            if (Config.logCongigBuilderActions)
-                log.debug("Creating treatment: " + insulin + " carbs: " + carbs);
+        if (result.success) {
             Treatment t = new Treatment(insulinType);
-            t.insulin = insulin;
-            t.carbs = (double) carbs;
-            t.date = new Date().getDate();
-            t.mealBolus = t.carbs > 0;
+            t.insulin = result.bolusDelivered;
+            if (carbTime == 0)
+                t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
+            t.date = new Date().getTime();
+            t.mealBolus = result.carbsDelivered > 0;
             addTreatmentToHistory(t);
-            NSUpload.uploadTreatment(t);
-            result = new PumpEnactResult();
-            result.success = true;
-            result.bolusDelivered = insulin;
-            result.carbsDelivered = carbs;
+            t.carbs = (double) result.carbsDelivered;
+            NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
         }
         mWakeLock.release();
         return result;
@@ -463,47 +447,41 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context, boolean createTreatment) {
         mWakeLock.acquire();
         PumpEnactResult result;
-        if (activePump != null) {
-            insulin = applyBolusConstraints(insulin);
-            carbs = applyCarbsConstraints(carbs);
+        insulin = applyBolusConstraints(insulin);
+        carbs = applyCarbsConstraints(carbs);
 
-            BolusProgressDialog bolusProgressDialog = null;
-            if (context != null) {
-                bolusProgressDialog = new BolusProgressDialog();
-                bolusProgressDialog.setInsulin(insulin);
-                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
-            } else {
-                Intent i = new Intent();
-                i.putExtra("insulin", insulin.doubleValue());
-                i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                MainApp.instance().startActivity(i);
-            }
-
-            MainApp.bus().post(new EventBolusRequested(insulin));
-
-            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
-
-            BolusProgressDialog.bolusEnded = true;
-
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
-
-            if (Config.logCongigBuilderActions)
-                log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
-
-            if (result.success && createTreatment) {
-                Treatment t = new Treatment(insulinType);
-                t.insulin = result.bolusDelivered;
-                t.carbs = (double) result.carbsDelivered;
-                t.date = new Date().getTime();
-                t.mealBolus = t.carbs > 0;
-                addTreatmentToHistory(t);
-                NSUpload.uploadTreatment(t);
-            }
+        BolusProgressDialog bolusProgressDialog = null;
+        if (context != null) {
+            bolusProgressDialog = new BolusProgressDialog();
+            bolusProgressDialog.setInsulin(insulin);
+            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
         } else {
-            log.error("activePump==null");
-            result = new PumpEnactResult();
-            result.success = false;
+            Intent i = new Intent();
+            i.putExtra("insulin", insulin.doubleValue());
+            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
+        }
+
+        MainApp.bus().post(new EventBolusRequested(insulin));
+
+        result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
+
+        BolusProgressDialog.bolusEnded = true;
+
+        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
+
+        if (Config.logCongigBuilderActions)
+            log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
+
+        if (result.success && createTreatment) {
+            Treatment t = new Treatment(insulinType);
+            t.insulin = result.bolusDelivered;
+            t.carbs = (double) result.carbsDelivered;
+            t.date = new Date().getTime();
+            t.mealBolus = t.carbs > 0;
+            addTreatmentToHistory(t);
+            NSUpload.uploadTreatment(t);
         }
         mWakeLock.release();
         return result;
@@ -528,13 +506,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
         if (Config.logCongigBuilderActions)
             log.debug("setTempBasalAbsolute rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
-        if (result.enacted && result.success) {
-            if (result.isPercent) {
-                NSUpload.uploadTempBasalStartPercent(result.percent, result.duration);
-            } else {
-                NSUpload.uploadTempBasalStartAbsolute(result.absolute, result.duration, result.originalExtendedAmount);
-            }
-        }
         return result;
     }
 
@@ -551,9 +522,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         PumpEnactResult result = activePump.setTempBasalPercent(percentAfterConstraints, durationInMinutes);
         if (Config.logCongigBuilderActions)
             log.debug("setTempBasalPercent percent: " + percentAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
-        if (result.enacted && result.success) {
-            NSUpload.uploadTempBasalStartPercent(result.percent, result.duration);
-        }
         return result;
     }
 
@@ -563,9 +531,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         PumpEnactResult result = activePump.setExtendedBolus(rateAfterConstraints, durationInMinutes);
         if (Config.logCongigBuilderActions)
             log.debug("setExtendedBolus rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
-        if (result.enacted && result.success) {
-            NSUpload.uploadExtendedBolus(result.bolusDelivered, result.duration);
-        }
         return result;
     }
 
@@ -574,9 +539,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         PumpEnactResult result = activePump.cancelTempBasal();
         if (Config.logCongigBuilderActions)
             log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
-        if (result.enacted && result.success) {
-            NSUpload.uploadTempBasalEnd(result.isFakedTempBasal);
-        }
         return result;
     }
 
@@ -585,9 +547,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         PumpEnactResult result = activePump.cancelExtendedBolus();
         if (Config.logCongigBuilderActions)
             log.debug("cancelExtendedBolus success: " + result.success + " enacted: " + result.enacted);
-        if (result.enacted && result.success) {
-            NSUpload.uploadExtendedBolusEnd();
-        }
         return result;
     }
 
@@ -898,11 +857,17 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     @Override
     public void addToHistoryTempBasalStart(TemporaryBasal tempBasal) {
         activeTreatments.addToHistoryTempBasalStart(tempBasal);
+        if (tempBasal.isAbsolute)
+            NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
+        else
+            NSUpload.uploadTempBasalStartPercent(tempBasal);
+
     }
 
     @Override
     public void addToHistoryTempBasalStop(long time) {
         activeTreatments.addToHistoryTempBasalStop(time);
+        NSUpload.uploadTempBasalEnd(time, false);
     }
 
     @Override
@@ -918,11 +883,19 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     @Override
     public void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus) {
         activeTreatments.addToHistoryExtendedBolusStart(extendedBolus);
+        if (activePump.isFakingTempsByExtendedBoluses())
+            NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
+        else
+            NSUpload.uploadExtendedBolus(extendedBolus);
     }
 
     @Override
     public void addToHistoryExtendedBolusStop(long time) {
         activeTreatments.addToHistoryExtendedBolusStop(time);
+        if (activePump.isFakingTempsByExtendedBoluses())
+            NSUpload.uploadTempBasalEnd(time, true);
+        else
+            NSUpload.uploadExtendedBolusEnd(time);
     }
 
     @Override

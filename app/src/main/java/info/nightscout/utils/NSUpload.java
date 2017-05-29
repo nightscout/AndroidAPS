@@ -17,11 +17,14 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 
@@ -32,16 +35,16 @@ import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 public class NSUpload {
     private static Logger log = LoggerFactory.getLogger(NSUpload.class);
 
-    public static void uploadTempBasalStartAbsolute(Double absolute, double durationInMinutes, Double originalExtendedAmount) {
+    public static void uploadTempBasalStartAbsolute(TemporaryBasal temporaryBasal, Double originalExtendedAmount) {
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
-            data.put("duration", durationInMinutes);
-            data.put("absolute", absolute);
-            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("duration", temporaryBasal.durationInMinutes);
+            data.put("absolute", temporaryBasal.absoluteRate);
+            data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + absolute + "u/h " + durationInMinutes + " min"); // ECOR
+            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.absoluteRate + "u/h " + temporaryBasal.durationInMinutes + " min"); // ECOR
             if (originalExtendedAmount != null)
                 data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
             Bundle bundle = new Bundle();
@@ -58,22 +61,27 @@ public class NSUpload {
         }
     }
 
-    public static void uploadTempBasalStartPercent(Integer percent, double durationInMinutes) {
+    public static void uploadTempBasalStartPercent(TemporaryBasal temporaryBasal) {
         try {
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
             boolean useAbsolute = SP.getBoolean("ns_sync_use_absolute", false);
             if (useAbsolute) {
-                double absolute = MainApp.getConfigBuilder().getBaseBasalRate() * percent / 100d;
-                uploadTempBasalStartAbsolute(absolute, durationInMinutes, null);
+                TemporaryBasal t = temporaryBasal.clone();
+                t.isAbsolute = true;
+                NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+                if (profile != null) {
+                    t.absoluteRate = profile.getBasal(NSProfile.secondsFromMidnight(temporaryBasal.date)) * temporaryBasal.percentRate / 100d;
+                    uploadTempBasalStartAbsolute(t, null);
+                }
             } else {
                 Context context = MainApp.instance().getApplicationContext();
                 JSONObject data = new JSONObject();
                 data.put("eventType", CareportalEvent.TEMPBASAL);
-                data.put("duration", durationInMinutes);
-                data.put("percent", percent - 100);
-                data.put("created_at", DateUtil.toISOString(new Date()));
+                data.put("duration", temporaryBasal.durationInMinutes);
+                data.put("percent", temporaryBasal.percentRate - 100);
+                data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
                 data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-                data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + percent + "% " + durationInMinutes + " min"); // ECOR
+                data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.percentRate + "% " + temporaryBasal.durationInMinutes + " min"); // ECOR
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
                 bundle.putString("collection", "treatments");
@@ -89,15 +97,15 @@ public class NSUpload {
         }
     }
 
-    public static void uploadTempBasalEnd(Boolean isFakedTempBasal) {
+    public static void uploadTempBasalEnd(long time, boolean isFakedTempBasal) {
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
-            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalendnote)); // ECOR
-            if (isFakedTempBasal != null)
+            if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
@@ -113,17 +121,17 @@ public class NSUpload {
         }
     }
 
-    public static void uploadExtendedBolus(Double insulin, double durationInMinutes) {
+    public static void uploadExtendedBolus(ExtendedBolus extendedBolus) {
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.COMBOBOLUS);
-            data.put("duration", durationInMinutes);
+            data.put("duration", extendedBolus.durationInMinutes);
             data.put("splitNow", 0);
             data.put("splitExt", 100);
-            data.put("enteredinsulin", insulin);
-            data.put("relative", insulin);
-            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("enteredinsulin", extendedBolus.insulin);
+            data.put("relative", extendedBolus.insulin);
+            data.put("created_at", DateUtil.toISOString(extendedBolus.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
@@ -139,7 +147,7 @@ public class NSUpload {
         }
     }
 
-    public static void uploadExtendedBolusEnd() {
+    public static void uploadExtendedBolusEnd(long time) {
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
@@ -149,7 +157,7 @@ public class NSUpload {
             data.put("splitExt", 100);
             data.put("enteredinsulin", 0);
             data.put("relative", 0);
-            data.put("created_at", DateUtil.toISOString(new Date()));
+            data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");

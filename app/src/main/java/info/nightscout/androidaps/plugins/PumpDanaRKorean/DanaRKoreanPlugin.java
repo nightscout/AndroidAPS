@@ -475,7 +475,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Extended bolus set ok");
             result.absolute = result.absolute + getBaseBasalRate();
-            result.originalExtendedAmount = extendedAmount;
             return result;
         }
         // We should never end here
@@ -581,7 +580,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             return cancelRealTempBasal();
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
             PumpEnactResult cancelEx = cancelExtendedBolus();
-            cancelEx.isFakedTempBasal = true;
             return cancelEx;
         }
         PumpEnactResult result = new PumpEnactResult();

@@ -61,6 +61,19 @@ public class TemporaryBasal implements Interval {
         this.absoluteRate = basal + extendedBolus.absoluteRate();
     }
 
+    public TemporaryBasal clone() {
+        TemporaryBasal t = new TemporaryBasal();
+        t.date = date;
+        t.isValid = isValid;
+        t.source = source;
+        t._id = _id;
+        t.durationInMinutes = durationInMinutes;
+        t.isAbsolute = isAbsolute;
+        t.percentRate = percentRate;
+        t.absoluteRate = absoluteRate;
+        return t;
+    }
+
     // -------- Interval interface ---------
 
     Long cuttedEnd = null;
