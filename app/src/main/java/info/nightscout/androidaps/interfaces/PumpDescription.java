@@ -15,6 +15,8 @@ public class PumpDescription {
 
     public boolean isExtendedBolusCapable = true;
     public double extendedBolusStep = 0.1d;
+    public double extendedBolusDurationStep = 30;
+    public double extendedBolusMaxDuration = 12 * 60;
 
     public boolean isTempBasalCapable = true;
     public int lowTempBasalStyle = PERCENT;

@@ -96,7 +96,7 @@ public class DanaRExecutionService extends Service {
     private PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new LocalBinder();
 
-    private DanaRPump danaRPump;
+    private DanaRPump danaRPump = DanaRPump.getInstance();
     private Treatment bolusingTreatment = null;
 
     private static Boolean connectionInProgress = false;
@@ -124,7 +124,6 @@ public class DanaRExecutionService extends Service {
     public DanaRExecutionService() {
         registerBus();
         MainApp.instance().getApplicationContext().registerReceiver(receiver, new IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED));
-        danaRPump = DanaRPump.getInstance();
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "DanaRExecutionService");
@@ -404,6 +403,7 @@ public class DanaRExecutionService extends Service {
             Calendar time = Calendar.getInstance();
             mSerialIOThread.sendMessage(new MsgSetCarbsEntry(time, carbs));
         }
+
         MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
         MainApp.bus().post(new EventDanaRBolusStart());
         long startTime = new Date().getTime();

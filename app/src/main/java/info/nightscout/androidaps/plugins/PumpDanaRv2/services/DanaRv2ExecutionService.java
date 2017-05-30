@@ -371,7 +371,7 @@ public class DanaRv2ExecutionService extends Service {
         return true;
     }
 
-    public boolean bolus(Double amount, int carbs, Treatment t) {
+    public boolean bolus(double amount, int carbs, Treatment t) {
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusStop stop = new MsgBolusStop(amount, t);

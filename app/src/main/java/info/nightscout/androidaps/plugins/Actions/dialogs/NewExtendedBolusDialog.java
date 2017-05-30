@@ -29,15 +29,8 @@ import info.nightscout.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
 
-    Button okButton;
-    EditText insulinEdit;
-    RadioButton h05Radio;
-    RadioButton h10Radio;
-    RadioButton h20Radio;
-    RadioButton h30Radio;
-    RadioButton h40Radio;
-
     PlusMinusEditText editInsulin;
+    PlusMinusEditText editDuration;
 
     Handler mHandler;
     public static HandlerThread mHandlerThread;
@@ -54,18 +47,16 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
         getDialog().setTitle(getString(R.string.overview_extendedbolus_button));
 
         View view = inflater.inflate(R.layout.overview_newextendedbolus_dialog, container, false);
-        okButton = (Button) view.findViewById(R.id.overview_newextendedbolus_okbutton);
-        insulinEdit = (EditText) view.findViewById(R.id.overview_newextendedbolus_insulin);
-        h05Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_05h);
-        h10Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_1h);
-        h20Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_2h);
-        h30Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_3h);
-        h40Radio = (RadioButton) view.findViewById(R.id.overview_newextendedbolus_4h);
 
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
         editInsulin = new PlusMinusEditText(view, R.id.overview_newextendedbolus_insulin, R.id.overview_newextendedbolus_insulin_plus, R.id.overview_newextendedbolus_insulin_minus, 0d, 0d, maxInsulin, 0.1d, new DecimalFormat("0.00"), false);
 
-        okButton.setOnClickListener(this);
+        double extendedDurationStep = MainApp.getConfigBuilder().getPumpDescription().extendedBolusDurationStep;
+        double extendedMaxDuration = MainApp.getConfigBuilder().getPumpDescription().extendedBolusMaxDuration;
+        editDuration = new PlusMinusEditText(view, R.id.overview_newextendedbolus_duration, R.id.overview_newextendedbolus_duration_plus, R.id.overview_newextendedbolus_duration_minus, extendedDurationStep, extendedDurationStep, extendedMaxDuration, extendedDurationStep, new DecimalFormat("0"), false);
+
+        view.findViewById(R.id.ok).setOnClickListener(this);
+        view.findViewById(R.id.cancel).setOnClickListener(this);
         return view;
     }
 
@@ -79,14 +70,10 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.overview_newextendedbolus_okbutton:
+            case R.id.ok:
                 try {
-                    Double insulin = SafeParse.stringToDouble(insulinEdit.getText().toString());
-                    int durationInMinutes = 30;
-                    if (h10Radio.isChecked()) durationInMinutes = 60;
-                    if (h20Radio.isChecked()) durationInMinutes = 120;
-                    if (h30Radio.isChecked()) durationInMinutes = 180;
-                    if (h40Radio.isChecked()) durationInMinutes = 240;
+                    Double insulin = SafeParse.stringToDouble(editInsulin.getText());
+                    int durationInMinutes = SafeParse.stringToInt(editDuration.getText());
 
                     String confirmMessage = getString(R.string.setextendedbolusquestion);
 
@@ -130,6 +117,10 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
+            case R.id.cancel:
+                dismiss();
+                break;
         }
     }
 

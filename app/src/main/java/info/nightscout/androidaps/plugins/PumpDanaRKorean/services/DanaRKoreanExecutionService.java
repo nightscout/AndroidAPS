@@ -219,7 +219,7 @@ public class DanaRKoreanExecutionService extends Service {
                         mSerialIOThread.disconnect("Recreate SerialIOThread");
                     }
                     mSerialIOThread = new SerialIOThread(mRfcommSocket);
-                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
+                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED, 0));
                     if (!getPumpStatus()) {
                         mSerialIOThread.disconnect("getPumpStatus failed");
                         waitMsec(3000);
@@ -385,7 +385,7 @@ public class DanaRKoreanExecutionService extends Service {
         return true;
     }
 
-    public boolean bolus(Double amount, int carbs, Treatment t) {
+    public boolean bolus(double amount, int carbs, Treatment t) {
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusStop stop = new MsgBolusStop(amount, t);

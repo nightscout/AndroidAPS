@@ -55,6 +55,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
         pumpDescription.isExtendedBolusCapable = true;
         pumpDescription.extendedBolusStep = 0.2d;
+        pumpDescription.extendedBolusDurationStep = 30;
 
         pumpDescription.isTempBasalCapable = true;
         pumpDescription.lowTempBasalStyle = PumpDescription.ABSOLUTE | PumpDescription.PERCENT;
@@ -72,7 +73,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
         pumpDescription.isSetBasalProfileCapable = true;
         pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.04d;
+        pumpDescription.basalMinimumRate = 0.01d;
 
         pumpDescription.isRefillingCapable = false;
     }

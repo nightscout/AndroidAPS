@@ -64,8 +64,8 @@
                     android:id="@+id/overview_newtempbasal_percent_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal">
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
 
 
                     <ImageView
@@ -73,11 +73,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="0.5"
                         android:background="@drawable/circle"
                         android:backgroundTint="#ffffff"
                         android:src="@drawable/ic_action_minus"
-                        android:tint="#ffffff"
-                        android:layout_weight="0.5" />
+                        android:tint="#ffffff" />
 
                     <EditText
                         android:id="@+id/overview_newtempbasal_basalpercentinput"
@@ -85,23 +85,23 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_weight="0.5"
+                        android:gravity="center_horizontal"
                         android:inputType="numberDecimal"
                         android:minWidth="100dp"
                         android:padding="10dp"
                         android:text=""
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:gravity="center_horizontal" />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <ImageView
                         android:id="@+id/overview_newtempbasal_basalpercent_plus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="0.5"
                         android:background="@drawable/circle"
                         android:backgroundTint="#ffffff"
                         android:src="@drawable/ic_action_add"
-                        android:tint="#ffffff"
-                        android:layout_weight="0.5" />
+                        android:tint="#ffffff" />
 
 
                 </LinearLayout>
@@ -110,8 +110,8 @@
                     android:id="@+id/overview_newtempbasal_absolute_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_gravity="center_horizontal">
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
 
 
                     <ImageView
@@ -119,11 +119,11 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="0.5"
                         android:background="@drawable/circle"
                         android:backgroundTint="#ffffff"
                         android:src="@drawable/ic_action_minus"
-                        android:tint="#ffffff"
-                        android:layout_weight="0.5" />
+                        android:tint="#ffffff" />
 
                     <EditText
                         android:id="@+id/overview_newtempbasal_basalabsoluteinput"
@@ -131,23 +131,23 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_weight="0.5"
+                        android:gravity="center_horizontal"
                         android:inputType="numberDecimal"
                         android:minWidth="100dp"
                         android:padding="10dp"
                         android:text=""
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:gravity="center_horizontal" />
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <ImageView
                         android:id="@+id/overview_newtempbasal_basalabsolute_plus"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_weight="0.5"
                         android:background="@drawable/circle"
                         android:backgroundTint="#ffffff"
                         android:src="@drawable/ic_action_add"
-                        android:tint="#ffffff"
-                        android:layout_weight="0.5" />
+                        android:tint="#ffffff" />
 
 
                 </LinearLayout>

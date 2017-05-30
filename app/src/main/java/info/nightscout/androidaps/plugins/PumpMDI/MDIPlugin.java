@@ -39,26 +39,8 @@ public class MDIPlugin implements PluginBase, PumpInterface {
         pumpDescription.bolusStep = 0.5d;
 
         pumpDescription.isExtendedBolusCapable = false;
-        pumpDescription.extendedBolusStep = 0d;
-
         pumpDescription.isTempBasalCapable = false;
-        pumpDescription.lowTempBasalStyle = PumpDescription.NONE;
-        pumpDescription.highTempBasalStyle = PumpDescription.NONE;
-        pumpDescription.maxHighTempPercent = 0;
-        pumpDescription.maxHighTempAbsolute = 0;
-        pumpDescription.lowTempPercentStep = 0;
-        pumpDescription.lowTempAbsoluteStep = 0;
-        pumpDescription.lowTempPercentDuration = 0;
-        pumpDescription.lowTempAbsoluteDuration = 0;
-        pumpDescription.highTempPercentStep = 0;
-        pumpDescription.highTempAbsoluteStep = 0d;
-        pumpDescription.highTempPercentDuration = 0;
-        pumpDescription.highTempAbsoluteDuration = 0;
-
         pumpDescription.isSetBasalProfileCapable = false;
-        pumpDescription.basalStep = 0d;
-        pumpDescription.basalMinimumRate = 0d;
-
         pumpDescription.isRefillingCapable = false;
     }
 

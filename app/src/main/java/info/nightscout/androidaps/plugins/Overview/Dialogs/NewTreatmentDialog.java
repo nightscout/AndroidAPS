@@ -33,11 +33,6 @@ import info.nightscout.utils.SafeParse;
 
 public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
 
-    Button okButton;
-    Button cancelButton;
-    TextView insulin;
-    TextView carbs;
-
     PlusMinusEditText editCarbs;
     PlusMinusEditText editInsulin;
 
@@ -55,15 +50,11 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.overview_newtreatment_dialog, null, false);
 
-        okButton = (Button) view.findViewById(R.id.ok);
-        okButton.setOnClickListener(this);
-        cancelButton = (Button) view.findViewById(R.id.cancel);
-        cancelButton.setOnClickListener(this);
+        view.findViewById(R.id.ok).setOnClickListener(this);
+        view.findViewById(R.id.cancel).setOnClickListener(this);
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        insulin = (TextView) view.findViewById(R.id.treatments_newtreatment_insulinamount);
-        carbs = (TextView) view.findViewById(R.id.treatments_newtreatment_carbsamount);
 
         Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
@@ -87,8 +78,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
             case R.id.ok:
 
                 try {
-                    Double insulin = SafeParse.stringToDouble(this.insulin.getText().toString());
-                    final Integer carbs = SafeParse.stringToInt(this.carbs.getText().toString());
+                    Double insulin = SafeParse.stringToDouble(editInsulin.getText());
+                    final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
 
                     String confirmMessage = getString(R.string.entertreatmentquestion) + "\n";
 
