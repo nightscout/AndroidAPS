@@ -81,26 +81,23 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
 
-        pumpDescription.isBolusCapable = true; // TODO: use description in setTempBasalAbsolute
+        pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
         pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.05d;
+        pumpDescription.extendedBolusStep = 0.1d;
         pumpDescription.extendedBolusDurationStep = 30;
+        pumpDescription.extendedBolusMaxDuration = 8 * 60;
 
         pumpDescription.isTempBasalCapable = true;
-        pumpDescription.lowTempBasalStyle = PumpDescription.PERCENT;
-        pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
-        pumpDescription.maxHighTempPercent = 200;
-        pumpDescription.maxHighTempAbsolute = 0;
-        pumpDescription.lowTempPercentStep = 10;
-        pumpDescription.lowTempAbsoluteStep = 0;
-        pumpDescription.lowTempPercentDuration = 60;
-        pumpDescription.lowTempAbsoluteDuration = 60;
-        pumpDescription.highTempPercentStep = 10;
-        pumpDescription.highTempAbsoluteStep = 0.05d;
-        pumpDescription.highTempPercentDuration = 60;
-        pumpDescription.highTempAbsoluteDuration = 30;
+        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
+
+        pumpDescription.maxTempPercent = 200;
+        pumpDescription.tempPercentStep = 10;
+
+        pumpDescription.tempDurationStep = 60;
+        pumpDescription.tempMaxDuration = 24 * 60;
+
 
         pumpDescription.isSetBasalProfileCapable = true;
         pumpDescription.basalStep = 0.01d;
@@ -134,8 +131,6 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         if (isEnabled(PUMP)) {
             boolean previousValue = useExtendedBoluses;
             useExtendedBoluses = SP.getBoolean("danar_useextended", false);
-
-            pumpDescription.highTempBasalStyle = useExtendedBoluses ? PumpDescription.EXTENDED : PumpDescription.PERCENT;
 
             if (useExtendedBoluses != previousValue && MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
                 sExecutionService.extendedBolusStop();
@@ -502,8 +497,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             log.error("setTempBasalPercent: Invalid input");
             return result;
         }
-        if (percent > getPumpDescription().maxHighTempPercent)
-            percent = getPumpDescription().maxHighTempPercent;
+        if (percent > getPumpDescription().maxTempPercent)
+            percent = getPumpDescription().maxTempPercent;
         if (pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = false;
             result.success = true;
@@ -757,8 +752,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
         if (percentRate < 0) percentRate = 0;
-        if (percentRate > getPumpDescription().maxHighTempPercent)
-            percentRate = getPumpDescription().maxHighTempPercent;
+        if (percentRate > getPumpDescription().maxTempPercent)
+            percentRate = getPumpDescription().maxTempPercent;
         if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
             log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
         return percentRate;

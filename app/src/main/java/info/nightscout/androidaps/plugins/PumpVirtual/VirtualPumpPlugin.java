@@ -54,22 +54,19 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         pumpDescription.bolusStep = 0.1d;
 
         pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.2d;
+        pumpDescription.extendedBolusStep = 0.05d;
         pumpDescription.extendedBolusDurationStep = 30;
+        pumpDescription.extendedBolusMaxDuration = 8 * 60;
 
         pumpDescription.isTempBasalCapable = true;
-        pumpDescription.lowTempBasalStyle = PumpDescription.ABSOLUTE | PumpDescription.PERCENT;
-        pumpDescription.highTempBasalStyle = PumpDescription.ABSOLUTE | PumpDescription.PERCENT;
-        pumpDescription.maxHighTempPercent = 600;
-        pumpDescription.maxHighTempAbsolute = 10;
-        pumpDescription.lowTempPercentStep = 5;
-        pumpDescription.lowTempAbsoluteStep = 0.1;
-        pumpDescription.lowTempPercentDuration = 30;
-        pumpDescription.lowTempAbsoluteDuration = 30;
-        pumpDescription.highTempPercentStep = 10;
-        pumpDescription.highTempAbsoluteStep = 0.05d;
-        pumpDescription.highTempPercentDuration = 30;
-        pumpDescription.highTempAbsoluteDuration = 30;
+        pumpDescription.tempBasalStyle = PumpDescription.PERCENT | PumpDescription.ABSOLUTE;
+
+        pumpDescription.maxTempPercent = 500;
+        pumpDescription.tempPercentStep = 10;
+
+        pumpDescription.tempDurationStep = 30;
+        pumpDescription.tempMaxDuration = 24 * 60;
+
 
         pumpDescription.isSetBasalProfileCapable = true;
         pumpDescription.basalStep = 0.01d;

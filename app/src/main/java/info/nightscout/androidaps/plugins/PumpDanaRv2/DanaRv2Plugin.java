@@ -78,26 +78,23 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
         MainApp.bus().register(this);
 
-        pumpDescription.isBolusCapable = true; // TODO: use description in setTempBasalAbsolute
-        pumpDescription.bolusStep = 0.05d;
+        pumpDescription.isBolusCapable = true;
+        pumpDescription.bolusStep = 0.1d;
 
         pumpDescription.isExtendedBolusCapable = true;
         pumpDescription.extendedBolusStep = 0.05d;
         pumpDescription.extendedBolusDurationStep = 30;
+        pumpDescription.extendedBolusMaxDuration = 8 * 60;
 
         pumpDescription.isTempBasalCapable = true;
-        pumpDescription.lowTempBasalStyle = PumpDescription.PERCENT;
-        pumpDescription.highTempBasalStyle = PumpDescription.PERCENT;
-        pumpDescription.maxHighTempPercent = 500;
-        pumpDescription.maxHighTempAbsolute = 0;
-        pumpDescription.lowTempPercentStep = 10;
-        pumpDescription.lowTempAbsoluteStep = 0;
-        pumpDescription.lowTempPercentDuration = 30;
-        pumpDescription.lowTempAbsoluteDuration = 30;
-        pumpDescription.highTempPercentStep = 10;
-        pumpDescription.highTempAbsoluteStep = 0;
-        pumpDescription.highTempPercentDuration = 15;
-        pumpDescription.highTempAbsoluteDuration = 0;
+        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
+
+        pumpDescription.maxTempPercent = 200;
+        pumpDescription.tempPercentStep = 10;
+
+        pumpDescription.tempDurationStep = 60;
+        pumpDescription.tempMaxDuration = 24 * 60;
+
 
         pumpDescription.isSetBasalProfileCapable = true;
         pumpDescription.basalStep = 0.01d;
@@ -360,8 +357,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
-            if (percentRate > getPumpDescription().maxHighTempPercent)
-                percentRate = getPumpDescription().maxHighTempPercent;
+            if (percentRate > getPumpDescription().maxTempPercent)
+                percentRate = getPumpDescription().maxTempPercent;
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 // Correct basal already set ?
@@ -412,8 +409,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             log.error("setTempBasalPercent: Invalid input");
             return result;
         }
-        if (percent > getPumpDescription().maxHighTempPercent)
-            percent = getPumpDescription().maxHighTempPercent;
+        if (percent > getPumpDescription().maxTempPercent)
+            percent = getPumpDescription().maxTempPercent;
         if (pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = false;
             result.success = true;
@@ -674,8 +671,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
         if (percentRate < 0) percentRate = 0;
-        if (percentRate > getPumpDescription().maxHighTempPercent)
-            percentRate = getPumpDescription().maxHighTempPercent;
+        if (percentRate > getPumpDescription().maxTempPercent)
+            percentRate = getPumpDescription().maxTempPercent;
         if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
             log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
         return percentRate;

@@ -619,4 +619,5 @@
     <string name="careportal_canulaage_label">Canula age</string>
     <string name="careportal_insulinage_label">Insulin age</string>
     <string name="hours">hours</string>
+    <string name="overview_newtempbasal_basaltype_label">Basal type</string>
 </resources>
