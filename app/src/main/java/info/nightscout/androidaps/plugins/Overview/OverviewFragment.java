@@ -804,8 +804,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
         } else {
-            wizardButton.setVisibility(View.VISIBLE);
-            treatmentButton.setVisibility(View.VISIBLE);
             pumpStatusLayout.setVisibility(View.GONE);
             loopStatusLayout.setVisibility(View.VISIBLE);
         }
@@ -1001,6 +999,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 quickWizardButton.setVisibility(View.GONE);
         } else
             quickWizardButton.setVisibility(View.GONE);
+
+        // Bolus and calc button
+        if (pump.isInitialized() && !pump.isSuspended()) {
+            wizardButton.setVisibility(View.VISIBLE);
+            treatmentButton.setVisibility(View.VISIBLE);
+        } else {
+            wizardButton.setVisibility(View.GONE);
+            treatmentButton.setVisibility(View.GONE);
+        }
 
         String units = profile.getUnits();
 

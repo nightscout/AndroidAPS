@@ -425,6 +425,9 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (new Date().getTime() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance) {
                         reply = MainApp.sResources.getString(R.string.smscommunicator_remotebolusnotallowed);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                    } else if (MainApp.getConfigBuilder().isSuspended()) {
+                        reply = MainApp.sResources.getString(R.string.pumpsuspended);
+                        sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else if (splited.length > 1) {
                         amount = SafeParse.stringToDouble(splited[1]);
                         amount = MainApp.getConfigBuilder().applyBolusConstraints(amount);

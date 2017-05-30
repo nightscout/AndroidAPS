@@ -197,7 +197,6 @@
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
                     android:layout_alignParentBottom="true"
-                    android:layout_paddingBottom="5dp"
                     android:layout_marginBottom="5dp"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
