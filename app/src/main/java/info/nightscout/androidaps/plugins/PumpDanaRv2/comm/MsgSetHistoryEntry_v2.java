@@ -16,17 +16,17 @@ public class MsgSetHistoryEntry_v2 extends MessageBase {
         SetCommand(0xE004);
     }
 
-    public MsgSetHistoryEntry_v2(int type, Date time, int param1, int param2) {
+    public MsgSetHistoryEntry_v2(int type, long time, int param1, int param2) {
         this();
 
         AddParamByte((byte) type);
         GregorianCalendar gtime = new GregorianCalendar();
-        gtime.setTimeInMillis(time.getTime());
+        gtime.setTimeInMillis(time);
         AddParamDateTime(gtime);
         AddParamInt(param1);
         AddParamInt(param2);
         if (Config.logDanaMessageDetail)
-            log.debug("Set history entry: type: " + type + " date: " + time.toString() + " param1: " + param1 + " param2: " + param2);
+            log.debug("Set history entry: type: " + type + " date: " + new Date(time).toString() + " param1: " + param1 + " param2: " + param2);
     }
 
     @Override

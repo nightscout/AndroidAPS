@@ -133,12 +133,12 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress())
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
                         extendedBolus.setVisibility(View.GONE);
                     else {
                         extendedBolus.setVisibility(View.VISIBLE);
                     }
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress())
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
                         extendedBolusCancel.setVisibility(View.GONE);
                     else {
                         extendedBolusCancel.setVisibility(View.VISIBLE);
@@ -205,26 +205,28 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                 fillDialog.show(manager, "FillDialog");
                 break;
             case R.id.actions_50_30:
-                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-                            danaRv2Plugin.setHighTempBasalPercent(50);
+                sHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                            danaRv2Plugin.cancelTempBasal();
                         }
-                    });
-                }
+                        danaRv2Plugin.setHighTempBasalPercent(50);
+                    }
+                });
                 break;
             case R.id.actions_400_15:
-                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-                            danaRv2Plugin.setHighTempBasalPercent(400);
+                sHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                            danaRv2Plugin.cancelTempBasal();
                         }
-                    });
-                }
+                        danaRv2Plugin.setHighTempBasalPercent(400);
+                    }
+                });
                 break;
         }
     }

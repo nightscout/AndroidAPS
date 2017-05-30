@@ -287,7 +287,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment(detailedBolusInfo.insulinInterface);
             boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, t);
+            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, new Date().getTime() + detailedBolusInfo.carbTime * 60 * 1000, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -295,9 +295,6 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             if (Config.logPumpActions)
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
-            detailedBolusInfo.insulin = t.insulin;
-            detailedBolusInfo.date = new Date().getTime();
-            MainApp.getConfigBuilder().addTreatmentToHistory(detailedBolusInfo);
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult();
@@ -357,8 +354,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             Integer percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
             if (percentRate < 100) percentRate = Round.ceilTo((double) percentRate, 10d).intValue();
             else percentRate = Round.floorTo((double) percentRate, 10d).intValue();
-            if (percentRate > getPumpDescription().maxTempPercent)
-                percentRate = getPumpDescription().maxTempPercent;
+            if (percentRate > 500) // Special high temp 500/15min
+                percentRate = 500;
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 // Correct basal already set ?
@@ -387,7 +384,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
-            return setTempBasalPercent(percentRate, durationInMinutes);
+            // use special APS temp basal call ... 100+/15min .... 100-/30min
+            setHighTempBasalPercent(percentRate);
         }
         // We should never end here
         log.error("setTempBasalAbsolute: Internal error");

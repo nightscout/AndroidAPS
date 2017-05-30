@@ -24,8 +24,10 @@ public class MessageHashTable_v2 {
             put(new MsgBolusStart());                // 0x0102 CMD_MEALINS_START_DATA
             put(new MsgBolusProgress());             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
             put(new MsgStatusProfile());             // 0x0204 CMD_PUMP_CALCULATION_SETTING
-            put(new MsgStatusTempBasal());           // 0x0205 CMD_PUMP_EXERCISE_MODE
-            put(new MsgStatusBolusExtended());       // 0x0207 CMD_PUMP_EXPANS_INS_I
+
+            put(new MsgStatusTempBasal_v2());        // 0x0205 CMD_PUMP_EXERCISE_MODE
+            put(new MsgStatusBolusExtended_v2());    // 0x0207 CMD_PUMP_EXPANS_INS_I
+
             put(new MsgStatusBasic());               // 0x020A CMD_PUMP_INITVIEW_I
             put(new MsgStatus());                    // 0x020B CMD_PUMP_STATUS
             put(new MsgInitConnStatusTime());        // 0x0301 CMD_PUMPINIT_TIME_INFO

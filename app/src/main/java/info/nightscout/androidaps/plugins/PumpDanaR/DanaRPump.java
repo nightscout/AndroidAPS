@@ -33,6 +33,22 @@ public class DanaRPump {
 
     public static final String PROFILE_PREFIX = "DanaR-";
 
+    // v2 history entries
+    public static final int TEMPSTART = 1;
+    public static final int TEMPSTOP = 2;
+    public static final int EXTENDEDSTART = 3;
+    public static final int EXTENDEDSTOP = 4;
+    public static final int BOLUS = 5;
+    public static final int DUALBOLUS = 6;
+    public static final int DUALEXTENDEDSTART = 7;
+    public static final int DUALEXTENDEDSTOP = 8;
+    public static final int SUSPENDON = 9;
+    public static final int SUSPENDOFF = 10;
+    public static final int REFILL = 11;
+    public static final int PRIME = 12;
+    public static final int PROFILECHANGE = 13;
+    public static final int CARBS = 14;
+
     public Date lastConnection = new Date(0);
     public Date lastSettingsRead = new Date(0);
 

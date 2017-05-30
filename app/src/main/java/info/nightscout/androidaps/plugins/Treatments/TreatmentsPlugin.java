@@ -341,7 +341,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus) {
-        log.debug("Adding new ExtentedBolus record" + extendedBolus);
+        log.debug("Adding new ExtentedBolus record" + extendedBolus.log());
         MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
@@ -350,7 +350,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         ExtendedBolus extendedBolus = new ExtendedBolus();
         extendedBolus.date = time;
         extendedBolus.durationInMinutes = 0;
-        log.debug("Adding new ExtentedBolus stop record" + extendedBolus);
+        log.debug("Adding new ExtentedBolus stop record" + extendedBolus.log());
         MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
@@ -390,7 +390,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void addToHistoryTempBasalStart(TemporaryBasal tempBasal) {
-        log.debug("Adding new TemporaryBasal record" + tempBasal);
+        log.debug("Adding new TemporaryBasal record" + tempBasal.log());
         MainApp.getDbHelper().createOrUpdate(tempBasal);
     }
 
@@ -399,7 +399,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         TemporaryBasal temporaryBasal = new TemporaryBasal();
         temporaryBasal.date = time;
         temporaryBasal.durationInMinutes = 0;
-        log.debug("Adding new TemporaryBasal stop record" + temporaryBasal);
+        log.debug("Adding new TemporaryBasal stop record" + temporaryBasal.log());
         MainApp.getDbHelper().createOrUpdate(temporaryBasal);
     }
 
@@ -413,7 +413,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
         MainApp.getDbHelper().createOrUpdate(treatment);
-        log.debug("Adding new Treatment record" + treatment);
+        log.debug("Adding new Treatment record" + treatment.log());
         if (detailedBolusInfo.carbTime != 0) {
             Treatment carbsTreatment = new Treatment(detailedBolusInfo.insulinInterface);
             carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L;

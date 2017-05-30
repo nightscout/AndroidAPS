@@ -47,7 +47,7 @@ public class MessageBase {
         AddParamByte((byte) (date.get(Calendar.YEAR) - 1900 - 100));
         AddParamByte((byte) (date.get(Calendar.MONTH) + 1));
         AddParamByte((byte) (date.get(Calendar.DAY_OF_MONTH)));
-        AddParamByte((byte) (date.get(Calendar.HOUR)));
+        AddParamByte((byte) (date.get(Calendar.HOUR_OF_DAY)));
         AddParamByte((byte) (date.get(Calendar.MINUTE)));
     }
 
@@ -55,7 +55,7 @@ public class MessageBase {
         AddParamByte((byte) (date.get(Calendar.YEAR) - 1900 - 100));
         AddParamByte((byte) (date.get(Calendar.MONTH) + 1));
         AddParamByte((byte) (date.get(Calendar.DAY_OF_MONTH)));
-        AddParamByte((byte) (date.get(Calendar.HOUR)));
+        AddParamByte((byte) (date.get(Calendar.HOUR_OF_DAY)));
         AddParamByte((byte) (date.get(Calendar.MINUTE)));
         AddParamByte((byte) (date.get(Calendar.SECOND)));
     }

@@ -34,6 +34,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -193,6 +194,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleExtendedBolusChange();
         scheduleTemporaryTargetChange();
         scheduleCareportalEventChange();
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        MainApp.bus().post(new EventRefreshGui(false));
+                    }
+                },
+                3000
+        );
     }
 
     public void resetTreatments() {
@@ -440,7 +450,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     //  -------------------- TREATMENT HANDLING -------------------
 
     public boolean changeAffectingIobCob(Treatment t) {
-        Treatment existing = findTreatmentByTimeIndex(t.date);
+        Treatment existing = findTreatmentByTime(t.date);
         if (existing == null)
             return true;
         if (existing.insulin == t.insulin && existing.carbs == t.carbs)
@@ -507,7 +517,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     }
 
     @Nullable
-    public Treatment findTreatmentByTimeIndex(Long timeIndex) {
+    public Treatment findTreatmentByTime(Long timeIndex) {
         try {
             QueryBuilder<Treatment, String> qb = null;
             Dao<Treatment, Long> daoTreatments = getDaoTreatments();
@@ -518,10 +528,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
             List<Treatment> trList = daoTreatments.query(preparedQuery);
             if (trList.size() != 1) {
-                log.debug("Treatment findTreatmentByTimeIndex query size: " + trList.size());
+                //log.debug("Treatment findTreatmentByTime query size: " + trList.size());
                 return null;
             } else {
-                log.debug("Treatment findTreatmentByTimeIndex found: " + trList.get(0).log());
+                //log.debug("Treatment findTreatmentByTime found: " + trList.get(0).log());
                 return trList.get(0);
             }
         } catch (SQLException e) {
@@ -853,6 +863,30 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<TemporaryBasal>();
     }
 
+    @Nullable
+    public TemporaryBasal findTempBasalByTime(Long timeIndex) {
+        try {
+            QueryBuilder<TemporaryBasal, String> qb = null;
+            Dao<TemporaryBasal, Long> daoTemporaryBasal = getDaoTemporaryBasal();
+            QueryBuilder<TemporaryBasal, Long> queryBuilder = daoTemporaryBasal.queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("date", timeIndex);
+            queryBuilder.limit(10L);
+            PreparedQuery<TemporaryBasal> preparedQuery = queryBuilder.prepare();
+            List<TemporaryBasal> trList = daoTemporaryBasal.query(preparedQuery);
+            if (trList.size() != 1) {
+                //log.debug("TemporaryBasal findTempBasalByTime query size: " + trList.size());
+                return null;
+            } else {
+                //log.debug("TemporaryBasal findTempBasalByTime found: " + trList.get(0).log());
+                return trList.get(0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     static public void scheduleTemporaryBasalChange() {
         class PostRunnable implements Runnable {
             public void run() {
@@ -1048,6 +1082,30 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return new ArrayList<ExtendedBolus>();
+    }
+
+    @Nullable
+    public ExtendedBolus findExtendedBolusByTime(Long timeIndex) {
+        try {
+            QueryBuilder<ExtendedBolus, String> qb = null;
+            Dao<ExtendedBolus, Long> daoExtendedBolus = getDaoExtendedBolus();
+            QueryBuilder<ExtendedBolus, Long> queryBuilder = daoExtendedBolus.queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("date", timeIndex);
+            queryBuilder.limit(10L);
+            PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
+            List<ExtendedBolus> trList = daoExtendedBolus.query(preparedQuery);
+            if (trList.size() != 1) {
+                //log.debug("ExtendedBolus findExtendedBolusByTime query size: " + trList.size());
+                return null;
+            } else {
+                //log.debug("ExtendedBolus findExtendedBolusByTime found: " + trList.get(0).log());
+                return trList.get(0);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public void deleteExtendedBolusById(String _id) {

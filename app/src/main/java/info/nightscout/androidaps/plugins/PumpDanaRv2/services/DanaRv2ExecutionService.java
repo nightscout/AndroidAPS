@@ -44,8 +44,11 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.SerialIOThread;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgHistoryEvents_v2;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetAPSTempBasalStart_v2;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgSetHistoryEntry_v2;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusAPS_v2;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgCheckValue_v2;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusBolusExtended_v2;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.comm.MsgStatusTempBasal_v2;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
@@ -69,6 +72,8 @@ public class DanaRv2ExecutionService extends Service {
     private static final Object connectionLock = new Object();
 
     private static final UUID SPP_UUID = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+
+    private long lastHistoryFetched = 0;
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -247,8 +252,8 @@ public class DanaRv2ExecutionService extends Service {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpstatus)));
             MsgStatus statusMsg = new MsgStatus();
             MsgStatusBasic statusBasicMsg = new MsgStatusBasic();
-            MsgStatusTempBasal tempStatusMsg = new MsgStatusTempBasal();
-            MsgStatusBolusExtended exStatusMsg = new MsgStatusBolusExtended();
+            MsgStatusTempBasal_v2 tempStatusMsg = new MsgStatusTempBasal_v2();
+            MsgStatusBolusExtended_v2 exStatusMsg = new MsgStatusBolusExtended_v2();
             MsgCheckValue_v2 checkValue = new MsgCheckValue_v2();
 
             if (danaRPump.isNewPump) {
@@ -325,7 +330,8 @@ public class DanaRv2ExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
-        mSerialIOThread.sendMessage(new MsgStatusTempBasal());
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
+        loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -335,8 +341,8 @@ public class DanaRv2ExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent));
-        mSerialIOThread.sendMessage(new MsgStatusAPS_v2());
-        mSerialIOThread.sendMessage(new MsgStatusTempBasal());
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
+        loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -346,7 +352,8 @@ public class DanaRv2ExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
-        mSerialIOThread.sendMessage(new MsgStatusTempBasal());
+        mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
+        loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -356,7 +363,8 @@ public class DanaRv2ExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStart(insulin, (byte) (durationInHalfHours & 0xFF)));
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended_v2());
+        loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
@@ -366,12 +374,13 @@ public class DanaRv2ExecutionService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingextendedbolus)));
         mSerialIOThread.sendMessage(new MsgSetExtendedBolusStop());
-        mSerialIOThread.sendMessage(new MsgStatusBolusExtended());
+        mSerialIOThread.sendMessage(new MsgStatusBolusExtended_v2());
+        loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
     }
 
-    public boolean bolus(double amount, int carbs, Treatment t) {
+    public boolean bolus(double amount, int carbs, long carbtime, Treatment t) {
         bolusingTreatment = t;
         MsgBolusStart start = new MsgBolusStart(amount);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
@@ -380,8 +389,11 @@ public class DanaRv2ExecutionService extends Service {
         if (!isConnected()) return false;
 
         if (carbs > 0) {
-            Calendar time = Calendar.getInstance();
-            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(time, carbs));
+            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs);
+            mSerialIOThread.sendMessage(msg);
+            MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, carbtime, carbs, 0);
+            mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
+            lastHistoryFetched = carbtime - 1000;
         }
         MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
         MainApp.bus().post(new EventDanaRBolusStart());
@@ -402,7 +414,7 @@ public class DanaRv2ExecutionService extends Service {
         }
         waitMsec(300);
         bolusingTreatment = null;
-        getPumpStatus();
+        loadEvents();
         return true;
     }
 
@@ -422,12 +434,14 @@ public class DanaRv2ExecutionService extends Service {
         }
     }
 
-    public boolean carbsEntry(int amount) {
+    public boolean carbsEntry(int amount, long time) {
         connect("carbsEntry");
         if (!isConnected()) return false;
-        Calendar time = Calendar.getInstance();
         MsgSetCarbsEntry msg = new MsgSetCarbsEntry(time, amount);
         mSerialIOThread.sendMessage(msg);
+        MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, time, amount, 0);
+        mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
+        lastHistoryFetched = time - 1;
         return true;
     }
 
@@ -478,12 +492,20 @@ public class DanaRv2ExecutionService extends Service {
 
     public boolean loadEvents() {
         if (!isConnected()) return false;
-        MsgHistoryEvents_v2 msg = new MsgHistoryEvents_v2();
+        MsgHistoryEvents_v2 msg;
+        if (lastHistoryFetched == 0) {
+            msg = new MsgHistoryEvents_v2();
+            log.debug("Loading complete event history");
+        } else {
+            msg = new MsgHistoryEvents_v2(lastHistoryFetched);
+            log.debug("Loading event history from: " + new Date(lastHistoryFetched).toLocaleString());
+        }
         mSerialIOThread.sendMessage(msg);
         while (!msg.done && mRfcommSocket.isConnected()) {
             waitMsec(100);
         }
         waitMsec(200);
+        lastHistoryFetched = MsgHistoryEvents_v2.lastEventTimeLoaded;
         return true;
     }
 
