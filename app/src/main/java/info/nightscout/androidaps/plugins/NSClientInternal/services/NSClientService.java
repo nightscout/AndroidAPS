@@ -609,7 +609,7 @@ public class NSClientService extends Service {
             public void run() {
                 if (mSocket == null || !mSocket.connected()) return;
 
-                if (lastResendTime  > new Date().getTime() - 30 * 1000L) {
+                if (lastResendTime  > new Date().getTime() - 10 * 1000L) {
                     log.debug("Skipping resend by lastResendTime: " + ((new Date().getTime() - lastResendTime) / 1000L) + " sec");
                     return;
                 }
