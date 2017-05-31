@@ -34,7 +34,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -44,6 +43,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -51,16 +51,14 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.TempBasalsInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -311,7 +309,19 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        PumpEnactResult result = pump.deliverTreatmentFromBolusWizard(
+                                        PumpEnactResult result;
+                                        if (useSuperBolus) {
+                                            final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+                                            if (activeloop != null) {
+                                                activeloop.superBolusTo(new Date().getTime() + 2 * 60L * 60 * 1000);
+                                                MainApp.bus().post(new EventRefreshGui(false));
+                                            }
+                                            result = pump.setTempBasalAbsolute(0d, 120);
+                                            if (!result.success) {
+                                                OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror), result.comment, null);
+                                            }
+                                        }
+                                        result = pump.deliverTreatmentFromBolusWizard(
                                                 MainApp.getConfigBuilder().getActiveInsulin(),
                                                 context,
                                                 finalInsulinAfterConstraints,
@@ -322,26 +332,7 @@ public class WizardDialog extends DialogFragment  implements OnClickListener, Co
                                                 boluscalcJSON
                                         );
                                         if (!result.success) {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            builder.setMessage(result.comment);
-                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                            builder.show();
-                                        }
-                                        if (useSuperBolus) {
-                                            final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
-                                            if (activeloop != null) {
-                                                activeloop.superBolusTo(new Date().getTime() + 2 * 60L * 60 * 1000);
-                                                MainApp.bus().post(new EventRefreshGui(false));
-                                            }
-                                            result = pump.setTempBasalAbsolute(0d, 120);
-                                            if (!result.success) {
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                                builder.setTitle(MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
-                                                builder.setMessage(result.comment);
-                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                                builder.show();
-                                            }
+                                            OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.treatmentdeliveryerror), result.comment, null);
                                         }
                                     }
                                 });
