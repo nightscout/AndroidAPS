@@ -328,6 +328,11 @@ public class DanaRv2ExecutionService extends Service {
     public boolean tempBasal(int percent, int durationInHours) {
         connect("tempBasal");
         if (!isConnected()) return false;
+        if (danaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            waitMsec(500);
+        }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());
@@ -339,6 +344,11 @@ public class DanaRv2ExecutionService extends Service {
     public boolean highTempBasal(int percent) {
         connect("highTempBasal");
         if (!isConnected()) return false;
+        if (danaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            waitMsec(500);
+        }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetAPSTempBasalStart_v2(percent));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal_v2());

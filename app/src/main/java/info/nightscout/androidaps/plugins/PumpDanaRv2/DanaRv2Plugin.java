@@ -287,7 +287,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             Treatment t = new Treatment(detailedBolusInfo.insulinInterface);
             boolean connectionOK = false;
-            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, new Date().getTime() + detailedBolusInfo.carbTime * 60 * 1000, t);
+            if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, new Date().getTime() + detailedBolusInfo.carbTime * 60 * 1000, t);
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
@@ -370,22 +371,19 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
                     if (Config.logPumpActions)
                         log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
                     return result;
-                } else {
-                    if (Config.logPumpActions)
-                        log.debug("setTempBasalAbsolute: Stopping temp basal (doLowTemp || doHighTemp)");
-                    result = cancelTempBasal();
-                    // Check for proper result
-                    if (!result.success) {
-                        log.error("setTempBasalAbsolute: Failed to stop previous temp basal (doLowTemp || doHighTemp)");
-                        return result;
-                    }
-                }
-            }
+                }            }
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");
             // use special APS temp basal call ... 100+/15min .... 100-/30min
-            setHighTempBasalPercent(percentRate);
+            result = setHighTempBasalPercent(percentRate);
+            if (!result.success) {
+                log.error("setTempBasalAbsolute: Failed to set hightemp basal");
+                return result;
+            }
+            if (Config.logPumpActions)
+                log.debug("setTempBasalAbsolute: hightemp basal set ok");
+            return result;
         }
         // We should never end here
         log.error("setTempBasalAbsolute: Internal error");
@@ -437,7 +435,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         }
         result.enacted = false;
         result.success = false;
-        result.comment = MainApp.instance().getString(R.string.danar_valuenotsetproperly);
+        result.comment = MainApp.instance().getString(R.string.tempbasaldeliveryerror);
         log.error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }

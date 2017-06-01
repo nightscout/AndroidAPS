@@ -54,21 +54,30 @@ public class MsgHistoryEvents_v2 extends MessageBase {
 
         TemporaryBasal temporaryBasal = MainApp.getDbHelper().findTempBasalByTime(datetime.getTime());
         if (temporaryBasal != null) {
+            log.debug("EVENT (" + recordCode + ") " + datetime.toLocaleString() + " Param1: " + param1 + " Param2: " + param2);
             log.debug("Existing temporaryBasal found. Skipping ...");
+            if (datetime.getTime() > lastEventTimeLoaded)
+                lastEventTimeLoaded = datetime.getTime();
             return;
         }
         temporaryBasal = new TemporaryBasal();
 
         ExtendedBolus extendedBolus = MainApp.getDbHelper().findExtendedBolusByTime(datetime.getTime());
         if (extendedBolus != null) {
+            log.debug("EVENT (" + recordCode + ") " + datetime.toLocaleString() + " Param1: " + param1 + " Param2: " + param2);
             log.debug("Existing extendedBolus found. Skipping ...");
+            if (datetime.getTime() > lastEventTimeLoaded)
+                lastEventTimeLoaded = datetime.getTime();
             return;
         }
         extendedBolus = new ExtendedBolus();
 
         Treatment treatment = MainApp.getDbHelper().findTreatmentByTime(datetime.getTime());
         if (treatment != null) {
+            log.debug("EVENT (" + recordCode + ") " + datetime.toLocaleString() + " Param1: " + param1 + " Param2: " + param2);
             log.debug("Existing treatment found. Skipping ...");
+            if (datetime.getTime() > lastEventTimeLoaded)
+                lastEventTimeLoaded = datetime.getTime();
             return;
         }
         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();

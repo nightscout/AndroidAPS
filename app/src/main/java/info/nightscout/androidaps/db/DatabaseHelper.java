@@ -59,7 +59,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     private static final int DATABASE_VERSION = 7;
 
-    private static Long latestTreatmentChange = null;
+    private static Long earliestDataChange = null;
 
     private static final ScheduledExecutorService bgWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledBgPost = null;
@@ -184,7 +184,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
-            updateLatestTreatmentChange(0);
+            updateEarliestDataChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -209,7 +209,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, Treatment.class, true);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
-            updateLatestTreatmentChange(0);
+            updateEarliestDataChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -230,7 +230,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
-            updateLatestTreatmentChange(0);
+            updateEarliestDataChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -241,7 +241,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         try {
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
-            updateLatestTreatmentChange(0);
+            updateEarliestDataChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -465,7 +465,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             boolean historyChange = changeAffectingIobCob(treatment);
             status = getDaoTreatments().createOrUpdate(treatment);
             if (historyChange)
-                updateLatestTreatmentChange(treatment.date);
+                updateEarliestDataChange(treatment.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -476,7 +476,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(Treatment treatment) {
         try {
             getDaoTreatments().delete(treatment);
-            updateLatestTreatmentChange(treatment.date);
+            updateEarliestDataChange(treatment.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -540,13 +540,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    void updateLatestTreatmentChange(long newDate) {
-        if (latestTreatmentChange == null) {
-            latestTreatmentChange = newDate;
+    void updateEarliestDataChange(long newDate) {
+        if (earliestDataChange == null) {
+            earliestDataChange = newDate;
             return;
         }
-        if (newDate < latestTreatmentChange) {
-            latestTreatmentChange = newDate;
+        if (newDate < earliestDataChange) {
+            earliestDataChange = newDate;
         }
     }
 
@@ -556,9 +556,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 log.debug("Firing EventTreatmentChange");
                 MainApp.bus().post(new EventReloadTreatmentData());
                 MainApp.bus().post(new EventTreatmentChange());
-                if (latestTreatmentChange != null)
-                    MainApp.bus().post(new EventNewHistoryData(latestTreatmentChange));
-                latestTreatmentChange = null;
+                if (earliestDataChange != null)
+                    MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
+                earliestDataChange = null;
                 scheduledTratmentPost = null;
             }
         }
@@ -830,7 +830,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         tempBasal.date = tempBasal.date - tempBasal.date % 1000;
         try {
             getDaoTemporaryBasal().createOrUpdate(tempBasal);
-            updateLatestTreatmentChange(tempBasal.date);
+            updateEarliestDataChange(tempBasal.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -840,7 +840,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(TemporaryBasal tempBasal) {
         try {
             getDaoTemporaryBasal().delete(tempBasal);
-            updateLatestTreatmentChange(tempBasal.date);
+            updateEarliestDataChange(tempBasal.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -893,6 +893,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 log.debug("Firing EventTempBasalChange");
                 MainApp.bus().post(new EventReloadTempBasalData());
                 MainApp.bus().post(new EventTempBasalChange());
+                if (earliestDataChange != null)
+                    MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
+                earliestDataChange = null;
                 scheduledTemBasalsPost = null;
             }
         }
@@ -1051,7 +1054,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         extendedBolus.date = extendedBolus.date - extendedBolus.date % 1000;
         try {
             getDaoExtendedBolus().createOrUpdate(extendedBolus);
-            updateLatestTreatmentChange(extendedBolus.date);
+            updateEarliestDataChange(extendedBolus.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1061,7 +1064,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void delete(ExtendedBolus extendedBolus) {
         try {
             getDaoExtendedBolus().delete(extendedBolus);
-            updateLatestTreatmentChange(extendedBolus.date);
+            updateEarliestDataChange(extendedBolus.date);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -1189,6 +1192,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 log.debug("Firing EventExtendedBolusChange");
                 MainApp.bus().post(new EventReloadTreatmentData());
                 MainApp.bus().post(new EventExtendedBolusChange());
+                if (earliestDataChange != null)
+                    MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
+                earliestDataChange = null;
                 scheduledExtendedBolusPost = null;
             }
         }
