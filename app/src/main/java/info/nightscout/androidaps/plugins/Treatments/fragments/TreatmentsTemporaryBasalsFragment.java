@@ -34,7 +34,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.OverlappingIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 
 
 public class TreatmentsTemporaryBasalsFragment extends Fragment {

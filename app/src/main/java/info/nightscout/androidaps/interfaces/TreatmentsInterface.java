@@ -10,8 +10,8 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.utils.OverlappingIntervals;
-import info.nightscout.utils.ProfileIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.ProfileIntervals;
 
 /**
  * Created by mike on 14.06.2016.

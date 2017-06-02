@@ -227,6 +227,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
     public void calculateSensitivityData() {
+        if (MainApp.getConfigBuilder() == null)
+            return; // app still initializing
         //log.debug("Locking calculateSensitivityData");
         synchronized (dataLock) {
             Profile profile = MainApp.getConfigBuilder().getProfile();
@@ -514,6 +516,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     @Subscribe
     public void onNewProfile(EventNewBasalProfile ev) {
+        if (MainApp.getConfigBuilder() == null)
+            return; // app still initializing
         Profile profile = MainApp.getConfigBuilder().getProfile();
         dia = profile.getDia();
         if (ev == null) { // on init no need of reset

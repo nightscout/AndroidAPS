@@ -291,7 +291,7 @@ public class Profile {
         return max;
     }
 
-    public static int secondsFromMidnight() {
+    public static Integer secondsFromMidnight() {
         Calendar c = Calendar.getInstance();
         long now = c.getTimeInMillis();
         c.set(Calendar.HOUR_OF_DAY, 0);
@@ -302,7 +302,7 @@ public class Profile {
         return (int) (passed / 1000);
     }
 
-    public static int secondsFromMidnight(Date date) {
+    public static Integer secondsFromMidnight(Date date) {
         Calendar c = Calendar.getInstance();
         long now = date.getTime();
         c.setTime(date);
@@ -314,7 +314,7 @@ public class Profile {
         return (int) (passed / 1000);
     }
 
-    public static int secondsFromMidnight(long date) {
+    public static Integer secondsFromMidnight(long date) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(date);
         c.set(Calendar.HOUR_OF_DAY, 0);

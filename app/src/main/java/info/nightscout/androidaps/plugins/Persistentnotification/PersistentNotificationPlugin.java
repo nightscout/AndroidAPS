@@ -102,7 +102,7 @@ public class PersistentNotificationPlugin implements PluginBase {
         if (getType() == type) {
             this.fragmentEnabled = fragmentEnabled;
             checkBusRegistration();
-            updateNotification();
+            //updateNotification();
         }
 
     }

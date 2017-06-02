@@ -47,8 +47,8 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogr
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.OverlappingIntervals;
-import info.nightscout.utils.ProfileIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.ProfileIntervals;
 
 /**
  * Created by mike on 05.08.2016.

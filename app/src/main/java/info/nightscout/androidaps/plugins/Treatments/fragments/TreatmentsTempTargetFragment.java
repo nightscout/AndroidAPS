@@ -29,7 +29,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.OverlappingIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.utils.SP;
 
 /**

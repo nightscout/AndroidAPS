@@ -8,14 +8,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.interfaces.Interval;
-import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.utils.DateUtil;
-import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
-public class ProfileSwitch implements Interval {
+public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(ProfileSwitch.class);
 
     @DatabaseField(id = true)
@@ -105,6 +103,25 @@ public class ProfileSwitch implements Interval {
     }
 
     // -------- Interval interface end ---------
+
+    //  ----------------- DataPointInterface --------------------
+    @Override
+    public double getX() {
+        return date;
+    }
+
+    // default when no sgv around available
+    private double yValue = 0;
+
+    @Override
+    public double getY() {
+        return yValue;
+    }
+
+    @Override
+    public String getLabel() {
+        return profileName;
+    }
 
     public String log() {
         return "ProfileSwitch{" +

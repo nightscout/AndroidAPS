@@ -1,4 +1,4 @@
-package info.nightscout.utils;
+package info.nightscout.androidaps.data;
 
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
@@ -12,14 +12,13 @@ import info.nightscout.androidaps.interfaces.Interval;
  * Created by mike on 09.05.2017.
  */
 
-// Zero duration means profile is valid until is chaged
-// When no interval match the lastest record without duration is used
+// Zero duration means end of interval
 
-public class ProfileIntervals<T extends Interval> {
+public class OverlappingIntervals<T extends Interval> {
 
     private LongSparseArray<T> rawData = new LongSparseArray<>(); // oldest at index 0
 
-    public ProfileIntervals reset() {
+    public OverlappingIntervals reset() {
         rawData = new LongSparseArray<>();
         return this;
     }
@@ -47,7 +46,7 @@ public class ProfileIntervals<T extends Interval> {
     }
 
     @Nullable
-    public Interval getValueToTime(long time) {
+    public Interval getValueByInterval(long time) {
         int index = binarySearch(time);
         if (index >= 0) return rawData.valueAt(index);
         return null;
@@ -83,13 +82,7 @@ public class ProfileIntervals<T extends Interval> {
                 return mid;  // value found
             }
         }
-        // not found, try nearest older with duration 0
-        while (lo >= 0) {
-            if (rawData.valueAt(lo).isEndingEvent())
-                return lo;
-            lo--;
-        }
-        return -1;  // value not present
+        return ~lo;  // value not present
     }
 
     public int size() {

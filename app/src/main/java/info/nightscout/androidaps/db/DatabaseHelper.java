@@ -31,10 +31,11 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
@@ -42,7 +43,6 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -272,7 +272,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleCareportalEventChange();
     }
 
-   public void resetProfileSwitch() {
+    public void resetProfileSwitch() {
         try {
             TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
             TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
@@ -1342,14 +1342,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // ---------------- ProfileSwitch handling ---------------
 
-    public List<ProfileSwitch> getProfileSwitchDataFromTime(long mills, boolean ascending) {
+    public List<ProfileSwitch> getProfileSwitchData(boolean ascending) {
         try {
             Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
             List<ProfileSwitch> profileSwitches;
             QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
             queryBuilder.orderBy("date", ascending);
-            Where where = queryBuilder.where();
-            where.ge("date", mills);
+            queryBuilder.limit(20L);
             PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
             profileSwitches = daoProfileSwitch.query(preparedQuery);
             return profileSwitches;
@@ -1381,8 +1380,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static void scheduleProfileSwitchChange() {
         class PostRunnable implements Runnable {
             public void run() {
-                log.debug("Firing EventNewBasalProfileChange");
-                MainApp.bus().post(new EventNewBasalProfile());
+                log.debug("Firing EventProfileSwitchChange");
+                MainApp.bus().post(new EventProfileSwitchChange());
                 scheduledProfileSwitchEventPost = null;
             }
         }
@@ -1438,11 +1437,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("timeshift"))
                 profileSwitch.timeshift = trJson.getInt("timeshift");
             if (trJson.has("percentage"))
-            profileSwitch.percentage = trJson.getInt("percentage");
+                profileSwitch.percentage = trJson.getInt("percentage");
             if (trJson.has("profileJson"))
-            profileSwitch.profileJson = trJson.getString("profileJson");
+                profileSwitch.profileJson = trJson.getString("profileJson");
             if (trJson.has("profilePlugin"))
-            profileSwitch.profilePlugin = trJson.getString("profilePlugin");
+                profileSwitch.profilePlugin = trJson.getString("profilePlugin");
             createOrUpdate(profileSwitch);
         } catch (SQLException | JSONException e) {
             e.printStackTrace();

@@ -70,6 +70,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -107,6 +108,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoi
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.VerticalTextsGraphSeries;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -1112,6 +1114,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         PointsGraphSeries<BgReading> seriesHigh;
         PointsGraphSeries<BgReading> predSeries;
         PointsWithLabelGraphSeries<Treatment> seriesTreatments;
+        VerticalTextsGraphSeries<ProfileSwitch> seriesProfileSwitch;
 
         // **** TEMP BASALS graph ****
         Double maxBasalValueFound = 0d;
@@ -1419,7 +1422,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
-            if (t.date < fromTime || t.date > now) continue;
+            if (t.date < fromTime || t.date > endTime) continue;
             t.setYValue(bgReadingsArray);
             filteredTreatments.add(t);
         }
@@ -1430,6 +1433,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             seriesTreatments.setShape(PointsWithLabelGraphSeries.Shape.TRIANGLE);
             seriesTreatments.setSize(10);
             seriesTreatments.setColor(Color.CYAN);
+        }
+
+        // ProfileSwitch
+        List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
+        List<ProfileSwitch> filteredProfileSwitches = new ArrayList<ProfileSwitch>();
+
+        for (int tx = 0; tx < profileSwitches.size(); tx++) {
+            ProfileSwitch t = profileSwitches.get(tx);
+            if (t.date < fromTime || t.date > now) continue;
+            filteredProfileSwitches.add(t);
+        }
+        ProfileSwitch[] profileSwitchArray = new ProfileSwitch[filteredProfileSwitches.size()];
+        profileSwitchArray = filteredProfileSwitches.toArray(profileSwitchArray);
+        if (profileSwitchArray.length > 0) {
+            bgGraph.addSeries(seriesProfileSwitch = new VerticalTextsGraphSeries<ProfileSwitch>(profileSwitchArray));
+            //seriesProfileSwitch.setShape(PointsWithLabelGraphSeries.Shape.TRIANGLE);
+            seriesProfileSwitch.setSize(10);
+            seriesProfileSwitch.setColor(Color.CYAN);
         }
 
         // set manual y bounds to have nice steps

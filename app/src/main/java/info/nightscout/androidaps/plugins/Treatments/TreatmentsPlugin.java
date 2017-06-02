@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -22,6 +23,8 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
@@ -31,8 +34,8 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.data.Profile;
-import info.nightscout.utils.OverlappingIntervals;
-import info.nightscout.utils.ProfileIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -48,6 +51,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     private static OverlappingIntervals<TemporaryBasal> tempBasals = new OverlappingIntervals<>();
     private static OverlappingIntervals<ExtendedBolus> extendedBoluses = new OverlappingIntervals<>();
     private static OverlappingIntervals<TempTarget> tempTargets = new OverlappingIntervals<>();
+    private static ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
 
     private static boolean fragmentEnabled = true;
     private static boolean fragmentVisible = true;
@@ -119,11 +123,12 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         initializeTreatmentData();
         initializeExtendedBolusData();
         initializeTempTargetData();
+        initializeProfileSwitchData();
     }
 
     public static void initializeTreatmentData() {
         // Treatments
-        double dia = MainApp.getConfigBuilder().getProfile().getDia();
+        double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
 
         treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
@@ -131,7 +136,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     public static void initializeTempBasalData() {
         // Treatments
-        double dia = MainApp.getConfigBuilder().getProfile().getDia();
+        double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
 
         tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(fromMills, false));
@@ -140,7 +145,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     public static void initializeExtendedBolusData() {
         // Treatments
-        double dia = MainApp.getConfigBuilder().getProfile().getDia();
+        double dia = MainApp.getConfigBuilder() == null ? Constants.defaultDIA : MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
 
         extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(fromMills, false));
@@ -150,6 +155,10 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public void initializeTempTargetData() {
         long fromMills = new Date().getTime() - 60 * 60 * 1000L * 24;
         tempTargets.reset().add(MainApp.getDbHelper().getTemptargetsDataFromTime(fromMills, false));
+    }
+
+    public void initializeProfileSwitchData() {
+        profiles.reset().add(MainApp.getDbHelper().getProfileSwitchData(false));
     }
 
     @Override
@@ -446,14 +455,20 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         return tempTargets;
     }
 
+    // Profile Switch
+    @Subscribe
+    public void onStatusEvent(final EventProfileSwitchChange ev) {
+        initializeProfileSwitchData();
+    }
+
     @Override
     public ProfileSwitch getProfileSwitchFromHistory(long time) {
-        return null;
+        return (ProfileSwitch) profiles.getValueToTime(time);
     }
 
     @Override
     public ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory() {
-        return null;
+        return profiles;
     }
 
     @Override
