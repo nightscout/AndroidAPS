@@ -268,7 +268,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         notificationsView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
-
+/*
         final LinearLayout graphs = (LinearLayout)view.findViewById(R.id.overview_graphs_layout);
         ViewTreeObserver observer = graphs.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -282,7 +282,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     bgGraph.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightNeeded));
             }
         });
-
+*/
         bgGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
         bgGraph.getGridLabelRenderer().reloadStyles();
         iobGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));

@@ -1430,7 +1430,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return;
             }
             profileSwitch.date = trJson.getLong("mills");
-            profileSwitch.durationInMinutes = trJson.getInt("duration");
+            if (trJson.has("duration"))
+                profileSwitch.durationInMinutes = trJson.getInt("duration");
             profileSwitch._id = trJson.getString("_id");
             profileSwitch.profileName = trJson.getString("profile");
             profileSwitch.isCPP = trJson.has("CircadianPercentageProfile");
