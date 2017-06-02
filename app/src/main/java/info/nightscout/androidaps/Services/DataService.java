@@ -2,9 +2,7 @@ package info.nightscout.androidaps.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.provider.Telephony;
 
 import org.json.JSONArray;
@@ -22,19 +20,16 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
-import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
-import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
@@ -84,7 +79,7 @@ public class DataService extends IntentService {
             glimpEnabled = true;
         }
 
-        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfile().getClass().equals(NSProfilePlugin.class);
+        boolean isNSProfile = ConfigBuilderPlugin.getActiveProfileInterface().getClass().equals(NSProfilePlugin.class);
 
         boolean nsUploadOnly = SP.getBoolean(R.string.key_ns_upload_only, false);
 
@@ -195,7 +190,7 @@ public class DataService extends IntentService {
 
         if (Config.logIncommingBG)
             log.debug(bundle.toString());
-            log.debug("GLIMP BG " + bgReading.toString());
+        log.debug("GLIMP BG " + bgReading.toString());
 
         MainApp.getDbHelper().createIfNotExists(bgReading);
     }
@@ -325,25 +320,12 @@ public class DataService extends IntentService {
             try {
                 String activeProfile = bundles.getString("activeprofile");
                 String profile = bundles.getString("profile");
-                NSProfile nsProfile = new NSProfile(new JSONObject(profile), activeProfile);
-                MainApp.bus().post(new EventNewBasalProfile(nsProfile, "NSClient"));
+                ProfileStore profileStore = new ProfileStore(new JSONObject(profile));
+                NSProfilePlugin.storeNewProfile(profileStore);
+                MainApp.bus().post(new EventNewBasalProfile());
 
-                PumpInterface pump = MainApp.getConfigBuilder();
-                if (pump != null) {
-                    SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                    if (SP.getBoolean("syncprofiletopump", false)) {
-                        if (pump.setNewBasalProfile(nsProfile) == PumpInterface.SUCCESS) {
-                            SmsCommunicatorPlugin smsCommunicatorPlugin = (SmsCommunicatorPlugin) MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
-                            if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
-                                smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
-                            }
-                        }
-                    }
-                } else {
-                    log.error("No active pump selected");
-                }
                 if (Config.logIncommingData)
-                    log.debug("Received profile: " + activeProfile + " " + profile);
+                    log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -462,6 +444,7 @@ public class DataService extends IntentService {
         MainApp.getDbHelper().deleteTempBasalById(_id);
         MainApp.getDbHelper().deleteExtendedBolusById(_id);
         MainApp.getDbHelper().deleteCareportalEventById(_id);
+        MainApp.getDbHelper().deleteProfileSwitchById(_id);
     }
 
     private void handleAddChangeDataFromNS(String trstring) throws JSONException {
@@ -472,6 +455,7 @@ public class DataService extends IntentService {
         handleAddChangeExtendedBolusRecord(trJson);
         handleAddChangeCareportalEventRecord(trJson);
         handleAddChangeTreatmentRecord(trJson);
+        handleAddChangeProfileSwitchRecord(trJson);
     }
 
     public void handleDanaRHistoryRecords(JSONObject trJson) {
@@ -516,12 +500,20 @@ public class DataService extends IntentService {
     public void handleAddChangeCareportalEventRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && (
                 trJson.getString("eventType").equals(CareportalEvent.SITECHANGE) ||
-                trJson.getString("eventType").equals(CareportalEvent.INSULINCHANGE) ||
-                trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE)
+                        trJson.getString("eventType").equals(CareportalEvent.INSULINCHANGE) ||
+                        trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE)
         )) {
             if (Config.logIncommingData)
                 log.debug("Processing CareportalEvent record: " + trJson.toString());
             MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
+        }
+    }
+
+    public void handleAddChangeProfileSwitchRecord(JSONObject trJson) throws JSONException {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.PROFILESWITCH)) {
+            if (Config.logIncommingData)
+                log.debug("Processing ProfileSwitch record: " + trJson.toString());
+            MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(trJson);
         }
     }
 

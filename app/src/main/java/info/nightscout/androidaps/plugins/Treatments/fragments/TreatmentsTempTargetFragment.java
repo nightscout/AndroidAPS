@@ -25,8 +25,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -62,7 +61,7 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
         @Override
         public void onBindViewHolder(TempTargetsViewHolder holder, int position) {
-            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+            Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) return;
             TempTarget tempTarget = tempTargetList.getReversed(position);
             if (!tempTarget.isEndingEvent()) {

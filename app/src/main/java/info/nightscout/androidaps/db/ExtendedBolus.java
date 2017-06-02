@@ -13,12 +13,13 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -132,7 +133,7 @@ public class ExtendedBolus implements Interval {
 
     public IobTotal iobCalc(long time) {
         IobTotal result = new IobTotal(time);
-        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile(time);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 
         if (profile == null)

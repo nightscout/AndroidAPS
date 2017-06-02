@@ -19,13 +19,14 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.DeviceStatus;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.DbLogger;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSMA.DetermineBasalResultMA;
 
@@ -69,9 +70,9 @@ public class NSUpload {
             if (useAbsolute) {
                 TemporaryBasal t = temporaryBasal.clone();
                 t.isAbsolute = true;
-                NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+                Profile profile = MainApp.getConfigBuilder().getProfile();
                 if (profile != null) {
-                    t.absoluteRate = profile.getBasal(NSProfile.secondsFromMidnight(temporaryBasal.date)) * temporaryBasal.percentRate / 100d;
+                    t.absoluteRate = profile.getBasal(temporaryBasal.date) * temporaryBasal.percentRate / 100d;
                     uploadTempBasalStartAbsolute(t, null);
                 }
             } else {
@@ -272,6 +273,27 @@ public class NSUpload {
             e.printStackTrace();
         }
         uploadCareportalEntryToNS(data);
+    }
+
+    public static void uploadProfileSwitch(ProfileSwitch profileSwitch) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("eventType", CareportalEvent.PROFILESWITCH);
+            data.put("duration", profileSwitch.durationInMinutes);
+            data.put("profile", profileSwitch.profileName);
+            data.put("profileJson", profileSwitch.profileJson);
+            data.put("profilePlugin", profileSwitch.profilePlugin);
+            if (profileSwitch.isCPP) {
+                data.put("CircadianPercentageProfile", true);
+                data.put("timeshift", profileSwitch.timeshift);
+                data.put("percentage", profileSwitch.percentage);
+            }
+            data.put("created_at", DateUtil.toISOString(profileSwitch.date));
+            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            uploadCareportalEntryToNS(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void uploadCareportalEntryToNS(JSONObject data) {

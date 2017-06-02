@@ -34,6 +34,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
@@ -41,7 +42,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
@@ -56,6 +57,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_DANARHISTORY = "DanaRHistory";
     public static final String DATABASE_DBREQUESTS = "DBRequests";
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
+    public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
 
     private static final int DATABASE_VERSION = 7;
 
@@ -79,6 +81,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static final ScheduledExecutorService careportalEventWorker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledCareportalEventPost = null;
 
+    private static final ScheduledExecutorService profileSwitchEventWorker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledProfileSwitchEventPost = null;
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         onCreate(getWritableDatabase(), getConnectionSource());
@@ -96,6 +101,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
+            TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
         } catch (SQLException e) {
             log.error("Can't create database", e);
             throw new RuntimeException(e);
@@ -114,6 +120,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
+            TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
             onCreate(database, connectionSource);
         } catch (SQLException e) {
             log.error("Can't drop databases", e);
@@ -158,6 +165,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         log.debug("Before CareportalEvent size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_CAREPORTALEVENTS));
         getWritableDatabase().delete(DATABASE_CAREPORTALEVENTS, "recordDate" + " < '" + (new Date().getTime() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
         log.debug("After CareportalEvent size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_CAREPORTALEVENTS));
+
+        log.debug("Before ProfileSwitch size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_PROFILESWITCHES));
+        getWritableDatabase().delete(DATABASE_PROFILESWITCHES, "recordDate" + " < '" + (new Date().getTime() - Constants.daysToKeepHistoryInDatabase * 24 * 60 * 60 * 1000L) + "'", null);
+        log.debug("After ProfileSwitch size: " + DatabaseUtils.queryNumEntries(getReadableDatabase(), DATABASE_PROFILESWITCHES));
     }
 
     public long size(String database) {
@@ -176,6 +187,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
             TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
             TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
+            TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
             TableUtils.createTableIfNotExists(connectionSource, TempTarget.class);
             TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
             TableUtils.createTableIfNotExists(connectionSource, BgReading.class);
@@ -184,6 +196,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTableIfNotExists(connectionSource, TemporaryBasal.class);
             TableUtils.createTableIfNotExists(connectionSource, ExtendedBolus.class);
             TableUtils.createTableIfNotExists(connectionSource, CareportalEvent.class);
+            TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
             updateEarliestDataChange(0);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -194,6 +207,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleExtendedBolusChange();
         scheduleTemporaryTargetChange();
         scheduleCareportalEventChange();
+        scheduleProfileSwitchChange();
         new java.util.Timer().schedule(
                 new java.util.TimerTask() {
                     @Override
@@ -258,6 +272,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleCareportalEventChange();
     }
 
+   public void resetProfileSwitch() {
+        try {
+            TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
+            TableUtils.createTableIfNotExists(connectionSource, ProfileSwitch.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleProfileSwitchChange();
+    }
+
     // ------------------ getDao -------------------------------------------
 
     private Dao<TempTarget, Long> getDaoTempTargets() throws SQLException {
@@ -292,6 +316,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(CareportalEvent.class);
     }
 
+    private Dao<ProfileSwitch, Long> getDaoProfileSwitch() throws SQLException {
+        return getDao(ProfileSwitch.class);
+    }
+
     // -------------------  BgReading handling -----------------------
 
     public void createIfNotExists(BgReading bgReading) {
@@ -304,7 +332,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleBgChange();
     }
 
-    static public void scheduleBgChange() {
+    private static void scheduleBgChange() {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventNewBg");
@@ -449,7 +477,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     //  -------------------- TREATMENT HANDLING -------------------
 
-    public boolean changeAffectingIobCob(Treatment t) {
+    private boolean changeAffectingIobCob(Treatment t) {
         Treatment existing = findTreatmentByTime(t.date);
         if (existing == null)
             return true;
@@ -540,7 +568,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    void updateEarliestDataChange(long newDate) {
+    private void updateEarliestDataChange(long newDate) {
         if (earliestDataChange == null) {
             earliestDataChange = newDate;
             return;
@@ -550,7 +578,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    static public void scheduleTreatmentChange() {
+    private static void scheduleTreatmentChange() {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventTreatmentChange");
@@ -617,9 +645,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
             treatment._id = trJson.getString("_id");
             if (trJson.has("eventType")) {
-                treatment.mealBolus = true;
-                if (trJson.get("eventType").equals("Correction Bolus"))
-                    treatment.mealBolus = false;
+                treatment.mealBolus = !trJson.get("eventType").equals("Correction Bolus");
                 double carbs = treatment.carbs;
                 if (trJson.has("boluscalc")) {
                     JSONObject boluscalc = trJson.getJSONObject("boluscalc");
@@ -631,9 +657,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     treatment.mealBolus = false;
             }
             createOrUpdate(treatment);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -676,7 +700,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    static public void scheduleTemporaryTargetChange() {
+    private static void scheduleTemporaryTargetChange() {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventTempTargetChange");
@@ -717,8 +741,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
             PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
             List<TempTarget> list = getDaoTempTargets().query(preparedQuery);
-            NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-            if (profile == null) return; // no profile data, better ignore than do something wrong
+            Profile profile = MainApp.getConfigBuilder().getProfile();
             String units = profile.getUnits();
             TempTarget tempTarget;
             if (list.size() == 0) {
@@ -736,14 +759,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             }
             tempTarget.date = trJson.getLong("mills");
             tempTarget.durationInMinutes = trJson.getInt("duration");
-            tempTarget.low = NSProfile.toMgdl(trJson.getDouble("targetBottom"), units);
-            tempTarget.high = NSProfile.toMgdl(trJson.getDouble("targetTop"), units);
+            tempTarget.low = Profile.toMgdl(trJson.getDouble("targetBottom"), units);
+            tempTarget.high = Profile.toMgdl(trJson.getDouble("targetTop"), units);
             tempTarget.reason = trJson.getString("reason");
             tempTarget._id = trJson.getString("_id");
             createOrUpdate(tempTarget);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -817,9 +838,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     // already set
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -887,7 +906,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
-    static public void scheduleTemporaryBasalChange() {
+    private static void scheduleTemporaryBasalChange() {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventTempBasalChange");
@@ -1018,9 +1037,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 tempBasal._id = trJson.getString("_id");
                 createOrUpdate(tempBasal);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
     }
@@ -1179,14 +1196,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             extendedBolus.insulin = trJson.getDouble("relative");
             extendedBolus._id = trJson.getString("_id");
             createOrUpdate(extendedBolus);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
     }
 
-    static public void scheduleExtendedBolusChange() {
+    private static void scheduleExtendedBolusChange() {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventExtendedBolusChange");
@@ -1302,14 +1317,12 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             careportalEvent.json = trJson.toString();
             careportalEvent._id = trJson.getString("_id");
             createOrUpdate(careportalEvent);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
+        } catch (SQLException | JSONException e) {
             e.printStackTrace();
         }
     }
 
-    static public void scheduleCareportalEventChange() {
+    private static void scheduleCareportalEventChange() {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing scheduleCareportalEventChange");
@@ -1325,6 +1338,137 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         final int sec = 1;
         scheduledCareportalEventPost = careportalEventWorker.schedule(task, sec, TimeUnit.SECONDS);
 
+    }
+
+    // ---------------- ProfileSwitch handling ---------------
+
+    public List<ProfileSwitch> getProfileSwitchDataFromTime(long mills, boolean ascending) {
+        try {
+            Dao<ProfileSwitch, Long> daoProfileSwitch = getDaoProfileSwitch();
+            List<ProfileSwitch> profileSwitches;
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = daoProfileSwitch.queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.ge("date", mills);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            profileSwitches = daoProfileSwitch.query(preparedQuery);
+            return profileSwitches;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<ProfileSwitch>();
+    }
+
+    public void createOrUpdate(ProfileSwitch profileSwitch) {
+        profileSwitch.date = profileSwitch.date - profileSwitch.date % 1000;
+        try {
+            getDaoProfileSwitch().createOrUpdate(profileSwitch);
+            scheduleProfileSwitchChange();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(ProfileSwitch profileSwitch) {
+        try {
+            getDaoProfileSwitch().delete(profileSwitch);
+            scheduleProfileSwitchChange();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void scheduleProfileSwitchChange() {
+        class PostRunnable implements Runnable {
+            public void run() {
+                log.debug("Firing EventNewBasalProfileChange");
+                MainApp.bus().post(new EventNewBasalProfile());
+                scheduledProfileSwitchEventPost = null;
+            }
+        }
+        // prepare task for execution in 1 sec
+        // cancel waiting task to prevent sending multiple posts
+        if (scheduledProfileSwitchEventPost != null)
+            scheduledProfileSwitchEventPost.cancel(false);
+        Runnable task = new PostRunnable();
+        final int sec = 1;
+        scheduledProfileSwitchEventPost = profileSwitchEventWorker.schedule(task, sec, TimeUnit.SECONDS);
+
+    }
+
+ /*
+{
+    "_id":"592fa43ed97496a80da913d2",
+    "created_at":"2017-06-01T05:20:06Z",
+    "eventType":"Profile Switch",
+    "profile":"2016 +30%",
+    "units":"mmol",
+    "enteredBy":"sony",
+    "NSCLIENT_ID":1496294454309,
+}
+  */
+
+    public void createProfileSwitchFromJsonIfNotExists(JSONObject trJson) {
+        try {
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = null;
+            queryBuilder = getDaoProfileSwitch().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            List<ProfileSwitch> list = getDaoProfileSwitch().query(preparedQuery);
+            ProfileSwitch profileSwitch;
+            if (list.size() == 0) {
+                profileSwitch = new ProfileSwitch();
+                if (Config.logIncommingData)
+                    log.debug("Adding ProfileSwitch record to database: " + trJson.toString());
+                // Record does not exists. add
+            } else if (list.size() == 1) {
+                profileSwitch = list.get(0);
+                if (Config.logIncommingData)
+                    log.debug("Updating ProfileSwitch record in database: " + trJson.toString());
+            } else {
+                log.error("Something went wrong");
+                return;
+            }
+            profileSwitch.date = trJson.getLong("mills");
+            profileSwitch.durationInMinutes = trJson.getInt("duration");
+            profileSwitch._id = trJson.getString("_id");
+            profileSwitch.profileName = trJson.getString("profile");
+            profileSwitch.isCPP = trJson.has("CircadianPercentageProfile");
+            if (trJson.has("timeshift"))
+                profileSwitch.timeshift = trJson.getInt("timeshift");
+            if (trJson.has("percentage"))
+            profileSwitch.percentage = trJson.getInt("percentage");
+            if (trJson.has("profileJson"))
+            profileSwitch.profileJson = trJson.getString("profileJson");
+            if (trJson.has("profilePlugin"))
+            profileSwitch.profilePlugin = trJson.getString("profilePlugin");
+            createOrUpdate(profileSwitch);
+        } catch (SQLException | JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteProfileSwitchById(String _id) {
+        try {
+            QueryBuilder<ProfileSwitch, Long> queryBuilder = getDaoProfileSwitch().queryBuilder();
+            Where where = queryBuilder.where();
+            where.eq("_id", _id);
+            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+            List<ProfileSwitch> list = getDaoProfileSwitch().query(preparedQuery);
+
+            if (list.size() == 1) {
+                ProfileSwitch record = list.get(0);
+                if (Config.logIncommingData)
+                    log.debug("Removing ProfileSwitch record from database: " + record.log());
+                delete(record);
+            } else {
+                if (Config.logIncommingData)
+                    log.debug("ProfileSwitch not found database: " + _id);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

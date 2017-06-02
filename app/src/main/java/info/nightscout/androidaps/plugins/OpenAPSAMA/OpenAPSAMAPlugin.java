@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.utils.DateUtil;
@@ -132,7 +132,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         }
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
 
         if (!isEnabled(PluginBase.APS)) {
@@ -146,20 +146,6 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noglucosedata)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
-            return;
-        }
-
-        if (profile == null || profile.getIc(NSProfile.secondsFromMidnight()) == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getBasal(NSProfile.secondsFromMidnight()) == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noprofile)));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
-            return;
-        }
-
-        if (pump == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_nopump)));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
             return;
         }
 
@@ -178,9 +164,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
-        double minBg = NSProfile.toMgdl(SP.getDouble("openapsma_min_bg", minBgDefault), units);
-        double maxBg = NSProfile.toMgdl(SP.getDouble("openapsma_max_bg", maxBgDefault), units);
-        double targetBg = NSProfile.toMgdl(SP.getDouble("openapsma_target_bg", targetBgDefault), units);
+        double minBg = Profile.toMgdl(SP.getDouble("openapsma_min_bg", minBgDefault), units);
+        double maxBg = Profile.toMgdl(SP.getDouble("openapsma_max_bg", maxBgDefault), units);
+        double targetBg = Profile.toMgdl(SP.getDouble("openapsma_target_bg", targetBgDefault), units);
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
@@ -216,12 +202,12 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
         if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100))
             return;
-        if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900))
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
-        long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvaialable();
+        long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvailable();
         long getBGDataFrom = Math.max(oldestDataAvailable, (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + profile.getDia())));
         log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
 

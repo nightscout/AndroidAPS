@@ -45,19 +45,21 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
-import info.nightscout.utils.ToastUtils;
 import info.nightscout.utils.Translator;
 
 public class NewNSTreatmentDialog extends DialogFragment implements View.OnClickListener, DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
@@ -67,7 +69,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
     private static OptionsToShow options;
 
-    NSProfile profile;
+    Profile profile;
+    ProfileStore profileStore;
     String units;
 
     RelativeLayout layoutBg;
@@ -225,25 +228,19 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         cancelButton.setOnClickListener(this);
 
         // profile
-        profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        profile = MainApp.getConfigBuilder().getProfile();
+        profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
         ArrayList<CharSequence> profileList;
         units = Constants.MGDL;
-        if (profile == null) {
-            ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), context.getString(R.string.noprofile));
-            profileList = new ArrayList<CharSequence>();
-        } else {
-            units = profile.getUnits();
-            profileList = profile.getProfileList();
-        }
+        units = profile.getUnits();
+        profileList = profileStore.getProfileList();
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
                 R.layout.spinner_centered, profileList);
         profileSpinner.setAdapter(adapter);
-        if (profile != null) {
-            // set selected to actual profile
-            for (int p = 0; p < profileList.size(); p++) {
-                if (profileList.get(p).equals(profile.getActiveProfile()))
-                    profileSpinner.setSelection(p);
-            }
+        // set selected to actual profile
+        for (int p = 0; p < profileList.size(); p++) {
+            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
+                profileSpinner.setSelection(p);
         }
 
         // temp target
@@ -268,7 +265,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 //            meterRadioButton.setChecked(true);
 //        }
 
-        Double bg = NSProfile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile != null ? profile.getUnits() : Constants.MGDL);
+        Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile != null ? profile.getUnits() : Constants.MGDL);
         if (profile == null)
             editBg = new PlusMinusEditText(view, R.id.careportal_newnstreatment_bginput, R.id.careportal_newnstreatment_bg_plus, R.id.careportal_newnstreatment_bg_minus, bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false);
         else if (profile.getUnits().equals(Constants.MMOL))
@@ -277,9 +274,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             editBg = new PlusMinusEditText(view, R.id.careportal_newnstreatment_bginput, R.id.careportal_newnstreatment_bg_plus, R.id.careportal_newnstreatment_bg_minus, bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
         bgInputEdit.addTextChangedListener(new TextWatcher() {
 
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (sensorRadioButton.isChecked()) meterRadioButton.setChecked(true);
@@ -288,9 +287,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         sensorRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
-                if (profile == null) return;
-                Double bg = NSProfile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits());
+                Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits());
                 editBg.setValue(bg);
             }
         });
@@ -439,6 +436,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     break;
                 case R.id.careportal_profileswitch:
                     data.put("eventType", CareportalEvent.PROFILESWITCH);
+                    allowZeroDuration = true;
                     break;
                 case R.id.careportal_pumpsitechange:
                     data.put("eventType", CareportalEvent.SITECHANGE);
@@ -615,24 +613,30 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                             @Override
                             public void run() {
                                 try {
-                                    String profile = data.getString("profile");
-                                    NSProfile nsProfile = ConfigBuilderPlugin.getActiveProfile().getProfile();
-                                    nsProfile.setActiveProfile(profile);
+                                    String profileName = data.getString("profile");
+                                    ProfileSwitch profileSwitch = new ProfileSwitch();
+                                    profileSwitch.date = new Date().getTime();
+                                    profileSwitch.source = Source.PUMP;
+                                    profileSwitch.profileName = profileName;
+                                    profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).toString();
+                                    profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
+                                    profileSwitch.durationInMinutes = data.getInt("duration");
+                                    if (ConfigBuilderPlugin.getActiveProfileInterface() instanceof CircadianPercentageProfilePlugin) {
+                                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getConfigBuilder().getActiveProfileInterface();
+                                        profileSwitch.isCPP = true;
+                                        profileSwitch.timeshift = cpp.timeshift;
+                                        profileSwitch.percentage = cpp.percentage;
+                                    }
+                                    MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+
                                     PumpInterface pump = MainApp.getConfigBuilder();
                                     if (pump != null) {
-                                        pump.setNewBasalProfile(nsProfile);
+                                        pump.setNewBasalProfile(profileStore.getSpecificProfile(profileName));
                                         log.debug("Setting new profile: " + profile);
-                                        MainApp.bus().post(new EventNewBasalProfile(nsProfile, "NewNSTreatmentDialog"));
+                                        MainApp.bus().post(new EventNewBasalProfile());
                                     } else {
                                         log.error("No active pump selected");
                                     }
-                                    if (ConfigBuilderPlugin.getActiveProfile() instanceof CircadianPercentageProfilePlugin) {
-                                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) ConfigBuilderPlugin.getActiveProfile();
-                                        data.put("CircadianPercentageProfile", true);
-                                        data.put("timeshift", cpp.timeshift);
-                                        data.put("percentage", cpp.percentage);
-                                    }
-                                    NSUpload.uploadCareportalEntryToNS(data);
                                     Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -642,7 +646,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     }
                 } else if (options.executeTempTarget) {
                     try {
-                        if ((data.has("targetBottom") && data.has("targetTop")) || (data.has("duration")&& data.getInt("duration") == 0)) {
+                        if ((data.has("targetBottom") && data.has("targetTop")) || (data.has("duration") && data.getInt("duration") == 0)) {
                             sHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -651,9 +655,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         tempTarget.date = eventTime.getTime();
                                         tempTarget.durationInMinutes = data.getInt("duration");
                                         tempTarget.reason = data.getString("reason");
-                                        if(tempTarget.durationInMinutes != 0) {
-                                            tempTarget.low = NSProfile.toMgdl(data.getDouble("targetBottom"), ConfigBuilderPlugin.getActiveProfile().getProfile().getUnits());
-                                            tempTarget.high = NSProfile.toMgdl(data.getDouble("targetTop"), ConfigBuilderPlugin.getActiveProfile().getProfile().getUnits());
+                                        if (tempTarget.durationInMinutes != 0) {
+                                            tempTarget.low = Profile.toMgdl(data.getDouble("targetBottom"), profile.getUnits());
+                                            tempTarget.high = Profile.toMgdl(data.getDouble("targetTop"), profile.getUnits());
                                         } else {
                                             tempTarget.low = 0;
                                             tempTarget.high = 0;

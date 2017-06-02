@@ -32,14 +32,14 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
  * Created by adrian on 23/12/16.
  */
 
-public class PersistentNotificationPlugin implements PluginBase{
+public class PersistentNotificationPlugin implements PluginBase {
 
     private static final int ONGOING_NOTIFICATION_ID = 4711;
     static boolean fragmentEnabled = true;
@@ -99,7 +99,7 @@ public class PersistentNotificationPlugin implements PluginBase{
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
 
-        if(getType() == type){
+        if (getType() == type) {
             this.fragmentEnabled = fragmentEnabled;
             checkBusRegistration();
             updateNotification();
@@ -109,7 +109,7 @@ public class PersistentNotificationPlugin implements PluginBase{
 
     private void updateNotification() {
 
-        if(!fragmentEnabled){
+        if (!fragmentEnabled) {
             NotificationManager mNotificationManager =
                     (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancel(ONGOING_NOTIFICATION_ID);
@@ -118,14 +118,13 @@ public class PersistentNotificationPlugin implements PluginBase{
 
 
         String line1 = ctx.getString(R.string.noprofile);
-        if (MainApp.getConfigBuilder().getActiveProfile() == null) return;
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
 
 
         BgReading lastBG = DatabaseHelper.lastBg();
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if(profile != null && lastBG != null) {
+        if (profile != null && lastBG != null) {
             line1 = lastBG.valueToUnitsToString(profile.getUnits());
             if (glucoseStatus != null) {
                 line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
@@ -158,9 +157,8 @@ public class PersistentNotificationPlugin implements PluginBase{
         String line3 = DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h";
 
 
-        if (profile != null && profile.getActiveProfile() != null)
-            line3 += " - " + profile.getActiveProfile();
-        
+        line3 += " - " + MainApp.getConfigBuilder().getProfileName();
+
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
         builder.setOngoing(true);
@@ -192,32 +190,32 @@ public class PersistentNotificationPlugin implements PluginBase{
     }
 
     private void checkBusRegistration() {
-        if(fragmentEnabled){
+        if (fragmentEnabled) {
             MainApp.bus().register(this);
         } else {
             try {
                 MainApp.bus().unregister(this);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-            //no visible fragment
+        //no visible fragment
     }
 
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
         String deltastring = "";
-        if (deltaMGDL >=0){
+        if (deltaMGDL >= 0) {
             deltastring += "+";
-        } else{
+        } else {
             deltastring += "-";
 
         }
-        if (units.equals(Constants.MGDL)){
+        if (units.equals(Constants.MGDL)) {
             deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
-        }
-        else {
+        } else {
             deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
         }
         return deltastring;

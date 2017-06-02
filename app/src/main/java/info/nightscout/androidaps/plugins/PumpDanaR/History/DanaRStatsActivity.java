@@ -5,14 +5,12 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -27,16 +25,11 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -50,12 +43,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
+import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
+import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
@@ -167,18 +161,15 @@ public class DanaRStatsActivity extends Activity {
         decimalFormat = new DecimalFormat("0.000");
         llm = new LinearLayoutManager(this);
 
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        TBB = preferences.getString("TBB", "10.00");
+        TBB = SP.getString("TBB", "10.00");
         totalBaseBasal.setText(TBB);
 
-        ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
+        ProfileInterface pi = ConfigBuilderPlugin.getActiveProfileInterface();
         if (pi != null && pi instanceof CircadianPercentageProfilePlugin) {
             double cppTBB = ((CircadianPercentageProfilePlugin) pi).baseBasalSum();
             totalBaseBasal.setText(decimalFormat.format(cppTBB));
-            SharedPreferences.Editor edit = preferences.edit();
-            edit.putString("TBB", totalBaseBasal.getText().toString());
-            edit.commit();
-            TBB = preferences.getString("TBB", "");
+            SP.putString("TBB", totalBaseBasal.getText().toString());
+            TBB = SP.getString("TBB", "");
         }
 
         // stats table
@@ -326,10 +317,8 @@ public class DanaRStatsActivity extends Activity {
                 if (hasFocus) {
                     totalBaseBasal.getText().clear();
                 } else {
-                    SharedPreferences.Editor edit = preferences.edit();
-                    edit.putString("TBB", totalBaseBasal.getText().toString());
-                    edit.commit();
-                    TBB = preferences.getString("TBB", "");
+                    SP.putString("TBB", totalBaseBasal.getText().toString());
+                    TBB = SP.getString("TBB", "");
                     loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
                     InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(totalBaseBasal.getWindowToken(), 0);

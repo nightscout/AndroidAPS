@@ -24,7 +24,7 @@ import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -186,12 +186,12 @@ public class StatuslinePlugin implements PluginBase {
                     + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (!mPrefs.getBoolean("xdripstatus_showbgi", false) || profile == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getIc(NSProfile.secondsFromMidnight()) == null) {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (!mPrefs.getBoolean("xdripstatus_showbgi", false)) {
             return status;
         }
 
-        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf(NSProfile.secondsFromMidnight());
+        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
 
         status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
 

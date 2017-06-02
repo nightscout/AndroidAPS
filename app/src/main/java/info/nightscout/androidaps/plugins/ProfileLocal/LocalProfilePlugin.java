@@ -15,7 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
 /**
@@ -27,7 +27,8 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private static boolean fragmentEnabled = false;
     private static boolean fragmentVisible = true;
 
-    private static NSProfile convertedProfile = null;
+    private static ProfileStore convertedProfile = null;
+    private static String convertedProfileName = null;
 
     final private String DEFAULTARRAY = "[{\"timeAsSeconds\":0,\"value\":0}]";
 
@@ -230,12 +231,18 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        convertedProfile = new NSProfile(json, "LocalProfile");
+        convertedProfile = new ProfileStore(json);
+        convertedProfileName = "LocalProfile";
     }
 
     @Override
-    public NSProfile getProfile() {
+    public ProfileStore getProfile() {
         return convertedProfile;
+    }
+
+    @Override
+    public String getProfileName() {
+        return convertedProfileName;
     }
 
 }

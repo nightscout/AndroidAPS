@@ -9,7 +9,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
 /**
@@ -132,7 +132,7 @@ public class DanaRPump {
     public double maxBolus;
     public double maxBasal;
 
-    public NSProfile createConvertedProfile() {
+    public ProfileStore createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();
@@ -189,7 +189,12 @@ public class DanaRPump {
         } catch (Exception e) {
             return null;
         }
-        return new NSProfile(json, PROFILE_PREFIX + (activeProfile + 1));
+
+        return new ProfileStore(json);
+    }
+
+    public String createConvertedProfileName() {
+        return PROFILE_PREFIX + (activeProfile + 1);
     }
 
 }

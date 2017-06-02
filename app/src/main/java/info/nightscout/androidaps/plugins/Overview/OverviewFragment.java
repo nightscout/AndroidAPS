@@ -94,7 +94,7 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
@@ -594,16 +594,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     void onClickQuickwizard() {
         final BgReading actualBg = DatabaseHelper.actualBg();
-        if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
-            return;
-        final NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText();
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -839,15 +837,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
 
-        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
-            pumpStatusView.setText(R.string.noprofileset);
-            pumpStatusLayout.setVisibility(View.VISIBLE);
-            loopStatusLayout.setVisibility(View.GONE);
-            return;
-        } else {
-            pumpStatusLayout.setVisibility(View.GONE);
-            loopStatusLayout.setVisibility(View.VISIBLE);
-        }
+//        if (MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
+//            pumpStatusView.setText(R.string.noprofileset);
+//            pumpStatusLayout.setVisibility(View.VISIBLE);
+//            loopStatusLayout.setVisibility(View.GONE);
+//            return;
+//        } else {
+        pumpStatusLayout.setVisibility(View.GONE);
+        loopStatusLayout.setVisibility(View.VISIBLE);
+//        }
 
         PumpInterface pump = MainApp.getConfigBuilder();
 
@@ -893,13 +891,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // temp target
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(new Date().getTime());
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
-            tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+            tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
         } else {
 
             Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
@@ -952,10 +950,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             basalLayout.setVisibility(View.GONE);
         }
 
-        if (profile != null && profile.getActiveProfile() != null) {
-            activeProfileView.setText(profile.getActiveProfile());
-            activeProfileView.setBackgroundColor(Color.GRAY);
-        }
+        activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
+        activeProfileView.setBackgroundColor(Color.GRAY);
 
         activeProfileView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -992,7 +988,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
@@ -1014,10 +1010,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         Double lowLine = SP.getDouble("low_mark", 0d);
         Double highLine = SP.getDouble("high_mark", 0d);
         if (lowLine < 1) {
-            lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
         }
         if (highLine < 1) {
-            highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
 
 
@@ -1034,9 +1030,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             arrowView.setTextColor(color);
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
             if (glucoseStatus != null) {
-                deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
-                avgdeltaView.setText("øΔ15m: " + NSProfile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
-                        "  øΔ40m: " + NSProfile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
+                deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
+                        "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
             } else {
                 deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
                 avgdeltaView.setText("");
@@ -1130,7 +1126,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
                 TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
-                double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
+                double baseBasalValue = profile.getBasal(Profile.secondsFromMidnight(new Date(time)));
                 double baseLineValue = baseBasalValue;
                 double tempBasalValue = 0;
                 double basal = 0d;
@@ -1346,7 +1342,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             else
                 inRangeArray.add(bg);
         }
-        maxBgValue = NSProfile.fromMgdlToUnits(maxBgValue, units);
+        maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
         if (highLine > maxBgValue) maxBgValue = highLine;
         Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);

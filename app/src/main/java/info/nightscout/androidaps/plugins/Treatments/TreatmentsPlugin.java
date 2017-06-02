@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -19,6 +18,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -28,11 +28,11 @@ import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.OverlappingIntervals;
+import info.nightscout.utils.ProfileIntervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -123,9 +123,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     public static void initializeTreatmentData() {
         // Treatments
-        double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
-            dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
+        double dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
 
         treatments = MainApp.getDbHelper().getTreatmentDataFromTime(fromMills, false);
@@ -133,9 +131,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     public static void initializeTempBasalData() {
         // Treatments
-        double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
-            dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
+        double dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
 
         tempBasals.reset().add(MainApp.getDbHelper().getTemporaryBasalsDataFromTime(fromMills, false));
@@ -144,9 +140,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     public static void initializeExtendedBolusData() {
         // Treatments
-        double dia = Constants.defaultDIA;
-        if (MainApp.getConfigBuilder().getActiveProfile() != null && MainApp.getConfigBuilder().getActiveProfile().getProfile() != null)
-            dia = MainApp.getConfigBuilder().getActiveProfile().getProfile().getDia();
+        double dia = MainApp.getConfigBuilder().getProfile().getDia();
         long fromMills = (long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia));
 
         extendedBoluses.reset().add(MainApp.getDbHelper().getExtendedBolusDataFromTime(fromMills, false));
@@ -167,9 +161,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public IobTotal getCalculationToTimeTreatments(long time) {
         IobTotal total = new IobTotal(time);
 
-        if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
-            return total;
-        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null)
             return total;
 
@@ -206,7 +198,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public MealData getMealData() {
         MealData result = new MealData();
 
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) return result;
 
         long now = new Date().getTime();
@@ -404,7 +396,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void addTreatmentToHistory(DetailedBolusInfo detailedBolusInfo) {
+    public void addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
         Treatment treatment = new Treatment(detailedBolusInfo.insulinInterface);
         treatment.date = detailedBolusInfo.date;
         treatment.insulin = detailedBolusInfo.insulin;
@@ -425,7 +417,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public long oldestDataAvaialable() {
+    public long oldestDataAvailable() {
         long oldestTime = new Date().getTime();
         if (tempBasals.size() > 0)
             oldestTime = Math.min(oldestTime, tempBasals.get(0).date);
@@ -452,6 +444,22 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public OverlappingIntervals<TempTarget> getTempTargetsFromHistory() {
         return tempTargets;
+    }
+
+    @Override
+    public ProfileSwitch getProfileSwitchFromHistory(long time) {
+        return null;
+    }
+
+    @Override
+    public ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory() {
+        return null;
+    }
+
+    @Override
+    public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
+        log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
+        MainApp.getDbHelper().createOrUpdate(profileSwitch);
     }
 
 

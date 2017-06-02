@@ -21,13 +21,12 @@ import com.crashlytics.android.answers.CustomEvent;
 
 import java.text.DecimalFormat;
 
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
@@ -73,9 +72,8 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         basalPercent = new PlusMinusEditText(view, R.id.overview_newtempbasal_basalpercentinput, R.id.overview_newtempbasal_basalpercent_plus, R.id.overview_newtempbasal_basalpercent_minus,
                 100d, 0d, (double) pumpDescription.maxTempPercent, (double) pumpDescription.tempPercentStep, new DecimalFormat("0"), true);
 
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        Double currentBasal = 0d;
-        if (profile != null) currentBasal = profile.getBasal(NSProfile.secondsFromMidnight());
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Double currentBasal = profile.getBasal();
         basalAbsolute = new PlusMinusEditText(view, R.id.overview_newtempbasal_basalabsoluteinput, R.id.overview_newtempbasal_basalabsolute_plus, R.id.overview_newtempbasal_basalabsolute_minus,
                 currentBasal, 0d, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, new DecimalFormat("0.00"), true);
 

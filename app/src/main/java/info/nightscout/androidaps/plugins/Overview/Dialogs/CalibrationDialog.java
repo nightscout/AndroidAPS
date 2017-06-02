@@ -24,7 +24,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.XdripCalibrations;
@@ -60,8 +60,8 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         okButton = (Button) view.findViewById(R.id.overview_calibration_okbutton);
         okButton.setOnClickListener(this);
 
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        Double bg = profile != null ? NSProfile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits()) : 0d;
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Double bg = profile != null ? Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits()) : 0d;
 
         String units = Constants.MGDL;
         if (profile != null)
@@ -83,7 +83,8 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.overview_calibration_okbutton:
-                final Double bg = SafeParse.stringToDouble(this.bgView.getText().toString());;
+                final Double bg = SafeParse.stringToDouble(this.bgView.getText().toString());
+                ;
                 XdripCalibrations.confirmAndSendCalibration(bg, context);
                 dismiss();
                 Answers.getInstance().logCustom(new CustomEvent("Calibration"));

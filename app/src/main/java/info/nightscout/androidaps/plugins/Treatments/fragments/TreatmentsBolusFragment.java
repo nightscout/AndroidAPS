@@ -35,8 +35,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -71,9 +70,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
 
         @Override
         public void onBindViewHolder(TreatmentsViewHolder holder, int position) {
-            if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
-                return;
-            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+            Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null)
                 return;
             holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).date));
@@ -225,10 +222,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
 
     public void updateGUI() {
         Activity activity = getActivity();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null)
-            return;
-        if (activity != null && recyclerView != null)
+        if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

@@ -15,7 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
 /**
@@ -27,7 +27,7 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     private static boolean fragmentEnabled = false;
     private static boolean fragmentVisible = true;
 
-    private static NSProfile convertedProfile = null;
+    private static ProfileStore convertedProfile = null;
 
     boolean mgdl;
     boolean mmol;
@@ -193,12 +193,17 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        convertedProfile = new NSProfile(json, "SimpleProfile");
+        convertedProfile = new ProfileStore(json);
     }
 
     @Override
-    public NSProfile getProfile() {
+    public ProfileStore getProfile() {
         return convertedProfile;
+    }
+
+    @Override
+    public String getProfileName() {
+        return "SimpleProfile";
     }
 
 }

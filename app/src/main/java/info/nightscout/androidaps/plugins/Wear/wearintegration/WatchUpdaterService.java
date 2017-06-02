@@ -35,7 +35,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
@@ -209,7 +209,7 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) return null;
 
         Double lowLine = SafeParse.stringToDouble(mPrefs.getString("low_mark", "0"));
@@ -339,7 +339,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         ArrayList<DataMap> temps = new ArrayList<>();
 
 
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
 
         if (profile == null) {
             return;
@@ -348,7 +348,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         long beginBasalSegmentTime = startTimeWindow;
         long runningTime = startTimeWindow;
 
-        double beginBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(beginBasalSegmentTime)));
+        double beginBasalValue = profile.getBasal(beginBasalSegmentTime);
         double endBasalValue = beginBasalValue;
 
         TemporaryBasal tb1 = MainApp.getConfigBuilder().getTempBasalFromHistory(runningTime);
@@ -367,7 +367,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         for (; runningTime < now; runningTime += 5 * 60 * 1000) {
 
             //basal rate
-            endBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(runningTime)));
+            endBasalValue = profile.getBasal(runningTime);
             if (endBasalValue != beginBasalValue) {
                 //push the segment we recently left
                 basals.add(basalMap(beginBasalSegmentTime, runningTime, beginBasalValue));
@@ -561,12 +561,12 @@ public class WatchUpdaterService extends WearableListenerService implements
                     + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (!mPrefs.getBoolean("wear_showbgi", false) || profile == null || profile.getIsf(NSProfile.secondsFromMidnight()) == null || profile.getIc(NSProfile.secondsFromMidnight()) == null) {
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (!mPrefs.getBoolean("wear_showbgi", false)) {
             return status;
         }
 
-        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf(NSProfile.secondsFromMidnight());
+        double bgi = -(bolusIob.activity + basalIob.activity) * 5 * profile.getIsf();
 
         status += " " + ((bgi >= 0) ? "+" : "") + DecimalFormatter.to2Decimal(bgi);
 
