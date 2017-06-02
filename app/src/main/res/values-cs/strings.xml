@@ -123,7 +123,6 @@
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="rate">Hodnota</string>
     <string name="reason">Zdůvodnění</string>
-    <string name="refreshtreatmentsfromnightscout">Opravdu aktualizovat ošetření z NS</string>
     <string name="safety">Bezpečnost</string>
     <string name="danar_useextended_title">Použít kombo bolusy pro >200%</string>
     <string name="setextendedbolusquestion">Spustit nový kombo bolus:</string>
@@ -388,10 +387,9 @@
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_scriptdebugdata_label">Ladící informace</string>
     <string name="openapsma_valuelimitedto" formatted="false">%.2f omezeno na %.2f</string>
-    <string name="refreshtemptargetsfromnightscout">Opravdu aktualizovat dočasné cíle z NS</string>
     <string name="removerecord">Odstranit záznam:</string>
     <string name="short_avgdelta">Krátkodobý průměr</string>
-    <string name="temptargetrange_refreshfromnightscout">Obnovit dočasné cíle z NS</string>
+    <string name="refresheventsfromnightscout">Obnovit události z NS</string>
     <string name="actions_shortname">"AKCE"</string>
     <string name="wear_shortname">"WEAR"</string>
     <string name="virtualpump_shortname">VPUM</string>

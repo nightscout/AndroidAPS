@@ -237,12 +237,12 @@ public class VerticalTextsGraphSeries<E extends DataPointWithLabelInterface> ext
                     Rect bounds = new Rect();
                     mPaint.getTextBounds(value.getLabel(), 0, value.getLabel().length(), bounds);
                     mPaint.setStyle(Paint.Style.STROKE);
-                    float px = endX;
-                    float py = (float) (graphHeight * ratY + bounds.height() + 80);
+                    float px = endX + bounds.height() / 2;
+                    float py = (float) (graphHeight * ratY + bounds.width() + 10);
                     canvas.save();
                     canvas.rotate(-90, px, py);
                     canvas.drawText(value.getLabel(), px, py, mPaint);
-                    canvas.drawRect(bounds.left + px - 3, bounds.top + py - 3, bounds.right + px + 3, bounds.bottom + py + 3, mPaint);
+                    canvas.drawRect(px - 3, bounds.top + py - 3, bounds.right + px + 3, bounds.bottom + py + 3, mPaint);
                     canvas.restore();
                 }
             }

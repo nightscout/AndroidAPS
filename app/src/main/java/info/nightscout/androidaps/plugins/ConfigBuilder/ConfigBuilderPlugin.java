@@ -998,6 +998,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return getProfile(new Date().getTime());
     }
     public Profile getProfile(long time) {
+        //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
             if (profileSwitch.profileJson != null) {

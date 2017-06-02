@@ -183,7 +183,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             case R.id.treatments_reshreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle(this.getContext().getString(R.string.confirmation));
-                builder.setMessage(this.getContext().getString(R.string.refreshtreatmentsfromnightscout));
+                builder.setMessage(this.getContext().getString(R.string.refresheventsfromnightscout) + "?");
                 builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetTreatments();

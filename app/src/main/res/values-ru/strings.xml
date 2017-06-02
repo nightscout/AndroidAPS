@@ -424,8 +424,6 @@
     <string name="quickwizardsettings">БыстрыйБолюс настройки</string>
     <string name="rate">значение</string>
     <string name="reason">основание</string>
-    <string name="refreshtemptargetsfromnightscout">хотите обновить врем цели из Nightscout?</string>
-    <string name="refreshtreatmentsfromnightscout">хотите обновить назначения из Nightscout?</string>
     <string name="reloadprofile">обновить профиль</string>
     <string name="removerecord">удалить запись</string>
     <string name="resend_all_data">повторить отправку всех данных</string>
@@ -508,7 +506,6 @@
     <string name="tempbasals_netratio_label_string">соотношение:</string>
     <string name="tempbasals_realduration_label_string">длит:</string>
     <string name="tempbasals_shortname">ВремБаз</string>
-    <string name="temptargetrange_refreshfromnightscout">обновить врем цели из NS</string>
     <string name="temptargetrange_shortname">ВремЦель</string>
     <string name="timeshift_hint">Время в часах к которому профиль перейдет на след сутки</string>
     <string name="treatmentdeliveryerror">ошибка доставки болюса</string>

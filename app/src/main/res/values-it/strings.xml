@@ -330,8 +330,6 @@
     <string name="pumpshutdown">Arresto Micro</string>
     <string name="pumpsuspended">Sospensione Micro</string>
     <string name="pumpsuspendedclicktorefresh">Micro sospeso. Clicca per aggiornare</string>
-    <string name="refreshtemptargetsfromnightscout">Vuoi aggiornare i target di tempo da Nightscout</string>
-    <string name="refreshtreatmentsfromnightscout">Vuoi aggiornare i trattamenti da Nightscout</string>
     <string name="reloadprofile">Aggiorna Profilo</string>
     <string name="removerecord">Eliminare campo:</string>
     <string name="restart">Riavvio</string>
@@ -411,7 +409,6 @@
     <string name="openapsma_mealdata_label">Data Pranzo</string>
     <string name="overview_bolusprogress_stoped">Stoppato</string>
     <string name="tempbasals_netratio_label_string">rapporto:</string>
-    <string name="temptargetrange_refreshfromnightscout">Aggiornare i target di temp da NS</string>
     <string name="treatmentdeliveryerror">Errore di erogazione del bolo</string>
     <string name="treatments_activity_string">attività</string>
     <string name="treatments_carbs_label_string">Carboidrati:</string>

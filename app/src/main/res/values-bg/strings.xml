@@ -123,7 +123,6 @@
     <string name="objectives_pumpstatusavailableinns">Статус на помпа в NS</string>
     <string name="rate">Стойност</string>
     <string name="reason">Основание</string>
-    <string name="refreshtreatmentsfromnightscout">Искате ли да обновите treatments от Nightscout</string>
     <string name="safety">Безопасност</string>
     <string name="setextendedbolusquestion">Задай нов удължен болусs:</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
@@ -413,12 +412,10 @@
     <string name="ongoingnotificaction">Текущи известия</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
-    <string name="refreshtemptargetsfromnightscout">Искате ли да обновите временните цели от Найтскаут</string>
     <string name="removerecord">Премахни запис:</string>
     <string name="short_avgdelta">Краткоср. Δ:</string>
     <string name="short_tabtitles">Къси имена</string>
     <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU delivered successfully</string>
-    <string name="temptargetrange_refreshfromnightscout">Обнови временни цели от NS</string>
     <string name="danar_stats_expweight">Експоненциално претеглена TDD</string>
     <string name="danar_stats_cumulative_tdd">Комулативна TDD</string>
     <string name="danar_stats_weight">Тегло</string>

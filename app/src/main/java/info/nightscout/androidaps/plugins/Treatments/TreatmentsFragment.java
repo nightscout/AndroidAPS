@@ -16,6 +16,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsBolusFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsExtendedBolusesFragment;
+import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsProfileSwitchFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempTargetFragment;
 import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTemporaryBasalsFragment;
 
@@ -28,11 +29,11 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         return treatmentsPlugin;
     }
 
-    Context context;
     TextView treatmentsTab;
     TextView extendedBolusesTab;
     TextView tempBasalsTab;
     TextView tempTargetTab;
+    TextView profileSwitchTab;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,11 +44,12 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         extendedBolusesTab = (TextView) view.findViewById(R.id.treatments_extendedboluses);
         tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
         tempTargetTab = (TextView) view.findViewById(R.id.treatments_temptargets);
+        profileSwitchTab = (TextView) view.findViewById(R.id.treatments_profileswitches);
         treatmentsTab.setOnClickListener(this);
         extendedBolusesTab.setOnClickListener(this);
         tempBasalsTab.setOnClickListener(this);
         tempTargetTab.setOnClickListener(this);
-        context = getContext();
+        profileSwitchTab.setOnClickListener(this);
 
         setFragment(new TreatmentsBolusFragment());
         setBackgroundColorOnSelected(treatmentsTab);
@@ -75,6 +77,10 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
                 setFragment(new TreatmentsTempTargetFragment());
                 setBackgroundColorOnSelected(tempTargetTab);
                 break;
+            case R.id.treatments_profileswitches:
+                setFragment(new TreatmentsProfileSwitchFragment());
+                setBackgroundColorOnSelected(profileSwitchTab);
+                break;
         }
     }
 
@@ -91,6 +97,7 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         extendedBolusesTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         tempBasalsTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         tempTargetTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
+        profileSwitchTab.setBackgroundColor(MainApp.sResources.getColor(R.color.defaultbackground));
         selected.setBackgroundColor(MainApp.sResources.getColor(R.color.tabBgColorSelected));
     }
 }

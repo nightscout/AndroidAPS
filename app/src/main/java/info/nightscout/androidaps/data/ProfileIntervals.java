@@ -77,15 +77,16 @@ public class ProfileIntervals<T extends Interval> {
             final int mid = (lo + hi) >>> 1;
             final Interval midVal = rawData.valueAt(mid);
 
-            if (midVal.before(value)) {
+            if (midVal.match(value)) {
+                return mid;  // value found
+            } else if (midVal.before(value)) {
                 lo = mid + 1;
             } else if (midVal.after(value)) {
                 hi = mid - 1;
-            } else if (midVal.match(value)) {
-                return mid;  // value found
             }
         }
         // not found, try nearest older with duration 0
+        lo = lo - 1;
         while (lo >= 0 && lo < rawData.size()) {
             if (rawData.valueAt(lo).isEndingEvent())
                 return lo;
