@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
@@ -310,7 +311,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
                 previous = autosensData;
                 autosensDataTable.put(bgTime, autosensData);
-                log.debug(autosensData.log(bgTime));
+                if (Config.logAutosensData)
+                    log.debug(autosensData.log(bgTime));
             }
         }
         MainApp.bus().post(new EventAutosensCalculationFinished());
@@ -545,7 +547,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
             log.debug("Invalidating cached data to: " + new Date(time).toLocaleString());
             for (int index = iobTable.size() - 1; index >= 0; index--) {
                 if (iobTable.keyAt(index) > time) {
-                    log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
+                    if (Config.logAutosensData)
+                        log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
                     iobTable.removeAt(index);
                 } else {
                     break;
@@ -553,7 +556,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
             }
             for (int index = autosensDataTable.size() - 1; index >= 0; index--) {
                 if (autosensDataTable.keyAt(index) > time) {
-                    log.debug("Removing from autosensDataTable: " + new Date(autosensDataTable.keyAt(index)).toLocaleString());
+                    if (Config.logAutosensData)
+                        log.debug("Removing from autosensDataTable: " + new Date(autosensDataTable.keyAt(index)).toLocaleString());
                     autosensDataTable.removeAt(index);
                 } else {
                     break;

@@ -12,11 +12,12 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/overview_buttons">
+            android:layout_above="@+id/overview_buttons"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.RecyclerView
@@ -29,7 +30,7 @@
                 <LinearLayout
                     android:id="@+id/overview_looplayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="2dp">
 
@@ -71,14 +72,14 @@
                 <LinearLayout
                     android:id="@+id/overview_pumpstatuslayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="2dp">
 
                     <TextView
                         android:id="@+id/overview_pumpstatus"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:gravity="center_vertical|center_horizontal"
@@ -99,7 +100,7 @@
                         android:layout_gravity="top|left"
                         android:gravity="center_vertical"
                         android:text="00.0"
-                        android:textSize="70dp"
+                        android:textSize="90dp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -112,87 +113,294 @@
                         android:paddingLeft="-5dp"
                         android:paddingRight="-5dp"
                         android:text="→"
-                        android:textSize="70dp"
+                        android:textSize="90dp"
                         android:textStyle="bold" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top"
+                        android:layout_gravity="top|center_horizontal"
                         android:layout_marginTop="10dp"
-                        android:gravity="top"
+                        android:layout_weight="0.5"
+                        android:gravity="top|center_horizontal"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/overview_timeago"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
                             android:layout_weight="0.5"
-                            android:orientation="vertical">
+                            android:gravity="center_horizontal"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                            <TextView
-                                android:id="@+id/overview_timeago"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.5"
-                                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                            <TextView
-                                android:id="@+id/overview_delta"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.5"
-                                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/overview_delta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center_horizontal"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
                             android:id="@+id/overview_avgdelta"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
                             android:layout_marginLeft="10dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/overview_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|left"
+                        android:gravity="center_vertical"
+                        android:text="8:00 PM"
+                        android:textAlignment="viewEnd"
+                        android:textSize="90dp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:paddingRight="5dp"
+                                    android:text="@string/basal"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0"
+                                    android:gravity="center_horizontal"
+                                    android:paddingEnd="2dp"
+                                    android:paddingStart="2dp"
+                                    android:text=":"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/overview_basebasal"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:gravity="start"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="5dp"
+                                    android:text="0.50U/h @17:35 1/30min - 0.40U/h"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="2dip"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/listdelimiter" />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:paddingRight="5dp"
+                                    android:text="@string/virtualpump_extendedbolus_label"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0"
+                                    android:gravity="center_horizontal"
+                                    android:paddingEnd="2dp"
+                                    android:paddingStart="2dp"
+                                    android:text=":"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/overview_extendedbolus"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:gravity="start"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="5dp"
+                                    android:text="0.50U/h @17:35 1/30min"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="2dip"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/listdelimiter" />
+
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:paddingRight="5dp"
+                                    android:text="@string/iob"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0"
+                                    android:gravity="center_horizontal"
+                                    android:paddingEnd="2dp"
+                                    android:paddingStart="2dp"
+                                    android:text=":"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/overview_iob"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:gravity="start"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="5dp"
+                                    android:text="0.50U/h @17:35 1/30min - 0.40U/h"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="2dip"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/listdelimiter" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:gravity="end"
+                                    android:paddingRight="5dp"
+                                    android:text="@string/cob"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="5dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0"
+                                    android:gravity="center_horizontal"
+                                    android:paddingEnd="2dp"
+                                    android:paddingStart="2dp"
+                                    android:text=":"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/overview_cob"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="0.5"
+                                    android:gravity="start"
+                                    android:orientation="horizontal"
+                                    android:paddingLeft="5dp"
+                                    android:text="23 g"
+                                    android:textColor="@android:color/white"
+                                    android:textSize="14sp" />
+
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="fill_parent"
+                                android:layout_height="2dip"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginLeft="20dp"
+                                android:layout_marginRight="20dp"
+                                android:layout_marginTop="5dp"
+                                android:background="@color/listdelimiter" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <include
+                            layout="@layout/careportal_stats_fragment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/overview_basallayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/overview_runningtemp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textStyle="normal|bold" />
-
-                    <TextView
-                        android:layout_width="20dp"
-                        android:layout_height="wrap_content" />
-
-                    <TextView
-                        android:id="@+id/overview_basebasal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="left"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/overview_iob"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -289,15 +497,17 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/overview_graphs_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/overview_bggraph"
                         android:layout_width="wrap_content"
-                        android:layout_height="160dip" />
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/overview_iobgraph"

@@ -394,12 +394,11 @@ public class NSClientService extends Service {
                                             latestDateInReceivedData = treatment.getMills();
 
                                     if (treatment.getAction() == null) {
-                                        if (!isCurrent(treatment)) continue;
                                         addedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("update")) {
-                                        if (!isCurrent(treatment)) continue;
                                         updatedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("remove")) {
+                                        if (!isCurrent(treatment)) continue;
                                         removedTreatments.put(jsonTreatment);
                                     }
                                 }

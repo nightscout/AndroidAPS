@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -55,6 +54,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -67,10 +68,12 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -87,6 +90,7 @@ import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -96,7 +100,6 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
@@ -129,16 +132,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         return overviewPlugin;
     }
 
+    TextView timeView;
     TextView bgView;
     TextView arrowView;
     TextView timeAgoView;
     TextView deltaView;
     TextView avgdeltaView;
-    TextView runningTempView;
     TextView baseBasalView;
-    LinearLayout basalLayout;
+    TextView extendedBolusView;
     TextView activeProfileView;
     TextView iobView;
+    TextView cobView;
     TextView apsModeView;
     TextView tempTargetView;
     TextView pumpStatusView;
@@ -146,6 +150,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
+
+    TextView iage;
+    TextView cage;
+    TextView sage;
+    TextView pbage;
 
     CheckBox showPredictionView;
     CheckBox showBasalsView;
@@ -179,6 +188,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
+    final Handler timeHandler = new Handler();
+
     public OverviewFragment() {
         super();
         if (sHandlerThread == null) {
@@ -202,12 +213,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         View view;
 
-        if (smallHeight) {
+        if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
+            view = inflater.inflate(R.layout.overview_fragment_tablet, container, false);
+        } else if (smallHeight) {
             view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
         }
 
+        timeView = (TextView) view.findViewById(R.id.overview_time);
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         arrowView = (TextView) view.findViewById(R.id.overview_arrow);
         if (smallWidth) {
@@ -216,9 +230,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
-        runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
-        basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
+        extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
         pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
         loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
@@ -227,8 +240,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
+        cobView = (TextView) view.findViewById(R.id.overview_cob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
         tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
+
+        iage = (TextView) view.findViewById(R.id.careportal_insulinage);
+        cage = (TextView) view.findViewById(R.id.careportal_canulaage);
+        sage = (TextView) view.findViewById(R.id.careportal_sensorage);
+        pbage = (TextView) view.findViewById(R.id.careportal_pbage);
 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
@@ -301,6 +320,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 return false;
             }
         });
+
+        Timer timeTimer = new Timer();
+        timeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                timeUpdate();
+            }
+        }, 0, 30000);
 
         return view;
     }
@@ -823,6 +850,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
+    private void timeUpdate() {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (timeView != null) { //must not exists
+                        timeView.setText(DateUtil.timeString(new Date()));
+                    }
+                    log.debug("Time updated");
+                }
+            });
+    }
+
     public void scheduleUpdateGUI(final String from) {
         class UpdateRunnable implements Runnable {
             public void run() {
@@ -850,6 +891,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void updateGUI(String from) {
         log.debug("updateGUI entered from: " + from);
         updateNotifications();
+        CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
 
@@ -949,22 +991,29 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (activeTemp != null) {
             cancelTempButton.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
-            runningTempView.setVisibility(View.VISIBLE);
-            runningTempView.setText(activeTemp.toString());
         } else {
             cancelTempButton.setVisibility(View.GONE);
-            runningTempView.setVisibility(View.GONE);
         }
 
-        if (pump.getPumpDescription().isTempBasalCapable) {
-            basalLayout.setVisibility(View.VISIBLE);
-            baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
-        } else {
-            basalLayout.setVisibility(View.GONE);
+        String basalText = "";
+        if (activeTemp != null) {
+            basalText = activeTemp.toString() + " - ";
         }
+        if (pump.getPumpDescription().isTempBasalCapable) {
+            basalText += DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h";
+        }
+        baseBasalView.setText(basalText);
+
+        ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
+        String extendedBolusText = "";
+        if (extendedBolus != null) {
+            extendedBolusText = extendedBolus.toString();
+        }
+        if (extendedBolusView != null) // must not exists in all layouts
+            extendedBolusView.setText(extendedBolusText);
 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
         activeProfileView.setBackgroundColor(Color.GRAY);
@@ -1032,6 +1081,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
 
+        timeUpdate();
 
         // **** BG value ****
         if (lastBG != null) {
@@ -1079,6 +1129,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
         iobView.setText(iobtext);
+
+        // cob
+        if (cobView != null) { // view must not exists
+            String cobText = "";
+            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(new Date().getTime());
+            if (autosensData != null)
+                cobText = (int) autosensData.cob + " g " + String.format(MainApp.sResources.getString(R.string.minago), autosensData.minOld());
+            cobView.setText(cobText);
+        }
 
         boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
         if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {

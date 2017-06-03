@@ -501,7 +501,8 @@ public class DataService extends IntentService {
         if (trJson.has("eventType") && (
                 trJson.getString("eventType").equals(CareportalEvent.SITECHANGE) ||
                         trJson.getString("eventType").equals(CareportalEvent.INSULINCHANGE) ||
-                        trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE)
+                        trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE) ||
+                        trJson.getString("eventType").equals(CareportalEvent.PUMPBATTERYCHANGE)
         )) {
             if (Config.logIncommingData)
                 log.debug("Processing CareportalEvent record: " + trJson.toString());
