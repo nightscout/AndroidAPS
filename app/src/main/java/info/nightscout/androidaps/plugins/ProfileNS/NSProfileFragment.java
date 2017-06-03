@@ -75,12 +75,12 @@ public class NSProfileFragment extends Fragment {
     }
 
     private void updateGUI() {
-//        if (nsProfilePlugin.profile == null) {
-//            noProfile.setVisibility(View.VISIBLE);
-//            return;
-//        } else {
-//            noProfile.setVisibility(View.GONE);
-//        }
+        if (MainApp.getConfigBuilder().getProfile() == null) {
+            noProfile.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            noProfile.setVisibility(View.GONE);
+        }
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
         units.setText(profile.getUnits());

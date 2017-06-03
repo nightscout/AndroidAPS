@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 log.debug("Requesting ignore battery optimization");
 
-                OKDialog.show(this, getString(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), getString(R.string.app_name)), new Runnable() {
+                OKDialog.show(getParent(), getString(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), getString(R.string.app_name)), new Runnable() {
 
                     @Override
                     public void run() {

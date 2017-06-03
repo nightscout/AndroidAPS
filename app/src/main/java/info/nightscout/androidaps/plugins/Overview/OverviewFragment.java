@@ -274,7 +274,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
         showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
-        showBasalsView.setChecked(SP.getBoolean("showbasals", false));
+        showBasalsView.setChecked(SP.getBoolean("showbasals", true));
         showIobView.setChecked(SP.getBoolean("showiob", false));
         showCobView.setChecked(SP.getBoolean("showcob", false));
         showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
@@ -891,20 +891,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @SuppressLint("SetTextI18n")
     public void updateGUI(String from) {
         log.debug("updateGUI entered from: " + from);
+        if (MainApp.getConfigBuilder().getProfile() == null) {// app not initialized yet
+            pumpStatusView.setText(R.string.noprofileset);
+            pumpStatusLayout.setVisibility(View.VISIBLE);
+            loopStatusLayout.setVisibility(View.GONE);
+            return;
+        }
+        pumpStatusLayout.setVisibility(View.GONE);
+        loopStatusLayout.setVisibility(View.VISIBLE);
+
         updateNotifications();
         CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
-
-//        if (MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
-//            pumpStatusView.setText(R.string.noprofileset);
-//            pumpStatusLayout.setVisibility(View.VISIBLE);
-//            loopStatusLayout.setVisibility(View.GONE);
-//            return;
-//        } else {
-        pumpStatusLayout.setVisibility(View.GONE);
-        loopStatusLayout.setVisibility(View.VISIBLE);
-//        }
 
         PumpInterface pump = MainApp.getConfigBuilder();
 
@@ -912,6 +911,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (bgGraph == null)
             return;
 
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (getActivity() == null)
             return;
 
@@ -950,7 +950,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // temp target
-        Profile profile = MainApp.getConfigBuilder().getProfile();
         TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(new Date().getTime());
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
