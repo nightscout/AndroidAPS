@@ -20,6 +20,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -27,7 +28,6 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
@@ -232,7 +232,6 @@ public class IobCobCalculatorPlugin implements PluginBase {
             return; // app still initializing
         //log.debug("Locking calculateSensitivityData");
         synchronized (dataLock) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
 
             if (bucketed_data == null || bucketed_data.size() < 3) {
                 log.debug("calculateSensitivityData: No bucketed data available");
@@ -247,6 +246,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 // check if data already exists
                 long bgTime = bucketed_data.get(i).date;
                 bgTime = roundUpTime(bgTime);
+                Profile profile = MainApp.getConfigBuilder().getProfile(bgTime);
 
                 AutosensData existing;
                 if ((existing = autosensDataTable.get(bgTime)) != null) {

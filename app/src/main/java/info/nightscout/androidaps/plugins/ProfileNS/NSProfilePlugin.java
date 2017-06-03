@@ -14,10 +14,10 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorPlugin;
 import info.nightscout.utils.SP;
@@ -62,12 +62,12 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == PROFILE && fragmentEnabled;
+        return type == PROFILE && (Config.NSCLIENT || fragmentEnabled);
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == PROFILE && fragmentVisible;
+        return type == PROFILE && (Config.NSCLIENT ||fragmentVisible);
     }
 
     @Override
@@ -82,7 +82,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public boolean showInList(int type) {
-        return true;
+        return !Config.NSCLIENT;
     }
 
     @Override

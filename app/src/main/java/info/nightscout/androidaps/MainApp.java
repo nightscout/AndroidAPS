@@ -114,10 +114,13 @@ public class MainApp extends Application {
             pluginsList.add(TreatmentsFragment.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyFragment.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
-            pluginsList.add(SourceXdripFragment.getPlugin());
+            if (!Config.NSCLIENT)
+                pluginsList.add(SourceXdripFragment.getPlugin());
             pluginsList.add(SourceNSClientFragment.getPlugin());
-            pluginsList.add(SourceMM640gFragment.getPlugin());
-            pluginsList.add(SourceGlimpFragment.getPlugin());
+            if (!Config.NSCLIENT)
+                pluginsList.add(SourceMM640gFragment.getPlugin());
+            if (!Config.NSCLIENT)
+                pluginsList.add(SourceGlimpFragment.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.getPlugin());
 
             if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));

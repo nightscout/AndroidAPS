@@ -11,6 +11,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -98,7 +99,7 @@ public class StatuslinePlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return true;
+        return !Config.NSCLIENT;
     }
 
     @Override

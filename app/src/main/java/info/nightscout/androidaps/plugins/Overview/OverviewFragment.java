@@ -61,6 +61,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -955,7 +956,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
-            tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+            if (tempTarget.low == tempTarget.high)
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
+            else
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+        } if (Config.NSCLIENT) {
+            tempTargetView.setVisibility(View.GONE);
         } else {
 
             Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
@@ -984,7 +990,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** Calibration button ****
-        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
+        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
             calibrationButton.setVisibility(View.VISIBLE);
         } else {
             calibrationButton.setVisibility(View.GONE);
@@ -1000,10 +1006,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         String basalText = "";
         if (activeTemp != null) {
-            basalText = activeTemp.toString() + " - ";
+            basalText = activeTemp.toString() + " ";
         }
-        if (pump.getPumpDescription().isTempBasalCapable) {
-            basalText += DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h";
+        if (Config.NSCLIENT)
+            basalText += "( " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h )";
+        else if (pump.getPumpDescription().isTempBasalCapable) {
+            basalText += "( " + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h )";
         }
         baseBasalView.setText(basalText);
 
@@ -1202,7 +1210,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
                 TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
-                double baseBasalValue = profile.getBasal(Profile.secondsFromMidnight(new Date(time)));
+                double baseBasalValue = MainApp.getConfigBuilder().getProfile(time).getBasal(Profile.secondsFromMidnight(time));
                 double baseLineValue = baseBasalValue;
                 double tempBasalValue = 0;
                 double basal = 0d;

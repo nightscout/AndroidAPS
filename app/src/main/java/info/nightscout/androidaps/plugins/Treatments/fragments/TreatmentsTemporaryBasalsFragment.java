@@ -74,6 +74,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                 holder.netInsulin.setText("");
                 holder.netRatio.setText("");
                 holder.extendedFlag.setVisibility(View.GONE);
+                holder.iob.setTextColor(holder.netRatio.getCurrentTextColor());
             } else {
                 if (tempBasal.isInProgress()) {
                     holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));

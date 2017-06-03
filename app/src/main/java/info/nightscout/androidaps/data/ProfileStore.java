@@ -66,8 +66,8 @@ public class ProfileStore {
             JSONObject store = json.getJSONObject("store");
             if (store.has(profileName)) {
                 String units = null;
-                if (store.has("units"))
-                    units = store.getString("units");
+                if (json.has("units"))
+                    units = json.getString("units");
                 profile = new Profile(store.getJSONObject(profileName), units);
             }
         } catch (JSONException e) {
