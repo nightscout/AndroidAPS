@@ -1437,25 +1437,26 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         low = lowArray.toArray(low);
         high = highArray.toArray(high);
 
+        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
 
         if (inRange.length > 0) {
             bgGraph.addSeries(seriesInRage = new PointsGraphSeries<>(inRange));
             seriesInRage.setShape(PointsGraphSeries.Shape.POINT);
-            seriesInRage.setSize(5);
+            seriesInRage.setSize(isTablet ? 8 : 5);
             seriesInRage.setColor(MainApp.sResources.getColor(R.color.inrange));
         }
 
         if (low.length > 0) {
             bgGraph.addSeries(seriesLow = new PointsGraphSeries<>(low));
             seriesLow.setShape(PointsGraphSeries.Shape.POINT);
-            seriesLow.setSize(5);
+            seriesLow.setSize(isTablet ? 8 : 5);
             seriesLow.setColor(MainApp.sResources.getColor(R.color.low));
         }
 
         if (high.length > 0) {
             bgGraph.addSeries(seriesHigh = new PointsGraphSeries<>(high));
             seriesHigh.setShape(PointsGraphSeries.Shape.POINT);
-            seriesHigh.setSize(5);
+            seriesHigh.setSize(isTablet ? 8 : 5);
             seriesHigh.setColor(MainApp.sResources.getColor(R.color.high));
         }
 
