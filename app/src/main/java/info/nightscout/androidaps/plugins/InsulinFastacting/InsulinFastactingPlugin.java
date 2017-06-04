@@ -1,15 +1,11 @@
 package info.nightscout.androidaps.plugins.InsulinFastacting;
 
-import java.util.Date;
-
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.interfaces.ProfileInterface;
 
 /**
  * Created by mike on 17.04.2017.
@@ -93,10 +89,7 @@ public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
 
     @Override
     public double getDia() {
-        ProfileInterface profileInterface =  MainApp.getConfigBuilder().getActiveProfile();
-        if (profileInterface.getProfile() != null)
-            return profileInterface.getProfile().getDia();
-        return Constants.defaultDIA;
+        return MainApp.getConfigBuilder().getProfile().getDia();
     }
 
     @Override

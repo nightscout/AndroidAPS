@@ -3,8 +3,6 @@ package info.nightscout.androidaps.db;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,11 +14,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.NSUpload;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_TREATMENTS)
 public class Treatment implements DataPointWithLabelInterface {
@@ -107,12 +104,11 @@ public class Treatment implements DataPointWithLabelInterface {
     }
 
     public void setYValue(List<BgReading> bgReadingsArray) {
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null) return;
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
             if (reading.date > date) continue;
-            yValue = NSProfile.fromMgdlToUnits(reading.value, profile.getUnits());
+            yValue = Profile.fromMgdlToUnits(reading.value, profile.getUnits());
             break;
         }
     }

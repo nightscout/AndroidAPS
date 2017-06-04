@@ -21,16 +21,11 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,11 +34,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -58,7 +52,7 @@ public class DanaRHistoryActivity extends Activity {
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
 
-    static NSProfile profile = null;
+    static Profile profile = null;
 
     Spinner historyTypeSpinner;
     TextView statusView;
@@ -249,7 +243,7 @@ public class DanaRHistoryActivity extends Activity {
                 clearCardView();
             }
         });
-        profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
             finish();
@@ -318,7 +312,7 @@ public class DanaRHistoryActivity extends Activity {
                     holder.alarm.setVisibility(View.GONE);
                     break;
                 case RecordTypes.RECORD_TYPE_GLUCOSE:
-                    holder.value.setText(NSProfile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+                    holder.value.setText(Profile.toUnitsString(record.recordValue, record.recordValue * Constants.MGDL_TO_MMOLL, profile.getUnits()));
                     // rest is the same
                 case RecordTypes.RECORD_TYPE_CARBO:
                 case RecordTypes.RECORD_TYPE_BASALHOUR:

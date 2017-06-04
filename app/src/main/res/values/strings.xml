@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
-    <string name="refreshtreatmentsfromnightscout">Do you want to refresh treatments from Nightscout</string>
-    <string name="refreshtemptargetsfromnightscout">Do you want to refresh temp targets from Nightscout</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -415,7 +413,7 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
-    <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
+    <string name="refresheventsfromnightscout">Refresh events from NS</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
@@ -620,4 +618,11 @@
     <string name="careportal_insulinage_label">Insulin age</string>
     <string name="hours">hours</string>
     <string name="overview_newtempbasal_basaltype_label">Basal type</string>
+    <string name="isfmissing">ISF missing in profile. Using default.</string>
+    <string name="icmissing">IC missing in profile. Using default.</string>
+    <string name="basalmissing">Basal missing in profile. Using default.</string>
+    <string name="targetmissing">Target missing in profile. Using default.</string>
+    <string name="invalidprofile">Invalid profile !!!</string>
+    <string name="profileswitch">ProfileSwitch</string>
+    <string name="careportal_pbage_label">Pump battery age</string>
 </resources>

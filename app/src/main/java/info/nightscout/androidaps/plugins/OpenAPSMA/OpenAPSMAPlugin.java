@@ -20,7 +20,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.utils.DateUtil;
@@ -130,7 +130,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         }
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
 
         if (!isEnabled(PluginBase.APS)) {
@@ -144,20 +144,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noglucosedata)));
             if (Config.logAPSResult)
                 log.debug(MainApp.instance().getString(R.string.openapsma_noglucosedata));
-            return;
-        }
-
-        if (profile == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noprofile)));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
-            return;
-        }
-
-        if (pump == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_nopump)));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
             return;
         }
 
@@ -176,9 +162,9 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
-        double minBg = NSProfile.toMgdl(SP.getDouble("openapsma_min_bg", minBgDefault), units);
-        double maxBg = NSProfile.toMgdl(SP.getDouble("openapsma_max_bg", maxBgDefault), units);
-        double targetBg = NSProfile.toMgdl(SP.getDouble("openapsma_target_bg", targetBgDefault), units);
+        double minBg = Profile.toMgdl(SP.getDouble("openapsma_min_bg", minBgDefault), units);
+        double maxBg = Profile.toMgdl(SP.getDouble("openapsma_max_bg", maxBgDefault), units);
+        double targetBg = Profile.toMgdl(SP.getDouble("openapsma_target_bg", targetBgDefault), units);
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
@@ -211,8 +197,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
-        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100)) return;
-        if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900)) return;
+        if (!checkOnlyHardLimits(profile.getIc(), "carbratio", 2, 100)) return;
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900)) return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 

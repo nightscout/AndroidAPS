@@ -51,6 +51,7 @@ public class CareportalEvent {
     public static final String SITECHANGE = "Site Change";
     public static final String INSULINCHANGE = "Insulin Change";
     public static final String SENSORCHANGE = "Sensor Change";
+    public static final String PUMPBATTERYCHANGE = "Pump Battery Change";
 
     public CareportalEvent() {
     }

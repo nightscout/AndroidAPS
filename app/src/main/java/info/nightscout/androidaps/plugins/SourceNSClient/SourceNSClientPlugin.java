@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.SourceNSClient;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
@@ -35,7 +36,7 @@ public class SourceNSClientPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean isEnabled(int type) {
-        return type == BGSOURCE && fragmentEnabled;
+        return Config.NSCLIENT || type == BGSOURCE && fragmentEnabled;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SourceNSClientPlugin implements PluginBase, BgSourceInterface {
 
     @Override
     public boolean showInList(int type) {
-        return true;
+        return !Config.NSCLIENT;
     }
 
     @Override

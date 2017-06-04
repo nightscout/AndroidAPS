@@ -21,4 +21,8 @@ public class AutosensData {
         return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " Bgi=" + bgi + " Deviation=" + deviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob;
     }
 
+    public int minOld() {
+        return (int) ((new Date().getTime() - time) / 1000 / 60);
+    }
+
 }

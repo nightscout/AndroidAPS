@@ -22,7 +22,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterAMAJS {
@@ -190,7 +190,7 @@ public class DetermineBasalAdapterAMAJS {
     }
 
 
-    public void setData(NSProfile profile,
+    public void setData(Profile profile,
                         double maxIob,
                         double maxBasal,
                         double minBg,
@@ -215,8 +215,8 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
         mProfile.add("target_bg", targetBg);
-        mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
-        mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
+        mProfile.add("carb_ratio", profile.getIc());
+        mProfile.add("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
         mProfile.add("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
         mProfile.add("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
         mProfile.add("skip_neutral_temps", true);
@@ -233,7 +233,7 @@ public class DetermineBasalAdapterAMAJS {
 
         // as we have non default temps longer than 30 mintues
         TemporaryBasal tempBasal = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
-        if(tempBasal != null){
+        if (tempBasal != null) {
             mCurrentTemp.add("minutesrunning", tempBasal.getRealDuration());
         }
 
@@ -245,7 +245,7 @@ public class DetermineBasalAdapterAMAJS {
         mGlucoseStatus = new V8Object(mV8rt);
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
 
-        if(SP.getBoolean("always_use_shortavg", false)){
+        if (SP.getBoolean("always_use_shortavg", false)) {
             mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.add("delta", glucoseStatus.delta);

@@ -52,7 +52,8 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.utils.BolusWizard;
@@ -351,7 +352,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void initDialog() {
-        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        ProfileStore profileStore = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
 
         if (profile == null) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
@@ -359,14 +361,14 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         }
 
         ArrayList<CharSequence> profileList;
-        profileList = profile.getProfileList();
+        profileList = profileStore.getProfileList();
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
                 R.layout.spinner_centered, profileList);
 
         profileSpinner.setAdapter(adapter);
         // set selected to actual profile
         for (int p = 0; p < profileList.size(); p++) {
-            if (profileList.get(p).equals(profile.getActiveProfile()))
+            if (profileList.get(p).equals(MainApp.getConfigBuilder().getProfileName()))
                 profileSpinner.setSelection(p);
         }
 
@@ -380,9 +382,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         if (lastBg != null) {
             Double lastBgValue = lastBg.valueToUnits(units);
-            Double sens = profile.getIsf(NSProfile.secondsFromMidnight());
-            Double targetBGLow = profile.getTargetLow(NSProfile.secondsFromMidnight());
-            Double targetBGHigh = profile.getTargetHigh(NSProfile.secondsFromMidnight());
+            Double sens = profile.getIsf();
+            Double targetBGLow = profile.getTargetLow();
+            Double targetBGHigh = profile.getTargetHigh();
             Double bgDiff;
             if (lastBgValue <= targetBGLow) {
                 bgDiff = lastBgValue - targetBGLow;
@@ -428,11 +430,11 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void calculateInsulin() {
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        ProfileStore profile = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile();
         if (profileSpinner == null || profileSpinner.getSelectedItem() == null)
             return; // not initialized yet
         String selectedAlternativeProfile = profileSpinner.getSelectedItem().toString();
-        JSONObject specificProfile = profile.getSpecificProfile(selectedAlternativeProfile);
+        Profile specificProfile = profile.getSpecificProfile(selectedAlternativeProfile);
 
         // Entered values
         Double c_bg = SafeParse.stringToDouble(bgInput.getText().toString());
@@ -506,7 +508,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         // Trend
         if (bgtrendCheckbox.isChecked()) {
             if (wizard.glucoseStatus != null) {
-                bgTrend.setText((wizard.glucoseStatus.avgdelta > 0 ? "+" : "") + NSProfile.toUnitsString(wizard.glucoseStatus.avgdelta * 3, wizard.glucoseStatus.avgdelta * 3 / 18, profile.getUnits()) + " " + profile.getUnits());
+                bgTrend.setText((wizard.glucoseStatus.avgdelta > 0 ? "+" : "") + Profile.toUnitsString(wizard.glucoseStatus.avgdelta * 3, wizard.glucoseStatus.avgdelta * 3 / 18, specificProfile.getUnits()) + " " + specificProfile.getUnits());
             } else {
                 bgTrend.setText("");
             }

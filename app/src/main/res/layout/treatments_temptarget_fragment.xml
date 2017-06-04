@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/temptargetrange_refreshfromnightscout" />
+            android:text="@string/refresheventsfromnightscout" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/temptargetrange_recyclerview"

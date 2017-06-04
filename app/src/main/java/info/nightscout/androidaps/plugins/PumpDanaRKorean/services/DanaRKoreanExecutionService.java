@@ -18,7 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
@@ -33,6 +32,7 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusProgress;
@@ -70,7 +70,6 @@ import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.SerialIOThread;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.comm.MsgCheckValue_k;
@@ -489,7 +488,7 @@ public class DanaRKoreanExecutionService extends Service {
         return true;
     }
 
-    public boolean updateBasalsInPump(final NSProfile profile) {
+    public boolean updateBasalsInPump(final Profile profile) {
         connect("updateBasalsInPump");
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.updatingbasalrates)));
@@ -502,7 +501,7 @@ public class DanaRKoreanExecutionService extends Service {
         return true;
     }
 
-    private double[] buildDanaRProfileRecord(NSProfile nsProfile) {
+    private double[] buildDanaRProfileRecord(Profile nsProfile) {
         double[] record = new double[24];
         for (Integer hour = 0; hour < 24; hour++) {
             double value = Math.round(100d * nsProfile.getBasal(hour * 60 * 60))/100d + 0.00001;

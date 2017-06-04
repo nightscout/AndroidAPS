@@ -1,7 +1,5 @@
-package info.nightscout.utils;
+package info.nightscout.androidaps.data;
 
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.Nullable;
 import android.support.v4.util.LongSparseArray;
 
@@ -13,6 +11,8 @@ import info.nightscout.androidaps.interfaces.Interval;
 /**
  * Created by mike on 09.05.2017.
  */
+
+// Zero duration means end of interval
 
 public class OverlappingIntervals<T extends Interval> {
 

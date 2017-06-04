@@ -13,39 +13,48 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/treatments_treatments"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
                 android:text="@string/bolus" />
 
             <TextView
                 android:id="@+id/treatments_extendedboluses"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
                 android:text="@string/extendedbolus" />
 
             <TextView
                 android:id="@+id/treatments_tempbasals"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
                 android:text="@string/tempbasal" />
 
-             <TextView
+            <TextView
                 android:id="@+id/treatments_temptargets"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="30dp"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:gravity="center_vertical|center_horizontal"
                 android:text="@string/temptarget" />
+
+            <TextView
+                android:id="@+id/treatments_profileswitches"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/profileswitch" />
 
         </LinearLayout>
 

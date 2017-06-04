@@ -19,7 +19,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
@@ -217,7 +217,7 @@ public class DetermineBasalAdapterMAJS {
     }
 
 
-    public void setData(NSProfile profile,
+    public void setData(Profile profile,
                         double maxIob,
                         double maxBasal,
                         double minBg,
@@ -238,8 +238,8 @@ public class DetermineBasalAdapterMAJS {
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
         mProfile.add("target_bg", targetBg);
-        mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
-        mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
+        mProfile.add("carb_ratio", profile.getIc());
+        mProfile.add("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
 
         mProfile.add("current_basal", pump.getBaseBasalRate());
         mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());

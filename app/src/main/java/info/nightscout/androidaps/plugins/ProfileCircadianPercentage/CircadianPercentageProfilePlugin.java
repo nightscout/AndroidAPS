@@ -15,7 +15,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -33,7 +33,8 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     private static boolean fragmentEnabled = false;
     private static boolean fragmentVisible = true;
 
-    private static NSProfile convertedProfile = null;
+    private static ProfileStore convertedProfile = null;
+    private static String convertedProfileName = null;
 
     boolean mgdl;
     boolean mmol;
@@ -203,15 +204,20 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        convertedProfile = new NSProfile(json, profileName);
+        convertedProfile = new ProfileStore(json);
+        convertedProfileName = profileName;
     }
 
     @Override
-    public NSProfile getProfile() {
-
+    public ProfileStore getProfile() {
         performLimitCheck();
-
         return convertedProfile;
+    }
+
+    @Override
+    public String getProfileName() {
+        performLimitCheck();
+        return convertedProfileName;
     }
 
     private void performLimitCheck() {

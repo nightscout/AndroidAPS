@@ -31,13 +31,13 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -219,7 +219,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
 
     // Pump interface
     @Override
-    public int setNewBasalProfile(NSProfile profile) {
+    public int setNewBasalProfile(Profile profile) {
         if (sExecutionService == null) {
             log.error("setNewBasalProfile sExecutionService is null");
             return FAILED;
@@ -244,7 +244,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
     }
 
     @Override
-    public boolean isThisProfileSet(NSProfile profile) {
+    public boolean isThisProfileSet(Profile profile) {
         if (!isInitialized())
             return true; // TODO: not sure what's better. so far TRUE to prevent too many SMS
         if (pump.pumpProfiles == null)
@@ -599,7 +599,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             }
             extended.put("BaseBasalRate", getBaseBasalRate());
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
+                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
 
@@ -700,10 +700,15 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
 
     @Nullable
     @Override
-    public NSProfile getProfile() {
+    public ProfileStore getProfile() {
         if (pump.lastSettingsRead.getTime() == 0)
             return null; // no info now
         return pump.createConvertedProfile();
+    }
+
+    @Override
+    public String getProfileName() {
+        return pump.createConvertedProfileName();
     }
 
     // Reply for sms communicator

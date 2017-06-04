@@ -25,12 +25,11 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.OverlappingIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -62,11 +61,11 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
         @Override
         public void onBindViewHolder(TempTargetsViewHolder holder, int position) {
-            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+            Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) return;
             TempTarget tempTarget = tempTargetList.getReversed(position);
             if (!tempTarget.isEndingEvent()) {
-                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTargetList.get(position).originalEnd()));
+                holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTarget.originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
                 holder.low.setText(tempTarget.lowValueToUnitsToString(profile.getUnits()));
                 holder.high.setText(tempTarget.highValueToUnitsToString(profile.getUnits()));
@@ -181,7 +180,7 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
             case R.id.temptargetrange_refreshfromnightscout:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
                 builder.setTitle(this.getContext().getString(R.string.confirmation));
-                builder.setMessage(this.getContext().getString(R.string.refreshtemptargetsfromnightscout));
+                builder.setMessage(this.getContext().getString(R.string.refresheventsfromnightscout) + " ?");
                 builder.setPositiveButton(this.getContext().getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         MainApp.getDbHelper().resetTempTargets();

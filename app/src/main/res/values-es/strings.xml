@@ -101,7 +101,6 @@
     <string name="loop_constraintsprocessed_label">Tras procesar limitaciones</string>
     <string name="loop_setbypump_label">Definido por la bomba</string>
     <string name="openapsma_lastenact_label">Última aceptada</string>
-    <string name="refreshtreatmentsfromnightscout">¿Quieres actualizar tratamientos de Nightscout?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
     <string name="noapsselected">NO APS Seleccionado</string>
@@ -384,7 +383,6 @@
     <string name="pumpNotInitializedProfileNotSet">Bomba no iniciada, ¡perfil no ajustado!</string>
     <string name="pumperror">Error en bomba</string>
     <string name="pumpshutdown">Apagando Bomba</string>
-    <string name="refreshtemptargetsfromnightscout">¿Quiere actualizar objetivo temporal desde Nightscout?</string>
     <string name="removerecord">Eliminar registro:</string>
     <string name="resend_all_data">Enviar todos los datos</string>
     <string name="send_to_pump">ENVIAR A BOMBA</string>
@@ -394,7 +392,6 @@
     <string name="sms_minago">%dmin antes</string>
     <string name="smscommunicator_bolusdelivered">Bolo %.2fU enviado correctamente</string>
     <string name="target_range">Rango Objetivo:</string>
-    <string name="temptargetrange_refreshfromnightscout">Actualizar objetivo temporal desde NS</string>
     <string name="timeshift_hint"></string>
     <string name="units">Unidades:</string>
     <string name="error_only_numeric_digits_allowed">Sólo se permiten caracteres numéricos</string>

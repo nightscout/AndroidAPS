@@ -54,11 +54,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -66,10 +69,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -85,6 +91,7 @@ import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -94,7 +101,6 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugi
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
@@ -107,6 +113,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoi
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.VerticalTextsGraphSeries;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -126,16 +133,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         return overviewPlugin;
     }
 
+    TextView timeView;
     TextView bgView;
     TextView arrowView;
     TextView timeAgoView;
     TextView deltaView;
     TextView avgdeltaView;
-    TextView runningTempView;
     TextView baseBasalView;
-    LinearLayout basalLayout;
+    TextView extendedBolusView;
     TextView activeProfileView;
     TextView iobView;
+    TextView cobView;
     TextView apsModeView;
     TextView tempTargetView;
     TextView pumpStatusView;
@@ -143,6 +151,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
     GraphView iobGraph;
+
+    TextView iage;
+    TextView cage;
+    TextView sage;
+    TextView pbage;
 
     CheckBox showPredictionView;
     CheckBox showBasalsView;
@@ -176,6 +189,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
+    final Handler timeHandler = new Handler();
+
     public OverviewFragment() {
         super();
         if (sHandlerThread == null) {
@@ -199,12 +214,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         View view;
 
-        if (smallHeight) {
+        if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
+            view = inflater.inflate(R.layout.overview_fragment_tablet, container, false);
+        } else if (smallHeight) {
             view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
         }
 
+        timeView = (TextView) view.findViewById(R.id.overview_time);
         bgView = (TextView) view.findViewById(R.id.overview_bg);
         arrowView = (TextView) view.findViewById(R.id.overview_arrow);
         if (smallWidth) {
@@ -213,9 +231,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
         deltaView = (TextView) view.findViewById(R.id.overview_delta);
         avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
-        runningTempView = (TextView) view.findViewById(R.id.overview_runningtemp);
         baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
-        basalLayout = (LinearLayout) view.findViewById(R.id.overview_basallayout);
+        extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
         pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
         loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
@@ -224,8 +241,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
 
         iobView = (TextView) view.findViewById(R.id.overview_iob);
+        cobView = (TextView) view.findViewById(R.id.overview_cob);
         apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
         tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
+
+        iage = (TextView) view.findViewById(R.id.careportal_insulinage);
+        cage = (TextView) view.findViewById(R.id.careportal_canulaage);
+        sage = (TextView) view.findViewById(R.id.careportal_sensorage);
+        pbage = (TextView) view.findViewById(R.id.careportal_pbage);
 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
@@ -251,7 +274,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
         showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
-        showBasalsView.setChecked(SP.getBoolean("showbasals", false));
+        showBasalsView.setChecked(SP.getBoolean("showbasals", true));
         showIobView.setChecked(SP.getBoolean("showiob", false));
         showCobView.setChecked(SP.getBoolean("showcob", false));
         showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
@@ -265,8 +288,21 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         notificationsView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
-
-
+/*
+        final LinearLayout graphs = (LinearLayout)view.findViewById(R.id.overview_graphs_layout);
+        ViewTreeObserver observer = graphs.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                log.debug("Height: " + graphs.getHeight());
+                graphs.getViewTreeObserver().removeGlobalOnLayoutListener(
+                        this);
+                int heightNeeded = Math.max(320, graphs.getHeight() - 200);
+                if (heightNeeded != bgGraph.getHeight())
+                    bgGraph.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightNeeded));
+            }
+        });
+*/
         bgGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
         bgGraph.getGridLabelRenderer().reloadStyles();
         iobGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
@@ -285,6 +321,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 return false;
             }
         });
+
+        Timer timeTimer = new Timer();
+        timeTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                timeUpdate();
+            }
+        }, 0, 30000);
 
         return view;
     }
@@ -594,16 +638,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     void onClickQuickwizard() {
         final BgReading actualBg = DatabaseHelper.actualBg();
-        if (MainApp.getConfigBuilder() == null || ConfigBuilderPlugin.getActiveProfile() == null) // app not initialized yet
-            return;
-        final NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText();
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -809,6 +851,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
+    private void timeUpdate() {
+        Activity activity = getActivity();
+        if (activity != null)
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (timeView != null) { //must not exists
+                        timeView.setText(DateUtil.timeString(new Date()));
+                    }
+                    log.debug("Time updated");
+                }
+            });
+    }
+
     public void scheduleUpdateGUI(final String from) {
         class UpdateRunnable implements Runnable {
             public void run() {
@@ -835,19 +891,19 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @SuppressLint("SetTextI18n")
     public void updateGUI(String from) {
         log.debug("updateGUI entered from: " + from);
-        updateNotifications();
-        BgReading actualBG = DatabaseHelper.actualBg();
-        BgReading lastBG = DatabaseHelper.lastBg();
-
-        if (MainApp.getConfigBuilder() == null || MainApp.getConfigBuilder().getActiveProfile() == null || MainApp.getConfigBuilder().getActiveProfile().getProfile() == null) {// app not initialized yet
+        if (MainApp.getConfigBuilder().getProfile() == null) {// app not initialized yet
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
             return;
-        } else {
-            pumpStatusLayout.setVisibility(View.GONE);
-            loopStatusLayout.setVisibility(View.VISIBLE);
         }
+        pumpStatusLayout.setVisibility(View.GONE);
+        loopStatusLayout.setVisibility(View.VISIBLE);
+
+        updateNotifications();
+        CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
+        BgReading actualBG = DatabaseHelper.actualBg();
+        BgReading lastBG = DatabaseHelper.lastBg();
 
         PumpInterface pump = MainApp.getConfigBuilder();
 
@@ -855,6 +911,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (bgGraph == null)
             return;
 
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (getActivity() == null)
             return;
 
@@ -893,13 +950,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // temp target
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
         TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(new Date().getTime());
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
-            tempTargetView.setText(NSProfile.toUnitsString(tempTarget.low, NSProfile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + NSProfile.toUnitsString(tempTarget.high, NSProfile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+            if (tempTarget.low == tempTarget.high)
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
+            else
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+        } if (Config.NSCLIENT) {
+            tempTargetView.setVisibility(View.GONE);
         } else {
 
             Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
@@ -928,34 +989,41 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** Calibration button ****
-        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
+        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
             calibrationButton.setVisibility(View.VISIBLE);
         } else {
             calibrationButton.setVisibility(View.GONE);
         }
 
         TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
-        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+        if (activeTemp != null) {
             cancelTempButton.setVisibility(View.VISIBLE);
             cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
-            runningTempView.setVisibility(View.VISIBLE);
-            runningTempView.setText(activeTemp.toString());
         } else {
             cancelTempButton.setVisibility(View.GONE);
-            runningTempView.setVisibility(View.GONE);
         }
 
-        if (pump.getPumpDescription().isTempBasalCapable) {
-            basalLayout.setVisibility(View.VISIBLE);
-            baseBasalView.setText(DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h");
-        } else {
-            basalLayout.setVisibility(View.GONE);
+        String basalText = "";
+        if (activeTemp != null) {
+            basalText = activeTemp.toString() + " ";
         }
+        if (Config.NSCLIENT)
+            basalText += "( " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h )";
+        else if (pump.getPumpDescription().isTempBasalCapable) {
+            basalText += "( " + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h )";
+        }
+        baseBasalView.setText(basalText);
 
-        if (profile != null && profile.getActiveProfile() != null) {
-            activeProfileView.setText(profile.getActiveProfile());
-            activeProfileView.setBackgroundColor(Color.GRAY);
+        ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
+        String extendedBolusText = "";
+        if (extendedBolus != null) {
+            extendedBolusText = extendedBolus.toString();
         }
+        if (extendedBolusView != null) // must not exists in all layouts
+            extendedBolusView.setText(extendedBolusText);
+
+        activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
+        activeProfileView.setBackgroundColor(Color.GRAY);
 
         activeProfileView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
@@ -992,7 +1060,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile.getDefaultProfile(), quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
@@ -1014,12 +1082,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         Double lowLine = SP.getDouble("low_mark", 0d);
         Double highLine = SP.getDouble("high_mark", 0d);
         if (lowLine < 1) {
-            lowLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
         }
         if (highLine < 1) {
-            highLine = NSProfile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
 
+        timeUpdate();
 
         // **** BG value ****
         if (lastBG != null) {
@@ -1034,9 +1103,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             arrowView.setTextColor(color);
             GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
             if (glucoseStatus != null) {
-                deltaView.setText("Δ " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
-                avgdeltaView.setText("øΔ15m: " + NSProfile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
-                        "  øΔ40m: " + NSProfile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
+                deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
+                        "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
             } else {
                 deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
                 avgdeltaView.setText("");
@@ -1067,6 +1136,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
         iobView.setText(iobtext);
+
+        // cob
+        if (cobView != null) { // view must not exists
+            String cobText = "";
+            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(new Date().getTime());
+            if (autosensData != null)
+                cobText = (int) autosensData.cob + " g " + String.format(MainApp.sResources.getString(R.string.minago), autosensData.minOld());
+            cobView.setText(cobText);
+        }
 
         boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
         if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
@@ -1116,6 +1194,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         PointsGraphSeries<BgReading> seriesHigh;
         PointsGraphSeries<BgReading> predSeries;
         PointsWithLabelGraphSeries<Treatment> seriesTreatments;
+        VerticalTextsGraphSeries<ProfileSwitch> seriesProfileSwitch;
 
         // **** TEMP BASALS graph ****
         Double maxBasalValueFound = 0d;
@@ -1130,7 +1209,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
                 TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
-                double baseBasalValue = profile.getBasal(NSProfile.secondsFromMidnight(new Date(time)));
+                double baseBasalValue = MainApp.getConfigBuilder().getProfile(time).getBasal(Profile.secondsFromMidnight(time));
                 double baseLineValue = baseBasalValue;
                 double tempBasalValue = 0;
                 double basal = 0d;
@@ -1346,7 +1425,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             else
                 inRangeArray.add(bg);
         }
-        maxBgValue = NSProfile.fromMgdlToUnits(maxBgValue, units);
+        maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
         if (highLine > maxBgValue) maxBgValue = highLine;
         Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
@@ -1358,25 +1437,26 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         low = lowArray.toArray(low);
         high = highArray.toArray(high);
 
+        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
 
         if (inRange.length > 0) {
             bgGraph.addSeries(seriesInRage = new PointsGraphSeries<>(inRange));
             seriesInRage.setShape(PointsGraphSeries.Shape.POINT);
-            seriesInRage.setSize(5);
+            seriesInRage.setSize(isTablet ? 8 : 5);
             seriesInRage.setColor(MainApp.sResources.getColor(R.color.inrange));
         }
 
         if (low.length > 0) {
             bgGraph.addSeries(seriesLow = new PointsGraphSeries<>(low));
             seriesLow.setShape(PointsGraphSeries.Shape.POINT);
-            seriesLow.setSize(5);
+            seriesLow.setSize(isTablet ? 8 : 5);
             seriesLow.setColor(MainApp.sResources.getColor(R.color.low));
         }
 
         if (high.length > 0) {
             bgGraph.addSeries(seriesHigh = new PointsGraphSeries<>(high));
             seriesHigh.setShape(PointsGraphSeries.Shape.POINT);
-            seriesHigh.setSize(5);
+            seriesHigh.setSize(isTablet ? 8 : 5);
             seriesHigh.setColor(MainApp.sResources.getColor(R.color.high));
         }
 
@@ -1423,7 +1503,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
-            if (t.date < fromTime || t.date > now) continue;
+            if (t.date < fromTime || t.date > endTime) continue;
             t.setYValue(bgReadingsArray);
             filteredTreatments.add(t);
         }
@@ -1434,6 +1514,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             seriesTreatments.setShape(PointsWithLabelGraphSeries.Shape.TRIANGLE);
             seriesTreatments.setSize(10);
             seriesTreatments.setColor(Color.CYAN);
+        }
+
+        // ProfileSwitch
+        List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
+        List<ProfileSwitch> filteredProfileSwitches = new ArrayList<ProfileSwitch>();
+
+        for (int tx = 0; tx < profileSwitches.size(); tx++) {
+            ProfileSwitch t = profileSwitches.get(tx);
+            if (t.date < fromTime || t.date > endTime) continue;
+            filteredProfileSwitches.add(t);
+        }
+        ProfileSwitch[] profileSwitchArray = new ProfileSwitch[filteredProfileSwitches.size()];
+        profileSwitchArray = filteredProfileSwitches.toArray(profileSwitchArray);
+        if (profileSwitchArray.length > 0) {
+            bgGraph.addSeries(seriesProfileSwitch = new VerticalTextsGraphSeries<ProfileSwitch>(profileSwitchArray));
+            //seriesProfileSwitch.setShape(PointsWithLabelGraphSeries.Shape.TRIANGLE);
+            seriesProfileSwitch.setSize(10);
+            seriesProfileSwitch.setColor(Color.CYAN);
         }
 
         // set manual y bounds to have nice steps

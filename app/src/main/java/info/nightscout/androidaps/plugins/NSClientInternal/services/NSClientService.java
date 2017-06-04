@@ -29,6 +29,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
@@ -47,7 +48,6 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastS
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSCal;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
@@ -69,10 +69,9 @@ public class NSClientService extends Service {
     static public PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new NSClientService.LocalBinder();
 
-    static NSProfile nsProfile;
+    static ProfileStore profileStore;
 
     static public Handler handler;
-    static private HandlerThread handlerThread;
 
     public static Socket mSocket;
     public static boolean isConnected = false;
@@ -101,7 +100,7 @@ public class NSClientService extends Service {
     public NSClientService() {
         registerBus();
         if (handler == null) {
-            handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
+            HandlerThread handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
@@ -172,14 +171,6 @@ public class NSClientService extends Service {
     public void onStatusEvent(final EventNSClientRestart ev) {
         latestDateInReceivedData = 0;
         restart();
-    }
-
-    public static void setNsProfile(NSProfile profile) {
-        nsProfile = profile;
-    }
-
-    public static NSProfile getNsProfile() {
-        return nsProfile;
     }
 
     public void initialize() {
@@ -334,9 +325,7 @@ public class NSClientService extends Service {
                                 JSONArray profiles = (JSONArray) data.getJSONArray("profiles");
                                 if (profiles.length() > 0) {
                                     JSONObject profile = (JSONObject) profiles.get(profiles.length() - 1);
-                                    String activeProfile = NSClientService.getNsProfile() == null ? null : NSClientService.getNsProfile().getActiveProfile();
-                                    NSProfile nsProfile = new NSProfile(profile, activeProfile);
-                                    NSClientService.setNsProfile(nsProfile);
+                                    profileStore = new ProfileStore(profile);
                                     broadcastProfile = true;
                                     MainApp.bus().post(new EventNSClientNewLog("PROFILE", "profile received"));
                                 }
@@ -358,20 +347,6 @@ public class NSClientService extends Service {
                                 BroadcastStatus bs = new BroadcastStatus();
                                 bs.handleNewStatus(nsStatus, MainApp.instance().getApplicationContext(), isDelta);
 
-                                if (NSClientService.getNsProfile() != null) {
-                                    String oldActiveProfile = NSClientService.getNsProfile().getActiveProfile();
-                                    String receivedActiveProfile = nsStatus.getActiveProfile();
-                                    NSClientService.getNsProfile().setActiveProfile(receivedActiveProfile);
-                                    if (receivedActiveProfile != null) {
-                                        MainApp.bus().post(new EventNSClientNewLog("PROFILE", "status activeProfile received: " + receivedActiveProfile));
-                                    }
-                                    // Change possible nulls to ""
-                                    String oldP = oldActiveProfile == null ? "" : oldActiveProfile;
-                                    String newP = receivedActiveProfile == null ? "" : receivedActiveProfile;
-                                    if (!newP.equals(oldP)) {
-                                        broadcastProfile = true;
-                                    }
-                                }
                     /*  Other received data to 2016/02/10
                         {
                           status: 'ok'
@@ -393,9 +368,9 @@ public class NSClientService extends Service {
                             }
 
                             // If new profile received or change detected broadcast it
-                            if (broadcastProfile && nsProfile != null) {
+                            if (broadcastProfile && profileStore != null) {
                                 BroadcastProfile bp = new BroadcastProfile();
-                                bp.handleNewTreatment(nsProfile, MainApp.instance().getApplicationContext(), isDelta);
+                                bp.handleNewTreatment(profileStore, MainApp.instance().getApplicationContext(), isDelta);
                                 MainApp.bus().post(new EventNSClientNewLog("PROFILE", "broadcasting"));
                             }
 
@@ -419,12 +394,11 @@ public class NSClientService extends Service {
                                             latestDateInReceivedData = treatment.getMills();
 
                                     if (treatment.getAction() == null) {
-                                        if (!isCurrent(treatment)) continue;
                                         addedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("update")) {
-                                        if (!isCurrent(treatment)) continue;
                                         updatedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("remove")) {
+                                        if (!isCurrent(treatment)) continue;
                                         removedTreatments.put(jsonTreatment);
                                     }
                                 }
@@ -481,7 +455,6 @@ public class NSClientService extends Service {
                             }
                             if (data.has("sgvs")) {
                                 BroadcastSgvs bs = new BroadcastSgvs();
-                                String units = nsProfile != null ? nsProfile.getUnits() : "mg/dl";
                                 JSONArray sgvs = (JSONArray) data.getJSONArray("sgvs");
                                 if (sgvs.length() > 0)
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"));

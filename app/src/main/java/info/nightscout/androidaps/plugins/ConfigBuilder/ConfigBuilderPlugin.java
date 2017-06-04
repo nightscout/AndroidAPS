@@ -1,13 +1,13 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +22,16 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventBolusRequested;
-import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
@@ -40,15 +43,12 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
-import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.OverlappingIntervals;
 
 /**
  * Created by mike on 05.08.2016.
@@ -191,8 +191,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activeBgSource;
     }
 
-    @Nullable
-    public static ProfileInterface getActiveProfile() {
+    public static ProfileInterface getActiveProfileInterface() {
         return activeProfile;
     }
 
@@ -353,9 +352,9 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public int setNewBasalProfile(NSProfile profile) {
+    public int setNewBasalProfile(Profile profile) {
         // Compare with pump limits
-        NSProfile.BasalValue[] basalValues = profile.getBasalValues();
+        Profile.BasalValue[] basalValues = profile.getBasalValues();
 
         for (int index = 0; index < basalValues.length; index++) {
             if (basalValues[index].value < getPumpDescription().basalMinimumRate) {
@@ -377,7 +376,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public boolean isThisProfileSet(NSProfile profile) {
+    public boolean isThisProfileSet(Profile profile) {
         if (activePump != null)
             return activePump.isThisProfileSet(profile);
         else return true;
@@ -432,7 +431,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
             t.date = new Date().getTime();
             t.mealBolus = result.carbsDelivered > 0;
-            addTreatmentToHistory(t);
+            addToHistoryTreatment(t);
             t.carbs = (double) result.carbsDelivered;
             NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
         }
@@ -506,7 +505,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             t.carbs = (double) result.carbsDelivered;
             t.date = new Date().getTime();
             t.mealBolus = t.carbs > 0;
-            addTreatmentToHistory(t);
+            addToHistoryTreatment(t);
             NSUpload.uploadTreatment(t);
         }
         mWakeLock.release();
@@ -680,6 +679,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
+        if (Config.NSCLIENT)
+            return false;
         return activePump.isFakingTempsByExtendedBoluses();
     }
 
@@ -851,6 +852,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
+    @Nullable
     public TemporaryBasal getRealTempBasalFromHistory(long time) {
         return activeTreatments.getRealTempBasalFromHistory(time);
     }
@@ -861,6 +863,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
+    @Nullable
     public TemporaryBasal getTempBasalFromHistory(long time) {
         return activeTreatments.getTempBasalFromHistory(time);
     }
@@ -902,6 +905,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
+    @Nullable
     public ExtendedBolus getExtendedBolusFromHistory(long time) {
         return activeTreatments.getExtendedBolusFromHistory(time);
     }
@@ -930,14 +934,15 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void addTreatmentToHistory(DetailedBolusInfo detailedBolusInfo) {
+    public void addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (!detailedBolusInfo.addToTreatments)
             return;
-        activeTreatments.addTreatmentToHistory(detailedBolusInfo);
+        activeTreatments.addToHistoryTreatment(detailedBolusInfo);
         NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
     }
 
     @Override
+    @Nullable
     public TempTarget getTempTargetFromHistory(long time) {
         return activeTreatments.getTempTargetFromHistory(time);
     }
@@ -948,7 +953,88 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public long oldestDataAvaialable() {
-        return activeTreatments.oldestDataAvaialable();
+    @Nullable
+    public ProfileSwitch getProfileSwitchFromHistory(long time) {
+        return activeTreatments.getProfileSwitchFromHistory(time);
+    }
+
+    @Override
+    public ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory() {
+        return activeTreatments.getProfileSwitchesFromHistory();
+    }
+
+    @Override
+    public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
+        activeTreatments.addToHistoryProfileSwitch(profileSwitch);
+        NSUpload.uploadProfileSwitch(profileSwitch);
+    }
+
+    @Override
+    public long oldestDataAvailable() {
+        return activeTreatments.oldestDataAvailable();
+    }
+
+    public String getProfileName() {
+        return getProfileName(new Date().getTime());
+    }
+    public String getProfileName(long time) {
+        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+        if (profileSwitch != null) {
+            if (profileSwitch.profileJson != null) {
+                return profileSwitch.profileName;
+            } else {
+                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                if (profile != null)
+                    return profileSwitch.profileName;
+            }
+        }
+        // Unable to determine profile, failover to default
+        String defaultProfile = activeProfile.getProfile().getDefaultProfileName();
+        if (defaultProfile != null)
+            return defaultProfile;
+        // If default from plugin fails .... create empty
+         return "Default";
+    }
+
+    public Profile getProfile() {
+        return getProfile(new Date().getTime());
+    }
+    public Profile getProfile(long time) {
+        //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
+        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+        if (profileSwitch != null) {
+            if (profileSwitch.profileJson != null) {
+                try {
+                    return new Profile(new JSONObject(profileSwitch.profileJson));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                if (profile != null)
+                    return profile;
+            }
+        }
+        // Unable to determine profile, failover to default
+        if (activeProfile.getProfile() == null)
+            return null; //app not initialized
+        Profile defaultProfile = activeProfile.getProfile().getDefaultProfile();
+        if (defaultProfile != null)
+            return defaultProfile;
+        // If default from plugin fails .... create empty
+        try {
+            Notification noisf = new Notification(Notification.ISF_MISSING, MainApp.sResources.getString(R.string.isfmissing), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(noisf));
+            Notification noic = new Notification(Notification.IC_MISSING, MainApp.sResources.getString(R.string.icmissing), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(noic));
+            Notification nobasal = new Notification(Notification.BASAL_MISSING, MainApp.sResources.getString(R.string.basalmissing), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(nobasal));
+            Notification notarget = new Notification(Notification.TARGET_MISSING, MainApp.sResources.getString(R.string.targetmissing), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notarget));
+            return new Profile(new JSONObject("{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"20\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"20\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"6\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"8\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}}"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

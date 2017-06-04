@@ -123,10 +123,9 @@
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="rate">Hodnota</string>
     <string name="reason">Zdůvodnění</string>
-    <string name="refreshtreatmentsfromnightscout">Opravdu aktualizovat ošetření z NS</string>
     <string name="safety">Bezpečnost</string>
-    <string name="danar_useextended_title">Použít kombo bolusy pro >200%</string>
-    <string name="setextendedbolusquestion">Spustit nový kombo bolus:</string>
+    <string name="danar_useextended_title">Použít prodloužený bolusy pro >200%</string>
+    <string name="setextendedbolusquestion">Spustit nový prodloužený bolus:</string>
     <string name="setbasalquestion">Spustit nový dočasný bazál:</string>
     <string name="simpleprofile">Jednoduchý profil</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
@@ -158,14 +157,14 @@
     <string name="virtualpump">Virtualní pumpa</string>
     <string name="virtualpump_basebasalrate_label">Základní hodnota bazálu</string>
     <string name="virtualpump_battery_label">Baterie</string>
-    <string name="virtualpump_extendedbolus_label">Kombo bolus</string>
+    <string name="virtualpump_extendedbolus_label">Prodloužený bolus</string>
     <string name="virtualpump_reservoir_label">Zásobník</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Chyba databáze</string>
     <string name="virtualpump_tempbasal_label">Dočasný bazál</string>
     <string name="vitualpump_label">VIRTUÁLNÍ PUMPA</string>
     <string name="xdrip">xDrip</string>
-    <string name="overview_extendedbolus_button">Kombo bolus</string>
+    <string name="overview_extendedbolus_button">Prodloužený bolus</string>
     <string name="overview_tempbasal_button">Dočasný bazál</string>
     <string name="nsprofileview_isf_label">Citlivost:</string>
     <string name="nsclientnotinstalled">NSClient není nainstalován. Záznam je ztracen!</string>
@@ -388,10 +387,9 @@
     <string name="openapsma_autosensdata_label">Data detekce senzitivity</string>
     <string name="openapsma_scriptdebugdata_label">Ladící informace</string>
     <string name="openapsma_valuelimitedto" formatted="false">%.2f omezeno na %.2f</string>
-    <string name="refreshtemptargetsfromnightscout">Opravdu aktualizovat dočasné cíle z NS</string>
     <string name="removerecord">Odstranit záznam:</string>
     <string name="short_avgdelta">Krátkodobý průměr</string>
-    <string name="temptargetrange_refreshfromnightscout">Obnovit dočasné cíle z NS</string>
+    <string name="refresheventsfromnightscout">Obnovit události z NS</string>
     <string name="actions_shortname">"AKCE"</string>
     <string name="wear_shortname">"WEAR"</string>
     <string name="virtualpump_shortname">VPUM</string>

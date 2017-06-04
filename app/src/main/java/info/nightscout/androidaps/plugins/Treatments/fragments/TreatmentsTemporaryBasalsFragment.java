@@ -34,7 +34,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.utils.OverlappingIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 
 
 public class TreatmentsTemporaryBasalsFragment extends Fragment {
@@ -74,6 +74,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                 holder.netInsulin.setText("");
                 holder.netRatio.setText("");
                 holder.extendedFlag.setVisibility(View.GONE);
+                holder.iob.setTextColor(holder.netRatio.getCurrentTextColor());
             } else {
                 if (tempBasal.isInProgress()) {
                     holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));

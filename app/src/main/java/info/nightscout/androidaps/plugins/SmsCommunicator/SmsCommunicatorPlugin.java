@@ -32,10 +32,10 @@ import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
@@ -237,13 +237,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     BgReading actualBG = DatabaseHelper.actualBg();
                     BgReading lastBG = DatabaseHelper.lastBg();
 
-                    if (ConfigBuilderPlugin.getActiveProfile() == null || ConfigBuilderPlugin.getActiveProfile().getProfile() == null) {
-                        reply = MainApp.sResources.getString(R.string.noprofile);
-                        sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
-                        return;
-                    }
-
-                    NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+                    Profile profile = MainApp.getConfigBuilder().getProfile();
                     String units = profile.getUnits();
 
                     if (actualBG != null) {
@@ -255,7 +249,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     }
                     GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
                     if (glucoseStatus != null)
-                        reply += MainApp.sResources.getString(R.string.sms_delta) + " " + NSProfile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
+                        reply += MainApp.sResources.getString(R.string.sms_delta) + " " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units + ", ";
 
                     MainApp.getConfigBuilder().updateTotalIOBTreatments();
                     IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();

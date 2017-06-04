@@ -12,6 +12,7 @@ import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -74,19 +75,21 @@ public class NSProfileFragment extends Fragment {
     }
 
     private void updateGUI() {
-        if (nsProfilePlugin.profile == null) {
+        if (MainApp.getConfigBuilder().getProfile() == null) {
             noProfile.setVisibility(View.VISIBLE);
             return;
         } else {
             noProfile.setVisibility(View.GONE);
         }
-        units.setText(nsProfilePlugin.profile.getUnits());
-        dia.setText(DecimalFormatter.to2Decimal(nsProfilePlugin.profile.getDia()) + " h");
-        activeProfile.setText(nsProfilePlugin.profile.getActiveProfile());
-        ic.setText(nsProfilePlugin.profile.getIcList());
-        isf.setText(nsProfilePlugin.profile.getIsfList());
-        basal.setText(nsProfilePlugin.profile.getBasalList());
-        target.setText(nsProfilePlugin.profile.getTargetList());
+
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        units.setText(profile.getUnits());
+        dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
+        activeProfile.setText(MainApp.getConfigBuilder().getProfileName());
+        ic.setText(profile.getIcList());
+        isf.setText(profile.getIsfList());
+        basal.setText(profile.getBasalList());
+        target.setText(profile.getTargetList());
     }
 
 }

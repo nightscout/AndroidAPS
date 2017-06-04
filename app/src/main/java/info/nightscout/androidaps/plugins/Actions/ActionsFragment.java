@@ -129,7 +129,10 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended())
+                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() == null)
+                        return;
+                    boolean allowProfileSwitch = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getProfileList().size() > 1;
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !allowProfileSwitch)
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);

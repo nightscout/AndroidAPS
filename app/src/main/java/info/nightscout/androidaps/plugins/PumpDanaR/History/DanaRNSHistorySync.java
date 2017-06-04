@@ -13,9 +13,9 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.ToastUtils;
@@ -47,7 +47,7 @@ public class DanaRNSHistorySync {
     public void sync(int what) {
         try {
             ConfigBuilderPlugin ConfigBuilderPlugin = MainApp.getConfigBuilder();
-            NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
+            Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) {
                 ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
                 return;
@@ -179,7 +179,7 @@ public class DanaRNSHistorySync {
                         log.debug("Syncing glucose record " + record.recordValue + " " + DateUtil.toISOString(record.recordDate));
                         nsrec.put(DANARSIGNATURE, record.bytes);
                         nsrec.put("eventType", "BG Check");
-                        nsrec.put("glucose", NSProfile.fromMgdlToUnits(record.recordValue, profile.getUnits()));
+                        nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, profile.getUnits()));
                         nsrec.put("glucoseType", "Finger");
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
                         nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));

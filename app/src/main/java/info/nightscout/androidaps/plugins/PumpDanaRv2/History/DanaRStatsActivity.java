@@ -56,6 +56,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
@@ -167,18 +168,15 @@ public class DanaRStatsActivity extends Activity {
         decimalFormat = new DecimalFormat("0.000");
         llm = new LinearLayoutManager(this);
 
-        final SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        TBB = preferences.getString("TBB", "10.00");
+        TBB = SP.getString("TBB", "10.00");
         totalBaseBasal.setText(TBB);
 
-        ProfileInterface pi = ConfigBuilderPlugin.getActiveProfile();
+        ProfileInterface pi = ConfigBuilderPlugin.getActiveProfileInterface();
         if (pi != null && pi instanceof CircadianPercentageProfilePlugin) {
             double cppTBB = ((CircadianPercentageProfilePlugin) pi).baseBasalSum();
             totalBaseBasal.setText(decimalFormat.format(cppTBB));
-            SharedPreferences.Editor edit = preferences.edit();
-            edit.putString("TBB", totalBaseBasal.getText().toString());
-            edit.commit();
-            TBB = preferences.getString("TBB", "");
+            SP.putString("TBB", totalBaseBasal.getText().toString());
+            TBB = SP.getString("TBB", "");
         }
 
         // stats table
@@ -326,10 +324,8 @@ public class DanaRStatsActivity extends Activity {
                 if (hasFocus) {
                     totalBaseBasal.getText().clear();
                 } else {
-                    SharedPreferences.Editor edit = preferences.edit();
-                    edit.putString("TBB", totalBaseBasal.getText().toString());
-                    edit.commit();
-                    TBB = preferences.getString("TBB", "");
+                    SP.putString("TBB", totalBaseBasal.getText().toString());
+                    TBB = SP.getString("TBB", "");
                     loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
                     InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(totalBaseBasal.getWindowToken(), 0);

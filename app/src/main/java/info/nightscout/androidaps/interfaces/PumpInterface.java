@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.interfaces;
 
-import android.content.Context;
-
 import org.json.JSONObject;
 
 import java.util.Date;
 
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 
 /**
  * Created by mike on 04.06.2016.
@@ -23,8 +21,8 @@ public interface PumpInterface {
     int SUCCESS = 0;
     int FAILED = 1;
     int NOT_NEEDED = 2;
-    int setNewBasalProfile(NSProfile profile);
-    boolean isThisProfileSet(NSProfile profile);
+    int setNewBasalProfile(Profile profile);
+    boolean isThisProfileSet(Profile profile);
 
     Date lastDataTime();
     void refreshDataFromPump(String reason);

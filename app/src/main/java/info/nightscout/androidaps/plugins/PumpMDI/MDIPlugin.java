@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpMDI;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -15,12 +13,10 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -121,13 +117,13 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public int setNewBasalProfile(NSProfile profile) {
+    public int setNewBasalProfile(Profile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         return SUCCESS;
     }
 
     @Override
-    public boolean isThisProfileSet(NSProfile profile) {
+    public boolean isThisProfileSet(Profile profile) {
         return false;
     }
 
@@ -153,7 +149,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-        MainApp.getConfigBuilder().addTreatmentToHistory(detailedBolusInfo);
+        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
         return result;
     }
 
@@ -220,7 +216,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
             status.put("status", "normal");
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
+                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
             status.put("timestamp", DateUtil.toISOString(new Date()));

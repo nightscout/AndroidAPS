@@ -100,8 +100,6 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">최근 주입</string>
-    <string name="refreshtreatmentsfromnightscout">나이트스카우트에서 Treatments를 새로고치시겠습니까</string>
-    <string name="refreshtemptargetsfromnightscout">나이트스카우트에서 Temp Target을 새로고치시겠습니까</string>
     <string name="ok">OK</string>
     <string name="cancel">취소</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -399,7 +397,6 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">AMA autosens 기능 사용하기</string>
-    <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
