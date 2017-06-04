@@ -100,6 +100,7 @@ public class DetermineBasalResultAMA extends APSResult {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
                         bg.date = startTime + i * 5 * 60 * 1000L;
+                        bg.isPrediction = true;
                         array.add(bg);
                     }
                 }
@@ -109,6 +110,7 @@ public class DetermineBasalResultAMA extends APSResult {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
                         bg.date = startTime + i * 5 * 60 * 1000L;
+                        bg.isPrediction = true;
                         array.add(bg);
                     }
                 }
@@ -118,6 +120,7 @@ public class DetermineBasalResultAMA extends APSResult {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
                         bg.date = startTime + i * 5 * 60 * 1000L;
+                        bg.isPrediction = true;
                         array.add(bg);
                     }
                 }

@@ -40,7 +40,6 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-import com.jjoe64.graphview.series.PointsGraphSeries;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -61,7 +60,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -109,11 +107,11 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
-import info.nightscout.androidaps.plugins.Overview.graphExtensions.VerticalTextsGraphSeries;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -188,8 +186,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
-
-    final Handler timeHandler = new Handler();
 
     public OverviewFragment() {
         super();
@@ -337,7 +333,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (activeloop == null)
             return;
         menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
@@ -620,8 +616,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     NSUpload.uploadDeviceStatus();
                                     ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
                                     if (objectivesPlugin != null) {
-                                        objectivesPlugin.manualEnacts++;
-                                        objectivesPlugin.saveProgress();
+                                        ObjectivesPlugin.manualEnacts++;
+                                        ObjectivesPlugin.saveProgress();
                                     }
                                 }
                                 scheduleUpdateGUI("onClickAcceptTemp");
@@ -643,7 +639,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
-            String text = MainApp.sResources.getString(R.string.bolus) + ": " + quickWizardEntry.buttonText();
             BolusWizard wizard = new BolusWizard();
             wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
 
@@ -679,7 +674,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
                 confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
 
-                if (insulinAfterConstraints - wizard.calculatedTotalInsulin != 0 || carbsAfterConstraints != quickWizardEntry.carbs()) {
+                if (!insulinAfterConstraints.equals(wizard.calculatedTotalInsulin) || !carbsAfterConstraints.equals(quickWizardEntry.carbs())) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
                     builder.setMessage(getString(R.string.constraints_violation) + "\n" + getString(R.string.changeyourinput));
@@ -921,7 +916,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             apsModeView.setVisibility(View.VISIBLE);
             apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopenabled));
             apsModeView.setTextColor(Color.BLACK);
-            final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
             if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuperBolus()) {
                 apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
                 apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuperbolusfor), activeloop.minutesToEndOfSuspend()));
@@ -959,7 +954,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
             else
                 tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
-        } if (Config.NSCLIENT) {
+        }
+        if (Config.NSCLIENT) {
             tempTargetView.setVisibility(View.GONE);
         } else {
 
@@ -1173,7 +1169,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
-            hoursToFetch = (int) (rangeToDisplay - predHours);
+            hoursToFetch = rangeToDisplay - predHours;
             toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime + predHours * 60 * 60 * 1000L;
@@ -1189,12 +1185,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         LineGraphSeries<DataPoint> tempBasalsSeries = null;
         AreaGraphSeries<DoubleDataPoint> areaSeries;
         LineGraphSeries<DataPoint> seriesNow, seriesNow2;
-        PointsGraphSeries<BgReading> seriesInRage;
-        PointsGraphSeries<BgReading> seriesLow;
-        PointsGraphSeries<BgReading> seriesHigh;
-        PointsGraphSeries<BgReading> predSeries;
-        PointsWithLabelGraphSeries<Treatment> seriesTreatments;
-        VerticalTextsGraphSeries<ProfileSwitch> seriesProfileSwitch;
 
         // **** TEMP BASALS graph ****
         Double maxBasalValueFound = 0d;
@@ -1406,9 +1396,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
-        List<BgReading> inRangeArray = new ArrayList<>();
-        List<BgReading> lowArray = new ArrayList<>();
-        List<BgReading> highArray = new ArrayList<>();
+        List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
         if (bgReadingsArray.size() == 0)
             return;
@@ -1418,59 +1406,28 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         while (it.hasNext()) {
             BgReading bg = it.next();
             if (bg.value > maxBgValue) maxBgValue = bg.value;
-            if (bg.valueToUnits(units) < lowLine)
-                lowArray.add(bg);
-            else if (bg.valueToUnits(units) > highLine)
-                highArray.add(bg);
-            else
-                inRangeArray.add(bg);
+            bgListArray.add(bg);
         }
+        if (showPrediction) {
+            DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
+            List<BgReading> predArray = amaResult.getPredictions();
+            Iterator<BgReading> itPred = predArray.iterator();
+            while (itPred.hasNext()) {
+                BgReading bg = it.next();
+                bgListArray.add(bg);
+            }
+        }
+
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
         if (highLine > maxBgValue) maxBgValue = highLine;
         Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
 
-        BgReading[] inRange = new BgReading[inRangeArray.size()];
-        BgReading[] low = new BgReading[lowArray.size()];
-        BgReading[] high = new BgReading[highArray.size()];
-        inRange = inRangeArray.toArray(inRange);
-        low = lowArray.toArray(low);
-        high = highArray.toArray(high);
+        DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
+        bg = bgListArray.toArray(bg);
 
-        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
-
-        if (inRange.length > 0) {
-            bgGraph.addSeries(seriesInRage = new PointsGraphSeries<>(inRange));
-            seriesInRage.setShape(PointsGraphSeries.Shape.POINT);
-            seriesInRage.setSize(isTablet ? 8 : 5);
-            seriesInRage.setColor(MainApp.sResources.getColor(R.color.inrange));
-        }
-
-        if (low.length > 0) {
-            bgGraph.addSeries(seriesLow = new PointsGraphSeries<>(low));
-            seriesLow.setShape(PointsGraphSeries.Shape.POINT);
-            seriesLow.setSize(isTablet ? 8 : 5);
-            seriesLow.setColor(MainApp.sResources.getColor(R.color.low));
-        }
-
-        if (high.length > 0) {
-            bgGraph.addSeries(seriesHigh = new PointsGraphSeries<>(high));
-            seriesHigh.setShape(PointsGraphSeries.Shape.POINT);
-            seriesHigh.setSize(isTablet ? 8 : 5);
-            seriesHigh.setColor(MainApp.sResources.getColor(R.color.high));
-        }
-
-        if (showPrediction) {
-            DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
-            List<BgReading> predArray = amaResult.getPredictions();
-            BgReading[] pred = new BgReading[predArray.size()];
-            pred = predArray.toArray(pred);
-            if (pred.length > 0) {
-                bgGraph.addSeries(predSeries = new PointsGraphSeries<BgReading>(pred));
-                predSeries.setShape(PointsGraphSeries.Shape.POINT);
-                predSeries.setSize(4);
-                predSeries.setColor(MainApp.sResources.getColor(R.color.prediction));
-            }
+        if (bg.length > 0) {
+            bgGraph.addSeries(new PointsWithLabelGraphSeries<>(bg));
         }
 
         // **** NOW line ****
@@ -1498,40 +1455,30 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
 
         // Treatments
+        List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
+
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
-        List<Treatment> filteredTreatments = new ArrayList<Treatment>();
 
         for (int tx = 0; tx < treatments.size(); tx++) {
-            Treatment t = treatments.get(tx);
-            if (t.date < fromTime || t.date > endTime) continue;
-            t.setYValue(bgReadingsArray);
+            DataPointWithLabelInterface t = treatments.get(tx);
+            if (t.getX() < fromTime || t.getX() > endTime) continue;
+            t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
             filteredTreatments.add(t);
-        }
-        Treatment[] treatmentsArray = new Treatment[filteredTreatments.size()];
-        treatmentsArray = filteredTreatments.toArray(treatmentsArray);
-        if (treatmentsArray.length > 0) {
-            bgGraph.addSeries(seriesTreatments = new PointsWithLabelGraphSeries<Treatment>(treatmentsArray));
-            seriesTreatments.setShape(PointsWithLabelGraphSeries.Shape.TRIANGLE);
-            seriesTreatments.setSize(10);
-            seriesTreatments.setColor(Color.CYAN);
         }
 
         // ProfileSwitch
         List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
-        List<ProfileSwitch> filteredProfileSwitches = new ArrayList<ProfileSwitch>();
 
         for (int tx = 0; tx < profileSwitches.size(); tx++) {
-            ProfileSwitch t = profileSwitches.get(tx);
-            if (t.date < fromTime || t.date > endTime) continue;
-            filteredProfileSwitches.add(t);
+            DataPointWithLabelInterface t = profileSwitches.get(tx);
+            if (t.getX() < fromTime || t.getX() > endTime) continue;
+            filteredTreatments.add(t);
         }
-        ProfileSwitch[] profileSwitchArray = new ProfileSwitch[filteredProfileSwitches.size()];
-        profileSwitchArray = filteredProfileSwitches.toArray(profileSwitchArray);
-        if (profileSwitchArray.length > 0) {
-            bgGraph.addSeries(seriesProfileSwitch = new VerticalTextsGraphSeries<ProfileSwitch>(profileSwitchArray));
-            //seriesProfileSwitch.setShape(PointsWithLabelGraphSeries.Shape.TRIANGLE);
-            seriesProfileSwitch.setSize(10);
-            seriesProfileSwitch.setColor(Color.CYAN);
+
+        DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
+        treatmentsArray = filteredTreatments.toArray(treatmentsArray);
+        if (treatmentsArray.length > 0) {
+            bgGraph.addSeries(new PointsWithLabelGraphSeries<>(treatmentsArray));
         }
 
         // set manual y bounds to have nice steps
@@ -1560,8 +1507,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         });
 
-
     }
+
+    public double getNearestBg(long date, List<BgReading> bgReadingsArray) {
+        double bg = 0;
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
+            BgReading reading = bgReadingsArray.get(r);
+            if (reading.date > date) continue;
+            bg = Profile.fromMgdlToUnits(reading.value, profile.getUnits());
+            break;
+        }
+        return bg;
+    }
+
 
     //Notifications
     public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.NotificationsViewHolder> {

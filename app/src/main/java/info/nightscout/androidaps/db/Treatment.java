@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.db;
 
+import android.graphics.Color;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -16,6 +18,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -103,14 +106,29 @@ public class Treatment implements DataPointWithLabelInterface {
         return label;
     }
 
-    public void setYValue(List<BgReading> bgReadingsArray) {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
-            BgReading reading = bgReadingsArray.get(r);
-            if (reading.date > date) continue;
-            yValue = Profile.fromMgdlToUnits(reading.value, profile.getUnits());
-            break;
-        }
+    @Override
+    public long getDuration() {
+        return 0;
+    }
+
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.BOLUS;
+    }
+
+    @Override
+    public float getSize() {
+        return 10;
+    }
+
+    @Override
+    public int getColor() {
+        return Color.CYAN;
+    }
+
+    @Override
+    public void setY(double y) {
+        yValue = y;
     }
 
     //  ----------------- DataPointInterface end --------------------

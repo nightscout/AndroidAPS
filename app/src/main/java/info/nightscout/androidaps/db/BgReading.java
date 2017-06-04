@@ -2,20 +2,24 @@ package info.nightscout.androidaps.db;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.jjoe64.graphview.series.DataPointInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
-public class BgReading implements DataPointInterface {
+public class BgReading implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(BgReading.class);
 
     @DatabaseField(id = true)
@@ -38,6 +42,8 @@ public class BgReading implements DataPointInterface {
 
 
     public static String units = Constants.MGDL;
+
+    public boolean isPrediction = false; // true when drawing predictions as bg points
 
     public BgReading() {}
 
@@ -106,6 +112,7 @@ public class BgReading implements DataPointInterface {
                 '}';
     }
 
+    // ------------------ DataPointWithLabelInterface ------------------
     @Override
     public double getX() {
         return date;
@@ -114,6 +121,53 @@ public class BgReading implements DataPointInterface {
     @Override
     public double getY() {
         return valueToUnits(units);
+    }
+
+    @Override
+    public void setY(double y) {
+
+    }
+
+    @Override
+    public String getLabel() {
+        return null;
+    }
+
+    @Override
+    public long getDuration() {
+        return 0;
+    }
+
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.POINT;
+    }
+
+    @Override
+    public float getSize() {
+        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
+        return isTablet ? 8 : 5;
+    }
+
+    @Override
+    public int getColor() {
+        Double lowLine = SP.getDouble("low_mark", 0d);
+        Double highLine = SP.getDouble("high_mark", 0d);
+        if (lowLine < 1) {
+            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+        }
+        if (highLine < 1) {
+            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+        }
+        String units = MainApp.getConfigBuilder().getProfile().getUnits();
+        int color = MainApp.sResources.getColor(R.color.inrange);
+        if (isPrediction)
+            color = MainApp.sResources.getColor(R.color.prediction);
+        else if (valueToUnits(units) < lowLine)
+            color = MainApp.sResources.getColor(R.color.low);
+        else if (valueToUnits(units) > highLine)
+            color = MainApp.sResources.getColor(R.color.high);
+        return color;
     }
 
 }

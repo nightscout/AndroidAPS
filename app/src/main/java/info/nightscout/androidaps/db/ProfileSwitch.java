@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.db;
 
+import android.graphics.Color;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -10,6 +12,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
@@ -119,8 +122,33 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     }
 
     @Override
+    public void setY(double y) {
+        yValue = y;
+    }
+
+    @Override
     public String getLabel() {
         return profileName;
+    }
+
+    @Override
+    public long getDuration() {
+        return 0;
+    }
+
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.PROFILE;
+    }
+
+    @Override
+    public float getSize() {
+        return 10;
+    }
+
+    @Override
+    public int getColor() {
+        return Color.CYAN;
     }
 
     public String log() {

@@ -4,6 +4,8 @@ package info.nightscout.androidaps.db;
  * Created by mike on 21.05.2017.
  */
 
+import android.graphics.Color;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
@@ -20,6 +22,8 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
@@ -29,7 +33,7 @@ import info.nightscout.utils.Round;
  */
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_EXTENDEDBOLUSES)
-public class ExtendedBolus implements Interval {
+public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(ExtendedBolus.class);
 
     @DatabaseField(id = true)
@@ -195,5 +199,50 @@ public class ExtendedBolus implements Interval {
     public String toStringMedium() {
         return "E " + DecimalFormatter.to2Decimal(absoluteRate()) + "U/h ("
                 + getRealDuration() + "/" + durationInMinutes + ") ";
+    }
+
+    // -------- DataPointWithLabelInterface --------
+    @Override
+    public double getX() {
+        return date;
+    }
+
+    // default when no sgv around available
+    private double yValue = 0;
+
+
+    @Override
+    public double getY() {
+        return yValue;
+    }
+
+    @Override
+    public void setY(double y) {
+        yValue = y;
+    }
+
+    @Override
+    public String getLabel() {
+        return toStringMedium();
+    }
+
+    @Override
+    public long getDuration() {
+        return durationInMinutes * 60 * 1000L;
+    }
+
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.EXTENDEDBOLUS;
+    }
+
+    @Override
+    public float getSize() {
+        return 10;
+    }
+
+    @Override
+    public int getColor() {
+        return Color.CYAN;
     }
 }
