@@ -1181,6 +1181,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         LineGraphSeries<DataPoint> basalsLineSeries = null;
+        LineGraphSeries<DataPoint> absoluteBasalsLineSeries = null;
         LineGraphSeries<DataPoint> baseBasalsSeries = null;
         LineGraphSeries<DataPoint> tempBasalsSeries = null;
         AreaGraphSeries<DoubleDataPoint> areaSeries;
@@ -1194,17 +1195,20 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             List<DataPoint> baseBasalArray = new ArrayList<>();
             List<DataPoint> tempBasalArray = new ArrayList<>();
             List<DataPoint> basalLineArray = new ArrayList<>();
+            List<DataPoint> absoluteBasalLineArray = new ArrayList<>();
             double lastLineBasal = 0;
+            double lastAbsoluteLineBasal = 0;
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
             for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
                 TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
                 double baseBasalValue = MainApp.getConfigBuilder().getProfile(time).getBasal(Profile.secondsFromMidnight(time));
                 double baseLineValue = baseBasalValue;
+                double absoluteLineValue = baseBasalValue;
                 double tempBasalValue = 0;
                 double basal = 0d;
                 if (tb != null) {
-                    tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time).getTime());
+                    absoluteLineValue = tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time).getTime());
                     if (tempBasalValue != lastTempBasal) {
                         tempBasalArray.add(new DataPoint(time, lastTempBasal));
                         tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
@@ -1230,7 +1234,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     basalLineArray.add(new DataPoint(time, lastLineBasal));
                     basalLineArray.add(new DataPoint(time, baseLineValue));
                 }
+                if (absoluteLineValue != lastAbsoluteLineBasal) {
+                    absoluteBasalLineArray.add(new DataPoint(time, lastAbsoluteLineBasal));
+                    absoluteBasalLineArray.add(new DataPoint(time, basal));
+                }
 
+                lastAbsoluteLineBasal = absoluteLineValue;
                 lastLineBasal = baseLineValue;
                 lastTempBasal = tempBasalValue;
                 maxBasalValueFound = Math.max(maxBasalValueFound, basal);
@@ -1238,6 +1247,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             basalLineArray.add(new DataPoint(now, lastLineBasal));
             baseBasalArray.add(new DataPoint(now, lastBaseBasal));
             tempBasalArray.add(new DataPoint(now, lastTempBasal));
+            absoluteBasalLineArray.add(new DataPoint(now, lastAbsoluteLineBasal));
 
             DataPoint[] baseBasal = new DataPoint[baseBasalArray.size()];
             baseBasal = baseBasalArray.toArray(baseBasal);
@@ -1262,6 +1272,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
             paint.setColor(MainApp.sResources.getColor(R.color.basal));
             basalsLineSeries.setCustomPaint(paint);
+
+            DataPoint[] absoluteBasalLine = new DataPoint[absoluteBasalLineArray.size()];
+            absoluteBasalLine = absoluteBasalLineArray.toArray(absoluteBasalLine);
+            absoluteBasalsLineSeries = new LineGraphSeries<>(absoluteBasalLine);
+            Paint absolutePaint = new Paint();
+            absolutePaint.setStyle(Paint.Style.STROKE);
+            absolutePaint.setStrokeWidth(4);
+            absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
+            absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
         }
 
         // **** IOB COB DEV graph ****
@@ -1492,6 +1511,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             bgGraph.getSecondScale().addSeries(baseBasalsSeries);
             bgGraph.getSecondScale().addSeries(tempBasalsSeries);
             bgGraph.getSecondScale().addSeries(basalsLineSeries);
+            bgGraph.getSecondScale().addSeries(absoluteBasalsLineSeries);
             bgGraph.getSecondScale().setMinY(0);
             bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
         }
