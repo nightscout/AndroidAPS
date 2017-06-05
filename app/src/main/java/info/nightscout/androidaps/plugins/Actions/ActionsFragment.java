@@ -212,9 +212,6 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void run() {
                         DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                            danaRv2Plugin.cancelTempBasal();
-                        }
                         danaRv2Plugin.setHighTempBasalPercent(50);
                     }
                 });
@@ -224,9 +221,6 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void run() {
                         DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
-                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                            danaRv2Plugin.cancelTempBasal();
-                        }
                         danaRv2Plugin.setHighTempBasalPercent(400);
                     }
                 });

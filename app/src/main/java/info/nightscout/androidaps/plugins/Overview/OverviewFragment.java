@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -155,6 +156,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView sage;
     TextView pbage;
 
+    TextView updating;
+
     CheckBox showPredictionView;
     CheckBox showBasalsView;
     CheckBox showIobView;
@@ -245,6 +248,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         cage = (TextView) view.findViewById(R.id.careportal_canulaage);
         sage = (TextView) view.findViewById(R.id.careportal_sensorage);
         pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+
+        updating = (TextView) view.findViewById(R.id.overview_updating);
 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
@@ -361,15 +366,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         switch (buttonView.getId()) {
             case R.id.overview_showprediction:
                 SP.putBoolean("showprediction", showPredictionView.isChecked());
-                scheduleUpdateGUI("onPredictionCheckedChanged");
+                updateGUI("onPredictionCheckedChanged");
                 break;
             case R.id.overview_showbasals:
                 SP.putBoolean("showbasals", showBasalsView.isChecked());
-                scheduleUpdateGUI("onBasalsCheckedChanged");
+                updateGUI("onBasalsCheckedChanged");
                 break;
             case R.id.overview_showiob:
                 SP.putBoolean("showiob", showIobView.isChecked());
-                scheduleUpdateGUI("onIobCheckedChanged");
+                updateGUI("onIobCheckedChanged");
                 break;
             case R.id.overview_showcob:
                 showDeviationsView.setOnCheckedChangeListener(null);
@@ -377,7 +382,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 showDeviationsView.setOnCheckedChangeListener(this);
                 SP.putBoolean("showcob", showCobView.isChecked());
                 SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-                scheduleUpdateGUI("onCobCheckedChanged");
+                updateGUI("onCobCheckedChanged");
                 break;
             case R.id.overview_showdeviations:
                 showCobView.setOnCheckedChangeListener(null);
@@ -385,7 +390,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 showCobView.setOnCheckedChangeListener(this);
                 SP.putBoolean("showcob", showCobView.isChecked());
                 SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-                scheduleUpdateGUI("onDeviationsCheckedChanged");
+                updateGUI("onDeviationsCheckedChanged");
                 break;
         }
     }
@@ -397,7 +402,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentEnabled(PluginBase.LOOP, false);
             activeloop.setFragmentVisible(PluginBase.LOOP, false);
             MainApp.getConfigBuilder().storeSettings();
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -413,12 +418,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activeloop.setFragmentEnabled(PluginBase.LOOP, true);
             activeloop.setFragmentVisible(PluginBase.LOOP, true);
             MainApp.getConfigBuilder().storeSettings();
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             NSUpload.uploadOpenAPSOffline(0);
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.resume))) {
             activeloop.suspendTo(0L);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -432,7 +437,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 60L * 60 * 1000);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -446,7 +451,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -474,7 +479,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.suspendloopfor10h))) {
             activeloop.suspendTo(new Date().getTime() + 10 * 60L * 60 * 1000);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -488,7 +493,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor30m))) {
             activeloop.suspendTo(new Date().getTime() + 30L * 60 * 1000);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -502,7 +507,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor1h))) {
             activeloop.suspendTo(new Date().getTime() + 1 * 60L * 60 * 1000);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -516,7 +521,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor2h))) {
             activeloop.suspendTo(new Date().getTime() + 2 * 60L * 60 * 1000);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -530,7 +535,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return true;
         } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.disconnectpumpfor3h))) {
             activeloop.suspendTo(new Date().getTime() + 3 * 60L * 60 * 1000);
-            scheduleUpdateGUI("suspendmenu");
+            updateGUI("suspendmenu");
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -879,8 +884,699 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (scheduledUpdate != null)
             scheduledUpdate.cancel(false);
         Runnable task = new UpdateRunnable();
-        final int msec = 400;
+        final int msec = 2000;
         scheduledUpdate = worker.schedule(task, msec, TimeUnit.MILLISECONDS);
+    }
+
+    private class updateGUIAsyncClass extends AsyncTask<String, Void, String> {
+
+        BgReading actualBG = DatabaseHelper.actualBg();
+        BgReading lastBG = DatabaseHelper.lastBg();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        String units = profile.getUnits();
+        final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
+
+        PumpInterface pump = MainApp.getConfigBuilder();
+
+        long now = new Date().getTime();
+
+        IobTotal bolusIob;
+        IobTotal basalIob;
+
+        Double lowLine;
+        Double highLine;
+
+        int hoursToFetch;
+        long toTime;
+        long fromTime;
+        long endTime;
+
+        boolean showPrediction;
+        boolean showBasals;
+        boolean showIob;
+        boolean showCob;
+        boolean showDeviations;
+
+        LineGraphSeries<DataPoint> basalsLineSeries;
+        LineGraphSeries<DataPoint> absoluteBasalsLineSeries;
+        LineGraphSeries<DataPoint> baseBasalsSeries;
+        LineGraphSeries<DataPoint> tempBasalsSeries;
+        AreaGraphSeries<DoubleDataPoint> areaSeries;
+        LineGraphSeries<DataPoint> seriesNow, seriesNow2;
+        PointsWithLabelGraphSeries<DataPointWithLabelInterface> bgSeries = null;
+        PointsWithLabelGraphSeries<DataPointWithLabelInterface> treatmentSeries = null;
+
+        class DeviationDataPoint extends DataPoint {
+            public int color;
+
+            public DeviationDataPoint(double x, double y, int color) {
+                super(x, y);
+                this.color = color;
+            }
+        }
+
+        FixedLineGraphSeries<DataPoint> iobSeries;
+        FixedLineGraphSeries<DataPoint> cobSeries;
+        BarGraphSeries<DeviationDataPoint> devSeries;
+        DataPoint[] cobData;
+        DeviationDataPoint[] devData;
+
+        List<BgReading> bgReadingsArray;
+        Double maxBgValue = 0d;
+        Double maxIobValueFound = 0d;
+        Double maxCobValueFound = 0d;
+        Double maxDevValueFound = 0d;
+        Double maxBasalValueFound = 0d;
+
+        Integer numOfHorizLines;
+
+        @Override
+        protected void onPreExecute() {
+            log.debug("updateGUIAsyncClass onPreExecute");
+            updating.setVisibility(View.VISIBLE);
+            updateNotifications();
+            CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
+            // open loop mode
+            if (Config.APS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable) {
+                apsModeView.setVisibility(View.VISIBLE);
+                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopenabled));
+                apsModeView.setTextColor(Color.BLACK);
+                final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+                if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuperBolus()) {
+                    apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                    apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuperbolusfor), activeloop.minutesToEndOfSuspend()));
+                    apsModeView.setTextColor(Color.WHITE);
+                } else if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuspended()) {
+                    apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                    apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuspendedfor), activeloop.minutesToEndOfSuspend()));
+                    apsModeView.setTextColor(Color.WHITE);
+                } else if (pump.isSuspended()) {
+                    apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
+                    apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
+                    apsModeView.setTextColor(Color.WHITE);
+                } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
+                    if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
+                        apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
+                    } else {
+                        apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
+                    }
+                } else {
+                    apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopdisabled));
+                    apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
+                    apsModeView.setTextColor(Color.WHITE);
+                }
+            } else {
+                apsModeView.setVisibility(View.GONE);
+            }
+
+            // temp target
+            TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(new Date().getTime());
+            if (tempTarget != null) {
+                tempTargetView.setTextColor(Color.BLACK);
+                tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
+                tempTargetView.setVisibility(View.VISIBLE);
+                if (tempTarget.low == tempTarget.high)
+                    tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
+                else
+                    tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+            }
+            if (Config.NSCLIENT) {
+                tempTargetView.setVisibility(View.GONE);
+            } else {
+
+                Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+                Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+                if (!profile.getUnits().equals(Constants.MGDL)) {
+                    maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
+                    minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
+                }
+                tempTargetView.setTextColor(Color.WHITE);
+                tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
+                tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
+                tempTargetView.setVisibility(View.VISIBLE);
+            }
+
+            // **** Temp button ****
+            boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
+            showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
+            showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
+            showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
+
+            if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && ConfigBuilderPlugin.getActiveLoop() != null) {
+                acceptTempLayout.setVisibility(View.VISIBLE);
+                acceptTempButton.setText(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
+            } else {
+                acceptTempLayout.setVisibility(View.GONE);
+            }
+
+            // **** Calibration button ****
+            if (MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
+                calibrationButton.setVisibility(View.VISIBLE);
+            } else {
+                calibrationButton.setVisibility(View.GONE);
+            }
+
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
+            if (activeTemp != null) {
+                cancelTempButton.setVisibility(View.VISIBLE);
+                cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
+            } else {
+                cancelTempButton.setVisibility(View.GONE);
+            }
+
+            String basalText = "";
+            if (activeTemp != null) {
+                basalText = activeTemp.toString() + " ";
+            }
+            if (Config.NSCLIENT)
+                basalText += "( " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h )";
+            else if (pump.getPumpDescription().isTempBasalCapable) {
+                basalText += "( " + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h )";
+            }
+            baseBasalView.setText(basalText);
+
+            ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
+            String extendedBolusText = "";
+            if (extendedBolus != null) {
+                extendedBolusText = extendedBolus.toString();
+            }
+            if (extendedBolusView != null) // must not exists in all layouts
+                extendedBolusView.setText(extendedBolusText);
+
+            activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
+            activeProfileView.setBackgroundColor(Color.GRAY);
+
+            activeProfileView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+                    final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
+                    profileswitch.executeProfileSwitch = true;
+                    newDialog.setOptions(profileswitch);
+                    newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+                    return true;
+                }
+            });
+            activeProfileView.setLongClickable(true);
+
+
+            tempTargetView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+                    NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
+                    final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
+                    temptarget.executeTempTarget = true;
+                    newTTDialog.setOptions(temptarget);
+                    newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+                    return true;
+                }
+            });
+            tempTargetView.setLongClickable(true);
+
+            // QuickWizard button
+            QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
+            if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
+                quickWizardButton.setVisibility(View.VISIBLE);
+                String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
+                BolusWizard wizard = new BolusWizard();
+                wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+                text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
+                quickWizardButton.setText(text);
+                if (wizard.calculatedTotalInsulin <= 0)
+                    quickWizardButton.setVisibility(View.GONE);
+            } else
+                quickWizardButton.setVisibility(View.GONE);
+
+            // Bolus and calc button
+            if (pump.isInitialized() && !pump.isSuspended()) {
+                wizardButton.setVisibility(View.VISIBLE);
+                treatmentButton.setVisibility(View.VISIBLE);
+            } else {
+                wizardButton.setVisibility(View.GONE);
+                treatmentButton.setVisibility(View.GONE);
+            }
+
+            String units = profile.getUnits();
+
+            lowLine = SP.getDouble("low_mark", 0d);
+            highLine = SP.getDouble("high_mark", 0d);
+            if (lowLine < 1) {
+                lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+            }
+            if (highLine < 1) {
+                highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+            }
+
+            timeUpdate();
+
+            // **** BG value ****
+            if (lastBG != null) {
+                int color = MainApp.sResources.getColor(R.color.inrange);
+                if (lastBG.valueToUnits(units) < lowLine)
+                    color = MainApp.sResources.getColor(R.color.low);
+                else if (lastBG.valueToUnits(units) > highLine)
+                    color = MainApp.sResources.getColor(R.color.high);
+                bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
+                arrowView.setText(lastBG.directionToSymbol());
+                bgView.setTextColor(color);
+                arrowView.setTextColor(color);
+                GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+                if (glucoseStatus != null) {
+                    deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                    avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
+                            "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
+                } else {
+                    deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
+                    avgdeltaView.setText("");
+                }
+
+                BgReading.units = profile.getUnits();
+            } else
+                return;
+
+            Integer flag = bgView.getPaintFlags();
+            if (actualBG == null) {
+                flag |= Paint.STRIKE_THRU_TEXT_FLAG;
+            } else
+                flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
+            bgView.setPaintFlags(flag);
+
+            Long agoMsec = new Date().getTime() - lastBG.date;
+            int agoMin = (int) (agoMsec / 60d / 1000d);
+            timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
+
+            // cob
+            if (cobView != null) { // view must not exists
+                String cobText = "";
+                AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(new Date().getTime());
+                if (autosensData != null)
+                    cobText = (int) autosensData.cob + " g " + String.format(MainApp.sResources.getString(R.string.minago), autosensData.minOld());
+                cobView.setText(cobText);
+            }
+
+            if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
+                showPredictionView.setVisibility(View.VISIBLE);
+                getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
+            } else {
+                showPredictionView.setVisibility(View.GONE);
+                getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);
+            }
+
+            // ****** GRAPH *******
+
+            // allign to hours
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(new Date().getTime());
+            calendar.set(Calendar.MILLISECOND, 0);
+            calendar.set(Calendar.SECOND, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.add(Calendar.HOUR, 1);
+
+            showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
+            showBasals = showBasalsView.isChecked();
+            showIob = showIobView.isChecked();
+            showCob = showCobView.isChecked();
+            showDeviations = showDeviationsView.isChecked();
+
+            if (showPrediction) {
+                int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
+                predHours = Math.min(2, predHours);
+                predHours = Math.max(0, predHours);
+                hoursToFetch = rangeToDisplay - predHours;
+                toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+                fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+                endTime = toTime + predHours * 60 * 60 * 1000L;
+            } else {
+                hoursToFetch = rangeToDisplay;
+                toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+                fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
+                endTime = toTime;
+            }
+
+            // **** HIGH and LOW targets graph ****
+            DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
+                    new DoubleDataPoint(fromTime, lowLine, highLine),
+                    new DoubleDataPoint(endTime, lowLine, highLine)
+            };
+            bgGraph.addSeries(areaSeries = new AreaGraphSeries<>(areaDataPoints));
+            areaSeries.setColor(0);
+            areaSeries.setDrawBackground(true);
+            areaSeries.setBackgroundColor(Color.argb(40, 0, 255, 0));
+
+            // set manual x bounds to have nice steps
+            bgGraph.getViewport().setMaxX(endTime);
+            bgGraph.getViewport().setMinX(fromTime);
+            bgGraph.getViewport().setXAxisBoundsManual(true);
+            bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
+            bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
+            iobGraph.getViewport().setMaxX(endTime);
+            iobGraph.getViewport().setMinX(fromTime);
+            iobGraph.getViewport().setXAxisBoundsManual(true);
+            iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
+            iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            log.debug("updateGUIAsyncClass starting background calculations from: " + params[0]);
+
+            // IOB
+            MainApp.getConfigBuilder().updateTotalIOBTreatments();
+            MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+            bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
+            basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+
+            // ****** GRAPH *******
+
+            // **** TEMP BASALS graph ****
+
+            if (pump.getPumpDescription().isTempBasalCapable && showBasals) {
+                List<DataPoint> baseBasalArray = new ArrayList<>();
+                List<DataPoint> tempBasalArray = new ArrayList<>();
+                List<DataPoint> basalLineArray = new ArrayList<>();
+                List<DataPoint> absoluteBasalLineArray = new ArrayList<>();
+                double lastLineBasal = 0;
+                double lastAbsoluteLineBasal = 0;
+                double lastBaseBasal = 0;
+                double lastTempBasal = 0;
+                for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
+                    TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
+                    double baseBasalValue = MainApp.getConfigBuilder().getProfile(time).getBasal(Profile.secondsFromMidnight(time));
+                    double baseLineValue = baseBasalValue;
+                    double absoluteLineValue = baseBasalValue;
+                    double tempBasalValue = 0;
+                    double basal = 0d;
+                    if (tb != null) {
+                        absoluteLineValue = tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time).getTime());
+                        if (tempBasalValue != lastTempBasal) {
+                            tempBasalArray.add(new DataPoint(time, lastTempBasal));
+                            tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
+                        }
+                        if (lastBaseBasal != 0d) {
+                            baseBasalArray.add(new DataPoint(time, lastBaseBasal));
+                            baseBasalArray.add(new DataPoint(time, 0d));
+                            lastBaseBasal = 0d;
+                        }
+                    } else {
+                        if (baseBasalValue != lastBaseBasal) {
+                            baseBasalArray.add(new DataPoint(time, lastBaseBasal));
+                            baseBasalArray.add(new DataPoint(time, basal = baseBasalValue));
+                            lastBaseBasal = baseBasalValue;
+                        }
+                        if (lastTempBasal != 0) {
+                            tempBasalArray.add(new DataPoint(time, lastTempBasal));
+                            tempBasalArray.add(new DataPoint(time, 0d));
+                        }
+                    }
+
+                    if (baseLineValue != lastLineBasal) {
+                        basalLineArray.add(new DataPoint(time, lastLineBasal));
+                        basalLineArray.add(new DataPoint(time, baseLineValue));
+                    }
+                    if (absoluteLineValue != lastAbsoluteLineBasal) {
+                        absoluteBasalLineArray.add(new DataPoint(time, lastAbsoluteLineBasal));
+                        absoluteBasalLineArray.add(new DataPoint(time, basal));
+                    }
+
+                    lastAbsoluteLineBasal = absoluteLineValue;
+                    lastLineBasal = baseLineValue;
+                    lastTempBasal = tempBasalValue;
+                    maxBasalValueFound = Math.max(maxBasalValueFound, basal);
+                }
+                basalLineArray.add(new DataPoint(now, lastLineBasal));
+                baseBasalArray.add(new DataPoint(now, lastBaseBasal));
+                tempBasalArray.add(new DataPoint(now, lastTempBasal));
+                absoluteBasalLineArray.add(new DataPoint(now, lastAbsoluteLineBasal));
+
+                DataPoint[] baseBasal = new DataPoint[baseBasalArray.size()];
+                baseBasal = baseBasalArray.toArray(baseBasal);
+                baseBasalsSeries = new LineGraphSeries<>(baseBasal);
+                baseBasalsSeries.setDrawBackground(true);
+                baseBasalsSeries.setBackgroundColor(Color.argb(200, 0x3F, 0x51, 0xB5));
+                baseBasalsSeries.setThickness(0);
+
+                DataPoint[] tempBasal = new DataPoint[tempBasalArray.size()];
+                tempBasal = tempBasalArray.toArray(tempBasal);
+                tempBasalsSeries = new LineGraphSeries<>(tempBasal);
+                tempBasalsSeries.setDrawBackground(true);
+                tempBasalsSeries.setBackgroundColor(Color.argb(200, 0x03, 0xA9, 0xF4));
+                tempBasalsSeries.setThickness(0);
+
+                DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
+                basalLine = basalLineArray.toArray(basalLine);
+                basalsLineSeries = new LineGraphSeries<>(basalLine);
+                Paint paint = new Paint();
+                paint.setStyle(Paint.Style.STROKE);
+                paint.setStrokeWidth(2);
+                paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
+                paint.setColor(MainApp.sResources.getColor(R.color.basal));
+                basalsLineSeries.setCustomPaint(paint);
+
+                DataPoint[] absoluteBasalLine = new DataPoint[absoluteBasalLineArray.size()];
+                absoluteBasalLine = absoluteBasalLineArray.toArray(absoluteBasalLine);
+                absoluteBasalsLineSeries = new LineGraphSeries<>(absoluteBasalLine);
+                Paint absolutePaint = new Paint();
+                absolutePaint.setStyle(Paint.Style.STROKE);
+                absolutePaint.setStrokeWidth(4);
+                absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
+                absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
+            }
+
+            // **** IOB COB DEV graph ****
+
+            if (showIob || showCob || showDeviations) {
+                //Date start = new Date();
+                List<DataPoint> iobArray = new ArrayList<>();
+                List<DataPoint> cobArray = new ArrayList<>();
+                List<DeviationDataPoint> devArray = new ArrayList<>();
+                for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
+                    if (showIob) {
+                        IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
+                        iobArray.add(new DataPoint(time, iob.iob));
+                        maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
+                    }
+                    if (showCob || showDeviations) {
+                        AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
+                        if (autosensData != null && showCob) {
+                            cobArray.add(new DataPoint(time, autosensData.cob));
+                            maxCobValueFound = Math.max(maxCobValueFound, autosensData.cob);
+                        }
+                        if (autosensData != null && showDeviations) {
+                            int color = Color.BLACK; // "="
+                            if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
+                            if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
+                            if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
+                            devArray.add(new DeviationDataPoint(time, autosensData.deviation, color));
+                            maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
+                        }
+                    }
+                }
+                //Profiler.log(log, "IOB processed", start);
+                DataPoint[] iobData = new DataPoint[iobArray.size()];
+                iobData = iobArray.toArray(iobData);
+                iobSeries = new FixedLineGraphSeries<>(iobData);
+                iobSeries.setDrawBackground(true);
+                iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.iob)); //50%
+                iobSeries.setColor(MainApp.sResources.getColor(R.color.iob));
+                iobSeries.setThickness(3);
+
+
+                if (showIob && (showCob || showDeviations)) {
+                    List<DataPoint> cobArrayRescaled = new ArrayList<>();
+                    List<DeviationDataPoint> devArrayRescaled = new ArrayList<>();
+                    for (int ci = 0; ci < cobArray.size(); ci++) {
+                        cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxIobValueFound / maxCobValueFound / 2));
+                    }
+                    for (int ci = 0; ci < devArray.size(); ci++) {
+                        devArrayRescaled.add(new DeviationDataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxIobValueFound / maxDevValueFound, devArray.get(ci).color));
+                    }
+                    cobArray = cobArrayRescaled;
+                    devArray = devArrayRescaled;
+                }
+                // COB
+                cobData = new DataPoint[cobArray.size()];
+                cobData = cobArray.toArray(cobData);
+                cobSeries = new FixedLineGraphSeries<>(cobData);
+                cobSeries.setDrawBackground(true);
+                cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
+                cobSeries.setColor(MainApp.sResources.getColor(R.color.cob));
+                cobSeries.setThickness(3);
+
+                // DEVIATIONS
+                devData = new DeviationDataPoint[devArray.size()];
+                devData = devArray.toArray(devData);
+                devSeries = new BarGraphSeries<>(devData);
+                devSeries.setValueDependentColor(new ValueDependentColor<DeviationDataPoint>() {
+                    @Override
+                    public int get(DeviationDataPoint data) {
+                        return data.color;
+                    }
+                });
+            }
+
+            // **** BG graph ****
+            bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
+            List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
+
+            Iterator<BgReading> it = bgReadingsArray.iterator();
+            while (it.hasNext()) {
+                BgReading bg = it.next();
+                if (bg.value > maxBgValue) maxBgValue = bg.value;
+                bgListArray.add(bg);
+            }
+            if (showPrediction) {
+                DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
+                List<BgReading> predArray = amaResult.getPredictions();
+                Iterator<BgReading> itPred = predArray.iterator();
+                while (itPred.hasNext()) {
+                    BgReading bg = it.next();
+                    bgListArray.add(bg);
+                }
+            }
+
+            maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
+            maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
+            if (highLine > maxBgValue) maxBgValue = highLine;
+            numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
+
+            DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
+            bg = bgListArray.toArray(bg);
+            if (bg.length > 0)
+                bgSeries = new PointsWithLabelGraphSeries<>(bg);
+
+            // **** treatments graph ****
+            List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
+
+            List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
+
+            for (int tx = 0; tx < treatments.size(); tx++) {
+                DataPointWithLabelInterface t = treatments.get(tx);
+                if (t.getX() < fromTime || t.getX() > endTime) continue;
+                t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
+                filteredTreatments.add(t);
+            }
+
+            // ProfileSwitch
+            List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
+
+            for (int tx = 0; tx < profileSwitches.size(); tx++) {
+                DataPointWithLabelInterface t = profileSwitches.get(tx);
+                if (t.getX() < fromTime || t.getX() > endTime) continue;
+                filteredTreatments.add(t);
+            }
+
+            DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
+            treatmentsArray = filteredTreatments.toArray(treatmentsArray);
+            if (treatmentsArray.length > 0) {
+                treatmentSeries = new PointsWithLabelGraphSeries<>(treatmentsArray);
+            }
+
+
+            return params[0];
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            log.debug("updateGUIAsyncClass onPostExecute");
+            // IOB
+            String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                    + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                    + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
+            iobView.setText(iobtext);
+
+            // ****** GRAPH *******
+
+            // **** IOB COB DEV graph ****
+            if (showIob || showCob || showDeviations) {
+                iobGraph.removeAllSeries();
+
+                if (showIob) {
+                    iobGraph.addSeries(iobSeries);
+                }
+                if (showCob && cobData.length > 0) {
+                    iobGraph.addSeries(cobSeries);
+                }
+                if (showDeviations && devData.length > 0) {
+                    iobGraph.addSeries(devSeries);
+                }
+                iobGraph.setVisibility(View.VISIBLE);
+            } else {
+                iobGraph.setVisibility(View.GONE);
+            }
+
+            // remove old data from graph
+            bgGraph.getSecondScale().getSeries().clear();
+            bgGraph.removeAllSeries();
+
+            // **** BG graph ****
+
+            if (bgSeries != null) {
+                bgGraph.addSeries(bgSeries);
+            }
+
+            // **** treatments graph ****
+            if (treatmentSeries != null) {
+                bgGraph.addSeries(treatmentSeries);
+            }
+
+            // **** NOW line ****
+            DataPoint[] nowPoints = new DataPoint[]{
+                    new DataPoint(now, 0),
+                    new DataPoint(now, maxBgValue)
+            };
+            bgGraph.addSeries(seriesNow = new LineGraphSeries<>(nowPoints));
+            seriesNow.setDrawDataPoints(false);
+            DataPoint[] nowPoints2 = new DataPoint[]{
+                    new DataPoint(now, 0),
+                    new DataPoint(now, maxIobValueFound)
+            };
+            iobGraph.addSeries(seriesNow2 = new LineGraphSeries<>(nowPoints2));
+            seriesNow2.setDrawDataPoints(false);
+            //seriesNow.setThickness(1);
+            // custom paint to make a dotted line
+            Paint paint = new Paint();
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(2);
+            paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
+            paint.setColor(Color.WHITE);
+            seriesNow.setCustomPaint(paint);
+            seriesNow2.setCustomPaint(paint);
+
+            // set manual y bounds to have nice steps
+            bgGraph.getViewport().setMaxY(maxBgValue);
+            bgGraph.getViewport().setMinY(0);
+            bgGraph.getViewport().setYAxisBoundsManual(true);
+            bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
+
+            // set second scale
+            if (pump.getPumpDescription().isTempBasalCapable && showBasals) {
+                bgGraph.getSecondScale().addSeries(baseBasalsSeries);
+                bgGraph.getSecondScale().addSeries(tempBasalsSeries);
+                bgGraph.getSecondScale().addSeries(basalsLineSeries);
+                bgGraph.getSecondScale().addSeries(absoluteBasalsLineSeries);
+                bgGraph.getSecondScale().setMinY(0);
+                bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
+            }
+            bgGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    return "";
+                }
+
+                @Override
+                public void setViewport(Viewport viewport) {
+
+                }
+            });
+            updating.setVisibility(View.GONE);
+        }
+    }
+
+    public void updateGUIAsync(String from) {
+        new updateGUIAsyncClass().execute(from);
     }
 
     @SuppressLint("SetTextI18n")
@@ -895,638 +1591,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.VISIBLE);
 
-        updateNotifications();
-        CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
-        BgReading actualBG = DatabaseHelper.actualBg();
-        BgReading lastBG = DatabaseHelper.lastBg();
-
-        PumpInterface pump = MainApp.getConfigBuilder();
-
-        // Skip if not initialized yet
-        if (bgGraph == null)
-            return;
-
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (getActivity() == null)
-            return;
-
-        // open loop mode
-        final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
-        if (Config.APS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable) {
-            apsModeView.setVisibility(View.VISIBLE);
-            apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopenabled));
-            apsModeView.setTextColor(Color.BLACK);
-            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-            if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuperBolus()) {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
-                apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuperbolusfor), activeloop.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(Color.WHITE);
-            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType()) && activeloop.isSuspended()) {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
-                apsModeView.setText(String.format(MainApp.sResources.getString(R.string.loopsuspendedfor), activeloop.minutesToEndOfSuspend()));
-                apsModeView.setTextColor(Color.WHITE);
-            } else if (pump.isSuspended()) {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.looppumpsuspended));
-                apsModeView.setText(MainApp.sResources.getString(R.string.pumpsuspended));
-                apsModeView.setTextColor(Color.WHITE);
-            } else if (activeloop != null && activeloop.isEnabled(activeloop.getType())) {
-                if (MainApp.getConfigBuilder().isClosedModeEnabled()) {
-                    apsModeView.setText(MainApp.sResources.getString(R.string.closedloop));
-                } else {
-                    apsModeView.setText(MainApp.sResources.getString(R.string.openloop));
-                }
-            } else {
-                apsModeView.setBackgroundColor(MainApp.sResources.getColor(R.color.loopdisabled));
-                apsModeView.setText(MainApp.sResources.getString(R.string.disabledloop));
-                apsModeView.setTextColor(Color.WHITE);
-            }
-        } else {
-            apsModeView.setVisibility(View.GONE);
-        }
-
-        // temp target
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(new Date().getTime());
-        if (tempTarget != null) {
-            tempTargetView.setTextColor(Color.BLACK);
-            tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
-            tempTargetView.setVisibility(View.VISIBLE);
-            if (tempTarget.low == tempTarget.high)
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
-            else
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
-        }
-        if (Config.NSCLIENT) {
-            tempTargetView.setVisibility(View.GONE);
-        } else {
-
-            Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-            Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-            if (!profile.getUnits().equals(Constants.MGDL)) {
-                maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
-                minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
-            }
-            tempTargetView.setTextColor(Color.WHITE);
-            tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
-            tempTargetView.setVisibility(View.VISIBLE);
-        }
-
-        // **** Temp button ****
-        boolean showAcceptButton = !MainApp.getConfigBuilder().isClosedModeEnabled(); // Open mode needed
-        showAcceptButton = showAcceptButton && finalLastRun != null && finalLastRun.lastAPSRun != null; // aps result must exist
-        showAcceptButton = showAcceptButton && (finalLastRun.lastOpenModeAccept == null || finalLastRun.lastOpenModeAccept.getTime() < finalLastRun.lastAPSRun.getTime()); // never accepted or before last result
-        showAcceptButton = showAcceptButton && finalLastRun.constraintsProcessed.changeRequested; // change is requested
-
-        if (showAcceptButton && pump.isInitialized() && !pump.isSuspended() && ConfigBuilderPlugin.getActiveLoop() != null) {
-            acceptTempLayout.setVisibility(View.VISIBLE);
-            acceptTempButton.setText(getContext().getString(R.string.setbasalquestion) + "\n" + finalLastRun.constraintsProcessed);
-        } else {
-            acceptTempLayout.setVisibility(View.GONE);
-        }
-
-        // **** Calibration button ****
-        if (MainApp.getSpecificPlugin(SourceXdripPlugin.class) != null && MainApp.getSpecificPlugin(SourceXdripPlugin.class).isEnabled(PluginBase.BGSOURCE) && profile != null && DatabaseHelper.actualBg() != null) {
-            calibrationButton.setVisibility(View.VISIBLE);
-        } else {
-            calibrationButton.setVisibility(View.GONE);
-        }
-
-        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
-        if (activeTemp != null) {
-            cancelTempButton.setVisibility(View.VISIBLE);
-            cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
-        } else {
-            cancelTempButton.setVisibility(View.GONE);
-        }
-
-        String basalText = "";
-        if (activeTemp != null) {
-            basalText = activeTemp.toString() + " ";
-        }
-        if (Config.NSCLIENT)
-            basalText += "( " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h )";
-        else if (pump.getPumpDescription().isTempBasalCapable) {
-            basalText += "( " + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h )";
-        }
-        baseBasalView.setText(basalText);
-
-        ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
-        String extendedBolusText = "";
-        if (extendedBolus != null) {
-            extendedBolusText = extendedBolus.toString();
-        }
-        if (extendedBolusView != null) // must not exists in all layouts
-            extendedBolusView.setText(extendedBolusText);
-
-        activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
-        activeProfileView.setBackgroundColor(Color.GRAY);
-
-        activeProfileView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
-                profileswitch.executeProfileSwitch = true;
-                newDialog.setOptions(profileswitch);
-                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-                return true;
-            }
-        });
-        activeProfileView.setLongClickable(true);
-
-
-        tempTargetView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
-                temptarget.executeTempTarget = true;
-                newTTDialog.setOptions(temptarget);
-                newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-                return true;
-            }
-        });
-        tempTargetView.setLongClickable(true);
-
-        // QuickWizard button
-        QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
-        if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
-            quickWizardButton.setVisibility(View.VISIBLE);
-            String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
-            BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
-            text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
-            quickWizardButton.setText(text);
-            if (wizard.calculatedTotalInsulin <= 0)
-                quickWizardButton.setVisibility(View.GONE);
-        } else
-            quickWizardButton.setVisibility(View.GONE);
-
-        // Bolus and calc button
-        if (pump.isInitialized() && !pump.isSuspended()) {
-            wizardButton.setVisibility(View.VISIBLE);
-            treatmentButton.setVisibility(View.VISIBLE);
-        } else {
-            wizardButton.setVisibility(View.GONE);
-            treatmentButton.setVisibility(View.GONE);
-        }
-
-        String units = profile.getUnits();
-
-        Double lowLine = SP.getDouble("low_mark", 0d);
-        Double highLine = SP.getDouble("high_mark", 0d);
-        if (lowLine < 1) {
-            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
-        }
-        if (highLine < 1) {
-            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
-        }
-
-        timeUpdate();
-
-        // **** BG value ****
-        if (lastBG != null) {
-            int color = MainApp.sResources.getColor(R.color.inrange);
-            if (lastBG.valueToUnits(units) < lowLine)
-                color = MainApp.sResources.getColor(R.color.low);
-            else if (lastBG.valueToUnits(units) > highLine)
-                color = MainApp.sResources.getColor(R.color.high);
-            bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
-            arrowView.setText(lastBG.directionToSymbol());
-            bgView.setTextColor(color);
-            arrowView.setTextColor(color);
-            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-            if (glucoseStatus != null) {
-                deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
-                avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
-                        "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
-            } else {
-                deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
-                avgdeltaView.setText("");
-            }
-
-            BgReading.units = profile.getUnits();
-        } else
-            return;
-
-        Integer flag = bgView.getPaintFlags();
-        if (actualBG == null) {
-            flag |= Paint.STRIKE_THRU_TEXT_FLAG;
-        } else
-            flag &= ~Paint.STRIKE_THRU_TEXT_FLAG;
-        bgView.setPaintFlags(flag);
-
-        Long agoMsec = new Date().getTime() - lastBG.date;
-        int agoMin = (int) (agoMsec / 60d / 1000d);
-        timeAgoView.setText(String.format(MainApp.sResources.getString(R.string.minago), agoMin));
-
-        // iob
-        MainApp.getConfigBuilder().updateTotalIOBTreatments();
-        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
-        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
-        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
-
-        String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-                + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
-        iobView.setText(iobtext);
-
-        // cob
-        if (cobView != null) { // view must not exists
-            String cobText = "";
-            AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(new Date().getTime());
-            if (autosensData != null)
-                cobText = (int) autosensData.cob + " g " + String.format(MainApp.sResources.getString(R.string.minago), autosensData.minOld());
-            cobView.setText(cobText);
-        }
-
-        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
-        if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
-            showPredictionView.setVisibility(View.VISIBLE);
-            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
-        } else {
-            showPredictionView.setVisibility(View.GONE);
-            getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);
-        }
-
-        // ****** GRAPH *******
-
-        // allign to hours
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(new Date().getTime());
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.add(Calendar.HOUR, 1);
-
-        int hoursToFetch;
-        long toTime;
-        long fromTime;
-        long endTime;
-        if (showPrediction) {
-            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - new Date().getTime()) / (60 * 60 * 1000));
-            predHours = Math.min(2, predHours);
-            predHours = Math.max(0, predHours);
-            hoursToFetch = rangeToDisplay - predHours;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
-            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-            endTime = toTime + predHours * 60 * 60 * 1000L;
-        } else {
-            hoursToFetch = rangeToDisplay;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
-            fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
-            endTime = toTime;
-        }
-
-        LineGraphSeries<DataPoint> basalsLineSeries = null;
-        LineGraphSeries<DataPoint> absoluteBasalsLineSeries = null;
-        LineGraphSeries<DataPoint> baseBasalsSeries = null;
-        LineGraphSeries<DataPoint> tempBasalsSeries = null;
-        AreaGraphSeries<DoubleDataPoint> areaSeries;
-        LineGraphSeries<DataPoint> seriesNow, seriesNow2;
-
-        // **** TEMP BASALS graph ****
-        Double maxBasalValueFound = 0d;
-
-        long now = new Date().getTime();
-        if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            List<DataPoint> baseBasalArray = new ArrayList<>();
-            List<DataPoint> tempBasalArray = new ArrayList<>();
-            List<DataPoint> basalLineArray = new ArrayList<>();
-            List<DataPoint> absoluteBasalLineArray = new ArrayList<>();
-            double lastLineBasal = 0;
-            double lastAbsoluteLineBasal = 0;
-            double lastBaseBasal = 0;
-            double lastTempBasal = 0;
-            for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
-                TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
-                double baseBasalValue = MainApp.getConfigBuilder().getProfile(time).getBasal(Profile.secondsFromMidnight(time));
-                double baseLineValue = baseBasalValue;
-                double absoluteLineValue = baseBasalValue;
-                double tempBasalValue = 0;
-                double basal = 0d;
-                if (tb != null) {
-                    absoluteLineValue = tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time).getTime());
-                    if (tempBasalValue != lastTempBasal) {
-                        tempBasalArray.add(new DataPoint(time, lastTempBasal));
-                        tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
-                    }
-                    if (lastBaseBasal != 0d) {
-                        baseBasalArray.add(new DataPoint(time, lastBaseBasal));
-                        baseBasalArray.add(new DataPoint(time, 0d));
-                        lastBaseBasal = 0d;
-                    }
-                } else {
-                    if (baseBasalValue != lastBaseBasal) {
-                        baseBasalArray.add(new DataPoint(time, lastBaseBasal));
-                        baseBasalArray.add(new DataPoint(time, basal = baseBasalValue));
-                        lastBaseBasal = baseBasalValue;
-                    }
-                    if (lastTempBasal != 0) {
-                        tempBasalArray.add(new DataPoint(time, lastTempBasal));
-                        tempBasalArray.add(new DataPoint(time, 0d));
-                    }
-                }
-
-                if (baseLineValue != lastLineBasal) {
-                    basalLineArray.add(new DataPoint(time, lastLineBasal));
-                    basalLineArray.add(new DataPoint(time, baseLineValue));
-                }
-                if (absoluteLineValue != lastAbsoluteLineBasal) {
-                    absoluteBasalLineArray.add(new DataPoint(time, lastAbsoluteLineBasal));
-                    absoluteBasalLineArray.add(new DataPoint(time, basal));
-                }
-
-                lastAbsoluteLineBasal = absoluteLineValue;
-                lastLineBasal = baseLineValue;
-                lastTempBasal = tempBasalValue;
-                maxBasalValueFound = Math.max(maxBasalValueFound, basal);
-            }
-            basalLineArray.add(new DataPoint(now, lastLineBasal));
-            baseBasalArray.add(new DataPoint(now, lastBaseBasal));
-            tempBasalArray.add(new DataPoint(now, lastTempBasal));
-            absoluteBasalLineArray.add(new DataPoint(now, lastAbsoluteLineBasal));
-
-            DataPoint[] baseBasal = new DataPoint[baseBasalArray.size()];
-            baseBasal = baseBasalArray.toArray(baseBasal);
-            baseBasalsSeries = new LineGraphSeries<>(baseBasal);
-            baseBasalsSeries.setDrawBackground(true);
-            baseBasalsSeries.setBackgroundColor(Color.argb(200, 0x3F, 0x51, 0xB5));
-            baseBasalsSeries.setThickness(0);
-
-            DataPoint[] tempBasal = new DataPoint[tempBasalArray.size()];
-            tempBasal = tempBasalArray.toArray(tempBasal);
-            tempBasalsSeries = new LineGraphSeries<>(tempBasal);
-            tempBasalsSeries.setDrawBackground(true);
-            tempBasalsSeries.setBackgroundColor(Color.argb(200, 0x03, 0xA9, 0xF4));
-            tempBasalsSeries.setThickness(0);
-
-            DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
-            basalLine = basalLineArray.toArray(basalLine);
-            basalsLineSeries = new LineGraphSeries<>(basalLine);
-            Paint paint = new Paint();
-            paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(2);
-            paint.setPathEffect(new DashPathEffect(new float[]{2, 4}, 0));
-            paint.setColor(MainApp.sResources.getColor(R.color.basal));
-            basalsLineSeries.setCustomPaint(paint);
-
-            DataPoint[] absoluteBasalLine = new DataPoint[absoluteBasalLineArray.size()];
-            absoluteBasalLine = absoluteBasalLineArray.toArray(absoluteBasalLine);
-            absoluteBasalsLineSeries = new LineGraphSeries<>(absoluteBasalLine);
-            Paint absolutePaint = new Paint();
-            absolutePaint.setStyle(Paint.Style.STROKE);
-            absolutePaint.setStrokeWidth(4);
-            absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
-            absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
-        }
-
-        // **** IOB COB DEV graph ****
-        class DeviationDataPoint extends DataPoint {
-            public int color;
-
-            public DeviationDataPoint(double x, double y, int color) {
-                super(x, y);
-                this.color = color;
-            }
-        }
-        FixedLineGraphSeries<DataPoint> iobSeries;
-        FixedLineGraphSeries<DataPoint> cobSeries;
-        BarGraphSeries<DeviationDataPoint> devSeries;
-        Double maxIobValueFound = 0d;
-        Double maxCobValueFound = 0d;
-        Double maxDevValueFound = 0d;
-
-        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked()) {
-            //Date start = new Date();
-            List<DataPoint> iobArray = new ArrayList<>();
-            List<DataPoint> cobArray = new ArrayList<>();
-            List<DeviationDataPoint> devArray = new ArrayList<>();
-            for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
-                if (showIobView.isChecked()) {
-                    IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
-                    iobArray.add(new DataPoint(time, iob.iob));
-                    maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
-                }
-                if (showCobView.isChecked() || showDeviationsView.isChecked()) {
-                    AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
-                    if (autosensData != null && showCobView.isChecked()) {
-                        cobArray.add(new DataPoint(time, autosensData.cob));
-                        maxCobValueFound = Math.max(maxCobValueFound, autosensData.cob);
-                    }
-                    if (autosensData != null && showDeviationsView.isChecked()) {
-                        int color = Color.BLACK; // "="
-                        if (autosensData.pastSensitivity.equals("C")) color = Color.GRAY;
-                        if (autosensData.pastSensitivity.equals("+")) color = Color.GREEN;
-                        if (autosensData.pastSensitivity.equals("-")) color = Color.RED;
-                        devArray.add(new DeviationDataPoint(time, autosensData.deviation, color));
-                        maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
-                    }
-                }
-            }
-            //Profiler.log(log, "IOB processed", start);
-            DataPoint[] iobData = new DataPoint[iobArray.size()];
-            iobData = iobArray.toArray(iobData);
-            iobSeries = new FixedLineGraphSeries<>(iobData);
-            iobSeries.setDrawBackground(true);
-            iobSeries.setBackgroundColor(0x80FFFFFF & MainApp.sResources.getColor(R.color.iob)); //50%
-            iobSeries.setColor(MainApp.sResources.getColor(R.color.iob));
-            iobSeries.setThickness(3);
-
-
-            if (showIobView.isChecked() && (showCobView.isChecked() || showDeviationsView.isChecked())) {
-                List<DataPoint> cobArrayRescaled = new ArrayList<>();
-                List<DeviationDataPoint> devArrayRescaled = new ArrayList<>();
-                for (int ci = 0; ci < cobArray.size(); ci++) {
-                    cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxIobValueFound / maxCobValueFound / 2));
-                }
-                for (int ci = 0; ci < devArray.size(); ci++) {
-                    devArrayRescaled.add(new DeviationDataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxIobValueFound / maxDevValueFound, devArray.get(ci).color));
-                }
-                cobArray = cobArrayRescaled;
-                devArray = devArrayRescaled;
-            }
-            // COB
-            DataPoint[] cobData = new DataPoint[cobArray.size()];
-            cobData = cobArray.toArray(cobData);
-            cobSeries = new FixedLineGraphSeries<>(cobData);
-            cobSeries.setDrawBackground(true);
-            cobSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
-            cobSeries.setColor(MainApp.sResources.getColor(R.color.cob));
-            cobSeries.setThickness(3);
-
-            // DEVIATIONS
-            DeviationDataPoint[] devData = new DeviationDataPoint[devArray.size()];
-            devData = devArray.toArray(devData);
-            devSeries = new BarGraphSeries<>(devData);
-            devSeries.setValueDependentColor(new ValueDependentColor<DeviationDataPoint>() {
-                @Override
-                public int get(DeviationDataPoint data) {
-                    return data.color;
-                }
-            });
-            //devSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
-            //devSeries.setColor(MainApp.sResources.getColor(R.color.cob));
-            //devSeries.setThickness(3);
-
-            iobGraph.removeAllSeries();
-
-            if (showIobView.isChecked()) {
-                iobGraph.addSeries(iobSeries);
-            }
-            if (showCobView.isChecked() && cobData.length > 0) {
-                iobGraph.addSeries(cobSeries);
-            }
-            if (showDeviationsView.isChecked() && devData.length > 0) {
-                iobGraph.addSeries(devSeries);
-            }
-            iobGraph.setVisibility(View.VISIBLE);
-        } else {
-            iobGraph.setVisibility(View.GONE);
-        }
-
-        // remove old data from graph
-        bgGraph.getSecondScale().getSeries().clear();
-        bgGraph.removeAllSeries();
-
-        // **** HIGH and LOW targets graph ****
-        DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
-                new DoubleDataPoint(fromTime, lowLine, highLine),
-                new DoubleDataPoint(endTime, lowLine, highLine)
-        };
-        bgGraph.addSeries(areaSeries = new AreaGraphSeries<>(areaDataPoints));
-        areaSeries.setColor(0);
-        areaSeries.setDrawBackground(true);
-        areaSeries.setBackgroundColor(Color.argb(40, 0, 255, 0));
-
-        // set manual x bounds to have nice steps
-        bgGraph.getViewport().setMaxX(endTime);
-        bgGraph.getViewport().setMinX(fromTime);
-        bgGraph.getViewport().setXAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
-        bgGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
-        iobGraph.getViewport().setMaxX(endTime);
-        iobGraph.getViewport().setMinX(fromTime);
-        iobGraph.getViewport().setXAxisBoundsManual(true);
-        iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
-        iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
-
-        // **** BG graph ****
-        List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
-        List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
-
-        if (bgReadingsArray.size() == 0)
-            return;
-
-        Iterator<BgReading> it = bgReadingsArray.iterator();
-        Double maxBgValue = 0d;
-        while (it.hasNext()) {
-            BgReading bg = it.next();
-            if (bg.value > maxBgValue) maxBgValue = bg.value;
-            bgListArray.add(bg);
-        }
-        if (showPrediction) {
-            DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
-            List<BgReading> predArray = amaResult.getPredictions();
-            Iterator<BgReading> itPred = predArray.iterator();
-            while (itPred.hasNext()) {
-                BgReading bg = it.next();
-                bgListArray.add(bg);
-            }
-        }
-
-        maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
-        maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
-        if (highLine > maxBgValue) maxBgValue = highLine;
-        Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
-
-        DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
-        bg = bgListArray.toArray(bg);
-
-        if (bg.length > 0) {
-            bgGraph.addSeries(new PointsWithLabelGraphSeries<>(bg));
-        }
-
-        // **** NOW line ****
-        DataPoint[] nowPoints = new DataPoint[]{
-                new DataPoint(now, 0),
-                new DataPoint(now, maxBgValue)
-        };
-        bgGraph.addSeries(seriesNow = new LineGraphSeries<>(nowPoints));
-        seriesNow.setDrawDataPoints(false);
-        DataPoint[] nowPoints2 = new DataPoint[]{
-                new DataPoint(now, 0),
-                new DataPoint(now, maxIobValueFound)
-        };
-        iobGraph.addSeries(seriesNow2 = new LineGraphSeries<>(nowPoints2));
-        seriesNow2.setDrawDataPoints(false);
-        //seriesNow.setThickness(1);
-        // custom paint to make a dotted line
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-        paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-        paint.setColor(Color.WHITE);
-        seriesNow.setCustomPaint(paint);
-        seriesNow2.setCustomPaint(paint);
-
-
-        // Treatments
-        List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
-
-        List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
-
-        for (int tx = 0; tx < treatments.size(); tx++) {
-            DataPointWithLabelInterface t = treatments.get(tx);
-            if (t.getX() < fromTime || t.getX() > endTime) continue;
-            t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
-            filteredTreatments.add(t);
-        }
-
-        // ProfileSwitch
-        List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
-
-        for (int tx = 0; tx < profileSwitches.size(); tx++) {
-            DataPointWithLabelInterface t = profileSwitches.get(tx);
-            if (t.getX() < fromTime || t.getX() > endTime) continue;
-            filteredTreatments.add(t);
-        }
-
-        DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
-        treatmentsArray = filteredTreatments.toArray(treatmentsArray);
-        if (treatmentsArray.length > 0) {
-            bgGraph.addSeries(new PointsWithLabelGraphSeries<>(treatmentsArray));
-        }
-
-        // set manual y bounds to have nice steps
-        bgGraph.getViewport().setMaxY(maxBgValue);
-        bgGraph.getViewport().setMinY(0);
-        bgGraph.getViewport().setYAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
-
-        // set second scale
-        if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
-            bgGraph.getSecondScale().addSeries(baseBasalsSeries);
-            bgGraph.getSecondScale().addSeries(tempBasalsSeries);
-            bgGraph.getSecondScale().addSeries(basalsLineSeries);
-            bgGraph.getSecondScale().addSeries(absoluteBasalsLineSeries);
-            bgGraph.getSecondScale().setMinY(0);
-            bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
-        }
-        bgGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
-            @Override
-            public String formatLabel(double value, boolean isValueX) {
-                return "";
-            }
-
-            @Override
-            public void setViewport(Viewport viewport) {
-
-            }
-        });
-
+        updateGUIAsync(from);
     }
 
     public double getNearestBg(long date, List<BgReading> bgReadingsArray) {

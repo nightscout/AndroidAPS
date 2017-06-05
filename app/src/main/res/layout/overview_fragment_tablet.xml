@@ -503,11 +503,30 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <com.jjoe64.graphview.GraphView
-                        android:id="@+id/overview_bggraph"
-                        android:layout_width="wrap_content"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.jjoe64.graphview.GraphView
+                            android:id="@+id/overview_bggraph"
+                            android:layout_width="wrap_content"
+                            android:layout_height="160dip"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true" />
+
+                        <TextView
+                            android:id="@+id/overview_updating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:text="@string/updating"
+                            android:textAppearance="?android:attr/textAppearanceMedium"
+                            android:textColor="@color/updating"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
 
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/overview_iobgraph"

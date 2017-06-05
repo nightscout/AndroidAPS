@@ -11,6 +11,7 @@
     <color name="tabBgColor">#f0003f59</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
     <color name="deviations">#FF0000</color>
+    <color name="updating">#50ffffff</color>
 
     <color name="defaultbackground">#424242</color>
 
