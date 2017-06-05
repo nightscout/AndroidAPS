@@ -304,9 +304,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         });
 */
-        bgGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
+        bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
         bgGraph.getGridLabelRenderer().reloadStyles();
-        iobGraph.getGridLabelRenderer().setGridColor(Color.rgb(0x75, 0x75, 0x75));
+        iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
         iobGraph.getGridLabelRenderer().reloadStyles();
         iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
         bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
@@ -1215,15 +1215,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 endTime = toTime;
             }
 
-            // **** HIGH and LOW targets graph ****
+            // **** Area ****
             DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
                     new DoubleDataPoint(fromTime, lowLine, highLine),
                     new DoubleDataPoint(endTime, lowLine, highLine)
             };
-            bgGraph.addSeries(areaSeries = new AreaGraphSeries<>(areaDataPoints));
+            areaSeries = new AreaGraphSeries<>(areaDataPoints);
             areaSeries.setColor(0);
             areaSeries.setDrawBackground(true);
-            areaSeries.setBackgroundColor(Color.argb(40, 0, 255, 0));
+            areaSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.inrangebackground));
 
             // set manual x bounds to have nice steps
             bgGraph.getViewport().setMaxX(endTime);
@@ -1236,6 +1236,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             iobGraph.getViewport().setXAxisBoundsManual(true);
             iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
             iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
+            bgGraph.onDataChanged(false, false);
+            iobGraph.onDataChanged(false, false);
 
         }
 
@@ -1315,14 +1317,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 baseBasal = baseBasalArray.toArray(baseBasal);
                 baseBasalsSeries = new LineGraphSeries<>(baseBasal);
                 baseBasalsSeries.setDrawBackground(true);
-                baseBasalsSeries.setBackgroundColor(Color.argb(200, 0x3F, 0x51, 0xB5));
+                baseBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.basebasal));
                 baseBasalsSeries.setThickness(0);
 
                 DataPoint[] tempBasal = new DataPoint[tempBasalArray.size()];
                 tempBasal = tempBasalArray.toArray(tempBasal);
                 tempBasalsSeries = new LineGraphSeries<>(tempBasal);
                 tempBasalsSeries.setDrawBackground(true);
-                tempBasalsSeries.setBackgroundColor(Color.argb(200, 0x03, 0xA9, 0xF4));
+                tempBasalsSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.tempbasal));
                 tempBasalsSeries.setThickness(0);
 
                 DataPoint[] basalLine = new DataPoint[basalLineArray.size()];
@@ -1510,6 +1512,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             // remove old data from graph
             bgGraph.getSecondScale().getSeries().clear();
             bgGraph.removeAllSeries();
+
+            // **** Area ***
+            bgGraph.addSeries(areaSeries);
 
             // **** BG graph ****
 

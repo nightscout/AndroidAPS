@@ -11,6 +11,10 @@
     <color name="tabBgColor">#f0003f59</color>
     <color name="tabBgColorSelected">#FF33B5E5</color>
     <color name="deviations">#FF0000</color>
+    <color name="inrangebackground">#2800FF00</color>
+    <color name="basebasal">#C83F51B5</color>
+    <color name="tempbasal">#C803A9F4</color>
+    <color name="graphgrid">#757575</color>
     <color name="updating">#50ffffff</color>
 
     <color name="defaultbackground">#424242</color>
