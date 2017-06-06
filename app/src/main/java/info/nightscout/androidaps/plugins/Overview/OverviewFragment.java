@@ -40,6 +40,7 @@ import com.jjoe64.graphview.Viewport;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.Series;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -1363,16 +1364,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             //devSeries.setColor(MainApp.sResources.getColor(R.color.cob));
             //devSeries.setThickness(3);
 
-            iobGraph.removeAllSeries();
+            iobGraph.getSeries().clear();
 
             if (showIobView.isChecked()) {
-                iobGraph.addSeries(iobSeries);
+                addSeriesWithoutInvalidate(iobSeries, iobGraph);
             }
             if (showCobView.isChecked() && cobData.length > 0) {
-                iobGraph.addSeries(cobSeries);
+                addSeriesWithoutInvalidate(cobSeries, iobGraph);
             }
             if (showDeviationsView.isChecked() && devData.length > 0) {
-                iobGraph.addSeries(devSeries);
+                addSeriesWithoutInvalidate(devSeries, iobGraph);
             }
             iobGraph.setVisibility(View.VISIBLE);
         } else {
@@ -1381,14 +1382,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // remove old data from graph
         bgGraph.getSecondScale().getSeries().clear();
-        bgGraph.removeAllSeries();
+        bgGraph.getSeries().clear();
 
         // **** Area ****
         DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
                 new DoubleDataPoint(fromTime, lowLine, highLine),
                 new DoubleDataPoint(endTime, lowLine, highLine)
         };
-        bgGraph.addSeries(areaSeries = new AreaGraphSeries<>(areaDataPoints));
+        areaSeries = new AreaGraphSeries<>(areaDataPoints);
+        addSeriesWithoutInvalidate(areaSeries, bgGraph);
         areaSeries.setColor(0);
         areaSeries.setDrawBackground(true);
         areaSeries.setBackgroundColor(MainApp.sResources.getColor(R.color.inrangebackground));
@@ -1425,11 +1427,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (showPrediction) {
             DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
             List<BgReading> predArray = amaResult.getPredictions();
-            Iterator<BgReading> itPred = predArray.iterator();
-            while (itPred.hasNext()) {
-                BgReading bg = it.next();
-                bgListArray.add(bg);
-            }
+            bgListArray.addAll(predArray);
         }
 
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
@@ -1441,34 +1439,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bg = bgListArray.toArray(bg);
 
         if (bg.length > 0) {
-            bgGraph.addSeries(new PointsWithLabelGraphSeries<>(bg));
+            addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(bg), bgGraph);
         }
 
-        // **** NOW line ****
-        DataPoint[] nowPoints = new DataPoint[]{
-                new DataPoint(now, 0),
-                new DataPoint(now, maxBgValue)
-        };
-        bgGraph.addSeries(seriesNow = new LineGraphSeries<>(nowPoints));
-        seriesNow.setDrawDataPoints(false);
-        DataPoint[] nowPoints2 = new DataPoint[]{
-                new DataPoint(now, 0),
-                new DataPoint(now, maxIobValueFound)
-        };
-        iobGraph.addSeries(seriesNow2 = new LineGraphSeries<>(nowPoints2));
-        seriesNow2.setDrawDataPoints(false);
-        //seriesNow.setThickness(1);
-        // custom paint to make a dotted line
-        Paint paint = new Paint();
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(2);
-        paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
-        paint.setColor(Color.WHITE);
-        seriesNow.setCustomPaint(paint);
-        seriesNow2.setCustomPaint(paint);
-
-
-        // Treatments
+         // Treatments
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
@@ -1544,8 +1518,33 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             }
         });
+
+        // **** NOW line ****
+        DataPoint[] nowPoints = new DataPoint[]{
+                new DataPoint(now, 0),
+                new DataPoint(now, maxBgValue)
+        };
+        addSeriesWithoutInvalidate(seriesNow = new LineGraphSeries<>(nowPoints), bgGraph);
+        seriesNow.setDrawDataPoints(false);
+        DataPoint[] nowPoints2 = new DataPoint[]{
+                new DataPoint(now, 0),
+                new DataPoint(now, maxIobValueFound)
+        };
+        iobGraph.addSeries(seriesNow2 = new LineGraphSeries<>(nowPoints2));
+        seriesNow2.setDrawDataPoints(false);
+        //seriesNow.setThickness(1);
+        // custom paint to make a dotted line
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(2);
+        paint.setPathEffect(new DashPathEffect(new float[]{10, 20}, 0));
+        paint.setColor(Color.WHITE);
+        seriesNow.setCustomPaint(paint);
+        seriesNow2.setCustomPaint(paint);
+
         if (updating != null)
             updating.setVisibility(View.GONE);
+        log.debug("updateGUI finshed");
     }
 
     public double getNearestBg(long date, List<BgReading> bgReadingsArray) {
@@ -1558,6 +1557,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             break;
         }
         return bg;
+    }
+
+    void addSeriesWithoutInvalidate(Series s, GraphView graph) {
+        s.onGraphViewAttached(graph);
+        graph.getSeries().add(s);
     }
 
 
