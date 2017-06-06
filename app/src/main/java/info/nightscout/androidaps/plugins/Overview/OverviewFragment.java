@@ -53,8 +53,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -322,14 +320,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 return false;
             }
         });
-
-        Timer timeTimer = new Timer();
-        timeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                timeUpdate();
-            }
-        }, 0, 30000);
 
         return view;
     }
@@ -856,20 +846,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    private void timeUpdate() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (timeView != null) { //must not exists
-                        timeView.setText(DateUtil.timeString(new Date()));
-                    }
-                    log.debug("Time updated");
-                }
-            });
-    }
-
     public void scheduleUpdateGUI(final String from) {
         class UpdateRunnable implements Runnable {
             public void run() {
@@ -1099,8 +1075,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (highLine < 1) {
             highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
-
-        timeUpdate();
 
         // **** BG value ****
         if (lastBG != null) {
