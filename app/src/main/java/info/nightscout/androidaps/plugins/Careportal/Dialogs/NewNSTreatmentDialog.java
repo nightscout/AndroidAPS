@@ -399,10 +399,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             data.put("created_at", DateUtil.toISOString(eventTime));
             switch (options.eventType) {
                 case R.id.careportal_bgcheck:
-                    data.put("eventType", "BG Check");
+                    data.put("eventType", CareportalEvent.BGCHECK);
                     break;
                 case R.id.careportal_announcement:
-                    data.put("eventType", "Announcement");
+                    data.put("eventType", CareportalEvent.ANNOUNCEMENT);
                     data.put("isAnnouncement", true);
                     break;
                 case R.id.careportal_cgmsensorinsert:
@@ -423,16 +423,19 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     data.put("eventType", "Carb Correction");
                     break;
                 case R.id.careportal_exercise:
-                    data.put("eventType", "Exercise");
+                    data.put("eventType", CareportalEvent.EXERCISE);
                     break;
                 case R.id.careportal_insulincartridgechange:
                     data.put("eventType", CareportalEvent.INSULINCHANGE);
+                    break;
+                case R.id.careportal_pumpbatterychange:
+                    data.put("eventType", CareportalEvent.PUMPBATTERYCHANGE);
                     break;
                 case R.id.careportal_mealbolus:
                     data.put("eventType", "Meal Bolus");
                     break;
                 case R.id.careportal_note:
-                    data.put("eventType", "Note");
+                    data.put("eventType", CareportalEvent.NOTE);
                     break;
                 case R.id.careportal_profileswitch:
                     data.put("eventType", CareportalEvent.PROFILESWITCH);
@@ -442,7 +445,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     data.put("eventType", CareportalEvent.SITECHANGE);
                     break;
                 case R.id.careportal_question:
-                    data.put("eventType", "Question");
+                    data.put("eventType", CareportalEvent.QUESTION);
                     break;
                 case R.id.careportal_snackbolus:
                     data.put("eventType", "Snack Bolus");
@@ -454,10 +457,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     data.put("eventType", CareportalEvent.TEMPBASAL);
                     break;
                 case R.id.careportal_openapsoffline:
-                    data.put("eventType", "OpenAPS Offline");
+                    data.put("eventType", CareportalEvent.OPENAPSOFFLINE);
                     break;
                 case R.id.careportal_temporarytarget:
-                    data.put("eventType", "Temporary Target");
+                    data.put("eventType", CareportalEvent.TEMPORARYTARGET);
                     if (!reasonSpinner.getSelectedItem().toString().equals(""))
                         data.put("reason", reasonSpinner.getSelectedItem().toString());
                     if (SafeParse.stringToDouble(low.getText().toString()) != 0d)

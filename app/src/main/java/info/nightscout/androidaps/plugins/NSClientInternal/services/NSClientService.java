@@ -3,13 +3,11 @@ package info.nightscout.androidaps.plugins.NSClientInternal.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -310,10 +308,8 @@ public class NSClientService extends Service {
                             "onDataUpdate");
                     wakeLock.acquire();
                     try {
-                        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
                         JSONObject data = (JSONObject) args[0];
-                        NSCal actualCal = new NSCal();
                         boolean broadcastProfile = false;
                         try {
                             // delta means only increment/changes are comming
@@ -398,7 +394,6 @@ public class NSClientService extends Service {
                                     } else if (treatment.getAction().equals("update")) {
                                         updatedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("remove")) {
-                                        if (!isCurrent(treatment)) continue;
                                         removedTreatments.put(jsonTreatment);
                                     }
                                 }
@@ -445,9 +440,6 @@ public class NSClientService extends Service {
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + cals.length() + " cals"));
                                 // Retreive actual calibration
                                 for (Integer index = 0; index < cals.length(); index++) {
-                                    if (index == 0) {
-                                        actualCal.set(cals.optJSONObject(index));
-                                    }
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(cals.optJSONObject(index));
                                 }

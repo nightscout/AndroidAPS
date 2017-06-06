@@ -12,11 +12,12 @@
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/overview_buttons">
+            android:layout_above="@+id/overview_buttons"
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <android.support.v7.widget.RecyclerView
@@ -29,7 +30,7 @@
                 <LinearLayout
                     android:id="@+id/overview_looplayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="2dp">
 
@@ -71,14 +72,14 @@
                 <LinearLayout
                     android:id="@+id/overview_pumpstatuslayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingTop="2dp">
 
                     <TextView
                         android:id="@+id/overview_pumpstatus"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:gravity="center_vertical|center_horizontal"
@@ -162,7 +163,7 @@
                 <LinearLayout
                     android:id="@+id/overview_basallayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -289,35 +290,17 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/overview_graphs_layout"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <com.jjoe64.graphview.GraphView
-                            android:id="@+id/overview_bggraph"
-                            android:layout_width="wrap_content"
-                            android:layout_height="160dip"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true" />
-
-                        <TextView
-                            android:id="@+id/overview_updating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerInParent="true"
-                            android:layout_centerVertical="true"
-                            android:text="@string/updating"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/updating"
-                            android:textStyle="bold" />
-
-                    </RelativeLayout>
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/overview_bggraph"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
 
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/overview_iobgraph"

@@ -49,6 +49,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
     static final OptionsToShow sensorstart = new OptionsToShow(R.id.careportal_cgmsensorstart, R.string.careportal_cgmsensorstart, true, false, false, false, false, false, false, false, false, false);
     static final OptionsToShow sensorchange = new OptionsToShow(R.id.careportal_cgmsensorinsert, R.string.careportal_cgmsensorinsert, true, false, false, false, false, false, false, false, false, false);
     static final OptionsToShow insulinchange = new OptionsToShow(R.id.careportal_insulincartridgechange, R.string.careportal_insulincartridgechange, true, false, false, false, false, false, false, false, false, false);
+    static final OptionsToShow pumpbatterychange = new OptionsToShow(R.id.careportal_pumpbatterychange, R.string.careportal_pumpbatterychange, true, false, false, false, false, false, false, false, false, false);
     static final OptionsToShow tempbasalstart = new OptionsToShow(R.id.careportal_tempbasalstart, R.string.careportal_tempbasalstart, true, false, false, false, true, true, true, false, false, false);
     static final OptionsToShow tempbasalend = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend, true, false, false, false, false, false, false, false, false, false);
     static final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, true, false, false, true, false, false);
@@ -69,6 +70,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
         view.findViewById(R.id.careportal_carbscorrection).setOnClickListener(this);
         view.findViewById(R.id.careportal_exercise).setOnClickListener(this);
         view.findViewById(R.id.careportal_insulincartridgechange).setOnClickListener(this);
+        view.findViewById(R.id.careportal_pumpbatterychange).setOnClickListener(this);
         view.findViewById(R.id.careportal_mealbolus).setOnClickListener(this);
         view.findViewById(R.id.careportal_note).setOnClickListener(this);
         view.findViewById(R.id.careportal_profileswitch).setOnClickListener(this);
@@ -123,6 +125,9 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
                 break;
             case R.id.careportal_insulincartridgechange:
                 newDialog.setOptions(insulinchange);
+                break;
+            case R.id.careportal_pumpbatterychange:
+                newDialog.setOptions(pumpbatterychange);
                 break;
             case R.id.careportal_mealbolus:
                 newDialog.setOptions(mealbolus);

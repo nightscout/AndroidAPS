@@ -236,6 +236,17 @@
                     app:layout_gravity="fill"
                     app:layout_row="6" />
 
+                <Button
+                    android:id="@+id/careportal_pumpbatterychange"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="70dp"
+                    android:text="@string/careportal_pumpbatterychange"
+                    app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="6" />
+
             </android.support.v7.widget.GridLayout>
         </LinearLayout>
     </ScrollView>

@@ -1266,6 +1266,22 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return null;
     }
 
+    public List<CareportalEvent> getCareportalEventsFromTime(long mills, boolean ascending) {
+        try {
+            List<CareportalEvent> careportalEvents;
+            QueryBuilder<CareportalEvent, Long> queryBuilder = getDaoCareportalEvents().queryBuilder();
+            queryBuilder.orderBy("date", ascending);
+            Where where = queryBuilder.where();
+            where.ge("date", mills);
+            PreparedQuery<CareportalEvent> preparedQuery = queryBuilder.prepare();
+            careportalEvents = getDaoCareportalEvents().query(preparedQuery);
+            return careportalEvents;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<CareportalEvent>();
+    }
+
     public void deleteCareportalEventById(String _id) {
         try {
             QueryBuilder<CareportalEvent, Long> queryBuilder = null;

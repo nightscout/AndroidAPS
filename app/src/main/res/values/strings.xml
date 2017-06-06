@@ -626,4 +626,5 @@
     <string name="profileswitch">ProfileSwitch</string>
     <string name="careportal_pbage_label">Pump battery age</string>
     <string name="updating">Updating ...</string>
+    <string name="careportal_pumpbatterychange">Pump Battery Change</string>
 </resources>

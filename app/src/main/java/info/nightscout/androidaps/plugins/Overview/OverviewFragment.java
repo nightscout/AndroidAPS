@@ -54,8 +54,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -78,6 +76,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
@@ -322,14 +321,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 return false;
             }
         });
-
-        Timer timeTimer = new Timer();
-        timeTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                timeUpdate();
-            }
-        }, 0, 30000);
 
         return view;
     }
@@ -788,6 +779,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
+    public void onStatusEvent(final EventCareportalEventChange ev) {
+        scheduleUpdateGUI("EventCareportalEventChange");
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
         scheduleUpdateGUI("EventNewBG");
     }
@@ -851,20 +847,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
     }
 
-    private void timeUpdate() {
-        Activity activity = getActivity();
-        if (activity != null)
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (timeView != null) { //must not exists
-                        timeView.setText(DateUtil.timeString(new Date()));
-                    }
-                    log.debug("Time updated");
-                }
-            });
-    }
-
     public void scheduleUpdateGUI(final String from) {
         class UpdateRunnable implements Runnable {
             public void run() {
@@ -888,7 +870,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         scheduledUpdate = worker.schedule(task, msec, TimeUnit.MILLISECONDS);
     }
 
-    private class updateGUIAsyncClass extends AsyncTask<String, Void, String> {
+    private class UpdateGUIAsyncTask extends AsyncTask<String, Void, String> {
 
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
@@ -952,8 +934,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         @Override
         protected void onPreExecute() {
-            log.debug("updateGUIAsyncClass onPreExecute");
-            updating.setVisibility(View.VISIBLE);
+            log.debug("UpdateGUIAsyncTask onPreExecute");
+            if (getActivity() == null)
+                return;
+
+            if (updating != null)
+                updating.setVisibility(View.VISIBLE);
+            if (timeView != null) { //must not exists
+                timeView.setText(DateUtil.timeString(new Date()));
+            }
             updateNotifications();
             CareportalFragment.updateAge(getActivity(), sage, iage, cage, pbage);
             // open loop mode
@@ -1129,8 +1118,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
             }
 
-            timeUpdate();
-
             // **** BG value ****
             if (lastBG != null) {
                 int color = MainApp.sResources.getColor(R.color.inrange);
@@ -1236,14 +1223,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             iobGraph.getViewport().setXAxisBoundsManual(true);
             iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
             iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
-            bgGraph.onDataChanged(false, false);
-            iobGraph.onDataChanged(false, false);
+            bgGraph.onDataChanged(true, true);
+            iobGraph.onDataChanged(true, true);
 
         }
 
         @Override
         protected String doInBackground(String... params) {
-            log.debug("updateGUIAsyncClass starting background calculations from: " + params[0]);
+            log.debug("UpdateGUIAsyncTask doInBackground");
 
             // IOB
             MainApp.getConfigBuilder().updateTotalIOBTreatments();
@@ -1470,6 +1457,29 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 filteredTreatments.add(t);
             }
 
+            // Extended bolus
+            if (!pump.isFakingTempsByExtendedBoluses()) {
+                List<ExtendedBolus> extendedBoluses = MainApp.getConfigBuilder().getExtendedBolusesFromHistory().getList();
+
+                for (int tx = 0; tx < extendedBoluses.size(); tx++) {
+                    DataPointWithLabelInterface t = extendedBoluses.get(tx);
+                    if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
+                    if (t.getDuration() == 0) continue;
+                    t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
+                    filteredTreatments.add(t);
+                }
+            }
+
+            // Careportal
+            List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, true);
+
+            for (int tx = 0; tx < careportalEvents.size(); tx++) {
+                DataPointWithLabelInterface t = careportalEvents.get(tx);
+                if (t.getX() + t.getDuration() < fromTime || t.getX() > endTime) continue;
+                t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
+                filteredTreatments.add(t);
+            }
+
             DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
             treatmentsArray = filteredTreatments.toArray(treatmentsArray);
             if (treatmentsArray.length > 0) {
@@ -1482,8 +1492,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         @Override
         protected void onPostExecute(String result) {
-            log.debug("updateGUIAsyncClass onPostExecute");
+            log.debug("UpdateGUIAsyncTask onPostExecute");
             // IOB
+            if (getActivity() == null)
+                return;
             String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                     + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                     + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
@@ -1514,7 +1526,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             bgGraph.removeAllSeries();
 
             // **** Area ***
-            bgGraph.addSeries(areaSeries);
+            if (areaSeries != null)
+                bgGraph.addSeries(areaSeries);
 
             // **** BG graph ****
 
@@ -1576,12 +1589,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
                 }
             });
-            updating.setVisibility(View.GONE);
+            if (updating != null)
+                updating.setVisibility(View.GONE);
         }
     }
 
     public void updateGUIAsync(String from) {
-        new updateGUIAsyncClass().execute(from);
+        new UpdateGUIAsyncTask().execute(from);
     }
 
     @SuppressLint("SetTextI18n")

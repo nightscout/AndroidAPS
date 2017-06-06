@@ -29,6 +29,7 @@ public class Notification {
     public static final int IC_MISSING = 14;
     public static final int BASAL_MISSING = 15;
     public static final int TARGET_MISSING = 16;
+    public static final int ANNOUNCEMENT = 17;
 
     public int id;
     public Date date;

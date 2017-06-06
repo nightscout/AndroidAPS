@@ -22,6 +22,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.Overview.Notification;
@@ -434,7 +435,42 @@ public class DataService extends IntentService {
         }
 
         if (intent.getAction().equals(Intents.ACTION_NEW_MBG)) {
-            log.error("Not implemented yet"); // TODO implemeng MBGS
+            try {
+                if (bundles.containsKey("mbg")) {
+                    String mbgstring = bundles.getString("mbg");
+                    JSONObject mbgJson = new JSONObject(mbgstring);
+                    NSMbg nsMbg = new NSMbg(mbgJson);
+                    CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
+                    if (careportalEvent.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                        if (Config.logIncommingData)
+                            log.debug("Ignoring old MBG: " + careportalEvent.log());
+                        return;
+                    }
+                    MainApp.getDbHelper().createOrUpdate(careportalEvent);
+                    if (Config.logIncommingData)
+                        log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+                }
+
+                if (bundles.containsKey("mbgs")) {
+                    String sgvstring = bundles.getString("mbgs");
+                    JSONArray jsonArray = new JSONArray(sgvstring);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject mbgJson = jsonArray.getJSONObject(i);
+                        NSMbg nsMbg = new NSMbg(mbgJson);
+                        CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
+                        if (careportalEvent.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
+                            if (Config.logIncommingData)
+                                log.debug("Ignoring old MBG: " + careportalEvent.log());
+                            return;
+                        }
+                        MainApp.getDbHelper().createOrUpdate(careportalEvent);
+                        if (Config.logIncommingData)
+                            log.debug("Adding/Updating new MBG: " + careportalEvent.log());
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -498,15 +534,35 @@ public class DataService extends IntentService {
     }
 
     public void handleAddChangeCareportalEventRecord(JSONObject trJson) throws JSONException {
+        if (trJson.has("insulin") && trJson.getDouble("insulin") > 0)
+            return;
+        if (trJson.has("carbs") && trJson.getDouble("carbs") > 0)
+            return;
         if (trJson.has("eventType") && (
                 trJson.getString("eventType").equals(CareportalEvent.SITECHANGE) ||
                         trJson.getString("eventType").equals(CareportalEvent.INSULINCHANGE) ||
                         trJson.getString("eventType").equals(CareportalEvent.SENSORCHANGE) ||
+                        trJson.getString("eventType").equals(CareportalEvent.BGCHECK) ||
+                        trJson.getString("eventType").equals(CareportalEvent.NOTE) ||
+                        trJson.getString("eventType").equals(CareportalEvent.NONE) ||
+                        trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT) ||
+                        trJson.getString("eventType").equals(CareportalEvent.QUESTION) ||
+                        trJson.getString("eventType").equals(CareportalEvent.EXERCISE) ||
+                        trJson.getString("eventType").equals(CareportalEvent.OPENAPSOFFLINE) ||
                         trJson.getString("eventType").equals(CareportalEvent.PUMPBATTERYCHANGE)
         )) {
             if (Config.logIncommingData)
                 log.debug("Processing CareportalEvent record: " + trJson.toString());
             MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
+        }
+
+        if (trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
+            long date = trJson.getLong("mills");
+            long now = new Date().getTime();
+            if (date > now - 15 * 60 * 1000L && trJson.has("notes")) {
+                Notification announcement = new Notification(Notification.ANNOUNCEMENT, trJson.getString("notes"), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(announcement));
+            }
         }
     }
 

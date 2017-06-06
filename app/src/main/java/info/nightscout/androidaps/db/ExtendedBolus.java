@@ -201,6 +201,11 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                 + getRealDuration() + "/" + durationInMinutes + ") ";
     }
 
+    public String toStringTotal() {
+        return DecimalFormatter.to2Decimal(insulin) + "U ( " +
+                DecimalFormatter.to2Decimal(absoluteRate()) + " U/h )";
+    }
+
     // -------- DataPointWithLabelInterface --------
     @Override
     public double getX() {
@@ -223,7 +228,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     @Override
     public String getLabel() {
-        return toStringMedium();
+        return toStringTotal();
     }
 
     @Override
