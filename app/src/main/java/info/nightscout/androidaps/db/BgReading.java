@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -133,13 +134,7 @@ public class BgReading implements DataPointWithLabelInterface {
             return false;
         if (!direction.equals(other.direction))
             return false;
-        if (_id == null && other._id != null)
-            return false;
-        else if (_id != null && other._id == null)
-            return false;
-        else if (_id == null && other._id == null)
-            ;
-        else if (!_id.equals(other._id))
+        if (!Objects.equals(_id, other._id))
             return false;
         return true;
     }

@@ -175,23 +175,6 @@ public class NSUpload {
         }
     }
 
-    public static void uploadTreatment(Treatment treatment) {
-        JSONObject data = new JSONObject();
-        try {
-            if (treatment.mealBolus)
-                data.put("eventType", "Meal Bolus");
-            else
-                data.put("eventType", "Correction Bolus");
-            if (treatment.insulin != 0d) data.put("insulin", treatment.insulin);
-            if (treatment.carbs != 0d) data.put("carbs", treatment.carbs.intValue());
-            data.put("created_at", DateUtil.toISOString(treatment.date));
-            data.put("timeIndex", treatment.date);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        NSUpload.uploadCareportalEntryToNS(data);
-    }
-
     public static void uploadDeviceStatus() {
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
@@ -261,6 +244,8 @@ public class NSUpload {
             if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
             data.put("created_at", DateUtil.toISOString(detailedBolusInfo.date));
             data.put("date", detailedBolusInfo.date);
+            if (detailedBolusInfo.pumpId != 0)
+                data.put("pumpId", detailedBolusInfo.pumpId);
             if (detailedBolusInfo.glucose != 0d)
                 data.put("glucose", detailedBolusInfo.glucose);
             if (!detailedBolusInfo.glucoseType.equals(""))

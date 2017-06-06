@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -72,15 +73,9 @@ public class MsgHistoryEvents_v2 extends MessageBase {
         }
         extendedBolus = new ExtendedBolus();
 
-        Treatment treatment = MainApp.getDbHelper().findTreatmentByTime(datetime.getTime());
-        if (treatment != null) {
-            log.debug("EVENT (" + recordCode + ") " + datetime.toLocaleString() + " Param1: " + param1 + " Param2: " + param2);
-            log.debug("Existing treatment found. Skipping ...");
-            if (datetime.getTime() > lastEventTimeLoaded)
-                lastEventTimeLoaded = datetime.getTime();
-            return;
-        }
         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        detailedBolusInfo.recordFromHistory = true;
+        detailedBolusInfo.pumpId = datetime.getTime();
 
         switch (recordCode) {
             case DanaRPump.TEMPSTART:
@@ -92,9 +87,7 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 break;
             case DanaRPump.TEMPSTOP:
                 log.debug("EVENT TEMPSTOP (" + recordCode + ") " + datetime.toLocaleString());
-                temporaryBasal.date = datetime.getTime();
-                temporaryBasal.durationInMinutes = 0;
-                MainApp.getConfigBuilder().addToHistoryTempBasalStart(temporaryBasal);
+                MainApp.getConfigBuilder().addToHistoryTempBasalStop(datetime.getTime());
                 break;
             case DanaRPump.EXTENDEDSTART:
                 log.debug("EVENT EXTENDEDSTART (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + (param1 / 100d) + "U Duration: " + param2 + "min");
@@ -105,20 +98,20 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 break;
             case DanaRPump.EXTENDEDSTOP:
                 log.debug("EVENT EXTENDEDSTOP (" + recordCode + ") " + datetime.toLocaleString() + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
-                extendedBolus.date = datetime.getTime();
-                extendedBolus.durationInMinutes = 0;
-                MainApp.getConfigBuilder().addToHistoryExtendedBolusStart(extendedBolus);
+                MainApp.getConfigBuilder().addToHistoryExtendedBolusStop(datetime.getTime());
                 break;
             case DanaRPump.BOLUS:
                 log.debug("EVENT BOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 detailedBolusInfo.date = datetime.getTime();
                 detailedBolusInfo.insulin = param1 / 100d;
+                detailedBolusInfo.source = Source.PUMP;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 break;
             case DanaRPump.DUALBOLUS:
                 log.debug("EVENT DUALBOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 detailedBolusInfo.date = datetime.getTime();
                 detailedBolusInfo.insulin = param1 / 100d;
+                detailedBolusInfo.source = Source.PUMP;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 break;
             case DanaRPump.DUALEXTENDEDSTART:
@@ -130,9 +123,7 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 break;
             case DanaRPump.DUALEXTENDEDSTOP:
                 log.debug("EVENT DUALEXTENDEDSTOP (" + recordCode + ") " + datetime.toLocaleString() + " Delivered: " + (param1 / 100d) + "U RealDuration: " + param2 + "min");
-                extendedBolus.date = datetime.getTime();
-                extendedBolus.durationInMinutes = 0;
-                MainApp.getConfigBuilder().addToHistoryExtendedBolusStart(extendedBolus);
+                MainApp.getConfigBuilder().addToHistoryExtendedBolusStop(datetime.getTime());
                 break;
             case DanaRPump.SUSPENDON:
                 log.debug("EVENT SUSPENDON (" + recordCode + ") " + datetime.toLocaleString());
@@ -153,6 +144,7 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 log.debug("EVENT CARBS (" + recordCode + ") " + datetime.toLocaleString() + " Carbs: " + param1 + "g");
                 detailedBolusInfo.date = datetime.getTime();
                 detailedBolusInfo.carbs = param1;
+                detailedBolusInfo.source = Source.PUMP;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 break;
             default:

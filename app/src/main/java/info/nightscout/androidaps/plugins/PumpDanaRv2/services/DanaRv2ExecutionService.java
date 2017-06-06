@@ -420,7 +420,7 @@ public class DanaRv2ExecutionService extends Service {
                 log.debug("Communication stopped");
             }
         }
-        waitMsec(300);
+        waitMsec(1000);
         bolusingTreatment = null;
         loadEvents();
         return true;

@@ -394,6 +394,7 @@ public class NSClientService extends Service {
                                     } else if (treatment.getAction().equals("update")) {
                                         updatedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("remove")) {
+                                        if (treatment.getMills() != null && treatment.getMills() > new Date().getTime() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
                                         removedTreatments.put(jsonTreatment);
                                     }
                                 }

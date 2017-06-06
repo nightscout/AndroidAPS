@@ -934,11 +934,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
+    // return true if new record is created
+    public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (!detailedBolusInfo.addToTreatments)
-            return;
-        activeTreatments.addToHistoryTreatment(detailedBolusInfo);
-        NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
+            return false;
+        boolean newRecordCreated = activeTreatments.addToHistoryTreatment(detailedBolusInfo);
+        if (newRecordCreated)
+            NSUpload.uploadBolusWizardRecord(detailedBolusInfo);
+        return newRecordCreated;
     }
 
     @Override

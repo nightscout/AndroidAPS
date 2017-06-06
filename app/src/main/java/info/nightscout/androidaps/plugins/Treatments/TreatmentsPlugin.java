@@ -24,6 +24,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -405,24 +406,31 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
+    public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
         Treatment treatment = new Treatment(detailedBolusInfo.insulinInterface);
         treatment.date = detailedBolusInfo.date;
+        treatment.source = detailedBolusInfo.recordFromHistory ? Source.PUMP : Source.USER;
+        if (detailedBolusInfo.recordFromHistory)
+            treatment.pumpId = treatment.date;
         treatment.insulin = detailedBolusInfo.insulin;
         if (detailedBolusInfo.carbTime == 0)
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
-        MainApp.getDbHelper().createOrUpdate(treatment);
-        log.debug("Adding new Treatment record" + treatment.log());
+        boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(treatment);
+        log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
             Treatment carbsTreatment = new Treatment(detailedBolusInfo.insulinInterface);
-            carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L;
+            carbsTreatment.source = detailedBolusInfo.recordFromHistory ? Source.PUMP : Source.USER;
+            if (detailedBolusInfo.recordFromHistory)
+                carbsTreatment.pumpId = treatment.date;
+            carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
             carbsTreatment.source = detailedBolusInfo.source;
             MainApp.getDbHelper().createOrUpdate(carbsTreatment);
             log.debug("Adding new Treatment record" + carbsTreatment);
         }
+        return newRecordCreated;
     }
 
     @Override

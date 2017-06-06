@@ -350,14 +350,28 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
     }
 
     void drawLabel45(float endX, float endY, E value, Canvas canvas) {
-        float px = endX;
-        float py = endY - value.getSize();
-        canvas.save();
-        canvas.rotate(-45, px, py);
-        mPaint.setTextSize((int) (value.getSize() * 2.5));
-        mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
-        mPaint.setFakeBoldText(true);
-        canvas.drawText(value.getLabel(), px + value.getSize(), py, mPaint);
-        canvas.restore();
+        if (value.getLabel().startsWith("~")) {
+            float px = endX;
+            float py = endY + value.getSize();
+            canvas.save();
+            canvas.rotate(-45, px, py);
+            mPaint.setTextSize((int) (value.getSize() * 2.5));
+            mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+            mPaint.setFakeBoldText(true);
+            mPaint.setTextAlign(Paint.Align.RIGHT);
+            canvas.drawText(value.getLabel().substring(1), px - value.getSize(), py, mPaint);
+            mPaint.setTextAlign(Paint.Align.LEFT);
+            canvas.restore();
+        } else {
+            float px = endX;
+            float py = endY - value.getSize();
+            canvas.save();
+            canvas.rotate(-45, px, py);
+            mPaint.setTextSize((int) (value.getSize() * 2.5));
+            mPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
+            mPaint.setFakeBoldText(true);
+            canvas.drawText(value.getLabel(), px + value.getSize(), py, mPaint);
+            canvas.restore();
+        }
     }
 }

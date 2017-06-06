@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -32,15 +33,18 @@ public class Treatment implements DataPointWithLabelInterface {
     @DatabaseField
     public boolean isValid = true;
 
+    @DatabaseField(index = true)
+    public long pumpId = 0;
+
     @DatabaseField
     public int source = Source.NONE;
     @DatabaseField
     public String _id;
 
     @DatabaseField
-    public Double insulin = 0d;
+    public double insulin = 0d;
     @DatabaseField
-    public Double carbs = 0d;
+    public double carbs = 0d;
     @DatabaseField
     public boolean mealBolus = true; // true for meal bolus , false for correction bolus
 
@@ -57,30 +61,58 @@ public class Treatment implements DataPointWithLabelInterface {
         dia = insulin.getDia();
     }
 
-    public void copyFrom(Treatment t) {
-        this.date = t.date;
-        this.isValid = t.isValid;
-        this.source = t.source;
-        this._id = t._id;
-        this.insulin = t.insulin;
-        this.carbs = t.carbs;
-        this.mealBolus = t.mealBolus;
-    }
-
     public long getMillisecondsFromStart() {
         return new Date().getTime() - date;
     }
 
-    public String log() {
+    public String toString() {
         return "Treatment{" +
                 "date= " + date +
                 ", date= " + DateUtil.dateAndTimeString(date) +
                 ", isValid= " + isValid +
                 ", _id= " + _id +
+                ", pumpId= " + pumpId +
                 ", insulin= " + insulin +
                 ", carbs= " + carbs +
                 ", mealBolus= " + mealBolus +
                 "}";
+    }
+
+    public boolean isDataChanging(Treatment other) {
+        if (date != other.date) {
+            return true;
+        }
+        if (insulin != other.insulin)
+            return true;
+        if (carbs != other.carbs)
+            return true;
+        return false;
+    }
+
+    public boolean isEqual(Treatment other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (insulin != other.insulin)
+            return false;
+        if (carbs != other.carbs)
+            return false;
+        if (mealBolus != other.mealBolus)
+            return false;
+        if (pumpId != other.pumpId)
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(Treatment t) {
+        date = t.date;
+        _id = t._id;
+        insulin = t.insulin;
+        carbs = t.carbs;
+        mealBolus = t.mealBolus;
+        pumpId = t.pumpId;
     }
 
     //  ----------------- DataPointInterface --------------------
@@ -102,7 +134,7 @@ public class Treatment implements DataPointWithLabelInterface {
         String label = "";
         if (insulin > 0) label += DecimalFormatter.to2Decimal(insulin) + "U";
         if (carbs > 0)
-            label += (label.equals("") ? "" : " ") + DecimalFormatter.to0Decimal(carbs) + "g";
+            label += "~" + DecimalFormatter.to0Decimal(carbs) + "g";
         return label;
     }
 

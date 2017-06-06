@@ -456,8 +456,6 @@ public class DataService extends IntentService {
 
     public void handleAddChangeTreatmentRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("insulin") || trJson.has("carbs")) {
-            if (Config.logIncommingData)
-                log.debug("Processing Treatment record: " + trJson.toString());
             MainApp.getDbHelper().createTreatmentFromJsonIfNotExists(trJson);
             return;
         }

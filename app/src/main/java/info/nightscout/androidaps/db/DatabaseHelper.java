@@ -492,28 +492,84 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     //  -------------------- TREATMENT HANDLING -------------------
 
-    private boolean changeAffectingIobCob(Treatment t) {
-        Treatment existing = findTreatmentByTime(t.date);
-        if (existing == null)
-            return true;
-        if (existing.insulin == t.insulin && existing.carbs == t.carbs)
-            return false;
-        return true;
-    }
-
-    public Dao.CreateOrUpdateStatus createOrUpdate(Treatment treatment) {
-        treatment.date = treatment.date - treatment.date % 1000;
-        Dao.CreateOrUpdateStatus status = null;
+    // return true if new record is created
+    public boolean createOrUpdate(Treatment treatment) {
         try {
-            boolean historyChange = changeAffectingIobCob(treatment);
-            status = getDaoTreatments().createOrUpdate(treatment);
-            if (historyChange)
+            Treatment old;
+            treatment.date = roundDateToSec(treatment.date);
+
+            if (treatment.source == Source.PUMP) {
+                // check for changed from pump change in NS
+                QueryBuilder<Treatment, Long> queryBuilder = getDaoTreatments().queryBuilder();
+                Where where = queryBuilder.where();
+                where.eq("pumpId", treatment.pumpId);
+                PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
+                List<Treatment> trList = getDaoTreatments().query(preparedQuery);
+                if (trList.size() > 0) {
+                    // do nothing, pump history record cannot be changed
+                    return false;
+                }
+                getDaoTreatments().create(treatment);
+                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 updateEarliestDataChange(treatment.date);
+                scheduleTreatmentChange();
+                return true;
+            }
+            if (treatment.source == Source.NIGHTSCOUT) {
+                old = getDaoTreatments().queryForId(treatment.date);
+                if (old != null) {
+                    if (!old.isEqual(treatment)) {
+                        boolean historyChange = old.isDataChanging(treatment);
+                        long oldDate = old.date;
+                        getDaoTreatments().delete(old); // need to delete/create because date may change too
+                        old.copyFrom(treatment);
+                        getDaoTreatments().create(old);
+                        log.debug("TREATMENT: Updating record by date from: " + Source.getString(treatment.source) + " " + old.toString());
+                        if (historyChange) {
+                            updateEarliestDataChange(oldDate);
+                            updateEarliestDataChange(old.date);
+                            scheduleTreatmentChange();
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+                // find by NS _id
+                if (treatment._id != null) {
+                    QueryBuilder<Treatment, Long> queryBuilder = getDaoTreatments().queryBuilder();
+                    Where where = queryBuilder.where();
+                    where.eq("_id", treatment._id);
+                    PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
+                    List<Treatment> trList = getDaoTreatments().query(preparedQuery);
+                    if (trList.size() > 0) {
+                        old = trList.get(0);
+                        if (!old.isEqual(treatment)) {
+                            boolean historyChange = old.isDataChanging(treatment);
+                            long oldDate = old.date;
+                            getDaoTreatments().delete(old); // need to delete/create because date may change too
+                            old.copyFrom(treatment);
+                            getDaoTreatments().create(old);
+                            log.debug("TREATMENT: Updating record by _id from: " + Source.getString(treatment.source) + " " + old.toString());
+                            if (historyChange) {
+                                updateEarliestDataChange(oldDate);
+                                updateEarliestDataChange(old.date);
+                                scheduleTreatmentChange();
+                            }
+                            return true;
+                        }
+                    }
+                }
+            }
+            if (treatment.source == Source.USER) {
+                getDaoTreatments().create(treatment);
+                updateEarliestDataChange(treatment.date);
+                scheduleTreatmentChange();
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        scheduleTreatmentChange();
-        return status;
+        return false;
     }
 
     public void delete(Treatment treatment) {
@@ -529,10 +585,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public void deleteTreatmentById(String _id) {
         Treatment stored = findTreatmentById(_id);
         if (stored != null) {
-            log.debug("Removing TempTarget record from database: " + stored.log());
+            log.debug("TREATMENT: Removing Treatment record from database: " + stored.toString());
             delete(stored);
-        } else {
-            log.debug("Treatment not found database: " + _id);
+            updateEarliestDataChange(stored.date);
+            scheduleTreatmentChange();
         }
     }
 
@@ -551,30 +607,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 return null;
             } else {
                 //log.debug("Treatment findTreatmentById found: " + trList.get(0).log());
-                return trList.get(0);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Nullable
-    public Treatment findTreatmentByTime(Long timeIndex) {
-        try {
-            QueryBuilder<Treatment, String> qb = null;
-            Dao<Treatment, Long> daoTreatments = getDaoTreatments();
-            QueryBuilder<Treatment, Long> queryBuilder = daoTreatments.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("date", timeIndex);
-            queryBuilder.limit(10L);
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            List<Treatment> trList = daoTreatments.query(preparedQuery);
-            if (trList.size() != 1) {
-                //log.debug("Treatment findTreatmentByTime query size: " + trList.size());
-                return null;
-            } else {
-                //log.debug("Treatment findTreatmentByTime found: " + trList.get(0).log());
                 return trList.get(0);
             }
         } catch (SQLException e) {
@@ -634,30 +666,13 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createTreatmentFromJsonIfNotExists(JSONObject trJson) {
         try {
-            QueryBuilder<Treatment, Long> queryBuilder = null;
-            queryBuilder = getDaoTreatments().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<Treatment> preparedQuery = queryBuilder.prepare();
-            List<Treatment> list = getDaoTreatments().query(preparedQuery);
-            Treatment treatment;
-            if (list.size() == 0) {
-                treatment = new Treatment();
-                treatment.source = Source.NIGHTSCOUT;
-                if (Config.logIncommingData)
-                    log.debug("Adding Treatment record to database: " + trJson.toString());
-                // Record does not exists. add
-            } else if (list.size() == 1) {
-                treatment = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Updating Treatment record in database: " + trJson.toString());
-            } else {
-                log.error("Something went wrong");
-                return;
-            }
-            treatment.date = trJson.getLong("mills");
+            Treatment treatment = new Treatment();
+            ;
+            treatment.source = Source.NIGHTSCOUT;
+            treatment.date = roundDateToSec(trJson.getLong("mills"));
             treatment.carbs = trJson.has("carbs") ? trJson.getDouble("carbs") : 0;
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
+            treatment.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
             treatment._id = trJson.getString("_id");
             if (trJson.has("eventType")) {
                 treatment.mealBolus = !trJson.get("eventType").equals("Correction Bolus");
@@ -672,7 +687,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                     treatment.mealBolus = false;
             }
             createOrUpdate(treatment);
-        } catch (SQLException | JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }

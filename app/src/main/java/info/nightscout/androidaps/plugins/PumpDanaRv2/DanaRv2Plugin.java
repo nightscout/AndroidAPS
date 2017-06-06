@@ -288,7 +288,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             Treatment t = new Treatment(detailedBolusInfo.insulinInterface);
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
-                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, new Date().getTime() + detailedBolusInfo.carbTime * 60 * 1000, t);
+                connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, new Date().getTime() + detailedBolusInfo.carbTime * 60 * 1000 + 1000, t); // +1000 to make the record different
             PumpEnactResult result = new PumpEnactResult();
             result.success = connectionOK;
             result.bolusDelivered = t.insulin;
