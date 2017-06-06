@@ -6,6 +6,8 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Date;
+
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -40,12 +42,10 @@ public class BgReading implements DataPointWithLabelInterface {
     @DatabaseField
     public String _id = null; // NS _id
 
-
-    public static String units = Constants.MGDL;
-
     public boolean isPrediction = false; // true when drawing predictions as bg points
 
-    public BgReading() {}
+    public BgReading() {
+    }
 
     public BgReading(NSSgv sgv) {
         date = sgv.getMills();
@@ -66,7 +66,7 @@ public class BgReading implements DataPointWithLabelInterface {
         else return DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL);
     }
 
-     public String directionToSymbol() {
+    public String directionToSymbol() {
         String symbol = "";
         if (direction.compareTo("DoubleDown") == 0) {
             symbol = "\u21ca";
@@ -105,11 +105,54 @@ public class BgReading implements DataPointWithLabelInterface {
     public String toString() {
         return "BgReading{" +
                 "date=" + date +
-                ", date=" + DateUtil.dateAndTimeString(date) +
+                ", date=" + new Date(date).toLocaleString() +
                 ", value=" + value +
                 ", direction=" + direction +
                 ", raw=" + raw +
                 '}';
+    }
+
+    public boolean isDataChanging(BgReading other) {
+        if (date != other.date) {
+            log.error("Comparing different");
+            return false;
+        }
+        if (value != other.value)
+            return true;
+        return false;
+    }
+
+    public boolean isEqual(BgReading other) {
+        if (date != other.date) {
+            log.error("Comparing different");
+            return false;
+        }
+        if (value != other.value)
+            return false;
+        if (raw != other.raw)
+            return false;
+        if (!direction.equals(other.direction))
+            return false;
+        if (_id == null && other._id != null)
+            return false;
+        else if (_id != null && other._id == null)
+            return false;
+        else if (_id == null && other._id == null)
+            ;
+        else if (!_id.equals(other._id))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(BgReading other) {
+        if (date != other.date) {
+            log.error("Copying different");
+            return;
+        }
+        value = other.value;
+        raw = other.raw;
+        direction = other.direction;
+        _id = other._id;
     }
 
     // ------------------ DataPointWithLabelInterface ------------------
@@ -120,6 +163,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
+        String units = MainApp.getConfigBuilder().getProfile().getUnits();
         return valueToUnits(units);
     }
 
@@ -151,6 +195,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
+        String units = MainApp.getConfigBuilder().getProfile().getUnits();
         Double lowLine = SP.getDouble("low_mark", 0d);
         Double highLine = SP.getDouble("high_mark", 0d);
         if (lowLine < 1) {
@@ -159,7 +204,6 @@ public class BgReading implements DataPointWithLabelInterface {
         if (highLine < 1) {
             highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
         }
-        String units = MainApp.getConfigBuilder().getProfile().getUnits();
         int color = MainApp.sResources.getColor(R.color.inrange);
         if (isPrediction)
             color = MainApp.sResources.getColor(R.color.prediction);

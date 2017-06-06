@@ -1097,8 +1097,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
                 avgdeltaView.setText("");
             }
-
-            BgReading.units = profile.getUnits();
         } else {
             if (updating != null)
                 updating.setVisibility(View.GONE);

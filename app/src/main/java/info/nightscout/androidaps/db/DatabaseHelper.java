@@ -320,16 +320,31 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return getDao(ProfileSwitch.class);
     }
 
+    public long roundDateToSec(long date) {
+        return date - date % 1000;
+    }
     // -------------------  BgReading handling -----------------------
 
-    public void createIfNotExists(BgReading bgReading) {
-        bgReading.date = bgReading.date - bgReading.date % 1000;
+    public void createIfNotExists(BgReading bgReading, String from) {
         try {
-            getDaoBgReadings().createIfNotExists(bgReading);
+            bgReading.date = roundDateToSec(bgReading.date);
+            BgReading old = getDaoBgReadings().queryForId(bgReading.date);
+            if (old == null) {
+                getDaoBgReadings().create(bgReading);
+                log.debug("BG: New record from: " + from + " " + bgReading.toString());
+                scheduleBgChange();
+                return;
+            }
+            if (!old.isEqual(bgReading)) {
+                old.copyFrom(bgReading);
+                getDaoBgReadings().update(old);
+                log.debug("BG: Updating record from: " + from + " " + old.toString());
+                scheduleBgChange();
+                return;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        scheduleBgChange();
     }
 
     private static void scheduleBgChange() {

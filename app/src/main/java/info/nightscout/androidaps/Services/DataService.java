@@ -166,16 +166,7 @@ public class DataService extends IntentService {
         bgReading.date = bundle.getLong(Intents.EXTRA_TIMESTAMP);
         bgReading.raw = bundle.getDouble(Intents.EXTRA_RAW);
 
-        if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
-            if (Config.logIncommingBG)
-                log.debug("Ignoring old XDRIPREC BG " + bgReading.toString());
-            return;
-        }
-
-        if (Config.logIncommingBG)
-            log.debug("XDRIPREC BG " + bgReading.toString());
-
-        MainApp.getDbHelper().createIfNotExists(bgReading);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "XDRIP");
     }
 
     private void handleNewDataFromGlimp(Intent intent) {
@@ -189,11 +180,7 @@ public class DataService extends IntentService {
         bgReading.date = bundle.getLong("myTimestamp");
         bgReading.raw = 0;
 
-        if (Config.logIncommingBG)
-            log.debug(bundle.toString());
-        log.debug("GLIMP BG " + bgReading.toString());
-
-        MainApp.getDbHelper().createIfNotExists(bgReading);
+        MainApp.getDbHelper().createIfNotExists(bgReading, "GLIMP");
     }
 
     private void handleNewDataFromMM640g(Intent intent) {
@@ -221,16 +208,7 @@ public class DataService extends IntentService {
                                 bgReading.date = json_object.getLong("date");
                                 bgReading.raw = json_object.getDouble("sgv");
 
-                                if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000L) {
-                                    if (Config.logIncommingBG)
-                                        log.debug("Ignoring old MM640g BG " + bgReading.toString());
-                                    return;
-                                }
-
-                                if (Config.logIncommingBG)
-                                    log.debug("MM640g BG " + bgReading.toString());
-
-                                MainApp.getDbHelper().createIfNotExists(bgReading);
+                                MainApp.getDbHelper().createIfNotExists(bgReading, "MM640g");
                                 break;
                             default:
                                 log.debug("Unknown entries type: " + type);
@@ -402,14 +380,7 @@ public class DataService extends IntentService {
                     JSONObject sgvJson = new JSONObject(sgvstring);
                     NSSgv nsSgv = new NSSgv(sgvJson);
                     BgReading bgReading = new BgReading(nsSgv);
-                    if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
-                        if (Config.logIncommingData)
-                            log.debug("Ignoring old BG: " + bgReading.toString());
-                        return;
-                    }
-                    MainApp.getDbHelper().createIfNotExists(bgReading);
-                    if (Config.logIncommingData)
-                        log.debug("ADD: Stored new BG: " + bgReading.toString());
+                    MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
                 }
 
                 if (bundles.containsKey("sgvs")) {
@@ -419,14 +390,7 @@ public class DataService extends IntentService {
                         JSONObject sgvJson = jsonArray.getJSONObject(i);
                         NSSgv nsSgv = new NSSgv(sgvJson);
                         BgReading bgReading = new BgReading(nsSgv);
-                        if (bgReading.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
-                            if (Config.logIncommingData)
-                                log.debug("Ignoring old BG: " + bgReading.toString());
-                        } else {
-                            MainApp.getDbHelper().createIfNotExists(bgReading);
-                            if (Config.logIncommingData)
-                                log.debug("ADD: Stored new BG: " + bgReading.toString());
-                        }
+                        MainApp.getDbHelper().createIfNotExists(bgReading, "NS");
                     }
                 }
             } catch (Exception e) {
@@ -441,11 +405,6 @@ public class DataService extends IntentService {
                     JSONObject mbgJson = new JSONObject(mbgstring);
                     NSMbg nsMbg = new NSMbg(mbgJson);
                     CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-                    if (careportalEvent.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
-                        if (Config.logIncommingData)
-                            log.debug("Ignoring old MBG: " + careportalEvent.log());
-                        return;
-                    }
                     MainApp.getDbHelper().createOrUpdate(careportalEvent);
                     if (Config.logIncommingData)
                         log.debug("Adding/Updating new MBG: " + careportalEvent.log());
@@ -458,11 +417,6 @@ public class DataService extends IntentService {
                         JSONObject mbgJson = jsonArray.getJSONObject(i);
                         NSMbg nsMbg = new NSMbg(mbgJson);
                         CareportalEvent careportalEvent = new CareportalEvent(nsMbg);
-                        if (careportalEvent.date < new Date().getTime() - Constants.hoursToKeepInDatabase * 60 * 60 * 1000l) {
-                            if (Config.logIncommingData)
-                                log.debug("Ignoring old MBG: " + careportalEvent.log());
-                            return;
-                        }
                         MainApp.getDbHelper().createOrUpdate(careportalEvent);
                         if (Config.logIncommingData)
                             log.debug("Adding/Updating new MBG: " + careportalEvent.log());
