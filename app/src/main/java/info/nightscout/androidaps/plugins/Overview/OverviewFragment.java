@@ -189,6 +189,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledUpdate = null;
 
+    private static UpdateGUIAsyncTask updateGUIAsyncTask;
+
     public OverviewFragment() {
         super();
         if (sHandlerThread == null) {
@@ -866,11 +868,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (scheduledUpdate != null)
             scheduledUpdate.cancel(false);
         Runnable task = new UpdateRunnable();
-        final int msec = 2000;
+        final int msec = 1000;
         scheduledUpdate = worker.schedule(task, msec, TimeUnit.MILLISECONDS);
     }
 
     private class UpdateGUIAsyncTask extends AsyncTask<String, Void, String> {
+        private String from;
 
         BgReading actualBG = DatabaseHelper.actualBg();
         BgReading lastBG = DatabaseHelper.lastBg();
@@ -932,9 +935,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         Integer numOfHorizLines;
 
+        public UpdateGUIAsyncTask(String from) {
+            super();
+            this.from = from;
+        }
+
         @Override
         protected void onPreExecute() {
-            log.debug("UpdateGUIAsyncTask onPreExecute");
+            log.debug("UpdateGUIAsyncTask onPreExecute from: " + from);
             if (getActivity() == null)
                 return;
 
@@ -1230,7 +1238,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         @Override
         protected String doInBackground(String... params) {
-            log.debug("UpdateGUIAsyncTask doInBackground");
+            log.debug("UpdateGUIAsyncTask doInBackground from: " + from);
 
             // IOB
             MainApp.getConfigBuilder().updateTotalIOBTreatments();
@@ -1492,7 +1500,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         @Override
         protected void onPostExecute(String result) {
-            log.debug("UpdateGUIAsyncTask onPostExecute");
+            log.debug("UpdateGUIAsyncTask onPostExecute from: " + from);
             // IOB
             if (getActivity() == null)
                 return;
@@ -1591,16 +1599,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             });
             if (updating != null)
                 updating.setVisibility(View.GONE);
+            // release for next run
+            log.debug("UpdateGUIAsyncTask finishing onPostExecute from: " + from);
+            updateGUIAsyncTask = null;
         }
     }
 
-    public void updateGUIAsync(String from) {
-        new UpdateGUIAsyncTask().execute(from);
-    }
-
-    @SuppressLint("SetTextI18n")
     public void updateGUI(String from) {
-        log.debug("updateGUI entered from: " + from);
         if (MainApp.getConfigBuilder().getProfile() == null) {// app not initialized yet
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
@@ -1610,7 +1615,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         pumpStatusLayout.setVisibility(View.GONE);
         loopStatusLayout.setVisibility(View.VISIBLE);
 
-        updateGUIAsync(from);
+        if (updateGUIAsyncTask != null) {
+            log.debug("Update already running. From: " + from);
+            return;
+        }
+        log.debug("updateGUI entered from: " + from);
+        updateGUIAsyncTask = new UpdateGUIAsyncTask(from);
+        updateGUIAsyncTask.execute(from);
     }
 
     public double getNearestBg(long date, List<BgReading> bgReadingsArray) {
