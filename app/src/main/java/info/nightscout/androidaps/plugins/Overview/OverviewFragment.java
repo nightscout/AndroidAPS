@@ -73,6 +73,7 @@ import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -698,6 +699,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                                     detailedBolusInfo.context = context;
                                     detailedBolusInfo.boluscalc = boluscalcJSON;
+                                    detailedBolusInfo.source = Source.USER;
                                     PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                     if (!result.success) {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

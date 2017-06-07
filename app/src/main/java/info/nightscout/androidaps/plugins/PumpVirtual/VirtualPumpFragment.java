@@ -25,12 +25,6 @@ import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpd
 public class VirtualPumpFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(VirtualPumpFragment.class);
 
-    private static VirtualPumpPlugin virtualPumpPlugin = new VirtualPumpPlugin();
-
-    public static VirtualPumpPlugin getPlugin() {
-        return virtualPumpPlugin;
-    }
-
     TextView basaBasalRateView;
     TextView tempBasalView;
     TextView extendedBolusView;
@@ -93,7 +87,7 @@ public class VirtualPumpFragment extends Fragment {
                 @Override
                 public void run() {
 
-                    basaBasalRateView.setText(virtualPumpPlugin.getBaseBasalRate() + "U");
+                    basaBasalRateView.setText(VirtualPumpPlugin.getInstance().getBaseBasalRate() + "U");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                         tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toString());
                     } else {
@@ -104,8 +98,8 @@ public class VirtualPumpFragment extends Fragment {
                     } else {
                         extendedBolusView.setText("");
                     }
-                    batteryView.setText(VirtualPumpPlugin.batteryPercent + "%");
-                    reservoirView.setText(VirtualPumpPlugin.reservoirInUnits + "U");
+                    batteryView.setText(VirtualPumpPlugin.getInstance().batteryPercent + "%");
+                    reservoirView.setText(VirtualPumpPlugin.getInstance().reservoirInUnits + "U");
                 }
             });
     }

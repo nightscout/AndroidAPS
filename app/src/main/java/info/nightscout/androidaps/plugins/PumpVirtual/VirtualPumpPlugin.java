@@ -46,6 +46,13 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     PumpDescription pumpDescription = new PumpDescription();
 
+    static VirtualPumpPlugin instance = null;
+    public static VirtualPumpPlugin getInstance() {
+        if (instance == null)
+            instance = new VirtualPumpPlugin();
+        return instance;
+    }
+
     public VirtualPumpPlugin() {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;

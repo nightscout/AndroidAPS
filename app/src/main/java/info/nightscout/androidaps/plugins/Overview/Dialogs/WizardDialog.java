@@ -48,6 +48,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -333,6 +334,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                         detailedBolusInfo.glucoseType = "Manual";
                                         detailedBolusInfo.carbTime = carbTime;
                                         detailedBolusInfo.boluscalc = boluscalcJSON;
+                                        detailedBolusInfo.source = Source.USER;
                                         result = pump.deliverTreatment(detailedBolusInfo);
                                         if (!result.success) {
                                             OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.treatmentdeliveryerror), result.comment, null);

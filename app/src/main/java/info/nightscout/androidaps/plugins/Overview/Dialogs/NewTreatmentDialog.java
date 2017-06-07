@@ -27,6 +27,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
@@ -112,6 +113,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                         detailedBolusInfo.insulin = finalInsulinAfterConstraints;
                                         detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                                         detailedBolusInfo.context = context;
+                                        detailedBolusInfo.source = Source.USER;
                                         PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                         if (!result.success) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
