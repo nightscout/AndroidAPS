@@ -528,8 +528,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         if (historyChange) {
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
-                            scheduleTreatmentChange();
                         }
+                        scheduleTreatmentChange();
                         return true;
                     }
                     return false;
@@ -553,8 +553,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             if (historyChange) {
                                 updateEarliestDataChange(oldDate);
                                 updateEarliestDataChange(old.date);
-                                scheduleTreatmentChange();
                             }
+                            scheduleTreatmentChange();
                             return true;
                         }
                     }
