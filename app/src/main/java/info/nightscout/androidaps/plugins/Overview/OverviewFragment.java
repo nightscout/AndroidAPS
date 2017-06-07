@@ -2,8 +2,9 @@ package info.nightscout.androidaps.plugins.Overview;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
@@ -576,6 +577,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             @Override
                             public void run() {
                                 hideTempRecommendation();
+                                clearNotification();
                                 PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
                                 if (applyResult.enacted) {
                                     finalLastRun.setByPump = applyResult;
@@ -802,6 +804,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     acceptTempLayout.setVisibility(View.GONE);
                 }
             });
+    }
+
+    private void clearNotification() {
+        NotificationManager notificationManager =
+                (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(Constants.notificationID);
     }
 
     private void updatePumpStatus(String status) {
