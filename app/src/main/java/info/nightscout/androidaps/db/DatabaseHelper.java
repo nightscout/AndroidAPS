@@ -559,9 +559,15 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         }
                     }
                 }
+                getDaoTreatments().create(treatment);
+                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
+                updateEarliestDataChange(treatment.date);
+                scheduleTreatmentChange();
+                return true;
             }
             if (treatment.source == Source.USER) {
                 getDaoTreatments().create(treatment);
+                log.debug("TREATMENT: New record from: " + Source.getString(treatment.source) + " " + treatment.toString());
                 updateEarliestDataChange(treatment.date);
                 scheduleTreatmentChange();
                 return true;
