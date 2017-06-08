@@ -961,7 +961,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
             tempTargetView.setVisibility(View.VISIBLE);
         }
-        if (Config.NSCLIENT && tempTarget != null) {
+        if (Config.NSCLIENT && tempTarget == null) {
             tempTargetView.setVisibility(View.GONE);
         }
 
