@@ -463,24 +463,18 @@ public class DataService extends IntentService {
 
     public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPORARYTARGET)) {
-            if (Config.logIncommingData)
-                log.debug("Processing TempTarget record: " + trJson.toString());
             MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(trJson);
         }
     }
 
     public void handleAddChangeTempBasalRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPBASAL)) {
-            if (Config.logIncommingData)
-                log.debug("Processing TempBasal record: " + trJson.toString());
             MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(trJson);
         }
     }
 
     public void handleAddChangeExtendedBolusRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.COMBOBOLUS)) {
-            if (Config.logIncommingData)
-                log.debug("Processing Extended Bolus record: " + trJson.toString());
             MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(trJson);
         }
     }

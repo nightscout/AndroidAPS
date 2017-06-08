@@ -996,7 +996,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         String basalText = "";
         if (activeTemp != null) {
-            basalText = activeTemp.toString() + " ";
+            basalText = activeTemp.toStringFull() + " ";
         }
         if (Config.NSCLIENT)
             basalText += "( " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h )";

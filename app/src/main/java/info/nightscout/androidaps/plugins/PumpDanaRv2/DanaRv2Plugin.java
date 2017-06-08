@@ -723,7 +723,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            ret += "Temp: " + MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toString() + "\n";
+            ret += "Temp: " + MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toStringFull() + "\n";
         }
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
             ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime()).toString() + "\n";

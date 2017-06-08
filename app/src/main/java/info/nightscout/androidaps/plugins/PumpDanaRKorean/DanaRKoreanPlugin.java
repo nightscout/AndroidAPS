@@ -809,7 +809,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime()).toString() + "\n";
+            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime()).toStringFull() + "\n";
         }
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
             ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime()).toString() + "\n";

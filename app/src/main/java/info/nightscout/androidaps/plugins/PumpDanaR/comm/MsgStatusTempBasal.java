@@ -9,6 +9,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -67,18 +68,23 @@ public class MsgStatusTempBasal extends MessageBase {
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal
-                    treatmentsInterface.addToHistoryTempBasalStop(now - 1000);
+                    TemporaryBasal tempStop = new TemporaryBasal(now - 1000);
+                    tempStop.source = Source.USER;
+                    treatmentsInterface.addToHistoryTempBasal(tempStop);
                     // Create new
                     TemporaryBasal newTempBasal = new TemporaryBasal();
                     newTempBasal.date = new Date(now).getTime();
                     newTempBasal.percentRate = danaRPump.tempBasalPercent;
                     newTempBasal.isAbsolute = false;
                     newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
-                    treatmentsInterface.addToHistoryTempBasalStart(newTempBasal);
+                    newTempBasal.source = Source.USER;
+                    treatmentsInterface.addToHistoryTempBasal(newTempBasal);
                 }
             } else {
                 // Close current temp basal
-                treatmentsInterface.addToHistoryTempBasalStop(now);
+                TemporaryBasal tempStop = new TemporaryBasal(now);
+                tempStop.source = Source.USER;
+                treatmentsInterface.addToHistoryTempBasal(tempStop);
             }
         } else {
             if (danaRPump.isTempBasalInProgress) {
@@ -88,7 +94,8 @@ public class MsgStatusTempBasal extends MessageBase {
                 newTempBasal.percentRate = danaRPump.tempBasalPercent;
                 newTempBasal.isAbsolute = false;
                 newTempBasal.durationInMinutes = danaRPump.tempBasalTotalSec / 60;
-                treatmentsInterface.addToHistoryTempBasalStart(newTempBasal);
+                newTempBasal.source = Source.USER;
+                treatmentsInterface.addToHistoryTempBasal(newTempBasal);
             }
         }
     }

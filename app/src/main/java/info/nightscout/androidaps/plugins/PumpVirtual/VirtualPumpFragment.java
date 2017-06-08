@@ -89,7 +89,7 @@ public class VirtualPumpFragment extends Fragment {
 
                     basaBasalRateView.setText(VirtualPumpPlugin.getInstance().getBaseBasalRate() + "U");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toString());
+                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toStringFull());
                     } else {
                         tempBasalView.setText("");
                     }

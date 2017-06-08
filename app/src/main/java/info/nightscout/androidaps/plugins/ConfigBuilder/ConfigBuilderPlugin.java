@@ -57,22 +57,22 @@ import info.nightscout.utils.NSUpload;
 public class ConfigBuilderPlugin implements PluginBase, PumpInterface, ConstraintsInterface, TreatmentsInterface {
     private static Logger log = LoggerFactory.getLogger(ConfigBuilderPlugin.class);
 
-    static BgSourceInterface activeBgSource;
-    static PumpInterface activePump;
-    static ProfileInterface activeProfile;
-    static TreatmentsInterface activeTreatments;
-    static APSInterface activeAPS;
-    static LoopPlugin activeLoop;
-    static InsulinInterface activeInsulin;
+    private static BgSourceInterface activeBgSource;
+    private static PumpInterface activePump;
+    private static ProfileInterface activeProfile;
+    private static TreatmentsInterface activeTreatments;
+    private static APSInterface activeAPS;
+    private static LoopPlugin activeLoop;
+    private static InsulinInterface activeInsulin;
 
     static public String nightscoutVersionName = "";
     static public Integer nightscoutVersionCode = 0;
     static public String nsClientVersionName = "";
     static public Integer nsClientVersionCode = 0;
 
-    static ArrayList<PluginBase> pluginList;
+    private static ArrayList<PluginBase> pluginList;
 
-    PowerManager.WakeLock mWakeLock;
+    private PowerManager.WakeLock mWakeLock;
 
     public ConfigBuilderPlugin() {
         MainApp.bus().register(this);
@@ -109,12 +109,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isEnabled(int type) {
-        return type == GENERAL && true;
+        return type == GENERAL;
     }
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        return type == GENERAL && true;
+        return type == GENERAL;
     }
 
     @Override
@@ -208,7 +208,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activeLoop;
     }
 
-    public void logPluginStatus() {
+    void logPluginStatus() {
         for (PluginBase p : pluginList) {
             log.debug(p.getName() + ":" +
                     (p.isEnabled(1) ? " GENERAL" : "") +
@@ -405,43 +405,44 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         else
             return 0d;
     }
-/*
-    public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
-        mWakeLock.acquire();
-        PumpEnactResult result;
-        insulin = applyBolusConstraints(insulin);
-        carbs = applyCarbsConstraints(carbs);
 
-        BolusProgressDialog bolusProgressDialog = null;
-        if (context != null) {
-            bolusProgressDialog = new BolusProgressDialog();
-            bolusProgressDialog.setInsulin(insulin);
-            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+    /*
+        public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
+            mWakeLock.acquire();
+            PumpEnactResult result;
+            insulin = applyBolusConstraints(insulin);
+            carbs = applyCarbsConstraints(carbs);
+
+            BolusProgressDialog bolusProgressDialog = null;
+            if (context != null) {
+                bolusProgressDialog = new BolusProgressDialog();
+                bolusProgressDialog.setInsulin(insulin);
+                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+            }
+
+            MainApp.bus().post(new EventBolusRequested(insulin));
+
+            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
+
+            BolusProgressDialog.bolusEnded = true;
+
+            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
+
+            if (result.success) {
+                Treatment t = new Treatment(insulinType);
+                t.insulin = result.bolusDelivered;
+                if (carbTime == 0)
+                    t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
+                t.date = new Date().getTime();
+                t.mealBolus = result.carbsDelivered > 0;
+                addToHistoryTreatment(t);
+                t.carbs = (double) result.carbsDelivered;
+                NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
+            }
+            mWakeLock.release();
+            return result;
         }
-
-        MainApp.bus().post(new EventBolusRequested(insulin));
-
-        result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
-
-        BolusProgressDialog.bolusEnded = true;
-
-        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
-
-        if (result.success) {
-            Treatment t = new Treatment(insulinType);
-            t.insulin = result.bolusDelivered;
-            if (carbTime == 0)
-                t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
-            t.date = new Date().getTime();
-            t.mealBolus = result.carbsDelivered > 0;
-            addToHistoryTreatment(t);
-            t.carbs = (double) result.carbsDelivered;
-            NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
-        }
-        mWakeLock.release();
-        return result;
-    }
-*/
+    */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         mWakeLock.acquire();
@@ -466,56 +467,57 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         mWakeLock.release();
         return result;
     }
-/*
-    @Override
-    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
-        return deliverTreatment(insulinType, insulin, carbs, context, true);
-    }
 
-    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context, boolean createTreatment) {
-        mWakeLock.acquire();
-        PumpEnactResult result;
-        insulin = applyBolusConstraints(insulin);
-        carbs = applyCarbsConstraints(carbs);
-
-        BolusProgressDialog bolusProgressDialog = null;
-        if (context != null) {
-            bolusProgressDialog = new BolusProgressDialog();
-            bolusProgressDialog.setInsulin(insulin);
-            bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
-        } else {
-            Intent i = new Intent();
-            i.putExtra("insulin", insulin.doubleValue());
-            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            MainApp.instance().startActivity(i);
+    /*
+        @Override
+        public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
+            return deliverTreatment(insulinType, insulin, carbs, context, true);
         }
 
-        MainApp.bus().post(new EventBolusRequested(insulin));
+        public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context, boolean createTreatment) {
+            mWakeLock.acquire();
+            PumpEnactResult result;
+            insulin = applyBolusConstraints(insulin);
+            carbs = applyCarbsConstraints(carbs);
 
-        result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
+            BolusProgressDialog bolusProgressDialog = null;
+            if (context != null) {
+                bolusProgressDialog = new BolusProgressDialog();
+                bolusProgressDialog.setInsulin(insulin);
+                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
+            } else {
+                Intent i = new Intent();
+                i.putExtra("insulin", insulin.doubleValue());
+                i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                MainApp.instance().startActivity(i);
+            }
 
-        BolusProgressDialog.bolusEnded = true;
+            MainApp.bus().post(new EventBolusRequested(insulin));
 
-        MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
+            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
 
-        if (Config.logCongigBuilderActions)
-            log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
+            BolusProgressDialog.bolusEnded = true;
 
-        if (result.success && createTreatment) {
-            Treatment t = new Treatment(insulinType);
-            t.insulin = result.bolusDelivered;
-            t.carbs = (double) result.carbsDelivered;
-            t.date = new Date().getTime();
-            t.mealBolus = t.carbs > 0;
-            addToHistoryTreatment(t);
-            NSUpload.uploadTreatment(t);
+            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
+
+            if (Config.logCongigBuilderActions)
+                log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
+
+            if (result.success && createTreatment) {
+                Treatment t = new Treatment(insulinType);
+                t.insulin = result.bolusDelivered;
+                t.carbs = (double) result.carbsDelivered;
+                t.date = new Date().getTime();
+                t.mealBolus = t.carbs > 0;
+                addToHistoryTreatment(t);
+                NSUpload.uploadTreatment(t);
+            }
+            mWakeLock.release();
+            return result;
         }
-        mWakeLock.release();
-        return result;
-    }
 
-*/
+    */
     @Override
     public void stopBolusDelivering() {
         activePump.stopBolusDelivering();
@@ -887,19 +889,17 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void addToHistoryTempBasalStart(TemporaryBasal tempBasal) {
-        activeTreatments.addToHistoryTempBasalStart(tempBasal);
-        if (tempBasal.isAbsolute)
-            NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
-        else
-            NSUpload.uploadTempBasalStartPercent(tempBasal);
-
-    }
-
-    @Override
-    public void addToHistoryTempBasalStop(long time) {
-        activeTreatments.addToHistoryTempBasalStop(time);
-        NSUpload.uploadTempBasalEnd(time, false);
+    public boolean addToHistoryTempBasal(TemporaryBasal tempBasal) {
+        boolean newRecordCreated = activeTreatments.addToHistoryTempBasal(tempBasal);
+        if (newRecordCreated) {
+            if (tempBasal.durationInMinutes == 0)
+                NSUpload.uploadTempBasalEnd(tempBasal.date, false, tempBasal.pumpId);
+            else if (tempBasal.isAbsolute)
+                NSUpload.uploadTempBasalStartAbsolute(tempBasal, null);
+            else
+                NSUpload.uploadTempBasalStartPercent(tempBasal);
+        }
+        return newRecordCreated;
     }
 
     @Override
@@ -914,21 +914,20 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus) {
-        activeTreatments.addToHistoryExtendedBolusStart(extendedBolus);
-        if (activePump.isFakingTempsByExtendedBoluses())
-            NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
-        else
-            NSUpload.uploadExtendedBolus(extendedBolus);
-    }
-
-    @Override
-    public void addToHistoryExtendedBolusStop(long time) {
-        activeTreatments.addToHistoryExtendedBolusStop(time);
-        if (activePump.isFakingTempsByExtendedBoluses())
-            NSUpload.uploadTempBasalEnd(time, true);
-        else
-            NSUpload.uploadExtendedBolusEnd(time);
+    public boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus) {
+        boolean newRecordCreated = activeTreatments.addToHistoryExtendedBolus(extendedBolus);
+        if (newRecordCreated) {
+            if (extendedBolus.durationInMinutes == 0) {
+                if (activePump.isFakingTempsByExtendedBoluses())
+                    NSUpload.uploadTempBasalEnd(extendedBolus.date, true, extendedBolus.pumpId);
+                else
+                    NSUpload.uploadExtendedBolusEnd(extendedBolus.date, extendedBolus.pumpId);
+            } else if (activePump.isFakingTempsByExtendedBoluses())
+                NSUpload.uploadTempBasalStartAbsolute(new TemporaryBasal(extendedBolus), extendedBolus.insulin);
+            else
+                NSUpload.uploadExtendedBolus(extendedBolus);
+        }
+        return newRecordCreated;
     }
 
     @Override
@@ -983,6 +982,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     public String getProfileName() {
         return getProfileName(new Date().getTime());
     }
+
     public String getProfileName(long time) {
         ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
@@ -999,12 +999,13 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         if (defaultProfile != null)
             return defaultProfile;
         // If default from plugin fails .... create empty
-         return "Default";
+        return "Default";
     }
 
     public Profile getProfile() {
         return getProfile(new Date().getTime());
     }
+
     public Profile getProfile(long time) {
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);

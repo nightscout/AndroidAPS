@@ -29,6 +29,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.utils.DateUtil;
@@ -62,6 +63,8 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
         @Override
         public void onBindViewHolder(ExtendedBolusesViewHolder holder, int position) {
             ExtendedBolus extendedBolus = extendedBolusList.getReversed(position);
+            holder.ph.setVisibility(extendedBolus.source == Source.PUMP ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(extendedBolus._id != null ? View.VISIBLE : View.GONE);
             if (extendedBolus.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(extendedBolus.date));
                 holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
@@ -115,6 +118,8 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
             TextView insulinSoFar;
             TextView iob;
             TextView remove;
+            TextView ph;
+            TextView ns;
 
             ExtendedBolusesViewHolder(View itemView) {
                 super(itemView);
@@ -126,6 +131,8 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                 ratio = (TextView) itemView.findViewById(R.id.extendedboluses_ratio);
                 insulinSoFar = (TextView) itemView.findViewById(R.id.extendedboluses_netinsulin);
                 iob = (TextView) itemView.findViewById(R.id.extendedboluses_iob);
+                ph = (TextView) itemView.findViewById(R.id.pump_sign);
+                ns = (TextView) itemView.findViewById(R.id.ns_sign);
                 remove = (TextView) itemView.findViewById(R.id.extendedboluses_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

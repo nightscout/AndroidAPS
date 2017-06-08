@@ -13,15 +13,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
@@ -42,6 +43,9 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     @DatabaseField
     public boolean isValid = true;
 
+    @DatabaseField(index = true)
+    public long pumpId = 0;
+
     @DatabaseField
     public int source = Source.NONE;
     @DatabaseField
@@ -57,6 +61,35 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     @DatabaseField
     public double dia = Constants.defaultDIA;
 
+    public ExtendedBolus() {
+    }
+
+    public ExtendedBolus(long date) {
+        this.date = date;
+    }
+
+    public boolean isEqual(ExtendedBolus other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (durationInMinutes != other.durationInMinutes)
+            return false;
+        if (insulin != other.insulin)
+            return false;
+        if (pumpId != other.pumpId)
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(ExtendedBolus t) {
+        date = t.date;
+        _id = t._id;
+        durationInMinutes = t.durationInMinutes;
+        insulin = t.insulin;
+        pumpId = t.pumpId;
+    }
 
     // -------- Interval interface ---------
 
@@ -122,6 +155,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                 ", date= " + DateUtil.dateAndTimeString(date) +
                 ", isValid=" + isValid +
                 ", _id= " + _id +
+                ", pumpId= " + pumpId +
                 ", insulin= " + insulin +
                 ", durationInMinutes= " + durationInMinutes +
                 "}";

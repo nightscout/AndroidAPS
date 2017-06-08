@@ -96,7 +96,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="PH"
-                android:textAlignment="viewEnd"
                 android:textColor="@color/colorSetTempButton" />
 
             <TextView
@@ -105,7 +104,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="NS"
-                android:textAlignment="viewEnd"
                 android:textColor="@color/colorSetTempButton" />
 
         </LinearLayout>

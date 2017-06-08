@@ -342,18 +342,9 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus) {
-        log.debug("Adding new ExtentedBolus record" + extendedBolus.log());
-        MainApp.getDbHelper().createOrUpdate(extendedBolus);
-    }
-
-    @Override
-    public void addToHistoryExtendedBolusStop(long time) {
-        ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = time;
-        extendedBolus.durationInMinutes = 0;
-        log.debug("Adding new ExtentedBolus stop record" + extendedBolus.log());
-        MainApp.getDbHelper().createOrUpdate(extendedBolus);
+    public boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus) {
+        //log.debug("Adding new ExtentedBolus record" + extendedBolus.log());
+        return MainApp.getDbHelper().createOrUpdate(extendedBolus);
     }
 
     @Override
@@ -391,44 +382,33 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
-    public void addToHistoryTempBasalStart(TemporaryBasal tempBasal) {
-        log.debug("Adding new TemporaryBasal record" + tempBasal.log());
-        MainApp.getDbHelper().createOrUpdate(tempBasal);
-    }
-
-    @Override
-    public void addToHistoryTempBasalStop(long time) {
-        TemporaryBasal temporaryBasal = new TemporaryBasal();
-        temporaryBasal.date = time;
-        temporaryBasal.durationInMinutes = 0;
-        log.debug("Adding new TemporaryBasal stop record" + temporaryBasal.log());
-        MainApp.getDbHelper().createOrUpdate(temporaryBasal);
+    public boolean addToHistoryTempBasal(TemporaryBasal tempBasal) {
+        //log.debug("Adding new TemporaryBasal record" + tempBasal.toString());
+        return MainApp.getDbHelper().createOrUpdate(tempBasal);
     }
 
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
         Treatment treatment = new Treatment(detailedBolusInfo.insulinInterface);
         treatment.date = detailedBolusInfo.date;
-        treatment.source = detailedBolusInfo.recordFromHistory ? Source.PUMP : Source.USER;
-        if (detailedBolusInfo.recordFromHistory)
-            treatment.pumpId = treatment.date;
+        treatment.source = detailedBolusInfo.source;
+        treatment.pumpId = detailedBolusInfo.pumpId;
         treatment.insulin = detailedBolusInfo.insulin;
         if (detailedBolusInfo.carbTime == 0)
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.source = detailedBolusInfo.source;
         treatment.mealBolus = treatment.carbs > 0;
         boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(treatment);
-        log.debug("Adding new Treatment record" + treatment.toString());
+        //log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
             Treatment carbsTreatment = new Treatment(detailedBolusInfo.insulinInterface);
-            carbsTreatment.source = detailedBolusInfo.recordFromHistory ? Source.PUMP : Source.USER;
-            if (detailedBolusInfo.recordFromHistory)
-                carbsTreatment.pumpId = treatment.date;
+            carbsTreatment.source = detailedBolusInfo.source;
+            carbsTreatment.pumpId = detailedBolusInfo.pumpId; // but this should never happen
             carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records
             carbsTreatment.carbs = detailedBolusInfo.carbs;
             carbsTreatment.source = detailedBolusInfo.source;
             MainApp.getDbHelper().createOrUpdate(carbsTreatment);
-            log.debug("Adding new Treatment record" + carbsTreatment);
+            //log.debug("Adding new Treatment record" + carbsTreatment);
         }
         return newRecordCreated;
     }
@@ -481,7 +461,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public void addToHistoryProfileSwitch(ProfileSwitch profileSwitch) {
-        log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
+        //log.debug("Adding new TemporaryBasal record" + profileSwitch.log());
         MainApp.getDbHelper().createOrUpdate(profileSwitch);
     }
 

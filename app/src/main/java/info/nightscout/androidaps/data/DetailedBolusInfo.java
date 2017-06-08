@@ -28,6 +28,5 @@ public class DetailedBolusInfo {
     public JSONObject boluscalc = null;    // additional bolus wizard info
     public Context context = null;         // context for progress dialog
     public boolean addToTreatments = true;
-    public boolean recordFromHistory = false; // true if record is comming from pump history (not a newly created treatment)
     public long pumpId = 0;                   // id of record if comming from pump history (not a newly created treatment)
 }
