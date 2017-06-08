@@ -1296,7 +1296,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
             List<DeviationDataPoint> devArray = new ArrayList<>();
-            double lastIob = -1000;
+            double lastIob = 0;
             int lastCob = 0;
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
@@ -1553,8 +1553,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
         seriesNow2.setCustomPaint(paint);
-        bgGraph.onDataChanged(true, true);
-        iobGraph.onDataChanged(true, true);
+        bgGraph.onDataChanged(false, false);
+        iobGraph.onDataChanged(false, false);
 
         if (updating != null)
             updating.setVisibility(View.GONE);
