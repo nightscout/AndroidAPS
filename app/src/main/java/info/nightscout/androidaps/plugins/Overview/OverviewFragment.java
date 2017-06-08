@@ -1296,17 +1296,30 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
             List<DeviationDataPoint> devArray = new ArrayList<>();
+            double lastIob = -1000;
+            int lastCob = 0;
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
-                    IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
-                    iobArray.add(new DataPoint(time, iob.iob));
-                    maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
+                    double iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time).iob;
+                    if (Math.abs(lastIob - iob) > 0.02) {
+                        if (Math.abs(lastIob - iob) > 0.2)
+                            iobArray.add(new DataPoint(time, lastIob));
+                        iobArray.add(new DataPoint(time, iob));
+                        maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob));
+                        lastIob = iob;
+                    }
                 }
                 if (showCobView.isChecked() || showDeviationsView.isChecked()) {
                     AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
                     if (autosensData != null && showCobView.isChecked()) {
-                        cobArray.add(new DataPoint(time, autosensData.cob));
-                        maxCobValueFound = Math.max(maxCobValueFound, autosensData.cob);
+                        int cob = (int) autosensData.cob;
+                        if (cob != lastCob) {
+                            if (autosensData.carbsFromBolus > 0)
+                                cobArray.add(new DataPoint(time, lastCob));
+                            cobArray.add(new DataPoint(time, cob));
+                            maxCobValueFound = Math.max(maxCobValueFound, cob);
+                            lastCob = cob;
+                        }
                     }
                     if (autosensData != null && showDeviationsView.isChecked()) {
                         int color = Color.BLACK; // "="
