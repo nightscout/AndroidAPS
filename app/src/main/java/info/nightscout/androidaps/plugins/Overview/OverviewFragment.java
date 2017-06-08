@@ -1488,7 +1488,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
         treatmentsArray = filteredTreatments.toArray(treatmentsArray);
         if (treatmentsArray.length > 0) {
-            bgGraph.addSeries(new PointsWithLabelGraphSeries<>(treatmentsArray));
+            addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(treatmentsArray), bgGraph);
         }
 
         // set manual y bounds to have nice steps
@@ -1529,7 +1529,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 new DataPoint(now, 0),
                 new DataPoint(now, maxIobValueFound)
         };
-        iobGraph.addSeries(seriesNow2 = new LineGraphSeries<>(nowPoints2));
+        addSeriesWithoutInvalidate(seriesNow2 = new LineGraphSeries<>(nowPoints2), iobGraph);
         seriesNow2.setDrawDataPoints(false);
         //seriesNow.setThickness(1);
         // custom paint to make a dotted line
@@ -1540,6 +1540,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
         seriesNow2.setCustomPaint(paint);
+        bgGraph.onDataChanged(true, true);
+        iobGraph.onDataChanged(true, true);
 
         if (updating != null)
             updating.setVisibility(View.GONE);
