@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpCombo;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -10,18 +8,14 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
-import info.nightscout.androidaps.plugins.PumpMDI.MDIFragment;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -37,28 +31,26 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     public ComboPlugin() {
         pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.5d;
+        pumpDescription.bolusStep = 0.1d;
 
-        pumpDescription.isExtendedBolusCapable = false;
-        pumpDescription.extendedBolusStep = 0d;
+        pumpDescription.isExtendedBolusCapable = true;
+        pumpDescription.extendedBolusStep = 0.05d;
+        pumpDescription.extendedBolusDurationStep = 30;
+        pumpDescription.extendedBolusMaxDuration = 8 * 60;
 
-        pumpDescription.isTempBasalCapable = false;
-        pumpDescription.lowTempBasalStyle = PumpDescription.NONE;
-        pumpDescription.highTempBasalStyle = PumpDescription.NONE;
-        pumpDescription.maxHighTempPercent = 0;
-        pumpDescription.maxHighTempAbsolute = 0;
-        pumpDescription.lowTempPercentStep = 0;
-        pumpDescription.lowTempAbsoluteStep = 0;
-        pumpDescription.lowTempPercentDuration = 0;
-        pumpDescription.lowTempAbsoluteDuration = 0;
-        pumpDescription.highTempPercentStep = 0;
-        pumpDescription.highTempAbsoluteStep = 0d;
-        pumpDescription.highTempPercentDuration = 0;
-        pumpDescription.highTempAbsoluteDuration = 0;
+        pumpDescription.isTempBasalCapable = true;
+        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
 
-        pumpDescription.isSetBasalProfileCapable = false;
-        pumpDescription.basalStep = 0d;
-        pumpDescription.basalMinimumRate = 0d;
+        pumpDescription.maxTempPercent = 500;
+        pumpDescription.tempPercentStep = 10;
+
+        pumpDescription.tempDurationStep = 30;
+        pumpDescription.tempMaxDuration = 24 * 60;
+
+
+        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.basalStep = 0.01d;
+        pumpDescription.basalMinimumRate = 0.01d;
 
         pumpDescription.isRefillingCapable = false;
     }
@@ -135,12 +127,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public int setNewBasalProfile(NSProfile profile) {
+    public int setNewBasalProfile(Profile profile) {
         return FAILED;
     }
 
     @Override
-    public boolean isThisProfileSet(NSProfile profile) {
+    public boolean isThisProfileSet(Profile profile) {
         return false;
     }
 
@@ -207,7 +199,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             status.put("status", "normal");
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
+                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
             status.put("timestamp", DateUtil.toISOString(new Date()));
