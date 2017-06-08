@@ -949,11 +949,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
             else
                 tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
-        }
-        if (Config.NSCLIENT) {
-            tempTargetView.setVisibility(View.GONE);
         } else {
-
             Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
             Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
             if (!profile.getUnits().equals(Constants.MGDL)) {
@@ -964,6 +960,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
             tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
             tempTargetView.setVisibility(View.VISIBLE);
+        }
+        if (Config.NSCLIENT && tempTarget != null) {
+            tempTargetView.setVisibility(View.GONE);
         }
 
         // **** Temp button ****

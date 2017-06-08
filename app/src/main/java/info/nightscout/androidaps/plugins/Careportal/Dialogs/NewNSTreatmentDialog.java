@@ -658,6 +658,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         tempTarget.date = eventTime.getTime();
                                         tempTarget.durationInMinutes = data.getInt("duration");
                                         tempTarget.reason = data.getString("reason");
+                                        tempTarget.source = Source.USER;
                                         if (tempTarget.durationInMinutes != 0) {
                                             tempTarget.low = Profile.toMgdl(data.getDouble("targetBottom"), profile.getUnits());
                                             tempTarget.high = Profile.toMgdl(data.getDouble("targetTop"), profile.getUnits());
@@ -665,7 +666,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                             tempTarget.low = 0;
                                             tempTarget.high = 0;
                                         }
-                                        log.debug("Creating new TempTarget db record: " + tempTarget.log());
+                                        log.debug("Creating new TempTarget db record: " + tempTarget.toString());
                                         MainApp.getDbHelper().createOrUpdate(tempTarget);
                                         NSUpload.uploadCareportalEntryToNS(data);
                                         Answers.getInstance().logCustom(new CustomEvent("TempTarget"));

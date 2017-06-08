@@ -717,14 +717,58 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<TempTarget>();
     }
 
-    public void createOrUpdate(TempTarget tempTarget) {
-        tempTarget.date = tempTarget.date - tempTarget.date % 1000;
+    public boolean createOrUpdate(TempTarget tempTarget) {
         try {
-            getDaoTempTargets().createOrUpdate(tempTarget);
-            scheduleTemporaryTargetChange();
+            TempTarget old;
+            tempTarget.date = roundDateToSec(tempTarget.date);
+
+            if (tempTarget.source == Source.NIGHTSCOUT) {
+                old = getDaoTempTargets().queryForId(tempTarget.date);
+                if (old != null) {
+                    if (!old.isEqual(tempTarget)) {
+                        getDaoTempTargets().delete(old); // need to delete/create because date may change too
+                        old.copyFrom(tempTarget);
+                        getDaoTempTargets().create(old);
+                        log.debug("TEMPTARGET: Updating record by date from: " + Source.getString(tempTarget.source) + " " + old.toString());
+                        scheduleTemporaryTargetChange();
+                        return true;
+                    }
+                    return false;
+                }
+                // find by NS _id
+                if (tempTarget._id != null) {
+                    QueryBuilder<TempTarget, Long> queryBuilder = getDaoTempTargets().queryBuilder();
+                    Where where = queryBuilder.where();
+                    where.eq("_id", tempTarget._id);
+                    PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
+                    List<TempTarget> trList = getDaoTempTargets().query(preparedQuery);
+                    if (trList.size() > 0) {
+                        old = trList.get(0);
+                        if (!old.isEqual(tempTarget)) {
+                            getDaoTempTargets().delete(old); // need to delete/create because date may change too
+                            old.copyFrom(tempTarget);
+                            getDaoTempTargets().create(old);
+                            log.debug("TEMPTARGET: Updating record by _id from: " + Source.getString(tempTarget.source) + " " + old.toString());
+                            scheduleTemporaryTargetChange();
+                            return true;
+                        }
+                    }
+                }
+                getDaoTempTargets().create(tempTarget);
+                log.debug("TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
+                scheduleTemporaryTargetChange();
+                return true;
+            }
+            if (tempTarget.source == Source.USER) {
+                getDaoTempTargets().create(tempTarget);
+                log.debug("TEMPTARGET: New record from: " + Source.getString(tempTarget.source) + " " + tempTarget.toString());
+                scheduleTemporaryTargetChange();
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public void delete(TempTarget tempTarget) {
@@ -771,41 +815,32 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
-            QueryBuilder<TempTarget, Long> queryBuilder = null;
-            queryBuilder = getDaoTempTargets().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<TempTarget> preparedQuery = queryBuilder.prepare();
-            List<TempTarget> list = getDaoTempTargets().query(preparedQuery);
             Profile profile = MainApp.getConfigBuilder().getProfile();
             String units = profile.getUnits();
-            TempTarget tempTarget;
-            if (list.size() == 0) {
-                tempTarget = new TempTarget();
-                if (Config.logIncommingData)
-                    log.debug("Adding TempTarget record to database: " + trJson.toString());
-                // Record does not exists. add
-            } else if (list.size() == 1) {
-                tempTarget = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Updating TempTarget record in database: " + trJson.toString());
-            } else {
-                log.error("Something went wrong");
-                return;
-            }
+            TempTarget tempTarget = new TempTarget();
             tempTarget.date = trJson.getLong("mills");
             tempTarget.durationInMinutes = trJson.getInt("duration");
             tempTarget.low = Profile.toMgdl(trJson.getDouble("targetBottom"), units);
             tempTarget.high = Profile.toMgdl(trJson.getDouble("targetTop"), units);
             tempTarget.reason = trJson.getString("reason");
             tempTarget._id = trJson.getString("_id");
+            tempTarget.source = Source.NIGHTSCOUT;
             createOrUpdate(tempTarget);
-        } catch (SQLException | JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public void deleteTempTargetById(String _id) {
+        TempTarget stored = findTempTargetById(_id);
+        if (stored != null) {
+            log.debug("TEMPTARGET: Removing TempTarget record from database: " + stored.toString());
+            delete(stored);
+            scheduleTemporaryTargetChange();
+        }
+    }
+
+    public TempTarget findTempTargetById(String _id) {
         try {
             QueryBuilder<TempTarget, Long> queryBuilder = getDaoTempTargets().queryBuilder();
             Where where = queryBuilder.where();
@@ -814,17 +849,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<TempTarget> list = getDaoTempTargets().query(preparedQuery);
 
             if (list.size() == 1) {
-                TempTarget record = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Removing TempTarget record from database: " + record.log());
-                delete(record);
+                return list.get(0);
             } else {
-                if (Config.logIncommingData)
-                    log.debug("TempTarget not found database: " + _id);
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     // ----------------- DanaRHistory handling --------------------
@@ -986,16 +1018,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             e.printStackTrace();
         }
         return new ArrayList<TemporaryBasal>();
-    }
-
-    @Nullable
-    public TemporaryBasal findTempBasalByTime(long date) {
-        try {
-            return getDaoTemporaryBasal().queryForId(date);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     private static void scheduleTemporaryBasalChange() {
@@ -1217,31 +1239,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<ExtendedBolus>();
     }
 
-    @Nullable
-    public ExtendedBolus findExtendedBolusByTime(Long timeIndex) {
-        try {
-            QueryBuilder<ExtendedBolus, String> qb = null;
-            Dao<ExtendedBolus, Long> daoExtendedBolus = getDaoExtendedBolus();
-            QueryBuilder<ExtendedBolus, Long> queryBuilder = daoExtendedBolus.queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("date", timeIndex);
-            queryBuilder.limit(10L);
-            PreparedQuery<ExtendedBolus> preparedQuery = queryBuilder.prepare();
-            List<ExtendedBolus> trList = daoExtendedBolus.query(preparedQuery);
-            if (trList.size() != 1) {
-                //log.debug("ExtendedBolus findExtendedBolusByTime query size: " + trList.size());
-                return null;
-            } else {
-                //log.debug("ExtendedBolus findExtendedBolusByTime found: " + trList.get(0).log());
-                return trList.get(0);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public void deleteExtendedBolusById(String _id) {
+        ExtendedBolus stored = findExtendedBolusById(_id);
+        if (stored != null) {
+            log.debug("EXTENDEDBOLUS: Removing ExtendedBolus record from database: " + stored.toString());
+            delete(stored);
+            updateEarliestDataChange(stored.date);
+            scheduleExtendedBolusChange();
+        }
+    }
+    public ExtendedBolus findExtendedBolusById(String _id) {
         try {
             QueryBuilder<ExtendedBolus, Long> queryBuilder = null;
             queryBuilder = getDaoExtendedBolus().queryBuilder();
@@ -1251,17 +1258,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<ExtendedBolus> list = getDaoExtendedBolus().query(preparedQuery);
 
             if (list.size() == 1) {
-                ExtendedBolus record = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Removing ExtendedBolus record from database: " + record.log());
-                delete(record);
+                return list.get(0);
             } else {
-                if (Config.logIncommingData)
-                    log.debug("ExtendedBolus not found database: " + _id);
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     /*
