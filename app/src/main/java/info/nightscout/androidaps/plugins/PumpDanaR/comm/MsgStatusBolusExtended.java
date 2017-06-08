@@ -74,14 +74,15 @@ public class MsgStatusBolusExtended extends MessageBase {
             if (pump.isExtendedInProgress) {
                 if (extendedBolus.absoluteRate() != pump.extendedBolusAbsoluteRate) {
                     // Close current extended
-                    ExtendedBolus exStop = new ExtendedBolus(now - 1000);
+                    ExtendedBolus exStop = new ExtendedBolus(pump.extendedBolusStart.getTime() - 1000);
                     exStop.source = Source.USER;
                     treatmentsInterface.addToHistoryExtendedBolus(exStop);
                     // Create new
                     ExtendedBolus newExtended = new ExtendedBolus();
-                    newExtended.date = new Date(now).getTime();
+                    newExtended.date = pump.extendedBolusStart.getTime();
                     newExtended.insulin = pump.extendedBolusAmount;
                     newExtended.durationInMinutes = pump.extendedBolusMinutes;
+                    newExtended.source = Source.USER;
                     treatmentsInterface.addToHistoryExtendedBolus(newExtended);
                 }
             } else {
@@ -94,9 +95,10 @@ public class MsgStatusBolusExtended extends MessageBase {
             if (pump.isExtendedInProgress) {
                 // Create new
                 ExtendedBolus newExtended = new ExtendedBolus();
-                newExtended.date = new Date(now).getTime();
+                newExtended.date = pump.extendedBolusStart.getTime();
                 newExtended.insulin = pump.extendedBolusAmount;
                 newExtended.durationInMinutes = pump.extendedBolusMinutes;
+                newExtended.source = Source.USER;
                 treatmentsInterface.addToHistoryExtendedBolus(newExtended);
             }
         }
