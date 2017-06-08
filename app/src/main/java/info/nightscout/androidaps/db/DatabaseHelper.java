@@ -1491,14 +1491,58 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return new ArrayList<ProfileSwitch>();
     }
 
-    public void createOrUpdate(ProfileSwitch profileSwitch) {
-        profileSwitch.date = profileSwitch.date - profileSwitch.date % 1000;
+    public boolean createOrUpdate(ProfileSwitch profileSwitch) {
         try {
-            getDaoProfileSwitch().createOrUpdate(profileSwitch);
-            scheduleProfileSwitchChange();
+            ProfileSwitch old;
+            profileSwitch.date = roundDateToSec(profileSwitch.date);
+
+            if (profileSwitch.source == Source.NIGHTSCOUT) {
+                old = getDaoProfileSwitch().queryForId(profileSwitch.date);
+                if (old != null) {
+                    if (!old.isEqual(profileSwitch)) {
+                        getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
+                        old.copyFrom(profileSwitch);
+                        getDaoProfileSwitch().create(old);
+                        log.debug("PROFILESWITCH: Updating record by date from: " + Source.getString(profileSwitch.source) + " " + old.toString());
+                        scheduleTemporaryTargetChange();
+                        return true;
+                    }
+                    return false;
+                }
+                // find by NS _id
+                if (profileSwitch._id != null) {
+                    QueryBuilder<ProfileSwitch, Long> queryBuilder = getDaoProfileSwitch().queryBuilder();
+                    Where where = queryBuilder.where();
+                    where.eq("_id", profileSwitch._id);
+                    PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
+                    List<ProfileSwitch> trList = getDaoProfileSwitch().query(preparedQuery);
+                    if (trList.size() > 0) {
+                        old = trList.get(0);
+                        if (!old.isEqual(profileSwitch)) {
+                            getDaoProfileSwitch().delete(old); // need to delete/create because date may change too
+                            old.copyFrom(profileSwitch);
+                            getDaoProfileSwitch().create(old);
+                            log.debug("PROFILESWITCH: Updating record by _id from: " + Source.getString(profileSwitch.source) + " " + old.toString());
+                            scheduleTemporaryTargetChange();
+                            return true;
+                        }
+                    }
+                }
+                getDaoProfileSwitch().create(profileSwitch);
+                log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
+                scheduleTemporaryTargetChange();
+                return true;
+            }
+            if (profileSwitch.source == Source.USER) {
+                getDaoProfileSwitch().create(profileSwitch);
+                log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
+                scheduleTemporaryTargetChange();
+                return true;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     public void delete(ProfileSwitch profileSwitch) {
@@ -1542,32 +1586,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createProfileSwitchFromJsonIfNotExists(JSONObject trJson) {
         try {
-            QueryBuilder<ProfileSwitch, Long> queryBuilder = null;
-            queryBuilder = getDaoProfileSwitch().queryBuilder();
-            Where where = queryBuilder.where();
-            where.eq("_id", trJson.getString("_id")).or().eq("date", trJson.getLong("mills"));
-            PreparedQuery<ProfileSwitch> preparedQuery = queryBuilder.prepare();
-            List<ProfileSwitch> list = getDaoProfileSwitch().query(preparedQuery);
-            ProfileSwitch profileSwitch;
-            if (list.size() == 0) {
-                profileSwitch = new ProfileSwitch();
-                if (Config.logIncommingData)
-                    log.debug("Adding ProfileSwitch record to database: " + trJson.toString());
-                // Record does not exists. add
-            } else if (list.size() == 1) {
-                profileSwitch = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Updating ProfileSwitch record in database: " + trJson.toString());
-            } else {
-                log.error("Something went wrong");
-                return;
-            }
+            ProfileSwitch profileSwitch = new ProfileSwitch();
             profileSwitch.date = trJson.getLong("mills");
             if (trJson.has("duration"))
                 profileSwitch.durationInMinutes = trJson.getInt("duration");
             profileSwitch._id = trJson.getString("_id");
             profileSwitch.profileName = trJson.getString("profile");
             profileSwitch.isCPP = trJson.has("CircadianPercentageProfile");
+            profileSwitch.source = Source.NIGHTSCOUT;
             if (trJson.has("timeshift"))
                 profileSwitch.timeshift = trJson.getInt("timeshift");
             if (trJson.has("percentage"))
@@ -1577,12 +1603,21 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (trJson.has("profilePlugin"))
                 profileSwitch.profilePlugin = trJson.getString("profilePlugin");
             createOrUpdate(profileSwitch);
-        } catch (SQLException | JSONException e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
     public void deleteProfileSwitchById(String _id) {
+        ProfileSwitch stored = findProfileSwitchById(_id);
+        if (stored != null) {
+            log.debug("PROFILESWITCH: Removing ProfileSwitch record from database: " + stored.toString());
+            delete(stored);
+            scheduleTemporaryTargetChange();
+        }
+    }
+
+    public ProfileSwitch findProfileSwitchById(String _id) {
         try {
             QueryBuilder<ProfileSwitch, Long> queryBuilder = getDaoProfileSwitch().queryBuilder();
             Where where = queryBuilder.where();
@@ -1591,17 +1626,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             List<ProfileSwitch> list = getDaoProfileSwitch().query(preparedQuery);
 
             if (list.size() == 1) {
-                ProfileSwitch record = list.get(0);
-                if (Config.logIncommingData)
-                    log.debug("Removing ProfileSwitch record from database: " + record.log());
-                delete(record);
+                return list.get(0);
             } else {
-                if (Config.logIncommingData)
-                    log.debug("ProfileSwitch not found database: " + _id);
+                return null;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
 }

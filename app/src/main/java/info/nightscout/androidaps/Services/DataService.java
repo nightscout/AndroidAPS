@@ -497,8 +497,6 @@ public class DataService extends IntentService {
                         trJson.getString("eventType").equals(CareportalEvent.OPENAPSOFFLINE) ||
                         trJson.getString("eventType").equals(CareportalEvent.PUMPBATTERYCHANGE)
         )) {
-            if (Config.logIncommingData)
-                log.debug("Processing CareportalEvent record: " + trJson.toString());
             MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
         }
 
@@ -514,8 +512,6 @@ public class DataService extends IntentService {
 
     public void handleAddChangeProfileSwitchRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.PROFILESWITCH)) {
-            if (Config.logIncommingData)
-                log.debug("Processing ProfileSwitch record: " + trJson.toString());
             MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(trJson);
         }
     }
