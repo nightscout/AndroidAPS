@@ -81,8 +81,6 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
-import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -98,6 +96,7 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
@@ -119,6 +118,7 @@ import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
@@ -359,15 +359,15 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         switch (buttonView.getId()) {
             case R.id.overview_showprediction:
                 SP.putBoolean("showprediction", showPredictionView.isChecked());
-                scheduleUpdateGUI("onPredictionCheckedChanged");
+                updateGUI("onPredictionCheckedChanged");
                 break;
             case R.id.overview_showbasals:
                 SP.putBoolean("showbasals", showBasalsView.isChecked());
-                scheduleUpdateGUI("onBasalsCheckedChanged");
+                updateGUI("onBasalsCheckedChanged");
                 break;
             case R.id.overview_showiob:
                 SP.putBoolean("showiob", showIobView.isChecked());
-                scheduleUpdateGUI("onIobCheckedChanged");
+                updateGUI("onIobCheckedChanged");
                 break;
             case R.id.overview_showcob:
                 showDeviationsView.setOnCheckedChangeListener(null);
@@ -375,7 +375,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 showDeviationsView.setOnCheckedChangeListener(this);
                 SP.putBoolean("showcob", showCobView.isChecked());
                 SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-                scheduleUpdateGUI("onCobCheckedChanged");
+                updateGUI("onCobCheckedChanged");
                 break;
             case R.id.overview_showdeviations:
                 showCobView.setOnCheckedChangeListener(null);
@@ -383,7 +383,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 showCobView.setOnCheckedChangeListener(this);
                 SP.putBoolean("showcob", showCobView.isChecked());
                 SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-                scheduleUpdateGUI("onDeviationsCheckedChanged");
+                updateGUI("onDeviationsCheckedChanged");
                 break;
         }
     }
@@ -764,7 +764,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     @Subscribe
     public void onStatusEvent(final EventAutosensCalculationFinished ev) {
-        scheduleUpdateGUI("EventRefreshGui");
+        scheduleUpdateGUI("EventAutosensCalculationFinished");
     }
 
     @Subscribe
@@ -787,20 +787,22 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         scheduleUpdateGUI("EventExtendedBolusChange");
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewBG ev) {
-        scheduleUpdateGUI("EventNewBG");
-    }
+//  Handled by EventAutosensCalculationFinished
+//    @Subscribe
+//    public void onStatusEvent(final EventNewBG ev) {
+//        scheduleUpdateGUI("EventNewBG");
+//    }
 
     @Subscribe
     public void onStatusEvent(final EventNewOpenLoopNotification ev) {
         scheduleUpdateGUI("EventNewOpenLoopNotification");
     }
 
-    @Subscribe
-    public void onStatusEvent(final EventNewBasalProfile ev) {
-        scheduleUpdateGUI("EventNewBasalProfile");
-    }
+//  Handled by EventAutosensCalculationFinished
+//    @Subscribe
+//    public void onStatusEvent(final EventNewBasalProfile ev) {
+//        scheduleUpdateGUI("EventNewBasalProfile");
+//    }
 
     @Subscribe
     public void onStatusEvent(final EventTempTargetChange ev) {
@@ -876,13 +878,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (scheduledUpdate != null)
             scheduledUpdate.cancel(false);
         Runnable task = new UpdateRunnable();
-        final int msec = 400;
+        final int msec = 2000;
         scheduledUpdate = worker.schedule(task, msec, TimeUnit.MILLISECONDS);
     }
 
     @SuppressLint("SetTextI18n")
     public void updateGUI(String from) {
         log.debug("updateGUI entered from: " + from);
+        Date updateGUIStart = new Date();
 
         if (getActivity() == null)
             return;
@@ -1152,6 +1155,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // ****** GRAPH *******
+        //log.debug("updateGUI checkpoint 1");
 
         // allign to hours
         Calendar calendar = Calendar.getInstance();
@@ -1170,12 +1174,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
             hoursToFetch = rangeToDisplay - predHours;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+            toTime = calendar.getTimeInMillis() + 60000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime + predHours * 60 * 60 * 1000L;
         } else {
             hoursToFetch = rangeToDisplay;
-            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding
+            toTime = calendar.getTimeInMillis() + 600000; // little bit more to avoid wrong rounding
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime;
         }
@@ -1200,15 +1204,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastAbsoluteLineBasal = 0;
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
-            for (long time = fromTime; time < now; time += 1 * 60 * 1000L) {
-                TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
-                double baseBasalValue = MainApp.getConfigBuilder().getProfile(time).getBasal(Profile.secondsFromMidnight(time));
-                double baseLineValue = baseBasalValue;
+            for (long time = fromTime; time < now; time +=  60 * 1000L) {
+                BasalData basalData = IobCobCalculatorPlugin.getBasalData(time);
+                double baseBasalValue = basalData.basal;
                 double absoluteLineValue = baseBasalValue;
                 double tempBasalValue = 0;
                 double basal = 0d;
-                if (tb != null) {
-                    absoluteLineValue = tempBasalValue = tb.tempBasalConvertedToAbsolute(new Date(time).getTime());
+                if (basalData.isTempBasalRunning) {
+                    absoluteLineValue = tempBasalValue = basalData.tempBasalAbsolute;
                     if (tempBasalValue != lastTempBasal) {
                         tempBasalArray.add(new DataPoint(time, lastTempBasal));
                         tempBasalArray.add(new DataPoint(time, basal = tempBasalValue));
@@ -1230,9 +1233,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     }
                 }
 
-                if (baseLineValue != lastLineBasal) {
+                if (baseBasalValue != lastLineBasal) {
                     basalLineArray.add(new DataPoint(time, lastLineBasal));
-                    basalLineArray.add(new DataPoint(time, baseLineValue));
+                    basalLineArray.add(new DataPoint(time, baseBasalValue));
                 }
                 if (absoluteLineValue != lastAbsoluteLineBasal) {
                     absoluteBasalLineArray.add(new DataPoint(time, lastAbsoluteLineBasal));
@@ -1240,7 +1243,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 }
 
                 lastAbsoluteLineBasal = absoluteLineValue;
-                lastLineBasal = baseLineValue;
+                lastLineBasal = baseBasalValue;
                 lastTempBasal = tempBasalValue;
                 maxBasalValueFound = Math.max(maxBasalValueFound, basal);
             }
@@ -1282,6 +1285,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             absolutePaint.setColor(MainApp.sResources.getColor(R.color.basal));
             absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
         }
+
+        //log.debug("updateGUI checkpoint 2");
 
         // **** IOB COB DEV graph ****
         class DeviationDataPoint extends DataPoint {
@@ -1399,10 +1404,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else {
             iobGraph.setVisibility(View.GONE);
         }
+        //log.debug("updateGUI checkpoint 3");
 
         // remove old data from graph
         bgGraph.getSecondScale().getSeries().clear();
         bgGraph.getSeries().clear();
+        //log.debug("updateGUI checkpoint 4");
 
         // **** Area ****
         DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
@@ -1427,6 +1434,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         iobGraph.getGridLabelRenderer().setLabelFormatter(new TimeAsXAxisLabelFormatter(getActivity(), "HH"));
         iobGraph.getGridLabelRenderer().setNumHorizontalLabels(7); // only 7 because of the space
 
+        //log.debug("updateGUI checkpoint 5");
         // **** BG graph ****
         List<BgReading> bgReadingsArray = MainApp.getDbHelper().getBgreadingsDataFromTime(fromTime, true);
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
@@ -1462,6 +1470,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(bg), bgGraph);
         }
 
+        //log.debug("updateGUI checkpoint 6");
         // Treatments
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
@@ -1474,6 +1483,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             filteredTreatments.add(t);
         }
 
+        //log.debug("updateGUI checkpoint 7");
         // ProfileSwitch
         List<ProfileSwitch> profileSwitches = MainApp.getConfigBuilder().getProfileSwitchesFromHistory().getList();
 
@@ -1483,6 +1493,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             filteredTreatments.add(t);
         }
 
+        //log.debug("updateGUI checkpoint 8");
         // Extended bolus
         if (!pump.isFakingTempsByExtendedBoluses()) {
             List<ExtendedBolus> extendedBoluses = MainApp.getConfigBuilder().getExtendedBolusesFromHistory().getList();
@@ -1496,6 +1507,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         }
 
+        //log.debug("updateGUI checkpoint 9");
         // Careportal
         List<CareportalEvent> careportalEvents = MainApp.getDbHelper().getCareportalEventsFromTime(fromTime, true);
 
@@ -1511,6 +1523,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (treatmentsArray.length > 0) {
             addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(treatmentsArray), bgGraph);
         }
+        //log.debug("updateGUI checkpoint 10");
 
         // set manual y bounds to have nice steps
         bgGraph.getViewport().setMaxY(maxBgValue);
@@ -1520,12 +1533,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         // set second scale
         if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
+            bgGraph.getSecondScale().setMinY(0);
+            bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
             bgGraph.getSecondScale().addSeries(baseBasalsSeries);
             bgGraph.getSecondScale().addSeries(tempBasalsSeries);
             bgGraph.getSecondScale().addSeries(basalsLineSeries);
             bgGraph.getSecondScale().addSeries(absoluteBasalsLineSeries);
-            bgGraph.getSecondScale().setMinY(0);
-            bgGraph.getSecondScale().setMaxY(maxBgValue / lowLine * maxBasalValueFound * 1.2d);
         }
         bgGraph.getSecondScale().setLabelFormatter(new LabelFormatter() {
             @Override
@@ -1539,6 +1552,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
         });
 
+        //log.debug("updateGUI checkpoint 11");
         // **** NOW line ****
         DataPoint[] nowPoints = new DataPoint[]{
                 new DataPoint(now, 0),
@@ -1566,7 +1580,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         if (updating != null)
             updating.setVisibility(View.GONE);
-        log.debug("updateGUI finshed");
+        Profiler.log(log, from, updateGUIStart);
     }
 
     public double getNearestBg(long date, List<BgReading> bgReadingsArray) {

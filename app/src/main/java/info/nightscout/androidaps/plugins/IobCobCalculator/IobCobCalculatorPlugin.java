@@ -22,10 +22,12 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.utils.Round;
@@ -41,6 +43,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     private static LongSparseArray<IobTotal> iobTable = new LongSparseArray<>(); // oldest at index 0
     private static LongSparseArray<AutosensData> autosensDataTable = new LongSparseArray<>(); // oldest at index 0
+    private static LongSparseArray<BasalData> basalDataTable = new LongSparseArray<>(); // oldest at index 0
 
     private static volatile List<BgReading> bgReadings = null; // newest at index 0
     private static volatile List<BgReading> bucketed_data = null;
@@ -352,6 +355,31 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return null;
     }
 
+    public static BasalData getBasalData(long time) {
+        long now = new Date().getTime();
+        time = roundUpTime(time);
+        BasalData retval = basalDataTable.get(time);
+        if (retval == null) {
+            retval = new BasalData();
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(time);
+            retval.basal = MainApp.getConfigBuilder().getProfile(time).getBasal(time);
+            if (tb != null) {
+                retval.isTempBasalRunning = true;
+                retval.tempBasalAbsolute = tb.tempBasalConvertedToAbsolute(time);
+            } else {
+                retval.isTempBasalRunning = false;
+                retval.tempBasalAbsolute = retval.basal;
+            }
+            if (time < now) {
+                basalDataTable.append(time, retval);
+            }
+            //log.debug(">>> Cache miss " + new Date(time).toLocaleString());
+        } else {
+            //log.debug(">>> Cache hit " +  new Date(time).toLocaleString());
+        }
+        return retval;
+    }
+
     public static AutosensData getAutosensData(long time) {
         long now = new Date().getTime();
         if (time > now)
@@ -559,6 +587,15 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     if (Config.logAutosensData)
                         log.debug("Removing from autosensDataTable: " + new Date(autosensDataTable.keyAt(index)).toLocaleString());
                     autosensDataTable.removeAt(index);
+                } else {
+                    break;
+                }
+            }
+            for (int index = basalDataTable.size() - 1; index >= 0; index--) {
+                if (basalDataTable.keyAt(index) > time) {
+                    if (Config.logAutosensData)
+                        log.debug("Removing from basalDataTable: " + new Date(basalDataTable.keyAt(index)).toLocaleString());
+                    basalDataTable.removeAt(index);
                 } else {
                     break;
                 }
