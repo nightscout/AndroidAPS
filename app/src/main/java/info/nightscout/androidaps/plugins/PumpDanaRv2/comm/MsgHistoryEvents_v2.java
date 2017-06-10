@@ -76,6 +76,7 @@ public class MsgHistoryEvents_v2 extends MessageBase {
         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
         detailedBolusInfo.recordFromHistory = true;
         detailedBolusInfo.pumpId = datetime.getTime();
+        detailedBolusInfo.source = Source.PUMP;
 
         switch (recordCode) {
             case DanaRPump.TEMPSTART:
@@ -104,14 +105,12 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 log.debug("EVENT BOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 detailedBolusInfo.date = datetime.getTime();
                 detailedBolusInfo.insulin = param1 / 100d;
-                detailedBolusInfo.source = Source.PUMP;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 break;
             case DanaRPump.DUALBOLUS:
                 log.debug("EVENT DUALBOLUS (" + recordCode + ") " + datetime.toLocaleString() + " Bolus: " + (param1 / 100d) + "U Duration: " + param2 + "min");
                 detailedBolusInfo.date = datetime.getTime();
                 detailedBolusInfo.insulin = param1 / 100d;
-                detailedBolusInfo.source = Source.PUMP;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 break;
             case DanaRPump.DUALEXTENDEDSTART:
@@ -144,7 +143,6 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 log.debug("EVENT CARBS (" + recordCode + ") " + datetime.toLocaleString() + " Carbs: " + param1 + "g");
                 detailedBolusInfo.date = datetime.getTime();
                 detailedBolusInfo.carbs = param1;
-                detailedBolusInfo.source = Source.PUMP;
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 break;
             default:
