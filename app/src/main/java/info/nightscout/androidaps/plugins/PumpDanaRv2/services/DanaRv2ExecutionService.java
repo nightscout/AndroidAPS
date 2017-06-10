@@ -401,26 +401,28 @@ public class DanaRv2ExecutionService extends Service {
             mSerialIOThread.sendMessage(msg);
             MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
-            lastHistoryFetched = carbtime - 1000;
+            lastHistoryFetched = carbtime - 60000;
         }
-        MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-        MainApp.bus().post(new EventDanaRBolusStart());
+        if (amount > 0) {
+            MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
+            MainApp.bus().post(new EventDanaRBolusStart());
 
-        if (!stop.stopped) {
-            mSerialIOThread.sendMessage(start);
-        } else {
-            t.insulin = 0d;
-            return false;
-        }
-        while (!stop.stopped && !start.failed) {
-            waitMsec(100);
-            if ((new Date().getTime() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
-                stop.stopped = true;
-                stop.forced = true;
-                log.debug("Communication stopped");
+            if (!stop.stopped) {
+                mSerialIOThread.sendMessage(start);
+            } else {
+                t.insulin = 0d;
+                return false;
+            }
+            while (!stop.stopped && !start.failed) {
+                waitMsec(100);
+                if ((new Date().getTime() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+                    stop.stopped = true;
+                    stop.forced = true;
+                    log.debug("Communication stopped");
+                }
             }
         }
-        waitMsec(1000);
+        waitMsec(3000);
         bolusingTreatment = null;
         loadEvents();
         return true;

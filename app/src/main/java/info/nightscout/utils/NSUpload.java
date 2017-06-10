@@ -44,6 +44,8 @@ public class NSUpload {
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("duration", temporaryBasal.durationInMinutes);
             data.put("absolute", temporaryBasal.absoluteRate);
+            if (temporaryBasal.pumpId != 0)
+                data.put("pumpId", temporaryBasal.pumpId);
             data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.absoluteRate + "u/h " + temporaryBasal.durationInMinutes + " min"); // ECOR
@@ -81,6 +83,8 @@ public class NSUpload {
                 data.put("eventType", CareportalEvent.TEMPBASAL);
                 data.put("duration", temporaryBasal.durationInMinutes);
                 data.put("percent", temporaryBasal.percentRate - 100);
+                if (temporaryBasal.pumpId != 0)
+                    data.put("pumpId", temporaryBasal.pumpId);
                 data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
                 data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
                 data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.percentRate + "% " + temporaryBasal.durationInMinutes + " min"); // ECOR
@@ -99,7 +103,7 @@ public class NSUpload {
         }
     }
 
-    public static void uploadTempBasalEnd(long time, boolean isFakedTempBasal) {
+    public static void uploadTempBasalEnd(long time, boolean isFakedTempBasal, long pumpId) {
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
@@ -109,6 +113,8 @@ public class NSUpload {
             data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalendnote)); // ECOR
             if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
+            if (pumpId != 0)
+                data.put("pumpId", pumpId);
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
@@ -133,6 +139,8 @@ public class NSUpload {
             data.put("splitExt", 100);
             data.put("enteredinsulin", extendedBolus.insulin);
             data.put("relative", extendedBolus.insulin);
+            if (extendedBolus.pumpId != 0)
+                data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
@@ -149,7 +157,7 @@ public class NSUpload {
         }
     }
 
-    public static void uploadExtendedBolusEnd(long time) {
+    public static void uploadExtendedBolusEnd(long time, long pumpId) {
         try {
             Context context = MainApp.instance().getApplicationContext();
             JSONObject data = new JSONObject();
@@ -161,6 +169,8 @@ public class NSUpload {
             data.put("relative", 0);
             data.put("created_at", DateUtil.toISOString(time));
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            if (pumpId != 0)
+                data.put("pumpId", pumpId);
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");

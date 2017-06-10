@@ -10,6 +10,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
@@ -73,26 +74,32 @@ public class MsgStatusBolusExtended extends MessageBase {
             if (pump.isExtendedInProgress) {
                 if (extendedBolus.absoluteRate() != pump.extendedBolusAbsoluteRate) {
                     // Close current extended
-                    treatmentsInterface.addToHistoryExtendedBolusStop(now - 1000);
+                    ExtendedBolus exStop = new ExtendedBolus(pump.extendedBolusStart.getTime() - 1000);
+                    exStop.source = Source.USER;
+                    treatmentsInterface.addToHistoryExtendedBolus(exStop);
                     // Create new
                     ExtendedBolus newExtended = new ExtendedBolus();
-                    newExtended.date = new Date(now).getTime();
+                    newExtended.date = pump.extendedBolusStart.getTime();
                     newExtended.insulin = pump.extendedBolusAmount;
                     newExtended.durationInMinutes = pump.extendedBolusMinutes;
-                    treatmentsInterface.addToHistoryExtendedBolusStart(newExtended);
+                    newExtended.source = Source.USER;
+                    treatmentsInterface.addToHistoryExtendedBolus(newExtended);
                 }
             } else {
                 // Close curent temp basal
-                treatmentsInterface.addToHistoryExtendedBolusStop(now);
+                ExtendedBolus exStop = new ExtendedBolus(now);
+                exStop.source = Source.USER;
+                treatmentsInterface.addToHistoryExtendedBolus(exStop);
             }
         } else {
             if (pump.isExtendedInProgress) {
                 // Create new
                 ExtendedBolus newExtended = new ExtendedBolus();
-                newExtended.date = new Date(now).getTime();
+                newExtended.date = pump.extendedBolusStart.getTime();
                 newExtended.insulin = pump.extendedBolusAmount;
                 newExtended.durationInMinutes = pump.extendedBolusMinutes;
-                treatmentsInterface.addToHistoryExtendedBolusStart(newExtended);
+                newExtended.source = Source.USER;
+                treatmentsInterface.addToHistoryExtendedBolus(newExtended);
             }
         }
     }

@@ -48,6 +48,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Fragment;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpFragment;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpFragment;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
@@ -102,7 +103,7 @@ public class MainApp extends Application {
             if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIFragment.getPlugin());
-            if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpFragment.getPlugin());
+            if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSAMAFragment.getPlugin());

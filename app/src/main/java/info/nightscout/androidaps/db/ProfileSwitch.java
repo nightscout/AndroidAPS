@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -48,6 +49,41 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @DatabaseField
     public int durationInMinutes = 0;
+
+    public boolean isEqual(ProfileSwitch other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (durationInMinutes != other.durationInMinutes)
+            return false;
+        if (percentage != other.percentage)
+            return false;
+        if (timeshift != other.timeshift)
+            return false;
+        if (isCPP != other.isCPP)
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        if (!Objects.equals(profilePlugin, other.profilePlugin))
+            return false;
+        if (!Objects.equals(profileJson, other.profileJson))
+            return false;
+        if (!Objects.equals(profileName, other.profileName))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(ProfileSwitch t) {
+        date = t.date;
+        _id = t._id;
+        durationInMinutes = t.durationInMinutes;
+        percentage = t.percentage;
+        timeshift = t.timeshift;
+        isCPP = t.isCPP;
+        profilePlugin = t.profilePlugin;
+        profileJson = t.profileJson;
+        profileName = t.profileName;
+    }
 
     // -------- Interval interface ---------
 

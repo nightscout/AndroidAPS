@@ -463,24 +463,18 @@ public class DataService extends IntentService {
 
     public void handleAddChangeTempTargetRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPORARYTARGET)) {
-            if (Config.logIncommingData)
-                log.debug("Processing TempTarget record: " + trJson.toString());
             MainApp.getDbHelper().createTemptargetFromJsonIfNotExists(trJson);
         }
     }
 
     public void handleAddChangeTempBasalRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.TEMPBASAL)) {
-            if (Config.logIncommingData)
-                log.debug("Processing TempBasal record: " + trJson.toString());
             MainApp.getDbHelper().createTempBasalFromJsonIfNotExists(trJson);
         }
     }
 
     public void handleAddChangeExtendedBolusRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.COMBOBOLUS)) {
-            if (Config.logIncommingData)
-                log.debug("Processing Extended Bolus record: " + trJson.toString());
             MainApp.getDbHelper().createExtendedBolusFromJsonIfNotExists(trJson);
         }
     }
@@ -503,8 +497,6 @@ public class DataService extends IntentService {
                         trJson.getString("eventType").equals(CareportalEvent.OPENAPSOFFLINE) ||
                         trJson.getString("eventType").equals(CareportalEvent.PUMPBATTERYCHANGE)
         )) {
-            if (Config.logIncommingData)
-                log.debug("Processing CareportalEvent record: " + trJson.toString());
             MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
         }
 
@@ -520,8 +512,6 @@ public class DataService extends IntentService {
 
     public void handleAddChangeProfileSwitchRecord(JSONObject trJson) throws JSONException {
         if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.PROFILESWITCH)) {
-            if (Config.logIncommingData)
-                log.debug("Processing ProfileSwitch record: " + trJson.toString());
             MainApp.getDbHelper().createProfileSwitchFromJsonIfNotExists(trJson);
         }
     }

@@ -32,6 +32,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Iob;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -73,18 +74,21 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null)
                 return;
-            holder.date.setText(DateUtil.dateAndTimeString(treatments.get(position).date));
-            holder.insulin.setText(DecimalFormatter.to2Decimal(treatments.get(position).insulin) + " U");
-            holder.carbs.setText(DecimalFormatter.to0Decimal(treatments.get(position).carbs) + " g");
-            Iob iob = treatments.get(position).iobCalc(new Date().getTime(), profile.getDia());
+            Treatment t = treatments.get(position);
+            holder.date.setText(DateUtil.dateAndTimeString(t.date));
+            holder.insulin.setText(DecimalFormatter.to2Decimal(t.insulin) + " U");
+            holder.carbs.setText(DecimalFormatter.to0Decimal(t.carbs) + " g");
+            Iob iob = t.iobCalc(new Date().getTime(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
-            holder.mealOrCorrection.setText(treatments.get(position).mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
+            holder.mealOrCorrection.setText(t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
+            holder.ph.setVisibility(t.source == Source.PUMP ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(t._id != null ? View.VISIBLE : View.GONE);
             if (iob.iobContrib != 0)
                 holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else
                 holder.iob.setTextColor(holder.carbs.getCurrentTextColor());
-            holder.remove.setTag(treatments.get(position));
+            holder.remove.setTag(t);
         }
 
         @Override
@@ -106,6 +110,8 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             TextView activity;
             TextView mealOrCorrection;
             TextView remove;
+            TextView ph;
+            TextView ns;
 
             TreatmentsViewHolder(View itemView) {
                 super(itemView);
@@ -116,6 +122,8 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
                 iob = (TextView) itemView.findViewById(R.id.treatments_iob);
                 activity = (TextView) itemView.findViewById(R.id.treatments_activity);
                 mealOrCorrection = (TextView) itemView.findViewById(R.id.treatments_mealorcorrection);
+                ph = (TextView) itemView.findViewById(R.id.pump_sign);
+                ns = (TextView) itemView.findViewById(R.id.ns_sign);
                 remove = (TextView) itemView.findViewById(R.id.treatments_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

@@ -23,6 +23,7 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.data.Profile;
@@ -64,6 +65,8 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) return;
             TempTarget tempTarget = tempTargetList.getReversed(position);
+            holder.ph.setVisibility(tempTarget.source == Source.PUMP ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(tempTarget._id != null ? View.VISIBLE : View.GONE);
             if (!tempTarget.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTarget.originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
@@ -106,6 +109,8 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
             TextView reasonLabel;
             TextView reasonColon;
             TextView remove;
+            TextView ph;
+            TextView ns;
 
             TempTargetsViewHolder(View itemView) {
                 super(itemView);
@@ -117,6 +122,8 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
                 reason = (TextView) itemView.findViewById(R.id.temptargetrange_reason);
                 reasonLabel = (TextView) itemView.findViewById(R.id.temptargetrange_reason_label);
                 reasonColon = (TextView) itemView.findViewById(R.id.temptargetrange_reason_colon);
+                ph = (TextView) itemView.findViewById(R.id.pump_sign);
+                ns = (TextView) itemView.findViewById(R.id.ns_sign);
                 remove = (TextView) itemView.findViewById(R.id.temptargetrange_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

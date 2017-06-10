@@ -227,7 +227,7 @@ public class DanaRv2Fragment extends Fragment {
                     SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
                     basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getPlugin().getBaseBasalRate()) + " U/h");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toString());
+                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toStringFull());
                     } else {
                         tempBasalView.setText("");
                     }

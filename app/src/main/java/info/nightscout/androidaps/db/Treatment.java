@@ -56,6 +56,10 @@ public class Treatment implements DataPointWithLabelInterface {
     public Treatment() {
     }
 
+    public Treatment(long date) {
+        this.date = date;
+    }
+
     public Treatment(InsulinInterface insulin) {
         insulinInterfaceID = insulin.getId();
         dia = insulin.getDia();

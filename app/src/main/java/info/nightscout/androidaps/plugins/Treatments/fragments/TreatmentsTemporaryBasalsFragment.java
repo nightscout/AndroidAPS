@@ -28,6 +28,7 @@ import java.util.Date;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -64,6 +65,8 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         @Override
         public void onBindViewHolder(TempBasalsViewHolder holder, int position) {
             TemporaryBasal tempBasal = tempBasalList.getReversed(position);
+            holder.ph.setVisibility(tempBasal.source == Source.PUMP ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(tempBasal._id != null ? View.VISIBLE : View.GONE);
             if (tempBasal.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempBasal.date));
                 holder.duration.setText(MainApp.sResources.getString(R.string.cancel));
@@ -130,6 +133,8 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
             TextView iob;
             TextView extendedFlag;
             TextView remove;
+            TextView ph;
+            TextView ns;
 
             TempBasalsViewHolder(View itemView) {
                 super(itemView);
@@ -143,6 +148,8 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                 netInsulin = (TextView) itemView.findViewById(R.id.tempbasals_netinsulin);
                 iob = (TextView) itemView.findViewById(R.id.tempbasals_iob);
                 extendedFlag = (TextView) itemView.findViewById(R.id.tempbasals_extendedflag);
+                ph = (TextView) itemView.findViewById(R.id.pump_sign);
+                ns = (TextView) itemView.findViewById(R.id.ns_sign);
                 remove = (TextView) itemView.findViewById(R.id.tempbasals_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -219,7 +226,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
 
     public void updateGUI() {
         Activity activity = getActivity();
-        if (activity != null && recyclerView != null)
+        if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

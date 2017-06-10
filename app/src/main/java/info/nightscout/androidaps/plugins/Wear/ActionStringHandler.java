@@ -350,6 +350,7 @@ public class ActionStringHandler {
         tempTarget.date = new Date().getTime();
         tempTarget.durationInMinutes = duration;
         tempTarget.reason = "WearPlugin";
+        tempTarget.source = Source.USER;
         if (tempTarget.durationInMinutes != 0) {
             tempTarget.low = low;
             tempTarget.high = high;

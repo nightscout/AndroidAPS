@@ -7,14 +7,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -32,6 +33,9 @@ public class TemporaryBasal implements Interval {
     @DatabaseField
     public boolean isValid = true;
 
+    @DatabaseField(index = true)
+    public long pumpId = 0;
+
     @DatabaseField
     public int source = Source.NONE;
     @DatabaseField
@@ -47,6 +51,10 @@ public class TemporaryBasal implements Interval {
     public double absoluteRate = 0d;
 
     public TemporaryBasal() {
+    }
+
+    public TemporaryBasal(long date) {
+        this.date = date;
     }
 
     public TemporaryBasal(ExtendedBolus extendedBolus) {
@@ -66,11 +74,41 @@ public class TemporaryBasal implements Interval {
         t.isValid = isValid;
         t.source = source;
         t._id = _id;
+        t.pumpId = pumpId;
         t.durationInMinutes = durationInMinutes;
         t.isAbsolute = isAbsolute;
         t.percentRate = percentRate;
         t.absoluteRate = absoluteRate;
         return t;
+    }
+
+    public boolean isEqual(TemporaryBasal other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (durationInMinutes != other.durationInMinutes)
+            return false;
+        if (isAbsolute != other.isAbsolute)
+            return false;
+        if (percentRate != other.percentRate)
+            return false;
+        if (absoluteRate != other.absoluteRate)
+            return false;
+        if (pumpId != other.pumpId)
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(TemporaryBasal t) {
+        date = t.date;
+        _id = t._id;
+        durationInMinutes = t.durationInMinutes;
+        isAbsolute = t.isAbsolute;
+        percentRate = t.percentRate;
+        absoluteRate = t.absoluteRate;
+        pumpId = t.pumpId;
     }
 
     // -------- Interval interface ---------
@@ -205,11 +243,12 @@ public class TemporaryBasal implements Interval {
         }
     }
 
-    public String log() {
+    public String toString() {
         return "TemporaryBasal{" +
                 "date=" + date +
                 ", date=" + DateUtil.dateAndTimeString(date) +
                 ", isValid=" + isValid +
+                ", pumpId=" + pumpId +
                 ", _id=" + _id +
                 ", percentRate=" + percentRate +
                 ", absoluteRate=" + absoluteRate +
@@ -218,7 +257,7 @@ public class TemporaryBasal implements Interval {
                 '}';
     }
 
-    public String toString() {
+    public String toStringFull() {
         if (isAbsolute) {
             return DecimalFormatter.to2Decimal(absoluteRate) + "U/h @" +
                     DateUtil.timeString(date) +

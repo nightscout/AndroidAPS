@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.interfaces.Interval;
@@ -39,6 +40,32 @@ public class TempTarget implements Interval {
 
     @DatabaseField
     public int durationInMinutes;
+
+    public boolean isEqual(TempTarget other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (durationInMinutes != other.durationInMinutes)
+            return false;
+        if (low != other.low)
+            return false;
+        if (high != other.high)
+            return false;
+        if (reason != other.reason)
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(TempTarget t) {
+        date = t.date;
+        _id = t._id;
+        durationInMinutes = t.durationInMinutes;
+        low = t.low;
+        high = t.high;
+        reason = t.reason;
+    }
 
     // -------- Interval interface ---------
 
@@ -108,7 +135,7 @@ public class TempTarget implements Interval {
         else return DecimalFormatter.to1Decimal(low * Constants.MGDL_TO_MMOLL);
     }
 
-    public String log() {
+    public String toString() {
         return "TemporaryTarget{" +
                 "date=" + date +
                 "date=" + DateUtil.dateAndTimeString(date) +

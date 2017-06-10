@@ -35,8 +35,7 @@ public interface TreatmentsInterface {
     boolean isInHistoryRealTempBasalInProgress();
     TemporaryBasal getRealTempBasalFromHistory(long time);
 
-    void addToHistoryTempBasalStart(TemporaryBasal tempBasal);
-    void addToHistoryTempBasalStop(long time);
+    boolean addToHistoryTempBasal(TemporaryBasal tempBasal);
 
     // basal that can be faked by extended boluses
     boolean isTempBasalInProgress();
@@ -47,9 +46,9 @@ public interface TreatmentsInterface {
 
     boolean isInHistoryExtendedBoluslInProgress();
     ExtendedBolus getExtendedBolusFromHistory(long time);
-    void addToHistoryExtendedBolusStart(ExtendedBolus extendedBolus);
-    void addToHistoryExtendedBolusStop(long time);
     OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory();
+
+    boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus);
 
     boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo);
 

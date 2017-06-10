@@ -26,6 +26,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
@@ -67,6 +68,8 @@ public class TreatmentsProfileSwitchFragment extends Fragment implements View.On
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) return;
             ProfileSwitch profileSwitch = profileSwitchList.getReversed(position);
+            holder.ph.setVisibility(profileSwitch.source == Source.PUMP ? View.VISIBLE : View.GONE);
+            holder.ns.setVisibility(profileSwitch._id != null ? View.VISIBLE : View.GONE);
 
             holder.date.setText(DateUtil.dateAndTimeString(profileSwitch.date));
             if (!profileSwitch.isEndingEvent()) {
@@ -98,6 +101,8 @@ public class TreatmentsProfileSwitchFragment extends Fragment implements View.On
             TextView duration;
             TextView name;
             TextView remove;
+            TextView ph;
+            TextView ns;
 
             ProfileSwitchViewHolder(View itemView) {
                 super(itemView);
@@ -105,6 +110,8 @@ public class TreatmentsProfileSwitchFragment extends Fragment implements View.On
                 date = (TextView) itemView.findViewById(R.id.profileswitch_date);
                 duration = (TextView) itemView.findViewById(R.id.profileswitch_duration);
                 name = (TextView) itemView.findViewById(R.id.profileswitch_name);
+                ph = (TextView) itemView.findViewById(R.id.pump_sign);
+                ns = (TextView) itemView.findViewById(R.id.ns_sign);
                 remove = (TextView) itemView.findViewById(R.id.profileswitch_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);

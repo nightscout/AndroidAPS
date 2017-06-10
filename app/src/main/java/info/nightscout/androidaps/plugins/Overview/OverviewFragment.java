@@ -949,11 +949,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
             else
                 tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
-        }
-        if (Config.NSCLIENT) {
-            tempTargetView.setVisibility(View.GONE);
         } else {
-
             Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
             Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
             if (!profile.getUnits().equals(Constants.MGDL)) {
@@ -964,6 +960,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
             tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
             tempTargetView.setVisibility(View.VISIBLE);
+        }
+        if (Config.NSCLIENT && tempTarget == null) {
+            tempTargetView.setVisibility(View.GONE);
         }
 
         // **** Temp button ****
@@ -996,7 +995,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         String basalText = "";
         if (activeTemp != null) {
-            basalText = activeTemp.toString() + " ";
+            basalText = activeTemp.toStringFull() + " ";
         }
         if (Config.NSCLIENT)
             basalText += "( " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h )";
@@ -1297,17 +1296,30 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
             List<DeviationDataPoint> devArray = new ArrayList<>();
+            double lastIob = 0;
+            int lastCob = 0;
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
-                    IobTotal iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time);
-                    iobArray.add(new DataPoint(time, iob.iob));
-                    maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob.iob));
+                    double iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time).iob;
+                    if (Math.abs(lastIob - iob) > 0.02) {
+                        if (Math.abs(lastIob - iob) > 0.2)
+                            iobArray.add(new DataPoint(time, lastIob));
+                        iobArray.add(new DataPoint(time, iob));
+                        maxIobValueFound = Math.max(maxIobValueFound, Math.abs(iob));
+                        lastIob = iob;
+                    }
                 }
                 if (showCobView.isChecked() || showDeviationsView.isChecked()) {
                     AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
                     if (autosensData != null && showCobView.isChecked()) {
-                        cobArray.add(new DataPoint(time, autosensData.cob));
-                        maxCobValueFound = Math.max(maxCobValueFound, autosensData.cob);
+                        int cob = (int) autosensData.cob;
+                        if (cob != lastCob) {
+                            if (autosensData.carbsFromBolus > 0)
+                                cobArray.add(new DataPoint(time, lastCob));
+                            cobArray.add(new DataPoint(time, cob));
+                            maxCobValueFound = Math.max(maxCobValueFound, cob);
+                            lastCob = cob;
+                        }
                     }
                     if (autosensData != null && showDeviationsView.isChecked()) {
                         int color = Color.BLACK; // "="
@@ -1489,7 +1501,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         DataPointWithLabelInterface[] treatmentsArray = new DataPointWithLabelInterface[filteredTreatments.size()];
         treatmentsArray = filteredTreatments.toArray(treatmentsArray);
         if (treatmentsArray.length > 0) {
-            bgGraph.addSeries(new PointsWithLabelGraphSeries<>(treatmentsArray));
+            addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(treatmentsArray), bgGraph);
         }
 
         // set manual y bounds to have nice steps
@@ -1530,7 +1542,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 new DataPoint(now, 0),
                 new DataPoint(now, maxIobValueFound)
         };
-        iobGraph.addSeries(seriesNow2 = new LineGraphSeries<>(nowPoints2));
+        addSeriesWithoutInvalidate(seriesNow2 = new LineGraphSeries<>(nowPoints2), iobGraph);
         seriesNow2.setDrawDataPoints(false);
         //seriesNow.setThickness(1);
         // custom paint to make a dotted line
@@ -1541,6 +1553,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         paint.setColor(Color.WHITE);
         seriesNow.setCustomPaint(paint);
         seriesNow2.setCustomPaint(paint);
+        bgGraph.onDataChanged(false, false);
+        iobGraph.onDataChanged(false, false);
 
         if (updating != null)
             updating.setVisibility(View.GONE);
