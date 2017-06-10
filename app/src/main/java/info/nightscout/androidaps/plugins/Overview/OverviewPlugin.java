@@ -71,6 +71,16 @@ public class OverviewPlugin implements PluginBase {
     }
 
     @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
+        return false;
+    }
+
+    @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         // Always enabled
     }

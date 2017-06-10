@@ -8,38 +8,38 @@ import java.util.Date;
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_DANARHISTORY)
 public class DanaRHistoryRecord {
 
-    @DatabaseField(useGetSet = true)
-    private String _id;
+    @DatabaseField
+    public String _id;
 
-    @DatabaseField(useGetSet = true)
-    private byte recordCode;
+    @DatabaseField
+    public byte recordCode;
 
-    @DatabaseField(id = true, useGetSet = true)
-    private String bytes;
+    @DatabaseField(id = true)
+    public String bytes;
 
-    @DatabaseField(useGetSet = true)
-    private long recordDate;
+    @DatabaseField
+    public long recordDate;
 
-    @DatabaseField(useGetSet = true)
-    private double recordValue;
+    @DatabaseField
+    public double recordValue;
 
-    @DatabaseField(useGetSet = true)
-    private String bolusType;
+    @DatabaseField
+    public String bolusType;
 
-    @DatabaseField(useGetSet = true)
-    private String stringRecordValue;
+    @DatabaseField
+    public String stringRecordValue;
 
-    @DatabaseField(useGetSet = true)
-    private int recordDuration;
+    @DatabaseField
+    public int recordDuration;
 
-    @DatabaseField(useGetSet = true)
-    private double recordDailyBasal;
+    @DatabaseField
+    public double recordDailyBasal;
 
-    @DatabaseField(useGetSet = true)
-    private double recordDailyBolus;
+    @DatabaseField
+    public double recordDailyBolus;
 
-    @DatabaseField(useGetSet = true)
-    private String recordAlarm;
+    @DatabaseField
+    public String recordAlarm;
 
     public DanaRHistoryRecord() {
         this.recordDate = 0;
@@ -48,74 +48,6 @@ public class DanaRHistoryRecord {
         this.recordCode = 0x0F;
         this.bytes = new String();
         this._id = null;
-    }
-
-    public void setRecordDate(Date dtRecordDate) {
-        this.recordDate = dtRecordDate.getTime();
-    }
-
-    public long getRecordDate() {
-        return this.recordDate;
-    }
-
-    public void setRecordDate(long dtRecordDate) {
-        this.recordDate = dtRecordDate;
-    }
-
-    public double getRecordValue() {
-        return this.recordValue;
-    }
-
-    public void setRecordValue(double dRecordValue) {
-        this.recordValue = dRecordValue;
-    }
-
-    public String getBolusType() {
-        return this.bolusType;
-    }
-
-    public void setBolusType(String strRecordType) {
-        this.bolusType = strRecordType;
-    }
-
-    public String getStringRecordValue() {
-        return this.stringRecordValue;
-    }
-
-    public void setStringRecordValue(String strRecordValue) {
-        this.stringRecordValue = strRecordValue;
-    }
-
-    public byte getRecordCode() {
-        return this.recordCode;
-    }
-
-    public void setRecordCode(byte cRecordCode) {
-        this.recordCode = cRecordCode;
-    }
-
-    public int getRecordDuration() {
-        return this.recordDuration;
-    }
-
-    public void setRecordDuration(int dRecordDuraion) {
-        this.recordDuration = dRecordDuraion;
-    }
-
-    public double getRecordDailyBasal() {
-        return this.recordDailyBasal;
-    }
-
-    public void setRecordDailyBasal(double dRecordDailyBasal) {
-        this.recordDailyBasal = dRecordDailyBasal;
-    }
-
-    public double getRecordDailyBolus() {
-        return this.recordDailyBolus;
-    }
-
-    public void setRecordDailyBolus(double dRecordDailyBolus) {
-        this.recordDailyBolus = dRecordDailyBolus;
     }
 
     public int getRecordLevel(double dExLow, double dLow, double dHigh, double dExHigh) {
@@ -128,32 +60,8 @@ public class DanaRHistoryRecord {
         return this.recordValue < dExHigh ? 3 : 4;
     }
 
-    public String getRecordAlarm() {
-        return this.recordAlarm;
-    }
-
-    public void setRecordAlarm(String strAlarm) {
-        this.recordAlarm = strAlarm;
-    }
-
-    public String get_id() {
-        return this._id;
-    }
-
-    public void set_id(String _id) {
-        this._id = _id;
-    }
-
     public void setBytes(byte[] raw) {
         this.bytes = bytesToHex(raw);
-    }
-
-    public void setBytes(String bytes) {
-        this.bytes = bytes;
-    }
-
-    public String getBytes() {
-        return this.bytes;
     }
 
     final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();

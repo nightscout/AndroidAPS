@@ -24,16 +24,15 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.CareportalEvent;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
-
-    Button deliverButton;
-    TextView insulin;
-    TextView carbs;
 
     PlusMinusEditText editCarbs;
     PlusMinusEditText editInsulin;
@@ -52,13 +51,11 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.overview_newtreatment_dialog, null, false);
 
-        deliverButton = (Button) view.findViewById(R.id.treatments_newtreatment_deliverbutton);
+        view.findViewById(R.id.ok).setOnClickListener(this);
+        view.findViewById(R.id.cancel).setOnClickListener(this);
 
-        deliverButton.setOnClickListener(this);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-        insulin = (TextView) view.findViewById(R.id.treatments_newtreatment_insulinamount);
-        carbs = (TextView) view.findViewById(R.id.treatments_newtreatment_carbsamount);
 
         Integer maxCarbs = MainApp.getConfigBuilder().applyCarbsConstraints(Constants.carbsOnlyForCheckLimit);
         Double maxInsulin = MainApp.getConfigBuilder().applyBolusConstraints(Constants.bolusOnlyForCheckLimit);
@@ -79,11 +76,11 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.treatments_newtreatment_deliverbutton:
+            case R.id.ok:
 
                 try {
-                    Double insulin = SafeParse.stringToDouble(this.insulin.getText().toString());
-                    Integer carbs = SafeParse.stringToInt(this.carbs.getText().toString());
+                    Double insulin = SafeParse.stringToDouble(editInsulin.getText());
+                    final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
 
                     String confirmMessage = getString(R.string.entertreatmentquestion) + "\n";
 
@@ -95,8 +92,8 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     if (insulinAfterConstraints - insulin != 0 || carbsAfterConstraints != carbs)
                         confirmMessage += "\n" + getString(R.string.constraintapllied);
 
-                    final Double finalInsulinAfterConstraints = insulinAfterConstraints;
-                    final Integer finalCarbsAfterConstraints = carbsAfterConstraints;
+                    final double finalInsulinAfterConstraints = insulinAfterConstraints;
+                    final int finalCarbsAfterConstraints = carbsAfterConstraints;
 
                     final Context context = getContext();
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -110,7 +107,14 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                 mHandler.post(new Runnable() {
                                     @Override
                                     public void run() {
-                                        PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, finalCarbsAfterConstraints, context);
+                                        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                        if (finalInsulinAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
+                                        if (finalCarbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                                        detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                        detailedBolusInfo.carbs = finalCarbsAfterConstraints;
+                                        detailedBolusInfo.context = context;
+                                        detailedBolusInfo.source = Source.USER;
+                                        PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                         if (!result.success) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                             builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
@@ -130,6 +134,9 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+                break;
+            case R.id.cancel:
+                dismiss();
                 break;
         }
 

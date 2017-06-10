@@ -29,6 +29,24 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
+                    android:text="@string/configbuilder_insulin"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textStyle="bold" />
+
+                <ListView
+                    android:id="@+id/configbuilder_insulinlistview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/cardColorBackground" />
+
+
+                <TextView
+                    android:id="@+id/configbuilder_bgsourcelabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:text="@string/configbuilder_bgsource"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textStyle="bold" />
@@ -96,6 +114,7 @@
                     android:background="@color/cardColorBackground" />
 
                 <TextView
+                    android:id="@+id/configbuilder_profilelabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -112,6 +131,7 @@
                     android:background="@color/cardColorBackground" />
 
                 <TextView
+                    android:id="@+id/configbuilder_treatmentslabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -126,24 +146,6 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
-
-                <TextView
-                    android:id="@+id/configbuilder_tempslabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/configbuilder_tempbasals"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/configbuilder_tempslistview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/cardColorBackground" />
-
 
                 <TextView
                     android:id="@+id/configbuilder_constraintslabel"

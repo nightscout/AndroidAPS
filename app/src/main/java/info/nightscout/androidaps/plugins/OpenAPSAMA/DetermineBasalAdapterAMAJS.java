@@ -1,8 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSAMA;
 
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
 import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
@@ -14,18 +11,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
-import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.Loop.ScriptReader;
 import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
+import info.nightscout.androidaps.plugins.Loop.ScriptReader;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 
 public class DetermineBasalAdapterAMAJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterAMAJS.class);
@@ -192,7 +190,7 @@ public class DetermineBasalAdapterAMAJS {
     }
 
 
-    public void setData(NSProfile profile,
+    public void setData(Profile profile,
                         double maxIob,
                         double maxBasal,
                         double minBg,
@@ -217,8 +215,8 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
         mProfile.add("target_bg", targetBg);
-        mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
-        mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
+        mProfile.add("carb_ratio", profile.getIc());
+        mProfile.add("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
         mProfile.add("max_daily_safety_multiplier", SP.getInt("openapsama_max_daily_safety_multiplier", 3));
         mProfile.add("current_basal_safety_multiplier", SP.getInt("openapsama_current_basal_safety_multiplier", 4));
         mProfile.add("skip_neutral_temps", true);
@@ -230,23 +228,28 @@ public class DetermineBasalAdapterAMAJS {
 
         mCurrentTemp = new V8Object(mV8rt);
         mCurrentTemp.add("temp", "absolute");
-        mCurrentTemp.add("duration", pump.getTempBasalRemainingMinutes());
-        mCurrentTemp.add("rate", pump.getTempBasalAbsoluteRate());
+        mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
+        mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
 
         // as we have non default temps longer than 30 mintues
-        TempBasal tempBasal = pump.getTempBasal();
-        if(tempBasal != null){
+        TemporaryBasal tempBasal = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
+        if (tempBasal != null) {
             mCurrentTemp.add("minutesrunning", tempBasal.getRealDuration());
         }
 
         mV8rt.add(PARAM_currentTemp, mCurrentTemp);
 
-        mIobData = mV8rt.executeArrayScript(IobTotal.convertToJSONArray(iobArray).toString());
+        mIobData = mV8rt.executeArrayScript(IobCobCalculatorPlugin.convertToJSONArray(iobArray).toString());
         mV8rt.add(PARAM_iobData, mIobData);
 
         mGlucoseStatus = new V8Object(mV8rt);
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
-        mGlucoseStatus.add("delta", glucoseStatus.delta);
+
+        if (SP.getBoolean("always_use_shortavg", false)) {
+            mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
+        } else {
+            mGlucoseStatus.add("delta", glucoseStatus.delta);
+        }
         mGlucoseStatus.add("short_avgdelta", glucoseStatus.short_avgdelta);
         mGlucoseStatus.add("long_avgdelta", glucoseStatus.long_avgdelta);
         mV8rt.add(PARAM_glucoseStatus, mGlucoseStatus);

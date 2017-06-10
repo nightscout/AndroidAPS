@@ -3,13 +3,11 @@ package info.nightscout.androidaps.plugins.NSClientInternal.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.preference.PreferenceManager;
 
 import com.google.common.base.Charsets;
 import com.google.common.hash.Hashing;
@@ -25,22 +23,20 @@ import org.slf4j.LoggerFactory;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.Map;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.DanaR.Services.ExecutionService;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAuthAck;
-import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSPingAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSUpdateAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastCals;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastDeviceStatus;
@@ -49,9 +45,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastP
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastSgvs;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
-import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSCal;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
@@ -68,15 +62,14 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class NSClientService extends Service {
-    private static Logger log = LoggerFactory.getLogger(ExecutionService.class);
+    private static Logger log = LoggerFactory.getLogger(NSClientService.class);
 
     static public PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new NSClientService.LocalBinder();
 
-    static NSProfile nsProfile;
+    static ProfileStore profileStore;
 
     static public Handler handler;
-    static private HandlerThread handlerThread;
 
     public static Socket mSocket;
     public static boolean isConnected = false;
@@ -92,11 +85,9 @@ public class NSClientService extends Service {
     static public String nsURL = "";
     private String nsAPISecret = "";
     private String nsDevice = "";
-    private Integer nsHours = 24;
+    private Integer nsHours = 48;
 
-    private final Integer timeToWaitForResponseInMs = 30000;
-    private boolean uploading = false;
-    public Date lastReception = new Date();
+    public long lastResendTime = 0;
 
     public long latestDateInReceivedData = 0;
 
@@ -107,7 +98,7 @@ public class NSClientService extends Service {
     public NSClientService() {
         registerBus();
         if (handler == null) {
-            handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
+            HandlerThread handlerThread = new HandlerThread(NSClientService.class.getSimpleName() + "Handler");
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
@@ -178,14 +169,6 @@ public class NSClientService extends Service {
     public void onStatusEvent(final EventNSClientRestart ev) {
         latestDateInReceivedData = 0;
         restart();
-    }
-
-    public static void setNsProfile(NSProfile profile) {
-        nsProfile = profile;
-    }
-
-    public static NSProfile getNsProfile() {
-        return nsProfile;
     }
 
     public void initialize() {
@@ -295,7 +278,6 @@ public class NSClientService extends Service {
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.NSCLIENT_NO_WRITE_PERMISSION));
         }
-        lastReception = new Date();
     }
 
     public void readPreferences() {
@@ -318,7 +300,6 @@ public class NSClientService extends Service {
     private Emitter.Listener onDataUpdate = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            lastReception = new Date();
             NSClientService.handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -327,10 +308,8 @@ public class NSClientService extends Service {
                             "onDataUpdate");
                     wakeLock.acquire();
                     try {
-                        SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
 
                         JSONObject data = (JSONObject) args[0];
-                        NSCal actualCal = new NSCal();
                         boolean broadcastProfile = false;
                         try {
                             // delta means only increment/changes are comming
@@ -342,9 +321,7 @@ public class NSClientService extends Service {
                                 JSONArray profiles = (JSONArray) data.getJSONArray("profiles");
                                 if (profiles.length() > 0) {
                                     JSONObject profile = (JSONObject) profiles.get(profiles.length() - 1);
-                                    String activeProfile = NSClientService.getNsProfile() == null ? null : NSClientService.getNsProfile().getActiveProfile();
-                                    NSProfile nsProfile = new NSProfile(profile, activeProfile);
-                                    NSClientService.setNsProfile(nsProfile);
+                                    profileStore = new ProfileStore(profile);
                                     broadcastProfile = true;
                                     MainApp.bus().post(new EventNSClientNewLog("PROFILE", "profile received"));
                                 }
@@ -366,20 +343,6 @@ public class NSClientService extends Service {
                                 BroadcastStatus bs = new BroadcastStatus();
                                 bs.handleNewStatus(nsStatus, MainApp.instance().getApplicationContext(), isDelta);
 
-                                if (NSClientService.getNsProfile() != null) {
-                                    String oldActiveProfile = NSClientService.getNsProfile().getActiveProfile();
-                                    String receivedActiveProfile = nsStatus.getActiveProfile();
-                                    NSClientService.getNsProfile().setActiveProfile(receivedActiveProfile);
-                                    if (receivedActiveProfile != null) {
-                                        MainApp.bus().post(new EventNSClientNewLog("PROFILE", "status activeProfile received: " + receivedActiveProfile));
-                                    }
-                                    // Change possible nulls to ""
-                                    String oldP = oldActiveProfile == null ? "" : oldActiveProfile;
-                                    String newP = receivedActiveProfile == null ? "" : receivedActiveProfile;
-                                    if (!newP.equals(oldP)) {
-                                        broadcastProfile = true;
-                                    }
-                                }
                     /*  Other received data to 2016/02/10
                         {
                           status: 'ok'
@@ -401,9 +364,9 @@ public class NSClientService extends Service {
                             }
 
                             // If new profile received or change detected broadcast it
-                            if (broadcastProfile && nsProfile != null) {
+                            if (broadcastProfile && profileStore != null) {
                                 BroadcastProfile bp = new BroadcastProfile();
-                                bp.handleNewTreatment(nsProfile, MainApp.instance().getApplicationContext(), isDelta);
+                                bp.handleNewTreatment(profileStore, MainApp.instance().getApplicationContext(), isDelta);
                                 MainApp.bus().post(new EventNSClientNewLog("PROFILE", "broadcasting"));
                             }
 
@@ -427,12 +390,11 @@ public class NSClientService extends Service {
                                             latestDateInReceivedData = treatment.getMills();
 
                                     if (treatment.getAction() == null) {
-                                        if (!isCurrent(treatment)) continue;
                                         addedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("update")) {
-                                        if (!isCurrent(treatment)) continue;
                                         updatedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("remove")) {
+                                        if (treatment.getMills() != null && treatment.getMills() > new Date().getTime() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
                                         removedTreatments.put(jsonTreatment);
                                     }
                                 }
@@ -479,9 +441,6 @@ public class NSClientService extends Service {
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + cals.length() + " cals"));
                                 // Retreive actual calibration
                                 for (Integer index = 0; index < cals.length(); index++) {
-                                    if (index == 0) {
-                                        actualCal.set(cals.optJSONObject(index));
-                                    }
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(cals.optJSONObject(index));
                                 }
@@ -489,7 +448,6 @@ public class NSClientService extends Service {
                             }
                             if (data.has("sgvs")) {
                                 BroadcastSgvs bs = new BroadcastSgvs();
-                                String units = nsProfile != null ? nsProfile.getUnits() : "mg/dl";
                                 JSONArray sgvs = (JSONArray) data.getJSONArray("sgvs");
                                 if (sgvs.length() > 0)
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"));
@@ -595,40 +553,6 @@ public class NSClientService extends Service {
         }
     }
 
-    public void doPing() {
-        if (!isConnected || !hasWriteAuth) return;
-        MainApp.bus().post(new EventNSClientNewLog("PING", "Sending"));
-        uploading = true;
-        JSONObject message = new JSONObject();
-        try {
-            message.put("mills", new Date().getTime());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        NSPingAck ack = new NSPingAck();
-        mSocket.emit("nsping", message, ack);
-        synchronized (ack) {
-            try {
-                ack.wait(timeToWaitForResponseInMs);
-            } catch (InterruptedException e) {
-            }
-        }
-        if (ack.received) {
-            String connectionStatus = "Pong received";
-            if (ack.auth_received) {
-                connectionStatus += ": ";
-                if (ack.read) connectionStatus += "R";
-                if (ack.write) connectionStatus += "W";
-                if (ack.write_treatment) connectionStatus += "T";
-            }
-            if (!ack.read) sendAuthMessage(new NSAuthAck());
-            MainApp.bus().post(new EventNSClientNewLog("AUTH ", connectionStatus));
-        } else {
-            MainApp.bus().post(new EventNSClientNewLog("PING", "Ping lost"));
-        }
-        uploading = false;
-    }
-
     private boolean isCurrent(NSTreatment treatment) {
         long now = (new Date()).getTime();
         long minPast = now - nsHours * 60L * 60 * 1000;
@@ -646,17 +570,22 @@ public class NSClientService extends Service {
 
         if (!isConnected || !hasWriteAuth) return;
 
-        MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
-
         handler.post(new Runnable() {
             @Override
             public void run() {
-                Logger log = LoggerFactory.getLogger(UploadQueue.class);
                 if (mSocket == null || !mSocket.connected()) return;
+
+                if (lastResendTime  > new Date().getTime() - 10 * 1000L) {
+                    log.debug("Skipping resend by lastResendTime: " + ((new Date().getTime() - lastResendTime) / 1000L) + " sec");
+                    return;
+                }
+                lastResendTime = new Date().getTime();
+
+                MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
                 CloseableIterator<DbRequest> iterator = null;
                 try {
-                    iterator = MainApp.getDbHelper().getDaoDbRequest().closeableIterator();
+                    iterator = MainApp.getDbHelper().getDbRequestInterator();
                     try {
                         while (iterator.hasNext()) {
                             DbRequest dbr = iterator.next();

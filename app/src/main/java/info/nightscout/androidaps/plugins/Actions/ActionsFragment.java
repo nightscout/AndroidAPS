@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.Actions;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -10,24 +12,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
+
+import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshGui;
-import info.nightscout.androidaps.interfaces.FragmentBase;
+import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
-import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
-import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActionsFragment extends Fragment implements FragmentBase, View.OnClickListener {
+public class ActionsFragment extends Fragment implements View.OnClickListener {
 
     static ActionsPlugin actionsPlugin = new ActionsPlugin();
 
@@ -38,10 +48,20 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
     Button profileSwitch;
     Button tempTarget;
     Button extendedBolus;
+    Button extendedBolusCancel;
     Button tempBasal;
     Button fill;
 
+    private static Handler sHandler;
+    private static HandlerThread sHandlerThread;
+
     public ActionsFragment() {
+        super();
+        if (sHandlerThread == null) {
+            sHandlerThread = new HandlerThread(ActionsFragment.class.getSimpleName());
+            sHandlerThread.start();
+            sHandler = new Handler(sHandlerThread.getLooper());
+        }
     }
 
 
@@ -53,12 +73,14 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
         profileSwitch = (Button) view.findViewById(R.id.actions_profileswitch);
         tempTarget = (Button) view.findViewById(R.id.actions_temptarget);
         extendedBolus = (Button) view.findViewById(R.id.actions_extendedbolus);
+        extendedBolusCancel = (Button) view.findViewById(R.id.actions_extendedbolus_cancel);
         tempBasal = (Button) view.findViewById(R.id.actions_settempbasal);
         fill = (Button) view.findViewById(R.id.actions_fill);
 
         profileSwitch.setOnClickListener(this);
         tempTarget.setOnClickListener(this);
         extendedBolus.setOnClickListener(this);
+        extendedBolusCancel.setOnClickListener(this);
         tempBasal.setOnClickListener(this);
         fill.setOnClickListener(this);
 
@@ -88,21 +110,42 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
         updateGUIIfVisible();
     }
 
+    @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
+        updateGUIIfVisible();
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventTempBasalChange ev) {
+        updateGUIIfVisible();
+    }
+
     void updateGUIIfVisible() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended())
+                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() == null)
+                        return;
+                    boolean allowProfileSwitch = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getProfileList().size() > 1;
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !allowProfileSwitch)
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended())
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
                         extendedBolus.setVisibility(View.GONE);
-                    else
+                    else {
                         extendedBolus.setVisibility(View.VISIBLE);
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended())
+                    }
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
+                        extendedBolusCancel.setVisibility(View.GONE);
+                    else {
+                        extendedBolusCancel.setVisibility(View.VISIBLE);
+                        ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
+                        extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + running.toString());
+                    }
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isTempBasalInProgress())
                         tempBasal.setVisibility(View.GONE);
                     else
                         tempBasal.setVisibility(View.VISIBLE);
@@ -122,6 +165,7 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
     @Override
     public void onClick(View view) {
         FragmentManager manager = getFragmentManager();
+        final PumpInterface pump = MainApp.getConfigBuilder();
         switch (view.getId()) {
             case R.id.actions_profileswitch:
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
@@ -140,6 +184,17 @@ public class ActionsFragment extends Fragment implements FragmentBase, View.OnCl
             case R.id.actions_extendedbolus:
                 NewExtendedBolusDialog newExtendedDialog = new NewExtendedBolusDialog();
                 newExtendedDialog.show(manager, "NewExtendedDialog");
+                break;
+            case R.id.actions_extendedbolus_cancel:
+                if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                    sHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            pump.cancelExtendedBolus();
+                            Answers.getInstance().logCustom(new CustomEvent("CancelExtended"));
+                        }
+                    });
+                }
                 break;
             case R.id.actions_settempbasal:
                 NewTempBasalDialog newTempDialog = new NewTempBasalDialog();

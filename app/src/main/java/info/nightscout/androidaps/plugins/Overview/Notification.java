@@ -23,7 +23,13 @@ public class Notification {
     public static final int OLD_NSCLIENT = 8;
     public static final int INVALID_PHONE_NUMBER = 9;
     public static final int APPROACHING_DAILY_LIMIT = 10;
-    public static final int NSCLIENT_NO_WRITE_PERMISSION = 10;
+    public static final int NSCLIENT_NO_WRITE_PERMISSION = 11;
+    public static final int MISSING_SMS_PERMISSION = 12;
+    public static final int ISF_MISSING = 13;
+    public static final int IC_MISSING = 14;
+    public static final int BASAL_MISSING = 15;
+    public static final int TARGET_MISSING = 16;
+    public static final int ANNOUNCEMENT = 17;
 
     public int id;
     public Date date;

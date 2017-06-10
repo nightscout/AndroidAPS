@@ -17,8 +17,9 @@ import info.nightscout.utils.ToastUtils;
  * Created by mike on 02.07.2016.
  */
 public class DbLogger {
-    public static void dbAdd(Intent intent, String data, Class sender) {
-        Logger log = LoggerFactory.getLogger(sender);
+    private static Logger log = LoggerFactory.getLogger(DbLogger.class);
+
+    public static void dbAdd(Intent intent, String data) {
         List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.nsclientnotinstalled));
@@ -27,8 +28,7 @@ public class DbLogger {
             log.debug("DBADD dbAdd " + q.size() + " receivers " + data);
     }
 
-   public static void dbRemove(Intent intent, String data, Class sender) {
-        Logger log = LoggerFactory.getLogger(sender);
+   public static void dbRemove(Intent intent, String data) {
         List<ResolveInfo> q = MainApp.instance().getApplicationContext().getPackageManager().queryBroadcastReceivers(intent, 0);
         if (q.size() < 1) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(),MainApp.sResources.getString(R.string.nsclientnotinstalled));

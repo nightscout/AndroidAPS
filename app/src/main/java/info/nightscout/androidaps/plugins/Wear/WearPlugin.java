@@ -5,9 +5,11 @@ import android.content.Intent;
 
 import com.squareup.otto.Subscribe;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventBolusRequested;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -28,7 +30,7 @@ import info.nightscout.utils.ToastUtils;
 
 public class WearPlugin implements PluginBase {
 
-    static boolean fragmentEnabled = true;
+    static boolean fragmentEnabled = Config.WEAR;
     static boolean fragmentVisible = true;
     private static WatchUpdaterService watchUS;
     private final Context ctx;
@@ -76,6 +78,16 @@ public class WearPlugin implements PluginBase {
 
     @Override
     public boolean canBeHidden(int type) {
+        return true;
+    }
+
+    @Override
+    public boolean hasFragment() {
+        return true;
+    }
+
+    @Override
+    public boolean showInList(int type) {
         return true;
     }
 
@@ -135,6 +147,11 @@ public class WearPlugin implements PluginBase {
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
+        sendDataToWatch(true, true, false);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
         sendDataToWatch(true, true, false);
     }
 

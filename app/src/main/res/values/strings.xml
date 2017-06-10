@@ -19,20 +19,20 @@
     <string name="objectives_gate_label_string">Gate:</string>
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>
-    <string name="nsprofileview_units_label">Units:</string>
-    <string name="nsprofileview_dia_label">DIA:</string>
-    <string name="nsprofileview_activeprofile_label">Active profile:</string>
-    <string name="nsprofileview_ic_label">IC:</string>
-    <string name="nsprofileview_isf_label">ISF:</string>
-    <string name="nsprofileview_basal_label">Basal:</string>
-    <string name="nsprofileview_target_label">Target:</string>
+    <string name="nsprofileview_units_label">Units</string>
+    <string name="nsprofileview_dia_label">DIA</string>
+    <string name="nsprofileview_activeprofile_label">Active profile</string>
+    <string name="nsprofileview_ic_label">IC</string>
+    <string name="nsprofileview_isf_label">ISF</string>
+    <string name="nsprofileview_basal_label">Basal</string>
+    <string name="nsprofileview_target_label">Target</string>
     <string name="noprofileset">NO PROFILE SET</string>
     <string name="treatments_insulin_label_string">Insulin:</string>
     <string name="treatments_carbs_label_string">Carbs:</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
     <string name="treatments_activity_string">Activity:</string>
-    <string name="treatments_iobtotal_label_string">Toal IOB:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Total IOB activity:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
@@ -49,11 +49,11 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Run now</string>
     <string name="vitualpump_label">VIRTUAL PUMP</string>
-    <string name="virtualpump_basebasalrate_label">Base basal rate:</string>
-    <string name="virtualpump_tempbasal_label">Temp basal:</string>
-    <string name="virtualpump_extendedbolus_label">Extended bolus:</string>
-    <string name="virtualpump_battery_label">Battery:</string>
-    <string name="virtualpump_reservoir_label">Reservoir:</string>
+    <string name="virtualpump_basebasalrate_label">Base basal rate</string>
+    <string name="virtualpump_tempbasal_label">Temp basal</string>
+    <string name="virtualpump_extendedbolus_label">Extended bolus</string>
+    <string name="virtualpump_battery_label">Battery</string>
+    <string name="virtualpump_reservoir_label">Reservoir</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">SQL Error</string>
     <string name="openapsma_lastrun_label">Last run</string>
@@ -84,7 +84,7 @@
     <string name="overview">Overview</string>
     <string name="profileviewer">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
-    <string name="tempbasals">Temp Basals</string>
+    <string name="tempbasal">TempBasal</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
     <string name="careportal">Careportal</string>
@@ -106,8 +106,6 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
-    <string name="refreshtreatmentsfromnightscout">Do you want to refresh treatments from Nightscout</string>
-    <string name="refreshtemptargetsfromnightscout">Do you want to refresh temp targets from Nightscout</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -184,7 +182,7 @@
     <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
-    <string name="careportal_newnstreatment_duration_min">min</string>
+    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
@@ -210,6 +208,8 @@
     <string name="de_lang">German</string>
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
+    <string name="it_lang">Italian</string>
+    <string name="ru_lang">Russian</string>
     <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
     <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
@@ -234,9 +234,8 @@
     <string name="nobtadapter">No bluetooth adapter found</string>
     <string name="devicenotfound">Selected device not found</string>
     <string name="connectionerror">Pump connection error</string>
-    <string name="virtualpump_lastconnection_label">Last connection:</string>
-    <string name="danar_iob_label">Pump IOB:</string>
-    <string name="danar_dailyunits">Daily units:</string>
+    <string name="danar_iob_label">Pump IOB</string>
+    <string name="danar_dailyunits">Daily units</string>
     <string name="danar_lastbolus">Last bolus:</string>
     <string name="hoursago">h ago</string>
     <string name="danar_invalidinput">Invalid input data</string>
@@ -354,7 +353,6 @@
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
-    <string name="ns_upload_only_enabled">Please deactivate "NS upload only" to use this feature.</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
     <string name="primefill">Prime/Fill</string>
@@ -415,8 +413,7 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
-    <string name="temptargetrange">Temp Target</string>
-    <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
+    <string name="refresheventsfromnightscout">Refresh events from NS</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
@@ -458,7 +455,6 @@
     <string name="always_use_shortavg">Always use short average delta instead of simple delta</string>
     <string name="always_use_shortavg_summary">Useful when data from unfiltered sources like xDrip gets noisy.</string>
     <string name="advancedsettings_title">Advanced Settings</string>
-    <string name="virtualpump_firmware_label">Firmware:</string>
     <string name="danar_model" formatted="false">Model: %02X Protocol: %02X Code: %02X</string>
     <string name="profile">Profile</string>
     <string name="openapsama_max_daily_safety_multiplier" translatable="false">max_daily_safety_multiplier</string>
@@ -510,12 +506,12 @@
     <string name="settings_password">Password for settings</string>
     <string name="unlock_settings">Unlock settings</string>
     <string name="approachingdailylimit">Approaching insulin daily limit</string>
-    <string name="nsclientinternal">NSClient internal</string>
+    <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
     <string name="restart">Restart</string>
-    <string name="nsclientinternal_title">Internal NSClient</string>
+    <string name="nsclientinternal_title">NSClient</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="nsclientinternal_url_dialogmessage">Enter Nightscout URL</string>
     <string name="nsclientinternal_secret_title">NS API secret</string>
@@ -580,7 +576,55 @@
     <string name="smscommunicator_loopresumed">Loop resumed</string>
     <string name="treatments_wizard_bgtrend_label">15min trend</string>
     <string name="treatments_wizard_cob_label">COB</string>
-    <string name="treatments_wizard_sb_label">Superbolus</string>
+    <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="restartingapp">Exiting application to apply settings.</string>
+    <string name="danarv2pump">DanaRv2</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="fastactinginsulin">Fast Acting Insulin</string>
+    <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
+    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
+    <string name="enablesuperbolus">Enable superbolus in wizard</string>
+    <string name="enablesuperbolus_summary">Enable superbolus functionality in wizard. Do not enable until you learn what it really does. IT MAY CAUSE INSULIN OVERDOSE IF USED BLINDLY!</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="predictionshortlabel">PRE</string>
+    <string name="basalshortlabel">BAS</string>
+    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="virtualpump_lastconnection_label">Last connection</string>
+    <string name="danar_bluetooth_status">Bluetooh status</string>
+    <string name="nav_about">About</string>
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+    <string name="dev">DEV</string>
+    <string name="xdripstatus_settings">xDrip Status (watch)</string>
+    <string name="xdripstatus">xDrip Statusline (watch)</string>
+    <string name="xdripstatus_shortname">xds</string>
+    <string name="wear_showbgi_title">Show BGI</string>
+    <string name="wear_showbgi_summary">Add BGI to status line</string>
+    <string name="ns_noupload">No upload to NS</string>
+    <string name="ns_noupload_summary">All data sent to NS are dropped. AAPS is connected to NS but no change in NS is done</string>
+    <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
+    <string name="key_ns_noupload" translatable="false">ns_noupload</string>
+    <string name="basal_step">Basal Step</string>
+    <string name="bolus_step">Bolus Step</string>
+    <string name="extendedbolus">ExtendedBolus</string>
+    <string name="temptarget">TempTarget</string>
+    <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
+    <string name="careportal_sensorage_label">Sensor age</string>
+    <string name="careportal_canulaage_label">Canula age</string>
+    <string name="careportal_insulinage_label">Insulin age</string>
+    <string name="hours">hours</string>
+    <string name="overview_newtempbasal_basaltype_label">Basal type</string>
+    <string name="isfmissing">ISF missing in profile. Using default.</string>
+    <string name="icmissing">IC missing in profile. Using default.</string>
+    <string name="basalmissing">Basal missing in profile. Using default.</string>
+    <string name="targetmissing">Target missing in profile. Using default.</string>
+    <string name="invalidprofile">Invalid profile !!!</string>
+    <string name="profileswitch">ProfileSwitch</string>
+    <string name="careportal_pbage_label">Pump battery age</string>
+    <string name="updating">Updating ...</string>
+    <string name="careportal_pumpbatterychange">Pump Battery Change</string>
 </resources>

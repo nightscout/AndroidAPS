@@ -1,14 +1,12 @@
 package info.nightscout.androidaps.interfaces;
 
-import android.content.Context;
-
 import org.json.JSONObject;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 
 /**
  * Created by mike on 04.06.2016.
@@ -19,27 +17,19 @@ public interface PumpInterface {
     boolean isSuspended();
     boolean isBusy();
 
-    boolean isTempBasalInProgress();
-    boolean isExtendedBoluslInProgress();
-
     // Upload to pump new basal profile
     int SUCCESS = 0;
     int FAILED = 1;
     int NOT_NEEDED = 2;
-    int setNewBasalProfile(NSProfile profile);
-    boolean isThisProfileSet(NSProfile profile);
+    int setNewBasalProfile(Profile profile);
+    boolean isThisProfileSet(Profile profile);
 
     Date lastDataTime();
     void refreshDataFromPump(String reason);
 
     double getBaseBasalRate(); // base basal rate, not temp basal
-    double getTempBasalAbsoluteRate();
-    double getTempBasalRemainingMinutes();
-    TempBasal getTempBasal(Date time);
-    TempBasal getTempBasal();
-    TempBasal getExtendedBolus();
 
-    PumpEnactResult deliverTreatment(Double insulin, Integer carbs, Context context);
+    PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo);
     void stopBolusDelivering();
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
     PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes);
@@ -56,4 +46,6 @@ public interface PumpInterface {
 
     // Short info for SMS, Wear etc
     String shortStatus(boolean veryShort);
+
+    boolean isFakingTempsByExtendedBoluses();
 }

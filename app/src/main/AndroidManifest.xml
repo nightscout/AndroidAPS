@@ -41,10 +41,10 @@
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
-        <activity android:name=".plugins.DanaR.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.DanaRKorean.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.DanaR.History.DanaRStatsActivity" />
-        <activity android:name=".plugins.DanaRKorean.History.DanaRStatsActivity" />
+        <activity android:name=".plugins.PumpDanaR.History.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaR.History.DanaRStatsActivity" />
+        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
@@ -116,11 +116,16 @@
             android:name=".Services.DataService"
             android:exported="false" />
         <service
-            android:name=".plugins.DanaR.Services.ExecutionService"
+            android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
+
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.DanaRKorean.Services.ExecutionService"
+            android:name=".plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".plugins.PumpDanaRv2.services.DanaRv2ExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service

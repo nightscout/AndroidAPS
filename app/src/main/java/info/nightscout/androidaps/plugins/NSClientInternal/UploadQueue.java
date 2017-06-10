@@ -5,22 +5,17 @@ import android.content.Intent;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.DbRequest;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
-import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 21.02.2016.
@@ -118,7 +113,7 @@ public class UploadQueue {
         String result = "";
         CloseableIterator<DbRequest> iterator = null;
         try {
-            iterator = MainApp.getDbHelper().getDaoDbRequest().closeableIterator();
+            iterator = MainApp.getDbHelper().getDbRequestInterator();
             try {
                 while (iterator.hasNext()) {
                     DbRequest dbr = iterator.next();

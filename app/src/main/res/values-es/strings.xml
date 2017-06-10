@@ -17,13 +17,13 @@
     <string name="objectives_gate_label_string">Meta:</string>
     <string name="objectives_button_start">Inicio</string>
     <string name="objectives_button_verify">Verificar</string>
-    <string name="nsprofileview_units_label">Unidades:</string>
-    <string name="nsprofileview_dia_label">DIA (Duración Insulina Activa):</string>
-    <string name="nsprofileview_activeprofile_label">Perfil activo:</string>
-    <string name="nsprofileview_ic_label">IC (Insulina/Carbohidratos Ratio):</string>
-    <string name="nsprofileview_isf_label">ISF (Factor Sensibilidad Insulina):</string>
-    <string name="nsprofileview_basal_label">Dosis Basal:</string>
-    <string name="nsprofileview_target_label">Objetivo:</string>
+    <string name="nsprofileview_units_label">Unidades</string>
+    <string name="nsprofileview_dia_label">DIA (Duración Insulina Activa)</string>
+    <string name="nsprofileview_activeprofile_label">Perfil activo</string>
+    <string name="nsprofileview_ic_label">IC (Insulina/Carbohidratos Ratio)</string>
+    <string name="nsprofileview_isf_label">ISF (Factor Sensibilidad Insulina)</string>
+    <string name="nsprofileview_basal_label">Dosis Basal</string>
+    <string name="nsprofileview_target_label">Objetivo</string>
     <string name="noprofileset">PERFIL NO ACTIVO</string>
     <string name="treatments_insulin_label_string">Insulina:</string>
     <string name="treatments_carbs_label_string">Carbohidratos:</string>
@@ -46,10 +46,10 @@
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="openapsma_run">Ejecutar ahora</string>
     <string name="vitualpump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_basebasalrate_label">Dosis Basal Base:</string>
-    <string name="virtualpump_tempbasal_label">Basal Temporal:</string>
-    <string name="virtualpump_extendedbolus_label">Bolo extendido:</string>
-    <string name="virtualpump_battery_label">Batería:</string>
+    <string name="virtualpump_basebasalrate_label">Dosis Basal Base</string>
+    <string name="virtualpump_tempbasal_label">Basal Temporal</string>
+    <string name="virtualpump_extendedbolus_label">Bolo extendido</string>
+    <string name="virtualpump_battery_label">Batería</string>
     <string name="virtualpump_reservoir_label">Depósito:</string>
     <string name="virtualpump_resultok">OK</string>
     <string name="virtualpump_sqlerror">Error de SQL</string>
@@ -80,7 +80,6 @@
     <string name="overview">Sinopsis</string>
     <string name="profileviewer">Perfil NS</string>
     <string name="simpleprofile">Perfil simple</string>
-    <string name="tempbasals">Temp basales</string>
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Careportal</string>
@@ -102,7 +101,6 @@
     <string name="loop_constraintsprocessed_label">Tras procesar limitaciones</string>
     <string name="loop_setbypump_label">Definido por la bomba</string>
     <string name="openapsma_lastenact_label">Última aceptada</string>
-    <string name="refreshtreatmentsfromnightscout">¿Quieres actualizar tratamientos de Nightscout?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
     <string name="noapsselected">NO APS Seleccionado</string>
@@ -172,7 +170,7 @@
     <string name="careportal_newnstreatment_duration_label">Duración</string>
     <string name="careportal_newnstreatment_percent_label">Dosis</string>
     <string name="careportal_newnstreatment_absolute_label">Absoluto</string>
-    <string name="careportal_newnstreatment_duration_min"> min</string>
+    <string name="careportal_newnstreatment_minutes"> min</string>
     <string name="careportal_newnstreatment_notes_label">Notas</string>
     <string name="careportal_newnstreatment_eventtime_label">Fecha Hora</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>
@@ -218,9 +216,9 @@
     <string name="nobtadapter">No se encuentra adaptador Bluetooth</string>
     <string name="devicenotfound">El dispositivo seleccionado no se encuentra</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
-    <string name="virtualpump_lastconnection_label">Última conexión:</string>
-    <string name="danar_iob_label">Bomba IOB:</string>
-    <string name="danar_dailyunits">Unidades diarias:</string>
+    <string name="virtualpump_lastconnection_label">Última conexión</string>
+    <string name="danar_iob_label">Bomba IOB</string>
+    <string name="danar_dailyunits">Unidades diarias</string>
     <string name="danar_lastbolus">Último bolo:</string>
     <string name="hoursago">h antes</string>
     <string name="danar_invalidinput">Datos invalidos</string>
@@ -327,7 +325,6 @@
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="es_lang">Español</string>
     <string name="ns_upload_only">NS solo subida (sinc. inactiva)</string>
-    <string name="ns_upload_only_enabled">Por favor desactiva \"NS solo subida\" para usar esta característica.</string>
     <string name="ns_upload_only_summary">NS solo subida. No efectivo con SGV salvo que este seleccionada una fuente local como xDrip. No efectivo en perfiles usando perfiles NS</string>
     <string name="othersettings_title">Otros</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
@@ -386,7 +383,6 @@
     <string name="pumpNotInitializedProfileNotSet">Bomba no iniciada, ¡perfil no ajustado!</string>
     <string name="pumperror">Error en bomba</string>
     <string name="pumpshutdown">Apagando Bomba</string>
-    <string name="refreshtemptargetsfromnightscout">¿Quiere actualizar objetivo temporal desde Nightscout?</string>
     <string name="removerecord">Eliminar registro:</string>
     <string name="resend_all_data">Enviar todos los datos</string>
     <string name="send_to_pump">ENVIAR A BOMBA</string>
@@ -396,8 +392,6 @@
     <string name="sms_minago">%dmin antes</string>
     <string name="smscommunicator_bolusdelivered">Bolo %.2fU enviado correctamente</string>
     <string name="target_range">Rango Objetivo:</string>
-    <string name="temptargetrange">Objetivo Temp</string>
-    <string name="temptargetrange_refreshfromnightscout">Actualizar objetivo temporal desde NS</string>
     <string name="timeshift_hint"></string>
     <string name="units">Unidades:</string>
     <string name="error_only_numeric_digits_allowed">Sólo se permiten caracteres numéricos</string>
@@ -405,4 +399,5 @@
     <string name="error_field_must_not_be_empty">Este campo no puede estar vacío</string>
     <string name="error_phone_not_valid">Número de teléfono inválido</string>
     <string name="waitingforpump">Esperando bomba</string>
+    <string name="it_lang">Italian</string>
 </resources>

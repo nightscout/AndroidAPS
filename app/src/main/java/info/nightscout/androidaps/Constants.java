@@ -12,6 +12,8 @@ public class Constants {
     public static final double MMOLL_TO_MGDL = 18; // 18.0182;
     public static final double MGDL_TO_MMOLL = 1 / MMOLL_TO_MGDL;
 
+    public static final double defaultDIA = 3d;
+
     public static final double basalAbsoluteOnlyForCheckLimit = 10101010d;
     public static final Integer basalPercentOnlyForCheckLimit = 10101010;
     public static final double bolusOnlyForCheckLimit = 10101010d;
@@ -55,4 +57,11 @@ public class Constants {
 
     //NSClientInternal
     public static final int MAX_LOG_LINES = 100;
+
+    //Screen: Threshold for width/height to go into small width/height layout
+    public static final int SMALL_WIDTH = 320;
+    public static final int SMALL_HEIGHT = 320;
+
+    //Autosens
+    public static final double DEVIATION_TO_BE_EQUAL = 2.0;
 }

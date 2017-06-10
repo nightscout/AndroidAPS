@@ -17,7 +17,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 
 /**
  * Created by mike on 10.02.2017.
@@ -44,7 +44,7 @@ public class XdripCalibrations {
     }
 
     public static boolean sendIntent(Double bg) {
-        final NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
 
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();

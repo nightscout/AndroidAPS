@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="xdripstatus"
+        android:title="@string/xdripstatus_settings">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="xdripstatus_detailediob"
+            android:title="@string/wear_detailedIOB_title"
+            android:summary="@string/wear_detailedIOB_summary"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="xdripstatus_showbgi"
+            android:title="@string/wear_showbgi_title"
+            android:summary="@string/wear_showbgi_summary"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

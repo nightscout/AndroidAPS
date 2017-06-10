@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="actions_shortname">" "</string>
     <string name="wear_shortname">" "</string>
     <string name="virtualpump_shortname">" "</string>
@@ -19,4 +18,5 @@
     <string name="configbuilder_shortname">" "</string>
     <string name="circadian_percentage_profile_shortname">" "</string>
     <string name="careportal_shortname">" "</string>
+    <string name="it_lang">Italian</string>
 </resources>

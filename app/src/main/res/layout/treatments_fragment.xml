@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".plugins.Treatments.TreatmentsFragment">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -12,56 +13,55 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/treatments_iobtotal_label"
+                android:id="@+id/treatments_treatments"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/treatments_iobtotal_label_string"
-                android:textStyle="bold" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/bolus" />
 
             <TextView
-                android:id="@+id/treatments_iobtotal"
+                android:id="@+id/treatments_extendedboluses"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/extendedbolus" />
 
             <TextView
-                android:id="@+id/treatments_iobactivitytotal_label"
+                android:id="@+id/treatments_tempbasals"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/treatments_iobactivitytotal_label_string"
-                android:textStyle="bold" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/tempbasal" />
 
             <TextView
-                android:id="@+id/treatments_iobactivitytotal"
+                android:id="@+id/treatments_temptargets"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/temptarget" />
+
+            <TextView
+                android:id="@+id/treatments_profileswitches"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/profileswitch" />
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/treatments_reshreshfromnightscout"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/nav_refreshtreatments" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/treatments_recyclerview"
+        <FrameLayout
+            android:id="@+id/treatments_fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

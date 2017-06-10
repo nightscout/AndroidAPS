@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -47,7 +47,7 @@ public class QuickWizard {
         }
 
         public Boolean isActive() {
-            return NSProfile.secondsFromMidnight() >= validFrom() && NSProfile.secondsFromMidnight() <= validTo();
+            return Profile.secondsFromMidnight() >= validFrom() && Profile.secondsFromMidnight() <= validTo();
         }
 
         public String buttonText() {

@@ -1,13 +1,10 @@
 package info.nightscout.androidaps.data;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 
@@ -20,7 +17,9 @@ public class IobTotal {
     public Double hightempinsulin;
 
     public Double netInsulin = 0d; // for calculations from temp basals only
-    public Double netRatio = 0d; // for calculations from temp basals only
+    public Double netRatio = 0d; // net ratio at start of temp basal
+
+    public Double extendedBolusInsulin = 0d; // total insulin for extended bolus
 
     long time;
 
@@ -42,7 +41,7 @@ public class IobTotal {
         netbasalinsulin += other.netbasalinsulin;
         hightempinsulin += other.hightempinsulin;
         netInsulin += other.netInsulin;
-        netRatio += other.netRatio;
+        extendedBolusInsulin += other.extendedBolusInsulin;
         return this;
     }
 
@@ -94,43 +93,4 @@ public class IobTotal {
         return json;
     }
 
-    public static IobTotal calulateFromTreatmentsAndTemps() {
-        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOB();
-        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculation().round();
-        ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOB();
-        IobTotal basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculation().round();
-        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
-        return  iobTotal;
-    }
-
-    public static IobTotal calulateFromTreatmentsAndTemps(long time) {
-        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getCalculationToTime(time).round();
-        IobTotal basalIob = ConfigBuilderPlugin.getActiveTempBasals().getCalculationToTime(time).round();
-        IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
-        return  iobTotal;
-    }
-
-    public static IobTotal[] calculateIobArrayInDia() {
-        NSProfile profile = ConfigBuilderPlugin.getActiveProfile().getProfile();
-        // predict IOB out to DIA plus 30m
-        long time = new Date().getTime();
-        int len = (int) ((profile.getDia() *60 + 30) / 5);
-        IobTotal[] array = new IobTotal[len];
-        int pos = 0;
-        for (int i = 0; i < len; i++){
-            long t = time + i * 5 * 60000;
-            IobTotal iob = calulateFromTreatmentsAndTemps(t);
-            array[pos] = iob;
-            pos++;
-        }
-        return array;
-    }
-
-    public static JSONArray convertToJSONArray(IobTotal[] iobArray) {
-        JSONArray array = new JSONArray();
-        for (int i = 0; i < iobArray.length; i ++) {
-            array.put(iobArray[i].determineBasalJson());
-        }
-        return array;
-    }
 }

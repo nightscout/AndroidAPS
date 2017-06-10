@@ -26,7 +26,9 @@ import java.text.DecimalFormat;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -159,7 +161,12 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
-                                PumpEnactResult result = pump.deliverTreatment(finalInsulinAfterConstraints, 0, context, false);
+                                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                                detailedBolusInfo.insulin = finalInsulinAfterConstraints;
+                                detailedBolusInfo.context = context;
+                                detailedBolusInfo.addToTreatments = false;
+                                detailedBolusInfo.source = Source.NONE;
+                                PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                 if (!result.success) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                     builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));

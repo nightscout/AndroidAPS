@@ -98,6 +98,12 @@ public class SP {
         editor.apply();
     }
 
+    static public void putString(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
     static public void removeString(int resourceID) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(MainApp.sResources.getString(resourceID));

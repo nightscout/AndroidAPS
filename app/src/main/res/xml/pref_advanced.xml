@@ -10,13 +10,26 @@
                 android:title="@string/nightscout">
                 <SwitchPreference
                     android:defaultValue="false"
-                    android:key="ns_upload_only"
+                    android:key="@string/key_ns_upload_only"
                     android:title="@string/ns_upload_only"
                     android:summary="@string/ns_upload_only_summary"/>
                 <SwitchPreference
                     android:defaultValue="false"
+                    android:key="@string/key_ns_noupload"
+                    android:title="@string/ns_noupload"
+                    android:summary="@string/ns_noupload_summary"/>
+                <SwitchPreference
+                    android:defaultValue="false"
                     android:key="ns_sync_use_absolute"
                     android:title="@string/ns_sync_use_absolute_title" />
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="@string/superbolus">
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_usesuperbolus"
+                    android:title="@string/enablesuperbolus"
+                    android:summary="@string/enablesuperbolus_summary"/>
             </PreferenceCategory>
             <PreferenceCategory
                 android:title="@string/openapsma">

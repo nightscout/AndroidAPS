@@ -66,19 +66,17 @@ public class GlucoseStatus {
 
     @Nullable
     public static GlucoseStatus getGlucoseStatusData() {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
-
         // load 45min
         long fromtime = (long) (new Date().getTime() - 60 * 1000L * 45);
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
         int sizeRecords = data.size();
-        if (sizeRecords < 1 || data.get(0).timeIndex < new Date().getTime() - 7 * 60 * 1000L) {
+        if (sizeRecords < 1 || data.get(0).date < new Date().getTime() - 7 * 60 * 1000L) {
             return null;
         }
 
         BgReading now = data.get(0);
-        long now_date = now.timeIndex;
+        long now_date = now.date;
         double change;
 
         if (sizeRecords < 2) {
@@ -98,7 +96,7 @@ public class GlucoseStatus {
         for (int i = 1; i < data.size(); i++) {
             if (data.get(i).value > 38) {
                 BgReading then = data.get(i);
-                long then_date = then.timeIndex;
+                long then_date = then.date;
                 double avgdelta = 0;
                 long minutesago;
 
@@ -131,7 +129,7 @@ public class GlucoseStatus {
 
         status.short_avgdelta = average(short_deltas);
 
-        if (prefs.getBoolean("always_use_shortavg", false) || last_deltas.isEmpty()) {
+        if (last_deltas.isEmpty()) {
             status.delta = status.short_avgdelta;
         } else {
             status.delta = average(last_deltas);
@@ -141,48 +139,6 @@ public class GlucoseStatus {
         status.avgdelta = status.short_avgdelta; // for OpenAPS MA
 
         return status.round();
-    }
-
-    /*
-     * Return last BgReading from database or null if db is empty
-     */
-    @Nullable
-    public static BgReading lastBg() {
-        List<BgReading> bgList = null;
-
-        try {
-            Dao<BgReading, Long> daoBgReadings = MainApp.getDbHelper().getDaoBgReadings();
-            QueryBuilder<BgReading, Long> queryBuilder = daoBgReadings.queryBuilder();
-            queryBuilder.orderBy("timeIndex", false);
-            queryBuilder.limit(1L);
-            queryBuilder.where().gt("value", 38);
-            PreparedQuery<BgReading> preparedQuery = queryBuilder.prepare();
-            bgList = daoBgReadings.query(preparedQuery);
-
-        } catch (SQLException e) {
-            log.debug(e.getMessage(), e);
-        }
-        if (bgList != null && bgList.size() > 0)
-            return bgList.get(0);
-        else
-            return null;
-    }
-
-    /*
-     * Return bg reading if not old ( <9 min )
-     * or null if older
-     */
-    @Nullable
-    public static BgReading actualBg() {
-        BgReading lastBg = lastBg();
-
-        if (lastBg == null)
-            return null;
-
-        if (lastBg.timeIndex > new Date().getTime() - 9 * 60 * 1000)
-            return lastBg;
-
-        return null;
     }
 
     public static double average(ArrayList<Double> array) {
