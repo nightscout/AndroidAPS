@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.Overview;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -605,6 +606,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             @Override
                             public void run() {
                                 hideTempRecommendation();
+                                clearNotification();
                                 PumpEnactResult applyResult = MainApp.getConfigBuilder().applyAPSRequest(finalLastRun.constraintsProcessed);
                                 if (applyResult.enacted) {
                                     finalLastRun.setByPump = applyResult;
@@ -836,6 +838,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     acceptTempLayout.setVisibility(View.GONE);
                 }
             });
+    }
+
+    private void clearNotification() {
+        NotificationManager notificationManager =
+                (NotificationManager) MainApp.instance().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancel(Constants.notificationID);
     }
 
     private void updatePumpStatus(String status) {
@@ -1454,7 +1462,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             addSeriesWithoutInvalidate(new PointsWithLabelGraphSeries<>(bg), bgGraph);
         }
 
-         // Treatments
+        // Treatments
         List<DataPointWithLabelInterface> filteredTreatments = new ArrayList<>();
 
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
