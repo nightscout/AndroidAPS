@@ -1391,7 +1391,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
             iobGraph.getSeries().clear();
 
-            if (showIobView.isChecked()) {
+            if (showIobView.isChecked() && iobData.length > 0) {
                 addSeriesWithoutInvalidate(iobSeries, iobGraph);
             }
             if (showCobView.isChecked() && cobData.length > 0) {
