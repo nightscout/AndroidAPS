@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <!-- To receive data from xdrip. -->
@@ -58,7 +59,6 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-
                 <!-- Receiver from NSClient -->
                 <action android:name="info.nightscout.client.NEW_SGV" />
                 <action android:name="info.nightscout.client.NEW_TREATMENT" />
@@ -78,6 +78,19 @@
                 <!-- Receiver from glimp -->
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
             </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".receivers.NSAlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <!-- Receiver from NSClient -->
+                <action android:name="info.nightscout.client.ANNOUNCEMENT" />
+                <action android:name="info.nightscout.client.ALARM" />
+                <action android:name="info.nightscout.client.URGENT_ALARM" />
+                <action android:name="info.nightscout.client.CLEAR_ALARM" />
+            </intent-filter>
+
         </receiver>
 
         <!-- Receiver keepalive, scheduled every 30 min -->
@@ -110,6 +123,14 @@
                 <action android:name="info.nightscout.client.DBACCESS" />
             </intent-filter>
         </receiver>
+        <receiver
+            android:name=".plugins.NSClientInternal.receivers.AckAlarmReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="info.nightscout.client.ACK_ALARM" />
+            </intent-filter>
+        </receiver>
 
         <!-- Service processing incomming data -->
         <service
@@ -117,7 +138,6 @@
             android:exported="false" />
         <service
             android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
-
             android:enabled="true"
             android:exported="false" />
         <service
@@ -135,15 +155,18 @@
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
-
         <service
             android:name=".plugins.NSClientInternal.services.NSClientService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".Services.AlarmSoundService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
 
     </application>
 

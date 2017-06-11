@@ -6,6 +6,7 @@ import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,19 +17,18 @@ import info.nightscout.androidaps.Services.Intents;
 /**
  * Created by mike on 26.06.2016.
  */
-public class BroadcastMbgs {
-    private static Logger log = LoggerFactory.getLogger(BroadcastMbgs.class);
+public class BroadcastAnnouncement {
+    private static Logger log = LoggerFactory.getLogger(BroadcastAnnouncement.class);
 
-    public static void handleNewMbg(JSONArray mbgs, Context context, boolean isDelta) {
+    public static void handleAnnouncement(JSONObject announcement, Context context) {
         Bundle bundle = new Bundle();
-        bundle.putString("mbgs", mbgs.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_MBG);
+        bundle.putString("data", announcement.toString());
+        Intent intent = new Intent(Intents.ACTION_ANNOUNCEMENT);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
         List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
 
-        log.debug("MBG " + x.size() + " receivers");
+        log.debug("ANNOUNCEMENT " + x.size() + " receivers");
     }
 }

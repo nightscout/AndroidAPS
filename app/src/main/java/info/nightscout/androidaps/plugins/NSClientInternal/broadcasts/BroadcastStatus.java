@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientServ
 public class BroadcastStatus {
     private static Logger log = LoggerFactory.getLogger(BroadcastStatus.class);
 
-    public void handleNewStatus(NSStatus status, Context context, boolean isDelta) {
+    public static void handleNewStatus(NSStatus status, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         try {
             bundle.putString("nsclientversionname", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionName);

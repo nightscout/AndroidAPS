@@ -64,6 +64,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.broadcasts.NSClearAlarmBroadcast;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -1631,6 +1632,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationLow));
             else if (notification.level == Notification.INFO)
                 holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationInfo));
+            else if (notification.level == Notification.ANNOUNCEMENT)
+                holder.cv.setBackgroundColor(ContextCompat.getColor(MainApp.instance(), R.color.notificationAnnouncement));
         }
 
         @Override
@@ -1664,6 +1667,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 switch (v.getId()) {
                     case R.id.notification_dismiss:
                         MainApp.bus().post(new EventDismissNotification(notification.id));
+                        if (notification.nsAlarm != null) {
+                            NSClearAlarmBroadcast.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
+                        }
                         break;
                 }
             }

@@ -19,7 +19,7 @@ import info.nightscout.androidaps.Services.Intents;
 public class BroadcastCals {
     private static Logger log = LoggerFactory.getLogger(BroadcastCals.class);
 
-    public void handleNewCal(JSONArray cals, Context context, boolean isDelta) {
+    public static void handleNewCal(JSONArray cals, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("cals", cals.toString());
         bundle.putBoolean("delta", isDelta);

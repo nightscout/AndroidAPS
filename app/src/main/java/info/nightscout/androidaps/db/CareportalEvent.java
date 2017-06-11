@@ -230,7 +230,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     @Override
     public int getColor() {
         if (eventType.equals(ANNOUNCEMENT))
-            return 0xFFFF8C00;
+            return MainApp.sResources.getColor(R.color.notificationAnnouncement);
         if (eventType.equals(MBG))
             return Color.RED;
         if (eventType.equals(BGCHECK))

@@ -99,7 +99,7 @@ public class BolusWizard {
             insulinFromSuperBolus = specificProfile.getBasal();
             long timeAfter1h = new Date().getTime();
             timeAfter1h += 60L * 60 * 1000;
-            insulinFromSuperBolus += specificProfile.getBasal(Profile.secondsFromMidnight(new Date(timeAfter1h)));
+            insulinFromSuperBolus += specificProfile.getBasal(timeAfter1h);
         }
 
         // Total

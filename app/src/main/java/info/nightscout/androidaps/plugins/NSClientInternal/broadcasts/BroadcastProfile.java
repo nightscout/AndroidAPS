@@ -20,7 +20,7 @@ import info.nightscout.androidaps.data.ProfileStore;
 public class BroadcastProfile {
     private static Logger log = LoggerFactory.getLogger(BroadcastProfile.class);
 
-    public void handleNewTreatment(ProfileStore profile, Context context, boolean isDelta) {
+    public static void handleNewTreatment(ProfileStore profile, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("profile", profile.getData().toString());
         bundle.putBoolean("delta", isDelta);

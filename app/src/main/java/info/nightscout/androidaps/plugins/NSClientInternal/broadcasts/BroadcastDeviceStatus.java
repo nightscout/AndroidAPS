@@ -18,7 +18,7 @@ import info.nightscout.androidaps.Services.Intents;
 public class BroadcastDeviceStatus {
     private static Logger log = LoggerFactory.getLogger(BroadcastDeviceStatus.class);
 
-    public void handleNewDeviceStatus(JSONObject status, Context context, boolean isDelta) {
+    public static void handleNewDeviceStatus(JSONObject status, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("devicestatus", status.toString());
         bundle.putBoolean("delta", isDelta);
@@ -30,7 +30,7 @@ public class BroadcastDeviceStatus {
 
         log.debug("DEVICESTATUS " + x.size() + " receivers");
     }
-    public void handleNewDeviceStatus(JSONArray statuses, Context context, boolean isDelta) {
+    public static void handleNewDeviceStatus(JSONArray statuses, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("devicestatuses", statuses.toString());
         bundle.putBoolean("delta", isDelta);

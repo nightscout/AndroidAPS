@@ -34,6 +34,7 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -79,6 +80,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         registerBus();
         setUpTabs(false);
+        Intent alarm = new Intent(this, AlarmSoundService.class);
+        alarm.putExtra("soundid", R.raw.staledataalarm);
+        //startService(alarm);
     }
 
     @Subscribe

@@ -55,6 +55,7 @@
     <color name="loopdisabled">#FFDD7792</color>
     <color name="looppumpsuspended">#ff0400</color>
 
+    <color name="notificationAnnouncement">#FF8C00</color>
     <color name="notificationUrgent">#ff0400</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>

@@ -531,7 +531,7 @@ public class DanaRExecutionService extends Service {
         for (Integer hour = 0; hour < 24; hour++) {
             //Some values get truncated to the next lower one.
             // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
-            double value = Math.round(100d * nsProfile.getBasal(hour * 60 * 60))/100d + 0.00001;
+            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
             if (Config.logDanaMessageDetail)
                 log.debug("NS basal value for " + hour + ":00 is " + value);
             record[hour] = value;

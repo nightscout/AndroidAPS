@@ -20,7 +20,7 @@ import info.nightscout.androidaps.Services.Intents;
 public class BroadcastSgvs {
     private static Logger log = LoggerFactory.getLogger(BroadcastSgvs.class);
 
-    public void handleNewSgv(JSONObject sgv, Context context, boolean isDelta) {
+    public static void handleNewSgv(JSONObject sgv, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("sgv", sgv.toString());
         bundle.putBoolean("delta", isDelta);
@@ -33,7 +33,7 @@ public class BroadcastSgvs {
         log.debug("SGV " + x.size() + " receivers");
     }
 
-    public void handleNewSgv(JSONArray sgvs, Context context, boolean isDelta) {
+    public static void handleNewSgv(JSONArray sgvs, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("sgvs", sgvs.toString());
         bundle.putBoolean("delta", isDelta);

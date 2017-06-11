@@ -504,7 +504,7 @@ public class DataService extends IntentService {
             long date = trJson.getLong("mills");
             long now = new Date().getTime();
             if (date > now - 15 * 60 * 1000L && trJson.has("notes")) {
-                Notification announcement = new Notification(Notification.ANNOUNCEMENT, trJson.getString("notes"), Notification.URGENT);
+                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, trJson.getString("notes"), Notification.ANNOUNCEMENT, 60);
                 MainApp.bus().post(new EventNewNotification(announcement));
             }
         }

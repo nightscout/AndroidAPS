@@ -74,7 +74,7 @@ public class DanaRNSHistorySync {
                                 nsrec.put("eventType", "Meal Bolus");
                                 nsrec.put("insulin", record.recordValue);
                                 nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                                nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                                nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                                 NSUpload.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
                                 ev.message += MainApp.sResources.getString(R.string.danar_sbolus);
@@ -92,7 +92,7 @@ public class DanaRNSHistorySync {
                                     cal.setTimeInMillis(record.recordDate);
                                     cal.add(Calendar.MINUTE, -1 * record.recordDuration);
                                     nsrec.put("created_at", DateUtil.toISOString(cal.getTime()));
-                                    nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                                    nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                                     NSUpload.uploadCareportalEntryToNS(nsrec);
                                     uploaded++;
                                     ev.message += MainApp.sResources.getString(R.string.danar_ebolus);
@@ -108,7 +108,7 @@ public class DanaRNSHistorySync {
                                 nsrec.put("splitNow", 100);
                                 nsrec.put("splitExt", 0);
                                 nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                                nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                                nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                                 NSUpload.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
                                 ev.message += MainApp.sResources.getString(R.string.danar_dsbolus);
@@ -124,7 +124,7 @@ public class DanaRNSHistorySync {
                                 cal.setTimeInMillis(record.recordDate);
                                 cal.add(Calendar.MINUTE, -1 * record.recordDuration);
                                 nsrec.put("created_at", DateUtil.toISOString(cal.getTime()));
-                                nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                                nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                                 NSUpload.uploadCareportalEntryToNS(nsrec);
                                 uploaded++;
                                 ev.message += MainApp.sResources.getString(R.string.danar_debolus);
@@ -141,7 +141,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("eventType", "Note");
                         nsrec.put("notes", "Error");
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                        nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                        nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                         NSUpload.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_error);
@@ -153,7 +153,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("eventType", "Insulin Change");
                         nsrec.put("notes", "Refill " + record.recordValue + "U");
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                        nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                        nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                         NSUpload.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_refill);
@@ -166,7 +166,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("absolute", record.recordValue);
                         nsrec.put("duration", 60);
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                        nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                        nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                         NSUpload.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_basalhour);
@@ -182,7 +182,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, profile.getUnits()));
                         nsrec.put("glucoseType", "Finger");
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                        nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                        nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                         NSUpload.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_glucose);
@@ -194,7 +194,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("eventType", "Meal Bolus");
                         nsrec.put("carbs", record.recordValue);
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                        nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                        nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                         NSUpload.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_carbohydrate);
@@ -206,7 +206,7 @@ public class DanaRNSHistorySync {
                         nsrec.put("eventType", "Note");
                         nsrec.put("notes", "Alarm: " + record.recordAlarm);
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
-                        nsrec.put("enteredBy", MainApp.sResources.getString(R.string.app_name));
+                        nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));
                         NSUpload.uploadCareportalEntryToNS(nsrec);
                         uploaded++;
                         ev.message += MainApp.sResources.getString(R.string.danar_alarm);

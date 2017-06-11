@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 public class BroadcastTreatment {
     private static Logger log = LoggerFactory.getLogger(BroadcastTreatment.class);
 
-    public void handleNewTreatment(NSTreatment treatment, Context context, boolean isDelta) {
+    public static void handleNewTreatment(NSTreatment treatment, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.getData().toString());
         bundle.putBoolean("delta", isDelta);
@@ -35,7 +35,7 @@ public class BroadcastTreatment {
         log.debug("TREAT_ADD " + treatment.getEventType() + " " + x.size() + " receivers");
     }
 
-    public void handleNewTreatment(JSONArray treatments, Context context, boolean isDelta) {
+    public static void handleNewTreatment(JSONArray treatments, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("treatments", treatments.toString());
         bundle.putBoolean("delta", isDelta);
@@ -63,7 +63,7 @@ public class BroadcastTreatment {
         } catch (JSONException e) {}
     }
 
-   public void handleChangedTreatment(JSONArray treatments, Context context, boolean isDelta) {
+   public static void handleChangedTreatment(JSONArray treatments, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("treatments", treatments.toString());
         bundle.putBoolean("delta", isDelta);
@@ -76,7 +76,7 @@ public class BroadcastTreatment {
         log.debug("TREAT_CHANGE " + treatments.length() + " " + x.size() + " receivers");
     }
 
-    public void handleRemovedTreatment(JSONObject treatment, Context context, boolean isDelta) {
+    public static void handleRemovedTreatment(JSONObject treatment, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.toString());
         bundle.putBoolean("delta", isDelta);
@@ -91,7 +91,7 @@ public class BroadcastTreatment {
         } catch (JSONException e) {}
     }
 
-    public void handleRemovedTreatment(JSONArray treatments, Context context, boolean isDelta) {
+    public static void handleRemovedTreatment(JSONArray treatments, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         bundle.putString("treatments", treatments.toString());
         bundle.putBoolean("delta", isDelta);

@@ -47,7 +47,7 @@ public class NSUpload {
             if (temporaryBasal.pumpId != 0)
                 data.put("pumpId", temporaryBasal.pumpId);
             data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.absoluteRate + "u/h " + temporaryBasal.durationInMinutes + " min"); // ECOR
             if (originalExtendedAmount != null)
                 data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
@@ -86,7 +86,7 @@ public class NSUpload {
                 if (temporaryBasal.pumpId != 0)
                     data.put("pumpId", temporaryBasal.pumpId);
                 data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-                data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+                data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
                 data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.percentRate + "% " + temporaryBasal.durationInMinutes + " min"); // ECOR
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
@@ -109,7 +109,7 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalendnote)); // ECOR
             if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
@@ -142,7 +142,7 @@ public class NSUpload {
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
@@ -168,7 +168,7 @@ public class NSUpload {
             data.put("enteredinsulin", 0);
             data.put("relative", 0);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (pumpId != 0)
                 data.put("pumpId", pumpId);
             Bundle bundle = new Bundle();
@@ -346,7 +346,7 @@ public class NSUpload {
             data.put("eventType", "OpenAPS Offline");
             data.put("duration", durationInMinutes);
             data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");

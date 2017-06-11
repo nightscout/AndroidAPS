@@ -504,7 +504,7 @@ public class DanaRKoreanExecutionService extends Service {
     private double[] buildDanaRProfileRecord(Profile nsProfile) {
         double[] record = new double[24];
         for (Integer hour = 0; hour < 24; hour++) {
-            double value = Math.round(100d * nsProfile.getBasal(hour * 60 * 60))/100d + 0.00001;
+            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
             if (Config.logDanaMessageDetail)
                 log.debug("NS basal value for " + hour + ":00 is " + value);
             record[hour] = value;
