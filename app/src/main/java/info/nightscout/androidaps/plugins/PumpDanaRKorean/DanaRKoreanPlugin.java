@@ -85,7 +85,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
         pumpDescription.bolusStep = 0.1d;
 
         pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.1d;
+        pumpDescription.extendedBolusStep = 0.05d;
         pumpDescription.extendedBolusDurationStep = 30;
         pumpDescription.extendedBolusMaxDuration = 8 * 60;
 
@@ -442,7 +442,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, Constraints
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = configBuilderPlugin.applyBasalConstraints(extendedRateToSet);
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.roundTo(extendedRateToSet, 0.1d);
+            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep);
 
             // What is current rate of extended bolusing in u/h?
             if (Config.logPumpActions) {
