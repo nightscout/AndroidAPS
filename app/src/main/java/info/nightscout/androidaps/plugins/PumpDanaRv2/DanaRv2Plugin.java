@@ -467,8 +467,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
         // needs to be rounded
-        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
-
+        int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
+        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep * (1 + durationInHalfHours % 1));
         PumpEnactResult result = new PumpEnactResult();
         if (pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = false;
@@ -482,7 +482,6 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
                 log.debug("setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulin);
             return result;
         }
-        int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
         if (connectionOK && pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = true;

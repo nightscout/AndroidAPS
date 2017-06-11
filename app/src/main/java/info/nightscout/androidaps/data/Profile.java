@@ -112,7 +112,7 @@ public class Profile {
     public String log() {
         String ret = "\n";
         for (Integer hour = 0; hour < 24; hour++) {
-            double value = getBasal(hour * 60 * 60);
+            double value = getBasal((Integer) (hour * 60 * 60));
             ret += "NS basal value for " + hour + ":00 is " + value + "\n";
         }
         ret += "NS units: " + getUnits();
@@ -285,7 +285,7 @@ public class Profile {
     public double getMaxDailyBasal() {
         Double max = 0d;
         for (Integer hour = 0; hour < 24; hour++) {
-            double value = getBasal(hour * 60 * 60);
+            double value = getBasal((Integer)(hour * 60 * 60));
             if (value > max) max = value;
         }
         return max;
