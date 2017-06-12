@@ -142,6 +142,7 @@
 
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
+    <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
     <string name="objectives_bgavailableinns">BG available in NS</string>
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>

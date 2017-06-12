@@ -4,6 +4,8 @@ package info.nightscout.androidaps;
  * Created by mike on 07.06.2016.
  */
 public class Config {
+    public static int SUPPORTEDNSVERSION = 1000; // 0.10.00
+
     // MAIN FUCTIONALITY
     public static final boolean APS = BuildConfig.APS;
     // PLUGINS

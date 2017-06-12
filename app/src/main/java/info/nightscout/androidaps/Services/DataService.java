@@ -2,6 +2,7 @@ package info.nightscout.androidaps.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Telephony;
 
@@ -237,11 +238,21 @@ public class DataService extends IntentService {
                 ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
                 ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
-                if (ConfigBuilderPlugin.nsClientVersionCode < 121) {
-                    Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                try {
+                    if (ConfigBuilderPlugin.nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
+                        Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                        MainApp.bus().post(new EventNewNotification(notification));
+                    } else {
+                        MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
+                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(notification));
                 } else {
-                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));
                 }
             } else {
                 Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
