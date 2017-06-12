@@ -37,6 +37,7 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempBasalChange;
@@ -1507,7 +1508,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         old.copyFrom(profileSwitch);
                         getDaoProfileSwitch().create(old);
                         log.debug("PROFILESWITCH: Updating record by date from: " + Source.getString(profileSwitch.source) + " " + old.toString());
-                        scheduleTemporaryTargetChange();
+                        scheduleProfileSwitchChange();
                         return true;
                     }
                     return false;
@@ -1526,20 +1527,20 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             old.copyFrom(profileSwitch);
                             getDaoProfileSwitch().create(old);
                             log.debug("PROFILESWITCH: Updating record by _id from: " + Source.getString(profileSwitch.source) + " " + old.toString());
-                            scheduleTemporaryTargetChange();
+                            scheduleProfileSwitchChange();
                             return true;
                         }
                     }
                 }
                 getDaoProfileSwitch().create(profileSwitch);
                 log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
-                scheduleTemporaryTargetChange();
+                scheduleProfileSwitchChange();
                 return true;
             }
             if (profileSwitch.source == Source.USER) {
                 getDaoProfileSwitch().create(profileSwitch);
                 log.debug("PROFILESWITCH: New record from: " + Source.getString(profileSwitch.source) + " " + profileSwitch.toString());
-                scheduleTemporaryTargetChange();
+                scheduleProfileSwitchChange();
                 return true;
             }
         } catch (SQLException e) {
@@ -1561,6 +1562,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventProfileSwitchChange");
+                MainApp.bus().post(new EventReloadProfileSwitchData());
                 MainApp.bus().post(new EventProfileSwitchChange());
                 scheduledProfileSwitchEventPost = null;
             }

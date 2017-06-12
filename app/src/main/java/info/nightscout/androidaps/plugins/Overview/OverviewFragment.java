@@ -1018,7 +1018,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
         String extendedBolusText = "";
-        if (extendedBolus != null) {
+        if (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses()) {
             extendedBolusText = extendedBolus.toString();
         }
         if (extendedBolusView != null) // must not exists in all layouts

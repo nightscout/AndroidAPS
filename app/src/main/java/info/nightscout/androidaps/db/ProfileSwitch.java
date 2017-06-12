@@ -187,7 +187,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         return Color.CYAN;
     }
 
-    public String log() {
+    public String toString() {
         return "ProfileSwitch{" +
                 "date=" + date +
                 "date=" + DateUtil.dateAndTimeString(date) +

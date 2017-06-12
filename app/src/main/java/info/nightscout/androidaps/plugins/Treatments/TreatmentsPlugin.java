@@ -24,11 +24,10 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
-import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.events.EventProfileSwitchChange;
+import info.nightscout.androidaps.events.EventReloadProfileSwitchData;
 import info.nightscout.androidaps.events.EventReloadTempBasalData;
 import info.nightscout.androidaps.events.EventReloadTreatmentData;
 import info.nightscout.androidaps.events.EventTempTargetChange;
@@ -445,7 +444,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     // Profile Switch
     @Subscribe
-    public void onStatusEvent(final EventProfileSwitchChange ev) {
+    public void onStatusEvent(final EventReloadProfileSwitchData ev) {
         initializeProfileSwitchData();
     }
 

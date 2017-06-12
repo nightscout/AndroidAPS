@@ -619,13 +619,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                     String profileName = data.getString("profile");
                                     ProfileSwitch profileSwitch = new ProfileSwitch();
                                     profileSwitch.date = new Date().getTime();
-                                    profileSwitch.source = Source.PUMP;
+                                    profileSwitch.source = Source.USER;
                                     profileSwitch.profileName = profileName;
-                                    profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).toString();
-                                    profileSwitch.profilePlugin = MainApp.getConfigBuilder().getActiveProfileInterface().getClass().getName();
+                                    profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
+                                    profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
                                     profileSwitch.durationInMinutes = data.getInt("duration");
                                     if (ConfigBuilderPlugin.getActiveProfileInterface() instanceof CircadianPercentageProfilePlugin) {
-                                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getConfigBuilder().getActiveProfileInterface();
+                                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) ConfigBuilderPlugin.getActiveProfileInterface();
                                         profileSwitch.isCPP = true;
                                         profileSwitch.timeshift = cpp.timeshift;
                                         profileSwitch.percentage = cpp.percentage;
