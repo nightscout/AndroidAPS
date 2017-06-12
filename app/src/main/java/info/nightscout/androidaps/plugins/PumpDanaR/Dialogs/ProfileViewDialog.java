@@ -19,6 +19,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -103,10 +104,10 @@ public class ProfileViewDialog extends DialogFragment {
 //        } else {
 //            noProfile.setVisibility(View.GONE);
 //        }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Profile profile = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile().getDefaultProfile();
         units.setText(profile.getUnits());
         dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-        activeProfile.setText(MainApp.getConfigBuilder().getProfileName());
+        activeProfile.setText(((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfileName());
         ic.setText(profile.getIcList());
         isf.setText(profile.getIsfList());
         basal.setText(profile.getBasalList());

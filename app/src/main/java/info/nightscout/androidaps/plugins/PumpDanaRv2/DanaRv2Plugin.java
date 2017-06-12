@@ -31,6 +31,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -51,7 +52,7 @@ import info.nightscout.utils.Round;
 /**
  * Created by mike on 05.08.2016.
  */
-public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
+public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(DanaRv2Plugin.class);
 
     @Override
@@ -624,6 +625,15 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
     }
 
     /**
+     * DanaR interface
+     */
+
+    @Override
+    public boolean loadHistory(byte type) {
+        return sExecutionService.loadHistory(type);
+    }
+
+    /**
      * Constraint interface
      */
 
@@ -735,6 +745,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, ConstraintsInte
         ret += "Batt: " + pump.batteryRemaining + "\n";
         return ret;
     }
+
     // TODO: daily total constraint
 
 }

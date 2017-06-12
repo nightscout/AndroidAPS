@@ -30,7 +30,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private static ProfileStore convertedProfile = null;
     private static String convertedProfileName = null;
 
-    final private String DEFAULTARRAY = "[{\"timeAsSeconds\":0,\"value\":0}]";
+    final private String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
 
     boolean mgdl;
     boolean mmol;

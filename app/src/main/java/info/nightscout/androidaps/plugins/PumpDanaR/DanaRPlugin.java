@@ -30,6 +30,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -50,7 +51,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
+public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(DanaRPlugin.class);
 
     @Override
@@ -704,6 +705,15 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
+    }
+
+    /**
+     * DanaR interface
+     */
+
+    @Override
+    public boolean loadHistory(byte type) {
+        return sExecutionService.loadHistory(type);
     }
 
     /**

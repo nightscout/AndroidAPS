@@ -208,6 +208,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activeLoop;
     }
 
+    public static PumpInterface getActivePump() {
+        return activePump;
+    }
+
     void logPluginStatus() {
         for (PluginBase p : pluginList) {
             log.debug(p.getName() + ":" +

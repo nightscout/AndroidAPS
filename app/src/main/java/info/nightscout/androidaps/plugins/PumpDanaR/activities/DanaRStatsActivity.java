@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpDanaR.History;
+package info.nightscout.androidaps.plugins.PumpDanaR.activities;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -42,7 +42,9 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
@@ -57,7 +59,6 @@ public class DanaRStatsActivity extends Activity {
     private static Logger log = LoggerFactory.getLogger(DanaRStatsActivity.class);
 
     private boolean mBounded;
-    private static DanaRExecutionService mExecutionService;
 
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
@@ -81,13 +82,6 @@ public class DanaRStatsActivity extends Activity {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, DanaRExecutionService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         MainApp.bus().register(this);
@@ -97,15 +91,6 @@ public class DanaRStatsActivity extends Activity {
     protected void onPause() {
         super.onPause();
         MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mBounded) {
-            unbindService(mConnection);
-            mBounded = false;
-        }
     }
 
     @Override
@@ -122,22 +107,6 @@ public class DanaRStatsActivity extends Activity {
         }
         return super.dispatchTouchEvent(event);
     }
-
-    ServiceConnection mConnection = new ServiceConnection() {
-
-        public void onServiceDisconnected(ComponentName name) {
-            log.debug("Service is disconnected");
-            mBounded = false;
-            mExecutionService = null;
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            log.debug("Service is connected");
-            mBounded = true;
-            DanaRExecutionService.LocalBinder mLocalBinder = (DanaRExecutionService.LocalBinder) service;
-            mExecutionService = mLocalBinder.getServiceInstance();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,7 +238,8 @@ public class DanaRStatsActivity extends Activity {
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mExecutionService.isConnected() || mExecutionService.isConnecting()) {
+                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                if (pump.isBusy()) {
                     ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.pumpbusy));
                     return;
                 }
@@ -285,7 +255,7 @@ public class DanaRStatsActivity extends Activity {
                                 statsMessage.setText(getString(R.string.danar_stats_warning_Message));
                             }
                         });
-                        mExecutionService.loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+                        ((DanaRInterface)pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
                         loadDataFromDB(RecordTypes.RECORD_TYPE_DAILY);
                         runOnUiThread(new Runnable() {
                             @Override

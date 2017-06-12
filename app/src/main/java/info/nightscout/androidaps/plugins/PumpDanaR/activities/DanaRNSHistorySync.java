@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpDanaR.History;
+package info.nightscout.androidaps.plugins.PumpDanaR.activities;
 
 import org.json.JSONException;
 import org.json.JSONObject;

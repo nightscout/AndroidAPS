@@ -42,14 +42,11 @@
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
-        <activity android:name=".plugins.PumpDanaR.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.History.DanaRStatsActivity" />
-        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRStatsActivity" />
+        <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.PumpDanaR.History;
+package info.nightscout.androidaps.plugins.PumpDanaR.activities;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -35,9 +35,13 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.DanaRInterface;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRSyncStatus;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.ToastUtils;
@@ -46,7 +50,6 @@ public class DanaRHistoryActivity extends Activity {
     private static Logger log = LoggerFactory.getLogger(DanaRHistoryActivity.class);
 
     private boolean mBounded;
-    private static DanaRExecutionService mExecutionService;
 
     private Handler mHandler;
     private static HandlerThread mHandlerThread;
@@ -87,13 +90,6 @@ public class DanaRHistoryActivity extends Activity {
 
 
     @Override
-    public void onStart() {
-        super.onStart();
-        Intent intent = new Intent(this, DanaRExecutionService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         MainApp.bus().register(this);
@@ -104,31 +100,6 @@ public class DanaRHistoryActivity extends Activity {
         super.onPause();
         MainApp.bus().unregister(this);
     }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mBounded) {
-            unbindService(mConnection);
-            mBounded = false;
-        }
-    }
-
-    ServiceConnection mConnection = new ServiceConnection() {
-
-        public void onServiceDisconnected(ComponentName name) {
-            log.debug("Service is disconnected");
-            mBounded = false;
-            mExecutionService = null;
-        }
-
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            log.debug("Service is connected");
-            mBounded = true;
-            DanaRExecutionService.LocalBinder mLocalBinder = (DanaRExecutionService.LocalBinder) service;
-            mExecutionService = mLocalBinder.getServiceInstance();
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,6 +121,8 @@ public class DanaRHistoryActivity extends Activity {
 
         statusView.setVisibility(View.GONE);
 
+        boolean isKorean = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP);
+
         // Types
 
         ArrayList<TypeList> typeList = new ArrayList<>();
@@ -158,10 +131,12 @@ public class DanaRHistoryActivity extends Activity {
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_BOLUS, getString(R.string.danar_history_bolus)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_CARBO, getString(R.string.danar_history_carbohydrates)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_DAILY, getString(R.string.danar_history_dailyinsulin)));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ERROR, getString(R.string.danar_history_errors)));
         typeList.add(new TypeList(RecordTypes.RECORD_TYPE_GLUCOSE, getString(R.string.danar_history_glucose)));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, getString(R.string.danar_history_refill)));
-        typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, getString(R.string.danar_history_syspend)));
+        if (!isKorean) {
+            typeList.add(new TypeList(RecordTypes.RECORD_TYPE_ERROR, getString(R.string.danar_history_errors)));
+            typeList.add(new TypeList(RecordTypes.RECORD_TYPE_REFILL, getString(R.string.danar_history_refill)));
+            typeList.add(new TypeList(RecordTypes.RECORD_TYPE_SUSPEND, getString(R.string.danar_history_syspend)));
+        }
         ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this,
                 R.layout.spinner_centered, typeList);
         historyTypeSpinner.setAdapter(spinnerAdapter);
@@ -169,7 +144,8 @@ public class DanaRHistoryActivity extends Activity {
         reloadButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mExecutionService.isConnected() || mExecutionService.isConnecting()) {
+                final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                if (pump.isBusy()) {
                     ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.pumpbusy));
                     return;
                 }
@@ -186,7 +162,7 @@ public class DanaRHistoryActivity extends Activity {
                             }
                         });
                         clearCardView();
-                        mExecutionService.loadHistory(selected.type);
+                        ((DanaRInterface)pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
                         loadDataFromDB(selected.type);
                         runOnUiThread(new Runnable() {
                             @Override
