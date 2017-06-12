@@ -45,6 +45,8 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
 
+    public static boolean fromNSAreCommingFakedExtendedBoluses = false;
+
     PumpDescription pumpDescription = new PumpDescription();
 
     static VirtualPumpPlugin instance = null;
@@ -143,7 +145,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        return false;
+        return Config.NSCLIENT && fromNSAreCommingFakedExtendedBoluses;
     }
 
     @Override

@@ -684,8 +684,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        if (Config.NSCLIENT)
-            return false;
         return activePump.isFakingTempsByExtendedBoluses();
     }
 

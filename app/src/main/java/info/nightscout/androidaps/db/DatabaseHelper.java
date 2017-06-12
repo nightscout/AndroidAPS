@@ -44,6 +44,7 @@ import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
 import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private static Logger log = LoggerFactory.getLogger(DatabaseHelper.class);
@@ -1068,6 +1069,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = trJson.getInt("duration");
                 extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
                 extendedBolus._id = trJson.getString("_id");
+                VirtualPumpPlugin.fromNSAreCommingFakedExtendedBoluses = true;
                 createOrUpdate(extendedBolus);
             } else if (trJson.has("isFakedTempBasal")) { // extended bolus end uploaded as temp basal end
                 ExtendedBolus extendedBolus = new ExtendedBolus();
@@ -1077,6 +1079,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = 0;
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
+                VirtualPumpPlugin.fromNSAreCommingFakedExtendedBoluses = true;
                 createOrUpdate(extendedBolus);
             } else {
                 TemporaryBasal tempBasal = new TemporaryBasal();
