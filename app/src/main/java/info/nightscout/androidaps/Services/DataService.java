@@ -26,6 +26,7 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -230,8 +231,6 @@ public class DataService extends IntentService {
 
 
         if (intent.getAction().equals(Intents.ACTION_NEW_STATUS)) {
-            if (Config.logIncommingData)
-                log.debug("Received status: " + bundles);
             if (bundles.containsKey("nsclientversioncode")) {
                 ConfigBuilderPlugin.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
                 ConfigBuilderPlugin.nightscoutVersionName = bundles.getString("nightscoutversionname");
@@ -261,6 +260,9 @@ public class DataService extends IntentService {
             if (bundles.containsKey("status")) {
                 try {
                     JSONObject statusJson = new JSONObject(bundles.getString("status"));
+                    NSStatus.getInstance().setData(statusJson);
+                    if (Config.logIncommingData)
+                        log.debug("Received status: " + statusJson.toString());
                     if (statusJson.has("settings")) {
                         JSONObject settings = statusJson.getJSONObject("settings");
                         if (settings.has("thresholds")) {

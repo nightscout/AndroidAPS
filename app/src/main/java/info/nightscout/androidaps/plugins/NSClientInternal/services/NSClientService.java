@@ -430,15 +430,15 @@ public class NSClientService extends Service {
 
                             if (data.has("status")) {
                                 JSONObject status = data.getJSONObject("status");
-                                NSStatus nsStatus = new NSStatus(status);
+                                NSStatus nsStatus = NSStatus.getInstance().setData(status);
 
                                 if (!status.has("versionNum")) {
-                                    if (status.getInt("versionNum") < 900) {
+                                    if (status.getInt("versionNum") < Config.SUPPORTEDNSVERSION) {
                                         MainApp.bus().post(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
                                     }
                                 } else {
-                                    nightscoutVersionName = status.getString("version");
-                                    nightscoutVersionCode = status.getInt("versionNum");
+                                    nightscoutVersionName = nsStatus.getVersion();
+                                    nightscoutVersionCode = nsStatus.getVersionNum();
                                 }
                                 BroadcastStatus.handleNewStatus(nsStatus, MainApp.instance().getApplicationContext(), isDelta);
 
