@@ -404,15 +404,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
                     if (Config.logPumpActions)
                         log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
                     return result;
-                } else {
-                    if (Config.logPumpActions)
-                        log.debug("setTempBasalAbsolute: Stopping temp basal (doLowTemp || doHighTemp)");
-                    result = cancelRealTempBasal();
-                    // Check for proper result
-                    if (!result.success) {
-                        log.error("setTempBasalAbsolute: Failed to stop previous temp basal (doLowTemp || doHighTemp)");
-                        return result;
-                    }
                 }
             }
             // Convert duration from minutes to hours
