@@ -27,4 +27,9 @@ public class EventNSClientNewLog {
         Spanned line = Html.fromHtml(timeFormat.format(date) + " <b>" + action + "</b> " + logText + "<br>");
         return line;
     }
+
+    public String toPreparedHtml() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+        return timeFormat.format(date) + " <b>" + action + "</b> " + logText + "<br>";
+    }
 }

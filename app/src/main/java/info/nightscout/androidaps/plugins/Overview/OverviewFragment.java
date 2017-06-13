@@ -1155,7 +1155,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // ****** GRAPH *******
-        log.debug("updateGUI checkpoint 1");
+        //log.debug("updateGUI checkpoint 1");
 
         // allign to hours
         Calendar calendar = Calendar.getInstance();
@@ -1286,7 +1286,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
         }
 
-        log.debug("updateGUI checkpoint 2");
+        //log.debug("updateGUI checkpoint 2");
 
         // **** IOB COB DEV graph ****
         class DeviationDataPoint extends DataPoint {
@@ -1404,12 +1404,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else {
             iobGraph.setVisibility(View.GONE);
         }
-        log.debug("updateGUI checkpoint 3");
+        //log.debug("updateGUI checkpoint 3");
 
         // remove old data from graph
         bgGraph.getSecondScale().getSeries().clear();
         bgGraph.getSeries().clear();
-        log.debug("updateGUI checkpoint 4");
+        //log.debug("updateGUI checkpoint 4");
 
         // **** Area ****
         DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
