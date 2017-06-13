@@ -202,6 +202,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     @Override
+    public String getUnits() {
+        return mgdl ? Constants.MGDL : Constants.MMOL;
+    }
+
+    @Override
     public String getProfileName() {
         return "SimpleProfile";
     }

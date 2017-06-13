@@ -803,6 +803,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     @Override
+    public String getUnits() {
+        return pump.getUnits();
+    }
+
+    @Override
     public String getProfileName() {
         return pump.createConvertedProfileName();
     }

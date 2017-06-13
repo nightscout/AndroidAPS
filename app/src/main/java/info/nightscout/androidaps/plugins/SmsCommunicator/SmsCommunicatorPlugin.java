@@ -238,8 +238,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     BgReading actualBG = DatabaseHelper.actualBg();
                     BgReading lastBG = DatabaseHelper.lastBg();
 
-                    Profile profile = MainApp.getConfigBuilder().getProfile();
-                    String units = profile.getUnits();
+                    String units = MainApp.getConfigBuilder().getProfileUnits();
 
                     if (actualBG != null) {
                         reply = MainApp.sResources.getString(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";

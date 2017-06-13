@@ -209,14 +209,13 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) return null;
+        String units = MainApp.getConfigBuilder().getProfileUnits();
 
         Double lowLine = SafeParse.stringToDouble(mPrefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(mPrefs.getString("high_mark", "0"));
 
         //convert to mg/dl
-        if (!profile.getUnits().equals(Constants.MGDL)) {
+        if (!units.equals(Constants.MGDL)) {
             lowLine *= Constants.MMOLL_TO_MGDL;
             highLine *= Constants.MMOLL_TO_MGDL;
 
@@ -239,7 +238,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         DataMap dataMap = new DataMap();
 
         int battery = getBatteryLevel(getApplicationContext());
-        dataMap.putString("sgvString", lastBG.valueToUnitsToString(profile.getUnits()));
+        dataMap.putString("sgvString", lastBG.valueToUnitsToString(units));
         dataMap.putDouble("timestamp", lastBG.date);
         if (glucoseStatus == null) {
             dataMap.putString("slopeArrow", "");
@@ -247,8 +246,8 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMap.putString("avgDelta", "");
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
-            dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
-            dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+            dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
         }
         dataMap.putString("battery", "" + battery);
         dataMap.putLong("sgvLevel", sgvLevel);

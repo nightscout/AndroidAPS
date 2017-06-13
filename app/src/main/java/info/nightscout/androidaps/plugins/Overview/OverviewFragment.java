@@ -916,6 +916,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         PumpInterface pump = MainApp.getConfigBuilder();
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
+        String units = profile.getUnits();
 
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
@@ -958,13 +959,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
             if (tempTarget.low == tempTarget.high)
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()));
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units));
             else
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits()));
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, units), units));
         } else {
             Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
             Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-            if (!profile.getUnits().equals(Constants.MGDL)) {
+            if (!units.equals(Constants.MGDL)) {
                 maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
                 minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
             }
@@ -1062,7 +1063,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(units), 0d, true, true, false, false);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)
@@ -1078,8 +1079,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             wizardButton.setVisibility(View.GONE);
             treatmentButton.setVisibility(View.GONE);
         }
-
-        String units = profile.getUnits();
 
         Double lowLine = SP.getDouble("low_mark", 0d);
         Double highLine = SP.getDouble("high_mark", 0d);
@@ -1097,7 +1096,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 color = MainApp.sResources.getColor(R.color.low);
             else if (lastBG.valueToUnits(units) > highLine)
                 color = MainApp.sResources.getColor(R.color.high);
-            bgView.setText(lastBG.valueToUnitsToString(profile.getUnits()));
+            bgView.setText(lastBG.valueToUnitsToString(units));
             arrowView.setText(lastBG.directionToSymbol());
             bgView.setTextColor(color);
             arrowView.setTextColor(color);
@@ -1156,7 +1155,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // ****** GRAPH *******
-        //log.debug("updateGUI checkpoint 1");
+        log.debug("updateGUI checkpoint 1");
 
         // allign to hours
         Calendar calendar = Calendar.getInstance();
@@ -1287,7 +1286,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             absoluteBasalsLineSeries.setCustomPaint(absolutePaint);
         }
 
-        //log.debug("updateGUI checkpoint 2");
+        log.debug("updateGUI checkpoint 2");
 
         // **** IOB COB DEV graph ****
         class DeviationDataPoint extends DataPoint {
@@ -1405,12 +1404,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else {
             iobGraph.setVisibility(View.GONE);
         }
-        //log.debug("updateGUI checkpoint 3");
+        log.debug("updateGUI checkpoint 3");
 
         // remove old data from graph
         bgGraph.getSecondScale().getSeries().clear();
         bgGraph.getSeries().clear();
-        //log.debug("updateGUI checkpoint 4");
+        log.debug("updateGUI checkpoint 4");
 
         // **** Area ****
         DoubleDataPoint[] areaDataPoints = new DoubleDataPoint[]{
@@ -1586,11 +1585,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
     public double getNearestBg(long date, List<BgReading> bgReadingsArray) {
         double bg = 0;
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        String units = MainApp.getConfigBuilder().getProfileUnits();
         for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
             BgReading reading = bgReadingsArray.get(r);
             if (reading.date > date) continue;
-            bg = Profile.fromMgdlToUnits(reading.value, profile.getUnits());
+            bg = Profile.fromMgdlToUnits(reading.value, units);
             break;
         }
         return bg;

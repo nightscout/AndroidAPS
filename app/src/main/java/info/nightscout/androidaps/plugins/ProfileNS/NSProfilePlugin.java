@@ -154,6 +154,11 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     @Override
+    public String getUnits() {
+        return profile.getUnits();
+    }
+
+    @Override
     public String getProfileName() {
         return profile.getDefaultProfileName();
     }

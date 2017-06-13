@@ -345,6 +345,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return iobTotal;
     }
 
+    @Nullable
     private static Long findPreviousTimeFromBucketedData(long time) {
         if (bucketed_data == null)
             return null;
@@ -413,6 +414,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         // predict IOB out to DIA plus 30m
         long time = new Date().getTime();
+        time = roundUpTime(time);
         int len = (int) ((profile.getDia() * 60 + 30) / 5);
         IobTotal[] array = new IobTotal[len];
         int pos = 0;

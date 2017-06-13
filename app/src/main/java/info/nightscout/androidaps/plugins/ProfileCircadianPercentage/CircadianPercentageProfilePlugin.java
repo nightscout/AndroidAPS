@@ -214,6 +214,11 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     }
 
     @Override
+    public String getUnits() {
+        return mgdl ? Constants.MGDL : Constants.MMOL;
+    }
+
+    @Override
     public String getProfileName() {
         performLimitCheck();
         return convertedProfileName;

@@ -204,6 +204,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        VirtualPumpPlugin.setFakingStatus(true);
         scheduleBgChange(); // trigger refresh
         scheduleTemporaryBasalChange();
         scheduleTreatmentChange();
@@ -251,6 +252,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        VirtualPumpPlugin.setFakingStatus(false);
         scheduleTemporaryBasalChange();
     }
 
@@ -817,8 +819,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     public void createTemptargetFromJsonIfNotExists(JSONObject trJson) {
         try {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-            String units = profile.getUnits();
+            String units = MainApp.getConfigBuilder().getProfileUnits();
             TempTarget tempTarget = new TempTarget();
             tempTarget.date = trJson.getLong("mills");
             tempTarget.durationInMinutes = trJson.getInt("duration");
@@ -1070,7 +1071,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = trJson.getInt("duration");
                 extendedBolus.insulin = trJson.getDouble("originalExtendedAmount");
                 extendedBolus._id = trJson.getString("_id");
-                VirtualPumpPlugin.fromNSAreCommingFakedExtendedBoluses = true;
+                if (!VirtualPumpPlugin.getFakingStatus()) {
+                    VirtualPumpPlugin.setFakingStatus(true);
+                    updateEarliestDataChange(0);
+                    scheduleTemporaryBasalChange();
+                }
                 createOrUpdate(extendedBolus);
             } else if (trJson.has("isFakedTempBasal")) { // extended bolus end uploaded as temp basal end
                 ExtendedBolus extendedBolus = new ExtendedBolus();
@@ -1080,7 +1085,11 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 extendedBolus.durationInMinutes = 0;
                 extendedBolus.insulin = 0;
                 extendedBolus._id = trJson.getString("_id");
-                VirtualPumpPlugin.fromNSAreCommingFakedExtendedBoluses = true;
+                if (!VirtualPumpPlugin.getFakingStatus()) {
+                    VirtualPumpPlugin.setFakingStatus(true);
+                    updateEarliestDataChange(0);
+                    scheduleTemporaryBasalChange();
+                }
                 createOrUpdate(extendedBolus);
             } else {
                 TemporaryBasal tempBasal = new TemporaryBasal();

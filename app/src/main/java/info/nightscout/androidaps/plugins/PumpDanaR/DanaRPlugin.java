@@ -799,6 +799,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     }
 
     @Override
+    public String getUnits() {
+        return pump.getUnits();
+    }
+
+    @Override
     public String getProfileName() {
         return pump.createConvertedProfileName();
     }

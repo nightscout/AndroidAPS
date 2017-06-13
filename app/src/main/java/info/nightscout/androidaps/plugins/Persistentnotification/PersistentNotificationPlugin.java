@@ -118,17 +118,17 @@ public class PersistentNotificationPlugin implements PluginBase {
 
 
         String line1 = ctx.getString(R.string.noprofile);
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        String units = MainApp.getConfigBuilder().getProfileUnits();
 
 
         BgReading lastBG = DatabaseHelper.lastBg();
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if (profile != null && lastBG != null) {
-            line1 = lastBG.valueToUnitsToString(profile.getUnits());
+        if (lastBG != null) {
+            line1 = lastBG.valueToUnitsToString(units);
             if (glucoseStatus != null) {
-                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
-                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
+                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
             } else {
                 line1 += " " +
                         ctx.getString(R.string.old_data) +

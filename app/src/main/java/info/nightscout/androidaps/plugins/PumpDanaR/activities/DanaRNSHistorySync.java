@@ -46,12 +46,6 @@ public class DanaRNSHistorySync {
 
     public void sync(int what) {
         try {
-            ConfigBuilderPlugin ConfigBuilderPlugin = MainApp.getConfigBuilder();
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-            if (profile == null) {
-                ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.noprofile));
-                return;
-            }
             Calendar cal = Calendar.getInstance();
             long records = historyRecords.size();
             long processing = 0;
@@ -179,7 +173,7 @@ public class DanaRNSHistorySync {
                         log.debug("Syncing glucose record " + record.recordValue + " " + DateUtil.toISOString(record.recordDate));
                         nsrec.put(DANARSIGNATURE, record.bytes);
                         nsrec.put("eventType", "BG Check");
-                        nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, profile.getUnits()));
+                        nsrec.put("glucose", Profile.fromMgdlToUnits(record.recordValue, MainApp.getConfigBuilder().getProfileUnits()));
                         nsrec.put("glucoseType", "Finger");
                         nsrec.put("created_at", DateUtil.toISOString(record.recordDate));
                         nsrec.put("enteredBy", "openaps://" + MainApp.sResources.getString(R.string.app_name));

@@ -132,6 +132,10 @@ public class DanaRPump {
     public double maxBolus;
     public double maxBasal;
 
+    public String getUnits() {
+        return units == UNITS_MGDL ? Constants.MGDL : Constants.MMOL;
+    }
+
     public ProfileStore createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();

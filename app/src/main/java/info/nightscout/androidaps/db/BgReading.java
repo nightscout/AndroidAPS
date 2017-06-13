@@ -158,7 +158,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        String units = MainApp.getConfigBuilder().getProfile().getUnits();
+        String units = MainApp.getConfigBuilder().getProfileUnits();
         return valueToUnits(units);
     }
 
@@ -190,7 +190,7 @@ public class BgReading implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        String units = MainApp.getConfigBuilder().getProfile().getUnits();
+        String units = MainApp.getConfigBuilder().getProfileUnits();
         Double lowLine = SP.getDouble("low_mark", 0d);
         Double highLine = SP.getDouble("high_mark", 0d);
         if (lowLine < 1) {

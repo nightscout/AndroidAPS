@@ -716,6 +716,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     }
 
     @Override
+    public String getUnits() {
+        return pump.getUnits();
+    }
+
+    @Override
     public String getProfileName() {
         return pump.createConvertedProfileName();
     }

@@ -28,6 +28,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProg
 import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -45,12 +46,26 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     boolean fragmentEnabled = true;
     boolean fragmentVisible = true;
 
-    public static boolean fromNSAreCommingFakedExtendedBoluses = false;
+    private static boolean fromNSAreCommingFakedExtendedBoluses = false;
 
     PumpDescription pumpDescription = new PumpDescription();
 
+    static void loadFakingStatus() {
+        fromNSAreCommingFakedExtendedBoluses = SP.getBoolean("fromNSAreCommingFakedExtendedBoluses", false);
+    }
+
+    public static void setFakingStatus(boolean newStatus) {
+        fromNSAreCommingFakedExtendedBoluses = newStatus;
+        SP.putBoolean("fromNSAreCommingFakedExtendedBoluses", fromNSAreCommingFakedExtendedBoluses);
+    }
+
+    public static boolean getFakingStatus() {
+        return fromNSAreCommingFakedExtendedBoluses;
+    }
+
     static VirtualPumpPlugin instance = null;
     public static VirtualPumpPlugin getInstance() {
+        loadFakingStatus();
         if (instance == null)
             instance = new VirtualPumpPlugin();
         return instance;

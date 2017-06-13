@@ -89,7 +89,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     }
 
     public String age() {
-        Map<TimeUnit,Long> diff = computeDiff(date, new Date().getTime());
+        Map<TimeUnit, Long> diff = computeDiff(date, new Date().getTime());
         return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
     }
 
@@ -105,17 +105,17 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     }
 
     //Map:{DAYS=1, HOURS=3, MINUTES=46, SECONDS=40, MILLISECONDS=0, MICROSECONDS=0, NANOSECONDS=0}
-    public static Map<TimeUnit,Long> computeDiff(long date1, long date2) {
+    public static Map<TimeUnit, Long> computeDiff(long date1, long date2) {
         long diffInMillies = date2 - date1;
         List<TimeUnit> units = new ArrayList<TimeUnit>(EnumSet.allOf(TimeUnit.class));
         Collections.reverse(units);
-        Map<TimeUnit,Long> result = new LinkedHashMap<TimeUnit,Long>();
+        Map<TimeUnit, Long> result = new LinkedHashMap<TimeUnit, Long>();
         long milliesRest = diffInMillies;
-        for ( TimeUnit unit : units ) {
-            long diff = unit.convert(milliesRest,TimeUnit.MILLISECONDS);
+        for (TimeUnit unit : units) {
+            long diff = unit.convert(milliesRest, TimeUnit.MILLISECONDS);
             long diffInMilliesForUnit = unit.toMillis(diff);
             milliesRest = milliesRest - diffInMilliesForUnit;
-            result.put(unit,diff);
+            result.put(unit, diff);
         }
         return result;
     }
@@ -131,7 +131,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
 
     @Override
     public double getY() {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+        String units = MainApp.getConfigBuilder().getProfileUnits();
         if (eventType.equals(MBG)) {
             double mbg = 0d;
             try {
@@ -140,13 +140,10 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            if (profile != null)
-                return profile.fromMgdlToUnits(mbg, profile.getUnits());
-            return 0d;
+            return Profile.fromMgdlToUnits(mbg, units);
         }
 
         double glucose = 0d;
-        String units = Constants.MGDL;
         try {
             JSONObject object = new JSONObject(json);
             if (object.has("glucose")) {
@@ -156,7 +153,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        if (profile != null && glucose != 0d) {
+        if (glucose != 0d) {
             double mmol = 0d;
             double mgdl = 0;
             if (units.equals(Constants.MGDL)) {
@@ -167,7 +164,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
                 mmol = glucose;
                 mgdl = glucose * Constants.MMOLL_TO_MGDL;
             }
-            return profile.toUnits(mgdl, mmol, profile.getUnits());
+            return Profile.toUnits(mgdl, mmol, units);
         }
 
         return yValue;

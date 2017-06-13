@@ -62,16 +62,15 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
         @Override
         public void onBindViewHolder(TempTargetsViewHolder holder, int position) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-            if (profile == null) return;
+            String units = MainApp.getConfigBuilder().getProfileUnits();
             TempTarget tempTarget = tempTargetList.getReversed(position);
             holder.ph.setVisibility(tempTarget.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(tempTarget._id != null ? View.VISIBLE : View.GONE);
             if (!tempTarget.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTarget.originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
-                holder.low.setText(tempTarget.lowValueToUnitsToString(profile.getUnits()));
-                holder.high.setText(tempTarget.highValueToUnitsToString(profile.getUnits()));
+                holder.low.setText(tempTarget.lowValueToUnitsToString(units));
+                holder.high.setText(tempTarget.highValueToUnitsToString(units));
                 holder.reason.setText(tempTarget.reason);
             } else {
                 holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date));

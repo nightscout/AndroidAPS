@@ -156,6 +156,7 @@ public class NSClientService extends Service {
                 ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
                 ev.isChanged(R.string.key_nsclientinternal_paused)
                 ) {
+            latestDateInReceivedData = 0;
             destroy();
             initialize();
         }
@@ -164,6 +165,7 @@ public class NSClientService extends Service {
     @Subscribe
     public void onStatusEvent(EventConfigBuilderChange ev) {
         if (nsEnabled != MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL)) {
+            latestDateInReceivedData = 0;
             destroy();
             initialize();
         }

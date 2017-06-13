@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import info.nightscout.androidaps.Constants;
+
 /**
  * Created by mike on 01.06.2017.
  */
@@ -17,9 +19,11 @@ import java.util.Iterator;
 public class ProfileStore {
     private static Logger log = LoggerFactory.getLogger(ProfileStore.class);
     private JSONObject json = null;
+    private String units = Constants.MGDL;
 
     public ProfileStore(JSONObject json) {
         this.json = json;
+        getDefaultProfile(); // initialize units
     }
 
     public JSONObject getData() {
@@ -33,10 +37,10 @@ public class ProfileStore {
             String defaultProfileName = json.getString("defaultProfile");
             JSONObject store = json.getJSONObject("store");
             if (store.has(defaultProfileName)) {
-                String units = null;
                 if (store.has("units"))
                     units = store.getString("units");
                 profile = new Profile(store.getJSONObject(defaultProfileName), units);
+                units = profile.getUnits();
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -57,6 +61,10 @@ public class ProfileStore {
             e.printStackTrace();
         }
         return defaultProfileName;
+    }
+
+    public String getUnits() {
+        return units;
     }
 
     @Nullable
