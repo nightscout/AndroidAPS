@@ -58,8 +58,6 @@ public class NSClientInternalFragment extends Fragment implements View.OnClickLi
     private CheckBox autoscrollCheckbox;
     private CheckBox pausedCheckbox;
 
-    String status = "";
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -119,7 +117,7 @@ public class NSClientInternalFragment extends Fragment implements View.OnClickLi
                 builder.setMessage("Clear queue? All data in queue will be lost!");
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        getPlugin().queue().clearQueue();
+                        UploadQueue.clearQueue();
                         updateGUI();
                         Answers.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
                     }
@@ -176,12 +174,13 @@ public class NSClientInternalFragment extends Fragment implements View.OnClickLi
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    logTextView.setText(getPlugin().textLog);
+                    NSClientInternalPlugin.updateLog();
+                    logTextView.setText(NSClientInternalPlugin.textLog);
                     if (getPlugin().autoscroll) {
                         logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                     }
                     urlTextView.setText(getPlugin().url());
-                    Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + getPlugin().queue().size() + "</b>");
+                    Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
                     queueTextView.setText(queuetext);
                     statusTextView.setText(getPlugin().status);
                 }

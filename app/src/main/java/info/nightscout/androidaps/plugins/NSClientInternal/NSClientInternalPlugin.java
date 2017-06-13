@@ -9,14 +9,12 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.text.Html;
 import android.text.Spanned;
-import android.text.TextUtils;
 
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,29 +34,28 @@ import info.nightscout.utils.ToastUtils;
 public class NSClientInternalPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalPlugin.class);
 
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
 
     static public Handler handler;
-    static private HandlerThread handlerThread;
 
-    public List<EventNSClientNewLog> listLog = new ArrayList<EventNSClientNewLog>();
-    public Spanned textLog = Html.fromHtml("");
+    private static List<EventNSClientNewLog> listLog = new ArrayList<>();
+    static Spanned textLog = Html.fromHtml("");
 
     public boolean paused = false;
-    public boolean autoscroll = true;
+    boolean autoscroll = true;
 
     public String status = "";
 
     public NSClientService nsClientService = null;
 
-    public NSClientInternalPlugin() {
+    NSClientInternalPlugin() {
         MainApp.bus().register(this);
         paused = SP.getBoolean(R.string.key_nsclientinternal_paused, false);
         autoscroll = SP.getBoolean(R.string.key_nsclientinternal_autoscroll, true);
 
         if (handler == null) {
-            handlerThread = new HandlerThread(NSClientInternalPlugin.class.getSimpleName() + "Handler");
+            HandlerThread handlerThread = new HandlerThread(NSClientInternalPlugin.class.getSimpleName() + "Handler");
             handlerThread.start();
             handler = new Handler(handlerThread.getLooper());
         }
@@ -129,7 +126,7 @@ public class NSClientInternalPlugin implements PluginBase {
         if (type == GENERAL) this.fragmentVisible = fragmentVisible;
     }
 
-    ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
             log.debug("Service is disconnected");
@@ -162,12 +159,12 @@ public class NSClientInternalPlugin implements PluginBase {
         MainApp.bus().post(new EventNSClientUpdateGUI());
     }
 
-    public void clearLog() {
+    void clearLog() {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                listLog = new ArrayList<EventNSClientNewLog>();
-                updateLog();
+                listLog = new ArrayList<>();
+                MainApp.bus().post(new EventNSClientUpdateGUI());
             }
         });
     }
@@ -176,31 +173,30 @@ public class NSClientInternalPlugin implements PluginBase {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
                 listLog.add(ev);
                 // remove the first line if log is too large
                 if (listLog.size() >= Constants.MAX_LOG_LINES) {
                     listLog.remove(0);
                 }
-                updateLog();
+                MainApp.bus().post(new EventNSClientUpdateGUI());
             }
         });
     }
 
-    private void updateLog() {
+    static void updateLog() {
         try {
             StringBuilder newTextLog = new StringBuilder();
-            for (EventNSClientNewLog log : listLog) {
+            List<EventNSClientNewLog> temporaryList = new ArrayList<>(listLog);
+            for (EventNSClientNewLog log : temporaryList) {
                 newTextLog.append(log.toPreparedHtml());
             }
             textLog = Html.fromHtml(newTextLog.toString());
-            MainApp.bus().post(new EventNSClientUpdateGUI());
         } catch (OutOfMemoryError e) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "Out of memory!\nStop using this phone !!!", R.raw.error);
         }
     }
 
-    public void resend(String reason) {
+    void resend(String reason) {
         if (nsClientService != null)
             nsClientService.resend(reason);
     }

@@ -22,9 +22,10 @@ public class EventNSClientNewLog {
         this.logText = logText;
     }
 
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
     public StringBuilder toPreparedHtml() {
         StringBuilder stringBuilder = new StringBuilder();
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
         stringBuilder.append(timeFormat.format(date));
         stringBuilder.append(" <b>");
         stringBuilder.append(action);
