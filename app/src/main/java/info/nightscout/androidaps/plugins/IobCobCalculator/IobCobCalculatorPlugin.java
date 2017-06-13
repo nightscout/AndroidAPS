@@ -326,18 +326,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
         long now = new Date().getTime();
         time = roundUpTime(time);
         if (time < now && iobTable.get(time) != null) {
-            //log.debug(">>> Cache hit");
+            //og.debug(">>> calulateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
             return iobTable.get(time);
         } else {
-            //log.debug(">>> Cache miss " + new Date(time).toLocaleString());
+            //log.debug(">>> calulateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
         }
         IobTotal bolusIob = MainApp.getConfigBuilder().getCalculationToTimeTreatments(time).round();
         IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
-/*
-        if (basalIob.basaliob > 0) {
-            log.debug(new Date(time).toLocaleString() + " basaliob: " + basalIob.basaliob );
-        }
-*/
+
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
         if (time < new Date().getTime()) {
             iobTable.put(time, iobTotal);
@@ -374,9 +370,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
             if (time < now) {
                 basalDataTable.append(time, retval);
             }
-            //log.debug(">>> Cache miss " + new Date(time).toLocaleString());
+            //log.debug(">>> getBasalData Cache miss " + new Date(time).toLocaleString());
         } else {
-            //log.debug(">>> Cache hit " +  new Date(time).toLocaleString());
+            //log.debug(">>> getBasalData Cache hit " +  new Date(time).toLocaleString());
         }
         return retval;
     }
@@ -391,10 +387,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
         time = roundUpTime(previous);
         AutosensData data = autosensDataTable.get(time);
         if (data != null) {
-            //log.debug(">>> Cache hit " + data.log(time));
+            //log.debug(">>> getAutosensData Cache hit " + data.log(time));
             return data;
         } else {
-            //log.debug(">>> Cache miss " + new Date(time).toLocaleString());
+            //log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
             return null;
         }
     }

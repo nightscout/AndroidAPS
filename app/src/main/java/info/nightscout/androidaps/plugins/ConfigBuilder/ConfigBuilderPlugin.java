@@ -1017,11 +1017,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
             if (profileSwitch.profileJson != null) {
-                try {
-                    return new Profile(new JSONObject(profileSwitch.profileJson));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                return profileSwitch.getProfileObject();
             } else {
                 Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
                 if (profile != null)

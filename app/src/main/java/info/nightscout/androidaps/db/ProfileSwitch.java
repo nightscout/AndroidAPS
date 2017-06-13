@@ -5,12 +5,15 @@ import android.graphics.Color;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 import java.util.Objects;
 
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
@@ -49,6 +52,18 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @DatabaseField
     public int durationInMinutes = 0;
+
+    private Profile profile = null;
+
+    public Profile getProfileObject() {
+        if (profile == null)
+            try {
+                profile = new Profile(new JSONObject(profileJson));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        return profile;
+    }
 
     public boolean isEqual(ProfileSwitch other) {
         if (date != other.date) {
