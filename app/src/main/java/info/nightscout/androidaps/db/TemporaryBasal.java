@@ -179,8 +179,8 @@ public class TemporaryBasal implements Interval {
 
         if (realDuration > 0) {
             Double netBasalRate = 0d;
-
-            Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
+            double dia = profile.getDia();
+            Double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
             double tempBolusSpacing = realDuration / aboutFiveMinIntervals;
 
@@ -202,11 +202,11 @@ public class TemporaryBasal implements Interval {
                     double tempBolusSize = netBasalRate * tempBolusSpacing / 60d;
                     netBasalAmount += tempBolusSize;
 
-                    Treatment tempBolusPart = new Treatment(insulinInterface);
+                    Treatment tempBolusPart = new Treatment(insulinInterface, dia);
                     tempBolusPart.insulin = tempBolusSize;
                     tempBolusPart.date = calcdate;
 
-                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
                     result.basaliob += aIOB.iobContrib;
                     result.activity += aIOB.activityContrib;
                     result.netbasalinsulin += tempBolusPart.insulin;

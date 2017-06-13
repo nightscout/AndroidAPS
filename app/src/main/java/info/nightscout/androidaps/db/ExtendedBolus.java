@@ -180,7 +180,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         int realDuration = getDurationToTime(time);
 
         if (realDuration > 0) {
-            Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
+            Double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
             double spacing = realDuration / aboutFiveMinIntervals;
 
@@ -191,11 +191,11 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                 if (calcdate > dia_ago && calcdate <= time) {
                     double tempBolusSize = absoluteRate() * spacing / 60d;
 
-                    Treatment tempBolusPart = new Treatment(insulinInterface);
+                    Treatment tempBolusPart = new Treatment(insulinInterface, dia);
                     tempBolusPart.insulin = tempBolusSize;
                     tempBolusPart.date = calcdate;
 
-                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
                     result.iob += aIOB.iobContrib;
                     result.activity += aIOB.activityContrib;
                     result.extendedBolusInsulin += tempBolusPart.insulin;

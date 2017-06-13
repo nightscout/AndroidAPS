@@ -38,7 +38,7 @@ public class ActivityGraph extends GraphView {
         double dia = insulin.getDia();
         int hours = (int) Math.floor(dia + 1);
 
-        Treatment t = new Treatment(insulin);
+        Treatment t = new Treatment(insulin, dia);
         t.date = 0;
         t.insulin = 1d;
 

@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.data;
 
+import android.support.v4.util.LongSparseArray;
+
 import com.crashlytics.android.Crashlytics;
 
 import org.json.JSONArray;
@@ -30,8 +32,11 @@ public class Profile {
     double dia = Constants.defaultDIA;
     TimeZone timeZone = TimeZone.getDefault();
     JSONArray isf;
+    private LongSparseArray<Double> isf_v = null; // oldest at index 0
     JSONArray ic;
+    private LongSparseArray<Double> ic_v = null; // oldest at index 0
     JSONArray basal;
+    private LongSparseArray<Double> basal_v = null; // oldest at index 0
     JSONArray targetLow;
     JSONArray targetHigh;
 
@@ -136,6 +141,21 @@ public class Profile {
         return timeZone;
     }
 
+    private LongSparseArray<Double> convertToSparseArray(JSONArray array) {
+        LongSparseArray<Double> sparse = new LongSparseArray<>();
+        for (Integer index = 0; index < array.length(); index++) {
+            try {
+                JSONObject o = array.getJSONObject(index);
+                long tas = o.getLong("timeAsSeconds");
+                Double value = o.getDouble("value");
+                sparse.put(tas, value);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return sparse;
+    }
+
     private Double getValueToTime(JSONArray array, Integer timeAsSeconds) {
         Double lastValue = null;
 
@@ -152,6 +172,21 @@ public class Profile {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+        return lastValue;
+    }
+
+    private Double getValueToTime(LongSparseArray<Double> array, long timeAsSeconds) {
+        Double lastValue = null;
+
+        for (Integer index = 0; index < array.size(); index++) {
+            long tas = array.keyAt(index);
+            double value = array.valueAt(index);
+            if (lastValue == null) lastValue = value;
+            if (timeAsSeconds < tas) {
+                break;
+            }
+            lastValue = value;
         }
         return lastValue;
     }
@@ -188,7 +223,9 @@ public class Profile {
     }
 
     public Double getIsf(Integer timeAsSeconds) {
-        return getValueToTime(isf, timeAsSeconds);
+        if (isf_v == null)
+            isf_v = convertToSparseArray(isf);
+        return getValueToTime(isf_v, timeAsSeconds);
     }
 
     public String getIsfList() {
@@ -204,7 +241,9 @@ public class Profile {
     }
 
     public Double getIc(Integer timeAsSeconds) {
-        return getValueToTime(ic, timeAsSeconds);
+        if (ic_v == null)
+            ic_v = convertToSparseArray(ic);
+        return getValueToTime(ic_v, timeAsSeconds);
     }
 
     public String getIcList() {
@@ -220,7 +259,9 @@ public class Profile {
     }
 
     public Double getBasal(Integer timeAsSeconds) {
-        return getValueToTime(basal, timeAsSeconds);
+        if (basal_v == null)
+            basal_v = convertToSparseArray(basal);
+        return getValueToTime(basal_v, timeAsSeconds);
     }
 
     public String getBasalList() {

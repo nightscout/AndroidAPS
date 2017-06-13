@@ -189,11 +189,11 @@ public class NSClientInternalPlugin implements PluginBase {
 
     private void updateLog() {
         try {
-            String newTextLog = "";
+            StringBuilder newTextLog = new StringBuilder();
             for (EventNSClientNewLog log : listLog) {
-                newTextLog = newTextLog + log.toPreparedHtml();
+                newTextLog.append(log.toPreparedHtml());
             }
-            textLog = Html.fromHtml(newTextLog);
+            textLog = Html.fromHtml(newTextLog.toString());
             MainApp.bus().post(new EventNSClientUpdateGUI());
         } catch (OutOfMemoryError e) {
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), "Out of memory!\nStop using this phone !!!", R.raw.error);
