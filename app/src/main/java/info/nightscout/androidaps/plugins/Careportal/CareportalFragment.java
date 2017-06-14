@@ -35,26 +35,26 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
     }
 
     //                                                    bg,insulin,carbs,prebolus,duration,percent,absolute,profile,split,temptarget
-    static final OptionsToShow bgcheck = new OptionsToShow(R.id.careportal_bgcheck, R.string.careportal_bgcheck, true, true, true, false, false, false, false, false, false, false);
-    static final OptionsToShow snackbolus = new OptionsToShow(R.id.careportal_snackbolus, R.string.careportal_snackbolus, true, true, true, true, false, false, false, false, false, false);
-    static final OptionsToShow mealbolus = new OptionsToShow(R.id.careportal_mealbolus, R.string.careportal_mealbolus, true, true, true, true, false, false, false, false, false, false);
-    static final OptionsToShow correctionbolus = new OptionsToShow(R.id.careportal_correctionbolus, R.string.careportal_correctionbolus, true, true, true, true, false, false, false, false, false, false);
-    static final OptionsToShow carbcorrection = new OptionsToShow(R.id.careportal_carbscorrection, R.string.careportal_carbscorrection, true, false, true, false, false, false, false, false, false, false);
-    static final OptionsToShow combobolus = new OptionsToShow(R.id.careportal_combobolus, R.string.careportal_combobolus, true, true, true, true, true, false, false, false, true, false);
-    static final OptionsToShow announcement = new OptionsToShow(R.id.careportal_announcement, R.string.careportal_announcement, true, false, false, false, false, false, false, false, false, false);
-    static final OptionsToShow note = new OptionsToShow(R.id.careportal_note, R.string.careportal_note, true, false, false, false, true, false, false, false, false, false);
-    static final OptionsToShow question = new OptionsToShow(R.id.careportal_question, R.string.careportal_question, true, false, false, false, false, false, false, false, false, false);
-    static final OptionsToShow exercise = new OptionsToShow(R.id.careportal_exercise, R.string.careportal_exercise, false, false, false, false, true, false, false, false, false, false);
-    static final OptionsToShow sitechange = new OptionsToShow(R.id.careportal_pumpsitechange, R.string.careportal_pumpsitechange, true, true, false, false, false, false, false, false, false, false);
-    static final OptionsToShow sensorstart = new OptionsToShow(R.id.careportal_cgmsensorstart, R.string.careportal_cgmsensorstart, true, false, false, false, false, false, false, false, false, false);
-    static final OptionsToShow sensorchange = new OptionsToShow(R.id.careportal_cgmsensorinsert, R.string.careportal_cgmsensorinsert, true, false, false, false, false, false, false, false, false, false);
-    static final OptionsToShow insulinchange = new OptionsToShow(R.id.careportal_insulincartridgechange, R.string.careportal_insulincartridgechange, true, false, false, false, false, false, false, false, false, false);
-    static final OptionsToShow pumpbatterychange = new OptionsToShow(R.id.careportal_pumpbatterychange, R.string.careportal_pumpbatterychange, true, false, false, false, false, false, false, false, false, false);
-    static final OptionsToShow tempbasalstart = new OptionsToShow(R.id.careportal_tempbasalstart, R.string.careportal_tempbasalstart, true, false, false, false, true, true, true, false, false, false);
-    static final OptionsToShow tempbasalend = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend, true, false, false, false, false, false, false, false, false, false);
-    static final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, true, false, false, true, false, false);
-    static final OptionsToShow openapsoffline = new OptionsToShow(R.id.careportal_openapsoffline, R.string.careportal_openapsoffline, false, false, false, false, true, false, false, false, false, false);
-    static final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
+    public static final OptionsToShow bgcheck = new OptionsToShow(R.id.careportal_bgcheck, R.string.careportal_bgcheck, true, true, true, false, false, false, false, false, false, false);
+    public static final OptionsToShow snackbolus = new OptionsToShow(R.id.careportal_snackbolus, R.string.careportal_snackbolus, true, true, true, true, false, false, false, false, false, false);
+    public static final OptionsToShow mealbolus = new OptionsToShow(R.id.careportal_mealbolus, R.string.careportal_mealbolus, true, true, true, true, false, false, false, false, false, false);
+    public static final OptionsToShow correctionbolus = new OptionsToShow(R.id.careportal_correctionbolus, R.string.careportal_correctionbolus, true, true, true, true, false, false, false, false, false, false);
+    public static final OptionsToShow carbcorrection = new OptionsToShow(R.id.careportal_carbscorrection, R.string.careportal_carbscorrection, true, false, true, false, false, false, false, false, false, false);
+    public static final OptionsToShow combobolus = new OptionsToShow(R.id.careportal_combobolus, R.string.careportal_combobolus, true, true, true, true, true, false, false, false, true, false);
+    public static final OptionsToShow announcement = new OptionsToShow(R.id.careportal_announcement, R.string.careportal_announcement, true, false, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow note = new OptionsToShow(R.id.careportal_note, R.string.careportal_note, true, false, false, false, true, false, false, false, false, false);
+    public static final OptionsToShow question = new OptionsToShow(R.id.careportal_question, R.string.careportal_question, true, false, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow exercise = new OptionsToShow(R.id.careportal_exercise, R.string.careportal_exercise, false, false, false, false, true, false, false, false, false, false);
+    public static final OptionsToShow sitechange = new OptionsToShow(R.id.careportal_pumpsitechange, R.string.careportal_pumpsitechange, true, true, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow sensorstart = new OptionsToShow(R.id.careportal_cgmsensorstart, R.string.careportal_cgmsensorstart, true, false, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow sensorchange = new OptionsToShow(R.id.careportal_cgmsensorinsert, R.string.careportal_cgmsensorinsert, true, false, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow insulinchange = new OptionsToShow(R.id.careportal_insulincartridgechange, R.string.careportal_insulincartridgechange, true, false, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow pumpbatterychange = new OptionsToShow(R.id.careportal_pumpbatterychange, R.string.careportal_pumpbatterychange, true, false, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow tempbasalstart = new OptionsToShow(R.id.careportal_tempbasalstart, R.string.careportal_tempbasalstart, true, false, false, false, true, true, true, false, false, false);
+    public static final OptionsToShow tempbasalend = new OptionsToShow(R.id.careportal_tempbasalend, R.string.careportal_tempbasalend, true, false, false, false, false, false, false, false, false, false);
+    public static final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, true, false, false, true, false, false);
+    public static final OptionsToShow openapsoffline = new OptionsToShow(R.id.careportal_openapsoffline, R.string.careportal_openapsoffline, false, false, false, false, true, false, false, false, false, false);
+    public static final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,6 +136,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
                 newDialog.setOptions(note);
                 break;
             case R.id.careportal_profileswitch:
+                profileswitch.executeProfileSwitch = false;
                 newDialog.setOptions(profileswitch);
                 break;
             case R.id.careportal_pumpsitechange:
@@ -157,6 +158,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
                 newDialog.setOptions(openapsoffline);
                 break;
             case R.id.careportal_temporarytarget:
+                temptarget.executeTempTarget = false;
                 newDialog.setOptions(temptarget);
                 break;
             default:

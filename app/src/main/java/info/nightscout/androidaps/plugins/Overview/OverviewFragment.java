@@ -1033,7 +1033,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             public boolean onLongClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
+                final OptionsToShow profileswitch = CareportalFragment.profileswitch;
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
@@ -1048,7 +1048,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             public boolean onLongClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
+                final OptionsToShow temptarget = CareportalFragment.temptarget;
                 temptarget.executeTempTarget = true;
                 newTTDialog.setOptions(temptarget);
                 newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
@@ -1204,7 +1204,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double lastAbsoluteLineBasal = 0;
             double lastBaseBasal = 0;
             double lastTempBasal = 0;
-            for (long time = fromTime; time < now; time +=  60 * 1000L) {
+            for (long time = fromTime; time < now; time += 60 * 1000L) {
                 BasalData basalData = IobCobCalculatorPlugin.getBasalData(time);
                 double baseBasalValue = basalData.basal;
                 double absoluteLineValue = baseBasalValue;

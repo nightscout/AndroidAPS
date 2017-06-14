@@ -30,6 +30,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewExtendedBolusDialog;
 import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
+import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
@@ -169,14 +170,14 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
         switch (view.getId()) {
             case R.id.actions_profileswitch:
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
+                final OptionsToShow profileswitch = CareportalFragment.profileswitch;
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch);
                 newDialog.show(manager, "NewNSTreatmentDialog");
                 break;
             case R.id.actions_temptarget:
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-                final OptionsToShow temptarget = new OptionsToShow(R.id.careportal_temporarytarget, R.string.careportal_temporarytarget, false, false, false, false, true, false, false, false, false, true);
+                final OptionsToShow temptarget = CareportalFragment.temptarget;
                 temptarget.executeTempTarget = true;
                 newTTDialog.setOptions(temptarget);
                 newTTDialog.show(manager, "NewNSTreatmentDialog");
