@@ -301,7 +301,7 @@ public class NSUpload {
                 if (data.has("enteredBy")) prebolus.put("enteredBy", data.get("enteredBy"));
                 if (data.has("notes")) prebolus.put("notes", data.get("notes"));
                 long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
-                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L);
+                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L + 1000L);
                 prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
                 uploadCareportalEntryToNS(prebolus);
             }
