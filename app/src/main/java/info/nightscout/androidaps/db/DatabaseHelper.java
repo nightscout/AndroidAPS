@@ -1166,7 +1166,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 getDaoExtendedBolus().create(extendedBolus);
                 log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
                 updateEarliestDataChange(extendedBolus.date);
-                scheduleTreatmentChange();
+                scheduleExtendedBolusChange();
                 return true;
             }
             if (extendedBolus.source == Source.NIGHTSCOUT) {
@@ -1180,7 +1180,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                         log.debug("EXTENDEDBOLUS: Updating record by date from: " + Source.getString(extendedBolus.source) + " " + old.toString());
                         updateEarliestDataChange(oldDate);
                         updateEarliestDataChange(old.date);
-                        scheduleTreatmentChange();
+                        scheduleExtendedBolusChange();
                         return true;
                     }
                     return false;
@@ -1202,7 +1202,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                             log.debug("EXTENDEDBOLUS: Updating record by _id from: " + Source.getString(extendedBolus.source) + " " + old.toString());
                             updateEarliestDataChange(oldDate);
                             updateEarliestDataChange(old.date);
-                            scheduleTreatmentChange();
+                            scheduleExtendedBolusChange();
                             return true;
                         }
                     }
@@ -1210,14 +1210,14 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
                 getDaoExtendedBolus().create(extendedBolus);
                 log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
                 updateEarliestDataChange(extendedBolus.date);
-                scheduleTreatmentChange();
+                scheduleExtendedBolusChange();
                 return true;
             }
             if (extendedBolus.source == Source.USER) {
                 getDaoExtendedBolus().create(extendedBolus);
                 log.debug("EXTENDEDBOLUS: New record from: " + Source.getString(extendedBolus.source) + " " + extendedBolus.toString());
                 updateEarliestDataChange(extendedBolus.date);
-                scheduleTreatmentChange();
+                scheduleExtendedBolusChange();
                 return true;
             }
         } catch (SQLException e) {
