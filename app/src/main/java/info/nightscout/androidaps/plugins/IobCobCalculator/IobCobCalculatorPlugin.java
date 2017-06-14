@@ -164,7 +164,77 @@ public class IobCobCalculatorPlugin implements PluginBase {
         //log.debug("Releasing loadBgData");
     }
 
+    private boolean isAbout5minData() {
+        synchronized (dataLock) {
+            if (bgReadings == null || bgReadings.size() < 3) {
+                return true;
+            }
+            long totalDiff = 0;
+            for (int i = 1; i < bgReadings.size(); ++i) {
+                long bgTime = bgReadings.get(i).date;
+                long lastbgTime = bgReadings.get(i - 1).date;
+                long diff = lastbgTime - bgTime;
+                totalDiff += diff;
+                if (diff > 30 * 1000 && diff < 270 * 1000) { // 0:30 - 4:30
+                    log.debug("Interval detection: values: " + bgReadings.size() + " diff: " + (diff / 1000) + "sec is5minData: " + false);
+                    return false;
+                }
+            }
+            double intervals = totalDiff / (5 * 60 * 1000d);
+            double variability = Math.abs(intervals - Math.round(intervals));
+            boolean is5mindata = variability < 0.02;
+            log.debug("Interval detection: values: " + bgReadings.size() + " variability: " + variability + " is5minData: " + is5mindata);
+            return is5mindata;
+        }
+    }
+
     public void createBucketedData() {
+        if (isAbout5minData())
+            createBucketedData5min();
+        else
+            createBucketedDataRecalculated();
+    }
+
+    public void createBucketedDataRecalculated() {
+        synchronized (dataLock) {
+            if (bgReadings == null || bgReadings.size() < 3) {
+                bucketed_data = null;
+                return;
+            }
+
+            bucketed_data = new ArrayList<>();
+            long currentTime = bgReadings.get(0).date + 5 * 60 * 1000 - bgReadings.get(0).date % (5 * 60 * 1000) - 5 * 60 * 1000L;
+            log.debug("First reading: " + new Date(bgReadings.get(0).date).toLocaleString() + " Staring at: " + new Date(currentTime).toLocaleString());
+            double newerbg = bgReadings.get(0).value;
+            long newerbgTime = bgReadings.get(0).date;
+            for (int i = 1; i < bgReadings.size(); ++i) {
+                // test if current value is older than current time
+                double olderbg = bgReadings.get(i).value;
+                long olderTime = bgReadings.get(i).date;
+                if (olderTime > currentTime) {
+                    newerbg = olderbg;
+                    newerbgTime = olderTime;
+                    continue;
+                }
+
+                double bgDelta = newerbg - olderbg;
+                long timeDiffToNew = newerbgTime - currentTime;
+
+                double currentBg = newerbg - (double) timeDiffToNew / (newerbgTime - olderTime) * bgDelta;
+                BgReading newBgreading = new BgReading();
+                newBgreading.date = currentTime;
+                newBgreading.value = Math.round(currentBg);
+                bucketed_data.add(newBgreading);
+                newerbg = olderbg;
+                newerbgTime = olderTime;
+                currentTime -= 5 * 60 * 1000L;
+
+            }
+        }
+    }
+
+
+    public void createBucketedData5min() {
         //log.debug("Locking createBucketedData");
         synchronized (dataLock) {
             if (bgReadings == null || bgReadings.size() < 3) {
