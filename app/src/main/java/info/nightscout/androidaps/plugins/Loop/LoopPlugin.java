@@ -209,7 +209,7 @@ public class LoopPlugin implements PluginBase {
     public void invoke(String initiator, boolean allowNotification) {
         try {
             if (Config.logFunctionCalls)
-                log.debug("invoke");
+                log.debug("invoke from " + initiator);
             ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
             if (!constraintsInterface.isLoopEnabled()) {
                 log.debug(MainApp.sResources.getString(R.string.loopdisabled));
