@@ -143,7 +143,7 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                         extendedBolusCancel.setVisibility(View.GONE);
                     else {
                         extendedBolusCancel.setVisibility(View.VISIBLE);
-                        ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
+                        ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
                         extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + running.toString());
                     }
                     if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isTempBasalInProgress())

@@ -61,7 +61,7 @@ public class Notification {
         this.date = new Date();
         this.text = text;
         this.level = level;
-        this.validTo = new Date(new Date().getTime() + validMinutes * 60 * 1000L);
+        this.validTo = new Date(System.currentTimeMillis() + validMinutes * 60 * 1000L);
     }
 
     public Notification(int id, String text, int level) {
@@ -81,7 +81,7 @@ public class Notification {
                 this.id = NSANNOUNCEMENT;
                 this.level = ANNOUNCEMENT;
                 this.text = nsAlarm.getMessage();
-                this.validTo = new Date(new Date().getTime() + 60 * 60 * 1000L);
+                this.validTo = new Date(System.currentTimeMillis() + 60 * 60 * 1000L);
                 break;
             case 1:
                 this.id = NSALARM;

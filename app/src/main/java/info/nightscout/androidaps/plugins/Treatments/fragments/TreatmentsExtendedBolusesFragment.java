@@ -82,7 +82,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                 holder.duration.setText(DecimalFormatter.to0Decimal(extendedBolus.durationInMinutes) + " min");
                 holder.insulin.setText(DecimalFormatter.to2Decimal(extendedBolus.insulin) + " U");
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(extendedBolus.getRealDuration()) + " min");
-                IobTotal iob = extendedBolus.iobCalc(new Date().getTime());
+                IobTotal iob = extendedBolus.iobCalc(System.currentTimeMillis());
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.iob) + " U");
                 holder.insulinSoFar.setText(DecimalFormatter.to2Decimal(extendedBolus.insulinSoFar()) + " U");
                 holder.ratio.setText(DecimalFormatter.to2Decimal(extendedBolus.absoluteRate()) + " U/h");
@@ -90,7 +90,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                     holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 else
                     holder.date.setTextColor(holder.insulin.getCurrentTextColor());
-                if (extendedBolus.iobCalc(new Date().getTime()).iob != 0)
+                if (extendedBolus.iobCalc(System.currentTimeMillis()).iob != 0)
                     holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 else
                     holder.iob.setTextColor(holder.insulin.getCurrentTextColor());

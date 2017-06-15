@@ -22,7 +22,7 @@ public class AutosensData {
     }
 
     public int minOld() {
-        return (int) ((new Date().getTime() - time) / 1000 / 60);
+        return (int) ((System.currentTimeMillis() - time) / 1000 / 60);
     }
 
 }

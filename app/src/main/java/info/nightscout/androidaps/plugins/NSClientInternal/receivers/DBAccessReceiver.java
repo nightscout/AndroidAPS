@@ -63,7 +63,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 data = new JSONObject();
             }
             // mark by id
-            Long nsclientid = new Date().getTime();
+            Long nsclientid = System.currentTimeMillis();
             try {
                 data.put("NSCLIENT_ID", nsclientid);
             } catch (JSONException e) {

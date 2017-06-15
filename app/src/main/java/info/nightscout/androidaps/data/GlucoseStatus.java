@@ -67,11 +67,11 @@ public class GlucoseStatus {
     @Nullable
     public static GlucoseStatus getGlucoseStatusData() {
         // load 45min
-        long fromtime = (long) (new Date().getTime() - 60 * 1000L * 45);
+        long fromtime = (long) (System.currentTimeMillis() - 60 * 1000L * 45);
         List<BgReading> data = MainApp.getDbHelper().getBgreadingsDataFromTime(fromtime, false);
 
         int sizeRecords = data.size();
-        if (sizeRecords < 1 || data.get(0).date < new Date().getTime() - 7 * 60 * 1000L) {
+        if (sizeRecords < 1 || data.get(0).date < System.currentTimeMillis() - 7 * 60 * 1000L) {
             return null;
         }
 

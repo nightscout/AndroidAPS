@@ -484,7 +484,7 @@ public class NSClientService extends Service {
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonTreatment);
                                     //Find latest date in treatment
-                                    if (treatment.getMills() != null && treatment.getMills() < new Date().getTime())
+                                    if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
                                         if (treatment.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = treatment.getMills();
 
@@ -493,7 +493,7 @@ public class NSClientService extends Service {
                                     } else if (treatment.getAction().equals("update")) {
                                         updatedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("remove")) {
-                                        if (treatment.getMills() != null && treatment.getMills() > new Date().getTime() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
+                                        if (treatment.getMills() != null && treatment.getMills() > System.currentTimeMillis() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
                                         removedTreatments.put(jsonTreatment);
                                     }
                                 }
@@ -554,7 +554,7 @@ public class NSClientService extends Service {
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonSgv);
                                     //Find latest date in sgv
-                                    if (sgv.getMills() != null && sgv.getMills() < new Date().getTime())
+                                    if (sgv.getMills() != null && sgv.getMills() < System.currentTimeMillis())
                                         if (sgv.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = sgv.getMills();
                                 }
@@ -676,11 +676,11 @@ public class NSClientService extends Service {
             public void run() {
                 if (mSocket == null || !mSocket.connected()) return;
 
-                if (lastResendTime  > new Date().getTime() - 10 * 1000L) {
-                    log.debug("Skipping resend by lastResendTime: " + ((new Date().getTime() - lastResendTime) / 1000L) + " sec");
+                if (lastResendTime  > System.currentTimeMillis() - 10 * 1000L) {
+                    log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                     return;
                 }
-                lastResendTime = new Date().getTime();
+                lastResendTime = System.currentTimeMillis();
 
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 

@@ -437,7 +437,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 t.insulin = result.bolusDelivered;
                 if (carbTime == 0)
                     t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
-                t.date = new Date().getTime();
+                t.date = System.currentTimeMillis();
                 t.mealBolus = result.carbsDelivered > 0;
                 addToHistoryTreatment(t);
                 t.carbs = (double) result.carbsDelivered;
@@ -512,7 +512,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 Treatment t = new Treatment(insulinType);
                 t.insulin = result.bolusDelivered;
                 t.carbs = (double) result.carbsDelivered;
-                t.date = new Date().getTime();
+                t.date = System.currentTimeMillis();
                 t.mealBolus = t.carbs > 0;
                 addToHistoryTreatment(t);
                 NSUpload.uploadTreatment(t);
@@ -633,7 +633,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < 0.05) {
             result = new PumpEnactResult();
             result.absolute = getTempBasalAbsoluteRateHistory();
-            result.duration = getTempBasalFromHistory(new Date().getTime()).getPlannedRemainingMinutes();
+            result.duration = getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes();
             result.enacted = false;
             result.comment = "Temp basal set correctly";
             result.success = true;
@@ -982,7 +982,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public String getProfileName() {
-        return getProfileName(new Date().getTime());
+        return getProfileName(System.currentTimeMillis());
     }
 
     public String getProfileName(long time) {
@@ -1005,7 +1005,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public Profile getProfile() {
-        return getProfile(new Date().getTime());
+        return getProfile(System.currentTimeMillis());
     }
 
     public String getProfileUnits() {

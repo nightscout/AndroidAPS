@@ -159,7 +159,7 @@ public class TemporaryBasal implements Interval {
 
     @Override
     public boolean isInProgress() {
-        return match(new Date().getTime());
+        return match(System.currentTimeMillis());
     }
 
     @Override
@@ -222,7 +222,7 @@ public class TemporaryBasal implements Interval {
     }
 
     public int getRealDuration() {
-        return getDurationToTime(new Date().getTime());
+        return getDurationToTime(System.currentTimeMillis());
     }
 
     private int getDurationToTime(long time) {
@@ -232,7 +232,7 @@ public class TemporaryBasal implements Interval {
     }
 
     public int getPlannedRemainingMinutes() {
-        float remainingMin = (end() - new Date().getTime()) / 1000f / 60;
+        float remainingMin = (end() - System.currentTimeMillis()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 

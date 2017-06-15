@@ -139,7 +139,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     @Override
     public boolean isInProgress() {
-        return match(new Date().getTime());
+        return match(System.currentTimeMillis());
     }
 
     @Override
@@ -202,7 +202,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public int getRealDuration() {
-        return getDurationToTime(new Date().getTime());
+        return getDurationToTime(System.currentTimeMillis());
     }
 
     private int getDurationToTime(long time) {
@@ -212,7 +212,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public int getPlannedRemainingMinutes() {
-        float remainingMin = (end() - new Date().getTime()) / 1000f / 60;
+        float remainingMin = (end() - System.currentTimeMillis()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 

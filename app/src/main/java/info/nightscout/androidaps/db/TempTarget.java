@@ -115,7 +115,7 @@ public class TempTarget implements Interval {
 
     @Override
     public boolean isInProgress() {
-        return match(new Date().getTime());
+        return match(System.currentTimeMillis());
     }
 
     @Override

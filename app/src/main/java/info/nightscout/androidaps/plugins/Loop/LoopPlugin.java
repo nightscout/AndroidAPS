@@ -167,7 +167,7 @@ public class LoopPlugin implements PluginBase {
         if (loopSuspendedTill == 0)
             return 0;
 
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
         long msecDiff = loopSuspendedTill - now;
 
         if (loopSuspendedTill <= now) { // time exceeded
@@ -182,7 +182,7 @@ public class LoopPlugin implements PluginBase {
         if (loopSuspendedTill == 0)
             return false;
 
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
 
         if (loopSuspendedTill <= now) { // time exceeded
             suspendTo(0L);
@@ -196,7 +196,7 @@ public class LoopPlugin implements PluginBase {
         if (loopSuspendedTill == 0)
             return false;
 
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
 
         if (loopSuspendedTill <= now) { // time exceeded
             suspendTo(0L);

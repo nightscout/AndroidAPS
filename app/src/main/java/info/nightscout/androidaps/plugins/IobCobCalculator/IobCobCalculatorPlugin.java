@@ -158,7 +158,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         //log.debug("Locking loadBgData");
         synchronized (dataLock) {
             onNewProfile(null);
-            bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (new Date().getTime() - 60 * 60 * 1000L * (24 + dia)), false);
+            bgReadings = MainApp.getDbHelper().getBgreadingsDataFromTime((long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + dia)), false);
             log.debug("BG data loaded. Size: " + bgReadings.size());
         }
         //log.debug("Releasing loadBgData");
@@ -393,7 +393,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
     public static IobTotal calulateFromTreatmentsAndTemps(long time) {
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
         time = roundUpTime(time);
         if (time < now && iobTable.get(time) != null) {
             //og.debug(">>> calulateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
@@ -405,7 +405,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
-        if (time < new Date().getTime()) {
+        if (time < System.currentTimeMillis()) {
             iobTable.put(time, iobTotal);
         }
         return iobTotal;
@@ -423,7 +423,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
     public static BasalData getBasalData(long time) {
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
         time = roundUpTime(time);
         BasalData retval = basalDataTable.get(time);
         if (retval == null) {
@@ -448,7 +448,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     }
 
     public static AutosensData getAutosensData(long time) {
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
         if (time > now)
             return null;
         Long previous = findPreviousTimeFromBucketedData(time);
@@ -469,7 +469,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         if (autosensDataTable.size() < 1)
             return null;
         AutosensData data = autosensDataTable.valueAt(autosensDataTable.size() - 1);
-        if (data.time < new Date().getTime() - 5 * 60 * 1000) {
+        if (data.time < System.currentTimeMillis() - 5 * 60 * 1000) {
             return null;
         } else {
             return data;
@@ -479,7 +479,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     public static IobTotal[] calculateIobArrayInDia() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         // predict IOB out to DIA plus 30m
-        long time = new Date().getTime();
+        long time = System.currentTimeMillis();
         time = roundUpTime(time);
         int len = (int) ((profile.getDia() * 60 + 30) / 5);
         IobTotal[] array = new IobTotal[len];

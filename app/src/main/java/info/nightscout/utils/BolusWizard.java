@@ -97,7 +97,7 @@ public class BolusWizard {
         // Insulin from superbolus for 2h. Get basal rate now and after 1h
         if (superBolus) {
             insulinFromSuperBolus = specificProfile.getBasal();
-            long timeAfter1h = new Date().getTime();
+            long timeAfter1h = System.currentTimeMillis();
             timeAfter1h += 60L * 60 * 1000;
             insulinFromSuperBolus += specificProfile.getBasal(timeAfter1h);
         }

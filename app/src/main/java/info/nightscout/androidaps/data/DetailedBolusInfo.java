@@ -16,7 +16,7 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
  */
 
 public class DetailedBolusInfo {
-    public long date = new Date().getTime();
+    public long date = System.currentTimeMillis();
     public InsulinInterface insulinInterface = MainApp.getConfigBuilder().getActiveInsulin();
     public String eventType = CareportalEvent.MEALBOLUS;
     public double insulin = 0;

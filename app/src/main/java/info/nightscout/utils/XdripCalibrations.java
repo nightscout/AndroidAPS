@@ -48,7 +48,7 @@ public class XdripCalibrations {
         Bundle bundle = new Bundle();
         bundle.putDouble("glucose_number", bg);
         bundle.putString("units", MainApp.getConfigBuilder().getProfileUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
-        bundle.putLong("timestamp", new Date().getTime());
+        bundle.putLong("timestamp", System.currentTimeMillis());
         Intent intent = new Intent(Intents.ACTION_REMOTE_CALIBRATION);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);

@@ -57,7 +57,7 @@ public class NotificationStore {
     public void removeExpired() {
         for (int i = 0; i < store.size(); i++) {
             Notification n = get(i);
-            if (n.validTo.getTime() != 0 && n.validTo.getTime() < new Date().getTime()) {
+            if (n.validTo.getTime() != 0 && n.validTo.getTime() < System.currentTimeMillis()) {
                 store.remove(i);
                 i--;
             }

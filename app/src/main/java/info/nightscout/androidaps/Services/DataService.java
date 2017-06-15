@@ -514,7 +514,7 @@ public class DataService extends IntentService {
 
         if (trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
             long date = trJson.getLong("mills");
-            long now = new Date().getTime();
+            long now = System.currentTimeMillis();
             if (date > now - 15 * 60 * 1000L && trJson.has("notes")) {
                 Notification announcement = new Notification(Notification.NSANNOUNCEMENT, trJson.getString("notes"), Notification.ANNOUNCEMENT, 60);
                 MainApp.bus().post(new EventNewNotification(announcement));

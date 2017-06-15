@@ -617,7 +617,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                 try {
                                     String profileName = data.getString("profile");
                                     ProfileSwitch profileSwitch = new ProfileSwitch();
-                                    profileSwitch.date = new Date().getTime();
+                                    profileSwitch.date = System.currentTimeMillis();
                                     profileSwitch.source = Source.USER;
                                     profileSwitch.profileName = profileName;
                                     profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();

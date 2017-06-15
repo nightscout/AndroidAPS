@@ -81,15 +81,15 @@ public class CareportalEvent implements DataPointWithLabelInterface {
     }
 
     public long getMillisecondsFromStart() {
-        return new Date().getTime() - date;
+        return System.currentTimeMillis() - date;
     }
 
     public long getHoursFromStart() {
-        return (new Date().getTime() - date) / (60 * 1000);
+        return (System.currentTimeMillis() - date) / (60 * 1000);
     }
 
     public String age() {
-        Map<TimeUnit, Long> diff = computeDiff(date, new Date().getTime());
+        Map<TimeUnit, Long> diff = computeDiff(date, System.currentTimeMillis());
         return diff.get(TimeUnit.DAYS) + " " + MainApp.sResources.getString(R.string.days) + " " + diff.get(TimeUnit.HOURS) + " " + MainApp.sResources.getString(R.string.hours);
     }
 

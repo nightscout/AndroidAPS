@@ -256,7 +256,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         TemporaryBasal tempBasal = new TemporaryBasal();
-        tempBasal.date = new Date().getTime();
+        tempBasal.date = System.currentTimeMillis();
         tempBasal.isAbsolute = true;
         tempBasal.absoluteRate = absoluteRate;
         tempBasal.durationInMinutes = durationInMinutes;
@@ -286,7 +286,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
                 return result;
         }
         TemporaryBasal tempBasal = new TemporaryBasal();
-        tempBasal.date = new Date().getTime();
+        tempBasal.date = System.currentTimeMillis();
         tempBasal.isAbsolute = false;
         tempBasal.percentRate = percent;
         tempBasal.durationInMinutes = durationInMinutes;
@@ -313,7 +313,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         if (!result.success)
             return result;
         ExtendedBolus extendedBolus = new ExtendedBolus();
-        extendedBolus.date = new Date().getTime();
+        extendedBolus.date = System.currentTimeMillis();
         extendedBolus.insulin = insulin;
         extendedBolus.durationInMinutes = durationInMinutes;
         extendedBolus.source = Source.USER;
@@ -340,7 +340,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
         if (treatmentsInterface.isTempBasalInProgress()) {
             result.enacted = true;
-            TemporaryBasal tempStop = new TemporaryBasal(new Date().getTime());
+            TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
             tempStop.source = Source.USER;
             treatmentsInterface.addToHistoryTempBasal(tempStop);
             //tempBasal = null;
@@ -357,7 +357,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         if (treatmentsInterface.isInHistoryExtendedBoluslInProgress()) {
-            ExtendedBolus exStop = new ExtendedBolus(new Date().getTime());
+            ExtendedBolus exStop = new ExtendedBolus(System.currentTimeMillis());
             exStop.source = Source.USER;
             treatmentsInterface.addToHistoryExtendedBolus(exStop);
         }
@@ -390,13 +390,13 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis()));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));

@@ -148,7 +148,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     @Override
     public boolean isInProgress() {
-        return match(new Date().getTime());
+        return match(System.currentTimeMillis());
     }
 
     @Override

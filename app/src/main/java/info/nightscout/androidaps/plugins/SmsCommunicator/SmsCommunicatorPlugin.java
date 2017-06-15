@@ -243,7 +243,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     if (actualBG != null) {
                         reply = MainApp.sResources.getString(R.string.sms_actualbg) + " " + actualBG.valueToUnitsToString(units) + ", ";
                     } else if (lastBG != null) {
-                        Long agoMsec = new Date().getTime() - lastBG.date;
+                        Long agoMsec = System.currentTimeMillis() - lastBG.date;
                         int agoMin = (int) (agoMsec / 60d / 1000d);
                         reply = MainApp.sResources.getString(R.string.sms_lastbg) + " " + lastBG.valueToUnitsToString(units) + " " + String.format(MainApp.sResources.getString(R.string.sms_minago), agoMin) + ", ";
                     }
@@ -416,7 +416,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     }
                     break;
                 case "BOLUS":
-                    if (new Date().getTime() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance) {
+                    if (System.currentTimeMillis() - lastRemoteBolusTime.getTime() < Constants.remoteBolusMinDistance) {
                         reply = MainApp.sResources.getString(R.string.smscommunicator_remotebolusnotallowed);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     } else if (MainApp.getConfigBuilder().isSuspended()) {
@@ -458,7 +458,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                     break;
                 default: // expect passCode here
                     if (bolusWaitingForConfirmation != null && !bolusWaitingForConfirmation.processed &&
-                            bolusWaitingForConfirmation.confirmCode.equals(splited[0]) && new Date().getTime() - bolusWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
+                            bolusWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - bolusWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         bolusWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
@@ -481,7 +481,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             }
                         }
                     } else if (tempBasalWaitingForConfirmation != null && !tempBasalWaitingForConfirmation.processed &&
-                            tempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && new Date().getTime() - tempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
+                            tempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - tempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         tempBasalWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
@@ -500,7 +500,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             }
                         }
                     } else if (cancelTempBasalWaitingForConfirmation != null && !cancelTempBasalWaitingForConfirmation.processed &&
-                            cancelTempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && new Date().getTime() - cancelTempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
+                            cancelTempBasalWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - cancelTempBasalWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         cancelTempBasalWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
@@ -519,7 +519,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             }
                         }
                     } else if (calibrationWaitingForConfirmation != null && !calibrationWaitingForConfirmation.processed &&
-                            calibrationWaitingForConfirmation.confirmCode.equals(splited[0]) && new Date().getTime() - calibrationWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
+                            calibrationWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - calibrationWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         calibrationWaitingForConfirmation.processed = true;
                         boolean result = XdripCalibrations.sendIntent(calibrationWaitingForConfirmation.calibrationRequested);
                         if (result) {
@@ -530,10 +530,10 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                         }
                     } else if (suspendWaitingForConfirmation != null && !suspendWaitingForConfirmation.processed &&
-                            suspendWaitingForConfirmation.confirmCode.equals(splited[0]) && new Date().getTime() - suspendWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
+                            suspendWaitingForConfirmation.confirmCode.equals(splited[0]) && System.currentTimeMillis() - suspendWaitingForConfirmation.date.getTime() < CONFIRM_TIMEOUT) {
                         suspendWaitingForConfirmation.processed = true;
                         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-                        activeloop.suspendTo(new Date().getTime() + suspendWaitingForConfirmation.duration * 60L * 1000);
+                        activeloop.suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
                         PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
                         NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
                         MainApp.bus().post(new EventRefreshGui(false));

@@ -215,7 +215,7 @@ public class Profile {
     }
 
     public Double getIsf() {
-        return getIsf(secondsFromMidnight(new Date().getTime()));
+        return getIsf(secondsFromMidnight(System.currentTimeMillis()));
     }
 
     public Double getIsf(long time) {
@@ -233,7 +233,7 @@ public class Profile {
     }
 
     public Double getIc() {
-        return getIc(secondsFromMidnight(new Date().getTime()));
+        return getIc(secondsFromMidnight(System.currentTimeMillis()));
     }
 
     public Double getIc(long time) {
@@ -251,7 +251,7 @@ public class Profile {
     }
 
     public Double getBasal() {
-        return getBasal(secondsFromMidnight(new Date().getTime()));
+        return getBasal(secondsFromMidnight(System.currentTimeMillis()));
     }
 
     public Double getBasal(long time) {
@@ -296,7 +296,7 @@ public class Profile {
     }
 
     public Double getTargetLow() {
-        return getTargetLow(secondsFromMidnight(new Date().getTime()));
+        return getTargetLow(secondsFromMidnight(System.currentTimeMillis()));
     }
 
     public Double getTargetLow(long time) {
@@ -308,7 +308,7 @@ public class Profile {
     }
 
     public Double getTargetHigh() {
-        return getTargetHigh(secondsFromMidnight(new Date().getTime()));
+        return getTargetHigh(secondsFromMidnight(System.currentTimeMillis()));
     }
 
     public Double getTargetHigh(long time) {

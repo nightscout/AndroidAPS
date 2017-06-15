@@ -78,7 +78,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             holder.date.setText(DateUtil.dateAndTimeString(t.date));
             holder.insulin.setText(DecimalFormatter.to2Decimal(t.insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(t.carbs) + " g");
-            Iob iob = t.iobCalc(new Date().getTime(), profile.getDia());
+            Iob iob = t.iobCalc(System.currentTimeMillis(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));

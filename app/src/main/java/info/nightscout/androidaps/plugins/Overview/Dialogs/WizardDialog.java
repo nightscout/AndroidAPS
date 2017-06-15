@@ -148,7 +148,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin && ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(new Date().getTime() - 11 * 60 * 1000L))) {
+                    if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin && ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(System.currentTimeMillis() - 11 * 60 * 1000L))) {
                         cobLayout.setVisibility(View.VISIBLE);
                         cobAvailable = true;
                     } else {
@@ -317,7 +317,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                         if (useSuperBolus) {
                                             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
                                             if (activeloop != null) {
-                                                activeloop.superBolusTo(new Date().getTime() + 2 * 60L * 60 * 1000);
+                                                activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                                 MainApp.bus().post(new EventRefreshGui(false));
                                             }
                                             result = pump.setTempBasalAbsolute(0d, 120);
@@ -422,7 +422,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         wizardDialogDeliverButton.setVisibility(Button.INVISIBLE);
 
         // COB only if AMA is selected
-        if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin && ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(new Date().getTime() - 11 * 60 * 1000L))) {
+        if (ConfigBuilderPlugin.getActiveAPS() instanceof OpenAPSAMAPlugin && ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(System.currentTimeMillis() - 11 * 60 * 1000L))) {
             cobLayout.setVisibility(View.VISIBLE);
             cobAvailable = true;
         } else {
@@ -466,7 +466,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         // COB
         Double c_cob = 0d;
         if (cobAvailable && cobCheckbox.isChecked()) {
-            if (ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(new Date().getTime() - 11 * 60 * 1000L))) {
+            if (ConfigBuilderPlugin.getActiveAPS().getLastAPSResult() != null && ConfigBuilderPlugin.getActiveAPS().getLastAPSRun().after(new Date(System.currentTimeMillis() - 11 * 60 * 1000L))) {
                 try {
                     c_cob = SafeParse.stringToDouble(ConfigBuilderPlugin.getActiveAPS().getLastAPSResult().json().getString("COB"));
                 } catch (JSONException e) {

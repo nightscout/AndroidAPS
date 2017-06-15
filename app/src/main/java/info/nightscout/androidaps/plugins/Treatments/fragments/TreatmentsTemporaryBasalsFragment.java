@@ -93,7 +93,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                     holder.percent.setText(DecimalFormatter.to0Decimal(tempBasal.percentRate) + "%");
                 }
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(tempBasal.getRealDuration()) + " min");
-                IobTotal iob = tempBasal.iobCalc(new Date().getTime());
+                IobTotal iob = tempBasal.iobCalc(System.currentTimeMillis());
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.basaliob) + " U");
                 holder.netInsulin.setText(DecimalFormatter.to2Decimal(iob.netInsulin) + " U");
                 holder.netRatio.setText(DecimalFormatter.to2Decimal(iob.netRatio) + " U/h");
@@ -103,7 +103,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
                     holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 else
                     holder.date.setTextColor(holder.netRatio.getCurrentTextColor());
-                if (tempBasal.iobCalc(new Date().getTime()).basaliob != 0)
+                if (tempBasal.iobCalc(System.currentTimeMillis()).basaliob != 0)
                     holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 else
                     holder.iob.setTextColor(holder.netRatio.getCurrentTextColor());

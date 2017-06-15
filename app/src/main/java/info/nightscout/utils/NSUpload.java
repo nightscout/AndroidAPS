@@ -190,7 +190,7 @@ public class NSUpload {
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
             LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
-            if (lastRun != null && lastRun.lastAPSRun.getTime() > new Date().getTime() - 300 * 1000L) {
+            if (lastRun != null && lastRun.lastAPSRun.getTime() > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
                 APSResult apsResult = lastRun.request;
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));

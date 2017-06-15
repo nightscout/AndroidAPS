@@ -276,7 +276,7 @@ public class ActionStringHandler {
         }
 
         //Check for Temp-Target:
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(new Date().getTime());
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
             ret += "Temp Target: " + Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits());
             ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
@@ -347,7 +347,7 @@ public class ActionStringHandler {
 
     private static void generateTempTarget(int duration, double low, double high) {
         TempTarget tempTarget = new TempTarget();
-        tempTarget.date = new Date().getTime();
+        tempTarget.date = System.currentTimeMillis();
         tempTarget.durationInMinutes = duration;
         tempTarget.reason = "WearPlugin";
         tempTarget.source = Source.USER;

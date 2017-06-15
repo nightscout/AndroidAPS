@@ -139,7 +139,7 @@ public class PersistentNotificationPlugin implements PluginBase {
         PumpInterface pump = MainApp.getConfigBuilder();
 
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
             line1 += "  " + activeTemp.toStringShort();
         }
 

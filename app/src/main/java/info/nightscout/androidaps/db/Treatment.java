@@ -71,7 +71,7 @@ public class Treatment implements DataPointWithLabelInterface {
     }
 
     public long getMillisecondsFromStart() {
-        return new Date().getTime() - date;
+        return System.currentTimeMillis() - date;
     }
 
     public String toString() {

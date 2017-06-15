@@ -213,13 +213,13 @@ public class DanaRFragment extends Fragment {
                 public void run() {
                     DanaRPump pump = DanaRPump.getInstance();
                     if (pump.lastConnection.getTime() != 0) {
-                        Long agoMsec = new Date().getTime() - pump.lastConnection.getTime();
+                        Long agoMsec = System.currentTimeMillis() - pump.lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);
                         lastConnectionView.setText(DateUtil.timeString(pump.lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
                     if (pump.lastBolusTime.getTime() != 0) {
-                        Long agoMsec = new Date().getTime() - pump.lastBolusTime.getTime();
+                        Long agoMsec = System.currentTimeMillis() - pump.lastBolusTime.getTime();
                         double agoHours = agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
                             lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(DanaRPump.getInstance().lastBolusAmount) + " U");
@@ -230,12 +230,12 @@ public class DanaRFragment extends Fragment {
                     SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
                     basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getPlugin().getBaseBasalRate()) + " U/h");
                     if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-                        tempBasalView.setText(MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime()).toStringFull());
+                        tempBasalView.setText(MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                     } else {
                         tempBasalView.setText("");
                     }
                     if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime()).toString());
+                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString());
                     } else {
                         extendedBolusView.setText("");
                     }

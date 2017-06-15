@@ -12,7 +12,7 @@ public class Profiler {
     public Profiler(){}
 
     static public void log(Logger log, String function, Date start) {
-        long msec = new Date().getTime() - start.getTime();
+        long msec = System.currentTimeMillis() - start.getTime();
         log.debug(">>> " + function + " <<< executed in " + msec + " miliseconds");
     }
 }

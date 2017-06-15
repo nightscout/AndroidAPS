@@ -59,7 +59,7 @@ public class MsgStatusBolusExtended_v2 extends MessageBase {
 
     @NonNull
     private Date getDateFromSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(new Date().getTime() / 1000d) - tempBasalAgoSecs) * 1000);
+        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
     }
 
 }
