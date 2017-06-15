@@ -3,6 +3,7 @@ package info.nightscout.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -221,7 +222,7 @@ public class NSUpload {
             } else {
                 log.debug("OpenAPS data too old to upload");
             }
-            deviceStatus.device = "openaps://" + MainApp.getConfigBuilder().deviceID();
+            deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
             JSONObject pumpstatus = MainApp.getConfigBuilder().getJSONStatus();
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
