@@ -174,7 +174,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         if (profile == null)
             return total;
 
-        Double dia = profile.getDia();
+        double dia = profile.getDia();
 
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
@@ -360,8 +360,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             if (tb.isAbsolute) {
                 return tb.absoluteRate;
             } else {
-                Double baseRate = pump.getBaseBasalRate();
-                Double tempRate = baseRate * (tb.percentRate / 100d);
+                double baseRate = pump.getBaseBasalRate();
+                double tempRate = baseRate * (tb.percentRate / 100d);
                 return tempRate;
             }
         }

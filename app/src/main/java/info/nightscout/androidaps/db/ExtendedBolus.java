@@ -176,13 +176,13 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
         int realDuration = getDurationToTime(time);
 
         if (realDuration > 0) {
-            Double dia_ago = time - dia * 60 * 60 * 1000;
+            double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
             double spacing = realDuration / aboutFiveMinIntervals;
 
-            for (Long j = 0L; j < aboutFiveMinIntervals; j++) {
+            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
                 // find middle of the interval
-                Long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
+                long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
 
                 if (calcdate > dia_ago && calcdate <= time) {
                     double tempBolusSize = absoluteRate() * spacing / 60d;

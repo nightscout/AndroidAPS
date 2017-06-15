@@ -151,9 +151,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-        Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-        Double targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
+        double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
+        double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
+        double targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
         if (!units.equals(Constants.MGDL)) {
             maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
             minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;

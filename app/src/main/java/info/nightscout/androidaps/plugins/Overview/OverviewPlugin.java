@@ -17,8 +17,8 @@ import info.nightscout.utils.SP;
  */
 public class OverviewPlugin implements PluginBase {
 
-    public static Double bgTargetLow = 80d;
-    public static Double bgTargetHigh = 180d;
+    public static double bgTargetLow = 80d;
+    public static double bgTargetHigh = 180d;
 
     public QuickWizard quickWizard = new QuickWizard();
 

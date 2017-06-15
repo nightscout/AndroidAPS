@@ -175,18 +175,18 @@ public class TemporaryBasal implements Interval {
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 
        int realDuration = getDurationToTime(time);
-        Double netBasalAmount = 0d;
+        double netBasalAmount = 0d;
 
         if (realDuration > 0) {
-            Double netBasalRate = 0d;
+            double netBasalRate = 0d;
             double dia = profile.getDia();
-            Double dia_ago = time - dia * 60 * 60 * 1000;
+            double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
             double tempBolusSpacing = realDuration / aboutFiveMinIntervals;
 
-            for (Long j = 0L; j < aboutFiveMinIntervals; j++) {
+            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
                 // find middle of the interval
-                Long calcdate = (long) (date + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
+                long calcdate = (long) (date + j * tempBolusSpacing * 60 * 1000 + 0.5d * tempBolusSpacing * 60 * 1000);
 
                 Double basalRate = profile.getBasal(calcdate);
 
