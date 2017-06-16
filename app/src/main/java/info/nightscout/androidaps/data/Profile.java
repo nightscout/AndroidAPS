@@ -128,7 +128,7 @@ public class Profile {
         return json;
     }
 
-    public Double getDia() {
+    public double getDia() {
         return dia;
     }
 
