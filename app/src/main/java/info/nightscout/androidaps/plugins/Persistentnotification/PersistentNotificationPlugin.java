@@ -11,8 +11,6 @@ import android.support.v7.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -27,12 +25,11 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -258,7 +255,7 @@ public class PersistentNotificationPlugin implements PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshGui ev) {
+    public void onStatusEvent(final EventRefreshOverview ev) {
         updateNotification();
     }
 

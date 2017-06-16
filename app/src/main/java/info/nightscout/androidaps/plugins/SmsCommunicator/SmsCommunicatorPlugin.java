@@ -24,21 +24,21 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.utils.DecimalFormatter;
@@ -273,7 +273,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
                                     PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
-                                    MainApp.bus().post(new EventRefreshGui(false));
+                                    MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
                                     reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled)+ " " +
                                             MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
@@ -288,6 +288,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, true);
                                     reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeenenabled);
                                     sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
+                                    MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_START"));
                                 }
                                 receivedSms.processed = true;
                                 Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Start"));
@@ -311,7 +312,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                             case "RESUME":
                                 final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
                                 activeloop.suspendTo(0);
-                                MainApp.bus().post(new EventRefreshGui(false));
+                                MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_RESUME"));
                                 NSUpload.uploadOpenAPSOffline(0);
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_loopresumed);
                                 sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));
@@ -536,7 +537,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         activeloop.suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
                         PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
                         NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
-                        MainApp.bus().post(new EventRefreshGui(false));
+                        MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
                         reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +
                                 MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);
                         sendSMSToAllNumbers(new Sms(receivedSms.phoneNumber, reply, new Date()));

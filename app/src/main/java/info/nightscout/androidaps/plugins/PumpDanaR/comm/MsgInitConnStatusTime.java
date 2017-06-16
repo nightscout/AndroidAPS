@@ -8,7 +8,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
@@ -41,7 +41,7 @@ public class MsgInitConnStatusTime extends MessageBase {
             }
 
             MainApp.getConfigBuilder().storeSettings();
-            MainApp.bus().post(new EventRefreshGui(false));
+            MainApp.bus().post(new EventRefreshOverview("MsgInitConnStatusTime"));
             return;
         }
 

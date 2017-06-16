@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 recreate();
                 try { // activity may be destroyed
-                    setUpTabs(ev.isSwitchToLast());
+                    setUpTabs(true);
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 }

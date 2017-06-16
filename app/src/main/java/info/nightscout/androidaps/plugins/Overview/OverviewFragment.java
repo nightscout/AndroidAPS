@@ -84,7 +84,7 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
@@ -107,7 +107,6 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
@@ -759,8 +758,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     }
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshGui ev) {
-        scheduleUpdateGUI("EventRefreshGui");
+    public void onStatusEvent(final EventRefreshOverview ev) {
+        scheduleUpdateGUI(ev.from);
     }
 
     @Subscribe
@@ -808,16 +807,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Subscribe
     public void onStatusEvent(final EventTempTargetChange ev) {
         scheduleUpdateGUI("EventTempTargetChange");
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventNewNotification n) {
-        updateNotifications();
-    }
-
-    @Subscribe
-    public void onStatusEvent(final EventDismissNotification n) {
-        updateNotifications();
     }
 
     @Subscribe
@@ -1608,6 +1597,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         RecyclerViewAdapter(List<Notification> notificationsList) {
             this.notificationsList = notificationsList;
+            log.debug("RecyclerViewAdapter");
         }
 
         @Override

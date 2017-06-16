@@ -44,17 +44,17 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventNewBG;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.utils.BolusWizard;
@@ -318,7 +318,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                             final LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
                                             if (activeloop != null) {
                                                 activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
-                                                MainApp.bus().post(new EventRefreshGui(false));
+                                                MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                             }
                                             result = pump.setTempBasalAbsolute(0d, 120);
                                             if (!result.success) {
