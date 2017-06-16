@@ -502,6 +502,22 @@
                         android:layout_marginBottom="-5dp"
                         android:layout_marginTop="-9dp"
                         app:buttonTint="@color/deviations" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/ratio_short"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showratios"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp" />
+
                 </LinearLayout>
 
                 <LinearLayout

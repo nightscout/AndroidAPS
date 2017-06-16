@@ -646,4 +646,8 @@
     <string name="nsalarm_urgentstaledata">Urgent stale data</string>
     <string name="nsalarm_staledatavalue_label">Stale data threshold [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Urgent stale data threshold [min]</string>
+    <string name="openapsama_autosens_period">Interval for autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
+    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
+    <string name="ratio_short">RAT</string>
 </resources>

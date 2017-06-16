@@ -19,6 +19,7 @@ import java.util.List;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
@@ -26,6 +27,7 @@ import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
@@ -304,6 +306,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
         if (MainApp.getConfigBuilder() == null)
             return; // app still initializing
         //log.debug("Locking calculateSensitivityData");
+        long oldestTimeWithData = oldestDataAvailable();
+
         synchronized (dataLock) {
 
             if (bucketed_data == null || bucketed_data.size() < 3) {
@@ -371,12 +375,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 if (autosensData.cob <= 0) {
                     if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
                         autosensData.pastSensitivity += "=";
+                        autosensData.nonEqualDeviation = true;
                     } else if (deviation > 0) {
                         autosensData.pastSensitivity += "+";
+                        autosensData.nonEqualDeviation = true;
                     } else {
                         autosensData.pastSensitivity += "-";
                     }
-                    autosensData.calculateWithDeviation = true;
+                    autosensData.nonCarbsDeviation = true;
                 } else {
                     autosensData.pastSensitivity += "C";
                 }
@@ -384,12 +390,22 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
                 previous = autosensData;
                 autosensDataTable.put(bgTime, autosensData);
+                autosensData.autosensRatio = detectSensitivity(oldestTimeWithData, bgTime).ratio;
                 if (Config.logAutosensData)
                     log.debug(autosensData.log(bgTime));
             }
         }
         MainApp.bus().post(new EventAutosensCalculationFinished());
         //log.debug("Releasing calculateSensitivityData");
+    }
+
+    public static long oldestDataAvailable() {
+        long now = System.currentTimeMillis();
+
+        long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvailable();
+        long getBGDataFrom = Math.max(oldestDataAvailable, (long) (now - 60 * 60 * 1000L * (24 + MainApp.getConfigBuilder().getProfile().getDia())));
+        log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
+        return getBGDataFrom;
     }
 
     public static IobTotal calulateFromTreatmentsAndTemps(long time) {
@@ -493,102 +509,109 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return array;
     }
 
-    public static AutosensResult detectSensitivity(long fromTime) {
-        //log.debug("Locking detectSensitivity");
+    public static AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
-            if (autosensDataTable == null || autosensDataTable.size() < 4) {
-                log.debug("No autosens data available");
-                return new AutosensResult();
-            }
-
-            AutosensData current = getLastAutosensData();
-            if (current == null) {
-                log.debug("No current autosens data available");
-                return new AutosensResult();
-            }
-
-
-            List<Double> deviationsArray = new ArrayList<>();
-            String pastSensitivity = "";
-            int index = 0;
-            while (index < autosensDataTable.size()) {
-                AutosensData autosensData = autosensDataTable.valueAt(index);
-
-                if (autosensData.time < fromTime) {
-                    index++;
-                    continue;
-                }
-
-                if (autosensData.calculateWithDeviation)
-                    deviationsArray.add(autosensData.deviation);
-
-                pastSensitivity += autosensData.pastSensitivity;
-                int secondsFromMidnight = Profile.secondsFromMidnight(autosensData.time);
-                if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
-                    pastSensitivity += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
-                }
-                index++;
-            }
-
-            Double[] deviations = new Double[deviationsArray.size()];
-            deviations = deviationsArray.toArray(deviations);
-
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-
-            double sens = profile.getIsf();
-
-            double ratio = 1;
-            String ratioLimit = "";
-            String sensResult = "";
-
-            log.debug("Records: " + index + "   " + pastSensitivity);
-            Arrays.sort(deviations);
-
-            for (double i = 0.9; i > 0.1; i = i - 0.02) {
-                if (percentile(deviations, (i + 0.02)) >= 0 && percentile(deviations, i) < 0) {
-                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (target 45%-50%)");
-                }
-            }
-            double pSensitive = percentile(deviations, 0.50);
-            double pResistant = percentile(deviations, 0.45);
-
-            double basalOff = 0;
-
-            if (pSensitive < 0) { // sensitive
-                basalOff = pSensitive * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
-                sensResult = "Excess insulin sensitivity detected";
-            } else if (pResistant > 0) { // resistant
-                basalOff = pResistant * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
-                sensResult = "Excess insulin resistance detected";
-            } else {
-                sensResult = "Sensitivity normal";
-            }
-            log.debug(sensResult);
-            ratio = 1 + (basalOff / profile.getMaxDailyBasal());
-
-            double rawRatio = ratio;
-            ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
-            ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
-
-            if (ratio != rawRatio) {
-                ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-                log.debug(ratioLimit);
-            }
-
-            double newisf = Math.round(Profile.toMgdl(sens, profile.getUnits()) / ratio);
-            if (ratio != 1) {
-                log.debug("ISF adjusted from " + Profile.toMgdl(sens, profile.getUnits()) + " to " + newisf);
-            }
-
-            AutosensResult output = new AutosensResult();
-            output.ratio = Round.roundTo(ratio, 0.01);
-            output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-            output.pastSensitivity = pastSensitivity;
-            output.ratioLimit = ratioLimit;
-            output.sensResult = sensResult;
-            return output;
+            return detectSensitivity(fromTime, toTime);
         }
-        //log.debug("Releasing detectSensitivity");
+    }
+
+    public static AutosensResult detectSensitivity(long fromTime, long toTime) {
+        String age = SP.getString(R.string.key_age, "");
+        int defaultHours = 24;
+        if (age.equals(MainApp.sResources.getString(R.string.key_adult))) defaultHours = 24;
+        if (age.equals(MainApp.sResources.getString(R.string.key_teenage))) defaultHours = 4;
+        if (age.equals(MainApp.sResources.getString(R.string.key_child))) defaultHours = 4;
+        int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
+
+        long now = System.currentTimeMillis();
+
+        if (autosensDataTable == null || autosensDataTable.size() < 4) {
+            log.debug("No autosens data available");
+            return new AutosensResult();
+        }
+
+        AutosensData current = getAutosensData(toTime);
+        if (current == null) {
+            log.debug("No autosens data available");
+            return new AutosensResult();
+        }
+
+
+        List<Double> deviationsArray = new ArrayList<>();
+        String pastSensitivity = "";
+        int index = 0;
+        while (index < autosensDataTable.size()) {
+            AutosensData autosensData = autosensDataTable.valueAt(index);
+
+            if (autosensData.time < fromTime) {
+                index++;
+                continue;
+            }
+
+            if (autosensData.time > toTime) {
+                index++;
+                continue;
+            }
+
+            if (autosensData.time > now - hoursForDetection * 60 * 60 * 1000L)
+                deviationsArray.add(autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
+            if (deviationsArray.size() > hoursForDetection * 60 / 5)
+                deviationsArray.remove(0);
+
+
+            pastSensitivity += autosensData.pastSensitivity;
+            int secondsFromMidnight = Profile.secondsFromMidnight(autosensData.time);
+            if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
+                pastSensitivity += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
+            }
+            index++;
+        }
+
+        Double[] deviations = new Double[deviationsArray.size()];
+        deviations = deviationsArray.toArray(deviations);
+
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        double sens = profile.getIsf();
+
+        String ratioLimit = "";
+        String sensResult = "";
+
+        log.debug("Records: " + index + "   " + pastSensitivity);
+        Arrays.sort(deviations);
+
+        double percentile = percentile(deviations, 0.50);
+        double basalOff = percentile * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
+        double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
+
+        if (percentile < 0) { // sensitive
+            sensResult = "Excess insulin sensitivity detected";
+        } else if (percentile > 0) { // resistant
+            sensResult = "Excess insulin resistance detected";
+        } else {
+            sensResult = "Sensitivity normal";
+        }
+
+        log.debug(sensResult);
+
+        double rawRatio = ratio;
+        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
+        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
+
+        if (ratio != rawRatio) {
+            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
+            log.debug(ratioLimit);
+        }
+
+        log.error("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile);
+
+        AutosensResult output = new AutosensResult();
+        output.ratio = Round.roundTo(ratio, 0.01);
+        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
+        output.pastSensitivity = pastSensitivity;
+        output.ratioLimit = ratioLimit;
+        output.sensResult = sensResult;
+        return output;
     }
 
 
@@ -632,6 +655,25 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 calculateSensitivityData();
             }
         });
+    }
+
+    @Subscribe
+    public void onStatusEvent(EventPreferenceChange ev) {
+        if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
+                ev.isChanged(R.string.key_age)
+                ) {
+            synchronized (dataLock) {
+                log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+                iobTable = new LongSparseArray<>();
+                autosensDataTable = new LongSparseArray<>();
+            }
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    calculateSensitivityData();
+                }
+            });
+        }
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated

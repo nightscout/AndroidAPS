@@ -4,6 +4,7 @@
     <color name="basal">#00ffff</color>
     <color name="iob">#FFFB8C00</color>
     <color name="cob">#8BC34A</color>
+    <color name="ratio">#FFFFFF</color>
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
