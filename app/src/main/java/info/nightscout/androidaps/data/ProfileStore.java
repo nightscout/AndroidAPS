@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.data;
 
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArrayMap;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,6 +22,8 @@ public class ProfileStore {
     private JSONObject json = null;
     private String units = Constants.MGDL;
 
+    ArrayMap<String, Profile> cachedObjects = new ArrayMap<>();
+
     public ProfileStore(JSONObject json) {
         this.json = json;
         getDefaultProfile(); // initialize units
@@ -37,10 +40,14 @@ public class ProfileStore {
             String defaultProfileName = json.getString("defaultProfile");
             JSONObject store = json.getJSONObject("store");
             if (store.has(defaultProfileName)) {
-                if (store.has("units"))
-                    units = store.getString("units");
-                profile = new Profile(store.getJSONObject(defaultProfileName), units);
-                units = profile.getUnits();
+                profile = cachedObjects.get(defaultProfileName);
+                if (profile == null) {
+                    if (store.has("units"))
+                        units = store.getString("units");
+                    profile = new Profile(store.getJSONObject(defaultProfileName), units);
+                    units = profile.getUnits();
+                    cachedObjects.put(defaultProfileName, profile);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -73,10 +80,14 @@ public class ProfileStore {
         try {
             JSONObject store = json.getJSONObject("store");
             if (store.has(profileName)) {
-                String units = null;
-                if (json.has("units"))
-                    units = json.getString("units");
-                profile = new Profile(store.getJSONObject(profileName), units);
+                profile = cachedObjects.get(profileName);
+                if (profile == null) {
+                    if (store.has("units"))
+                        units = store.getString("units");
+                    profile = new Profile(store.getJSONObject(profileName), units);
+                    units = profile.getUnits();
+                    cachedObjects.put(profileName, profile);
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
