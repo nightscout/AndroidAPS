@@ -162,7 +162,7 @@ public class DanaRHistoryActivity extends Activity {
                             }
                         });
                         clearCardView();
-                        ((DanaRInterface)pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+                        ((DanaRInterface)pump).loadHistory(selected.type);
                         loadDataFromDB(selected.type);
                         runOnUiThread(new Runnable() {
                             @Override
