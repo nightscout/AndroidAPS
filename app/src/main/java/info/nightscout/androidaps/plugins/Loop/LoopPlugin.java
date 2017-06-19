@@ -234,6 +234,12 @@ public class LoopPlugin implements PluginBase {
                 return;
             }
 
+            if (configBuilder.getProfile() == null) {
+                log.debug(MainApp.sResources.getString(R.string.noprofileselected));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noprofileselected)));
+                return;
+            }
+
             // Check if pump info is loaded
             if (configBuilder.getBaseBasalRate() < 0.01d) return;
 
