@@ -1480,7 +1480,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
         if (highLine > maxBgValue) maxBgValue = highLine;
-        Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
+        Integer numOfVertLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
 
         DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
         bg = bgListArray.toArray(bg);
@@ -1548,7 +1548,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bgGraph.getViewport().setMaxY(maxBgValue);
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
+        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
 
         // set second scale
         if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
