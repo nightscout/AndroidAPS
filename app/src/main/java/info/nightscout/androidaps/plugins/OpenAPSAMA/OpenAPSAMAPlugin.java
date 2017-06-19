@@ -135,6 +135,13 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
 
+        if (profile == null) {
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.noprofileselected)));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.noprofileselected));
+            return;
+        }
+
         if (!isEnabled(PluginBase.APS)) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_disabled)));
             if (Config.logAPSResult)

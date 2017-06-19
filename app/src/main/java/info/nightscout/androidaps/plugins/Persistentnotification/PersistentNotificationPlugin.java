@@ -115,6 +115,9 @@ public class PersistentNotificationPlugin implements PluginBase {
 
 
         String line1 = ctx.getString(R.string.noprofile);
+
+        if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || MainApp.getConfigBuilder().getProfile() == null)
+            return;
         String units = MainApp.getConfigBuilder().getProfileUnits();
 
 
