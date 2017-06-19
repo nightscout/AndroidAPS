@@ -1163,12 +1163,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
             hoursToFetch = rangeToDisplay - predHours;
-            toTime = calendar.getTimeInMillis() + 60000; // little bit more to avoid wrong rounding
+            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime + predHours * 60 * 60 * 1000L;
         } else {
             hoursToFetch = rangeToDisplay;
-            toTime = calendar.getTimeInMillis() + 600000; // little bit more to avoid wrong rounding
+            toTime = calendar.getTimeInMillis() + 100000; // little bit more to avoid wrong rounding - Graphview specific
             fromTime = toTime - hoursToFetch * 60 * 60 * 1000L;
             endTime = toTime;
         }
