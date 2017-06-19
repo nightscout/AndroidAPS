@@ -247,7 +247,7 @@ public class Profile {
     }
 
     public String getIcList() {
-        return getValuesList(ic, null, new DecimalFormat("0.0"), getUnits() + "/U");
+        return getValuesList(ic, null, new DecimalFormat("0.0"), " g/hr");
     }
 
     public Double getBasal() {
