@@ -869,7 +869,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (scheduledUpdate != null)
             scheduledUpdate.cancel(false);
         Runnable task = new UpdateRunnable();
-        final int msec = 2000;
+        final int msec = 500;
         scheduledUpdate = worker.schedule(task, msec, TimeUnit.MILLISECONDS);
     }
 
