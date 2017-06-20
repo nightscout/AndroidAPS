@@ -128,6 +128,14 @@
                     android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
                     android:key="openapsama_min_5m_carbimpact" />
             </PreferenceCategory>
+            <PreferenceCategory
+                android:title="@string/profile">
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_do_not_track_profile_switch"
+                    android:title="@string/do_not_track_profile_switch"
+                    android:summary="@string/do_not_track_profile_switch_summary"/>
+            </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>
 </PreferenceScreen>

@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -1014,19 +1015,22 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     public Profile getProfile(long time) {
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
-        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
-        if (profileSwitch != null) {
-            if (profileSwitch.profileJson != null) {
-                return profileSwitch.getProfileObject();
-            } else if (activeProfile.getProfile() != null){
-                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                if (profile != null)
-                    return profile;
+        boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
+        if (!ignoreProfileSwitchEvents) {
+            ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+            if (profileSwitch != null) {
+                if (profileSwitch.profileJson != null) {
+                    return profileSwitch.getProfileObject();
+                } else if (activeProfile.getProfile() != null) {
+                    Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null)
+                        return profile;
+                }
             }
+            // Unable to determine profile, failover to default
+            if (activeProfile.getProfile() == null)
+                return null; //app not initialized
         }
-        // Unable to determine profile, failover to default
-        if (activeProfile.getProfile() == null)
-            return null; //app not initialized
         Profile defaultProfile = activeProfile.getProfile().getDefaultProfile();
         if (defaultProfile != null)
             return defaultProfile;

@@ -134,8 +134,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
             if (Config.ALLPREFERENCES) {
                 addPreferencesFromResource(R.xml.pref_others);
-                addPreferencesFromResource(R.xml.pref_advanced);
             }
+            addPreferencesFromResource(R.xml.pref_advanced);
 
             if (Config.WEAR) {
                 WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
