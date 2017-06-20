@@ -1126,17 +1126,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
         IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
 
-        String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-                + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
-        iobView.setText(iobtext);
+        if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
+            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                    + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                    + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
+            iobView.setText(iobtext);
+        } else {
+            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "/"
+                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            iobView.setText(iobtext);
+        }
 
         // cob
         if (cobView != null) { // view must not exists
             String cobText = "";
             AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
             if (autosensData != null)
-                cobText = (int) autosensData.cob + " g " + String.format(MainApp.sResources.getString(R.string.minago), autosensData.minOld());
+                cobText = (int) autosensData.cob + " g";
             cobView.setText(cobText);
         }
 
