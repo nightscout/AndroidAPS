@@ -212,12 +212,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         int screen_height = dm.heightPixels;
         smallWidth = screen_width < Constants.SMALL_WIDTH;
         smallHeight = screen_height < Constants.SMALL_HEIGHT;
+        boolean landscape = screen_height < screen_width;
 
         View view;
 
         if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
             view = inflater.inflate(R.layout.overview_fragment_tablet, container, false);
-        } else if (smallHeight) {
+        } else if (smallHeight || landscape) {
             view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
         } else {
             view = inflater.inflate(R.layout.overview_fragment, container, false);
