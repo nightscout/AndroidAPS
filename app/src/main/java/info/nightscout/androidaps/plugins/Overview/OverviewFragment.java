@@ -961,7 +961,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
+            double low = SP.getDouble("openapsma_min_bg", minBgDefault);
+            double high = SP.getDouble("openapsma_max_bg", maxBgDefault);
+            if (low == high)
+                tempTargetView.setText("" + low);
+            else
+                tempTargetView.setText(low + " - " + high);
             tempTargetView.setVisibility(View.VISIBLE);
         }
         if (Config.NSCLIENT && tempTarget == null) {
