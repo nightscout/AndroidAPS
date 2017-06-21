@@ -320,7 +320,7 @@
                                     android:gravity="start"
                                     android:orientation="horizontal"
                                     android:paddingLeft="5dp"
-                                    android:text="0.50U/h @17:35 1/30min - 0.40U/h"
+                                    android:text=""
                                     android:textColor="@android:color/white"
                                     android:textSize="14sp" />
 

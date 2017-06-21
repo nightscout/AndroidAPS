@@ -2,7 +2,12 @@ package info.nightscout.androidaps.plugins.Overview;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSAlarm;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 03.12.2016.
@@ -44,6 +49,7 @@ public class Notification {
     public Date validTo = new Date(0);
 
     public NSAlarm nsAlarm = null;
+    public Integer soundId = null;
 
     public Notification() {
     }
@@ -87,12 +93,52 @@ public class Notification {
                 this.id = NSALARM;
                 this.level = NORMAL;
                 this.text = nsAlarm.getTile();
+                if (isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false))
+                    this.soundId = R.raw.alarm;
                 break;
             case 2:
                 this.id = NSURGENTALARM;
                 this.level = URGENT;
                 this.text = nsAlarm.getTile();
+                if (isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_urgent_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_urgent_high, false))
+                    this.soundId = R.raw.urgentalarm;
                 break;
         }
+    }
+
+    public boolean isEnabled() {
+        if (nsAlarm == null)
+            return true;
+        if (level == ANNOUNCEMENT)
+            return true;
+        if (level == NORMAL && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false))
+            return true;
+        if (level == URGENT && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_urgent_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_urgent_high, false))
+            return true;
+        return false;
+    }
+
+    boolean isAlarmForLow() {
+        BgReading bgReading = MainApp.getDbHelper().lastBg();
+        if (bgReading == null)
+            return false;
+        Double threshold = NSStatus.getInstance().getThreshold("bgTargetTop");
+        if (threshold == null)
+            return false;
+        if (bgReading.value <= threshold)
+            return true;
+        return false;
+    }
+
+    boolean isAlarmForHigh() {
+        BgReading bgReading = MainApp.getDbHelper().lastBg();
+        if (bgReading == null)
+            return false;
+        Double threshold = NSStatus.getInstance().getThreshold("bgTargetBottom");
+        if (threshold == null)
+            return false;
+        if (bgReading.value >= threshold)
+            return true;
+        return false;
     }
 }

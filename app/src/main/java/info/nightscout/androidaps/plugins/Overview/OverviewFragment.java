@@ -854,7 +854,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (scheduledUpdate != null)
             scheduledUpdate.cancel(false);
         Runnable task = new UpdateRunnable();
-        final int msec = 2000;
+        final int msec = 500;
         scheduledUpdate = worker.schedule(task, msec, TimeUnit.MILLISECONDS);
     }
 
@@ -946,7 +946,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            tempTargetView.setText(SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault));
+            double low = SP.getDouble("openapsma_min_bg", minBgDefault);
+            double high = SP.getDouble("openapsma_max_bg", maxBgDefault);
+            if (low == high)
+                tempTargetView.setText("" + low);
+            else
+                tempTargetView.setText(low + " - " + high);
             tempTargetView.setVisibility(View.VISIBLE);
         }
         if (Config.NSCLIENT && tempTarget == null) {
@@ -1106,17 +1111,24 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
         IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
 
-        String iobtext = getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
-                + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
-                + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
-        iobView.setText(iobtext);
+        if (MainApp.sResources.getBoolean(R.bool.isTablet)) {
+            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                    + getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
+                    + getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
+            iobView.setText(iobtext);
+        } else {
+            String iobtext = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
+                    + DecimalFormatter.to2Decimal(bolusIob.iob) + "/"
+                    + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
+            iobView.setText(iobtext);
+        }
 
         // cob
         if (cobView != null) { // view must not exists
             String cobText = "";
             AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(System.currentTimeMillis());
             if (autosensData != null)
-                cobText = (int) autosensData.cob + " g " + String.format(MainApp.sResources.getString(R.string.minago), autosensData.minOld());
+                cobText = (int) autosensData.cob + " g";
             cobView.setText(cobText);
         }
 

@@ -36,7 +36,8 @@ public class NSAlarmReceiver extends BroadcastReceiver {
             case Intents.ACTION_ALARM:
             case Intents.ACTION_URGENT_ALARM:
                 Notification notification = new Notification(nsAlarm);
-                MainApp.bus().post(new EventNewNotification(notification));
+                if (notification.isEnabled())
+                    MainApp.bus().post(new EventNewNotification(notification));
                 break;
             case Intents.ACTION_CLEAR_ALARM:
                 MainApp.bus().post(new EventDismissNotification(Notification.NSALARM));

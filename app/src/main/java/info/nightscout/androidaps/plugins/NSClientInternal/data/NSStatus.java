@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.NSClientInternal.data;
 
+import android.support.annotation.Nullable;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -104,9 +106,10 @@ public class NSStatus {
         return instance;
     }
 
-    private JSONObject data;
+    private JSONObject data = null;
 
-    public NSStatus() {}
+    public NSStatus() {
+    }
 
     public NSStatus setData(JSONObject obj) {
         this.data = obj;
@@ -155,6 +158,32 @@ public class NSStatus {
 
     public String getActiveProfile() {
         return getStringOrNull("activeProfile");
+    }
+
+    // "bgHigh": 252,
+    // "bgTargetTop": 180,
+    // "bgTargetBottom": 72,
+    // "bgLow": 71
+    @Nullable
+    public Double getThreshold(String what) {
+        try {
+            if (data == null)
+                return null;
+            String settings = getSettings();
+            if (settings != null) {
+                JSONObject settingsO = new JSONObject(settings);
+                if (settingsO.has("thresholds")) {
+                    JSONObject tObject = settingsO.getJSONObject("thresholds");
+                    if (tObject.has(what)) {
+                        Double result = tObject.getDouble(what);
+                        return result;
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     private String getStringOrNull(String key) {
