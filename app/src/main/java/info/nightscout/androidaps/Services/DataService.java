@@ -262,18 +262,12 @@ public class DataService extends IntentService {
                     NSStatus.getInstance().setData(statusJson);
                     if (Config.logIncommingData)
                         log.debug("Received status: " + statusJson.toString());
-                    if (statusJson.has("settings")) {
-                        JSONObject settings = statusJson.getJSONObject("settings");
-                        if (settings.has("thresholds")) {
-                            JSONObject thresholds = settings.getJSONObject("thresholds");
-                            if (thresholds.has("bgTargetTop")) {
-                                OverviewPlugin.bgTargetHigh = thresholds.getDouble("bgTargetTop");
-                            }
-                            if (thresholds.has("bgTargetBottom")) {
-                                OverviewPlugin.bgTargetLow = thresholds.getDouble("bgTargetBottom");
-                            }
-                        }
-                    }
+                    Double targetHigh = NSStatus.getInstance().getThreshold("bgTargetTop");
+                    Double targetlow = NSStatus.getInstance().getThreshold("bgTargetBottom");
+                    if (targetHigh != null)
+                        OverviewPlugin.bgTargetHigh = targetHigh;
+                    if (targetlow != null)
+                        OverviewPlugin.bgTargetLow = targetlow;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

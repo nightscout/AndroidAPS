@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         registerBus();
         setUpTabs(false);
-        Intent alarm = new Intent(this, AlarmSoundService.class);
-        alarm.putExtra("soundid", R.raw.staledataalarm);
-        //startService(alarm);
     }
 
     @Subscribe

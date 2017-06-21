@@ -18,7 +18,7 @@ public class AlarmSoundService extends Service {
     private static Logger log = LoggerFactory.getLogger(AlarmSoundService.class);
 
     MediaPlayer player;
-    int resourceId = R.raw.bgalarm;
+    int resourceId = R.raw.error;
 
     public AlarmSoundService() {
     }
@@ -36,9 +36,11 @@ public class AlarmSoundService extends Service {
     }
 
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (player != null && player.isPlaying())
+            player.stop();
         log.debug("onStartCommand");
         if (intent != null && intent.hasExtra("soundid"))
-            resourceId = intent.getIntExtra("soundid", R.raw.bgalarm);
+            resourceId = intent.getIntExtra("soundid", R.raw.error);
 
         player = new MediaPlayer();
         AssetFileDescriptor afd = MainApp.sResources.openRawResourceFd(resourceId);
