@@ -353,6 +353,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
                 AutosensData autosensData = new AutosensData();
                 autosensData.time = bgTime;
+                if (previous != null)
+                    autosensData.activeCarbsList = new ArrayList<>(previous.activeCarbsList);
+                else
+                    autosensData.activeCarbsList = new ArrayList<>();
 
                 //console.error(bgTime , bucketed_data[i].glucose);
                 double bg;
@@ -373,17 +377,28 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBackFromHistory(bgTime);
                 for (int ir = 0; ir < recentTreatments.size(); ir++) {
                     autosensData.carbsFromBolus += recentTreatments.get(ir).carbs;
+                    autosensData.activeCarbsList.add(new AutosensData.CarbsInPast(recentTreatments.get(ir)));
                 }
+
 
                 // if we are absorbing carbs
                 if (previous != null && previous.cob > 0) {
+                    // calculate sum of min carb impact from all active treatments
+                    double totalMinCarbsImpact = 0d;
+                    for (int ii = 0; ii < autosensData.activeCarbsList.size(); ++ii) {
+                        AutosensData.CarbsInPast c = autosensData.activeCarbsList.get(ii);
+                        totalMinCarbsImpact += c.min5minCarbImpact;
+                    }
+
                     // figure out how many carbs that represents
-                    // but always assume at least 3mg/dL/5m (default) absorption
-                    double ci = Math.max(deviation, SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
+                    // but always assume at least 3mg/dL/5m (default) absorption per active treatment
+                    double ci = Math.max(deviation, totalMinCarbsImpact);
                     autosensData.absorbed = ci * profile.getIc(bgTime) / sens;
                     // and add that to the running total carbsAbsorbed
                     autosensData.cob = Math.max(previous.cob - autosensData.absorbed, 0d);
+                    autosensData.substractAbosorbedCarbs();
                 }
+                autosensData.removeOldCarbs(bgTime);
                 autosensData.cob += autosensData.carbsFromBolus;
                 autosensData.deviation = deviation;
                 autosensData.bgi = bgi;
@@ -481,6 +496,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return retval;
     }
 
+    @Nullable
     public static AutosensData getAutosensData(long time) {
         long now = System.currentTimeMillis();
         if (time > now)
@@ -499,6 +515,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
+    @Nullable
     public static AutosensData getLastAutosensData() {
         if (autosensDataTable.size() < 1)
             return null;

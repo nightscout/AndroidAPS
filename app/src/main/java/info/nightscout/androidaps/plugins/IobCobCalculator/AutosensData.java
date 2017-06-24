@@ -1,17 +1,42 @@
 package info.nightscout.androidaps.plugins.IobCobCalculator;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
+import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 25.04.2017.
  */
 
 public class AutosensData {
+    private static Logger log = LoggerFactory.getLogger(AutosensData.class);
+
+    static class CarbsInPast {
+        long time = 0L;
+        double carbs = 0d;
+        double min5minCarbImpact = 0d;
+        double remaining = 0d;
+
+        public CarbsInPast(Treatment t) {
+            time = t.date;
+            carbs = t.carbs;
+            remaining = t.carbs;
+            min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", 3.0);
+        }
+    }
+
     public long time = 0L;
     public String pastSensitivity = "";
     public double deviation = 0d;
     boolean nonCarbsDeviation = false;
     public boolean nonEqualDeviation = false;
+    List<CarbsInPast> activeCarbsList = new ArrayList<>();
     double absorbed = 0d;
     public double carbsFromBolus = 0d;
     public double cob = 0;
@@ -26,6 +51,31 @@ public class AutosensData {
 
     public int minOld() {
         return (int) ((System.currentTimeMillis() - time) / 1000 / 60);
+    }
+
+    // remove carbs older than 4h
+    public void removeOldCarbs(long toTime) {
+        for (int i = 0; i < activeCarbsList.size(); i++) {
+            CarbsInPast c = activeCarbsList.get(i);
+            if (c.time + 4 * 60 * 60 * 1000L < toTime) {
+                activeCarbsList.remove(i--);
+                if (c.remaining > 0)
+                    cob -= c.remaining;
+                log.debug("Removing carbs at "+ new Date(toTime).toLocaleString() + " + after 4h :" + new Date(c.time).toLocaleString());
+            }
+        }
+    }
+
+    public void substractAbosorbedCarbs() {
+        double ac = absorbed;
+        for (int i = 0; i < activeCarbsList.size() && ac > 0; i++) {
+            CarbsInPast c = activeCarbsList.get(i);
+            if (c.remaining > 0) {
+                double sub = Math.min(ac, c.remaining);
+                c.remaining -= sub;
+                ac -= sub;
+            }
+        }
     }
 
 }
