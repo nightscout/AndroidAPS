@@ -215,6 +215,10 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activePump;
     }
 
+   public static SensitivityInterface getActiveSensitivity() {
+        return activeSensitivity;
+    }
+
     void logPluginStatus() {
         for (PluginBase p : pluginList) {
             log.debug(p.getName() + ":" +

@@ -29,6 +29,7 @@ import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
@@ -55,14 +56,22 @@ public class IobCobCalculatorPlugin implements PluginBase {
     private static Handler sHandler = null;
     private static HandlerThread sHandlerThread = null;
 
-    private static Object dataLock = new Object();
+    private static final Object dataLock = new Object();
 
-    static IobCobCalculatorPlugin plugin = null;
+    private static IobCobCalculatorPlugin plugin = null;
 
     public static IobCobCalculatorPlugin getPlugin() {
         if (plugin == null)
             plugin = new IobCobCalculatorPlugin();
         return plugin;
+    }
+
+    public static LongSparseArray<AutosensData> getAutosensDataTable() {
+        return autosensDataTable;
+    }
+
+    public static List<BgReading> getBucketedData() {
+        return bucketed_data;
     }
 
     @Override
@@ -120,7 +129,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     }
 
-    public IobCobCalculatorPlugin() {
+    IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
         if (sHandlerThread == null) {
             sHandlerThread = new HandlerThread(IobCobCalculatorPlugin.class.getSimpleName());
@@ -198,14 +207,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
-    public void createBucketedData() {
+    private void createBucketedData() {
         if (isAbout5minData())
             createBucketedData5min();
         else
             createBucketedDataRecalculated();
     }
 
-    public void createBucketedDataRecalculated() {
+    private void createBucketedDataRecalculated() {
         synchronized (dataLock) {
             if (bgReadings == null || bgReadings.size() < 3) {
                 bucketed_data = null;
@@ -310,7 +319,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         //log.debug("Releasing createBucketedData");
     }
 
-    public void calculateSensitivityData() {
+    private void calculateSensitivityData() {
         if (MainApp.getConfigBuilder() == null)
             return; // app still initializing
         //log.debug("Locking calculateSensitivityData");
@@ -523,105 +532,9 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
-    public static AutosensResult detectSensitivity(long fromTime, long toTime) {
-        String age = SP.getString(R.string.key_age, "");
-        int defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_adult))) defaultHours = 24;
-        if (age.equals(MainApp.sResources.getString(R.string.key_teenage))) defaultHours = 4;
-        if (age.equals(MainApp.sResources.getString(R.string.key_child))) defaultHours = 4;
-        int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
-
-        long now = System.currentTimeMillis();
-
-        if (autosensDataTable == null || autosensDataTable.size() < 4) {
-            log.debug("No autosens data available");
-            return new AutosensResult();
-        }
-
-        AutosensData current = getAutosensData(toTime);
-        if (current == null) {
-            log.debug("No autosens data available");
-            return new AutosensResult();
-        }
-
-
-        List<Double> deviationsArray = new ArrayList<>();
-        String pastSensitivity = "";
-        int index = 0;
-        while (index < autosensDataTable.size()) {
-            AutosensData autosensData = autosensDataTable.valueAt(index);
-
-            if (autosensData.time < fromTime) {
-                index++;
-                continue;
-            }
-
-            if (autosensData.time > toTime) {
-                index++;
-                continue;
-            }
-
-            if (autosensData.time > now - hoursForDetection * 60 * 60 * 1000L)
-                deviationsArray.add(autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
-            if (deviationsArray.size() > hoursForDetection * 60 / 5)
-                deviationsArray.remove(0);
-
-
-            pastSensitivity += autosensData.pastSensitivity;
-            int secondsFromMidnight = Profile.secondsFromMidnight(autosensData.time);
-            if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
-                pastSensitivity += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
-            }
-            index++;
-        }
-
-        Double[] deviations = new Double[deviationsArray.size()];
-        deviations = deviationsArray.toArray(deviations);
-
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-
-        double sens = profile.getIsf();
-
-        String ratioLimit = "";
-        String sensResult = "";
-
-        log.debug("Records: " + index + "   " + pastSensitivity);
-        Arrays.sort(deviations);
-
-        double percentile = percentile(deviations, 0.50);
-        double basalOff = percentile * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
-        double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
-
-        if (percentile < 0) { // sensitive
-            sensResult = "Excess insulin sensitivity detected";
-        } else if (percentile > 0) { // resistant
-            sensResult = "Excess insulin resistance detected";
-        } else {
-            sensResult = "Sensitivity normal";
-        }
-
-        log.debug(sensResult);
-
-        double rawRatio = ratio;
-        ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
-        ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
-
-        if (ratio != rawRatio) {
-            ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-            log.debug(ratioLimit);
-        }
-
-        log.error("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile);
-
-        AutosensResult output = new AutosensResult();
-        output.ratio = Round.roundTo(ratio, 0.01);
-        output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-        output.pastSensitivity = pastSensitivity;
-        output.ratioLimit = ratioLimit;
-        output.sensResult = sensResult;
-        return output;
+    private static AutosensResult detectSensitivity(long fromTime, long toTime) {
+        return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(fromTime, toTime);
     }
-
 
     public static JSONArray convertToJSONArray(IobTotal[] iobArray) {
         JSONArray array = new JSONArray();
