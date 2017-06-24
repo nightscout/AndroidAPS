@@ -47,8 +47,9 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanEx
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Fragment;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIFragment;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpFragment;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.SensitivityMK.SensitivityMKPlugin;
+import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpFragment;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
@@ -98,6 +99,8 @@ public class MainApp extends Application {
             if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
             pluginsList.add(InsulinFastactingFragment.getPlugin());
             pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
+            pluginsList.add(SensitivityOref0Plugin.getPlugin());
+            pluginsList.add(SensitivityMKPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
             if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());

@@ -653,4 +653,8 @@
     <string name="key_do_not_track_profile_switch">do_not_track_profile_switch</string>
     <string name="do_not_track_profile_switch">Ignore profile switch events</string>
     <string name="do_not_track_profile_switch_summary">All profile switch events are ignoreg and active profile is always used</string>
+    <string name="configbuilder_sensitivity">Sensitivity detection</string>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensitivity Oref0</string>
+    <string name="sensitivitymk">Sensitivity MK</string>
 </resources>

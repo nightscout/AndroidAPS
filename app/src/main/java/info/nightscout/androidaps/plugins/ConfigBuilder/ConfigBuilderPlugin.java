@@ -40,6 +40,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
@@ -65,6 +66,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     private static APSInterface activeAPS;
     private static LoopPlugin activeLoop;
     private static InsulinInterface activeInsulin;
+    private static SensitivityInterface activeSensitivity;
 
     static public String nightscoutVersionName = "";
     static public Integer nightscoutVersionCode = 0;
@@ -218,6 +220,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             log.debug(p.getName() + ":" +
                     (p.isEnabled(1) ? " GENERAL" : "") +
                     (p.isEnabled(2) ? " TREATMENT" : "") +
+                    (p.isEnabled(3) ? " SENSITIVITY" : "") +
                     (p.isEnabled(4) ? " PROFILE" : "") +
                     (p.isEnabled(5) ? " APS" : "") +
                     (p.isEnabled(6) ? " PUMP" : "") +
@@ -253,6 +256,17 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         for (PluginBase p : pluginsInCategory) {
             if (!p.getName().equals(((PluginBase) activeInsulin).getName())) {
                 p.setFragmentVisible(PluginBase.INSULIN, false);
+            }
+        }
+
+        // PluginBase.SENSITIVITY
+        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
+        activeSensitivity = (SensitivityInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.SENSITIVITY);
+        if (Config.logConfigBuilder)
+            log.debug("Selected sensitivity interface: " + ((PluginBase) activeSensitivity).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activeSensitivity).getName())) {
+                p.setFragmentVisible(PluginBase.SENSITIVITY, false);
             }
         }
 
@@ -411,43 +425,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             return 0d;
     }
 
-    /*
-        public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
-            mWakeLock.acquire();
-            PumpEnactResult result;
-            insulin = applyBolusConstraints(insulin);
-            carbs = applyCarbsConstraints(carbs);
-
-            BolusProgressDialog bolusProgressDialog = null;
-            if (context != null) {
-                bolusProgressDialog = new BolusProgressDialog();
-                bolusProgressDialog.setInsulin(insulin);
-                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
-            }
-
-            MainApp.bus().post(new EventBolusRequested(insulin));
-
-            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
-
-            BolusProgressDialog.bolusEnded = true;
-
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
-
-            if (result.success) {
-                Treatment t = new Treatment(insulinType);
-                t.insulin = result.bolusDelivered;
-                if (carbTime == 0)
-                    t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
-                t.date = System.currentTimeMillis();
-                t.mealBolus = result.carbsDelivered > 0;
-                addToHistoryTreatment(t);
-                t.carbs = (double) result.carbsDelivered;
-                NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
-            }
-            mWakeLock.release();
-            return result;
-        }
-    */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         mWakeLock.acquire();
@@ -473,56 +450,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return result;
     }
 
-    /*
-        @Override
-        public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
-            return deliverTreatment(insulinType, insulin, carbs, context, true);
-        }
-
-        public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context, boolean createTreatment) {
-            mWakeLock.acquire();
-            PumpEnactResult result;
-            insulin = applyBolusConstraints(insulin);
-            carbs = applyCarbsConstraints(carbs);
-
-            BolusProgressDialog bolusProgressDialog = null;
-            if (context != null) {
-                bolusProgressDialog = new BolusProgressDialog();
-                bolusProgressDialog.setInsulin(insulin);
-                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
-            } else {
-                Intent i = new Intent();
-                i.putExtra("insulin", insulin.doubleValue());
-                i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                MainApp.instance().startActivity(i);
-            }
-
-            MainApp.bus().post(new EventBolusRequested(insulin));
-
-            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
-
-            BolusProgressDialog.bolusEnded = true;
-
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
-
-            if (Config.logCongigBuilderActions)
-                log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
-
-            if (result.success && createTreatment) {
-                Treatment t = new Treatment(insulinType);
-                t.insulin = result.bolusDelivered;
-                t.carbs = (double) result.carbsDelivered;
-                t.date = System.currentTimeMillis();
-                t.mealBolus = t.carbs > 0;
-                addToHistoryTreatment(t);
-                NSUpload.uploadTreatment(t);
-            }
-            mWakeLock.release();
-            return result;
-        }
-
-    */
     @Override
     public void stopBolusDelivering() {
         activePump.stopBolusDelivering();
