@@ -25,6 +25,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
@@ -595,6 +596,21 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 }
             });
         }
+    }
+
+    @Subscribe
+    public void onStatusEvent(EventConfigBuilderChange ev) {
+        synchronized (dataLock) {
+            log.debug("Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+            iobTable = new LongSparseArray<>();
+            autosensDataTable = new LongSparseArray<>();
+        }
+        sHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                calculateSensitivityData();
+            }
+        });
     }
 
     // When historical data is changed (comming from NS etc) finished calculations after this date must be invalidated
