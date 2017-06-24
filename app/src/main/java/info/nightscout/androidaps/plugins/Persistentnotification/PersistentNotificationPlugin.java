@@ -54,7 +54,7 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     @Override
     public String getFragmentClass() {
-        return PersistentNotificationFragment.class.getName();
+        return null;
     }
 
     @Override

@@ -26,10 +26,10 @@ import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
-import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyFragment;
+import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
 import info.nightscout.androidaps.plugins.InsulinFastactingProlonged.InsulinFastactingProlongedFragment;
-import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorFragment;
+import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
@@ -46,18 +46,18 @@ import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanFragment;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Fragment;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
-import info.nightscout.androidaps.plugins.PumpMDI.MDIFragment;
+import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityMK.SensitivityMKPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
-import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpFragment;
-import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
-import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
-import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripFragment;
+import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
+import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
+import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
+import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
-import info.nightscout.androidaps.plugins.XDripStatusline.StatuslineFragment;
+import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
 import info.nightscout.utils.NSUpload;
 import io.fabric.sdk.android.Fabric;
@@ -95,7 +95,7 @@ public class MainApp extends Application {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
             pluginsList.add(OverviewFragment.getPlugin());
-            pluginsList.add(IobCobCalculatorFragment.getPlugin());
+            pluginsList.add(IobCobCalculatorPlugin.getPlugin());
             if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
             pluginsList.add(InsulinFastactingFragment.getPlugin());
             pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
@@ -105,7 +105,7 @@ public class MainApp extends Application {
             if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
             if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
-            if (Config.MDI) pluginsList.add(MDIFragment.getPlugin());
+            if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
@@ -116,19 +116,19 @@ public class MainApp extends Application {
             if (Config.OTHERPROFILES)
                 pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
-            if (Config.SAFETY) pluginsList.add(SafetyFragment.getPlugin());
+            if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
             if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
             if (!Config.NSCLIENT)
-                pluginsList.add(SourceXdripFragment.getPlugin());
-            pluginsList.add(SourceNSClientFragment.getPlugin());
+                pluginsList.add(SourceXdripPlugin.getPlugin());
+            pluginsList.add(SourceNSClientPlugin.getPlugin());
             if (!Config.NSCLIENT)
-                pluginsList.add(SourceMM640gFragment.getPlugin());
+                pluginsList.add(SourceMM640gPlugin.getPlugin());
             if (!Config.NSCLIENT)
-                pluginsList.add(SourceGlimpFragment.getPlugin());
+                pluginsList.add(SourceGlimpPlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorFragment.getPlugin());
 
             if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
-            pluginsList.add(StatuslineFragment.getPlugin(this));
+            pluginsList.add(StatuslinePlugin.getPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
             pluginsList.add(NSClientInternalFragment.getPlugin());
 

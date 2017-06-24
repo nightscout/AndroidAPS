@@ -57,6 +57,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     private static Object dataLock = new Object();
 
+    static IobCobCalculatorPlugin plugin = null;
+
+    public static IobCobCalculatorPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new IobCobCalculatorPlugin();
+        return plugin;
+    }
+
     @Override
     public int getType() {
         return GENERAL;
@@ -64,7 +72,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     @Override
     public String getFragmentClass() {
-        return IobCobCalculatorFragment.class.getName();
+        return null;
     }
 
     @Override
