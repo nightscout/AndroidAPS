@@ -10,21 +10,6 @@
             android:key="openapsama_useautosens"
             android:title="@string/openapsama_useautosens" />
 
-        <com.andreabaccega.widget.ValidatingEditTextPreference
-            validate:maxNumber="24"
-            validate:minNumber="4"
-            validate:testType="numericRange"
-            android:defaultValue="24"
-            android:dependency="openapsama_useautosens"
-            android:dialogMessage="@string/openapsama_autosens_period_summary"
-            android:digits="0123456789"
-            android:inputType="number"
-            android:key="@string/key_openapsama_autosens_period"
-            android:maxLines="20"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"
-            android:title="@string/openapsama_autosens_period" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

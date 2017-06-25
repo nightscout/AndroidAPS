@@ -7,7 +7,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.SensitivityMK.SensitivityMKPlugin;
 import info.nightscout.utils.SP;
 
 /**
@@ -27,7 +32,16 @@ public class AutosensData {
             time = t.date;
             carbs = t.carbs;
             remaining = t.carbs;
-            min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", 3.0);
+            if (MainApp.getSpecificPlugin(SensitivityMKPlugin.class) != null && MainApp.getSpecificPlugin(SensitivityMKPlugin.class).isEnabled(PluginBase.SENSITIVITY)) {
+                double maxAbsorptionHours = SP.getDouble(R.string.key_absorption_maxtime, 4d);
+                Profile profile = MainApp.getConfigBuilder().getProfile(t.date);
+                double sens = Profile.toMgdl(profile.getIsf(t.date), profile.getUnits());
+                double ic = profile.getIc(t.date);
+                min5minCarbImpact = t.carbs / (maxAbsorptionHours * 60 / 5) * sens / ic;
+                log.debug("Min 5m carbs impact for " + carbs + "g @" + new Date(t.date).toLocaleString() + " for " + maxAbsorptionHours + "h calculated to " + min5minCarbImpact + " ISF: " + sens + " IC: " + ic);
+            } else {
+                min5minCarbImpact = SP.getDouble("openapsama_min_5m_carbimpact", 3.0);
+            }
         }
     }
 

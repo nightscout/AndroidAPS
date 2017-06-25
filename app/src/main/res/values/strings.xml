@@ -657,4 +657,9 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref0">Sensitivity Oref0</string>
     <string name="sensitivitymk">Sensitivity MK</string>
+    <string name="absorptionsettings_title">Absorption settings</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="absorption_maxtime_title">Meal max absorption time</string>
+    <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
+    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
 </resources>

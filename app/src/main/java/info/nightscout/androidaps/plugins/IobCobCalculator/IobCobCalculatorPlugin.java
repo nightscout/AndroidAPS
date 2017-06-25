@@ -599,7 +599,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
     @Subscribe
     public void onStatusEvent(EventPreferenceChange ev) {
         if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
-                ev.isChanged(R.string.key_age)
+                ev.isChanged(R.string.key_age) ||
+                ev.isChanged(R.string.key_absorption_maxtime)
                 ) {
             synchronized (dataLock) {
                 log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");

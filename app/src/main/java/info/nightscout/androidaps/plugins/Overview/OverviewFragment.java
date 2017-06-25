@@ -305,11 +305,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
+        rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
+
         bgGraph.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 rangeToDisplay += 6;
                 rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
+                SP.putInt(R.string.key_rangetodisplay, rangeToDisplay);
                 updateGUI("rangeChange");
                 return false;
             }
