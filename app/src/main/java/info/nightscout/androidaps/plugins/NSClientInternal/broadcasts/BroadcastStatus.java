@@ -13,7 +13,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 
 /**
@@ -22,7 +22,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientServ
 public class BroadcastStatus {
     private static Logger log = LoggerFactory.getLogger(BroadcastStatus.class);
 
-    public static void handleNewStatus(NSStatus status, Context context, boolean isDelta) {
+    public static void handleNewStatus(NSSettingsStatus status, Context context, boolean isDelta) {
         Bundle bundle = new Bundle();
         try {
             bundle.putString("nsclientversionname", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionName);

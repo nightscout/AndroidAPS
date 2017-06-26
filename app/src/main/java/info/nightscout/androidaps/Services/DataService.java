@@ -12,8 +12,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -25,7 +23,7 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.data.ProfileStore;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -38,6 +36,7 @@ import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
+import info.nightscout.utils.NSDeviceStatus;
 import info.nightscout.utils.SP;
 
 
@@ -259,11 +258,11 @@ public class DataService extends IntentService {
             if (bundles.containsKey("status")) {
                 try {
                     JSONObject statusJson = new JSONObject(bundles.getString("status"));
-                    NSStatus.getInstance().setData(statusJson);
+                    NSSettingsStatus.getInstance().setData(statusJson);
                     if (Config.logIncommingData)
                         log.debug("Received status: " + statusJson.toString());
-                    Double targetHigh = NSStatus.getInstance().getThreshold("bgTargetTop");
-                    Double targetlow = NSStatus.getInstance().getThreshold("bgTargetBottom");
+                    Double targetHigh = NSSettingsStatus.getInstance().getThreshold("bgTargetTop");
+                    Double targetlow = NSSettingsStatus.getInstance().getThreshold("bgTargetBottom");
                     if (targetHigh != null)
                         OverviewPlugin.bgTargetHigh = targetHigh;
                     if (targetlow != null)
@@ -276,8 +275,8 @@ public class DataService extends IntentService {
         if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
             try {
                 if (bundles.containsKey("devicestatus")) {
-                    String devicestatusesstring = bundles.getString("devicestatus");
                     JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
+                    NSDeviceStatus.getInstance().setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
                         ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
@@ -287,8 +286,9 @@ public class DataService extends IntentService {
                 if (bundles.containsKey("devicestatuses")) {
                     String devicestatusesstring = bundles.getString("devicestatuses");
                     JSONArray jsonArray = new JSONArray(devicestatusesstring);
-                    if (jsonArray.length() > 0) {
-                        JSONObject devicestatusJson = jsonArray.getJSONObject(0);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject devicestatusJson = jsonArray.getJSONObject(i);
+                        NSDeviceStatus.getInstance().setData(devicestatusJson);
                         if (devicestatusJson.has("pump")) {
                             // Objectives 0
                             ObjectivesPlugin.pumpStatusIsAvailableInNS = true;

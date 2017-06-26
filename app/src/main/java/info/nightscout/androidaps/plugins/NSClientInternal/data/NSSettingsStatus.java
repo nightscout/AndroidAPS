@@ -97,21 +97,21 @@ import java.util.Date;
  "activeProfile": "2016 +30%"
  }
  */
-public class NSStatus {
-    private static NSStatus instance = null;
+public class NSSettingsStatus {
+    private static NSSettingsStatus instance = null;
 
-    public static NSStatus getInstance() {
+    public static NSSettingsStatus getInstance() {
         if (instance == null)
-            instance = new NSStatus();
+            instance = new NSSettingsStatus();
         return instance;
     }
 
     private JSONObject data = null;
 
-    public NSStatus() {
+    public NSSettingsStatus() {
     }
 
-    public NSStatus setData(JSONObject obj) {
+    public NSSettingsStatus setData(JSONObject obj) {
         this.data = obj;
         return this;
     }
@@ -152,8 +152,17 @@ public class NSStatus {
         return getStringOrNull("settings");
     }
 
-    public String getExtendedSettings() {
-        return getStringOrNull("extendedSettings");
+    public JSONObject getExtendedSettings() {
+        try {
+            String extended = getStringOrNull("extendedSettings");
+            if (extended != null)
+                return new JSONObject(extended);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+
     }
 
     public String getActiveProfile() {
@@ -254,10 +263,89 @@ public class NSStatus {
         return ret;
     }
 
-    ;
+    // ***** PUMP STATUS ******
 
     public JSONObject getData() {
         return data;
     }
+
+    /*
+      , warnClock: sbx.extendedSettings.warnClock || 30
+      , urgentClock: sbx.extendedSettings.urgentClock || 60
+      , warnRes: sbx.extendedSettings.warnRes || 10
+      , urgentRes: sbx.extendedSettings.urgentRes || 5
+      , warnBattV: sbx.extendedSettings.warnBattV || 1.35
+      , urgentBattV: sbx.extendedSettings.urgentBattV || 1.3
+      , warnBattP: sbx.extendedSettings.warnBattP || 30
+      , urgentBattP: sbx.extendedSettings.urgentBattP || 20
+      , enableAlerts: sbx.extendedSettings.enableAlerts || false
+
+     */
+
+    public double extendedPumpSettings(String setting) {
+        try {
+            JSONObject pump = extentendedPumpSettings();
+            switch (setting) {
+                case "warnClock":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "urgentClock":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "warnRes":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "urgentRes":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "warnBattV":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "urgentBattV":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+               case "warnBattP":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+                case "urgentBattP":
+                    return pump != null  && pump.has(setting) ? pump.getDouble(setting) : 30;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return 0d;
+    }
+
+    @Nullable
+    public JSONObject extentendedPumpSettings() {
+        try {
+            JSONObject extended = getExtendedSettings();
+            if (extended.has("pump")) {
+                JSONObject pump = extended.getJSONObject("pump");
+                return pump;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean pumpExtentendedSettingsEnabledAlerts() {
+        try {
+            JSONObject pump = extentendedPumpSettings();
+            if (pump != null && pump.has("enableAlerts")) {
+                return pump.getBoolean("enableAlerts");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String pumpExtentendedSettingsFields() {
+        try {
+            JSONObject pump = extentendedPumpSettings();
+            if (pump != null && pump.has("fields")) {
+                return pump.getString("fields");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
 
 }

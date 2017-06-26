@@ -6,7 +6,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSAlarm;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.utils.SP;
 
 /**
@@ -122,7 +122,7 @@ public class Notification {
         BgReading bgReading = MainApp.getDbHelper().lastBg();
         if (bgReading == null)
             return false;
-        Double threshold = NSStatus.getInstance().getThreshold("bgTargetTop");
+        Double threshold = NSSettingsStatus.getInstance().getThreshold("bgTargetTop");
         if (threshold == null)
             return false;
         if (bgReading.value <= threshold)
@@ -134,7 +134,7 @@ public class Notification {
         BgReading bgReading = MainApp.getDbHelper().lastBg();
         if (bgReading == null)
             return false;
-        Double threshold = NSStatus.getInstance().getThreshold("bgTargetBottom");
+        Double threshold = NSSettingsStatus.getInstance().getThreshold("bgTargetBottom");
         if (threshold == null)
             return false;
         if (bgReading.value >= threshold)

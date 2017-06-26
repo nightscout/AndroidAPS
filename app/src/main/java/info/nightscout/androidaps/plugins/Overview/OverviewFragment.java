@@ -117,7 +117,9 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.NSDeviceStatus;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
@@ -147,6 +149,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView apsModeView;
     TextView tempTargetView;
     TextView pumpStatusView;
+    TextView pumpDeviceStatusView;
+    TextView openapsDeviceStatusView;
     LinearLayout loopStatusLayout;
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
@@ -236,6 +240,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
         pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
+        pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
+        openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
         loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
         pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
@@ -1154,6 +1160,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else {
             showPredictionView.setVisibility(View.GONE);
             getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);
+        }
+
+        // pump status from ns
+        if (pumpDeviceStatusView != null) {
+            pumpDeviceStatusView.setText(NSDeviceStatus.getInstance().getPumpStatus());
+            pumpStatusView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus(), null);
+                }
+            });
         }
 
         // ****** GRAPH *******
