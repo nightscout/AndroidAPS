@@ -117,7 +117,7 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.utils.NSDeviceStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
@@ -1169,6 +1169,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 @Override
                 public void onClick(View v) {
                     OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus(), null);
+                }
+            });
+        }
+
+        // OpenAPS status from ns
+        if (openapsDeviceStatusView != null) {
+            openapsDeviceStatusView.setText(NSDeviceStatus.getInstance().getOpenApsStatus());
+            openapsDeviceStatusView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus(), null);
                 }
             });
         }

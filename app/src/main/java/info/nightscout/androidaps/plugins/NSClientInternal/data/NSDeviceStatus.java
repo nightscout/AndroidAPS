@@ -1,7 +1,6 @@
-package info.nightscout.utils;
+package info.nightscout.androidaps.plugins.NSClientInternal.data;
 
 import android.text.Html;
-import android.text.Spannable;
 import android.text.Spanned;
 
 import org.json.JSONException;
@@ -9,11 +8,10 @@ import org.json.JSONObject;
 
 import java.util.Iterator;
 
-import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
-
-import static android.R.attr.value;
+import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.Round;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 25.06.2017.
@@ -87,6 +85,7 @@ public class NSDeviceStatus {
     public NSDeviceStatus setData(JSONObject obj) {
         this.data = obj;
         updatePumpData(obj);
+        updateOpenApsData(obj);
         return this;
     }
 
@@ -127,10 +126,10 @@ public class NSDeviceStatus {
             return Html.fromHtml("");
 
         StringBuilder string = new StringBuilder();
-        // test wanring level
+        // test warning level
         int level = Levels.INFO;
         long now = System.currentTimeMillis();
-        if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("urgentClock") < now)
+        if (deviceStatusPumpData.clock + NSSettingsStatus.getInstance().extendedPumpSettings("urgentClock") * 60 * 1000L < now)
             level = Levels.URGENT;
         else if (deviceStatusPumpData.reservoir < NSSettingsStatus.getInstance().extendedPumpSettings("urgentRes"))
             level = Levels.URGENT;
@@ -233,6 +232,85 @@ public class NSDeviceStatus {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    // ********* OpenAPS data ***********
+
+    static DeviceStatusOpenAPSData deviceStatusOpenAPSData = new DeviceStatusOpenAPSData();
+
+    static class DeviceStatusOpenAPSData {
+        long clockSuggested = 0L;
+        long clockEnacted = 0L;
+
+        JSONObject suggested = null;
+        JSONObject enacted = null;
+    }
+
+    public void updateOpenApsData(JSONObject object) {
+        try {
+            JSONObject openaps = object.has("openaps") ? object.getJSONObject("openaps") : new JSONObject();
+            JSONObject suggested = openaps.has("suggested") ? openaps.getJSONObject("suggested") : new JSONObject();
+            JSONObject enacted = openaps.has("enacted") ? openaps.getJSONObject("enacted") : new JSONObject();
+
+            long clock = 0L;
+            if (suggested.has("timestamp"))
+                clock = DateUtil.fromISODateString(suggested.getString("timestamp")).getTime();
+            // check if this is new data
+            if (clock != 0 && clock > deviceStatusOpenAPSData.clockSuggested) {
+                deviceStatusOpenAPSData.suggested = suggested;
+                deviceStatusOpenAPSData.clockSuggested = clock;
+            }
+
+            clock = 0L;
+            if (enacted.has("timestamp"))
+                clock = DateUtil.fromISODateString(enacted.getString("timestamp")).getTime();
+            // check if this is new data
+            if (clock != 0 && clock > deviceStatusOpenAPSData.clockEnacted) {
+                deviceStatusOpenAPSData.enacted = enacted;
+                deviceStatusOpenAPSData.clockEnacted = clock;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Spanned getOpenApsStatus() {
+        StringBuilder string = new StringBuilder();
+        // test warning level
+        int level = Levels.INFO;
+        long now = System.currentTimeMillis();
+        if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + SP.getInt(R.string.key_nsalarm_urgent_staledatavalue, 16) * 60 * 1000L < now)
+            level = Levels.URGENT;
+        else if (deviceStatusOpenAPSData.clockSuggested != 0 && deviceStatusOpenAPSData.clockSuggested + SP.getInt(R.string.key_nsalarm_staledatavalue, 16) * 60 * 1000L < now)
+            level = Levels.WARN;
+
+        string.append("<span style=\"color:");
+        if (level == Levels.INFO) string.append("white\">");
+        if (level == Levels.WARN) string.append("yellow\">");
+        if (level == Levels.URGENT) string.append("red\">");
+
+        if (deviceStatusOpenAPSData.clockSuggested != 0) {
+            string.append(DateUtil.minAgo(deviceStatusOpenAPSData.clockSuggested)).append(" ");
+        }
+        string.append("</span>"); // color
+
+        return Html.fromHtml(string.toString());
+    }
+
+    public Spanned getExtendedOpenApsStatus() {
+        StringBuilder string = new StringBuilder();
+
+        try {
+            if (deviceStatusOpenAPSData.enacted != null && deviceStatusOpenAPSData.clockEnacted != deviceStatusOpenAPSData.clockSuggested)
+                string.append("<b>").append(DateUtil.minAgo(deviceStatusOpenAPSData.clockEnacted)).append("</b> ").append(deviceStatusOpenAPSData.enacted.getString("reason")).append("<br>");
+            if (deviceStatusOpenAPSData.suggested != null)
+                string.append("<b>").append(DateUtil.minAgo(deviceStatusOpenAPSData.clockSuggested)).append("</b> ").append(deviceStatusOpenAPSData.suggested.getString("reason")).append("<br>");
+            return Html.fromHtml(string.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return Html.fromHtml("");
     }
 
 }
