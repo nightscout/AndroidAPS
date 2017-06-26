@@ -131,7 +131,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     public void onResume() {
         super.onResume();
         if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         MainApp.bus().register(this);
     }
 
