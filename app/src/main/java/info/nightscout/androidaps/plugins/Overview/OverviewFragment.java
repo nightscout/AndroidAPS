@@ -1165,7 +1165,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         // pump status from ns
         if (pumpDeviceStatusView != null) {
             pumpDeviceStatusView.setText(NSDeviceStatus.getInstance().getPumpStatus());
-            pumpStatusView.setOnClickListener(new View.OnClickListener() {
+            pumpDeviceStatusView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus(), null);
