@@ -6,7 +6,9 @@ import android.text.Spanned;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import info.nightscout.androidaps.R;
 import info.nightscout.utils.DateUtil;
@@ -86,13 +88,18 @@ public class NSDeviceStatus {
         this.data = obj;
         updatePumpData(obj);
         updateOpenApsData(obj);
+        updateUploaderData(obj);
         return this;
     }
 
     public String getDevice() {
         try {
             if (data.has("device")) {
-                return data.getString("device");
+                String device = data.getString("device");
+                if (device.startsWith("openaps://")) {
+                    device = device.substring(10);
+                    return device;
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -311,6 +318,70 @@ public class NSDeviceStatus {
             e.printStackTrace();
         }
         return Html.fromHtml("");
+    }
+
+    // ********* Uploader data ***********
+
+    public static HashMap<String, Uploader> uploaders = new HashMap<>();
+
+    static class Uploader {
+        long clock = 0L;
+        int battery = 0;
+    }
+
+    public void updateUploaderData(JSONObject object) {
+        try {
+
+            long clock = 0L;
+            if (object.has("created_at"))
+                clock = DateUtil.fromISODateString(object.getString("created_at")).getTime();
+            String device = getDevice();
+            Integer battery = null;
+            if (object.has("uploaderBattery"))
+                battery = object.getInt("uploaderBattery");
+            else if (object.has("uploader")) {
+                if (object.getJSONObject("uploader").has("battery"))
+                    battery = object.getJSONObject("uploader").getInt("battery");
+            }
+            Uploader uploader = uploaders.get(device);
+            // check if this is new data
+            if (clock != 0 && (uploader != null && clock > uploader.clock || uploader == null)) {
+                if (uploader == null)
+                    uploader = new Uploader();
+                uploader.battery = battery;
+                uploader.clock = clock;
+                uploaders.put(device, uploader);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String getUploaderStatus() {
+        Iterator iter = uploaders.entrySet().iterator();
+        int minBattery = 100;
+        while(iter.hasNext()) {
+            Map.Entry pair = (Map.Entry) iter.next();
+            Uploader uploader = (Uploader) pair.getValue();
+            if (minBattery > uploader.battery)
+                minBattery = uploader.battery;
+        }
+
+        return minBattery + "%";
+    }
+
+    public Spanned getExtendedUploaderStatus() {
+        StringBuilder string = new StringBuilder();
+
+        Iterator iter = uploaders.entrySet().iterator();
+        while(iter.hasNext()) {
+            Map.Entry pair = (Map.Entry) iter.next();
+            Uploader uploader = (Uploader) pair.getValue();
+            String device = (String) pair.getKey();
+            string.append("<b>").append(device).append(":</b> ").append(uploader.battery).append("%<br>");
+        }
+
+        return Html.fromHtml(string.toString());
     }
 
 }

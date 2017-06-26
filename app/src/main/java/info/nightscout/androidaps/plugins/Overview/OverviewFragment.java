@@ -151,6 +151,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView pumpStatusView;
     TextView pumpDeviceStatusView;
     TextView openapsDeviceStatusView;
+    TextView uploaderDeviceStatusView;
     LinearLayout loopStatusLayout;
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
@@ -242,6 +243,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
         pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
         openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
+        uploaderDeviceStatusView = (TextView) view.findViewById(R.id.overview_uploader);
         loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
         pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
@@ -1180,6 +1182,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 @Override
                 public void onClick(View v) {
                     OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus(), null);
+                }
+            });
+        }
+
+        // Uploader status from ns
+        if (uploaderDeviceStatusView != null) {
+            uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatus());
+            uploaderDeviceStatusView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus(), null);
                 }
             });
         }

@@ -649,4 +649,5 @@
     <string name="pump">Pump</string>
     <string name="openaps">OpenAPS</string>
     <string name="device">Device</string>
+    <string name="uploader">Uploader</string>
 </resources>
