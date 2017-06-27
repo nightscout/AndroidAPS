@@ -3,6 +3,7 @@ package info.nightscout.utils;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -118,6 +119,19 @@ public class NumberPicker extends LinearLayout implements View.OnKeyListener,
         plusButton.setOnTouchListener(this);
         plusButton.setOnKeyListener(this);
         plusButton.setOnClickListener(this);
+    }
+
+    public void removeTextChangedListener(TextWatcher textWatcher) {
+        editText.removeTextChangedListener(textWatcher);
+    }
+
+    public void addTextChangedListener(TextWatcher textWatcher) {
+        editText.addTextChangedListener(textWatcher);
+    }
+
+    public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, TextWatcher textWatcher) {
+        setParams(initValue, minValue, maxValue, step, formater, allowZero);
+        editText.addTextChangedListener(textWatcher);
     }
 
     public void setParams(Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero) {
