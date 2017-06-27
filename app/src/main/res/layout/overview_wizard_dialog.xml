@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="left"
-                android:minWidth="40dp"
+                android:minWidth="45dp"
                 android:paddingLeft="5dp"
                 android:text="mg/dl"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="left"
-                android:minWidth="40dp"
+                android:minWidth="45dp"
                 android:paddingLeft="5dp"
                 android:text="@string/treatments_wizard_unit_label"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -141,7 +141,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:gravity="left"
-                android:minWidth="40dp"
+                android:minWidth="45dp"
                 android:paddingLeft="5dp"
                 android:text="min"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
