@@ -42,7 +42,7 @@ public class SensitivityMKPlugin implements PluginBase, SensitivityInterface{
 
     @Override
     public int getType() {
-        return INSULIN;
+        return SENSITIVITY;
     }
 
     @Override

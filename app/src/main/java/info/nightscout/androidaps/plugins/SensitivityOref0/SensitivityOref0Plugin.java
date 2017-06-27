@@ -41,7 +41,7 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
 
     @Override
     public int getType() {
-        return INSULIN;
+        return SENSITIVITY;
     }
 
     @Override
