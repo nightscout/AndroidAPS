@@ -62,10 +62,10 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
 
         bgNumber = (NumberPicker) view.findViewById(R.id.overview_calibration_bg);
 
-         if (units.equals(Constants.MMOL))
+        if (units.equals(Constants.MMOL))
             bgNumber.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
         else
-             bgNumber.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
+            bgNumber.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
 
         unitsView = (TextView) view.findViewById(R.id.overview_calibration_units);
         unitsView.setText(units);
@@ -77,7 +77,7 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ok:
-                final Double bg = SafeParse.stringToDouble(bgNumber.getText().toString());
+                final Double bg = SafeParse.stringToDouble(bgNumber.getText());
                 XdripCalibrations.confirmAndSendCalibration(bg, context);
                 dismiss();
                 Answers.getInstance().logCustom(new CustomEvent("Calibration"));
