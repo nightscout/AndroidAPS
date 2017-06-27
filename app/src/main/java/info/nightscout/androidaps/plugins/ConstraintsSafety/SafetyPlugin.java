@@ -21,9 +21,17 @@ import info.nightscout.utils.SP;
 public class SafetyPlugin implements PluginBase, ConstraintsInterface {
     private static Logger log = LoggerFactory.getLogger(SafetyPlugin.class);
 
+    static SafetyPlugin plugin = null;
+
+    public static SafetyPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new SafetyPlugin();
+        return plugin;
+    }
+
     @Override
     public String getFragmentClass() {
-        return SafetyFragment.class.getName();
+        return null;
     }
 
     @Override

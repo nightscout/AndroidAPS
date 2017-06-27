@@ -12,9 +12,17 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 public class SourceNSClientPlugin implements PluginBase, BgSourceInterface {
     boolean fragmentEnabled = true;
 
+    static SourceNSClientPlugin plugin = null;
+
+    public static SourceNSClientPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new SourceNSClientPlugin();
+        return plugin;
+    }
+
     @Override
     public String getFragmentClass() {
-        return SourceNSClientFragment.class.getName();
+        return null;
     }
 
     @Override
