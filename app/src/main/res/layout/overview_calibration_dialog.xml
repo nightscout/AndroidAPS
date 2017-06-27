@@ -40,6 +40,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginRight="30dp"
                     android:orientation="horizontal">
 
 
@@ -81,15 +83,7 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/overview_calibration_okbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="OK"
-                    android:textSize="20sp"
-                    android:layout_marginTop="30dp" />
+                <include layout="@layout/mdtp_done_button" />
 
             </LinearLayout>
 

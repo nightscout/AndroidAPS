@@ -32,7 +32,6 @@ import info.nightscout.utils.XdripCalibrations;
 public class CalibrationDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(CalibrationDialog.class);
 
-    Button okButton;
     PlusMinusEditText bgText;
     TextView unitsView;
     TextView bgView;
@@ -57,8 +56,8 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        okButton = (Button) view.findViewById(R.id.overview_calibration_okbutton);
-        okButton.setOnClickListener(this);
+        view.findViewById(R.id.ok).setOnClickListener(this);
+        view.findViewById(R.id.cancel).setOnClickListener(this);
 
         String units = MainApp.getConfigBuilder().getProfileUnits();
         Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
@@ -78,12 +77,15 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.overview_calibration_okbutton:
+            case R.id.ok:
                 final Double bg = SafeParse.stringToDouble(this.bgView.getText().toString());
                 ;
                 XdripCalibrations.confirmAndSendCalibration(bg, context);
                 dismiss();
                 Answers.getInstance().logCustom(new CustomEvent("Calibration"));
+                break;
+            case R.id.cancel:
+                dismiss();
                 break;
         }
     }
