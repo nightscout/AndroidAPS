@@ -1013,6 +1013,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public Profile getProfile(long time) {
+        if (activeTreatments == null)
+            return null; //app not initialized
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
