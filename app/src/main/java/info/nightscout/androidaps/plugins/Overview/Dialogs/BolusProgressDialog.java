@@ -71,7 +71,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     public void onResume() {
         super.onResume();
         if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setLayout(1000, ViewGroup.LayoutParams.WRAP_CONTENT);
         MainApp.bus().register(this);
         running = true;
         if (bolusEnded) dismiss();

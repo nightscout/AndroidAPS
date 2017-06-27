@@ -1014,6 +1014,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public Profile getProfile(long time) {
+        if (activeTreatments == null)
+            return null; //app not initialized
         //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
         boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
         if (!ignoreProfileSwitchEvents) {

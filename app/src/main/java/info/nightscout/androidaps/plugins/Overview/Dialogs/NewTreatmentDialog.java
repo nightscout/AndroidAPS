@@ -49,7 +49,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.overview_newtreatment_dialog, null, false);
+        View view = inflater.inflate(R.layout.overview_newtreatment_dialog, container, false);
 
         view.findViewById(R.id.ok).setOnClickListener(this);
         view.findViewById(R.id.cancel).setOnClickListener(this);
@@ -70,7 +70,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
     public void onResume() {
         super.onResume();
         if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override

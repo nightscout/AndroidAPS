@@ -117,7 +117,9 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
@@ -147,6 +149,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView apsModeView;
     TextView tempTargetView;
     TextView pumpStatusView;
+    TextView pumpDeviceStatusView;
+    TextView openapsDeviceStatusView;
+    TextView uploaderDeviceStatusView;
     LinearLayout loopStatusLayout;
     LinearLayout pumpStatusLayout;
     GraphView bgGraph;
@@ -237,6 +242,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
         activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
         pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
+        pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
+        openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
+        uploaderDeviceStatusView = (TextView) view.findViewById(R.id.overview_uploader);
         loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
         pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
@@ -1139,6 +1147,39 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         } else {
             showPredictionView.setVisibility(View.GONE);
             getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.GONE);
+        }
+
+        // pump status from ns
+        if (pumpDeviceStatusView != null) {
+            pumpDeviceStatusView.setText(NSDeviceStatus.getInstance().getPumpStatus());
+            pumpDeviceStatusView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.pump), NSDeviceStatus.getInstance().getExtendedPumpStatus(), null);
+                }
+            });
+        }
+
+        // OpenAPS status from ns
+        if (openapsDeviceStatusView != null) {
+            openapsDeviceStatusView.setText(NSDeviceStatus.getInstance().getOpenApsStatus());
+            openapsDeviceStatusView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.openaps), NSDeviceStatus.getInstance().getExtendedOpenApsStatus(), null);
+                }
+            });
+        }
+
+        // Uploader status from ns
+        if (uploaderDeviceStatusView != null) {
+            uploaderDeviceStatusView.setText(NSDeviceStatus.getInstance().getUploaderStatus());
+            uploaderDeviceStatusView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.uploader), NSDeviceStatus.getInstance().getExtendedUploaderStatus(), null);
+                }
+            });
         }
 
         // ****** GRAPH *******

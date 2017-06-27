@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 
 /**
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
@@ -111,4 +112,10 @@ public class DateUtil {
     public static String dateAndTimeString(long mills) {
         return dateString(mills) + " " + timeString(mills);
     }
+
+    public static String minAgo(long time) {
+        int mins = (int) ((System.currentTimeMillis() - time) / 1000 / 60);
+        return String.format(MainApp.sResources.getString(R.string.minago), mins);
+    }
+
 }

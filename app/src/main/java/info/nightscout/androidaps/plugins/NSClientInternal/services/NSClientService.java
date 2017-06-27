@@ -51,7 +51,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastT
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastUrgentAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.AlarmAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
@@ -432,17 +432,17 @@ public class NSClientService extends Service {
 
                             if (data.has("status")) {
                                 JSONObject status = data.getJSONObject("status");
-                                NSStatus nsStatus = NSStatus.getInstance().setData(status);
+                                NSSettingsStatus nsSettingsStatus = NSSettingsStatus.getInstance().setData(status);
 
                                 if (!status.has("versionNum")) {
                                     if (status.getInt("versionNum") < Config.SUPPORTEDNSVERSION) {
                                         MainApp.bus().post(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
                                     }
                                 } else {
-                                    nightscoutVersionName = nsStatus.getVersion();
-                                    nightscoutVersionCode = nsStatus.getVersionNum();
+                                    nightscoutVersionName = nsSettingsStatus.getVersion();
+                                    nightscoutVersionCode = nsSettingsStatus.getVersionNum();
                                 }
-                                BroadcastStatus.handleNewStatus(nsStatus, MainApp.instance().getApplicationContext(), isDelta);
+                                BroadcastStatus.handleNewStatus(nsSettingsStatus, MainApp.instance().getApplicationContext(), isDelta);
 
                     /*  Other received data to 2016/02/10
                         {
@@ -516,8 +516,7 @@ public class NSClientService extends Service {
                                         // remove from upload queue if Ack is failing
                                         UploadQueue.removeID(jsonStatus);
                                     }
-                                    // send only last record
-                                    BroadcastDeviceStatus.handleNewDeviceStatus(devicestatuses.getJSONObject(devicestatuses.length() - 1), MainApp.instance().getApplicationContext(), isDelta);
+                                    BroadcastDeviceStatus.handleNewDeviceStatus(devicestatuses, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                             }
                             if (data.has("mbgs")) {

@@ -653,4 +653,8 @@
     <string name="key_do_not_track_profile_switch">do_not_track_profile_switch</string>
     <string name="do_not_track_profile_switch">Ignore profile switch events</string>
     <string name="do_not_track_profile_switch_summary">All profile switch events are ignoreg and active profile is always used</string>
+    <string name="pump">Pump</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="device">Device</string>
+    <string name="uploader">Uploader</string>
 </resources>
