@@ -124,6 +124,12 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        this.context = null;
+    }
+
+    @Override
     public void onResume() {
         super.onPause();
         MainApp.bus().register(this);

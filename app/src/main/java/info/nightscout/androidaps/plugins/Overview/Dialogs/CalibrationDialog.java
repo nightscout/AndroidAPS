@@ -47,6 +47,12 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        this.context = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.overview_calibration_dialog, container, false);

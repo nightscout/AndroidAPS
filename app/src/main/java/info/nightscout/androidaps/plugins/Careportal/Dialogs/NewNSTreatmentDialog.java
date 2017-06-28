@@ -142,6 +142,12 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        this.context = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         getDialog().setTitle(getString(options.eventName));
