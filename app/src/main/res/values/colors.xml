@@ -16,6 +16,7 @@
     <color name="tempbasal">#C803A9F4</color>
     <color name="graphgrid">#757575</color>
     <color name="updating">#50ffffff</color>
+    <color name="colorLightGray">#d8d8d8</color>
 
     <color name="defaultbackground">#424242</color>
 

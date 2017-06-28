@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
@@ -155,7 +156,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public String getUnits() {
-        return profile.getUnits();
+        return profile != null ? profile.getUnits() : Constants.MGDL;
     }
 
     @Override

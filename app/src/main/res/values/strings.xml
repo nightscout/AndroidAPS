@@ -39,8 +39,8 @@
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_newtreatment_insulinamount_label">Insulin amount</string>
-    <string name="treatments_newtreatment_carbsamount_label">Carbs amount</string>
+    <string name="treatments_newtreatment_insulinamount_label">Insulin</string>
+    <string name="treatments_newtreatment_carbsamount_label">Carbs</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
@@ -483,7 +483,7 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="nav_show_logcat">Show log</string>
     <string name="overview_calibration">Calibration</string>
-    <string name="overview_calibration_bg_label">Calibration BG</string>
+    <string name="overview_calibration_bg_label">Calibration</string>
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
