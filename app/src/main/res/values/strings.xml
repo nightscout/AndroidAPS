@@ -63,7 +63,7 @@
     <string name="openapsma_iobdata_label">IOB data</string>
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
-    <string name="openapsma_result_label">Result</string>
+    <string name="result">Result</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="openapsma_noprofile">No profile available</string>
     <string name="openapsma_nopump">No pump available</string>
