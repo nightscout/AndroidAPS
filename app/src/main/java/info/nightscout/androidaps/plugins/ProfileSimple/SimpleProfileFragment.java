@@ -102,7 +102,7 @@ public class SimpleProfileFragment extends Fragment {
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
                 final OptionsToShow profileswitch = CareportalFragment.profileswitch;
                 profileswitch.executeProfileSwitch = true;
-                newDialog.setOptions(profileswitch);
+                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
             }
         });
