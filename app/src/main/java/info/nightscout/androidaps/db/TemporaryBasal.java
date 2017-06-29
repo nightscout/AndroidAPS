@@ -273,7 +273,7 @@ public class TemporaryBasal implements Interval {
 
     public String toStringShort() {
         if (isAbsolute) {
-            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false)){
+            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
                 Profile profile = MainApp.getConfigBuilder().getProfile();
                 if(profile != null) {
                     double basal = profile.getBasal(System.currentTimeMillis());
