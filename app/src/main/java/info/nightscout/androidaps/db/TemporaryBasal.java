@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
@@ -18,6 +19,7 @@ import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 21.05.2017.
@@ -271,6 +273,15 @@ public class TemporaryBasal implements Interval {
 
     public String toStringShort() {
         if (isAbsolute) {
+            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
+                Profile profile = MainApp.getConfigBuilder().getProfile();
+                if(profile != null) {
+                    double basal = profile.getBasal(System.currentTimeMillis());
+                    if(basal != 0){
+                        return Math.round(absoluteRate*100d/basal) + "% ";
+                    }
+                }
+            }
             return DecimalFormatter.to2Decimal(absoluteRate) + "U/h ";
         } else { // percent
             return percentRate + "% ";
