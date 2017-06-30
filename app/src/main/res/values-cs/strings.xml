@@ -111,7 +111,7 @@
     <string name="openapsma_nopump">Žádná pumpa</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_request_label">Požadavek</string>
-    <string name="openapsma_result_label">Výsledek</string>
+    <string name="result">Výsledek</string>
     <string name="openapsma_run">Sputit teď</string>
     <string name="openloop_newsuggestion">Dostupné nové doporučení</string>
     <string name="overview">Přehled</string>
@@ -172,7 +172,6 @@
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
-    <string name="configbuilder_nsclientversion_label">Verze NSClienta:</string>
     <string name="send">POSLAT</string>
     <string name="missing">Chybí</string>
     <string name="enabled">Povolený</string>

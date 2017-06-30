@@ -214,14 +214,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
-        long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvailable();
-        long getBGDataFrom = Math.max(oldestDataAvailable, (long) (System.currentTimeMillis() - 60 * 60 * 1000L * (24 + profile.getDia())));
-        log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
-
         startPart = new Date();
         if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
-            //lastAutosensResult = Autosens.detectSensitivityandCarbAbsorption(getBGDataFrom, null);
-            lastAutosensResult = IobCobCalculatorPlugin.detectSensitivity(getBGDataFrom);
+            lastAutosensResult = IobCobCalculatorPlugin.detectSensitivityWithLock(IobCobCalculatorPlugin.oldestDataAvailable(), System.currentTimeMillis());
         } else {
             lastAutosensResult = new AutosensResult();
         }

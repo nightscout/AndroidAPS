@@ -63,7 +63,7 @@
     <string name="openapsma_iobdata_label">IOB data</string>
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
-    <string name="openapsma_result_label">Result</string>
+    <string name="result">Result</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="openapsma_noprofile">No profile available</string>
     <string name="openapsma_nopump">No pump available</string>
@@ -192,7 +192,6 @@
     <string name="noprofile">No profile loaded from NS yet</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
-    <string name="configbuilder_nsclientversion_label">NSClient version:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="send">SEND</string>
     <string name="missing">Missing</string>
@@ -532,6 +531,7 @@
     <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
     <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
+    <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
     <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
@@ -646,8 +646,25 @@
     <string name="nsalarm_urgentstaledata">Urgent stale data</string>
     <string name="nsalarm_staledatavalue_label">Stale data threshold [min]</string>
     <string name="nsalarm_urgent_staledatavalue_label">Urgent stale data threshold [min]</string>
+    <string name="openapsama_autosens_period">Interval for autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
+    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
+    <string name="ratio_short">RAT</string>
+    <string name="key_do_not_track_profile_switch">do_not_track_profile_switch</string>
+    <string name="do_not_track_profile_switch">Ignore profile switch events</string>
+    <string name="do_not_track_profile_switch_summary">All profile switch events are ignoreg and active profile is always used</string>
     <string name="pump">Pump</string>
     <string name="openaps">OpenAPS</string>
     <string name="device">Device</string>
     <string name="uploader">Uploader</string>
+    <string name="configbuilder_sensitivity">Sensitivity detection</string>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensitivity Oref0</string>
+    <string name="sensitivitymk">Sensitivity MK</string>
+    <string name="absorptionsettings_title">Absorption settings</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="absorption_maxtime_title">Meal max absorption time</string>
+    <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
+    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
+    <string name="danar_visualizeextendedaspercentage_title">Visualize extended bolus as %</string>
 </resources>

@@ -81,7 +81,6 @@
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_nightscoutversion_label">Versione Nightscout</string>
-    <string name="configbuilder_nsclientversion_label">Versione NSClient</string>
     <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_pump">Microinfusore</string>
     <string name="configbuilder_shortname">Configurazione</string>
@@ -299,7 +298,7 @@
     <string name="dont_show_again">Non mostrarlo più</string>
     <string name="enablesuperbolus_summary">Abilita funzionalità superbolus nella procedura guidata. Non abilitare fino a quando non impari quello che realmente fa. PUÒ CAUSARE L\'INVERTIMENTO INSULINO SE USATO BLINDLY!</string>
     <string name="openapsma_request_label">Richiesta</string>
-    <string name="openapsma_result_label">Esito</string>
+    <string name="result">Esito</string>
     <string name="openapsma_run">Avvia ora</string>
     <string name="openloop">Apertura Loop</string>
     <string name="othersettings_title">Altro</string>

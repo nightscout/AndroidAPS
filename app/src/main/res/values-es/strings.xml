@@ -60,7 +60,7 @@
     <string name="openapsma_iobdata_label">IOB datos</string>
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Datos de comidas</string>
-    <string name="openapsma_result_label">Resultado</string>
+    <string name="result">Resultado</string>
     <string name="openapsma_noglucosedata">No hay disponibles datos de glucosa</string>
     <string name="openapsma_noprofile">Sin perfil disponible</string>
     <string name="openapsma_nopump">No se dispone de bomba</string>
@@ -179,7 +179,6 @@
     <string name="noprofile">Pendiente carga perfil NS</string>
     <string name="overview_tempbasal_button">Basal Temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
-    <string name="configbuilder_nsclientversion_label">NSClient versión:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
     <string name="send">ENVIAR</string>
     <string name="missing">Faltan</string>

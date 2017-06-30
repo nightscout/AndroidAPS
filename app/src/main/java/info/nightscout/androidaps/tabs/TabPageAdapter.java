@@ -59,7 +59,7 @@ public class TabPageAdapter extends FragmentStatePagerAdapter {
     }
 
     public void registerNewFragment(PluginBase plugin) {
-        if (plugin.isVisibleInTabs(plugin.getType())) {
+        if (plugin.hasFragment() && plugin.isVisibleInTabs(plugin.getType())) {
             visibleFragmentList.add(plugin);
             notifyDataSetChanged();
         }

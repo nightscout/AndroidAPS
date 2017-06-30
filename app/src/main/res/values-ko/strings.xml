@@ -62,7 +62,7 @@
     <string name="openapsma_iobdata_label">IOB 데이터</string>
     <string name="openapsma_profile_label">프로파일</string>
     <string name="openapsma_mealdata_label">식사 데이터</string>
-    <string name="openapsma_result_label">결과</string>
+    <string name="result">결과</string>
     <string name="openapsma_noglucosedata">혈당 데이터 없음</string>
     <string name="openapsma_noprofile">프로파일 없음</string>
     <string name="openapsma_nopump">No pump available</string>
@@ -180,7 +180,6 @@
     <string name="noprofile">아직 NS에서 프로파일을 로드하지 못했습니다.</string>
     <string name="overview_tempbasal_button">임시기초주입</string>
     <string name="overview_extendedbolus_button">확장식사주입</string>
-    <string name="configbuilder_nsclientversion_label">NSClient 버전:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
     <string name="send">보내기</string>
     <string name="missing">Missing</string>

@@ -19,14 +19,18 @@ import java.util.List;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventConfigBuilderChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
+import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
@@ -53,7 +57,23 @@ public class IobCobCalculatorPlugin implements PluginBase {
     private static Handler sHandler = null;
     private static HandlerThread sHandlerThread = null;
 
-    private static Object dataLock = new Object();
+    private static final Object dataLock = new Object();
+
+    private static IobCobCalculatorPlugin plugin = null;
+
+    public static IobCobCalculatorPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new IobCobCalculatorPlugin();
+        return plugin;
+    }
+
+    public static LongSparseArray<AutosensData> getAutosensDataTable() {
+        return autosensDataTable;
+    }
+
+    public static List<BgReading> getBucketedData() {
+        return bucketed_data;
+    }
 
     @Override
     public int getType() {
@@ -62,7 +82,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     @Override
     public String getFragmentClass() {
-        return IobCobCalculatorFragment.class.getName();
+        return null;
     }
 
     @Override
@@ -110,7 +130,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     }
 
-    public IobCobCalculatorPlugin() {
+    IobCobCalculatorPlugin() {
         MainApp.bus().register(this);
         if (sHandlerThread == null) {
             sHandlerThread = new HandlerThread(IobCobCalculatorPlugin.class.getSimpleName());
@@ -188,14 +208,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
-    public void createBucketedData() {
+    private void createBucketedData() {
         if (isAbout5minData())
             createBucketedData5min();
         else
             createBucketedDataRecalculated();
     }
 
-    public void createBucketedDataRecalculated() {
+    private void createBucketedDataRecalculated() {
         synchronized (dataLock) {
             if (bgReadings == null || bgReadings.size() < 3) {
                 bucketed_data = null;
@@ -300,12 +320,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
         //log.debug("Releasing createBucketedData");
     }
 
-    public void calculateSensitivityData() {
+    private void calculateSensitivityData() {
         if (MainApp.getConfigBuilder() == null)
             return; // app still initializing
         if (MainApp.getConfigBuilder().getProfile() == null)
             return; // app still initializing
         //log.debug("Locking calculateSensitivityData");
+        long oldestTimeWithData = oldestDataAvailable();
+
         synchronized (dataLock) {
 
             if (bucketed_data == null || bucketed_data.size() < 3) {
@@ -333,6 +355,10 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
                 AutosensData autosensData = new AutosensData();
                 autosensData.time = bgTime;
+                if (previous != null)
+                    autosensData.activeCarbsList = new ArrayList<>(previous.activeCarbsList);
+                else
+                    autosensData.activeCarbsList = new ArrayList<>();
 
                 //console.error(bgTime , bucketed_data[i].glucose);
                 double bg;
@@ -353,17 +379,28 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBackFromHistory(bgTime);
                 for (int ir = 0; ir < recentTreatments.size(); ir++) {
                     autosensData.carbsFromBolus += recentTreatments.get(ir).carbs;
+                    autosensData.activeCarbsList.add(new AutosensData.CarbsInPast(recentTreatments.get(ir)));
                 }
+
 
                 // if we are absorbing carbs
                 if (previous != null && previous.cob > 0) {
+                    // calculate sum of min carb impact from all active treatments
+                    double totalMinCarbsImpact = 0d;
+                    for (int ii = 0; ii < autosensData.activeCarbsList.size(); ++ii) {
+                        AutosensData.CarbsInPast c = autosensData.activeCarbsList.get(ii);
+                        totalMinCarbsImpact += c.min5minCarbImpact;
+                    }
+
                     // figure out how many carbs that represents
-                    // but always assume at least 3mg/dL/5m (default) absorption
-                    double ci = Math.max(deviation, SP.getDouble("openapsama_min_5m_carbimpact", 3.0));
+                    // but always assume at least 3mg/dL/5m (default) absorption per active treatment
+                    double ci = Math.max(deviation, totalMinCarbsImpact);
                     autosensData.absorbed = ci * profile.getIc(bgTime) / sens;
                     // and add that to the running total carbsAbsorbed
                     autosensData.cob = Math.max(previous.cob - autosensData.absorbed, 0d);
+                    autosensData.substractAbosorbedCarbs();
                 }
+                autosensData.removeOldCarbs(bgTime);
                 autosensData.cob += autosensData.carbsFromBolus;
                 autosensData.deviation = deviation;
                 autosensData.bgi = bgi;
@@ -373,12 +410,14 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 if (autosensData.cob <= 0) {
                     if (Math.abs(deviation) < Constants.DEVIATION_TO_BE_EQUAL) {
                         autosensData.pastSensitivity += "=";
+                        autosensData.nonEqualDeviation = true;
                     } else if (deviation > 0) {
                         autosensData.pastSensitivity += "+";
+                        autosensData.nonEqualDeviation = true;
                     } else {
                         autosensData.pastSensitivity += "-";
                     }
-                    autosensData.calculateWithDeviation = true;
+                    autosensData.nonCarbsDeviation = true;
                 } else {
                     autosensData.pastSensitivity += "C";
                 }
@@ -386,12 +425,22 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
                 previous = autosensData;
                 autosensDataTable.put(bgTime, autosensData);
+                autosensData.autosensRatio = detectSensitivity(oldestTimeWithData, bgTime).ratio;
                 if (Config.logAutosensData)
                     log.debug(autosensData.log(bgTime));
             }
         }
         MainApp.bus().post(new EventAutosensCalculationFinished());
         //log.debug("Releasing calculateSensitivityData");
+    }
+
+    public static long oldestDataAvailable() {
+        long now = System.currentTimeMillis();
+
+        long oldestDataAvailable = MainApp.getConfigBuilder().oldestDataAvailable();
+        long getBGDataFrom = Math.max(oldestDataAvailable, (long) (now - 60 * 60 * 1000L * (24 + MainApp.getConfigBuilder().getProfile().getDia())));
+        log.debug("Limiting data to oldest available temps: " + new Date(oldestDataAvailable).toString());
+        return getBGDataFrom;
     }
 
     public static IobTotal calulateFromTreatmentsAndTemps(long time) {
@@ -449,6 +498,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return retval;
     }
 
+    @Nullable
     public static AutosensData getAutosensData(long time) {
         long now = System.currentTimeMillis();
         if (time > now)
@@ -467,6 +517,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
     }
 
+    @Nullable
     public static AutosensData getLastAutosensData() {
         if (autosensDataTable.size() < 1)
             return null;
@@ -495,104 +546,15 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return array;
     }
 
-    public static AutosensResult detectSensitivity(long fromTime) {
-        //log.debug("Locking detectSensitivity");
+    public static AutosensResult detectSensitivityWithLock(long fromTime, long toTime) {
         synchronized (dataLock) {
-            if (autosensDataTable == null || autosensDataTable.size() < 4) {
-                log.debug("No autosens data available");
-                return new AutosensResult();
-            }
-
-            AutosensData current = getLastAutosensData();
-            if (current == null) {
-                log.debug("No current autosens data available");
-                return new AutosensResult();
-            }
-
-
-            List<Double> deviationsArray = new ArrayList<>();
-            String pastSensitivity = "";
-            int index = 0;
-            while (index < autosensDataTable.size()) {
-                AutosensData autosensData = autosensDataTable.valueAt(index);
-
-                if (autosensData.time < fromTime) {
-                    index++;
-                    continue;
-                }
-
-                if (autosensData.calculateWithDeviation)
-                    deviationsArray.add(autosensData.deviation);
-
-                pastSensitivity += autosensData.pastSensitivity;
-                int secondsFromMidnight = Profile.secondsFromMidnight(autosensData.time);
-                if (secondsFromMidnight % 3600 < 2.5 * 60 || secondsFromMidnight % 3600 > 57.5 * 60) {
-                    pastSensitivity += "(" + Math.round(secondsFromMidnight / 3600d) + ")";
-                }
-                index++;
-            }
-
-            Double[] deviations = new Double[deviationsArray.size()];
-            deviations = deviationsArray.toArray(deviations);
-
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-
-            double sens = profile.getIsf();
-
-            double ratio = 1;
-            String ratioLimit = "";
-            String sensResult = "";
-
-            log.debug("Records: " + index + "   " + pastSensitivity);
-            Arrays.sort(deviations);
-
-            for (double i = 0.9; i > 0.1; i = i - 0.02) {
-                if (percentile(deviations, (i + 0.02)) >= 0 && percentile(deviations, i) < 0) {
-                    log.debug(Math.round(100 * i) + "% of non-meal deviations negative (target 45%-50%)");
-                }
-            }
-            double pSensitive = percentile(deviations, 0.50);
-            double pResistant = percentile(deviations, 0.45);
-
-            double basalOff = 0;
-
-            if (pSensitive < 0) { // sensitive
-                basalOff = pSensitive * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
-                sensResult = "Excess insulin sensitivity detected";
-            } else if (pResistant > 0) { // resistant
-                basalOff = pResistant * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
-                sensResult = "Excess insulin resistance detected";
-            } else {
-                sensResult = "Sensitivity normal";
-            }
-            log.debug(sensResult);
-            ratio = 1 + (basalOff / profile.getMaxDailyBasal());
-
-            double rawRatio = ratio;
-            ratio = Math.max(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_min", "0.7")));
-            ratio = Math.min(ratio, SafeParse.stringToDouble(SP.getString("openapsama_autosens_max", "1.2")));
-
-            if (ratio != rawRatio) {
-                ratioLimit = "Ratio limited from " + rawRatio + " to " + ratio;
-                log.debug(ratioLimit);
-            }
-
-            double newisf = Math.round(Profile.toMgdl(sens, profile.getUnits()) / ratio);
-            if (ratio != 1) {
-                log.debug("ISF adjusted from " + Profile.toMgdl(sens, profile.getUnits()) + " to " + newisf);
-            }
-
-            AutosensResult output = new AutosensResult();
-            output.ratio = Round.roundTo(ratio, 0.01);
-            output.carbsAbsorbed = Round.roundTo(current.cob, 0.01);
-            output.pastSensitivity = pastSensitivity;
-            output.ratioLimit = ratioLimit;
-            output.sensResult = sensResult;
-            return output;
+            return detectSensitivity(fromTime, toTime);
         }
-        //log.debug("Releasing detectSensitivity");
     }
 
+    private static AutosensResult detectSensitivity(long fromTime, long toTime) {
+        return ConfigBuilderPlugin.getActiveSensitivity().detectSensitivity(fromTime, toTime);
+    }
 
     public static JSONArray convertToJSONArray(IobTotal[] iobArray) {
         JSONArray array = new JSONArray();
@@ -627,6 +589,41 @@ public class IobCobCalculatorPlugin implements PluginBase {
         }
         synchronized (dataLock) {
             log.debug("Invalidating cached data because of new profile. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+            iobTable = new LongSparseArray<>();
+            autosensDataTable = new LongSparseArray<>();
+        }
+        sHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                calculateSensitivityData();
+            }
+        });
+    }
+
+    @Subscribe
+    public void onStatusEvent(EventPreferenceChange ev) {
+        if (ev.isChanged(R.string.key_openapsama_autosens_period) ||
+                ev.isChanged(R.string.key_age) ||
+                ev.isChanged(R.string.key_absorption_maxtime)
+                ) {
+            synchronized (dataLock) {
+                log.debug("Invalidating cached data because of preference change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
+                iobTable = new LongSparseArray<>();
+                autosensDataTable = new LongSparseArray<>();
+            }
+            sHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    calculateSensitivityData();
+                }
+            });
+        }
+    }
+
+    @Subscribe
+    public void onStatusEvent(EventConfigBuilderChange ev) {
+        synchronized (dataLock) {
+            log.debug("Invalidating cached data because of configuration change. IOB: " + iobTable.size() + " Autosens: " + autosensDataTable.size() + " records");
             iobTable = new LongSparseArray<>();
             autosensDataTable = new LongSparseArray<>();
         }

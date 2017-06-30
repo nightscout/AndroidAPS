@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugi
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.SensitivityMK.SensitivityMKPlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.utils.LocaleHelper;
@@ -105,6 +106,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
                     addPreferencesFromResource(R.xml.pref_openapsama);
             }
+            if (MainApp.getSpecificPlugin(SensitivityMKPlugin.class) != null && MainApp.getSpecificPlugin(SensitivityMKPlugin.class).isEnabled(PluginBase.SENSITIVITY))
+                addPreferencesFromResource(R.xml.pref_absorption);
             if (Config.ALLPREFERENCES) {
                 addPreferencesFromResource(R.xml.pref_profile);
             }
@@ -134,8 +137,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
             if (Config.ALLPREFERENCES) {
                 addPreferencesFromResource(R.xml.pref_others);
-                addPreferencesFromResource(R.xml.pref_advanced);
             }
+            addPreferencesFromResource(R.xml.pref_advanced);
 
             if (Config.WEAR) {
                 WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);

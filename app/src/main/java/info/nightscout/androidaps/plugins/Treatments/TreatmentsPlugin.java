@@ -182,7 +182,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             Iob tIOB = t.iobCalc(time, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = t.iobCalc(time, dia / SP.getInt("openapsama_bolussnooze_dia_divisor", 2));
+            Iob bIOB = t.iobCalc(time, dia / SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
             total.bolussnooze += bIOB.iobContrib;
         }
 
@@ -242,7 +242,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         List<Treatment> in5minback = new ArrayList<>();
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
-            if (t.date <= time && t.date > time - 5 * 60 * 1000)
+            if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
                 in5minback.add(t);
         }
         return in5minback;

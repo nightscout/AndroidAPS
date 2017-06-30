@@ -53,7 +53,6 @@
     <string name="configbuilder_bgsource">BZ Quelle</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout Version:</string>
-    <string name="configbuilder_nsclientversion_label">NSClient Version:</string>
     <string name="configbuilder_tempbasals">Temp Basals</string>
     <string name="delta">Delta</string>
     <string name="duration">Dauer</string>
@@ -124,7 +123,7 @@
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="overview">Übersicht</string>
     <string name="openloop_newsuggestion">Neue Empfehlung verfügbar</string>
-    <string name="openapsma_result_label">Ergebnis</string>
+    <string name="result">Ergebnis</string>
     <string name="openapsma_request_label">Anfrage</string>
     <string name="openapsma_run">Run now</string>
     <string name="openapsma_nopump">Keine Pumpe verfügbar</string>

@@ -21,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -62,7 +61,6 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.OKDialog;
-import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
@@ -521,7 +519,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
             String insulinText = calculatedTotalInsulin > 0d ? (DecimalFormatter.to2Decimal(calculatedTotalInsulin) + "U") : "";
             String carbsText = calculatedCarbs > 0d ? (DecimalFormatter.to0Decimal(calculatedCarbs) + "g") : "";
-            total.setText(getString(R.string.send) + " " + insulinText + " " + carbsText);
+            total.setText(getString(R.string.result) + ": " + insulinText + " " + carbsText);
             okButton.setVisibility(View.VISIBLE);
         } else {
             total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");

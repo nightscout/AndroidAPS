@@ -44,6 +44,17 @@ public class StatuslinePlugin implements PluginBase {
     private final Context ctx;
     SharedPreferences mPrefs;
 
+    private static StatuslinePlugin statuslinePlugin;
+
+    public static StatuslinePlugin getPlugin(Context ctx) {
+
+        if (statuslinePlugin == null) {
+            statuslinePlugin = new StatuslinePlugin(ctx);
+        }
+
+        return statuslinePlugin;
+    }
+
     StatuslinePlugin(Context ctx) {
         this.ctx = ctx;
         this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -56,7 +67,7 @@ public class StatuslinePlugin implements PluginBase {
 
     @Override
     public String getFragmentClass() {
-        return StatuslineFragment.class.getName();
+        return null;
     }
 
     @Override

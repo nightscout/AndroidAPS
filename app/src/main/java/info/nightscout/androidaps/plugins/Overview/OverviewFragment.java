@@ -169,6 +169,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     CheckBox showIobView;
     CheckBox showCobView;
     CheckBox showDeviationsView;
+    CheckBox showRatiosView;
 
     RecyclerView notificationsView;
     LinearLayoutManager llm;
@@ -284,36 +285,25 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
         showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
         showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
+        showRatiosView = (CheckBox) view.findViewById(R.id.overview_showratios);
         showPredictionView.setChecked(SP.getBoolean("showprediction", false));
         showBasalsView.setChecked(SP.getBoolean("showbasals", true));
         showIobView.setChecked(SP.getBoolean("showiob", false));
         showCobView.setChecked(SP.getBoolean("showcob", false));
         showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
+        showRatiosView.setChecked(SP.getBoolean("showratios", false));
         showPredictionView.setOnCheckedChangeListener(this);
         showBasalsView.setOnCheckedChangeListener(this);
         showIobView.setOnCheckedChangeListener(this);
         showCobView.setOnCheckedChangeListener(this);
         showDeviationsView.setOnCheckedChangeListener(this);
+        showRatiosView.setOnCheckedChangeListener(this);
 
         notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
         notificationsView.setHasFixedSize(true);
         llm = new LinearLayoutManager(view.getContext());
         notificationsView.setLayoutManager(llm);
-/*
-        final LinearLayout graphs = (LinearLayout)view.findViewById(R.id.overview_graphs_layout);
-        ViewTreeObserver observer = graphs.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                log.debug("Height: " + graphs.getHeight());
-                graphs.getViewTreeObserver().removeGlobalOnLayoutListener(
-                        this);
-                int heightNeeded = Math.max(320, graphs.getHeight() - 200);
-                if (heightNeeded != bgGraph.getHeight())
-                    bgGraph.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, heightNeeded));
-            }
-        });
-*/
+
         bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
         bgGraph.getGridLabelRenderer().reloadStyles();
         iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
@@ -323,11 +313,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
         iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
 
+        rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
+
         bgGraph.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 rangeToDisplay += 6;
                 rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
+                SP.putInt(R.string.key_rangetodisplay, rangeToDisplay);
                 updateGUI("rangeChange");
                 return false;
             }
@@ -367,34 +360,29 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         switch (buttonView.getId()) {
             case R.id.overview_showprediction:
-                SP.putBoolean("showprediction", showPredictionView.isChecked());
-                updateGUI("onPredictionCheckedChanged");
-                break;
             case R.id.overview_showbasals:
-                SP.putBoolean("showbasals", showBasalsView.isChecked());
-                updateGUI("onBasalsCheckedChanged");
-                break;
             case R.id.overview_showiob:
-                SP.putBoolean("showiob", showIobView.isChecked());
-                updateGUI("onIobCheckedChanged");
                 break;
             case R.id.overview_showcob:
                 showDeviationsView.setOnCheckedChangeListener(null);
                 showDeviationsView.setChecked(false);
                 showDeviationsView.setOnCheckedChangeListener(this);
-                SP.putBoolean("showcob", showCobView.isChecked());
-                SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-                updateGUI("onCobCheckedChanged");
                 break;
             case R.id.overview_showdeviations:
                 showCobView.setOnCheckedChangeListener(null);
                 showCobView.setChecked(false);
                 showCobView.setOnCheckedChangeListener(this);
-                SP.putBoolean("showcob", showCobView.isChecked());
-                SP.putBoolean("showdeviations", showDeviationsView.isChecked());
-                updateGUI("onDeviationsCheckedChanged");
+                break;
+            case R.id.overview_showratios:
                 break;
         }
+        SP.putBoolean("showiob", showIobView.isChecked());
+        SP.putBoolean("showprediction", showPredictionView.isChecked());
+        SP.putBoolean("showbasals", showBasalsView.isChecked());
+        SP.putBoolean("showcob", showCobView.isChecked());
+        SP.putBoolean("showdeviations", showDeviationsView.isChecked());
+        SP.putBoolean("showratios", showRatiosView.isChecked());
+        scheduleUpdateGUI("onGraphCheckboxesCheckedChanged");
     }
 
     @Override
@@ -1038,7 +1026,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
                 final OptionsToShow profileswitch = CareportalFragment.profileswitch;
                 profileswitch.executeProfileSwitch = true;
-                newDialog.setOptions(profileswitch);
+                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
                 return true;
             }
@@ -1053,7 +1041,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
                 final OptionsToShow temptarget = CareportalFragment.temptarget;
                 temptarget.executeTempTarget = true;
-                newTTDialog.setOptions(temptarget);
+                newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
                 newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
                 return true;
             }
@@ -1343,15 +1331,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         FixedLineGraphSeries<DataPoint> iobSeries;
         FixedLineGraphSeries<DataPoint> cobSeries;
         BarGraphSeries<DeviationDataPoint> devSeries;
+        LineGraphSeries<DataPoint> ratioSeries;
         Double maxIobValueFound = 0d;
         Double maxCobValueFound = 0d;
         Double maxDevValueFound = 0d;
+        Double maxRatioValueFound = 0d;
 
-        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked()) {
+        if (showIobView.isChecked() || showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
             //Date start = new Date();
             List<DataPoint> iobArray = new ArrayList<>();
             List<DataPoint> cobArray = new ArrayList<>();
             List<DeviationDataPoint> devArray = new ArrayList<>();
+            List<DataPoint> ratioArray = new ArrayList<>();
             double lastIob = 0;
             int lastCob = 0;
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
@@ -1365,7 +1356,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         lastIob = iob;
                     }
                 }
-                if (showCobView.isChecked() || showDeviationsView.isChecked()) {
+                if (showCobView.isChecked() || showDeviationsView.isChecked() || showRatiosView.isChecked()) {
                     AutosensData autosensData = IobCobCalculatorPlugin.getAutosensData(time);
                     if (autosensData != null && showCobView.isChecked()) {
                         int cob = (int) autosensData.cob;
@@ -1385,6 +1376,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         devArray.add(new DeviationDataPoint(time, autosensData.deviation, color));
                         maxDevValueFound = Math.max(maxDevValueFound, Math.abs(autosensData.deviation));
                     }
+                    if (autosensData != null && showRatiosView.isChecked()) {
+                        ratioArray.add(new DataPoint(time, autosensData.autosensRatio));
+                        maxRatioValueFound = Math.max(maxRatioValueFound, Math.abs(autosensData.autosensRatio));
+                    }
                 }
             }
             //Profiler.log(log, "IOB processed", start);
@@ -1397,18 +1392,49 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             iobSeries.setThickness(3);
 
 
-            if (showIobView.isChecked() && (showCobView.isChecked() || showDeviationsView.isChecked())) {
-                List<DataPoint> cobArrayRescaled = new ArrayList<>();
-                List<DeviationDataPoint> devArrayRescaled = new ArrayList<>();
-                for (int ci = 0; ci < cobArray.size(); ci++) {
-                    cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxIobValueFound / maxCobValueFound / 2));
-                }
-                for (int ci = 0; ci < devArray.size(); ci++) {
-                    devArrayRescaled.add(new DeviationDataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxIobValueFound / maxDevValueFound, devArray.get(ci).color));
-                }
-                cobArray = cobArrayRescaled;
-                devArray = devArrayRescaled;
+            Double maxByScale = null;
+            int graphsToShow = 0;
+            if (showIobView.isChecked()) {
+                if (maxByScale == null) maxByScale = maxIobValueFound;
+                graphsToShow++;
             }
+            if (showCobView.isChecked()) {
+                if (maxByScale == null) maxByScale = maxCobValueFound;
+                graphsToShow++;
+            }
+            if (showDeviationsView.isChecked()) {
+                if (maxByScale == null) maxByScale = maxDevValueFound;
+                graphsToShow++;
+            }
+            if (showRatiosView.isChecked()) {
+                if (maxByScale == null) maxByScale = maxRatioValueFound;
+                graphsToShow++;
+            }
+
+            if (graphsToShow > 1) {
+                if (!maxByScale.equals(maxCobValueFound)) {
+                    List<DataPoint> cobArrayRescaled = new ArrayList<>();
+                    for (int ci = 0; ci < cobArray.size(); ci++) {
+                        cobArrayRescaled.add(new DataPoint(cobArray.get(ci).getX(), cobArray.get(ci).getY() * maxByScale / maxCobValueFound / 2));
+                    }
+                    cobArray = cobArrayRescaled;
+                }
+                if (!maxByScale.equals(maxDevValueFound)) {
+                    List<DeviationDataPoint> devArrayRescaled = new ArrayList<>();
+                    for (int ci = 0; ci < devArray.size(); ci++) {
+                        devArrayRescaled.add(new DeviationDataPoint(devArray.get(ci).getX(), devArray.get(ci).getY() * maxByScale / maxDevValueFound, devArray.get(ci).color));
+                    }
+                    devArray = devArrayRescaled;
+                }
+                if (!maxByScale.equals(maxRatioValueFound)) {
+                    List<DataPoint> ratioArrayRescaled = new ArrayList<>();
+                    for (int ci = 0; ci < ratioArray.size(); ci++) {
+                        ratioArrayRescaled.add(new DataPoint(ratioArray.get(ci).getX(), (ratioArray.get(ci).getY() - 1) * maxByScale / maxRatioValueFound));
+                    }
+                    ratioArray = ratioArrayRescaled;
+                }
+            }
+
             // COB
             DataPoint[] cobData = new DataPoint[cobArray.size()];
             cobData = cobArray.toArray(cobData);
@@ -1428,9 +1454,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                     return data.color;
                 }
             });
-            //devSeries.setBackgroundColor(0xB0FFFFFF & MainApp.sResources.getColor(R.color.cob)); //50%
-            //devSeries.setColor(MainApp.sResources.getColor(R.color.cob));
-            //devSeries.setThickness(3);
+
+            // RATIOS
+            DataPoint[] ratioData = new DataPoint[ratioArray.size()];
+            ratioData = ratioArray.toArray(ratioData);
+            ratioSeries = new LineGraphSeries<>(ratioData);
+            ratioSeries.setColor(MainApp.sResources.getColor(R.color.ratio));
+            ratioSeries.setThickness(3);
 
             iobGraph.getSeries().clear();
 
@@ -1442,6 +1472,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             }
             if (showDeviationsView.isChecked() && devData.length > 0) {
                 addSeriesWithoutInvalidate(devSeries, iobGraph);
+            }
+            if (showRatiosView.isChecked() && ratioData.length > 0) {
+                addSeriesWithoutInvalidate(ratioSeries, iobGraph);
             }
             iobGraph.setVisibility(View.VISIBLE);
         } else {
@@ -1504,7 +1537,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         maxBgValue = Profile.fromMgdlToUnits(maxBgValue, units);
         maxBgValue = units.equals(Constants.MGDL) ? Round.roundTo(maxBgValue, 40d) + 80 : Round.roundTo(maxBgValue, 2d) + 4;
         if (highLine > maxBgValue) maxBgValue = highLine;
-        Integer numOfHorizLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
+        Integer numOfVertLines = units.equals(Constants.MGDL) ? (int) (maxBgValue / 40 + 1) : (int) (maxBgValue / 2 + 1);
 
         DataPointWithLabelInterface[] bg = new DataPointWithLabelInterface[bgListArray.size()];
         bg = bgListArray.toArray(bg);
@@ -1572,7 +1605,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bgGraph.getViewport().setMaxY(maxBgValue);
         bgGraph.getViewport().setMinY(0);
         bgGraph.getViewport().setYAxisBoundsManual(true);
-        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfHorizLines);
+        bgGraph.getGridLabelRenderer().setNumVerticalLabels(numOfVertLines);
 
         // set second scale
         if (pump.getPumpDescription().isTempBasalCapable && showBasalsView.isChecked()) {
@@ -1645,20 +1678,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
 
     //Notifications
-    public static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.NotificationsViewHolder> {
+    static class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.NotificationsViewHolder> {
 
         List<Notification> notificationsList;
 
         RecyclerViewAdapter(List<Notification> notificationsList) {
             this.notificationsList = notificationsList;
-            log.debug("RecyclerViewAdapter");
         }
 
         @Override
         public NotificationsViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.overview_notification_item, viewGroup, false);
-            NotificationsViewHolder notificationsViewHolder = new NotificationsViewHolder(v);
-            return notificationsViewHolder;
+            return new NotificationsViewHolder(v);
         }
 
         @Override
@@ -1689,7 +1720,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             super.onAttachedToRecyclerView(recyclerView);
         }
 
-        public static class NotificationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        static class NotificationsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
             CardView cv;
             TextView time;
             TextView text;
