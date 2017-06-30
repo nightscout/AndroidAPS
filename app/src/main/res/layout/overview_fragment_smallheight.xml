@@ -407,7 +407,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_calculator_label"
                     android:textColor="@color/colorCalculatorButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/overview_calibrationbutton"
@@ -421,7 +422,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_calibration"
                     android:textColor="@color/colorCalibrationButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/overview_quickwizardbutton"
@@ -435,7 +437,8 @@
                     android:paddingRight="0dp"
                     android:text="Quick wizard"
                     android:textColor="@color/colorQuickWizardButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/overview_canceltempbutton"
@@ -448,7 +451,8 @@
                     android:paddingRight="0dp"
                     android:text="Cancel temp basal"
                     android:textColor="@color/colorCancelTempButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 
