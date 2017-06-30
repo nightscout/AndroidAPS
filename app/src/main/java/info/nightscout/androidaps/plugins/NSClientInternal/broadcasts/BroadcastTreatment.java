@@ -114,7 +114,7 @@ public class BroadcastTreatment {
     }
 
 
-    private static List<JSONArray> splitArray(JSONArray array) {
+    public static List<JSONArray> splitArray(JSONArray array) {
         List<JSONArray> ret = new ArrayList<>();
         try {
             int size = array.length();

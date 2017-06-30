@@ -31,15 +31,18 @@ public class BroadcastDeviceStatus {
         log.debug("DEVICESTATUS " + x.size() + " receivers");
     }
     public static void handleNewDeviceStatus(JSONArray statuses, Context context, boolean isDelta) {
-        Bundle bundle = new Bundle();
-        bundle.putString("devicestatuses", statuses.toString());
-        bundle.putBoolean("delta", isDelta);
-        Intent intent = new Intent(Intents.ACTION_NEW_DEVICESTATUS);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+        List<JSONArray> splitted = BroadcastTreatment.splitArray(statuses);
+        for (JSONArray part: splitted) {
+            Bundle bundle = new Bundle();
+            bundle.putString("devicestatuses", part.toString());
+            bundle.putBoolean("delta", isDelta);
+            Intent intent = new Intent(Intents.ACTION_NEW_DEVICESTATUS);
+            intent.putExtras(bundle);
+            intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+            context.sendBroadcast(intent);
+            List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
 
-        log.debug("DEVICESTATUS " + x.size() + " receivers");
+            log.debug("DEVICESTATUS " + part.length() + " records " + x.size() + " receivers");
+        }
     }
 }
