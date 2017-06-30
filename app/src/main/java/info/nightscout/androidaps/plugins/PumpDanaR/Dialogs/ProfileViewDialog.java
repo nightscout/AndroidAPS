@@ -17,6 +17,7 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
@@ -104,14 +105,20 @@ public class ProfileViewDialog extends DialogFragment {
 //        } else {
 //            noProfile.setVisibility(View.GONE);
 //        }
-        Profile profile = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile().getDefaultProfile();
-        units.setText(profile.getUnits());
-        dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-        activeProfile.setText(((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfileName());
-        ic.setText(profile.getIcList());
-        isf.setText(profile.getIsfList());
-        basal.setText(profile.getBasalList());
-        target.setText(profile.getTargetList());
+        ProfileStore store = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile();
+        if (store != null) {
+            noProfile.setVisibility(View.GONE);
+            Profile profile = store.getDefaultProfile();
+            units.setText(profile.getUnits());
+            dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
+            activeProfile.setText(((ProfileInterface) MainApp.getConfigBuilder().getActivePump()).getProfileName());
+            ic.setText(profile.getIcList());
+            isf.setText(profile.getIsfList());
+            basal.setText(profile.getBasalList());
+            target.setText(profile.getTargetList());
+        } else {
+            noProfile.setVisibility(View.VISIBLE);
+        }
     }
 
 
