@@ -626,7 +626,6 @@
     <string name="invalidprofile">Invalid profile !!!</string>
     <string name="profileswitch">ProfileSwitch</string>
     <string name="careportal_pbage_label">Pump battery age</string>
-    <string name="updating">Updating ...</string>
     <string name="careportal_pumpbatterychange">Pump Battery Change</string>
     <string name="ns_alarmoptions">Alarm options</string>
     <string name="key_nsalarm_urgent_high" translatable="false">nsalarm_urgent_high</string>
@@ -660,10 +659,10 @@
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="sensitivityoref0">Sensitivity Oref0</string>
-    <string name="sensitivitymk">Sensitivity MK</string>
+    <string name="sensitivityaaps">Sensitivity AAPS</string>
     <string name="absorptionsettings_title">Absorption settings</string>
     <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
-    <string name="absorption_maxtime_title">Meal max absorption time</string>
+    <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="danar_visualizeextendedaspercentage_title">Visualize extended bolus as %</string>

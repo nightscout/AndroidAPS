@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.SensitivityMK;
+package info.nightscout.androidaps.plugins.SensitivityAAPS;
 
 import android.support.v4.util.LongSparseArray;
 
@@ -26,17 +26,17 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityMKPlugin implements PluginBase, SensitivityInterface{
-    private static Logger log = LoggerFactory.getLogger(SensitivityMKPlugin.class);
+public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
+    private static Logger log = LoggerFactory.getLogger(SensitivityAAPSPlugin.class);
 
     private static boolean fragmentEnabled = true;
     private static boolean fragmentVisible = false;
 
-    static SensitivityMKPlugin plugin = null;
+    static SensitivityAAPSPlugin plugin = null;
 
-    public static SensitivityMKPlugin getPlugin() {
+    public static SensitivityAAPSPlugin getPlugin() {
         if (plugin == null)
-            plugin = new SensitivityMKPlugin();
+            plugin = new SensitivityAAPSPlugin();
         return plugin;
     }
 
@@ -52,7 +52,7 @@ public class SensitivityMKPlugin implements PluginBase, SensitivityInterface{
 
     @Override
     public String getName() {
-        return MainApp.sResources.getString(R.string.sensitivitymk);
+        return MainApp.sResources.getString(R.string.sensitivityaaps);
     }
 
     @Override
