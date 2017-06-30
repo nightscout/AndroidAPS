@@ -162,8 +162,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     TextView sage;
     TextView pbage;
 
-    TextView updating;
-
     CheckBox showPredictionView;
     CheckBox showBasalsView;
     CheckBox showIobView;
@@ -259,8 +257,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         cage = (TextView) view.findViewById(R.id.careportal_canulaage);
         sage = (TextView) view.findViewById(R.id.careportal_sensorage);
         pbage = (TextView) view.findViewById(R.id.careportal_pbage);
-
-        updating = (TextView) view.findViewById(R.id.overview_updating);
 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
@@ -880,15 +876,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         if (timeView != null) { //must not exists
             timeView.setText(DateUtil.timeString(new Date()));
         }
-        if (updating != null)
-            updating.setVisibility(View.VISIBLE);
-
         if (MainApp.getConfigBuilder().getProfile() == null) {// app not initialized yet
             pumpStatusView.setText(R.string.noprofileset);
             pumpStatusLayout.setVisibility(View.VISIBLE);
             loopStatusLayout.setVisibility(View.GONE);
-            if (updating != null)
-                updating.setVisibility(View.GONE);
             return;
         }
         pumpStatusLayout.setVisibility(View.GONE);
@@ -903,6 +894,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
         String units = profile.getUnits();
+
+        if (units == null) {
+            pumpStatusView.setText(R.string.noprofileset);
+            pumpStatusLayout.setVisibility(View.VISIBLE);
+            loopStatusLayout.setVisibility(View.GONE);
+            return;
+        }
 
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
@@ -1101,8 +1099,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 avgdeltaView.setText("");
             }
         } else {
-            if (updating != null)
-                updating.setVisibility(View.GONE);
             return;
         }
         Integer flag = bgView.getPaintFlags();
@@ -1516,8 +1512,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         List<DataPointWithLabelInterface> bgListArray = new ArrayList<>();
 
         if (bgReadingsArray.size() == 0) {
-            if (updating != null)
-                updating.setVisibility(View.GONE);
             return;
         }
 
@@ -1654,8 +1648,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bgGraph.onDataChanged(false, false);
         iobGraph.onDataChanged(false, false);
 
-        if (updating != null)
-            updating.setVisibility(View.GONE);
         Profiler.log(log, from, updateGUIStart);
     }
 

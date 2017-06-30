@@ -152,15 +152,6 @@
                             android:layout_marginLeft="10dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                        <TextView
-                            android:id="@+id/overview_updating"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/updating"
-                            android:textAppearance="?android:attr/textAppearanceMedium"
-                            android:textColor="@color/updating"
-                            android:textStyle="bold" />
-
                     </LinearLayout>
 
                     <TextView
