@@ -527,6 +527,12 @@ public class WatchUpdaterService extends WearableListenerService implements
         String status = "";
         boolean shortString = true;
 
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            status = MainApp.sResources.getString(R.string.noprofile);
+            return status;
+        }
+
         LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
 
         if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
@@ -560,7 +566,6 @@ public class WatchUpdaterService extends WearableListenerService implements
                     + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (!mPrefs.getBoolean("wear_showbgi", false)) {
             return status;
         }
