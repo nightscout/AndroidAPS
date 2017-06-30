@@ -100,66 +100,66 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
         NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
         switch (id) {
             case R.id.careportal_bgcheck:
-                newDialog.setOptions(bgcheck);
+                newDialog.setOptions(bgcheck, R.string.careportal_bgcheck);
                 break;
             case R.id.careportal_announcement:
-                newDialog.setOptions(announcement);
+                newDialog.setOptions(announcement, R.string.careportal_announcement);
                 break;
             case R.id.careportal_cgmsensorinsert:
-                newDialog.setOptions(sensorchange);
+                newDialog.setOptions(sensorchange, R.string.careportal_cgmsensorinsert);
                 break;
             case R.id.careportal_cgmsensorstart:
-                newDialog.setOptions(sensorstart);
+                newDialog.setOptions(sensorstart, R.string.careportal_cgmsensorstart);
                 break;
             case R.id.careportal_combobolus:
-                newDialog.setOptions(combobolus);
+                newDialog.setOptions(combobolus, R.string.careportal_combobolus);
                 break;
             case R.id.careportal_correctionbolus:
-                newDialog.setOptions(correctionbolus);
+                newDialog.setOptions(correctionbolus, R.string.careportal_correctionbolus);
                 break;
             case R.id.careportal_carbscorrection:
-                newDialog.setOptions(carbcorrection);
+                newDialog.setOptions(carbcorrection, R.string.careportal_carbscorrection);
                 break;
             case R.id.careportal_exercise:
-                newDialog.setOptions(exercise);
+                newDialog.setOptions(exercise, R.string.careportal_exercise);
                 break;
             case R.id.careportal_insulincartridgechange:
-                newDialog.setOptions(insulinchange);
+                newDialog.setOptions(insulinchange, R.string.careportal_insulincartridgechange);
                 break;
             case R.id.careportal_pumpbatterychange:
-                newDialog.setOptions(pumpbatterychange);
+                newDialog.setOptions(pumpbatterychange, R.string.careportal_pumpbatterychange);
                 break;
             case R.id.careportal_mealbolus:
-                newDialog.setOptions(mealbolus);
+                newDialog.setOptions(mealbolus, R.string.careportal_mealbolus);
                 break;
             case R.id.careportal_note:
-                newDialog.setOptions(note);
+                newDialog.setOptions(note, R.string.careportal_note);
                 break;
             case R.id.careportal_profileswitch:
                 profileswitch.executeProfileSwitch = false;
-                newDialog.setOptions(profileswitch);
+                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 break;
             case R.id.careportal_pumpsitechange:
-                newDialog.setOptions(sitechange);
+                newDialog.setOptions(sitechange, R.string.careportal_pumpsitechange);
                 break;
             case R.id.careportal_question:
-                newDialog.setOptions(question);
+                newDialog.setOptions(question, R.string.careportal_question);
                 break;
             case R.id.careportal_snackbolus:
-                newDialog.setOptions(snackbolus);
+                newDialog.setOptions(snackbolus, R.string.careportal_snackbolus);
                 break;
             case R.id.careportal_tempbasalstart:
-                newDialog.setOptions(tempbasalstart);
+                newDialog.setOptions(tempbasalstart, R.string.careportal_tempbasalstart);
                 break;
             case R.id.careportal_tempbasalend:
-                newDialog.setOptions(tempbasalend);
+                newDialog.setOptions(tempbasalend, R.string.careportal_tempbasalend);
                 break;
             case R.id.careportal_openapsoffline:
-                newDialog.setOptions(openapsoffline);
+                newDialog.setOptions(openapsoffline, R.string.careportal_openapsoffline);
                 break;
             case R.id.careportal_temporarytarget:
                 temptarget.executeTempTarget = false;
-                newDialog.setOptions(temptarget);
+                newDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
                 break;
             default:
                 newDialog = null;

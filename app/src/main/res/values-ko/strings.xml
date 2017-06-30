@@ -62,7 +62,7 @@
     <string name="openapsma_iobdata_label">IOB 데이터</string>
     <string name="openapsma_profile_label">프로파일</string>
     <string name="openapsma_mealdata_label">식사 데이터</string>
-    <string name="openapsma_result_label">결과</string>
+    <string name="result">결과</string>
     <string name="openapsma_noglucosedata">혈당 데이터 없음</string>
     <string name="openapsma_noprofile">프로파일 없음</string>
     <string name="openapsma_nopump">No pump available</string>

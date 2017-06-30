@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -45,6 +46,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
@@ -441,7 +443,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
             bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
+        } else {
+            Intent i = new Intent();
+            i.putExtra("insulin", detailedBolusInfo.insulin);
+            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
         }
+
 
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 

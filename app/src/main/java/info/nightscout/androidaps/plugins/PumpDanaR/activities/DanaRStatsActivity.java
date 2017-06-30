@@ -35,7 +35,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
@@ -73,6 +75,7 @@ public class DanaRStatsActivity extends Activity {
     DecimalFormat decimalFormat;
 
     List<DanaRHistoryRecord> historyList = new ArrayList<>();
+    List<DanaRHistoryRecord> dummies;
 
     public DanaRStatsActivity() {
         super();
@@ -302,6 +305,34 @@ public class DanaRStatsActivity extends Activity {
     private void loadDataFromDB(byte type) {
         historyList = MainApp.getDbHelper().getDanaRHistoryRecordsByType(type);
 
+        //only use newest 10
+        historyList = historyList.subList(0, Math.min(10, historyList.size()));
+
+        //fill single gaps
+        dummies = new LinkedList();
+        DateFormat df = new SimpleDateFormat("dd.MM.");
+        for(int i = 0; i < historyList.size()-1; i++){
+            DanaRHistoryRecord elem1 = historyList.get(i);
+            DanaRHistoryRecord elem2 = historyList.get(i+1);
+
+            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25*60*60*1000)))){
+                DanaRHistoryRecord dummy = new DanaRHistoryRecord();
+                dummy.recordDate = elem1.recordDate - 24*60*60*1000;
+                dummy.recordDailyBasal = elem1.recordDailyBasal/2;
+                dummy.recordDailyBolus = elem1.recordDailyBolus/2;
+                dummies.add(dummy);
+                elem1.recordDailyBasal /= 2;
+                elem1.recordDailyBolus /= 2;
+            }
+        }
+        historyList.addAll(dummies);
+        Collections.sort(historyList, new Comparator<DanaRHistoryRecord>() {
+            @Override
+            public int compare(DanaRHistoryRecord lhs, DanaRHistoryRecord rhs) {
+                return (int) (rhs.recordDate-lhs.recordDate);
+            }
+        });
+
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -332,6 +363,9 @@ public class DanaRStatsActivity extends Activity {
                     // Create the table row
                     TableRow tr = new TableRow(DanaRStatsActivity.this);
                     if (i % 2 != 0) tr.setBackgroundColor(Color.DKGRAY);
+                    if(dummies.contains(record)){
+                        tr.setBackgroundColor(Color.argb(125, 255, 0, 0));
+                    }
                     tr.setId(100 + i);
                     tr.setLayoutParams(new TableLayout.LayoutParams(
                             TableLayout.LayoutParams.MATCH_PARENT,

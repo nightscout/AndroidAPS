@@ -169,14 +169,14 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
                 final OptionsToShow profileswitch = CareportalFragment.profileswitch;
                 profileswitch.executeProfileSwitch = true;
-                newDialog.setOptions(profileswitch);
+                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(manager, "NewNSTreatmentDialog");
                 break;
             case R.id.actions_temptarget:
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
                 final OptionsToShow temptarget = CareportalFragment.temptarget;
                 temptarget.executeTempTarget = true;
-                newTTDialog.setOptions(temptarget);
+                newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
                 newTTDialog.show(manager, "NewNSTreatmentDialog");
                 break;
             case R.id.actions_extendedbolus:

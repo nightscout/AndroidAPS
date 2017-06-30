@@ -69,7 +69,9 @@ public class BgReading implements DataPointWithLabelInterface {
 
     public String directionToSymbol() {
         String symbol = "";
-        if (direction.compareTo("DoubleDown") == 0) {
+        if (direction == null) {
+            symbol = "??";
+        } else if (direction.compareTo("DoubleDown") == 0) {
             symbol = "\u21ca";
         } else if (direction.compareTo("SingleDown") == 0) {
             symbol = "\u2193";
