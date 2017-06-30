@@ -81,7 +81,6 @@
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_nightscoutversion_label">Versione Nightscout</string>
-    <string name="configbuilder_nsclientversion_label">Versione NSClient</string>
     <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_pump">Microinfusore</string>
     <string name="configbuilder_shortname">Configurazione</string>

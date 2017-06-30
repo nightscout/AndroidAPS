@@ -97,7 +97,6 @@
     <string name="configbuilder_insulin">инсулин</string>
     <string name="configbuilder_loop">замкнутый цикл</string>
     <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
-    <string name="configbuilder_nsclientversion_label">версия NSClient:</string>
     <string name="configbuilder_profile">профиль</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_shortname">КОНФ</string>

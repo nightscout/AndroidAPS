@@ -67,8 +67,6 @@ public class ConfigBuilderFragment extends Fragment {
     ListView constraintsListView;
     TextView constraintsLabel;
     ListView generalListView;
-    TextView nsclientVerView;
-    TextView nightscoutVerView;
 
     LinearLayout mainLayout;
     Button unlock;
@@ -116,17 +114,10 @@ public class ConfigBuilderFragment extends Fragment {
         constraintsListView = (ListView) view.findViewById(R.id.configbuilder_constraintslistview);
         constraintsLabel = (TextView) view.findViewById(R.id.configbuilder_constraintslabel);
         generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
-        nsclientVerView = (TextView) view.findViewById(R.id.configbuilder_nsclientversion);
-        nightscoutVerView = (TextView) view.findViewById(R.id.configbuilder_nightscoutversion);
 
         mainLayout = (LinearLayout) view.findViewById(R.id.configbuilder_mainlayout);
         unlock = (Button) view.findViewById(R.id.configbuilder_unlock);
 
-        nsclientVerView.setText(ConfigBuilderPlugin.nsClientVersionName);
-        nightscoutVerView.setText(ConfigBuilderPlugin.nightscoutVersionName);
-        if (ConfigBuilderPlugin.nsClientVersionCode < 117) nsclientVerView.setTextColor(Color.RED);
-        if (ConfigBuilderPlugin.nightscoutVersionCode < 900)
-            nightscoutVerView.setTextColor(Color.RED);
         setViews();
 
         if (PasswordProtection.isLocked("settings_password")) {

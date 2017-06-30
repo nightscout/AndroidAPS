@@ -172,7 +172,6 @@
     <string name="careportal_newnstreatment_glucosetype">Zadání glykémie</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="configbuilder_nightscoutversion_label">Verze Nightscoutu:</string>
-    <string name="configbuilder_nsclientversion_label">Verze NSClienta:</string>
     <string name="send">POSLAT</string>
     <string name="missing">Chybí</string>
     <string name="enabled">Povolený</string>

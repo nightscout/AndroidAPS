@@ -179,7 +179,6 @@
     <string name="noprofile">Pendiente carga perfil NS</string>
     <string name="overview_tempbasal_button">Basal Temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
-    <string name="configbuilder_nsclientversion_label">NSClient versión:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
     <string name="send">ENVIAR</string>
     <string name="missing">Faltan</string>
