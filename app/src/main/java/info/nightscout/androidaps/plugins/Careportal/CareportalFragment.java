@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +13,13 @@ import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 
 public class CareportalFragment extends Fragment implements View.OnClickListener {
 
@@ -26,6 +29,8 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
     TextView cage;
     TextView sage;
     TextView pbage;
+
+    View statsLayout;
 
     static public CareportalPlugin getPlugin() {
         if (careportalPlugin == null) {
@@ -86,6 +91,11 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
         cage = (TextView) view.findViewById(R.id.careportal_canulaage);
         sage = (TextView) view.findViewById(R.id.careportal_sensorage);
         pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+
+        statsLayout = (View) view.findViewById(R.id.careportal_stats);
+
+        if (BuildConfig.NSCLIENTOLNY)
+            statsLayout.setVisibility(View.GONE); // visible on overview
 
         updateGUI();
         return view;
@@ -197,21 +207,22 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
                         @Override
                         public void run() {
                             CareportalEvent careportalEvent;
+                            String notavailable = OverviewFragment.shorttextmode ? "-" : MainApp.sResources.getString(R.string.notavailable);
                             if (sage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SENSORCHANGE);
-                                sage.setText(careportalEvent != null ? careportalEvent.age() : MainApp.sResources.getString(R.string.notavailable));
+                                sage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
                             }
                             if (iage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.INSULINCHANGE);
-                                iage.setText(careportalEvent != null ? careportalEvent.age() : MainApp.sResources.getString(R.string.notavailable));
+                                iage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
                             }
                             if (cage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.SITECHANGE);
-                                cage.setText(careportalEvent != null ? careportalEvent.age() : MainApp.sResources.getString(R.string.notavailable));
+                                cage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
                             }
                             if (pbage != null) {
                                 careportalEvent = MainApp.getDbHelper().getLastCareportalEvent(CareportalEvent.PUMPBATTERYCHANGE);
-                                pbage.setText(careportalEvent != null ? careportalEvent.age() : MainApp.sResources.getString(R.string.notavailable));
+                                pbage.setText(careportalEvent != null ? careportalEvent.age() : notavailable);
                             }
                         }
                     }

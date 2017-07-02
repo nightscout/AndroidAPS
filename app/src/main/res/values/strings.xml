@@ -666,4 +666,12 @@
     <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
     <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="danar_visualizeextendedaspercentage_title">Visualize extended bolus as %</string>
+    <string name="careportal_sensorage_label_short">SAGE</string>
+    <string name="careportal_insulinage_label_short">IAGE</string>
+    <string name="careportal_canulaage_label_short">CAGE</string>
+    <string name="careportal_pbage_label_short">PBAGE</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <string name="basal_short">BAS</string>
+    <string name="virtualpump_extendedbolus_label_short">EXT</string>
 </resources>

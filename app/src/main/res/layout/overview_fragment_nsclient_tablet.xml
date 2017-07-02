@@ -546,14 +546,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal"
                     android:paddingTop="5dp">
@@ -693,24 +685,6 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/overview_accepttemplayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:id="@+id/overview_accepttempbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="3dp"
-                    android:layout_marginTop="3dp"
-                    android:layout_weight="0.5"
-                    android:text="Accept new temp\n0.25U/h"
-                    android:textColor="@color/colorAcceptTempButton" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
@@ -745,21 +719,6 @@
                     android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/overview_calibrationbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_marginRight="-4dp"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_calibration"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/overview_calibration"
-                    android:textColor="@color/colorCalibrationButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-                <Button
                     android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -771,20 +730,6 @@
                     android:paddingRight="0dp"
                     android:text="Quick wizard"
                     android:textColor="@color/colorQuickWizardButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/overview_canceltempbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_cancelbasal"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="Cancel temp basal"
-                    android:textColor="@color/colorCancelTempButton"
                     android:textSize="10sp"
                     android:visibility="gone" />
 
