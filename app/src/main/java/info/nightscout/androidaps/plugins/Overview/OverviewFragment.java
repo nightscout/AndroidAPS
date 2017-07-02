@@ -31,6 +31,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -63,6 +64,7 @@ import java.util.concurrent.TimeUnit;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.broadcasts.NSClearAlarmBroadcast;
@@ -85,6 +87,7 @@ import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
@@ -108,6 +111,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DoubleDataPoint;
@@ -180,6 +184,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     Button calibrationButton;
     Button acceptTempButton;
     Button quickWizardButton;
+
+    CheckBox lockScreen;
 
     boolean smallWidth;
     boolean smallHeight;
@@ -329,6 +335,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 return false;
             }
         });
+
+        lockScreen = (CheckBox) view.findViewById(R.id.overview_lockscreen);
+        if (lockScreen != null) {
+            lockScreen.setChecked(SP.getBoolean("lockscreen", false));
+            lockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    SP.putBoolean("lockscreen", isChecked);
+                    MainApp.bus().post(new EventSetWakeLock(isChecked));
+                }
+            });
+        }
 
         return view;
     }

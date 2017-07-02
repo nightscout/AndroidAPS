@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -40,6 +41,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ImageButton menuButton;
 
+    protected PowerManager.WakeLock mWakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,8 +82,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
+        onStatusEvent(new EventSetWakeLock(SP.getBoolean("lockscreen", false)));
+
         registerBus();
         setUpTabs(false);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventSetWakeLock ev) {
+        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (ev.lock) {
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
+            mWakeLock.acquire();
+        } else {
+            if (mWakeLock != null)
+                mWakeLock.release();
+        }
     }
 
     @Subscribe
@@ -96,6 +113,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 }
+                boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
+                if (lockScreen)
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                else
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
     }
@@ -154,6 +176,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         askForSMSPermissions();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mWakeLock != null)
+            mWakeLock.release();
+        super.onDestroy();
     }
 
     private void askForBatteryOptimizationPermission() {

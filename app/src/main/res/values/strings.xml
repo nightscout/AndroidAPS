@@ -674,4 +674,6 @@
     <string name="uploader_short">UPLD</string>
     <string name="basal_short">BAS</string>
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
+    <string name="lock_screen">Lock screen</string>
+    <string name="lock_screen_short">Lock</string>
 </resources>

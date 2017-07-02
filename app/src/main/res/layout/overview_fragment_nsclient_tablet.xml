@@ -152,6 +152,14 @@
                             android:layout_marginLeft="10dp"
                             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+                        <CheckBox
+                            android:id="@+id/overview_lockscreen"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="@string/lock_screen"
+                            android:textAlignment="center" />
+
                     </LinearLayout>
 
                     <TextView
@@ -719,6 +727,21 @@
                     android:visibility="gone" />
 
                 <Button
+                    android:id="@+id/overview_calibrationbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_marginRight="-4dp"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_calibration"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/overview_calibration"
+                    android:textColor="@color/colorCalibrationButton"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <Button
                     android:id="@+id/overview_quickwizardbutton"
                     style="?android:attr/buttonStyle"
                     android:layout_width="0px"
@@ -730,6 +753,20 @@
                     android:paddingRight="0dp"
                     android:text="Quick wizard"
                     android:textColor="@color/colorQuickWizardButton"
+                    android:textSize="10sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/overview_canceltempbutton"
+                    style="?android:attr/buttonStyle"
+                    android:layout_width="0px"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="0.5"
+                    android:drawableTop="@drawable/icon_cancelbasal"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="Cancel temp basal"
+                    android:textColor="@color/colorCancelTempButton"
                     android:textSize="10sp"
                     android:visibility="gone" />
 

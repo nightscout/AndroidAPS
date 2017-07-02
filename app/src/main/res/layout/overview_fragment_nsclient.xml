@@ -138,17 +138,30 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/overview_time"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="fill_vertical"
-                    android:layout_marginTop="10dp"
-                    android:maxWidth="150dp"
-                    android:paddingLeft="10dp"
-                    android:text="8:00 PM"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/overview_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill_vertical"
+                        android:layout_marginTop="10dp"
+                        android:maxWidth="150dp"
+                        android:paddingLeft="10dp"
+                        android:text="8:00 PM"
+                        android:textSize="30sp"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/overview_lockscreen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/lock_screen_short"
+                        android:textAlignment="center" />
+                </LinearLayout>
 
             </LinearLayout>
 
