@@ -14,7 +14,9 @@ public class StatusMenuActivity extends MenuListActivity {
         return new String[] {
                 "Pump",
                 "Loop",
-                "Targets"};
+                "Targets",
+                "OAPS Result"};
+
     }
 
     @Override
@@ -29,6 +31,9 @@ public class StatusMenuActivity extends MenuListActivity {
                 break;
             case 2:
                 ListenerService.initiateAction(this, "status targets");
+                break;
+            case 3:
+                ListenerService.initiateAction(this, "status oapsresult");
                 break;
         }
 

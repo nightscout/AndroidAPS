@@ -336,6 +336,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         .setContentIntent(actionPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVibrate(vibratePattern)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                        .extend(new NotificationCompat.WearableExtender())
                         .addAction(R.drawable.ic_confirm, title, actionPendingIntent);
 
         NotificationManagerCompat notificationManager =
