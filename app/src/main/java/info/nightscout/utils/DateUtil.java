@@ -3,6 +3,7 @@ package info.nightscout.utils;
 import android.text.format.DateUtils;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,6 +25,7 @@ public class DateUtil {
      * The date format in iso.
      */
     public static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     /**
      * Takes in an ISO date string of the following format:
@@ -36,8 +38,15 @@ public class DateUtil {
     public static Date fromISODateString(String isoDateString)
             throws Exception {
         SimpleDateFormat f = new SimpleDateFormat(FORMAT_DATE_ISO);
+        Date date;
         f.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date date = f.parse(isoDateString);
+        try {
+            date = f.parse(isoDateString);
+        } catch (ParseException e) {
+            f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC);
+            f.setTimeZone(TimeZone.getTimeZone("UTC"));
+            date = f.parse(isoDateString);
+        }
         return date;
     }
 
