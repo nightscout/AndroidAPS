@@ -26,6 +26,8 @@ import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugi
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.OKDialog;
+import info.nightscout.utils.SP;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -49,6 +51,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
         }
         if (key.equals("short_tabtitles")) {
             MainApp.bus().post(new EventRefreshGui());
+        }
+        if (key.equals("openapsama_useautosens") && SP.getBoolean("openapsama_useautosens", false)) {
+            OKDialog.show(this, MainApp.sResources.getString(R.string.configbuilder_sensitivity), MainApp.sResources.getString(R.string.sensitivity_warning), null);
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
