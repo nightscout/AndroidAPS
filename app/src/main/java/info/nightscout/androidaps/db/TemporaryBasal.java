@@ -71,7 +71,7 @@ public class TemporaryBasal implements Interval {
         this.source = extendedBolus.source;
         this._id = extendedBolus._id;
         this.durationInMinutes = extendedBolus.durationInMinutes;
-        this.isAbsolute = false;
+        this.isAbsolute = true;
         this.isFakeExtended = true;
         this.netExtendedRate = extendedBolus.absoluteRate();
         this.absoluteRate = basal + extendedBolus.absoluteRate();
