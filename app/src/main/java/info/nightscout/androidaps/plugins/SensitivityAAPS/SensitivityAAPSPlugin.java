@@ -5,6 +5,7 @@ import android.support.v4.util.LongSparseArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -107,8 +108,6 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
         if (age.equals(MainApp.sResources.getString(R.string.key_child))) defaultHours = 4;
         int hoursForDetection = SP.getInt(R.string.key_openapsama_autosens_period, defaultHours);
 
-        long now = System.currentTimeMillis();
-
         if (autosensDataTable == null || autosensDataTable.size() < 4) {
             log.debug("No autosens data available");
             return new AutosensResult();
@@ -137,7 +136,7 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
                 continue;
             }
 
-            if (autosensData.time > now - hoursForDetection * 60 * 60 * 1000L)
+            if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L)
                 deviationsArray.add(autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
             if (deviationsArray.size() > hoursForDetection * 60 / 5)
                 deviationsArray.remove(0);
@@ -187,7 +186,8 @@ public class SensitivityAAPSPlugin implements PluginBase, SensitivityInterface{
             log.debug(ratioLimit);
         }
 
-        log.error("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile);
+        log.debug("Sensitivity to: " + new Date(toTime).toLocaleString() + " percentile: " + percentile + " ratio: " + ratio);
+        log.debug("Sensitivity to: deviations " + Arrays.toString(deviations));
 
         AutosensResult output = new AutosensResult();
         output.ratio = Round.roundTo(ratio, 0.01);

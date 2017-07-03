@@ -416,6 +416,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                         autosensData.nonEqualDeviation = true;
                     } else {
                         autosensData.pastSensitivity += "-";
+                        autosensData.nonEqualDeviation = true;
                     }
                     autosensData.nonCarbsDeviation = true;
                 } else {

@@ -136,7 +136,7 @@ public class SensitivityOref0Plugin implements PluginBase, SensitivityInterface 
                 continue;
             }
 
-            if (autosensData.time > now - hoursForDetection * 60 * 60 * 1000L)
+            if (autosensData.time > toTime - hoursForDetection * 60 * 60 * 1000L)
                 deviationsArray.add(autosensData.nonEqualDeviation ? autosensData.deviation : 0d);
             if (deviationsArray.size() > hoursForDetection * 60 / 5)
                 deviationsArray.remove(0);
