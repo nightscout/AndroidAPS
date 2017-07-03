@@ -361,7 +361,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 double baseRate = pump.getBaseBasalRate();
                 double tempRate = baseRate + tb.netExtendedRate;
                 return tempRate;
-            }else if (tb.isAbsolute) {
+            } else if (tb.isAbsolute) {
                 return tb.absoluteRate;
             } else {
                 double baseRate = pump.getBaseBasalRate();

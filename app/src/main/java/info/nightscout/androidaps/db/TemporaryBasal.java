@@ -48,7 +48,7 @@ public class TemporaryBasal implements Interval {
     @DatabaseField
     public boolean isAbsolute = false;
 
-    public boolean isFakeExtended = true;
+    public boolean isFakeExtended = false;
 
     @DatabaseField
     public int percentRate = 0;
