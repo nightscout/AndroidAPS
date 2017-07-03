@@ -125,6 +125,12 @@ public class Profile {
     }
 
     public JSONObject getData() {
+        if (!json.has("units"))
+            try {
+                json.put("units", units);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         return json;
     }
 
