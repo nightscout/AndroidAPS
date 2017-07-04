@@ -160,8 +160,6 @@ public class StatuslinePlugin implements PluginBase {
     @NonNull
     private String buildStatusString() {
         String status = "";
-        boolean shortString = true; // make setting?
-
         LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
 
         if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
@@ -176,11 +174,8 @@ public class StatuslinePlugin implements PluginBase {
 
         if (treatmentsInterface.isTempBasalInProgress()) {
             TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
-            if (shortString) {
-                status += activeTemp.toStringShort();
-            } else {
-                status += activeTemp.toStringMedium();
-            }
+            status += activeTemp.toStringShort();
+
         }
 
         //IOB
@@ -188,7 +183,7 @@ public class StatuslinePlugin implements PluginBase {
         IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
         treatmentsInterface.updateTotalIOBTempBasals();
         IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += (shortString ? "" : (ctx.getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
 
 
         if (mPrefs.getBoolean("xdripstatus_detailediob", true)) {

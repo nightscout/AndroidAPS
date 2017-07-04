@@ -357,7 +357,11 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
         TemporaryBasal tb = getTempBasalFromHistory(System.currentTimeMillis());
         if (tb != null) {
-            if (tb.isAbsolute) {
+            if (tb.isFakeExtended){
+                double baseRate = pump.getBaseBasalRate();
+                double tempRate = baseRate + tb.netExtendedRate;
+                return tempRate;
+            } else if (tb.isAbsolute) {
                 return tb.absoluteRate;
             } else {
                 double baseRate = pump.getBaseBasalRate();

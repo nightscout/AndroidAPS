@@ -1031,10 +1031,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
-                if (activeTemp.isAbsolute)
-                    basalText = "T: " + DecimalFormatter.to2Decimal(activeTemp.absoluteRate) + "U/h";
-                else
-                    basalText = "T: " + DecimalFormatter.to0Decimal(activeTemp.percentRate) + "%";
+                    basalText = "T: " + activeTemp.toStringVeryShort();
             } else {
                 basalText = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
             }
@@ -1054,9 +1051,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 basalText = activeTemp.toStringFull() + " ";
             }
             if (Config.NSCLIENT)
-                basalText += "( " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h )";
+                basalText += "(" + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + " U/h)";
             else if (pump.getPumpDescription().isTempBasalCapable) {
-                basalText += "( " + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h )";
+                basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
             }
         }
         baseBasalView.setText(basalText);

@@ -525,7 +525,6 @@ public class WatchUpdaterService extends WearableListenerService implements
     @NonNull
     private String generateStatusString() {
         String status = "";
-        boolean shortString = true;
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile == null) {
@@ -547,11 +546,8 @@ public class WatchUpdaterService extends WearableListenerService implements
 
         if (treatmentsInterface.isTempBasalInProgress()) {
             TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
-            if (shortString) {
-                status += activeTemp.toStringShort();
-            } else {
-                status += activeTemp.toStringMedium();
-            }
+            status += activeTemp.toStringShort();
+
         }
 
         //IOB
@@ -559,7 +555,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
         treatmentsInterface.updateTotalIOBTempBasals();
         IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += (shortString ? "" : (getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
 
         if (mPrefs.getBoolean("wear_detailediob", true)) {
             status += "("

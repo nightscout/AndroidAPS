@@ -47,10 +47,15 @@ public class TemporaryBasal implements Interval {
     public int durationInMinutes = 0; // duration == 0 means end of temp basal
     @DatabaseField
     public boolean isAbsolute = false;
+
+    public boolean isFakeExtended = false;
+
     @DatabaseField
     public int percentRate = 0;
     @DatabaseField
     public double absoluteRate = 0d;
+
+    public double netExtendedRate = 0d;
 
     public TemporaryBasal() {
     }
@@ -67,6 +72,8 @@ public class TemporaryBasal implements Interval {
         this._id = extendedBolus._id;
         this.durationInMinutes = extendedBolus.durationInMinutes;
         this.isAbsolute = true;
+        this.isFakeExtended = true;
+        this.netExtendedRate = extendedBolus.absoluteRate();
         this.absoluteRate = basal + extendedBolus.absoluteRate();
     }
 
@@ -96,6 +103,10 @@ public class TemporaryBasal implements Interval {
             return false;
         if (absoluteRate != other.absoluteRate)
             return false;
+        if (netExtendedRate != other.netExtendedRate)
+            return false;
+        if (isFakeExtended != other.isFakeExtended)
+            return false;
         if (pumpId != other.pumpId)
             return false;
         if (!Objects.equals(_id, other._id))
@@ -111,6 +122,8 @@ public class TemporaryBasal implements Interval {
         percentRate = t.percentRate;
         absoluteRate = t.absoluteRate;
         pumpId = t.pumpId;
+        isFakeExtended = t.isFakeExtended;
+        netExtendedRate = t.netExtendedRate;
     }
 
     // -------- Interval interface ---------
@@ -172,6 +185,12 @@ public class TemporaryBasal implements Interval {
     // -------- Interval interface end ---------
 
     public IobTotal iobCalc(long time) {
+
+        if(isFakeExtended){
+            log.error("iobCalc should only be called on Extended boluses separately");
+            return new IobTotal(time);
+        }
+
         IobTotal result = new IobTotal(time);
         Profile profile = MainApp.getConfigBuilder().getProfile(time);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
@@ -239,8 +258,11 @@ public class TemporaryBasal implements Interval {
     }
 
     public double tempBasalConvertedToAbsolute(long time) {
-        if (isAbsolute) return absoluteRate;
-        else {
+        if(isFakeExtended){
+            return MainApp.getConfigBuilder().getProfile(time).getBasal(time) + netExtendedRate;
+        } else if (isAbsolute) {
+            return absoluteRate;
+        } else {
              return MainApp.getConfigBuilder().getProfile(time).getBasal(time) * percentRate / 100;
         }
     }
@@ -256,11 +278,21 @@ public class TemporaryBasal implements Interval {
                 ", absoluteRate=" + absoluteRate +
                 ", durationInMinutes=" + durationInMinutes +
                 ", isAbsolute=" + isAbsolute +
+                ", isFakeExtended=" + isFakeExtended +
+                ", netExtendedRate=" + netExtendedRate +
                 '}';
     }
 
     public String toStringFull() {
-        if (isAbsolute) {
+        if(isFakeExtended){
+
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            Double currentBasalRate = profile.getBasal();
+            double rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
+            return DecimalFormatter.to2Decimal(rate) + "U/h ("+DecimalFormatter.to2Decimal(netExtendedRate)+"E) @" +
+                    DateUtil.timeString(date) +
+                    " " + getRealDuration() + "/" + durationInMinutes + "min";
+        } else if (isAbsolute) {
             return DecimalFormatter.to2Decimal(absoluteRate) + "U/h @" +
                     DateUtil.timeString(date) +
                     " " + getRealDuration() + "/" + durationInMinutes + "min";
@@ -272,28 +304,46 @@ public class TemporaryBasal implements Interval {
     }
 
     public String toStringShort() {
-        if (isAbsolute) {
+        if (isAbsolute || isFakeExtended) {
+
+            double rate  = 0d;
+            if (isFakeExtended) {
+                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Double currentBasalRate = profile.getBasal();
+                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
+            } else if (isAbsolute){
+                rate = absoluteRate;
+            }
+
             if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
                 Profile profile = MainApp.getConfigBuilder().getProfile();
                 if(profile != null) {
-                    double basal = profile.getBasal(System.currentTimeMillis());
+                    double basal = profile.getBasal();
                     if(basal != 0){
-                        return Math.round(absoluteRate*100d/basal) + "% ";
+                        return Math.round(rate*100d/basal) + "% ";
                     }
                 }
             }
-            return DecimalFormatter.to2Decimal(absoluteRate) + "U/h ";
+            return DecimalFormatter.to2Decimal(rate) + "U/h ";
         } else { // percent
             return percentRate + "% ";
         }
     }
 
-    public String toStringMedium() {
-        if (isAbsolute) {
-            return DecimalFormatter.to2Decimal(absoluteRate) + "U/h ("
-                    + getRealDuration() + "/" + durationInMinutes + ") ";
+    public String toStringVeryShort() {
+        if (isAbsolute || isFakeExtended) {
+
+            double rate  = 0d;
+            if (isFakeExtended) {
+                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Double currentBasalRate = profile.getBasal();
+                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
+            } else if (isAbsolute){
+                rate = absoluteRate;
+            }
+            return DecimalFormatter.to2Decimal(rate) + "U/h ";
         } else { // percent
-            return percentRate + "% (" + getRealDuration() + "/" + durationInMinutes + ") ";
+            return percentRate + "% ";
         }
     }
 
