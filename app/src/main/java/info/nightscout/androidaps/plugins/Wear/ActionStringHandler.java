@@ -21,6 +21,7 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
+import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.BolusWizard;
@@ -159,6 +160,9 @@ public class ActionStringHandler {
             } else if ("targets".equals(act[1])) {
                 rTitle += " TARGETS";
                 rMessage = getTargetsStatus();
+            } else if ("oapsresult".equals(act[1])) {
+                rTitle += " OAPS RESULT";
+                rMessage = getOAPSResultStatus();
             }
 
         } else if ("wizard".equals(act[0])) {
@@ -295,6 +299,40 @@ public class ActionStringHandler {
         ret += "DEFAULT RANGE: ";
         ret += SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault);
         ret += " target: " + SP.getDouble("openapsma_target_bg", targetBgDefault);
+        return ret;
+    }
+
+    private static String getOAPSResultStatus() {
+        String ret = "";
+        if (!Config.APS) {
+            return "Only apply in APS mode!";
+        }
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            return "No profile set :(";
+        }
+
+        APSInterface usedAPS = MainApp.getConfigBuilder().getActiveAPS();
+        if (usedAPS == null) {
+            return "No active APS :(!";
+        }
+
+        APSResult result = usedAPS.getLastAPSResult();
+        if (result == null) {
+            return "Last result not available!";
+        }
+
+        if (!result.changeRequested) {
+           ret += MainApp.sResources.getString(R.string.nochangerequested) + "\n";
+        } else if (result.rate == 0 && result.duration == 0) {
+            ret += MainApp.sResources.getString(R.string.canceltemp)+ "\n";
+        } else {
+            ret += MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
+                    "(" + DecimalFormatter.to2Decimal(result.rate / MainApp.getConfigBuilder().getBaseBasalRate() * 100) + "%)\n" +
+                    MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration) + " min\n";
+        }
+        ret += "\n" + MainApp.sResources.getString(R.string.reason) + ": " + result.reason;
+
         return ret;
     }
 
