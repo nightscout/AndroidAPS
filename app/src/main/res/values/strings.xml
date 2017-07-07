@@ -677,4 +677,5 @@
     <string name="lock_screen">Lock screen</string>
     <string name="lock_screen_short">Lock</string>
     <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
+    <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
 </resources>

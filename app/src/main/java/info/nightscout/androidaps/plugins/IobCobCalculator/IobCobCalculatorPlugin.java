@@ -215,6 +215,30 @@ public class IobCobCalculatorPlugin implements PluginBase {
             createBucketedDataRecalculated();
     }
 
+    @Nullable
+    private BgReading findNewer(long time) {
+        BgReading lastFound = bgReadings.get(0);
+        if (lastFound.date < time) return null;
+        for (int i = 1; i < bgReadings.size(); ++i) {
+            if (bgReadings.get(i).date > time) continue;
+            lastFound = bgReadings.get(i);
+            if (bgReadings.get(i).date < time) break;
+        }
+        return lastFound;
+    }
+
+    @Nullable
+    private BgReading findOlder(long time) {
+        BgReading lastFound = bgReadings.get(bgReadings.size() - 1);
+        if (lastFound.date > time) return null;
+        for (int i = bgReadings.size() - 2; i >=0 ; --i) {
+            if (bgReadings.get(i).date < time) continue;
+            lastFound = bgReadings.get(i);
+            if (bgReadings.get(i).date > time) break;
+        }
+        return lastFound;
+    }
+
     private void createBucketedDataRecalculated() {
         synchronized (dataLock) {
             if (bgReadings == null || bgReadings.size() < 3) {
@@ -224,29 +248,24 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
             bucketed_data = new ArrayList<>();
             long currentTime = bgReadings.get(0).date + 5 * 60 * 1000 - bgReadings.get(0).date % (5 * 60 * 1000) - 5 * 60 * 1000L;
-            log.debug("First reading: " + new Date(bgReadings.get(0).date).toLocaleString() + " Staring at: " + new Date(currentTime).toLocaleString());
-            double newerbg = bgReadings.get(0).value;
-            long newerbgTime = bgReadings.get(0).date;
-            for (int i = 1; i < bgReadings.size(); ++i) {
+            //log.debug("First reading: " + new Date(currentTime).toLocaleString());
+
+             while (true) {
                 // test if current value is older than current time
-                double olderbg = bgReadings.get(i).value;
-                long olderTime = bgReadings.get(i).date;
-                if (olderTime > currentTime) {
-                    newerbg = olderbg;
-                    newerbgTime = olderTime;
-                    continue;
-                }
+                BgReading newer = findNewer(currentTime);
+                BgReading older = findOlder(currentTime);
+                if (newer == null || older == null)
+                    break;
 
-                double bgDelta = newerbg - olderbg;
-                long timeDiffToNew = newerbgTime - currentTime;
+                double bgDelta = newer.value - older.value;
+                long timeDiffToNew = newer.date - currentTime;
 
-                double currentBg = newerbg - (double) timeDiffToNew / (newerbgTime - olderTime) * bgDelta;
+                double currentBg = newer.value - (double) timeDiffToNew / (newer.date - older.date) * bgDelta;
                 BgReading newBgreading = new BgReading();
                 newBgreading.date = currentTime;
                 newBgreading.value = Math.round(currentBg);
                 bucketed_data.add(newBgreading);
-                newerbg = olderbg;
-                newerbgTime = olderTime;
+                //log.debug("BG: " + newBgreading.value + " (" + new Date(newBgreading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
                 currentTime -= 5 * 60 * 1000L;
 
             }
@@ -645,6 +664,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
             log.debug("Invalidating cached data to: " + new Date(time).toLocaleString());
             for (int index = iobTable.size() - 1; index >= 0; index--) {
                 if (iobTable.keyAt(index) > time) {
+                    if (Config.logAutosensData)
                     if (Config.logAutosensData)
                         log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
                     iobTable.removeAt(index);

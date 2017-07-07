@@ -50,6 +50,7 @@ import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
 import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
+import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.SmsCommunicator.SmsCommunicatorFragment;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
@@ -101,6 +102,7 @@ public class MainApp extends Application {
             pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
+            pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
             if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());
