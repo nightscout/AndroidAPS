@@ -65,7 +65,6 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -102,6 +101,8 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
@@ -119,7 +120,6 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.OKDialog;
 import info.nightscout.utils.Profiler;
@@ -1028,7 +1028,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
-                    basalText = "T: " + activeTemp.toStringVeryShort();
+                basalText = "T: " + activeTemp.toStringVeryShort();
             } else {
                 basalText = DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getProfile().getBasal()) + "U/h";
             }
