@@ -15,6 +15,7 @@ public class StatusMenuActivity extends MenuListActivity {
                 "Pump",
                 "Loop",
                 "Targets",
+                "CPP",
                 "OAPS Result"};
 
     }
@@ -33,6 +34,9 @@ public class StatusMenuActivity extends MenuListActivity {
                 ListenerService.initiateAction(this, "status targets");
                 break;
             case 3:
+                ListenerService.initiateAction(this, "opencpp");
+                break;
+            case 4:
                 ListenerService.initiateAction(this, "status oapsresult");
                 break;
         }

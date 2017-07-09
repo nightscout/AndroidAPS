@@ -358,4 +358,11 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         return sb.toString();
     }
 
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public int getTimeshift() {
+        return timeshift;
+    }
 }

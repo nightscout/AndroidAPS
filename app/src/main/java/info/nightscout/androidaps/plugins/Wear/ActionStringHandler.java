@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -225,7 +226,24 @@ public class ActionStringHandler {
 
             lastBolusWizard = bolusWizard;
 
-        } else return;
+        } else if("opencpp".equals(act[0])){
+            //TODO ADRIAN open cpp
+            Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+            CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+
+            if(cpp == null || activeProfile==null || cpp != activeProfile){
+                rTitle = "STATUS";
+                rAction = "statusmessage";
+                rMessage = "CPP not activated";
+            } else {
+                // read CPP values
+                rTitle = "opencpp";
+                rMessage = "opencpp";
+                rAction = "opencpp" + " " + cpp.getPercentage() + " " + cpp.getTimeshift();
+            }
+
+        }else return;
+
 
         // send result
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, rMessage, rAction);
