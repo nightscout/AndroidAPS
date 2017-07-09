@@ -20,6 +20,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -197,19 +198,9 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
 
         //send profile to pumpe
-        if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
-            Thread t = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    pump.setNewBasalProfile(profile);
-                }
-            });
-            t.start();
-            msg += "syctopump";
-        } else {
-            msg += "SP.getBoolean(\"syncprofiletopump\", false): " + SP.getBoolean("syncprofiletopump", false) + " \n";
-            msg += "pump.isThisProfileSet(profile): " + pump.isThisProfileSet(profile);
-        }
+        new NewNSTreatmentDialog(); //init
+        NewNSTreatmentDialog.doProfileSwitch(this.getProfile(), this.getProfileName(), 0);
+
         //return formatted string
         /*msg += "%: " + this.percentage + " h: +" + this.timeshift;
         msg += "\n";
