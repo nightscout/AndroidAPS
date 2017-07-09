@@ -680,4 +680,7 @@
     <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Cancel</string>
+    <string name="cpp_sync_setting_missing">needs to be activated to send values to the pump!</string>
+    <string name="cpp_notloadedplugins">Not all profiles loaded!</string>
+    <string name="cpp_valuesnotstored">Values not stored!</string>
 </resources>

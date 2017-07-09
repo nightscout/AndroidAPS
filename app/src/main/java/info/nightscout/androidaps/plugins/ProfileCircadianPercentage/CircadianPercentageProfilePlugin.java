@@ -15,9 +15,11 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
@@ -157,6 +159,58 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
 
         createConvertedProfile();
+    }
+
+    public String externallySetParameters(int timeshift, int percentage) {
+
+        String msg = "";
+
+        //check for validity
+        if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
+            msg+= String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage") + "\n";
+        }
+        if (timeshift < 0 || percentage > 23) {
+            msg+= String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Timeshift") + "\n";
+        }
+        if(SP.getBoolean("syncprofiletopump", false)){
+            msg+= MainApp.sResources.getString(R.string.syncprofiletopump_title) + " " + MainApp.sResources.getString(R.string.cpp_sync_setting_missing) + "\n";
+        }
+        final PumpInterface pump = MainApp.getConfigBuilder();
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (pump != null && profile != null && profile.getBasal() != null){
+            msg+= MainApp.sResources.getString(R.string.cpp_notloadedplugins) +  "\n";
+        }
+        if(!"".equals(msg)) {
+            msg += MainApp.sResources.getString(R.string.cpp_valuesnotstored);
+            return msg;
+        }
+
+        //store profile
+        this.timeshift= timeshift;
+        this.percentage =  percentage;
+        storeSettings();
+
+
+        //send profile to pumpe
+        if (SP.getBoolean("syncprofiletopump", false) && !pump.isThisProfileSet(profile)) {
+            Thread t = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    pump.setNewBasalProfile(profile);
+                }
+            });
+            t.start();
+        }
+
+        //return formatted string
+        msg += "%: " + this.percentage + " h: +" + this.timeshift;
+        msg += "\n";
+        msg += "\nBasal:\n" + basalString() + "\n";
+        msg += "\nISF:\n" + isfString() + "\n";
+        msg += "\nIC:\n" + isfString() + "\n";
+
+        return msg;
     }
 
     private void createConvertedProfile() {
