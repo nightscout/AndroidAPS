@@ -227,14 +227,12 @@ public class ActionStringHandler {
             lastBolusWizard = bolusWizard;
 
         } else if("opencpp".equals(act[0])){
-            //TODO ADRIAN open cpp
             Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
             CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
 
             if(cpp == null || activeProfile==null || cpp != activeProfile){
-                rTitle = "STATUS";
-                rAction = "statusmessage";
-                rMessage = "CPP not activated";
+                sendError("CPP not activated!");
+                return;
             } else {
                 // read CPP values
                 rTitle = "opencpp";
@@ -242,7 +240,23 @@ public class ActionStringHandler {
                 rAction = "opencpp" + " " + cpp.getPercentage() + " " + cpp.getTimeshift();
             }
 
-        }else return;
+        } else if("cppset".equals(act[0])){
+            Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+            CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+
+            if(cpp == null || activeProfile==null || cpp != activeProfile){
+                sendError("CPP not activated!");
+                return;
+            } else {
+                // read CPP values
+                rMessage = "CPP:" + "\n\n"+
+                            "Percentage: " + act[1] + "%\n" +
+                            "Timeshift: " + act[2];
+                rAction = actionstring;
+            }
+
+        }
+        else return;
 
 
         // send result
@@ -397,8 +411,24 @@ public class ActionStringHandler {
             double insulin = SafeParse.stringToDouble(act[1]);
             int carbs = SafeParse.stringToInt(act[2]);
             doBolus(insulin, carbs);
+        } else if ("cppset".equals(act[0])) {
+            int timeshift = SafeParse.stringToInt(act[1]);
+            int percentage = SafeParse.stringToInt(act[2]);
+            setCPP(percentage, timeshift);
         }
         lastBolusWizard = null;
+    }
+
+    private static void setCPP(int percentage, int timeshift) {
+        Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+
+        if(cpp == null || activeProfile==null || cpp != activeProfile){
+            sendError("CPP not activated!");
+            return;
+        }
+        String msg = cpp.externallySetParameters(timeshift, percentage);
+        ToastUtils.showToastInUiThread(MainApp.instance(), msg);
     }
 
     private static void generateTempTarget(int duration, double low, double high) {

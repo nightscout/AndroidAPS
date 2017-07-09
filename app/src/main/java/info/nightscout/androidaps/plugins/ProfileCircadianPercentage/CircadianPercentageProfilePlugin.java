@@ -165,20 +165,24 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
         String msg = "";
 
+        if (!fragmentEnabled){
+            msg+= "NO CPP!" +  "\n";
+        }
+
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {
             msg+= String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Percentage") + "\n";
         }
-        if (timeshift < 0 || percentage > 23) {
+        if (timeshift < 0 || timeshift > 23) {
             msg+= String.format(MainApp.sResources.getString(R.string.openapsma_valueoutofrange), "Profile-Timeshift") + "\n";
         }
-        if(SP.getBoolean("syncprofiletopump", false)){
+        if(!SP.getBoolean("syncprofiletopump", false)){
             msg+= MainApp.sResources.getString(R.string.syncprofiletopump_title) + " " + MainApp.sResources.getString(R.string.cpp_sync_setting_missing) + "\n";
         }
         final PumpInterface pump = MainApp.getConfigBuilder();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
 
-        if (pump != null && profile != null && profile.getBasal() != null){
+        if (pump == null || profile == null || profile.getBasal() == null){
             msg+= MainApp.sResources.getString(R.string.cpp_notloadedplugins) +  "\n";
         }
         if(!"".equals(msg)) {
@@ -201,14 +205,17 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
                 }
             });
             t.start();
+            msg += "syctopump";
+        } else {
+            msg += "SP.getBoolean(\"syncprofiletopump\", false): " + SP.getBoolean("syncprofiletopump", false) + " \n";
+            msg += "pump.isThisProfileSet(profile): " + pump.isThisProfileSet(profile);
         }
-
         //return formatted string
-        msg += "%: " + this.percentage + " h: +" + this.timeshift;
+        /*msg += "%: " + this.percentage + " h: +" + this.timeshift;
         msg += "\n";
         msg += "\nBasal:\n" + basalString() + "\n";
         msg += "\nISF:\n" + isfString() + "\n";
-        msg += "\nIC:\n" + isfString() + "\n";
+        msg += "\nIC:\n" + isfString() + "\n";*/
 
         return msg;
     }
