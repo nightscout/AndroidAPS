@@ -80,7 +80,7 @@ public class CPPActivity extends ViewSelectorActivity {
                 if (editTimeshift != null){
                     def = SafeParse.stringToDouble(editTimeshift.editText.getText().toString());
                 }
-                editTimeshift = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 24d, 1d, new DecimalFormat("0"), false);
+                editTimeshift = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 0d, 23d, 1d, new DecimalFormat("0"), true, true);
                 setLabelToPlusMinusView(view, "timeshift");
                 container.addView(view);
                 return view;

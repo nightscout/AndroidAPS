@@ -250,8 +250,8 @@ public class ActionStringHandler {
             } else {
                 // read CPP values
                 rMessage = "CPP:" + "\n\n"+
-                            "Percentage: " + act[1] + "%\n" +
-                            "Timeshift: " + act[2];
+                            "Timeshift: " + act[1] + "\n" +
+                            "Percentage: " + act[2] + "%";
                 rAction = actionstring;
             }
 
@@ -428,7 +428,13 @@ public class ActionStringHandler {
             return;
         }
         String msg = cpp.externallySetParameters(timeshift, percentage);
-        ToastUtils.showToastInUiThread(MainApp.instance(), msg);
+        if(msg != null && !"".equals(msg)){
+            String rTitle = "STATUS";
+            String rAction = "statusmessage";
+            WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, msg, rAction);
+            lastSentTimestamp = System.currentTimeMillis();
+            lastConfirmActionString = rAction;
+        }
     }
 
     private static void generateTempTarget(int duration, double low, double high) {
