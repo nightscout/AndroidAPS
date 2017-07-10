@@ -492,6 +492,7 @@ public class CircadianPercentageProfileFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateGui();
         MainApp.bus().register(this);
         onStatusEvent(new EventInitializationChanged());
         fl.requestFocusFromTouch();
