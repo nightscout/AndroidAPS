@@ -593,40 +593,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             public void onClick(DialogInterface dialog, int id) {
                 if (options.executeProfileSwitch) {
                     if (data.has("profile")) {
-                        sHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    String profileName = data.getString("profile");
-                                    ProfileSwitch profileSwitch = new ProfileSwitch();
-                                    profileSwitch.date = System.currentTimeMillis();
-                                    profileSwitch.source = Source.USER;
-                                    profileSwitch.profileName = profileName;
-                                    profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
-                                    profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
-                                    profileSwitch.durationInMinutes = data.getInt("duration");
-                                    if (ConfigBuilderPlugin.getActiveProfileInterface() instanceof CircadianPercentageProfilePlugin) {
-                                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) ConfigBuilderPlugin.getActiveProfileInterface();
-                                        profileSwitch.isCPP = true;
-                                        profileSwitch.timeshift = cpp.timeshift;
-                                        profileSwitch.percentage = cpp.percentage;
-                                    }
-                                    MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
-
-                                    PumpInterface pump = MainApp.getConfigBuilder();
-                                    if (pump != null) {
-                                        pump.setNewBasalProfile(profileStore.getSpecificProfile(profileName));
-                                        log.debug("Setting new profile: " + profile);
-                                        MainApp.bus().post(new EventNewBasalProfile());
-                                    } else {
-                                        log.error("No active pump selected");
-                                    }
-                                    Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
+                        try {
+                            doProfileSwitch(profileStore, data.getString("profile"), data.getInt("duration"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 } else if (options.executeTempTarget) {
                     try {
@@ -668,6 +639,37 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         });
         builder.setNegativeButton(getContext().getString(R.string.cancel), null);
         builder.show();
+    }
+
+    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration) {
+        sHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                    ProfileSwitch profileSwitch = new ProfileSwitch();
+                    profileSwitch.date = System.currentTimeMillis();
+                    profileSwitch.source = Source.USER;
+                    profileSwitch.profileName = profileName;
+                    profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
+                    profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
+                    profileSwitch.durationInMinutes = duration;
+                    if (ConfigBuilderPlugin.getActiveProfileInterface() instanceof CircadianPercentageProfilePlugin) {
+                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) ConfigBuilderPlugin.getActiveProfileInterface();
+                        profileSwitch.isCPP = true;
+                        profileSwitch.timeshift = cpp.timeshift;
+                        profileSwitch.percentage = cpp.percentage;
+                    }
+                    MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+
+                    PumpInterface pump = MainApp.getConfigBuilder();
+                    if (pump != null) {
+                        pump.setNewBasalProfile(profileStore.getSpecificProfile(profileName));
+                        MainApp.bus().post(new EventNewBasalProfile());
+                    } else {
+                        log.error("No active pump selected");
+                    }
+                    Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
+            }
+        });
     }
 
 }
