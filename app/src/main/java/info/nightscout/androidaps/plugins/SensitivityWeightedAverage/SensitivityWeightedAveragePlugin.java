@@ -26,7 +26,7 @@ import info.nightscout.utils.SafeParse;
  * Created by mike on 24.06.2017.
  */
 
-public class SensitivityWeightedAveragePlugin implements PluginBase, SensitivityInterface{
+public class SensitivityWeightedAveragePlugin implements PluginBase, SensitivityInterface {
     private static Logger log = LoggerFactory.getLogger(SensitivityWeightedAveragePlugin.class);
 
     private static boolean fragmentEnabled = true;
@@ -156,11 +156,15 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             index++;
         }
 
+        if (data.size() == 0) {
+            return new AutosensResult();
+        }
+
         double weightedsum = 0;
         double weights = 0;
 
         long hightestWeight = data.keyAt(data.size() - 1);
-        for (int i = 0 ; i < data.size(); i++) {
+        for (int i = 0; i < data.size(); i++) {
             long reversedWeigth = data.keyAt(i);
             double value = data.valueAt(i);
             double weight = (hightestWeight - reversedWeigth) / 2;
@@ -177,7 +181,7 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
 
         log.debug("Records: " + index + "   " + pastSensitivity);
 
-        double average = weightedsum /weights;
+        double average = weightedsum / weights;
         double basalOff = average * (60 / 5) / Profile.toMgdl(sens, profile.getUnits());
         double ratio = 1 + (basalOff / profile.getMaxDailyBasal());
 
