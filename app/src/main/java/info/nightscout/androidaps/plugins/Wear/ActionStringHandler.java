@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -225,7 +226,38 @@ public class ActionStringHandler {
 
             lastBolusWizard = bolusWizard;
 
-        } else return;
+        } else if("opencpp".equals(act[0])){
+            Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+            CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+
+            if(cpp == null || activeProfile==null || cpp != activeProfile){
+                sendError("CPP not activated!");
+                return;
+            } else {
+                // read CPP values
+                rTitle = "opencpp";
+                rMessage = "opencpp";
+                rAction = "opencpp" + " " + cpp.getPercentage() + " " + cpp.getTimeshift();
+            }
+
+        } else if("cppset".equals(act[0])){
+            Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+            CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+
+            if(cpp == null || activeProfile==null || cpp != activeProfile){
+                sendError("CPP not activated!");
+                return;
+            } else {
+                // read CPP values
+                rMessage = "CPP:" + "\n\n"+
+                            "Timeshift: " + act[1] + "\n" +
+                            "Percentage: " + act[2] + "%";
+                rAction = actionstring;
+            }
+
+        }
+        else return;
+
 
         // send result
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, rMessage, rAction);
@@ -379,8 +411,30 @@ public class ActionStringHandler {
             double insulin = SafeParse.stringToDouble(act[1]);
             int carbs = SafeParse.stringToInt(act[2]);
             doBolus(insulin, carbs);
+        } else if ("cppset".equals(act[0])) {
+            int timeshift = SafeParse.stringToInt(act[1]);
+            int percentage = SafeParse.stringToInt(act[2]);
+            setCPP(percentage, timeshift);
         }
         lastBolusWizard = null;
+    }
+
+    private static void setCPP(int percentage, int timeshift) {
+        Object activeProfile = MainApp.getConfigBuilder().getActiveProfileInterface();
+        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+
+        if(cpp == null || activeProfile==null || cpp != activeProfile){
+            sendError("CPP not activated!");
+            return;
+        }
+        String msg = cpp.externallySetParameters(timeshift, percentage);
+        if(msg != null && !"".equals(msg)){
+            String rTitle = "STATUS";
+            String rAction = "statusmessage";
+            WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, msg, rAction);
+            lastSentTimestamp = System.currentTimeMillis();
+            lastConfirmActionString = rAction;
+        }
     }
 
     private static void generateTempTarget(int duration, double low, double high) {

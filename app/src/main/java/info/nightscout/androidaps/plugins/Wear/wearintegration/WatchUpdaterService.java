@@ -19,6 +19,9 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -71,6 +75,9 @@ public class WatchUpdaterService extends WearableListenerService implements
     boolean wear_integration = false;
     SharedPreferences mPrefs;
     private static boolean lastLoopStatus;
+
+    private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
+
 
     @Override
     public void onCreate() {
@@ -169,13 +176,13 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                ToastUtils.showToastInUiThread(this, "Wear: " + actionstring);
+                log.debug("Wear: " + actionstring);
                 ActionStringHandler.handleInitiate(actionstring);
             }
 
             if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                ToastUtils.showToastInUiThread(this, "Wear Confirm: " + actionstring);
+                log.debug("Wear Confirm: " + actionstring);
                 ActionStringHandler.handleConfirmation(actionstring);
             }
         }
@@ -497,7 +504,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putString("message", message);
             dataMapRequest.getDataMap().putString("actionstring", actionstring);
 
-            ToastUtils.showToastInUiThread(this, "Requesting confirmation from wear: " + actionstring);
+            log.debug("Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
