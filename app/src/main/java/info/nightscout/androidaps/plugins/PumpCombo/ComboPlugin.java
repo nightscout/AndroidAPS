@@ -50,6 +50,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private ServiceConnection mRuffyServiceConnection;
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
+
     static {
         OPERATION_NOT_SUPPORTED.success = false;
         OPERATION_NOT_SUPPORTED.enacted = false;
@@ -94,7 +95,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         };
 
         boolean success = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
-        if(!success) {
+        if (!success) {
             log.error("Binding to ruffy service failed");
         }
     }
@@ -189,7 +190,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public boolean isInitialized() {
         // TODO
-        return ruffyScripter != null;
+        // hm, lastCmdDate > 0, like the DanaR does it?
+        return true; // scripter does this as needed; ruffyScripter != null;
     }
 
     @Override
@@ -239,16 +241,19 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        Command command = new BolusCommand(detailedBolusInfo.insulin);
-        CommandResult commandResult = ruffyScripter.runCommand(command);
+        try {
+            Command command = new BolusCommand(detailedBolusInfo.insulin);
+            CommandResult commandResult = ruffyScripter.runCommand(command);
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = commandResult.success;
-        pumpEnactResult.enacted = commandResult.enacted;
-        pumpEnactResult.comment = commandResult.message;
-        pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
-
-        return pumpEnactResult;
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = commandResult.success;
+            pumpEnactResult.enacted = commandResult.enacted;
+            pumpEnactResult.comment = commandResult.message;
+            pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
+            return pumpEnactResult;
+        } finally {
+            ruffyScripter.disconnect();
+        }
     }
 
     @Override
@@ -267,19 +272,24 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         // TODO make each cmd return all the data the main screen displays and cache here ?
-        Command command = new SetTbrCommand(percent, durationInMinutes);
-        CommandResult commandResult = ruffyScripter.runCommand(command);
+        try {
+            Command command = new SetTbrCommand(percent, durationInMinutes);
+            CommandResult commandResult = ruffyScripter.runCommand(command);
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = commandResult.success;
-        pumpEnactResult.enacted = commandResult.enacted;
-        pumpEnactResult.comment = commandResult.message;
-        pumpEnactResult.isPercent = true;
-        pumpEnactResult.percent = percent;
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = commandResult.success;
+            pumpEnactResult.enacted = commandResult.enacted;
+            pumpEnactResult.comment = commandResult.message;
+            pumpEnactResult.isPercent = true;
+            pumpEnactResult.percent = percent;
 
-        fakeBasalRate = fakeBasalRate * percent / 100;
+            //TODO
+            fakeBasalRate = fakeBasalRate * percent / 100;
 
-        return pumpEnactResult;
+            return pumpEnactResult;
+        } finally {
+            ruffyScripter.disconnect();
+        }
     }
 
     // TODO
@@ -291,18 +301,23 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO
     @Override
     public PumpEnactResult cancelTempBasal() {
-        Command command = new CancelTbrCommand();
-        CommandResult commandResult = ruffyScripter.runCommand(command);
+        try {
+            Command command = new CancelTbrCommand();
+            CommandResult commandResult = ruffyScripter.runCommand(command);
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = commandResult.success;
-        pumpEnactResult.enacted = commandResult.enacted;
-        pumpEnactResult.comment = commandResult.message;
-        pumpEnactResult.isTempCancel = true;
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = commandResult.success;
+            pumpEnactResult.enacted = commandResult.enacted;
+            pumpEnactResult.comment = commandResult.message;
+            pumpEnactResult.isTempCancel = true;
 
-        fakeBasalRate = 0.5d;
+            //TODO
+            fakeBasalRate = 0.5d;
 
-        return pumpEnactResult;
+            return pumpEnactResult;
+        } finally {
+            ruffyScripter.disconnect();
+        }
     }
 
     // TODO
