@@ -1,18 +1,34 @@
 package info.nightscout.androidaps.plugins.PumpCombo;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
+
+import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import de.jotomo.ruffyscripter.RuffyScripter;
+import de.jotomo.ruffyscripter.commands.BolusCommand;
+import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
+import de.jotomo.ruffyscripter.commands.Command;
+import de.jotomo.ruffyscripter.commands.CommandResult;
+import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -29,11 +45,65 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     PumpDescription pumpDescription = new PumpDescription();
 
+    private RuffyScripter ruffyScripter;
+    private Date lastCmdTime = new Date(0);
+    private ServiceConnection mRuffyServiceConnection;
+
+    private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
+    static {
+        OPERATION_NOT_SUPPORTED.success = false;
+        OPERATION_NOT_SUPPORTED.enacted = false;
+        OPERATION_NOT_SUPPORTED.comment = "Requested operation not supported by pump";
+    }
+
+    private double fakeBasalRate = 0.5d;
+
     public ComboPlugin() {
+        definePumpCapabilities();
+        bindRuffyService();
+        MainApp.bus().register(this);
+    }
+
+    private void bindRuffyService() {
+        Context context = MainApp.instance().getApplicationContext();
+
+        Intent intent = new Intent()
+                .setComponent(new ComponentName(
+                        // this must be the base package of the app (check package attribute in
+                        // manifest element in the manifest file of the providing app)
+                        "org.monkey.d.ruffy.ruffy",
+                        // full path to the driver
+                        // in the logs this service is mentioned as (note the slash)
+                        // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
+                        "org.monkey.d.ruffy.ruffy.driver.Ruffy"
+                ));
+        context.startService(intent);
+
+        mRuffyServiceConnection = new ServiceConnection() {
+
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
+                log.debug("ruffy serivce connected");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                log.debug("ruffy service disconnected");
+            }
+        };
+
+        boolean success = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
+        if(!success) {
+            log.error("Binding to ruffy service failed");
+        }
+    }
+
+    private void definePumpCapabilities() {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
-        pumpDescription.isExtendedBolusCapable = true;
+        pumpDescription.isExtendedBolusCapable = false; // TODO
         pumpDescription.extendedBolusStep = 0.05d;
         pumpDescription.extendedBolusDurationStep = 30;
         pumpDescription.extendedBolusMaxDuration = 8 * 60;
@@ -44,11 +114,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.maxTempPercent = 500;
         pumpDescription.tempPercentStep = 10;
 
-        pumpDescription.tempDurationStep = 30;
+        pumpDescription.tempDurationStep = 15;
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
-        pumpDescription.isSetBasalProfileCapable = true;
+        pumpDescription.isSetBasalProfileCapable = false; // TODO
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.01d;
 
@@ -118,7 +188,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isInitialized() {
-        return true;
+        // TODO
+        return ruffyScripter != null;
     }
 
     @Override
@@ -126,75 +197,122 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return false;
     }
 
+    // TODO
     @Override
     public boolean isBusy() {
-        return false;
+        return ruffyScripter.isPumpBusy();
     }
 
+    // TODO
     @Override
     public int setNewBasalProfile(Profile profile) {
         return FAILED;
     }
 
+    // TODO
     @Override
     public boolean isThisProfileSet(Profile profile) {
         return false;
     }
 
+    // TODO
     @Override
     public Date lastDataTime() {
-        return new Date();
+        return lastCmdTime;
     }
 
+    // TODO
     @Override
     public void refreshDataFromPump(String reason) {
 // this is called regulary from keepalive
+
+        // TODO how often is this called? use this to run checks regularly, e.g.
+        // recheck active TBR, basal rate to ensure nothing broke?
     }
 
+    // TODO
     @Override
     public double getBaseBasalRate() {
-        return 0d;
+        // TODO this is simple to read, w/o causing vibirations, it's BASAL_RATE in the main menu
+        return fakeBasalRate;
     }
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        return null;
+        Command command = new BolusCommand(detailedBolusInfo.insulin);
+        CommandResult commandResult = ruffyScripter.runCommand(command);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = commandResult.success;
+        pumpEnactResult.enacted = commandResult.enacted;
+        pumpEnactResult.comment = commandResult.message;
+        pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
+
+        return pumpEnactResult;
     }
 
     @Override
     public void stopBolusDelivering() {
+        // there's no way to stop the combo once delivery has started
+        // but before that, we could interrupt the command thread ... pause
+        // till pump times out or raises an error
     }
 
+    // TODO
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
-        PumpEnactResult result = new PumpEnactResult();
-        return result;
+        return OPERATION_NOT_SUPPORTED;
     }
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
-        PumpEnactResult result = new PumpEnactResult();
-        return result;
+        // TODO make each cmd return all the data the main screen displays and cache here ?
+        Command command = new SetTbrCommand(percent, durationInMinutes);
+        CommandResult commandResult = ruffyScripter.runCommand(command);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = commandResult.success;
+        pumpEnactResult.enacted = commandResult.enacted;
+        pumpEnactResult.comment = commandResult.message;
+        pumpEnactResult.isPercent = true;
+        pumpEnactResult.percent = percent;
+
+        fakeBasalRate = fakeBasalRate * percent / 100;
+
+        return pumpEnactResult;
     }
 
+    // TODO
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        PumpEnactResult result = new PumpEnactResult();
-        return result;
+        return OPERATION_NOT_SUPPORTED;
     }
 
+    // TODO
     @Override
     public PumpEnactResult cancelTempBasal() {
-        PumpEnactResult result = new PumpEnactResult();
-        return result;
+        Command command = new CancelTbrCommand();
+        CommandResult commandResult = ruffyScripter.runCommand(command);
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = commandResult.success;
+        pumpEnactResult.enacted = commandResult.enacted;
+        pumpEnactResult.comment = commandResult.message;
+        pumpEnactResult.isTempCancel = true;
+
+        fakeBasalRate = 0.5d;
+
+        return pumpEnactResult;
     }
 
+    // TODO
     @Override
     public PumpEnactResult cancelExtendedBolus() {
-        PumpEnactResult result = new PumpEnactResult();
-        return result;
+        return OPERATION_NOT_SUPPORTED;
     }
 
+    // TODO
+    // cache as much as possible - every time we interact with the pump it vibrates at the end
     @Override
     public JSONObject getJSONStatus() {
         JSONObject pump = new JSONObject();
@@ -219,6 +337,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return pump;
     }
 
+    // TODO
     @Override
     public String deviceID() {
 // Serial number here
@@ -240,6 +359,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return false;
     }
 
+    @SuppressWarnings("UnusedParameters")
+    @Subscribe
+    public void onStatusEvent(final EventAppExit e) {
+        MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
+    }
 }
 
 
