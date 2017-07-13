@@ -104,10 +104,8 @@ public class RuffyScripter {
 
     private volatile Command activeCmd = null;
 
-    // TODO take a callback to call when command finishes?
-    // TODO sometimes hangs ... we should timeout and raise an alert to check the pump and ruffy
-    // TODO not getting a menu update in a while is a good cue ...
-    // fire up a monitoring thread for that?
+    // TODO fire up a monitoring thread to intervene when we're stuck? re-bind service
+    // in case ruffy app went away
     public CommandResult runCommand(final Command cmd) {
         try {
             if (isPumpBusy()) {

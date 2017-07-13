@@ -81,8 +81,7 @@ public class BolusCommand implements Command {
     private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
         double displayedBolus = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
         log.debug("Final bolus: " + displayedBolus);
-        // TODO can't we just use BigDecimal? doubles aren't precise ...
-        if (Math.abs(displayedBolus - bolus) > 0.001) {
+        if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
         }
     }
