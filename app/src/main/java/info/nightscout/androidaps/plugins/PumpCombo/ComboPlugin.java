@@ -105,9 +105,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.bolusStep = 0.1d;
 
         pumpDescription.isExtendedBolusCapable = false; // TODO
-        pumpDescription.extendedBolusStep = 0.05d;
-        pumpDescription.extendedBolusDurationStep = 30;
-        pumpDescription.extendedBolusMaxDuration = 8 * 60;
+        pumpDescription.extendedBolusStep = 0.1d;
+        pumpDescription.extendedBolusDurationStep = 15;
+        pumpDescription.extendedBolusMaxDuration = 12 * 60;
 
         pumpDescription.isTempBasalCapable = true;
         pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
