@@ -687,4 +687,5 @@
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
     <string name="combopump">Accu-Chek Combo</string>
     <string name="combopump_settings">Accu-Chek Combo settings</string>
+    <string name="combopump_shortname">COMBO</string>
 </resources>

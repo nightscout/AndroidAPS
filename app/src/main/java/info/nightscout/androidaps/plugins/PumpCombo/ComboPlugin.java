@@ -67,7 +67,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public String getNameShort() {
-        // use long name as fallback (not visible in tabs)
+        String name = MainApp.sResources.getString(R.string.combopump_shortname);
+        if (!name.trim().isEmpty()) {
+            //only if translation exists
+            return name;
+        }
+        // use long name as fallback
         return getName();
     }
 
