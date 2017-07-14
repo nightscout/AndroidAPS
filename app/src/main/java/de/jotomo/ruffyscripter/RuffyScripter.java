@@ -158,16 +158,16 @@ public class RuffyScripter {
         // did we get a menu update from the pump in the last 5s? Then we're connected
         if (currentMenu != null && menuLastUpdated + 5000 > System.currentTimeMillis()) {
             log.debug("Pump is sending us menu updating, so we're connected");
-           return;
+            return;
         }
 
         try {
-                boolean connectSuccesful = ruffyService.doRTConnect() == 0;
-                log.debug("Connect init successful: " + connectSuccesful);
-                while (currentMenu == null) {
-                    log.debug("Waiting for first menu update to be sent");
-                    waitForMenuUpdate();
-                }
+            boolean connectSuccesful = ruffyService.doRTConnect() == 0;
+            log.debug("Connect init successful: " + connectSuccesful);
+            while (currentMenu == null) {
+                log.debug("Waiting for first menu update to be sent");
+                waitForMenuUpdate();
+            }
         } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
@@ -209,12 +209,14 @@ public class RuffyScripter {
         pressKey(Key.MENU);
     }
 
-    /** Wait until the menu update is in */
+    /**
+     * Wait until the menu update is in
+     */
     public void waitForMenuUpdate() {
         long timeoutExpired = System.currentTimeMillis() + 90 * 1000;
         long initialUpdateTime = menuLastUpdated;
         while (initialUpdateTime == menuLastUpdated) {
-            if(System.currentTimeMillis() > timeoutExpired) {
+            if (System.currentTimeMillis() > timeoutExpired) {
                 throw new CommandException().message("Timeout waiting for menu update");
             }
             SystemClock.sleep(50);
@@ -232,7 +234,6 @@ public class RuffyScripter {
         SystemClock.sleep(100);
         ruffyService.rtSendKey(Key.NO_KEY, true);
     }*/
-
     private void pressKey(final byte key) {
         try {
             ruffyService.rtSendKey(key, true);
@@ -269,16 +270,22 @@ public class RuffyScripter {
         }
     }
 
-    public void verifyMenuIsDisplayed(MenuType menu) {
-        String message = "Invalid pump state, expected to be in menu "
-                + menu + ", but current menu is " + currentMenu.getType();
-        verifyMenuIsDisplayed(menu, message);
+    public void verifyMenuIsDisplayed(MenuType expectedMenu) {
+        String failureMessage = "Invalid pump state, expected to be in menu "
+                + expectedMenu + ", but current menu is " + currentMenu.getType();
+        verifyMenuIsDisplayed(expectedMenu, failureMessage);
     }
 
-    public void verifyMenuIsDisplayed(MenuType menu, String message) {
+    public void verifyMenuIsDisplayed(MenuType expectedMenu, String failureMessage) {
         waitForMenuUpdate();
-        if (currentMenu.getType() != menu) {
-            throw new CommandException().message(message);
+        int retries = 5;
+        while (currentMenu.getType() != expectedMenu) {
+            if (retries > 0) {
+                SystemClock.sleep(200);
+                retries = retries - 1;
+            } else {
+                throw new CommandException().message(failureMessage);
+            }
         }
     }
 }
