@@ -110,7 +110,8 @@ public class BolusWizard {
             calculatedTotalInsulin = 0d;
         }
 
-        calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, 0.05d);
+        double bolusStep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep);
 
         return calculatedTotalInsulin;
     }
