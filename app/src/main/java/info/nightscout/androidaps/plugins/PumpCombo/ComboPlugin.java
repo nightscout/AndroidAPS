@@ -57,8 +57,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         OPERATION_NOT_SUPPORTED.comment = "Requested operation not supported by pump";
     }
 
-    private double fakeBasalRate = 0.5d;
-
     public ComboPlugin() {
         definePumpCapabilities();
         bindRuffyService();
@@ -121,7 +119,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         pumpDescription.isSetBasalProfileCapable = false; // TODO
         pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.01d;
+        pumpDescription.basalMinimumRate = 0.0d;
 
         pumpDescription.isRefillingCapable = false;
     }
@@ -235,8 +233,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO
     @Override
     public double getBaseBasalRate() {
-        // TODO this is simple to read, w/o causing vibirations, it's BASAL_RATE in the main menu
-        return fakeBasalRate;
+        // TODO this is simple to read, w/o causing vibrations, it's BASAL_RATE in the main menu
+        // and/or read this from a cached basal rate profile
+        return 0.5d;
     }
 
     @Override
@@ -282,10 +281,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pumpEnactResult.comment = commandResult.message;
             pumpEnactResult.isPercent = true;
             pumpEnactResult.percent = percent;
-
-            //TODO
-            fakeBasalRate = fakeBasalRate * percent / 100;
-
             return pumpEnactResult;
         } finally {
             ruffyScripter.disconnect();
@@ -310,10 +305,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pumpEnactResult.enacted = commandResult.enacted;
             pumpEnactResult.comment = commandResult.message;
             pumpEnactResult.isTempCancel = true;
-
-            //TODO
-            fakeBasalRate = 0.5d;
-
             return pumpEnactResult;
         } finally {
             ruffyScripter.disconnect();
