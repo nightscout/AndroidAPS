@@ -240,6 +240,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+        if (detailedBolusInfo.insulin < 0.05) {
+            log.debug("Ignoring request to deliver bolus of " + detailedBolusInfo.insulin + " U");
+            // Don't bother the pump when only carbs have been entered
+            // TODO find out if this should be prevented earlier on, or if there's a reason
+            // the pump (danar?) is still called (fetch data for next calc?)
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = true;
+            pumpEnactResult.enacted = false;
+            pumpEnactResult.bolusDelivered = 0d;
+            return pumpEnactResult;
+        }
         try {
             Command command = new BolusCommand(detailedBolusInfo.insulin);
             CommandResult commandResult = ruffyScripter.runCommand(command);
