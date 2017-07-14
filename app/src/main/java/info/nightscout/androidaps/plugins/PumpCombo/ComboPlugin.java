@@ -252,7 +252,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 result.success = bolusCmdResult.success;
                 result.enacted = bolusCmdResult.enacted;
                 result.bolusDelivered = detailedBolusInfo.insulin;
-                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+                result.comment = bolusCmdResult.message;
             } else {
                 // TODO the ui freezes when the calculator issues a carb-only treatment
                 // so just wait, yeah, this is dumb. for now; proper fix via GL#10
