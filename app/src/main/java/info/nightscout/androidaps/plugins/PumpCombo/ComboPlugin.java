@@ -301,6 +301,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             return ruffyScripter.runCommand(command);
         } finally {
 //            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+            lastCmdTime = new Date();
             ruffyScripter.disconnect();
 //            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
 //            MainApp.bus().post(new EventComboPumpUpdateGUI());
