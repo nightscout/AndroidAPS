@@ -23,6 +23,7 @@ import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -32,6 +33,7 @@ import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -240,29 +242,45 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        if (detailedBolusInfo.insulin < 0.05) {
-            log.debug("Ignoring request to deliver bolus of " + detailedBolusInfo.insulin + " U");
-            // Don't bother the pump when only carbs have been entered
-            // TODO find out if this should be prevented earlier on, or if there's a reason
-            // the pump (danar?) is still called (fetch data for next calc?)
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = true;
-            pumpEnactResult.enacted = false;
-            pumpEnactResult.bolusDelivered = 0d;
-            return pumpEnactResult;
+        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
+        detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
+        if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
+            PumpEnactResult result = new PumpEnactResult();
+            if (detailedBolusInfo.insulin > 0) {
+                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
+                result.success = bolusCmdResult.success;
+                result.enacted = bolusCmdResult.enacted;
+                result.bolusDelivered = detailedBolusInfo.insulin;
+                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            } else {
+                result.success = true;
+                result.enacted = false;
+            }
+            result.carbsDelivered = detailedBolusInfo.carbs;
+            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+            if (Config.logPumpActions)
+                log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
+            detailedBolusInfo.date = new Date().getTime();
+            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            return result;
+        } else {
+            PumpEnactResult result = new PumpEnactResult();
+            result.success = false;
+            result.bolusDelivered = 0d;
+            result.carbsDelivered = 0d;
+            result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
+            log.error("deliverTreatment: Invalid input");
+            return result;
         }
-        try {
-            Command command = new BolusCommand(detailedBolusInfo.insulin);
-            CommandResult commandResult = ruffyScripter.runCommand(command);
+    }
 
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = commandResult.success;
-            pumpEnactResult.enacted = commandResult.enacted;
-            pumpEnactResult.comment = commandResult.message;
-            // Combo would have bailed if this wasn't set properly. Maybe we should
-            // have the command return this anyways ...
-            pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
-            return pumpEnactResult;
+    private CommandResult runCommand(Command command) {
+        // TODO call this for all cmnds
+        // TODO use this to disptach methods to a service thread, like DanaRs executionService
+        // TODO add a monitor-something that raises an alarm if the command has finished
+        // with 90s or so
+        try {
+            return ruffyScripter.runCommand(command);
         } finally {
             ruffyScripter.disconnect();
         }
