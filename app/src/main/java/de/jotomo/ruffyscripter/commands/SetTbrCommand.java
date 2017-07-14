@@ -137,9 +137,11 @@ public class SetTbrCommand implements Command {
         long currentDuration = readDisplayedTbrDuration(scripter);
         if (currentDuration % 15 != 0) {
             // The duration displayed is how long an active TBR will still run,
-            // which might be something like 0:43, hence not in 15 minute steps.
-            // Pressing down will go to the next lower 15 minute step.
-            scripter.pressDownKey();
+            // which might be something like 0:13, hence not in 15 minute steps.
+            // Pressing up will go to the next higher 15 minute step.
+            // Don't press down, from 0:13 it can't go down, so press up.
+            // Pressing up from 23:59 works to go to 24:00.
+            scripter.pressUpKey();
             scripter.waitForMenuUpdate();
             currentDuration = readDisplayedTbrDuration(scripter);
         }
