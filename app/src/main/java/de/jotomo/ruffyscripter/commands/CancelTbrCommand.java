@@ -17,4 +17,9 @@ public class CancelTbrCommand implements Command {
         }
         return new SetTbrCommand(100, 0).execute(scripter);
     }
+
+    @Override
+    public String toString() {
+        return "CancelTbrCommand{}";
+    }
 }

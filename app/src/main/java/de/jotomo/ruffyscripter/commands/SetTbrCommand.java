@@ -235,4 +235,12 @@ public class SetTbrCommand implements Command {
             throw new CommandException().message("Setting TBR failed, TBR in MAIN_MENU differs from expected");
         }
     }
+
+    @Override
+    public String toString() {
+        return "SetTbrCommand{" +
+                "percentage=" + percentage +
+                ", duration=" + duration +
+                '}';
+    }
 }

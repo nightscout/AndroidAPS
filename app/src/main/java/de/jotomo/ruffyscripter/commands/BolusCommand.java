@@ -85,4 +85,11 @@ public class BolusCommand implements Command {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
         }
     }
+
+    @Override
+    public String toString() {
+        return "BolusCommand{" +
+                "bolus=" + bolus +
+                '}';
+    }
 }
