@@ -244,13 +244,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public double getBaseBasalRate() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         Double basal = profile.getBasal();
-        log.debug("getBaseBasalrate returning " + basal);
+        log.trace("getBaseBasalrate returning " + basal);
         return basal;
     }
 
     // TODO rewrite this crap into something comprehensible
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
+        log.debug("deliver treatment called with dbi: " + detailedBolusInfo);
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
@@ -293,18 +294,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private CommandResult runCommand(Command command) {
-        // TODO call this for all cmnds
-        // TODO use this to disptach methods to a service thread, like DanaRs executionService
-        // TODO add a monitor-something that raises an alarm if the command has finished
-        // with 90s or so
+        // TODO use this to dispatch methods to a service thread, like DanaRs executionService
         try {
+            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
             return ruffyScripter.runCommand(command);
         } finally {
-//            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
             lastCmdTime = new Date();
             ruffyScripter.disconnect();
-//            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
-//            MainApp.bus().post(new EventComboPumpUpdateGUI());
+            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
         }
     }
 
@@ -323,6 +320,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
+        log.debug("setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
@@ -354,6 +352,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult cancelTempBasal() {
+        log.debug("cancelTempBasal called");
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
         CommandResult commandResult = runCommand(new CancelTbrCommand());
         if(commandResult.enacted) {
