@@ -248,6 +248,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pumpEnactResult.success = commandResult.success;
             pumpEnactResult.enacted = commandResult.enacted;
             pumpEnactResult.comment = commandResult.message;
+            // Combo would have bailed if this wasn't set properly. Maybe we should
+            // have the command return this anyways ...
             pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
             return pumpEnactResult;
         } finally {
@@ -280,7 +282,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pumpEnactResult.enacted = commandResult.enacted;
             pumpEnactResult.comment = commandResult.message;
             pumpEnactResult.isPercent = true;
+            // Combo would have bailed if this wasn't set properly. Maybe we should
+            // have the command return this anyways ...
             pumpEnactResult.percent = percent;
+            pumpEnactResult.duration = durationInMinutes;
             return pumpEnactResult;
         } finally {
             ruffyScripter.disconnect();
