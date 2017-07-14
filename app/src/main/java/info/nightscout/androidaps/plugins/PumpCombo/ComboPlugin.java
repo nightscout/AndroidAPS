@@ -244,6 +244,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return 0.5d;
     }
 
+    // TODO rewrite this crap into something comprehensible
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
@@ -254,6 +255,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
                 result.success = bolusCmdResult.success;
                 result.enacted = bolusCmdResult.enacted;
+                // TODO if no error occurred, the requested bolus is what the pump delievered,
+                // that has been checked. If an error occurred, we should check how much insulin
+                // was delivered, e.g. when the cartridge went empty mid-bolus
                 result.bolusDelivered = detailedBolusInfo.insulin;
                 result.comment = bolusCmdResult.message;
             } else {
@@ -264,12 +268,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 result.success = true;
                 result.enacted = false;
             }
-            result.carbsDelivered = detailedBolusInfo.carbs;
-            result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-            if (Config.logPumpActions)
-                log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
-            detailedBolusInfo.date = new Date().getTime();
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            if (result.enacted) {
+                result.carbsDelivered = detailedBolusInfo.carbs;
+                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+                if (Config.logPumpActions)
+                    log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
+                detailedBolusInfo.date = new Date().getTime();
+                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+            }
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult();
@@ -346,8 +352,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
         CommandResult commandResult = runCommand(new CancelTbrCommand());
         if(commandResult.enacted) {
-            TemporaryBasal tempStop = new TemporaryBasal(new Date().getTime());
-            tempStop.durationInMinutes = 0; // == ending temp basal
+            TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
+            tempStop.durationInMinutes = 0; // ending temp basal
             tempStop.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStop);
