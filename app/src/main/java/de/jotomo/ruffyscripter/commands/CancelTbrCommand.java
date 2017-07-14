@@ -13,7 +13,11 @@ public class CancelTbrCommand implements Command {
         Double tbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
         boolean runtimeDisplayed = scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME);
         if (tbrPercentage == 100 && !runtimeDisplayed) {
-            return new CommandResult().success(true).enacted(false).message("No TBR active");
+            return new CommandResult()
+                    .success(true)
+                    .enacted(true) // technically, nothing was enacted, but AAPS needs this to recover
+                                   // when there was an issue and AAPS thinks a TBR is still active
+                    .message("No TBR active");
         }
         return new SetTbrCommand(100, 0).execute(scripter);
     }
