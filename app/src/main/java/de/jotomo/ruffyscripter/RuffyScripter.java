@@ -113,6 +113,9 @@ public class RuffyScripter {
             }
             ensureConnected();
 
+            // TODO reuse thread, scheduler ...
+            Thread cmdThread;
+
             // TODO make this a safe lock
             synchronized (this) {
                 cmdResult = null;
@@ -122,7 +125,7 @@ public class RuffyScripter {
                 // wait till pump is ready for input
                 waitForMenuUpdate();
                 log.debug("Cmd execution: connection ready, executing cmd " + cmd);
-                new Thread(new Runnable() {
+                cmdThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -134,16 +137,25 @@ public class RuffyScripter {
                         }
 
                     }
-                }).start();
+                });
+                cmdThread.start();
             }
 
             // TODO really?
+            long timeout = System.currentTimeMillis() + 90 * 1000;
             while (activeCmd != null) {
                 SystemClock.sleep(500);
                 log.trace("Waiting for running command to complete");
+                if (System.currentTimeMillis() > timeout) {
+                    log.error("Running command " + activeCmd + " timed out");
+                    cmdThread.interrupt();
+                    activeCmd = null;
+                    cmdResult = null;
+                    return new CommandResult().success(false).enacted(false).message("Command timed out");
+                }
             }
-            log.debug("Command result: " + cmdResult);
 
+            log.debug("Command result: " + cmdResult);
             CommandResult r = cmdResult;
             cmdResult = null;
             return r;
@@ -162,10 +174,11 @@ public class RuffyScripter {
         }
 
         try {
-            boolean connectSuccesful = ruffyService.doRTConnect() == 0;
-            log.debug("Connect init successful: " + connectSuccesful);
+            boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
+            log.debug("Connect init successful: " + connectInitSuccessful);
             while (currentMenu == null) {
                 log.debug("Waiting for first menu update to be sent");
+                // waitForMenuUpdate times out after 90s and throws a CommandException
                 waitForMenuUpdate();
             }
         } catch (RemoteException e) {
