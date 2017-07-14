@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.os.SystemClock;
 
 import com.squareup.otto.Subscribe;
 
@@ -253,6 +254,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 result.bolusDelivered = detailedBolusInfo.insulin;
                 result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             } else {
+                // TODO the ui freezes when the calculator issues a carb-only treatment
+                // so just wait, yeah, this is dumb. for now; proper fix via GL#10
+                // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
+                SystemClock.sleep(6000);
                 result.success = true;
                 result.enacted = false;
             }
