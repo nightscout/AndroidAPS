@@ -30,7 +30,10 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
@@ -287,7 +290,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         try {
             return ruffyScripter.runCommand(command);
         } finally {
+//            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
             ruffyScripter.disconnect();
+//            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+//            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
     }
 
@@ -306,48 +312,53 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
-        // TODO make each cmd return all the data the main screen displays and cache here ?
-        try {
-            Command command = new SetTbrCommand(percent, durationInMinutes);
-            CommandResult commandResult = ruffyScripter.runCommand(command);
-
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = commandResult.success;
-            pumpEnactResult.enacted = commandResult.enacted;
-            pumpEnactResult.comment = commandResult.message;
-            pumpEnactResult.isPercent = true;
-            // Combo would have bailed if this wasn't set properly. Maybe we should
-            // have the command return this anyways ...
-            pumpEnactResult.percent = percent;
-            pumpEnactResult.duration = durationInMinutes;
-            return pumpEnactResult;
-        } finally {
-            ruffyScripter.disconnect();
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
+        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
+        if (commandResult.enacted) {
+            TemporaryBasal tempStart = new TemporaryBasal(System.currentTimeMillis());
+            tempStart.durationInMinutes = durationInMinutes;
+            tempStart.percentRate = percent;
+            tempStart.isAbsolute = false;
+            tempStart.source = Source.USER;
+            ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
+            treatmentsInterface.addToHistoryTempBasal(tempStart);
         }
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = commandResult.success;
+        pumpEnactResult.enacted = commandResult.enacted;
+        pumpEnactResult.comment = commandResult.message;
+        pumpEnactResult.isPercent = true;
+        // Combo would have bailed if this wasn't set properly. Maybe we should
+        // have the command return this anyways ...
+        pumpEnactResult.percent = percent;
+        pumpEnactResult.duration = durationInMinutes;
+        return pumpEnactResult;
     }
 
-    // TODO
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
         return OPERATION_NOT_SUPPORTED;
     }
 
-    // TODO
     @Override
     public PumpEnactResult cancelTempBasal() {
-        try {
-            Command command = new CancelTbrCommand();
-            CommandResult commandResult = ruffyScripter.runCommand(command);
-
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = commandResult.success;
-            pumpEnactResult.enacted = commandResult.enacted;
-            pumpEnactResult.comment = commandResult.message;
-            pumpEnactResult.isTempCancel = true;
-            return pumpEnactResult;
-        } finally {
-            ruffyScripter.disconnect();
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
+        CommandResult commandResult = runCommand(new CancelTbrCommand());
+        if(commandResult.enacted) {
+            TemporaryBasal tempStop = new TemporaryBasal(new Date().getTime());
+            tempStop.durationInMinutes = 0; // == ending temp basal
+            tempStop.source = Source.USER;
+            ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
+            treatmentsInterface.addToHistoryTempBasal(tempStop);
         }
+
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = commandResult.success;
+        pumpEnactResult.enacted = commandResult.enacted;
+        pumpEnactResult.comment = commandResult.message;
+        pumpEnactResult.isTempCancel = true;
+        return pumpEnactResult;
     }
 
     // TODO
