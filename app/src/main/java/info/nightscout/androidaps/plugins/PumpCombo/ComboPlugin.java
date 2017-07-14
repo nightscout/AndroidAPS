@@ -230,18 +230,22 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO
     @Override
     public void refreshDataFromPump(String reason) {
-// this is called regulary from keepalive
+        log.debug("RefreshDataFromPump called");
+
+        // this is called regulary from keepalive
 
         // TODO how often is this called? use this to run checks regularly, e.g.
         // recheck active TBR, basal rate to ensure nothing broke?
     }
 
-    // TODO
+    // TODO uses profile values for the time being
+    // this get's called mulitple times a minute, must absolutely be cached
     @Override
     public double getBaseBasalRate() {
-        // TODO this is simple to read, w/o causing vibrations, it's BASAL_RATE in the main menu
-        // and/or read this from a cached basal rate profile
-        return 0.5d;
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        Double basal = profile.getBasal();
+        log.debug("getBaseBasalrate returning " + basal);
+        return basal;
     }
 
     // TODO rewrite this crap into something comprehensible
