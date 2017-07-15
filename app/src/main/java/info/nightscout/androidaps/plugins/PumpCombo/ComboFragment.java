@@ -34,14 +34,14 @@ public class ComboFragment extends Fragment {
         return comboPlugin;
     }
 
-    private EditText statusText;
+    private TextView statusText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
-        statusText = (EditText) view.findViewById(R.id.comboStatusEditText);
+        statusText = (TextView) view.findViewById(R.id.comboStatusEditText);
 
         updateGUI();
         return view;
@@ -64,6 +64,7 @@ public class ComboFragment extends Fragment {
         updateGUI();
     }
 
+    // TODO *very* quick hack
     public void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
@@ -77,7 +78,12 @@ public class ComboFragment extends Fragment {
                         sb.append(getPlugin().statusSummary);
                         if (getPlugin().pumpState != null) {
                             sb.append("\n\n");
-                            sb.append(getPlugin().pumpState.toString().replaceAll(",", "\n"));
+                            sb.append(getPlugin().pumpState.toString()
+                                    // i know ... i need to take a break already
+                                    .replaceAll(", ", "\n")
+                                    .replaceAll("PumpState\\{", "\n")
+                                    .replaceAll("\\}", "\n")
+                            );
                         }
                         statusText.setText(sb.toString());
                     }
