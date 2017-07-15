@@ -254,12 +254,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    // TODO rewrite this crap into something comprehensible
+    // what a mess: pump integration code reading carb info from Detailed**Bolus**Info,
+    // writing carb treatments to the history table. What's PumpEnactResult for again?
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         log.debug("deliver treatment called with dbi: " + detailedBolusInfo);
-        ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
-        detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             PumpEnactResult result = new PumpEnactResult();
             if (detailedBolusInfo.insulin > 0) {
@@ -269,6 +268,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 // TODO if no error occurred, the requested bolus is what the pump delievered,
                 // that has been checked. If an error occurred, we should check how much insulin
                 // was delivered, e.g. when the cartridge went empty mid-bolus
+                // For the first iteration, the alert the pump raises must suffice
                 result.bolusDelivered = detailedBolusInfo.insulin;
                 result.comment = bolusCmdResult.message;
             } else {
@@ -277,11 +277,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
                 SystemClock.sleep(6000);
                 result.success = true;
-                result.enacted = false;
+                result.enacted = true;
+                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             }
             if (result.enacted) {
                 result.carbsDelivered = detailedBolusInfo.carbs;
-                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
                 if (Config.logPumpActions)
                     log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
                 detailedBolusInfo.date = new Date().getTime();
@@ -291,6 +291,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         } else {
             PumpEnactResult result = new PumpEnactResult();
             result.success = false;
+            result.enacted = false;
             result.bolusDelivered = 0d;
             result.carbsDelivered = 0d;
             result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
