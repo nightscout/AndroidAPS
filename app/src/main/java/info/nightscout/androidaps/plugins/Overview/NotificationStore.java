@@ -14,6 +14,7 @@ import java.util.List;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 
 
 /**
@@ -53,6 +54,12 @@ public class NotificationStore {
             MainApp.instance().startService(alarm);
         }
         store.add(n);
+
+        WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
+        if(wearPlugin!= null && wearPlugin.isEnabled()) {
+            wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
+        }
+
         Collections.sort(store, new NotificationComparator());
     }
 

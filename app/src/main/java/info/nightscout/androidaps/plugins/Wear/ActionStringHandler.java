@@ -24,6 +24,7 @@ import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
@@ -415,6 +416,8 @@ public class ActionStringHandler {
             int timeshift = SafeParse.stringToInt(act[1]);
             int percentage = SafeParse.stringToInt(act[2]);
             setCPP(percentage, timeshift);
+        } else if ("dismissoverviewnotification".equals(act[0])){
+            MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         }
         lastBolusWizard = null;
     }
@@ -500,6 +503,14 @@ public class ActionStringHandler {
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("ERROR", errormessage, "error");
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
+        lastBolusWizard = null;
+    }
+
+    public synchronized static void expectNotificationAction(String message, int id) {
+        String actionstring = "dismissoverviewnotification " + id;
+        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("DISMISS", message, actionstring);
+        lastSentTimestamp = System.currentTimeMillis();
+        lastConfirmActionString = actionstring;
         lastBolusWizard = null;
     }
 }

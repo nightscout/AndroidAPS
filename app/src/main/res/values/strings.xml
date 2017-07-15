@@ -683,4 +683,6 @@
     <string name="cpp_sync_setting_missing">needs to be activated to send values to the pump!</string>
     <string name="cpp_notloadedplugins">Not all profiles loaded!</string>
     <string name="cpp_valuesnotstored">Values not stored!</string>
+    <string name="wear_overviewnotifications">Overview Notifications</string>
+    <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
 </resources>

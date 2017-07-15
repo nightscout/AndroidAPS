@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.Wear.wearintegration.WatchUpdaterService;
+import info.nightscout.utils.SP;
 
 /**
  * Created by adrian on 17/11/16.
@@ -228,5 +229,10 @@ public class WearPlugin implements PluginBase {
         watchUS = null;
     }
 
+    public void overviewNotification(int id, String message) {
+        if(SP.getBoolean("wear_overview_notification", false)){
+            ActionStringHandler.expectNotificationAction(message, id);
+        }
+    }
 
 }
