@@ -51,6 +51,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     PumpDescription pumpDescription = new PumpDescription();
 
+    // TODO quick hack until pump state is more thoroughly supported
+    int activeTbrPercentage = -1;
+
     private RuffyScripter ruffyScripter;
     private Date lastCmdTime = new Date(0);
     private ServiceConnection mRuffyServiceConnection;
@@ -329,6 +332,15 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.debug("Rounded requested percentage from " + percent + " to " + rounded);
             percent = rounded;
         }
+        if (activeTbrPercentage != -1 && Math.abs(activeTbrPercentage - percent) <= 20) {
+            log.debug("Not bothering the pump for a small TBR change from " + activeTbrPercentage + "% -> " + percent + "%");
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = true;
+            pumpEnactResult.enacted = false;
+            pumpEnactResult.percent = activeTbrPercentage;
+            pumpEnactResult.comment = "TBR change too small, skipping";
+           return pumpEnactResult;
+        }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
@@ -339,6 +351,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             tempStart.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
+            activeTbrPercentage = percent;
         }
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
@@ -369,6 +382,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             tempStop.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStop);
+            activeTbrPercentage = 100;
         }
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
