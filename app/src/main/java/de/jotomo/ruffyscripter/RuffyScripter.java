@@ -99,7 +99,7 @@ public class RuffyScripter {
     };
 
     public boolean isPumpBusy() {
-        return activeCmd != null; // || currentMenu == null || currentMenu.getType() != MenuType.MAIN_MENU;
+        return activeCmd != null;
     }
 
     private volatile Command activeCmd = null;
@@ -287,8 +287,12 @@ public class RuffyScripter {
      * Wait till a menu changed has completed, "away" from the menu provided as argument.
      */
     public void waitForMenuToBeLeft(MenuType menuType) {
+        long timeout = System.currentTimeMillis() + 30 * 1000;
         while (currentMenu.getType() == menuType) {
-            SystemClock.sleep(250);
+            if (System.currentTimeMillis() > timeout) {
+                throw new CommandException().message("Timeout waiting for menu " + menuType + " to be left");
+            }
+            SystemClock.sleep(50);
         }
     }
 
