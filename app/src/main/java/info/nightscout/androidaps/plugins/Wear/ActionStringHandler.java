@@ -157,14 +157,9 @@ public class ActionStringHandler {
                 rMessage = getPumpStatus();
             } else if ("loop".equals(act[1])) {
                 rTitle += " LOOP";
-                rMessage = getLoopStatus();
-
-            } else if ("targets".equals(act[1])) {
-                rTitle += " TARGETS";
-                rMessage = getTargetsStatus();
-            } else if ("oapsresult".equals(act[1])) {
-                rTitle += " OAPS RESULT";
-                rMessage = getOAPSResultStatus();
+                rMessage = "TARGETS:\n" + getTargetsStatus();
+                rMessage += "\n\n" +  getLoopStatus();
+                rMessage += "\n\nOAPS RESULT:\n" +  getOAPSResultStatus();;
             }
 
         } else if ("wizard".equals(act[0])) {
