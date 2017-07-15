@@ -12,19 +12,31 @@ import info.nightscout.androidaps.interfaces.Interval;
 public class OverlappingIntervals<T extends Interval> extends Intervals<T> {
 
     protected void merge() {
-        for (int index = 0; index < rawData.size() - 1; index++) {
-            Interval i = rawData.valueAt(index);
-            long startOfNewer = rawData.valueAt(index + 1).start();
-            if (i.originalEnd() > startOfNewer) {
-                i.cutEndTo(startOfNewer);
+        boolean needToCut = false;
+        long cutTime = 0;
+
+        for (int index = rawData.size()-1; index > 0; index--) { //begin with newest
+            Interval cur = rawData.valueAt(index);
+            if (cur.isEndingEvent()){
+                needToCut = true;
+                cutTime = cur.start();
+            } else {
+                //event that is no EndingEvent might need to be stopped by an ending event
+                if(needToCut&&cur.end() > cutTime){
+                    cur.cutEndTo(cutTime);
+                }
             }
         }
     }
 
     @Nullable
     public T getValueByInterval(long time) {
-        int index = binarySearch(time);
-        if (index >= 0) return rawData.valueAt(index);
+        for (int index = rawData.size()-1; index > 0; index--) { //begin with newest
+            T cur = rawData.valueAt(index);
+            if (cur.match(time)){
+                return cur;
+            }
+        }
         return null;
     }
 

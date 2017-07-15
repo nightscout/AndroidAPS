@@ -16,20 +16,19 @@ import info.nightscout.androidaps.interfaces.Interval;
 
 public abstract class Intervals<T extends Interval> {
 
-    LongSparseArray<T> rawData = new LongSparseArray<>(); // oldest at index 0
+    LongSparseArray<T> rawData = new LongSparseArray<T>(); // oldest at index 0
 
     public Intervals reset() {
-        rawData = new LongSparseArray<>();
+        rawData = new LongSparseArray<T>();
         return this;
-    }
-
-    public void add(T newInterval) {
-        rawData.put(newInterval.start(), newInterval);
-        merge();
     }
 
     protected abstract void merge();
 
+    /**
+     * The List must be sorted by `T.start()` in ascending order
+     *
+     * */
     public void add(List<T> list) {
         for (T interval : list) {
             rawData.put(interval.start(), interval);

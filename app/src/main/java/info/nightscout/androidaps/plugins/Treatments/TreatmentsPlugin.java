@@ -20,6 +20,7 @@ import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.NonOverlappingIntervals;
+import info.nightscout.androidaps.data.OverlappingIntervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.db.ExtendedBolus;
@@ -50,7 +51,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     public static List<Treatment> treatments;
     private static Intervals<TemporaryBasal> tempBasals = new NonOverlappingIntervals<TemporaryBasal>();
     private static Intervals<ExtendedBolus> extendedBoluses = new NonOverlappingIntervals<ExtendedBolus>();
-    private static Intervals<TempTarget> tempTargets = new NonOverlappingIntervals<TempTarget>();
+    private static Intervals<TempTarget> tempTargets = new OverlappingIntervals<TempTarget>();
     private static ProfileIntervals<ProfileSwitch> profiles = new ProfileIntervals<>();
 
     private static boolean fragmentEnabled = true;

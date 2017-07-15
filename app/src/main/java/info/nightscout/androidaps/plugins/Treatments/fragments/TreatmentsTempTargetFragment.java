@@ -47,9 +47,11 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
 
         Intervals<TempTarget> tempTargetList;
+        TempTarget currentlyActiveTarget;
 
         RecyclerViewAdapter(Intervals<TempTarget> TempTargetList) {
             this.tempTargetList = TempTargetList;
+            currentlyActiveTarget = tempTargetList.getValueByInterval(System.currentTimeMillis());
         }
 
         @Override
@@ -80,10 +82,18 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
                 holder.reasonLabel.setText("");
                 holder.reasonColon.setText("");
             }
-            if (tempTarget.isInProgress())
-                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-            else
+            if (tempTarget.isInProgress()) {
+                if(tempTarget == currentlyActiveTarget){
+                    // active as newest
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
+                } else {
+                    // other's that might become active again after the latest (overlapping) is over
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+                }
+            }
+            else {
                 holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
+            }
             holder.remove.setTag(tempTarget);
         }
 
