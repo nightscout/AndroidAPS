@@ -118,8 +118,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private CommandResult readPumpState(boolean keepConnectionOpen) {
         CommandResult commandResult = runCommand(new ReadStateCommand(), keepConnectionOpen);
-        pumpState = commandResult.state;
-        log.debug("Pump state: " + commandResult.state);
+        if (commandResult.success) {
+            pumpState = commandResult.state;
+            log.debug("Pump state: " + commandResult.state);
+        } else {
+            log.warn("Reading pump status failed: " + commandResult.message);
+        }
         return commandResult;
     }
 
@@ -376,7 +380,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             percent = rounded;
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
-        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes), false);
+        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes), true);
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(System.currentTimeMillis());
             tempStart.durationInMinutes = durationInMinutes;
