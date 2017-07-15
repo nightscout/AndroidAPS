@@ -129,8 +129,7 @@ public class RuffyScripter {
                 // check if pump is an an error state
                 if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                     try {
-                        PumpAlert alert = readDisplayPumpAlert();
-                        return new CommandResult().message("Pump is in an error state: " + alert + " (" + alert.code + ")");
+                        return new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE));
                     } catch (Exception e) {
                         return new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
                     }
@@ -343,15 +342,5 @@ public class RuffyScripter {
             state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
         }
         return state;
-    }
-
-    public PumpAlert readDisplayPumpAlert() {
-        Object errorObj = currentMenu.getAttribute(MenuAttribute.ERROR);
-        while (errorObj == null) {
-            SystemClock.sleep(10);
-            errorObj = currentMenu.getAttribute(MenuAttribute.ERROR);
-        }
-        String errorMsg = (String) currentMenu.getAttribute(MenuAttribute.MESSAGE);
-        return new PumpAlert((int) errorObj, errorMsg);
     }
 }

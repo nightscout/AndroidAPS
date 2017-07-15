@@ -190,19 +190,22 @@ public class SetTbrCommand implements Command {
         scripter.pressCheckKey();
 
         // we could read remaining duration from MAIN_MENU, but but the time we're here,
-        // we could have moved from 0:02 to 0:01, so instead,/ check if a TBR CANCELLED alert
+        // we could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED alert"
         // is raised and if so dismiss it
         scripter.waitForMenuToBeLeft(MenuType.TBR_SET);
         long inTwoSeconds = System.currentTimeMillis() + 2 * 1000;
         boolean alertProcessed = false;
         while (System.currentTimeMillis() < inTwoSeconds && !alertProcessed) {
             if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                // check the raised alarm is TBR CANCELLED
-                PumpAlert alert = scripter.readDisplayPumpAlert();
-                if (alert.code != 6 || Objects.equals(alert.msg, "TBR CANCELLED")) {
+                // check the raised alarm is TBR CANCELLED.
+                // note that the message is permanently displayed, while the error code is blinking.
+                // wait till the error code can be read results in the code hanging, despite
+                // menu updates coming in, so just check the message
+                String errorMsg = (String) scripter.currentMenu.getAttribute(MenuAttribute.MESSAGE);
+                if (!errorMsg.equals("TBR CANCELLED")) {
                     throw new CommandException().success(false).enacted(false)
                             .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
-                                    + alert.code + "(" + alert.msg + "). Please check the pump.");
+                                    + errorMsg + ". Please check the pump.");
                 }
                 // confirm "TBR CANCELLED alert"
                 scripter.pressCheckKey();
