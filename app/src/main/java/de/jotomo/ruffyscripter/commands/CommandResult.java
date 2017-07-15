@@ -48,6 +48,7 @@ public class CommandResult {
                 ", enacted=" + enacted +
                 ", exception=" + exception +
                 ", message='" + message + '\'' +
+                ", state=" + state +
                 '}';
     }
 }
