@@ -5,6 +5,8 @@ public class CommandResult {
     public boolean enacted;
     public Exception exception;
     public String message;
+    public State state;
+    public History history;
 
     public CommandResult() {
     }
@@ -27,6 +29,16 @@ public class CommandResult {
     public CommandResult message(String message) {
         this.message = message;
         return this;
+    }
+
+    public CommandResult state(State state) {
+        this.state = state;
+        return this;
+    }
+
+    public CommandResult history(History history) {
+        this.history = history;
+        return  this;
     }
 
     @Override
