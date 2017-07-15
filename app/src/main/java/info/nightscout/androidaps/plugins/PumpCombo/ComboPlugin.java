@@ -313,16 +313,33 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // till pump times out or raises an error
     }
 
+    // Note: AAPS calls this only to enact OpenAPS recommendations
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         log.debug("setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         int roundedPercentage = (int) (Math.round(absoluteRate/ getBaseBasalRate() * 10) * 10);
-        if (unroundedPercentage != roundedPercentage)
+        if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
+        }
+        if (activeTbrPercentage != -1 && Math.abs(activeTbrPercentage - roundedPercentage) <= 20) {
+            log.debug("Not bothering the pump for a small TBR change from " + activeTbrPercentage + "% -> " + roundedPercentage + "%");
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = true;
+            pumpEnactResult.enacted = false;
+            pumpEnactResult.percent = activeTbrPercentage;
+            pumpEnactResult.comment = "TBR change too small, skipping";
+            return pumpEnactResult;
+        }
+        int stepSize = pumpDescription.tempPercentStep;
+        if (durationInMinutes > stepSize) {
+            log.debug("Reducing requested duration of " + durationInMinutes + "m to minimal duration supported by the pump: " + stepSize + "m");
+            durationInMinutes = stepSize;
+        }
         return setTempBasalPercent(roundedPercentage, durationInMinutes);
     }
 
+    // Note: AAPS calls this only for setting a temp basal issued by the user
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         log.debug("setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
@@ -331,15 +348,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             while (rounded % 10 != 0) rounded = rounded - 1;
             log.debug("Rounded requested percentage from " + percent + " to " + rounded);
             percent = rounded;
-        }
-        if (activeTbrPercentage != -1 && Math.abs(activeTbrPercentage - percent) <= 20) {
-            log.debug("Not bothering the pump for a small TBR change from " + activeTbrPercentage + "% -> " + percent + "%");
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = true;
-            pumpEnactResult.enacted = false;
-            pumpEnactResult.percent = activeTbrPercentage;
-            pumpEnactResult.comment = "TBR change too small, skipping";
-           return pumpEnactResult;
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
