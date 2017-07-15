@@ -46,10 +46,10 @@ import info.nightscout.utils.DateUtil;
 public class ComboPlugin implements PluginBase, PumpInterface {
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = false;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = false;
 
-    PumpDescription pumpDescription = new PumpDescription();
+    private PumpDescription pumpDescription = new PumpDescription();
 
     // TODO quick hack until pump state is more thoroughly supported
     int activeTbrPercentage = -1;

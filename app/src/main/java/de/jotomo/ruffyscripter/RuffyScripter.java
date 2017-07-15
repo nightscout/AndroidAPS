@@ -106,8 +106,6 @@ public class RuffyScripter {
 
     private volatile Command activeCmd = null;
 
-    // TODO fire up a monitoring thread to intervene when we're stuck? re-bind service
-    // in case ruffy app went away
     public CommandResult runCommand(final Command cmd) {
         try {
             if (isPumpBusy()) {
