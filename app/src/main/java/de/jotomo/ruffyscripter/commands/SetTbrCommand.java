@@ -185,7 +185,12 @@ public class SetTbrCommand implements Command {
     }
 
     private void cancelTbrAndConfirmCancellationWarning(RuffyScripter scripter) {
-        // TODO this will fail if no TBR is running; detect and just throw CE(success=true, msg="nothing to do")?
+      // TODO tbr with 1m remaining doesn't raise an alert;
+      // BT connection is NOT lost when an alarm is raised, see if we can improve checking for
+      // and acknowleding errors;
+      // i think timing is crucial: waiting too long and the pump display activates and we lose
+      // connection. we can reconnect, but by then the pump might be noisy already.
+
 
         // confirm entered TBR
         scripter.pressCheckKey();
