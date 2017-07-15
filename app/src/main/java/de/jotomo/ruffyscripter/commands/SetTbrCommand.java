@@ -185,38 +185,35 @@ public class SetTbrCommand implements Command {
     }
 
     private void cancelTbrAndConfirmCancellationWarning(RuffyScripter scripter) {
-      // TODO tbr with 1m remaining doesn't raise an alert;
-      // BT connection is NOT lost when an alarm is raised, see if we can improve checking for
-      // and acknowleding errors;
-      // i think timing is crucial: waiting too long and the pump display activates and we lose
-      // connection. we can reconnect, but by then the pump might be noisy already.
-
-
         // confirm entered TBR
         scripter.pressCheckKey();
-        scripter.waitForMenuUpdate();
 
-        // hm, waiting here (more) makes things worse, if we don't press the alert away quickly,
-        // the pump exits BT mode ... so I guess we'll live with the checks below,
-        // verifying we made it back to the main menu and the displayed TBR data
-        // corresponds to what we set. Hope the timing is stable enough ...
-
-/*                scripter.waitForMenuToBeLeft(MenuType.TBR_SET);
-                if (scripter.currentMenu.getType() != MenuType.MAIN_MENU) {
-                    // pump shortly enters the main menu before raising the alert
-                    // TODO is this always entered?
-                    log.debug("TBR cancelled, going over main menu");
-                    scripter.waitForMenuToBeLeft(MenuType.MAIN_MENU);
+        // we could read remaining duration from MAIN_MENU, but but the time we're here,
+        // we could have moved from 0:02 to 0:01, so instead,/ check if a TBR CANCELLED alert
+        // is raised and if so dismiss it
+        scripter.waitForMenuToBeLeft(MenuType.TBR_SET);
+        long inTwoSeconds = System.currentTimeMillis() + 2 * 1000;
+        boolean alertProcessed = false;
+        while (System.currentTimeMillis() < inTwoSeconds && !alertProcessed) {
+            if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+                // check the raised alarm is TBR CANCELLED
+                int errorCode = (int) scripter.currentMenu.getAttribute(MenuAttribute.ERROR);
+                String errorMsg = (String) scripter.currentMenu.getAttribute(MenuAttribute.MESSAGE);
+                if (errorCode != 6 || errorMsg.equals("TBR CANCELLED")) {
+                    throw new CommandException().success(false).enacted(false)
+                            .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
+                                    + errorMsg + "(" + errorCode + "). Please check the pump.");
                 }
-                if (scripter.currentMenu.getType() != MenuType.WARNING_OR_ERROR) {
-                    throw new CommandException(false, null, "Expected WARNING_OR_ERROR menu was not shown when cancelling TBR");
-                }*/
-        // confirm "TBR cancelled alert"
-        scripter.pressCheckKey();
-        SystemClock.sleep(200);
-        // dismiss "TBR cancelled alert"
-        scripter.pressCheckKey();
-        scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
+                // confirm "TBR CANCELLED alert"
+                scripter.pressCheckKey();
+                SystemClock.sleep(200);
+                // dismiss "TBR CANCELLED alert"
+                scripter.pressCheckKey();
+                scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
+                alertProcessed = true;
+            }
+            SystemClock.sleep(50);
+        }
     }
 
     private void verifyMainMenuShowsNoActiveTbr(RuffyScripter scripter) {
