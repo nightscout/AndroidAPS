@@ -264,7 +264,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // writing carb treatments to the history table. What's PumpEnactResult for again?
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
-        log.debug("deliver treatment called with dbi: " + detailedBolusInfo);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             PumpEnactResult result = new PumpEnactResult();
             if (detailedBolusInfo.insulin > 0) {
@@ -335,10 +334,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 } catch (Exception e) {
                     statusSummary = "Error";
                 }
-                if (commandResult != null && commandResult.success) {
-                    // just leave it open, to avoid more errors
-                    ruffyScripter.disconnect();
-                }
+
+                ruffyScripter.disconnect();
                 MainApp.bus().post(new EventComboPumpUpdateGUI());
             }
         }
