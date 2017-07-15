@@ -126,6 +126,15 @@ public class RuffyScripter {
                 // TODO hackish, to say the least ...
                 // wait till pump is ready for input
                 waitForMenuUpdate();
+                // check if pump is an an error state
+                if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+                    try {
+                        PumpAlert alert = readDisplayPumpAlert();
+                        return new CommandResult().message("Pump is in an error state: " + alert + " (" + alert.code + ")");
+                    } catch (Exception e) {
+                        return new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
+                    }
+                }
                 // TODO check pump state; currently most command check their in the MAIN_MENU;
                 // run ReadStateCommand, which handles possible states ... and then do wait?
                 // Return an unsuccessful CommandResult and make the caller do something loud with it
