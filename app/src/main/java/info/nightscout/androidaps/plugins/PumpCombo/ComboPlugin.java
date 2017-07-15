@@ -319,10 +319,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private CommandResult runCommand(Command command, boolean keepConnectionOpen) {
         // TODO use this to dispatch methods to a service thread, like DanaRs executionService
         try {
+            long timeout = System.currentTimeMillis() + 10 * 1000;
+            while (ruffyScripter.isPumpBusy()) {
+                if (System.currentTimeMillis() < timeout) {
+                    return new CommandResult().success(false).enacted(false).message("Timeout waiting for the pump to be ready");
+                }
+                SystemClock.sleep(200);
+            }
             return ruffyScripter.runCommand(command);
         } finally {
             lastCmdTime = new Date();
-            if(!keepConnectionOpen) {
+            if (!keepConnectionOpen) {
                 ruffyScripter.disconnect();
             }
         }
@@ -340,7 +347,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         log.debug("setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
-        int roundedPercentage = (int) (Math.round(absoluteRate/ getBaseBasalRate() * 10) * 10);
+        int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
         if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
         }
