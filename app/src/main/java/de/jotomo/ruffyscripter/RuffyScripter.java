@@ -6,7 +6,9 @@ import android.os.SystemClock;
 import org.monkey.d.ruffy.ruffy.driver.IRTHandler;
 import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
+import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
+import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,6 +126,7 @@ public class RuffyScripter {
                 // TODO hackish, to say the least ...
                 // wait till pump is ready for input
                 waitForMenuUpdate();
+                logPumpStatus();
                 log.debug("Cmd execution: connection ready, executing cmd " + cmd);
                 cmdThread = new Thread(new Runnable() {
                     @Override
@@ -163,6 +166,28 @@ public class RuffyScripter {
             return e.toCommandResult();
         } catch (Exception e) {
             return new CommandResult().exception(e).message("Unexpected exception communication with ruffy");
+        }
+    }
+
+    private void logPumpStatus() {
+        log.debug("Pump status:");
+        MenuType currentMenuType = currentMenu.getType();
+        if (currentMenuType == MenuType.MAIN_MENU) {
+            Double tbrPercentage = (Double) currentMenu.getAttribute(MenuAttribute.TBR);
+            if (tbrPercentage != 100) {
+                MenuTime durationMenuTime = ((MenuTime) currentMenu.getAttribute(MenuAttribute.RUNTIME));
+                long durationRemainging = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
+                log.debug("  TBR active: " + tbrPercentage + "%/" + durationRemainging + "m remaining");
+            } else {
+                log.debug("  TBR active: no");
+            }
+        } else {
+            log.warn("  !!! Pump is on unexpected screen " + currentMenuType + " !!!");
+            log.warn("  Dumping all displayed attributes:");
+            for (MenuAttribute menuAttribute : currentMenu.attributes()) {
+                log.warn("    " + menuAttribute + ": " + currentMenu.getAttribute(menuAttribute));
+            }
+
         }
     }
 
