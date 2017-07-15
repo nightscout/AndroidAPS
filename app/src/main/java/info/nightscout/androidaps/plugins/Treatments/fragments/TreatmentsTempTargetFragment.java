@@ -26,11 +26,10 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -47,9 +46,9 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
 
-        OverlappingIntervals<TempTarget> tempTargetList;
+        Intervals<TempTarget> tempTargetList;
 
-        RecyclerViewAdapter(OverlappingIntervals<TempTarget> TempTargetList) {
+        RecyclerViewAdapter(Intervals<TempTarget> TempTargetList) {
             this.tempTargetList = TempTargetList;
         }
 

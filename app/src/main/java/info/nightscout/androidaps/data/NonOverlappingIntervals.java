@@ -9,7 +9,7 @@ import info.nightscout.androidaps.interfaces.Interval;
  * Created by adrian on 15/07/17.
  */
 
-public class OverlappingIntervals<T extends Interval> extends Intervals<T> {
+public class NonOverlappingIntervals<T extends Interval> extends Intervals<T> {
 
     protected void merge() {
         for (int index = 0; index < rawData.size() - 1; index++) {
@@ -27,5 +27,4 @@ public class OverlappingIntervals<T extends Interval> extends Intervals<T> {
         if (index >= 0) return rawData.valueAt(index);
         return null;
     }
-
 }
