@@ -57,6 +57,7 @@ public class SetTbrCommand implements Command {
             } else {
                 // switch to TBR_DURATION menu by pressing menu key
                 scripter.pressMenuKey();
+                scripter.waitForMenuUpdate();
                 scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
                 inputTbrDuration(scripter);
