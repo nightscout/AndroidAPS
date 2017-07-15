@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -33,10 +34,14 @@ public class ComboFragment extends Fragment {
         return comboPlugin;
     }
 
+    private EditText statusText;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
+
+        statusText = (EditText) view.findViewById(R.id.comboStatusEditText);
 
         updateGUI();
         return view;
@@ -65,9 +70,17 @@ public class ComboFragment extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-// your rendering code here
-
+                    if (getPlugin() == null) {
+                        statusText.setText("Initializing");
+                    } else {
+                        StringBuilder sb = new StringBuilder();
+                        sb.append(getPlugin().statusSummary);
+                        if (getPlugin().pumpState != null) {
+                            sb.append("\n\n");
+                            sb.append(getPlugin().pumpState.toString().replaceAll(",", "\n"));
+                        }
+                        statusText.setText(sb.toString());
+                    }
                 }
             });
     }

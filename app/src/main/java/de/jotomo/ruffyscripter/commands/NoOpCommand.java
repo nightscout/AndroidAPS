@@ -1,4 +1,15 @@
 package de.jotomo.ruffyscripter.commands;
 
-public class NoOpCommand {
+import de.jotomo.ruffyscripter.RuffyScripter;
+
+public class NoOpCommand implements Command {
+    @Override
+    public CommandResult execute(RuffyScripter ruffyScripter) {
+        return new CommandResult().success(true).enacted(false).message("Returning pump state only");
+    }
+
+    @Override
+    public String toString() {
+        return "NoOpCommand{}";
+    }
 }

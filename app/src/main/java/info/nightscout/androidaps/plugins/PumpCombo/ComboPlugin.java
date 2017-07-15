@@ -23,7 +23,7 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.ReadStateCommand;
+import de.jotomo.ruffyscripter.commands.NoOpCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffyscripter.commands.PumpState;
 import info.nightscout.androidaps.BuildConfig;
@@ -36,11 +36,11 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
-import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -59,7 +59,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private ServiceConnection mRuffyServiceConnection;
 
     @Nullable
-    private volatile PumpState pumpState;
+    volatile PumpState pumpState;
+
+    volatile String statusSummary = "Initializing";
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -96,6 +98,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
                 log.debug("ruffy serivce connected");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        runCommand(new NoOpCommand());
+                    }
+                }).start();
             }
 
             @Override
@@ -299,18 +307,27 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private CommandResult runCommand(Command command) {
-        // TODO use this to dispatch methods to a service thread, like DanaRs executionService
-        // will be required when doing multiple commands in sequence.
-        // Alternatively provide 'composite commands' to return everything needed in one go?
-        try {
-            CommandResult commandResult = ruffyScripter.runCommand(command);
-            if (commandResult.success && commandResult.state != null) {
-                pumpState = commandResult.state;
+        synchronized (this) {
+            // TODO use this to dispatch methods to a service thread, like DanaRs executionService
+            // will be required when doing multiple commands in sequence.
+            // Alternatively provide 'composite commands' to return everything needed in one go?
+            try {
+                statusSummary = "Busy running " + command;
+                pumpState = null;
+                MainApp.bus().post(new EventComboPumpUpdateGUI());
+                CommandResult commandResult = ruffyScripter.runCommand(command);
+                if (commandResult.success && commandResult.state != null) {
+                    pumpState = commandResult.state;
+                }
+                return commandResult;
+            } finally {
+                lastCmdTime = new Date();
+                statusSummary = pumpState != null && !pumpState.isErrorOrWarning
+                        ? "Idle"
+                        : "Error: " + pumpState.errorMsg;
+                ruffyScripter.disconnect();
+                MainApp.bus().post(new EventComboPumpUpdateGUI());
             }
-            return commandResult;
-        } finally {
-            lastCmdTime = new Date();
-            ruffyScripter.disconnect();
         }
     }
 
@@ -358,7 +375,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.debug("Rounded requested percentage from " + percent + " to " + rounded);
             percent = rounded;
         }
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(System.currentTimeMillis());
@@ -387,10 +403,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return OPERATION_NOT_SUPPORTED;
     }
 
+    // TODO untested, probably not working
     @Override
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
-        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
         CommandResult commandResult = runCommand(new CancelTbrCommand());
         if (commandResult.enacted) {
             TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
@@ -422,13 +438,20 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         JSONObject status = new JSONObject();
         JSONObject extended = new JSONObject();
         try {
-            status.put("status", "normal");
+            status.put("status", statusSummary);
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
                 extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
-            status.put("timestamp", DateUtil.toISOString(new Date()));
+            status.put("timestamp", lastCmdTime);
+
+            if (pumpState != null) {
+                extended.put("TempBasalAbsoluteRate", pumpState.tbrRate);
+                // TODO best guess at this point ...
+                extended.put("TempBasalStart", DateUtil.dateAndTimeString(System.currentTimeMillis() - (pumpState.tbrRemainingDuration - 15 * 60 * 1000)));
+                extended.put("TempBasalRemaining", pumpState.tbrRemainingDuration);
+            }
 
 // more info here .... look at dana plugin
 
@@ -454,7 +477,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public String shortStatus(boolean veryShort) {
-        return deviceID();
+        return statusSummary;
     }
 
     @Override

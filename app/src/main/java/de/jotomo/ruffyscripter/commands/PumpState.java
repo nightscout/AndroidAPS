@@ -9,6 +9,7 @@ public class PumpState {
     public Date timestamp = new Date();
     public boolean tbrActive = false;
     public int tbrPercent = -1;
+    public double tbrRate = -1;
     public int tbrRemainingDuration = -1;
     public boolean isErrorOrWarning = false;
     public String errorMsg;
@@ -20,6 +21,11 @@ public class PumpState {
 
     public PumpState tbrPercent(int tbrPercent) {
         this.tbrPercent = tbrPercent;
+        return this;
+    }
+
+    public PumpState tbrRate(double tbrRate) {
+        this.tbrRate = tbrRate;
         return this;
     }
 
@@ -43,6 +49,7 @@ public class PumpState {
         return "PumpState{" +
                 "tbrActive=" + tbrActive +
                 ", tbrPercent=" + tbrPercent +
+                ", tbrRate=" + tbrRate +
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
                 ", isErrorOrWarning=" + isErrorOrWarning +
                 ", errorMsg=" + errorMsg +

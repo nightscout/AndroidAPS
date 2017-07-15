@@ -108,17 +108,16 @@ public class RuffyScripter {
     private volatile Command activeCmd = null;
 
     public CommandResult runCommand(final Command cmd) {
-        try {
-            if (isPumpBusy()) {
-                return new CommandResult().message("Pump is busy");
-            }
-            ensureConnected();
+        synchronized (this) {
+            try {
+                if (isPumpBusy()) {
+                    return new CommandResult().message("Pump is busy");
+                }
+                ensureConnected();
 
-            // TODO reuse thread, scheduler ...
-            Thread cmdThread;
+                // TODO reuse thread, scheduler ...
+                Thread cmdThread;
 
-            // TODO make this a safe lock
-            synchronized (this) {
                 cmdResult = null;
                 activeCmd = cmd;
                 // wait till pump is ready for input
@@ -126,7 +125,8 @@ public class RuffyScripter {
                 // check if pump is an an error state
                 if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                     try {
-                        return new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE));
+                        PumpState pumpState = readPumpState();
+                        return new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
                     } catch (Exception e) {
                         return new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
                     }
@@ -147,33 +147,32 @@ public class RuffyScripter {
                     }
                 });
                 cmdThread.start();
-            }
 
-            // TODO really?
-            long timeout = System.currentTimeMillis() + 90 * 1000;
-            while (activeCmd != null) {
-                SystemClock.sleep(500);
-                log.trace("Waiting for running command to complete");
-                if (System.currentTimeMillis() > timeout) {
-                    log.error("Running command " + activeCmd + " timed out");
-                    cmdThread.interrupt();
-                    activeCmd = null;
-                    cmdResult = null;
-                    return new CommandResult().success(false).enacted(false).message("Command timed out");
+                // TODO really?
+                long timeout = System.currentTimeMillis() + 90 * 1000;
+                while (activeCmd != null) {
+                    SystemClock.sleep(500);
+                    log.trace("Waiting for running command to complete");
+                    if (System.currentTimeMillis() > timeout) {
+                        log.error("Running command " + activeCmd + " timed out");
+                        cmdThread.interrupt();
+                        activeCmd = null;
+                        return new CommandResult().success(false).enacted(false).message("Command timed out");
+                    }
                 }
-            }
 
-            if (cmdResult.state == null) {
-                cmdResult.state = readPumpState();
+                if (cmdResult.state == null) {
+                    cmdResult.state = readPumpState();
+                }
+                log.debug("Command result: " + cmdResult);
+                return cmdResult;
+            } catch (CommandException e) {
+                return e.toCommandResult();
+            } catch (Exception e) {
+                return new CommandResult().exception(e).message("Unexpected exception communication with ruffy");
+            } finally {
+                activeCmd = null;
             }
-            log.debug("Command result: " + cmdResult);
-            CommandResult r = cmdResult;
-            cmdResult = null;
-            return r;
-        } catch (CommandException e) {
-            return e.toCommandResult();
-        } catch (Exception e) {
-            return new CommandResult().exception(e).message("Unexpected exception communication with ruffy");
         }
     }
 
@@ -288,7 +287,7 @@ public class RuffyScripter {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException().message("Timeout waiting for menu " + menuType + " to be left");
             }
-            SystemClock.sleep(50);
+            SystemClock.sleep(10);
         }
     }
 
@@ -312,16 +311,31 @@ public class RuffyScripter {
     }
 
     private PumpState readPumpState() {
-        verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         PumpState state = new PumpState();
-        Double tbrPercentage = (Double) currentMenu.getAttribute(MenuAttribute.TBR);
-        if (tbrPercentage != 100) {
-            state.tbrActive = true;
-            Double displayedTbr = (Double) currentMenu.getAttribute(MenuAttribute.TBR);
-            state.tbrPercent = displayedTbr.intValue();
-            MenuTime durationMenuTime = ((MenuTime) currentMenu.getAttribute(MenuAttribute.RUNTIME));
-            state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
-            state.tbrRate = ((double) currentMenu.getAttribute(MenuAttribute.BASAL_RATE));
+        Menu menu = this.currentMenu;
+        MenuType menuType = menu.getType();
+        if (menuType == MenuType.MAIN_MENU) {
+            Double tbrPercentage = (Double) menu.getAttribute(MenuAttribute.TBR);
+            if (tbrPercentage != 100) {
+                state.tbrActive = true;
+                Double displayedTbr = (Double) menu.getAttribute(MenuAttribute.TBR);
+                state.tbrPercent = displayedTbr.intValue();
+                MenuTime durationMenuTime = ((MenuTime) menu.getAttribute(MenuAttribute.RUNTIME));
+                state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
+                state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
+            }
+        } else if (menuType == MenuType.WARNING_OR_ERROR) {
+            state.isErrorOrWarning = true;
+            state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (MenuAttribute menuAttribute : menu.attributes()) {
+                sb.append(menuAttribute);
+                sb.append(": ");
+                sb.append(menu.getAttribute(menuAttribute));
+                sb.append("\n");
+            }
+            state.errorMsg = "Pump is on menu " + menuType + ", listing attributes: \n" + sb.toString();
         }
         return state;
     }
