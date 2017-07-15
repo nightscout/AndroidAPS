@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?
+// Hm, we could just ignore TBRs that run out within the next 60s (0:01 or even 0:02
+// given we need some time to process the request).
 public class CancelTbrCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(CancelTbrCommand.class);
 

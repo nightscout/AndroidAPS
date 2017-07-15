@@ -110,7 +110,6 @@ public class SetTbrCommand implements Command {
         for (int i = 0; i < percentageSteps; i++) {
             if (increasePercentage) scripter.pressUpKey();
             else scripter.pressDownKey();
-            // TODO waitForMenuChange instead // or have key press method handle that??
             SystemClock.sleep(100);
             log.debug("Push #" + (i + 1));
         }
@@ -159,7 +158,6 @@ public class SetTbrCommand implements Command {
         for (int i = 0; i < durationSteps; i++) {
             if (increaseDuration) scripter.pressUpKey();
             else scripter.pressDownKey();
-            // TODO waitForMenuChange instead // or have key press method handle that??
             SystemClock.sleep(100);
             log.debug("Push #" + (i + 1));
         }

@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.PumpAlert;
 import de.jotomo.ruffyscripter.commands.PumpState;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
@@ -122,8 +121,6 @@ public class RuffyScripter {
             synchronized (this) {
                 cmdResult = null;
                 activeCmd = cmd;
-                final RuffyScripter scripter = this;
-                // TODO hackish, to say the least ...
                 // wait till pump is ready for input
                 waitForMenuUpdate();
                 // check if pump is an an error state
@@ -134,10 +131,8 @@ public class RuffyScripter {
                         return new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
                     }
                 }
-                // TODO check pump state; currently most command check their in the MAIN_MENU;
-                // run ReadStateCommand, which handles possible states ... and then do wait?
-                // Return an unsuccessful CommandResult and make the caller do something loud with it
                 log.debug("Cmd execution: connection ready, executing cmd " + cmd);
+                final RuffyScripter scripter = this;
                 cmdThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -240,7 +235,6 @@ public class RuffyScripter {
     }
 
     public void pressMenuKey() {
-        // TODO build 'wait for menu update' into this method? get current menu, press key, wait for update?
         log.debug("Pressing menu key");
         pressKey(Key.MENU);
         log.debug("Releasing menu key");
@@ -260,17 +254,6 @@ public class RuffyScripter {
         }
     }
 
-    /**
-     * "Virtual" key, emulated by pressing menu and up simultaneously
-     */
-    // Doesn't work
-/*    public void pressBackKey() throws RemoteException {
-        ruffyService.rtSendKey(Key.MENU, true);
-        SystemClock.sleep(50);
-        ruffyService.rtSendKey(Key.UP, true);
-        SystemClock.sleep(100);
-        ruffyService.rtSendKey(Key.NO_KEY, true);
-    }*/
     private void pressKey(final byte key) {
         try {
             ruffyService.rtSendKey(key, true);

@@ -209,7 +209,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return false;
     }
 
-    // TODO
     @Override
     public boolean isBusy() {
         return ruffyScripter.isPumpBusy();
@@ -227,7 +226,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return false;
     }
 
-    // TODO
     @Override
     public Date lastDataTime() {
         return lastCmdTime;
