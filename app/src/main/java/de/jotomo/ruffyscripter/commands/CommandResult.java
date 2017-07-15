@@ -5,7 +5,7 @@ public class CommandResult {
     public boolean enacted;
     public Exception exception;
     public String message;
-    public State state;
+    public PumpState state;
     public History history;
 
     public CommandResult() {
@@ -31,7 +31,7 @@ public class CommandResult {
         return this;
     }
 
-    public CommandResult state(State state) {
+    public CommandResult state(PumpState state) {
         this.state = state;
         return this;
     }

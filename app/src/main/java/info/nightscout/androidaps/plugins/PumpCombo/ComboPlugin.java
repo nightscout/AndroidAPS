@@ -25,7 +25,7 @@ import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.ReadStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
-import de.jotomo.ruffyscripter.commands.State;
+import de.jotomo.ruffyscripter.commands.PumpState;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -59,7 +59,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private ServiceConnection mRuffyServiceConnection;
 
     @Nullable
-    private volatile State pumpState;
+    private volatile PumpState pumpState;
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 

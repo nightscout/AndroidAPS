@@ -15,7 +15,7 @@ public class ReadStateCommand implements Command {
     @Override
     public CommandResult execute(RuffyScripter scripter) {
         try {
-            State state = new State();
+            PumpState state = new PumpState();
             Menu displayedMenu = scripter.currentMenu;
             MenuType displayedMenuType = displayedMenu.getType();
             if (displayedMenuType == MenuType.MAIN_MENU) {
