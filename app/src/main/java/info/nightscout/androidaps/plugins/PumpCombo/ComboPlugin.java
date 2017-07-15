@@ -61,7 +61,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Nullable
     volatile PumpState pumpState;
 
-    volatile String statusSummary = "Initializing";
+    volatile String statusSummary = "No state received yet";
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -311,21 +311,34 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             // TODO use this to dispatch methods to a service thread, like DanaRs executionService
             // will be required when doing multiple commands in sequence.
             // Alternatively provide 'composite commands' to return everything needed in one go?
+            CommandResult commandResult = null;
             try {
                 statusSummary = "Busy running " + command;
                 pumpState = null;
                 MainApp.bus().post(new EventComboPumpUpdateGUI());
-                CommandResult commandResult = ruffyScripter.runCommand(command);
+                commandResult = ruffyScripter.runCommand(command);
                 if (commandResult.success && commandResult.state != null) {
                     pumpState = commandResult.state;
                 }
                 return commandResult;
             } finally {
                 lastCmdTime = new Date();
-                statusSummary = pumpState != null && !pumpState.isErrorOrWarning
-                        ? "Idle"
-                        : "Error: " + pumpState.errorMsg;
-                ruffyScripter.disconnect();
+                statusSummary = "Idle";
+                try {
+                    if (pumpState != null) {
+                        if (pumpState.errorMsg != null) {
+                            statusSummary = "Error: " + pumpState.errorMsg;
+                        } else if (pumpState.isErrorOrWarning) {
+                            statusSummary = "Error: pump is in error mode, please check pump display";
+                        }
+                    }
+                } catch (Exception e) {
+                    statusSummary = "Error";
+                }
+                if (commandResult != null && commandResult.success) {
+                    // just leave it open, to avoid more errors
+                    ruffyScripter.disconnect();
+                }
                 MainApp.bus().post(new EventComboPumpUpdateGUI());
             }
         }
