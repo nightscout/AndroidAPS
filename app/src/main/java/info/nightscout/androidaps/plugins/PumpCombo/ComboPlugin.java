@@ -310,15 +310,25 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         // till pump times out or raises an error
     }
 
-    // TODO
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
-        return OPERATION_NOT_SUPPORTED;
+        log.debug("setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
+        int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+        int roundedPercentage = (int) (Math.round(absoluteRate/ getBaseBasalRate() * 10) * 10);
+        if (unroundedPercentage != roundedPercentage)
+            log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
+        return setTempBasalPercent(roundedPercentage, durationInMinutes);
     }
 
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         log.debug("setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
+        if (percent % 10 != 0) {
+            int rounded = percent;
+            while (rounded % 10 != 0) rounded = rounded - 1;
+            log.debug("Rounded requested percentage from " + percent + " to " + rounded);
+            percent = rounded;
+        }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
