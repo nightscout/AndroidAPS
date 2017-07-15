@@ -206,20 +206,28 @@ public class RuffyScripter {
     }
 
     public void pressUpKey() {
+        log.debug("Pressing up key");
         pressKey(Key.UP);
+        log.debug("Releasing up key");
     }
 
     public void pressDownKey() {
+        log.debug("Pressing down key");
         pressKey(Key.DOWN);
+        log.debug("Releasing down key");
     }
 
     public void pressCheckKey() {
+        log.debug("Pressing check key");
         pressKey(Key.CHECK);
+        log.debug("Releasing check key");
     }
 
     public void pressMenuKey() {
         // TODO build 'wait for menu update' into this method? get current menu, press key, wait for update?
+        log.debug("Pressing menu key");
         pressKey(Key.MENU);
+        log.debug("Releasing menu key");
     }
 
     /**
