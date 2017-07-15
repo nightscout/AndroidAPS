@@ -4,8 +4,6 @@ import org.monkey.d.ruffy.ruffy.driver.display.Menu;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
 
@@ -14,8 +12,6 @@ import de.jotomo.ruffyscripter.RuffyScripter;
  * This command is 'read-only', no buttons are pushed and so no vibrations are caused.
  */
 public class ReadStateCommand implements Command {
-    private static final Logger log = LoggerFactory.getLogger(ReadStateCommand.class);
-
     @Override
     public CommandResult execute(RuffyScripter scripter) {
         try {
@@ -26,6 +22,8 @@ public class ReadStateCommand implements Command {
                 Double tbrPercentage = (Double) displayedMenu.getAttribute(MenuAttribute.TBR);
                 if (tbrPercentage != 100) {
                     state.tbrActive = true;
+                    Double displayedTbr = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
+                    state.tbrPercent = displayedTbr.intValue();
                     MenuTime durationMenuTime = ((MenuTime) displayedMenu.getAttribute(MenuAttribute.RUNTIME));
                     state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
                 }
@@ -41,4 +39,10 @@ public class ReadStateCommand implements Command {
             return e.toCommandResult();
         }
     }
+
+    @Override
+    public String toString() {
+        return "ReadStateCommand{}";
+    }
+
 }
