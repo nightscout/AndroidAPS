@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 
@@ -22,7 +23,9 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
+import de.jotomo.ruffyscripter.commands.ReadStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
+import de.jotomo.ruffyscripter.commands.State;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -51,12 +54,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private PumpDescription pumpDescription = new PumpDescription();
 
-    // TODO quick hack until pump state is more thoroughly supported
-    int activeTbrPercentage = -1;
-
     private RuffyScripter ruffyScripter;
     private Date lastCmdTime = new Date(0);
     private ServiceConnection mRuffyServiceConnection;
+
+    @Nullable
+    private volatile State pumpState;
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -92,7 +95,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
-                log.debug("ruffy serivce connected");
+                log.debug("ruffy serivce connected, fetching initial pump state");
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        readPumpState(false);
+                    }
+                }).start();
             }
 
             @Override
@@ -105,6 +114,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!success) {
             log.error("Binding to ruffy service failed");
         }
+    }
+
+    private CommandResult readPumpState(boolean keepConnectionOpen) {
+        CommandResult commandResult = runCommand(new ReadStateCommand(), keepConnectionOpen);
+        pumpState = commandResult.state;
+        log.debug("Pump state: " + commandResult.state);
+        return commandResult;
     }
 
     private void definePumpCapabilities() {
@@ -260,7 +276,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             PumpEnactResult result = new PumpEnactResult();
             if (detailedBolusInfo.insulin > 0) {
-                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
+                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin), false);
                 result.success = bolusCmdResult.success;
                 result.enacted = bolusCmdResult.enacted;
                 // TODO if no error occurred, the requested bolus is what the pump delievered,
@@ -296,13 +312,15 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
     }
 
-    private CommandResult runCommand(Command command) {
+    private CommandResult runCommand(Command command, boolean keepConnectionOpen) {
         // TODO use this to dispatch methods to a service thread, like DanaRs executionService
         try {
             return ruffyScripter.runCommand(command);
         } finally {
             lastCmdTime = new Date();
-            ruffyScripter.disconnect();
+            if(!keepConnectionOpen) {
+                ruffyScripter.disconnect();
+            }
         }
     }
 
@@ -322,6 +340,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
         }
+        CommandResult readStateCmdResult = readPumpState(true);
+        if (!readStateCmdResult.success) {
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = false;
+            pumpEnactResult.enacted = false;
+            pumpEnactResult.comment = "Failed to read pump state";
+        }
+        int activeTbrPercentage = pumpState != null ? pumpState.tbrPercent : 100;
         if (activeTbrPercentage != -1 && Math.abs(activeTbrPercentage - roundedPercentage) <= 20) {
             log.debug("Not bothering the pump for a small TBR change from " + activeTbrPercentage + "% -> " + roundedPercentage + "%");
             PumpEnactResult pumpEnactResult = new PumpEnactResult();
@@ -350,7 +376,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             percent = rounded;
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
-        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
+        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes), false);
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(System.currentTimeMillis());
             tempStart.durationInMinutes = durationInMinutes;
@@ -359,8 +385,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             tempStart.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
-            activeTbrPercentage = percent;
         }
+
+        readPumpState(false);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = commandResult.success;
@@ -383,15 +410,16 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
-        CommandResult commandResult = runCommand(new CancelTbrCommand());
-        if(commandResult.enacted) {
+        CommandResult commandResult = runCommand(new CancelTbrCommand(), true);
+        if (commandResult.enacted) {
             TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
             tempStop.durationInMinutes = 0; // ending temp basal
             tempStop.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStop);
-            activeTbrPercentage = 100;
         }
+
+        readPumpState(false);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = commandResult.success;
