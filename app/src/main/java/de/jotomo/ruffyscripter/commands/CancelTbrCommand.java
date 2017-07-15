@@ -13,17 +13,21 @@ public class CancelTbrCommand implements Command {
 
     @Override
     public CommandResult execute(RuffyScripter scripter) {
-        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        Double tbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
-        boolean runtimeDisplayed = scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME);
-        if (tbrPercentage == 100 && !runtimeDisplayed) {
-            return new CommandResult()
-                    .success(true)
-                    .enacted(true) // technically, nothing was enacted, but AAPS needs this to recover
-                                   // when there was an issue and AAPS thinks a TBR is still active
-                    .message("No TBR active");
+        try {
+            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+            Double tbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
+            boolean runtimeDisplayed = scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME);
+            if (tbrPercentage == 100 && !runtimeDisplayed) {
+                return new CommandResult()
+                        .success(true)
+                        .enacted(true) // technically, nothing was enacted, but AAPS needs this to recover
+                        // when there was an issue and AAPS thinks a TBR is still active
+                        .message("No TBR active");
+            }
+            log.debug("Cancelling active TBR of " + tbrPercentage + "% with " + runtimeDisplayed + "min remaining");
+        } catch (CommandException e) {
+            return e.toCommandResult();
         }
-        log.debug("Cancelling active TBR of " + tbrPercentage + "% with " + runtimeDisplayed + "min remaining");
         return new SetTbrCommand(100, 0).execute(scripter);
     }
 
