@@ -29,7 +29,7 @@ public class ReadStateCommand implements Command {
                 }
             } else if (displayedMenuType == MenuType.WARNING_OR_ERROR) {
                 state.isErrorOrWarning = true;
-                state.errorCode = (int) displayedMenu.getAttribute(MenuAttribute.ERROR);
+                state.errorMsg = (String) displayedMenu.getAttribute(MenuAttribute.MESSAGE);
             } else {
                 throw new CommandException().success(false).message("Neither MAIN_MENU nor WARNING_OR_ERROR is displayed, but " + displayedMenuType);
             }
