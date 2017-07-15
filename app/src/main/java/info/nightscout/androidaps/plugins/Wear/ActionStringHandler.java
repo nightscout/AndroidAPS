@@ -320,18 +320,9 @@ public class ActionStringHandler {
             ret += "\n\n";
         }
 
-        //Default Range/Target
-        Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-        Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-        Double targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
-        if (!profile.getUnits().equals(Constants.MGDL)) {
-            maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
-            minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
-            targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
-        }
         ret += "DEFAULT RANGE: ";
-        ret += SP.getDouble("openapsma_min_bg", minBgDefault) + " - " + SP.getDouble("openapsma_max_bg", maxBgDefault);
-        ret += " target: " + SP.getDouble("openapsma_target_bg", targetBgDefault);
+        ret += profile.getTargetLow() + " - " + profile.getTargetHigh();
+        ret += " target: " + (profile.getTargetLow() + profile.getTargetHigh()) / 2;
         return ret;
     }
 

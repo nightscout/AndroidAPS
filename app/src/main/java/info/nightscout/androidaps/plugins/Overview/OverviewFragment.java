@@ -971,16 +971,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             else
                 tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, units), units));
         } else {
-            Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-            Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-            if (!units.equals(Constants.MGDL)) {
-                maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
-                minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
-            }
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            double low = SP.getDouble("openapsma_min_bg", minBgDefault);
-            double high = SP.getDouble("openapsma_max_bg", maxBgDefault);
+            double low = MainApp.getConfigBuilder().getProfile().getTargetLow();
+            double high = MainApp.getConfigBuilder().getProfile().getTargetHigh();
             if (low == high)
                 tempTargetView.setText("" + low);
             else

@@ -156,22 +156,13 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-        Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-        Double targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
-        if (!units.equals(Constants.MGDL)) {
-            maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
-            minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
-            targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
-        }
-
         Date now = new Date();
 
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
-        double minBg = Profile.toMgdl(SP.getDouble("openapsma_min_bg", minBgDefault), units);
-        double maxBg = Profile.toMgdl(SP.getDouble("openapsma_max_bg", maxBgDefault), units);
-        double targetBg = Profile.toMgdl(SP.getDouble("openapsma_target_bg", targetBgDefault), units);
+        double minBg = profile.getTargetLow();
+        double maxBg = profile.getTargetHigh();
+        double targetBg = (minBg + maxBg) / 2;
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
