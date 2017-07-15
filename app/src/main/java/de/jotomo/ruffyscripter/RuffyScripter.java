@@ -321,6 +321,7 @@ public class RuffyScripter {
             state.tbrPercent = displayedTbr.intValue();
             MenuTime durationMenuTime = ((MenuTime) currentMenu.getAttribute(MenuAttribute.RUNTIME));
             state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
+            state.tbrRate = ((double) currentMenu.getAttribute(MenuAttribute.BASAL_RATE));
         }
         return state;
     }
