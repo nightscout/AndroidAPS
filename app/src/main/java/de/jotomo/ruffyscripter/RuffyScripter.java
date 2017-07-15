@@ -110,68 +110,64 @@ public class RuffyScripter {
     public CommandResult runCommand(final Command cmd) {
         synchronized (this) {
             try {
-                if (isPumpBusy()) {
-                    return new CommandResult().message("Pump is busy");
-                }
-                ensureConnected();
-
-                // TODO reuse thread, scheduler ...
-                Thread cmdThread;
-
-                cmdResult = null;
                 activeCmd = cmd;
-                // wait till pump is ready for input
-                waitForMenuUpdate();
-                // check if pump is an an error state
-                if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                    try {
-                        PumpState pumpState = readPumpState();
-                        return new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
-                    } catch (Exception e) {
-                        return new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
-                    }
-                }
-                log.debug("Cmd execution: connection ready, executing cmd " + cmd);
+                cmdResult = null;
+                Thread cmdThread;
                 final RuffyScripter scripter = this;
                 cmdThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
+                            ensureConnected();
+                            cmdResult = null;
+                            // wait till pump is ready for input
+                            waitForMenuUpdate();
+                            // check if pump is an an error state
+                            if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+                                try {
+                                    PumpState pumpState = readPumpState();
+                                    cmdResult = new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
+                                    return;
+                                } catch (Exception e) {
+                                    cmdResult = new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
+                                    return;
+                                }
+                            }
+                            log.debug("Cmd execution: connection ready, executing cmd " + cmd);
                             cmdResult = cmd.execute(scripter);
+                        } catch (CommandException e) {
+                            cmdResult = e.toCommandResult();
                         } catch (Exception e) {
                             cmdResult = new CommandResult().exception(e).message("Unexpected exception running cmd");
-                        } finally {
-                            activeCmd = null;
                         }
-
                     }
                 });
                 cmdThread.start();
 
-                // TODO really?
                 long timeout = System.currentTimeMillis() + 90 * 1000;
-                while (activeCmd != null) {
-                    SystemClock.sleep(500);
+                while (cmdResult == null) {
                     log.trace("Waiting for running command to complete");
+                    SystemClock.sleep(500);
                     if (System.currentTimeMillis() > timeout) {
                         log.error("Running command " + activeCmd + " timed out");
                         cmdThread.interrupt();
-                        activeCmd = null;
-                        return new CommandResult().success(false).enacted(false).message("Command timed out");
+                        cmdResult = new CommandResult().success(false).enacted(false).message("Command timed out");
                     }
                 }
 
-                if (cmdResult.state == null) {
-                    cmdResult.state = readPumpState();
+                CommandResult result = cmdResult;
+                if (result.state == null) {
+                    result.state = readPumpState();
                 }
-                log.debug("Command result: " + cmdResult);
-                return cmdResult;
+                log.debug("Command result: " + result);
+                return result;
             } catch (CommandException e) {
                 return e.toCommandResult();
             } catch (Exception e) {
                 return new CommandResult().exception(e).message("Unexpected exception communication with ruffy");
             } finally {
                 activeCmd = null;
+                cmdResult = null;
             }
         }
     }
