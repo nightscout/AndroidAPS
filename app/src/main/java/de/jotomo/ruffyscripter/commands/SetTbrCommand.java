@@ -190,8 +190,7 @@ public class SetTbrCommand implements Command {
         // we could read remaining duration from MAIN_MENU, but but the time we're here,
         // we could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED alert"
         // is raised and if so dismiss it
-        scripter.waitForMenuToBeLeft(MenuType.TBR_SET);
-        long inTwoSeconds = System.currentTimeMillis() + 2 * 1000;
+        long inTwoSeconds = System.currentTimeMillis() + 5 * 1000;
         boolean alertProcessed = false;
         while (System.currentTimeMillis() < inTwoSeconds && !alertProcessed) {
             if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
@@ -207,13 +206,12 @@ public class SetTbrCommand implements Command {
                 }
                 // confirm "TBR CANCELLED alert"
                 scripter.pressCheckKey();
-                SystemClock.sleep(200);
                 // dismiss "TBR CANCELLED alert"
                 scripter.pressCheckKey();
                 scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
                 alertProcessed = true;
             }
-            SystemClock.sleep(50);
+            SystemClock.sleep(10);
         }
     }
 
