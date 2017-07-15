@@ -347,16 +347,11 @@ public class RuffyScripter {
 
     public PumpAlert readDisplayPumpAlert() {
         Object errorObj = currentMenu.getAttribute(MenuAttribute.ERROR);
-        Object errorMsgObj = currentMenu.getAttribute(MenuAttribute.MESSAGE);
         while (errorObj == null) {
             SystemClock.sleep(10);
             errorObj = currentMenu.getAttribute(MenuAttribute.ERROR);
-            errorMsgObj = currentMenu.getAttribute(MenuAttribute.MESSAGE);
         }
-        while (errorMsgObj == null) {
-            SystemClock.sleep(10);
-            errorMsgObj = currentMenu.getAttribute(MenuAttribute.MESSAGE);
-        }
-        return new PumpAlert((int) errorObj, (String) errorMsgObj);
+        String errorMsg = (String) currentMenu.getAttribute(MenuAttribute.MESSAGE);
+        return new PumpAlert((int) errorObj, errorMsg);
     }
 }
