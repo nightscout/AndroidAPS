@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
 
@@ -197,12 +198,11 @@ public class SetTbrCommand implements Command {
         while (System.currentTimeMillis() < inTwoSeconds && !alertProcessed) {
             if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                 // check the raised alarm is TBR CANCELLED
-                int errorCode = (int) scripter.currentMenu.getAttribute(MenuAttribute.ERROR);
-                String errorMsg = (String) scripter.currentMenu.getAttribute(MenuAttribute.MESSAGE);
-                if (errorCode != 6 || errorMsg.equals("TBR CANCELLED")) {
+                PumpAlert alert = scripter.readDisplayPumpAlert();
+                if (alert.code != 6 || Objects.equals(alert.msg, "TBR CANCELLED")) {
                     throw new CommandException().success(false).enacted(false)
                             .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
-                                    + errorMsg + "(" + errorCode + "). Please check the pump.");
+                                    + alert.code + "(" + alert.msg + "). Please check the pump.");
                 }
                 // confirm "TBR CANCELLED alert"
                 scripter.pressCheckKey();

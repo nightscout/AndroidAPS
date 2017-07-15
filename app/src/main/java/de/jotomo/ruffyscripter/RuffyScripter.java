@@ -6,13 +6,17 @@ import android.os.SystemClock;
 import org.monkey.d.ruffy.ruffy.driver.IRTHandler;
 import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
+import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
+import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.CommandResult;
+import de.jotomo.ruffyscripter.commands.PumpAlert;
+import de.jotomo.ruffyscripter.commands.PumpState;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -156,6 +160,9 @@ public class RuffyScripter {
                 }
             }
 
+            if (cmdResult.state == null) {
+                cmdResult.state = readPumpState();
+            }
             log.debug("Command result: " + cmdResult);
             CommandResult r = cmdResult;
             cmdResult = null;
@@ -313,5 +320,34 @@ public class RuffyScripter {
                 throw new CommandException().message(failureMessage);
             }
         }
+    }
+
+    private PumpState readPumpState() {
+        verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        PumpState state = new PumpState();
+        Double tbrPercentage = (Double) currentMenu.getAttribute(MenuAttribute.TBR);
+        if (tbrPercentage != 100) {
+            state.tbrActive = true;
+            Double displayedTbr = (Double) currentMenu.getAttribute(MenuAttribute.TBR);
+            state.tbrPercent = displayedTbr.intValue();
+            MenuTime durationMenuTime = ((MenuTime) currentMenu.getAttribute(MenuAttribute.RUNTIME));
+            state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
+        }
+        return state;
+    }
+
+    public PumpAlert readDisplayPumpAlert() {
+        Object errorObj = currentMenu.getAttribute(MenuAttribute.ERROR);
+        Object errorMsgObj = currentMenu.getAttribute(MenuAttribute.MESSAGE);
+        while (errorObj == null) {
+            SystemClock.sleep(10);
+            errorObj = currentMenu.getAttribute(MenuAttribute.ERROR);
+            errorMsgObj = currentMenu.getAttribute(MenuAttribute.MESSAGE);
+        }
+        while (errorMsgObj == null) {
+            SystemClock.sleep(10);
+            errorMsgObj = currentMenu.getAttribute(MenuAttribute.MESSAGE);
+        }
+        return new PumpAlert((int) errorObj, (String) errorMsgObj);
     }
 }

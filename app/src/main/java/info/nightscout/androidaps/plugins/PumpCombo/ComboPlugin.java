@@ -95,13 +95,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
                 ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
-                log.debug("ruffy serivce connected, fetching initial pump state");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        readPumpState(false);
-                    }
-                }).start();
+                log.debug("ruffy serivce connected");
             }
 
             @Override
@@ -114,17 +108,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!success) {
             log.error("Binding to ruffy service failed");
         }
-    }
-
-    private CommandResult readPumpState(boolean keepConnectionOpen) {
-        CommandResult commandResult = runCommand(new ReadStateCommand(), keepConnectionOpen);
-        if (commandResult.success) {
-            pumpState = commandResult.state;
-            log.debug("Pump state: " + commandResult.state);
-        } else {
-            log.warn("Reading pump status failed: " + commandResult.message);
-        }
-        return commandResult;
     }
 
     private void definePumpCapabilities() {
@@ -280,7 +263,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             PumpEnactResult result = new PumpEnactResult();
             if (detailedBolusInfo.insulin > 0) {
-                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin), false);
+                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
                 result.success = bolusCmdResult.success;
                 result.enacted = bolusCmdResult.enacted;
                 // TODO if no error occurred, the requested bolus is what the pump delievered,
@@ -316,22 +299,19 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
     }
 
-    private CommandResult runCommand(Command command, boolean keepConnectionOpen) {
+    private CommandResult runCommand(Command command) {
         // TODO use this to dispatch methods to a service thread, like DanaRs executionService
+        // will be required when doing multiple commands in sequence.
+        // Alternatively provide 'composite commands' to return everything needed in one go?
         try {
-            long timeout = System.currentTimeMillis() + 10 * 1000;
-            while (ruffyScripter.isPumpBusy()) {
-                if (System.currentTimeMillis() < timeout) {
-                    return new CommandResult().success(false).enacted(false).message("Timeout waiting for the pump to be ready");
-                }
-                SystemClock.sleep(200);
+            CommandResult commandResult = ruffyScripter.runCommand(command);
+            if (commandResult.success && commandResult.state != null) {
+                pumpState = commandResult.state;
             }
-            return ruffyScripter.runCommand(command);
+            return commandResult;
         } finally {
             lastCmdTime = new Date();
-            if (!keepConnectionOpen) {
-                ruffyScripter.disconnect();
-            }
+            ruffyScripter.disconnect();
         }
     }
 
@@ -350,13 +330,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
         if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
-        }
-        CommandResult readStateCmdResult = readPumpState(true);
-        if (!readStateCmdResult.success) {
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = false;
-            pumpEnactResult.enacted = false;
-            pumpEnactResult.comment = "Failed to read pump state";
         }
         int activeTbrPercentage = pumpState != null ? pumpState.tbrPercent : 100;
         if (activeTbrPercentage != -1 && Math.abs(activeTbrPercentage - roundedPercentage) <= 20) {
@@ -387,7 +360,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             percent = rounded;
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
-        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes), true);
+        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(System.currentTimeMillis());
             tempStart.durationInMinutes = durationInMinutes;
@@ -397,8 +370,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStart);
         }
-
-        readPumpState(false);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = commandResult.success;
@@ -421,7 +392,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
-        CommandResult commandResult = runCommand(new CancelTbrCommand(), true);
+        CommandResult commandResult = runCommand(new CancelTbrCommand());
         if (commandResult.enacted) {
             TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
             tempStop.durationInMinutes = 0; // ending temp basal
@@ -429,8 +400,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
             treatmentsInterface.addToHistoryTempBasal(tempStop);
         }
-
-        readPumpState(false);
 
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = commandResult.success;
