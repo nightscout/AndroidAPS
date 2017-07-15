@@ -339,7 +339,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pumpEnactResult.success = true;
             pumpEnactResult.enacted = false;
             pumpEnactResult.percent = activeTbrPercentage;
-            pumpEnactResult.comment = "TBR change too small, skipping";
+            pumpEnactResult.comment = "TBR change too small, skipping change from " + activeTbrPercentage + "% -> " + roundedPercentage + "%";
             return pumpEnactResult;
         }
         int stepSize = pumpDescription.tempDurationStep;
