@@ -17,13 +17,11 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 
+import de.jotomo.ruffyscripter.commands.PumpState;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
-import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
-import info.nightscout.androidaps.plugins.PumpVirtual.events.EventVirtualPumpUpdateGui;
 
 public class ComboFragment extends Fragment {
     private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
@@ -76,9 +74,10 @@ public class ComboFragment extends Fragment {
                     } else {
                         StringBuilder sb = new StringBuilder();
                         sb.append(getPlugin().statusSummary);
-                        if (getPlugin().pumpState != null) {
+                        PumpState ps = getPlugin().pumpState;
+                        if (ps != null) {
                             sb.append("\n\n");
-                            sb.append(getPlugin().pumpState.toString()
+                            sb.append(ps.toString()
                                     // i know ... i need to take a break already
                                     .replaceAll(", ", "\n")
                                     .replaceAll("PumpState\\{", "\n")

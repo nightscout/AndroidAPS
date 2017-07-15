@@ -323,16 +323,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             } finally {
                 lastCmdTime = new Date();
                 statusSummary = "Idle";
-                try {
-                    if (pumpState != null) {
-                        if (pumpState.errorMsg != null) {
-                            statusSummary = "Error: " + pumpState.errorMsg;
-                        } else if (pumpState.isErrorOrWarning) {
-                            statusSummary = "Error: pump is in error mode, please check pump display";
-                        }
+                PumpState ps = pumpState;
+                if (ps != null) {
+                    if (ps.errorMsg != null) {
+                        statusSummary = "Error: " + ps.errorMsg;
+                    } else if (ps.isErrorOrWarning) {
+                        statusSummary = "Error: pump is in error mode, please check pump display";
                     }
-                } catch (Exception e) {
-                    statusSummary = "Error";
                 }
 
                 ruffyScripter.disconnect();
@@ -357,7 +354,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
         }
-        int activeTbrPercentage = pumpState != null ? pumpState.tbrPercent : 100;
+        PumpState ps = pumpState;
+        int activeTbrPercentage = ps != null ? ps.tbrPercent : 100;
         if (activeTbrPercentage != -1 && Math.abs(activeTbrPercentage - roundedPercentage) <= 20) {
             log.debug("Not bothering the pump for a small TBR change from " + activeTbrPercentage + "% -> " + roundedPercentage + "%");
             PumpEnactResult pumpEnactResult = new PumpEnactResult();
@@ -456,11 +454,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
             status.put("timestamp", lastCmdTime);
 
-            if (pumpState != null) {
-                extended.put("TempBasalAbsoluteRate", pumpState.tbrRate);
+            PumpState ps = this.pumpState;
+            if (ps != null) {
+                extended.put("TempBasalAbsoluteRate", ps.tbrRate);
                 // TODO best guess at this point ...
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(System.currentTimeMillis() - (pumpState.tbrRemainingDuration - 15 * 60 * 1000)));
-                extended.put("TempBasalRemaining", pumpState.tbrRemainingDuration);
+                extended.put("TempBasalStart", DateUtil.dateAndTimeString(System.currentTimeMillis() - (ps.tbrRemainingDuration - 15 * 60 * 1000)));
+                extended.put("TempBasalRemaining", ps.tbrRemainingDuration);
             }
 
 // more info here .... look at dana plugin
