@@ -282,19 +282,17 @@ public class RuffyScripter {
     }
 
     public void navigateToMenu(MenuType desiredMenu) {
-        // TODO menu var might not have been initialized if this is called to early
-        // though that's gonna be a problem for all code;
-        // wait during init till this is set? create a getter for currentMenu to do this?
         MenuType startedFrom = currentMenu.getType();
+        boolean movedOnce = false;
         while (currentMenu.getType() != desiredMenu) {
-            MenuType currentType = currentMenu.getType();
-/*            if (currentType == startedFrom) {
-                // TODO don't trigger right away, that's always a match ;-)
-                // failed to find the menu, after going through all the menus, bail out
-                throw new CommandException(false, null, "Menu not found searching for " + desiredMenu);
-            }*/
+            MenuType currentMenuType = currentMenu.getType();
+            if (movedOnce && currentMenuType == startedFrom) {
+                throw new CommandException().message("Menu not found searching for " + desiredMenu
+                        + ". Check menu settings on your pump to ensure it's not hidden.");
+            }
             pressMenuKey();
-            waitForMenuToBeLeft(currentType);
+            waitForMenuToBeLeft(currentMenuType);
+            movedOnce = true;
         }
     }
 
