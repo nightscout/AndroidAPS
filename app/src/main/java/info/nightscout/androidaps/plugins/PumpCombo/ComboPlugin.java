@@ -296,12 +296,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private CommandResult runCommand(Command command) {
         // TODO use this to dispatch methods to a service thread, like DanaRs executionService
         try {
-            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
             return ruffyScripter.runCommand(command);
         } finally {
             lastCmdTime = new Date();
             ruffyScripter.disconnect();
-            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
         }
     }
 
