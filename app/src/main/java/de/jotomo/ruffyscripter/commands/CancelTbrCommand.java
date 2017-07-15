@@ -2,11 +2,15 @@ package de.jotomo.ruffyscripter.commands;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?
 public class CancelTbrCommand implements Command {
+    private static final Logger log = LoggerFactory.getLogger(CancelTbrCommand.class);
+
     @Override
     public CommandResult execute(RuffyScripter scripter) {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
@@ -19,6 +23,7 @@ public class CancelTbrCommand implements Command {
                                    // when there was an issue and AAPS thinks a TBR is still active
                     .message("No TBR active");
         }
+        log.debug("Cancelling active TBR of " + tbrPercentage + "% with " + runtimeDisplayed + "min remaining");
         return new SetTbrCommand(100, 0).execute(scripter);
     }
 
