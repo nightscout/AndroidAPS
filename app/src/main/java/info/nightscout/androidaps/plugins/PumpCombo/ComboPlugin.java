@@ -331,7 +331,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pumpEnactResult.comment = "TBR change too small, skipping";
             return pumpEnactResult;
         }
-        int stepSize = pumpDescription.tempPercentStep;
+        int stepSize = pumpDescription.tempDurationStep;
         if (durationInMinutes > stepSize) {
             log.debug("Reducing requested duration of " + durationInMinutes + "m to minimal duration supported by the pump: " + stepSize + "m");
             durationInMinutes = stepSize;
