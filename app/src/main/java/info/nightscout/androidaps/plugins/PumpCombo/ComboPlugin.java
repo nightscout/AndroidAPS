@@ -108,7 +108,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     @Override
                     public void run() {
                         log.debug("Querying pump for initial state");
-                        runCommand(new ReadPumpStateCommand());
                     }
                 }).start();
             }
@@ -134,27 +133,30 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 while (true) {
                     String errorMsg = pumpState.errorMsg;
                     long now = System.currentTimeMillis();
-                    long sixMinutesSinceLastAlarm = lastAlarmTime + 6 * 60 * 1000;
-                    if (errorMsg != null && now > sixMinutesSinceLastAlarm) {
-                        log.warn("Pump is in error state, raising alert: " + errorMsg);
-                        long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000};
-                        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                        NotificationCompat.Builder notificationBuilder =
-                                new NotificationCompat.Builder(context)
-                                        .setSmallIcon(R.drawable.notif_icon)
-                                        .setSmallIcon(R.drawable.icon_bolus)
-                                        .setContentTitle("Combo communication error")
-                                        .setContentText(errorMsg)
-                                        .setPriority(NotificationCompat.PRIORITY_MAX)
-                                        .setLights(Color.BLUE, 1000, 0)
-                                        .setSound(uri)
-                                        .setVibrate(vibratePattern);
-                        mgr.notify(id, notificationBuilder.build());
-                        lastAlarmTime = now;
+                    long sixMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
+                    if (errorMsg != null)
+                        if (now > sixMinutesSinceLastAlarm) {
+                            log.warn("Pump is in error state, raising alert: " + errorMsg);
+                            long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000};
+                            Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                            NotificationCompat.Builder notificationBuilder =
+                                    new NotificationCompat.Builder(context)
+                                            .setSmallIcon(R.drawable.notif_icon)
+                                            .setSmallIcon(R.drawable.icon_bolus)
+                                            .setContentTitle("Combo communication error")
+                                            .setContentText(errorMsg)
+                                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                                            .setLights(Color.BLUE, 1000, 0)
+                                            .setSound(uri)
+                                            .setVibrate(vibratePattern);
+                            mgr.notify(id, notificationBuilder.build());
+                            lastAlarmTime = now;
+                        } else {
+                            log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + errorMsg);
                     } else {
                         log.debug("Pump state normal");
                     }
-                    SystemClock.sleep(15_000);
+                    SystemClock.sleep(60 * 1000);
                 }
             }
         }, "combo-alerter").start();
@@ -288,8 +290,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         // this is called regulary from keepalive
 
-        // TODO how often is this called? use this to run checks regularly, e.g.
-        // recheck active TBR, basal rate to ensure nothing broke?
+        runCommand(new ReadPumpStateCommand());
     }
 
     // TODO uses profile values for the time being
@@ -347,12 +348,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
     }
 
-    // TODO if there was some clue as to what refreshDataFromPump would do with the data ...
-    // that method calls NSUpload.uploadDeviceStatus(); in VirtualPump ...
-    void fetchPumpState() {
-        runCommand(new ReadPumpStateCommand());
-    }
-
     private CommandResult runCommand(Command command) {
         statusSummary = "Busy running command: " + command;
         MainApp.bus().post(new EventComboPumpUpdateGUI());
@@ -369,6 +364,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             pumpState.errorMsg = commandResult.message != null
                     ? commandResult.message
                     : "Unknown error";
+            if (commandResult.exception != null) {
+                log.error("Exception received from pump", commandResult.exception);
+            }
         }
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
