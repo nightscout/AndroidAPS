@@ -30,7 +30,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         return comboPlugin;
     }
 
-    private Button update;
+    private Button refresh;
     private TextView status;
     private TextView tbrPercentage;
     private TextView tbrDurationRemaining;
@@ -43,7 +43,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
-        update = (Button) view.findViewById(R.id.combo_update);
+        refresh = (Button) view.findViewById(R.id.combo_refresh);
         status = (TextView) view.findViewById(R.id.combo_status);
         tbrPercentage = (TextView) view.findViewById(R.id.combo_tbr_percentage);
         tbrDurationRemaining = (TextView) view.findViewById(R.id.combo_tbr_duration_remaining);
@@ -51,7 +51,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         errorMsg = (TextView) view.findViewById(R.id.combo_error_message);
         lastUpdate = (TextView) view.findViewById(R.id.combo_last_update);
 
-        update.setOnClickListener(this);
+        refresh.setOnClickListener(this);
         status.setText("Initializing");
 
         updateGUI();
@@ -79,8 +79,8 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.combo_update:
-                status.setText("Updating");
+            case R.id.combo_refresh:
+                status.setText("Refreshing");
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
