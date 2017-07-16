@@ -29,20 +29,46 @@ import de.jotomo.ruffyscripter.commands.PumpState;
 public class RuffyScripter {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
-    public volatile Menu currentMenu;
 
     private final IRuffyService ruffyService;
-    private volatile CommandResult cmdResult;
+    private final long connectionTimeOutMs = 5000;
+
+    public volatile Menu currentMenu;
     private volatile long menuLastUpdated = 0;
 
-    public RuffyScripter(IRuffyService ruffyService) {
+    private volatile long lastCmdExecution;
+    private volatile Command activeCmd = null;
+    private volatile CommandResult cmdResult;
+
+
+    public RuffyScripter(final IRuffyService ruffyService) {
         this.ruffyService = ruffyService;
         try {
             ruffyService.setHandler(mHandler);
+            idleDisconnectMonitorThread.start();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            SystemClock.sleep(10_000);
+            while (true) {
+                try {
+                    if (ruffyService.isConnected() && activeCmd == null
+                            && lastCmdExecution + connectionTimeOutMs < System.currentTimeMillis()) {
+                        log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
+                        ruffyService.doRTDisconnect();
+                        SystemClock.sleep(1000);
+                    }
+                } catch (RemoteException e) {
+                    log.debug("Exception in idle disconnect monitor thread, carrying on", e);
+                }
+            }
+        }
+    }, "idle-disconnect-monitor");
 
     private IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
@@ -105,16 +131,20 @@ public class RuffyScripter {
         return activeCmd != null;
     }
 
-    private volatile Command activeCmd = null;
+    // TODO still needed?
+    // problem was some timing issue something when disconnectin from ruffy and immediately reconnecting
+    private static class Returnable {
+        CommandResult cmdResult;
+    }
 
     public CommandResult runCommand(final Command cmd) {
-        synchronized (this) {
+        synchronized (RuffyScripter.class) {
             try {
                 activeCmd = cmd;
                 cmdResult = null;
-                Thread cmdThread;
                 final RuffyScripter scripter = this;
-                cmdThread = new Thread(new Runnable() {
+                final Returnable returnable = new Returnable();
+                Thread cmdThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -126,53 +156,55 @@ public class RuffyScripter {
                             if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                                 try {
                                     PumpState pumpState = readPumpState();
-                                    cmdResult = new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
+                                    returnable.cmdResult = new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
                                     return;
                                 } catch (Exception e) {
-                                    cmdResult = new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
+                                    returnable.cmdResult = new CommandResult().message("Pump is in an error state, reading the error state resulted in the attached exception").exception(e);
                                     return;
                                 }
                             }
                             log.debug("Cmd execution: connection ready, executing cmd " + cmd);
-                            cmdResult = cmd.execute(scripter);
+                            returnable.cmdResult = cmd.execute(scripter);
                         } catch (CommandException e) {
-                            cmdResult = e.toCommandResult();
+                            returnable.cmdResult = e.toCommandResult();
                         } catch (Exception e) {
-                            cmdResult = new CommandResult().exception(e).message("Unexpected exception running cmd");
+                            returnable.cmdResult = new CommandResult().exception(e).message("Unexpected exception running cmd");
+                        } finally {
+                            lastCmdExecution = System.currentTimeMillis();
                         }
                     }
-                });
+                }, cmd.toString());
                 cmdThread.start();
 
-                long timeout = System.currentTimeMillis() + 90 * 1000;
-                while (cmdResult == null) {
+                long timeout = System.currentTimeMillis() + 60 * 1000;
+                while (cmdThread.isAlive()) {
                     log.trace("Waiting for running command to complete");
                     SystemClock.sleep(500);
                     if (System.currentTimeMillis() > timeout) {
                         log.error("Running command " + activeCmd + " timed out");
                         cmdThread.interrupt();
-                        cmdResult = new CommandResult().success(false).enacted(false).message("Command timed out");
+                        SystemClock.sleep(5000);
+                        log.error("Thread dead yet? " + cmdThread.isAlive());
+                        return new CommandResult().success(false).enacted(false).message("Command timed out");
                     }
                 }
 
-                CommandResult result = cmdResult;
-                if (result.state == null) {
-                    result.state = readPumpState();
+                if (returnable.cmdResult.state == null) {
+                    returnable.cmdResult.state = readPumpState();
                 }
-                log.debug("Command result: " + result);
-                return result;
+                log.debug("Command result: " + returnable.cmdResult);
+                return returnable.cmdResult;
             } catch (CommandException e) {
                 return e.toCommandResult();
             } catch (Exception e) {
                 return new CommandResult().exception(e).message("Unexpected exception communication with ruffy");
             } finally {
                 activeCmd = null;
-                cmdResult = null;
             }
         }
     }
 
-    public void ensureConnected() {
+    private void ensureConnected() {
         // did we get a menu update from the pump in the last 5s? Then we're connected
         if (currentMenu != null && menuLastUpdated + 5000 > System.currentTimeMillis()) {
             log.debug("Pump is sending us menu updating, so we're connected");
@@ -192,16 +224,9 @@ public class RuffyScripter {
         }
     }
 
-    public CommandResult disconnect() {
-        try {
-            ruffyService.doRTDisconnect();
-        } catch (RemoteException e) {
-            return new CommandResult().exception(e).message("Unexpected exception trying to disconnect");
-        }
-        return new CommandResult().success(true);
-    }
-
     // below: methods to be used by commands
+    // TODO move into a new Operations(scripter) class commands can delegate to
+    // while refactoring, move everything thats not a command out of the commands package
 
     private static class Key {
         static byte NO_KEY = (byte) 0x00;
@@ -288,9 +313,7 @@ public class RuffyScripter {
     }
 
     public void verifyMenuIsDisplayed(MenuType expectedMenu) {
-        String failureMessage = "Invalid pump state, expected to be in menu "
-                + expectedMenu + ", but current menu is " + currentMenu.getType();
-        verifyMenuIsDisplayed(expectedMenu, failureMessage);
+        verifyMenuIsDisplayed(expectedMenu, null);
     }
 
     public void verifyMenuIsDisplayed(MenuType expectedMenu, String failureMessage) {
@@ -301,6 +324,9 @@ public class RuffyScripter {
                 SystemClock.sleep(200);
                 retries = retries - 1;
             } else {
+                if (failureMessage == null) {
+                    failureMessage = "Invalid pump state, expected to be in menu " + expectedMenu + ", but current menu is " + currentMenu.getType();
+                }
                 throw new CommandException().message(failureMessage);
             }
         }
@@ -308,7 +334,7 @@ public class RuffyScripter {
 
     private PumpState readPumpState() {
         PumpState state = new PumpState();
-        Menu menu = this.currentMenu;
+        Menu menu = currentMenu;
         MenuType menuType = menu.getType();
         if (menuType == MenuType.MAIN_MENU) {
             Double tbrPercentage = (Double) menu.getAttribute(MenuAttribute.TBR);
