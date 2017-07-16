@@ -101,6 +101,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        log.debug("Querying pump for initial state");
                         runCommand(new NoOpCommand());
                     }
                 }).start();
@@ -305,36 +306,41 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
     }
 
-    private CommandResult runCommand(Command command) {
-        synchronized (this) {
-            // TODO use this to dispatch methods to a service thread, like DanaRs executionService
-            // will be required when doing multiple commands in sequence.
-            // Alternatively provide 'composite commands' to return everything needed in one go?
-            CommandResult commandResult = null;
-            try {
-                statusSummary = "Busy running " + command;
-                pumpState = null;
-                MainApp.bus().post(new EventComboPumpUpdateGUI());
-                commandResult = ruffyScripter.runCommand(command);
-                if (commandResult.success && commandResult.state != null) {
-                    pumpState = commandResult.state;
-                }
-                return commandResult;
-            } finally {
-                lastCmdTime = new Date();
-                statusSummary = "Idle";
-                PumpState ps = pumpState;
-                if (ps != null) {
-                    if (ps.errorMsg != null) {
-                        statusSummary = "Error: " + ps.errorMsg;
-                    } else if (ps.isErrorOrWarning) {
-                        statusSummary = "Error: pump is in error mode, please check pump display";
-                    }
-                }
+    // TODO if there was some clue as to what refreshDataFromPump would do with the data ...
+    // that method calls NSUpload.uploadDeviceStatus(); in VirtualPump ...
+    public PumpState fetchPumpState() {
+        CommandResult commandResult = runCommand(new NoOpCommand());
+        if (commandResult.success) {
+            pumpState = commandResult.state;
+            return commandResult.state;
+        } else {
+            return new PumpState().errorMsg("Failure reading state from pump: " + commandResult.message);
+        }
+    }
 
-                ruffyScripter.disconnect();
-                MainApp.bus().post(new EventComboPumpUpdateGUI());
+    private CommandResult runCommand(Command command) {
+        CommandResult commandResult;
+        try {
+            statusSummary = "Busy running " + command;
+            pumpState = null;
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
+            commandResult = ruffyScripter.runCommand(command);
+            if (commandResult.success && commandResult.state != null) {
+                pumpState = commandResult.state;
             }
+            return commandResult;
+        } finally {
+            lastCmdTime = new Date();
+            statusSummary = "Idle";
+            PumpState ps = pumpState;
+            if (ps != null) {
+                if (ps.errorMsg != null) {
+                    statusSummary = "Error: " + ps.errorMsg;
+                } else if (ps.isErrorOrWarning) {
+                    statusSummary = "Error: pump is in error mode, please check pump display";
+                }
+            }
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
     }
 
@@ -353,17 +359,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
         if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
-        }
-        PumpState ps = pumpState;
-        int activeTbrPercentage = ps != null ? ps.tbrPercent : 100;
-        if (activeTbrPercentage != -1 && Math.abs(activeTbrPercentage - roundedPercentage) <= 20) {
-            log.debug("Not bothering the pump for a small TBR change from " + activeTbrPercentage + "% -> " + roundedPercentage + "%");
-            PumpEnactResult pumpEnactResult = new PumpEnactResult();
-            pumpEnactResult.success = true;
-            pumpEnactResult.enacted = false;
-            pumpEnactResult.percent = activeTbrPercentage;
-            pumpEnactResult.comment = "TBR change too small, skipping change from " + activeTbrPercentage + "% -> " + roundedPercentage + "%";
-            return pumpEnactResult;
         }
         int stepSize = pumpDescription.tempDurationStep;
         if (durationInMinutes > stepSize) {
@@ -411,7 +406,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return OPERATION_NOT_SUPPORTED;
     }
 
-    // TODO untested, probably not working
     @Override
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
