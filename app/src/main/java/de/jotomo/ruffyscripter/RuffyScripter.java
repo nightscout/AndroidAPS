@@ -58,7 +58,7 @@ public class RuffyScripter {
         @Override
         public void run() {
             long lastDisconnect = System.currentTimeMillis();
-            SystemClock.sleep(10_000);
+            SystemClock.sleep(1000);
             while (unrecoverableError == null) {
                 try {
                     long now = System.currentTimeMillis();
@@ -173,10 +173,16 @@ public class RuffyScripter {
                             cmdResult = null;
                             // wait till pump is ready for input
                             waitForMenuUpdate();
+                            // wait a bit longer to make extra sure we have a valid menu to work with
+                            for (int i = 0; currentMenu == null && i < 20; i++) {
+                                log.debug("Extra wait required before pump is ready");
+                                SystemClock.sleep(50);
+                            }
                             // check if pump is an an error state
-                            if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+                            if (currentMenu == null || currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                                 try {
-                                    PumpState pumpState = readPumpState();
+                                    PumpState pumpState = null;
+                                    try { pumpState = readPumpState(); } catch (Exception e) {}
                                     returnable.cmdResult = new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
                                     return;
                                 } catch (Exception e) {
@@ -206,16 +212,22 @@ public class RuffyScripter {
                         log.error("Running command " + activeCmd + " timed out");
                         cmdThread.interrupt();
                         SystemClock.sleep(5000);
-                        log.error("Thread dead yet? " + cmdThread.isAlive());
+                        log.error("Timed out thread dead yet? " + cmdThread.isAlive());
                         return new CommandResult().success(false).enacted(false).message("Command timed out");
                     }
-                    if (now > menuLastUpdated + 5000) {
-                        log.debug("Stopped received menu updates while running command, aborting the command");
-                        cmdThread.interrupt();
-                        SystemClock.sleep(5000);
-                        log.error("Thread dead yet? " + cmdThread.isAlive());
-                        return new CommandResult().success(false).enacted(false).message("Pump stopped sending state updates");
-                    }
+                    // TODO this is an extra safety measure when the user interrupts a command by using the pump
+                    // and the pump returns before the timeout, the command might continue to try, but will
+                    // very likely safely fail, still ....
+                    // TODO if ruffyscripter ensures the meun is ready for a command: then
+                    // operations of a command should all timeout after 5-10 seconds, right?
+                    // anything else can't be right. and the pump quits menus after what, 8 seconds? alright, twenty
+//                    if (currentMenu != null && now > menuLastUpdated + 5 * 1000) {
+//                        log.debug("Stopped receiving menu updates while running command, aborting the command");
+//                        cmdThread.interrupt();
+//                        SystemClock.sleep(5000);
+//                        log.error("Thread not receiving menu updates dead yet? " + cmdThread.isAlive());
+//                        return new CommandResult().success(false).enacted(false).message("Pump stopped sending state updates");
+//                    }
                 }
 
                 if (returnable.cmdResult.state == null) {
@@ -226,7 +238,8 @@ public class RuffyScripter {
             } catch (CommandException e) {
                 return e.toCommandResult();
             } catch (Exception e) {
-                return new CommandResult().exception(e).message("Unexpected exception communication with ruffy");
+                log.error("Error in ruffyscripter/ruffy", e);
+                return new CommandResult().exception(e).message("Unexpected exception communication with ruffy: " + e.getMessage());
             } finally {
                 activeCmd = null;
             }
@@ -238,7 +251,7 @@ public class RuffyScripter {
         // did we get a menu update from the pump in the last second? Then we're connected
         boolean recentMenuUpdate = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
         log.debug("ensureConnect, connected: " + connected + ", receiving menu updates: " + recentMenuUpdate);
-        if (currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis()) {
+        if (recentMenuUpdate) {
             log.debug("Pump is sending us menu updating, so we're connected");
             return;
         }
@@ -248,7 +261,7 @@ public class RuffyScripter {
             log.debug("Connect init successful: " + connectInitSuccessful);
             while (currentMenu == null) {
                 log.debug("Waiting for first menu update to be sent");
-                // waitForMenuUpdate times out after 90s and throws a CommandException
+                // waitForMenuUpdate times out after 60s and throws a CommandException
                 waitForMenuUpdate();
             }
             connected = true;
@@ -297,7 +310,7 @@ public class RuffyScripter {
      * Wait until the menu update is in
      */
     public void waitForMenuUpdate() {
-        long timeoutExpired = System.currentTimeMillis() + 30 * 1000;
+        long timeoutExpired = System.currentTimeMillis() + 60 * 1000;
         long initialUpdateTime = menuLastUpdated;
         while (initialUpdateTime == menuLastUpdated) {
             if (System.currentTimeMillis() > timeoutExpired) {
@@ -367,6 +380,9 @@ public class RuffyScripter {
     private PumpState readPumpState() {
         PumpState state = new PumpState();
         Menu menu = currentMenu;
+        if (menu == null) {
+            return new PumpState().errorMsg("Menu is not available");
+        }
         MenuType menuType = menu.getType();
         if (menuType == MenuType.MAIN_MENU) {
             Double tbrPercentage = (Double) menu.getAttribute(MenuAttribute.TBR);
