@@ -39,8 +39,6 @@ public class RuffyScripter {
 
     private volatile long lastCmdExecutionTime;
     private volatile Command activeCmd = null;
-    private volatile CommandResult cmdResult;
-
 
     public RuffyScripter(final IRuffyService ruffyService) {
         this.ruffyService = ruffyService;
@@ -77,6 +75,7 @@ public class RuffyScripter {
                     // converted into a command failure, but it's not classified as unrecoverable;
                     // eventually we might try to recover ... check docs, there's also another
                     // execption we should watch interacting with a remote service.
+                    // SecurityException was the other, when there's an AIDL mismatch;
                     unrecoverableError = "Ruffy service went away";
                 } catch (RemoteException e) {
                     log.debug("Exception in idle disconnect monitor thread, carrying on", e);
@@ -148,8 +147,6 @@ public class RuffyScripter {
         return activeCmd != null;
     }
 
-    // TODO still needed?
-    // problem was some timing issue something when disconnectin from ruffy and immediately reconnecting
     private static class Returnable {
         CommandResult cmdResult;
     }
@@ -161,16 +158,14 @@ public class RuffyScripter {
         }
         synchronized (RuffyScripter.class) {
             try {
-                activeCmd = cmd;
-                cmdResult = null;
                 final RuffyScripter scripter = this;
+                activeCmd = cmd;
                 final Returnable returnable = new Returnable();
                 Thread cmdThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
                             ensureConnected();
-                            cmdResult = null;
                             // wait till pump is ready for input
                             waitForMenuUpdate();
                             // wait a bit longer to make extra sure we have a valid menu to work with
@@ -247,12 +242,10 @@ public class RuffyScripter {
     }
 
     private void ensureConnected() {
-        // TODO cleanup/simplify
-        // did we get a menu update from the pump in the last second? Then we're connected
-        boolean recentMenuUpdate = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
-        log.debug("ensureConnect, connected: " + connected + ", receiving menu updates: " + recentMenuUpdate);
-        if (recentMenuUpdate) {
-            log.debug("Pump is sending us menu updating, so we're connected");
+        boolean menuUpdateRecentlyReceived = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
+        log.debug("ensureConnect, connected: " + connected + ", receiving menu updates: " + menuUpdateRecentlyReceived);
+        if (menuUpdateRecentlyReceived) {
+            log.debug("Pump is sending us menu updates, so we're connected");
             return;
         }
 
@@ -271,8 +264,9 @@ public class RuffyScripter {
     }
 
     // below: methods to be used by commands
-    // TODO move into a new Operations(scripter) class commands can delegate to
-    // while refactoring, move everything thats not a command out of the commands package
+    // TODO move into a new Operations(scripter) class commands can delegate to,
+    // so this class can focus on providing a connection to run commands
+    // (or maybe reconsider putting it into a base class)
 
     private static class Key {
         static byte NO_KEY = (byte) 0x00;
