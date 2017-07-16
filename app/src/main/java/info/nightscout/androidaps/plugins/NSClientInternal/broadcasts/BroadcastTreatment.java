@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.TransactionTooLargeException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -46,9 +47,17 @@ public class BroadcastTreatment {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+            try {
+                List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+                log.debug("TREAT_ADD " + part.length() + " " + x.size() + " receivers");
+            } catch (RuntimeException exception){
+                if(exception.getCause() instanceof TransactionTooLargeException){
+                    log.error("TREAT_ADD " + part.length() + " ERROR: no receiver size, CAUSE: " + exception.getMessage());
+                } else {
+                    throw exception;
+                }
+            }
 
-            log.debug("TREAT_ADD " + part.length() + " " + x.size() + " receivers");
         }
     }
 
