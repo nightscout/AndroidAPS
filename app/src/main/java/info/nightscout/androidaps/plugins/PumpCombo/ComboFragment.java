@@ -84,7 +84,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        getPlugin().fetchPumpState();
+                        getPlugin().refreshDataFromPump("User request");
                         updateGUI();
                     }
                 });
