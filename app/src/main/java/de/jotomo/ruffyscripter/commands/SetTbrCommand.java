@@ -47,7 +47,6 @@ public class SetTbrCommand implements Command {
     @Override
     public CommandResult execute(RuffyScripter scripter) {
         try {
-            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             enterTbrMenu(scripter);
             inputTbrPercentage(scripter);
             SystemClock.sleep(500);
@@ -57,6 +56,7 @@ public class SetTbrCommand implements Command {
                 cancelTbrAndConfirmCancellationWarning(scripter);
             } else {
                 // switch to TBR_DURATION menu by pressing menu key
+                scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
                 scripter.pressMenuKey();
                 scripter.waitForMenuUpdate();
                 scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
@@ -90,13 +90,16 @@ public class SetTbrCommand implements Command {
     }
 
     private void enterTbrMenu(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.TBR_MENU);
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_MENU);
         scripter.pressCheckKey();
         scripter.waitForMenuUpdate();
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
     }
 
     private void inputTbrPercentage(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long currentPercent = readDisplayedTbrPercentage(scripter);
         log.debug("Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
@@ -108,6 +111,7 @@ public class SetTbrCommand implements Command {
         }
         log.debug("Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
         for (int i = 0; i < percentageSteps; i++) {
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
             if (increasePercentage) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(100);
@@ -142,6 +146,7 @@ public class SetTbrCommand implements Command {
             // Pressing up will go to the next higher 15 minute step.
             // Don't press down, from 0:13 it can't go down, so press up.
             // Pressing up from 23:59 works to go to 24:00.
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
             scripter.pressUpKey();
             scripter.waitForMenuUpdate();
             currentDuration = readDisplayedTbrDuration(scripter);
@@ -156,6 +161,7 @@ public class SetTbrCommand implements Command {
         }
         log.debug("Pressing " + (increaseDuration ? "up" : "down") + " " + durationSteps + " times");
         for (int i = 0; i < durationSteps; i++) {
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
             if (increaseDuration) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(100);
@@ -164,6 +170,7 @@ public class SetTbrCommand implements Command {
     }
 
     private void verifyDisplayedTbrDuration(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long displayedDuration = readDisplayedTbrDuration(scripter);
         if (displayedDuration != duration) {
             log.debug("Final displayed TBR duration: " + displayedDuration);
@@ -172,6 +179,7 @@ public class SetTbrCommand implements Command {
     }
 
     private long readDisplayedTbrDuration(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
         // this as a bit hacky, the display value is blinking, so we might catch that, so
         // keep trying till we get the Double we want
@@ -185,6 +193,7 @@ public class SetTbrCommand implements Command {
 
     private void cancelTbrAndConfirmCancellationWarning(RuffyScripter scripter) {
         // confirm entered TBR
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         scripter.pressCheckKey();
 
         // we could read remaining duration from MAIN_MENU, but but the time we're here,
@@ -205,8 +214,10 @@ public class SetTbrCommand implements Command {
                                     + errorMsg + ". Please check the pump.");
                 }
                 // confirm "TBR CANCELLED alert"
+                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 scripter.pressCheckKey();
                 // dismiss "TBR CANCELLED alert"
+                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 scripter.pressCheckKey();
                 scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
                 alertProcessed = true;
@@ -216,6 +227,7 @@ public class SetTbrCommand implements Command {
     }
 
     private void verifyMainMenuShowsNoActiveTbr(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         Double tbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
         boolean runtimeDisplayed = scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME);
         if (tbrPercentage != 100 || runtimeDisplayed) {
@@ -224,6 +236,7 @@ public class SetTbrCommand implements Command {
     }
 
     private void verifyMainMenuShowsExpectedTbrActive(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         // new TBR set; percentage and duration must be displayed ...
         if (!scripter.currentMenu.attributes().contains(MenuAttribute.TBR) ||
                 !scripter.currentMenu.attributes().contains(MenuAttribute.TBR)) {

@@ -23,13 +23,13 @@ public class BolusCommand implements Command {
     @Override
     public CommandResult execute(RuffyScripter scripter) {
         try {
-            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             enterBolusMenu(scripter);
             inputBolusAmount(scripter);
             SystemClock.sleep(500);
             verifyDisplayedBolusAmount(scripter);
 
             // confirm bolus
+            scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressCheckKey();
 
             // the pump displays the entered bolus and waits a bit to let user check and cancel
@@ -63,7 +63,9 @@ public class BolusCommand implements Command {
     }
 
     private void enterBolusMenu(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.BOLUS_MENU);
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_MENU);
         scripter.pressCheckKey();
         scripter.waitForMenuUpdate();
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
@@ -73,12 +75,14 @@ public class BolusCommand implements Command {
         // press 'up' once for each 0.1 U increment
         long steps = Math.round(bolus * 10);
         for (int i = 0; i < steps; i++) {
+            scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressUpKey();
             SystemClock.sleep(100);
         }
     }
 
     private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         double displayedBolus = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
