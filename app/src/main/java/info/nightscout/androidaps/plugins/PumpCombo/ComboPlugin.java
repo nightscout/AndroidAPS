@@ -1,12 +1,17 @@
 package info.nightscout.androidaps.plugins.PumpCombo;
 
+import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
@@ -118,6 +123,41 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!success) {
             log.error("Binding to ruffy service failed");
         }
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Context context = MainApp.instance().getApplicationContext();
+                NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                int id = 1000;
+                long lastAlarmTime = 0;
+                while (true) {
+                    String errorMsg = pumpState.errorMsg;
+                    long now = System.currentTimeMillis();
+                    long sixMinutesSinceLastAlarm = lastAlarmTime + 6 * 60 * 1000;
+                    if (errorMsg != null && now > sixMinutesSinceLastAlarm) {
+                        log.warn("Pump is in error state, raising alert: " + errorMsg);
+                        long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000};
+                        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                        NotificationCompat.Builder notificationBuilder =
+                                new NotificationCompat.Builder(context)
+                                        .setSmallIcon(R.drawable.notif_icon)
+                                        .setSmallIcon(R.drawable.icon_bolus)
+                                        .setContentTitle("Combo communication error")
+                                        .setContentText(errorMsg)
+                                        .setPriority(NotificationCompat.PRIORITY_MAX)
+                                        .setLights(Color.BLUE, 1000, 0)
+                                        .setSound(uri)
+                                        .setVibrate(vibratePattern);
+                        mgr.notify(id, notificationBuilder.build());
+                        lastAlarmTime = now;
+                    } else {
+                        log.debug("Pump state normal");
+                    }
+                    SystemClock.sleep(15_000);
+                }
+            }
+        }, "combo-alerter").start();
     }
 
     private void definePumpCapabilities() {
@@ -325,11 +365,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             statusSummary = "Idle";
             pumpState = commandResult.state;
         } else {
-            // TODO this is where we want to raise a noisily-vibrating alarm
             statusSummary = "Command failed: " + command;
-            if (commandResult.message != null) {
-                pumpState.errorMsg = commandResult.message;
-            }
+            pumpState.errorMsg = commandResult.message != null
+                    ? commandResult.message
+                    : "Unknown error";
         }
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
@@ -428,7 +467,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public JSONObject getJSONStatus() {
         /// TODO not doing that just yet
-        if (1==1) return null;
+        if (1 == 1) return null;
         JSONObject pump = new JSONObject();
         JSONObject status = new JSONObject();
         JSONObject extended = new JSONObject();
