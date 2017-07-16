@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
@@ -58,10 +59,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private Date lastCmdTime = new Date(0);
     private ServiceConnection mRuffyServiceConnection;
 
-    @Nullable
-    volatile PumpState pumpState;
+    @NonNull
+    volatile PumpState pumpState = new PumpState();
 
-    volatile String statusSummary = "No state received yet";
+    @NonNull
+    volatile String statusSummary = "Initializing";
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -308,40 +310,30 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     // TODO if there was some clue as to what refreshDataFromPump would do with the data ...
     // that method calls NSUpload.uploadDeviceStatus(); in VirtualPump ...
-    public PumpState fetchPumpState() {
-        CommandResult commandResult = runCommand(new NoOpCommand());
-        if (commandResult.success) {
-            pumpState = commandResult.state;
-            return commandResult.state;
-        } else {
-            return new PumpState().errorMsg("Failure reading state from pump: " + commandResult.message);
-        }
+    void fetchPumpState() {
+        runCommand(new NoOpCommand());
     }
 
     private CommandResult runCommand(Command command) {
-        CommandResult commandResult;
-        try {
-            statusSummary = "Busy running " + command;
-            pumpState = null;
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
-            commandResult = ruffyScripter.runCommand(command);
-            if (commandResult.success && commandResult.state != null) {
-                pumpState = commandResult.state;
-            }
-            return commandResult;
-        } finally {
-            lastCmdTime = new Date();
+        statusSummary = "Busy running command: " + command;
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
+
+        CommandResult commandResult = ruffyScripter.runCommand(command);
+        log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
+
+        lastCmdTime = new Date();
+        if (commandResult.success) {
             statusSummary = "Idle";
-            PumpState ps = pumpState;
-            if (ps != null) {
-                if (ps.errorMsg != null) {
-                    statusSummary = "Error: " + ps.errorMsg;
-                } else if (ps.isErrorOrWarning) {
-                    statusSummary = "Error: pump is in error mode, please check pump display";
-                }
+            pumpState = commandResult.state;
+        } else {
+            // TODO this is where we want to raise a noisily-vibrating alarm
+            statusSummary = "Command failed: " + command;
+            if (commandResult.message != null) {
+                pumpState.errorMsg = commandResult.message;
             }
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
         }
+        MainApp.bus().post(new EventComboPumpUpdateGUI());
+        return commandResult;
     }
 
     @Override
@@ -436,6 +428,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // cache as much as possible - every time we interact with the pump it vibrates at the end
     @Override
     public JSONObject getJSONStatus() {
+        /// TODO not doing that just yet
+        if (1==1) return null;
         JSONObject pump = new JSONObject();
         JSONObject status = new JSONObject();
         JSONObject extended = new JSONObject();

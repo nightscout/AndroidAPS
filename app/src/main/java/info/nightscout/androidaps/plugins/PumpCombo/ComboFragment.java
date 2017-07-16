@@ -99,28 +99,20 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    status.setText(getPlugin().statusSummary);
                     PumpState ps = getPlugin().pumpState;
-                    status.setText(getPlugin().isBusy() ? "Busy" : "Idle");
-                    if (getPlugin() != null && ps != null) {
-                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
-                        if (tbrActive) {
-                            tbrPercentage.setText("" + ps.tbrPercent + "%");
-                            tbrDurationRemaining.setText("" + ps.tbrRemainingDuration + " min");
-                            tbrRate.setText("" + ps.tbrRate + " U/h");
-                        } else {
-                            tbrPercentage.setText("");
-                            tbrDurationRemaining.setText("");
-                            tbrRate.setText("");
-                        }
-                        errorMsg.setText(ps.errorMsg != null ? ps.errorMsg : "");
-                        lastUpdate.setText(ps.timestamp.toLocaleString());
+                    boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                    if (tbrActive) {
+                        tbrPercentage.setText("" + ps.tbrPercent + "%");
+                        tbrDurationRemaining.setText("" + ps.tbrRemainingDuration + " min");
+                        tbrRate.setText("" + ps.tbrRate + " U/h");
                     } else {
-                        tbrPercentage.setText("");
-                        tbrRate.setText("");
+                        tbrPercentage.setText("Default basal rate running");
                         tbrDurationRemaining.setText("");
-                        errorMsg.setText("");
-                        lastUpdate.setText("");
+                        tbrRate.setText("" + getPlugin().getBaseBasalRate() + " U/h");
                     }
+                    errorMsg.setText(ps.errorMsg != null ? ps.errorMsg : "");
+                    lastUpdate.setText(ps.timestamp.toLocaleString());
                 }
             });
     }

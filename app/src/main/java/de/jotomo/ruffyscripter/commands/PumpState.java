@@ -11,7 +11,6 @@ public class PumpState {
     public int tbrPercent = -1;
     public double tbrRate = -1;
     public int tbrRemainingDuration = -1;
-    public boolean isErrorOrWarning = false;
     public String errorMsg;
 
     public PumpState tbrActive(boolean tbrActive) {
@@ -34,11 +33,6 @@ public class PumpState {
         return this;
     }
 
-    public PumpState isErrorOrWarning(boolean isErrorOrWarning) {
-        this.isErrorOrWarning = isErrorOrWarning;
-        return this;
-    }
-
     public PumpState errorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
         return this;
@@ -51,7 +45,6 @@ public class PumpState {
                 ", tbrPercent=" + tbrPercent +
                 ", tbrRate=" + tbrRate +
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
-                ", isErrorOrWarning=" + isErrorOrWarning +
                 ", errorMsg=" + errorMsg +
                 ", timestamp=" + timestamp +
                 '}';
