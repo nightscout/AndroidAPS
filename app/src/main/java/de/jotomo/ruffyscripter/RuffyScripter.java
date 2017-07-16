@@ -1,5 +1,6 @@
 package de.jotomo.ruffyscripter;
 
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
 
@@ -32,11 +33,12 @@ public class RuffyScripter {
 
     private final IRuffyService ruffyService;
     private final long connectionTimeOutMs = 5000;
+    private String unrecoverableError = null;
 
     public volatile Menu currentMenu;
     private volatile long menuLastUpdated = 0;
 
-    private volatile long lastCmdExecution;
+    private volatile long lastCmdExecutionTime;
     private volatile Command activeCmd = null;
     private volatile CommandResult cmdResult;
 
@@ -51,18 +53,32 @@ public class RuffyScripter {
         }
     }
 
+    private volatile boolean connected = false;
+
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
         @Override
         public void run() {
+            long lastDisconnect = System.currentTimeMillis();
             SystemClock.sleep(10_000);
-            while (true) {
+            while (unrecoverableError == null) {
                 try {
-                    if (ruffyService.isConnected() && activeCmd == null
-                            && lastCmdExecution + connectionTimeOutMs < System.currentTimeMillis()) {
+                    long now = System.currentTimeMillis();
+                    if (connected && activeCmd == null
+                            && now > lastCmdExecutionTime + connectionTimeOutMs
+                            // don't disconnect too frequently, confuses ruffy?
+                            && now > lastDisconnect + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
+                        connected = false;
+                        lastDisconnect = now;
                         ruffyService.doRTDisconnect();
                         SystemClock.sleep(1000);
                     }
+                } catch (DeadObjectException doe) {
+                    // TODO do we need to catch this exception somewhere else too? right now it's
+                    // converted into a command failure, but it's not classified as unrecoverable;
+                    // eventually we might try to recover ... check docs, there's also another
+                    // execption we should watch interacting with a remote service.
+                    unrecoverableError = "Ruffy went away";
                 } catch (RemoteException e) {
                     log.debug("Exception in idle disconnect monitor thread, carrying on", e);
                 }
@@ -90,11 +106,13 @@ public class RuffyScripter {
         public void rtStopped() throws RemoteException {
             log.debug("rtStopped callback invoked");
             currentMenu = null;
+            connected = false;
         }
 
         @Override
         public void rtStarted() throws RemoteException {
             log.debug("rtStarted callback invoked");
+            connected = true;
         }
 
         @Override
@@ -137,7 +155,11 @@ public class RuffyScripter {
         CommandResult cmdResult;
     }
 
+    /** Always returns a CommandResult, never throws */
     public CommandResult runCommand(final Command cmd) {
+        if (unrecoverableError != null) {
+            return new CommandResult().success(false).enacted(false).message(unrecoverableError);
+        }
         synchronized (RuffyScripter.class) {
             try {
                 activeCmd = cmd;
@@ -170,7 +192,7 @@ public class RuffyScripter {
                         } catch (Exception e) {
                             returnable.cmdResult = new CommandResult().exception(e).message("Unexpected exception running cmd");
                         } finally {
-                            lastCmdExecution = System.currentTimeMillis();
+                            lastCmdExecutionTime = System.currentTimeMillis();
                         }
                     }
                 }, cmd.toString());
@@ -180,12 +202,20 @@ public class RuffyScripter {
                 while (cmdThread.isAlive()) {
                     log.trace("Waiting for running command to complete");
                     SystemClock.sleep(500);
-                    if (System.currentTimeMillis() > timeout) {
+                    long now = System.currentTimeMillis();
+                    if (now > timeout) {
                         log.error("Running command " + activeCmd + " timed out");
                         cmdThread.interrupt();
                         SystemClock.sleep(5000);
                         log.error("Thread dead yet? " + cmdThread.isAlive());
                         return new CommandResult().success(false).enacted(false).message("Command timed out");
+                    }
+                    if (now > menuLastUpdated + 5000) {
+                        log.debug("Stopped received menu updates while running command, aborting the command");
+                        cmdThread.interrupt();
+                        SystemClock.sleep(5000);
+                        log.error("Thread dead yet? " + cmdThread.isAlive());
+                        return new CommandResult().success(false).enacted(false).message("Pump stopped sending state updates");
                     }
                 }
 
@@ -205,8 +235,11 @@ public class RuffyScripter {
     }
 
     private void ensureConnected() {
-        // did we get a menu update from the pump in the last 5s? Then we're connected
-        if (currentMenu != null && menuLastUpdated + 5000 > System.currentTimeMillis()) {
+        // TODO cleanup/simplify
+        // did we get a menu update from the pump in the last second? Then we're connected
+        boolean recentMenuUpdate = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
+        log.debug("ensureConnect, connected: " + connected + ", receiving menu updates: " + recentMenuUpdate);
+        if (currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis()) {
             log.debug("Pump is sending us menu updating, so we're connected");
             return;
         }
@@ -219,6 +252,7 @@ public class RuffyScripter {
                 // waitForMenuUpdate times out after 90s and throws a CommandException
                 waitForMenuUpdate();
             }
+            connected = true;
         } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
@@ -264,7 +298,7 @@ public class RuffyScripter {
      * Wait until the menu update is in
      */
     public void waitForMenuUpdate() {
-        long timeoutExpired = System.currentTimeMillis() + 90 * 1000;
+        long timeoutExpired = System.currentTimeMillis() + 30 * 1000;
         long initialUpdateTime = menuLastUpdated;
         while (initialUpdateTime == menuLastUpdated) {
             if (System.currentTimeMillis() > timeoutExpired) {
@@ -347,7 +381,6 @@ public class RuffyScripter {
                 state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
-            state.isErrorOrWarning = true;
             state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
         } else {
             StringBuilder sb = new StringBuilder();
