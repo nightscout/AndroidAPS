@@ -3,13 +3,11 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -23,7 +21,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 
-public class ComboFragment extends Fragment {
+public class ComboFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(ComboFragment.class);
 
     private static ComboPlugin comboPlugin = new ComboPlugin();
@@ -32,14 +30,29 @@ public class ComboFragment extends Fragment {
         return comboPlugin;
     }
 
-    private TextView statusText;
+    private Button update;
+    private TextView status;
+    private TextView tbrPercentage;
+    private TextView tbrDurationRemaining;
+    private TextView tbrRate;
+    private TextView errorMsg;
+    private TextView lastUpdate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
-        statusText = (TextView) view.findViewById(R.id.comboStatusEditText);
+        update = (Button) view.findViewById(R.id.combo_update);
+        status = (TextView) view.findViewById(R.id.combo_status);
+        tbrPercentage = (TextView) view.findViewById(R.id.combo_tbr_percentage);
+        tbrDurationRemaining = (TextView) view.findViewById(R.id.combo_tbr_duration_remaining);
+        tbrRate = (TextView) view.findViewById(R.id.combo_tbr_rate);
+        errorMsg = (TextView) view.findViewById(R.id.combo_error_message);
+        lastUpdate = (TextView) view.findViewById(R.id.combo_last_update);
+
+        update.setOnClickListener(this);
+        status.setText("Initializing");
 
         updateGUI();
         return view;
@@ -62,29 +75,51 @@ public class ComboFragment extends Fragment {
         updateGUI();
     }
 
-    // TODO *very* quick hack
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.combo_update:
+                status.setText("Updating");
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPlugin().fetchPumpState();
+                        updateGUI();
+                    }
+                });
+                thread.start();
+                break;
+        }
+    }
+
     public void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getPlugin() == null) {
-                        statusText.setText("Initializing");
-                    } else {
-                        StringBuilder sb = new StringBuilder();
-                        sb.append(getPlugin().statusSummary);
-                        PumpState ps = getPlugin().pumpState;
-                        if (ps != null) {
-                            sb.append("\n\n");
-                            sb.append(ps.toString()
-                                    // i know ... i need to take a break already
-                                    .replaceAll(", ", "\n")
-                                    .replaceAll("PumpState\\{", "\n")
-                                    .replaceAll("\\}", "\n")
-                            );
+                    PumpState ps = getPlugin().pumpState;
+                    status.setText(getPlugin().isBusy() ? "Busy" : "Idle");
+                    if (getPlugin() != null && ps != null) {
+                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                        if (tbrActive) {
+                            tbrPercentage.setText("" + ps.tbrPercent + "%");
+                            tbrDurationRemaining.setText("" + ps.tbrRemainingDuration + " min");
+                            tbrRate.setText("" + ps.tbrRate + " U/h");
+                        } else {
+                            tbrPercentage.setText("");
+                            tbrDurationRemaining.setText("");
+                            tbrRate.setText("");
                         }
-                        statusText.setText(sb.toString());
+                        errorMsg.setText(ps.errorMsg != null ? ps.errorMsg : "");
+                        lastUpdate.setText(ps.timestamp.toLocaleString());
+                    } else {
+                        tbrPercentage.setText("");
+                        tbrRate.setText("");
+                        tbrDurationRemaining.setText("");
+                        errorMsg.setText("");
+                        lastUpdate.setText("");
                     }
                 }
             });
