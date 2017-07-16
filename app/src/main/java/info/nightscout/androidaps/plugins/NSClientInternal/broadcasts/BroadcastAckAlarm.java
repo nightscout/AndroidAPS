@@ -29,9 +29,13 @@ public class BroadcastAckAlarm {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+        try {
+            List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
+            log.debug("ACKALARM " + x.size() + " receivers");
+        } catch (Exception e){
+            //for testing
+        }
 
-        log.debug("ACKALARM " + x.size() + " receivers");
     }
 
 }
