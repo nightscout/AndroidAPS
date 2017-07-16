@@ -1,5 +1,8 @@
 package de.jotomo.ruffyscripter.commands;
 
+import de.jotomo.ruffyscripter.History;
+import de.jotomo.ruffyscripter.PumpState;
+
 public class CommandResult {
     public boolean success;
     public boolean enacted;

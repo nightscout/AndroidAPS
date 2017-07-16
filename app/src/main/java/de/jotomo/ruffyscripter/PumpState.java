@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter.commands;
+package de.jotomo.ruffyscripter;
 
 import java.util.Date;
 

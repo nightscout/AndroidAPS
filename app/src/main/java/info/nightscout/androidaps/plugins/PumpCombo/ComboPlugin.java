@@ -7,7 +7,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
 
@@ -24,9 +23,9 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.NoOpCommand;
+import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
-import de.jotomo.ruffyscripter.commands.PumpState;
+import de.jotomo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -104,7 +103,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     @Override
                     public void run() {
                         log.debug("Querying pump for initial state");
-                        runCommand(new NoOpCommand());
+                        runCommand(new ReadPumpStateCommand());
                     }
                 }).start();
             }
@@ -311,7 +310,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO if there was some clue as to what refreshDataFromPump would do with the data ...
     // that method calls NSUpload.uploadDeviceStatus(); in VirtualPump ...
     void fetchPumpState() {
-        runCommand(new NoOpCommand());
+        runCommand(new ReadPumpStateCommand());
     }
 
     private CommandResult runCommand(Command command) {

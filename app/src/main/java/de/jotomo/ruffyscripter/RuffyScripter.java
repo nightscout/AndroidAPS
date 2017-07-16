@@ -16,7 +16,6 @@ import org.slf4j.LoggerFactory;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.PumpState;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
