@@ -50,12 +50,8 @@ public class BroadcastTreatment {
             try {
                 List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
                 log.debug("TREAT_ADD " + part.length() + " " + x.size() + " receivers");
-            } catch (RuntimeException exception){
-                if(exception.getCause() instanceof TransactionTooLargeException){
-                    log.error("TREAT_ADD " + part.length() + " ERROR: no receiver size, CAUSE: " + exception.getMessage());
-                } else {
-                    throw exception;
-                }
+            } catch (Throwable exception){
+                    log.debug("TREAT_ADD " + part.length() + " ERROR: no receiver size, CAUSE: " + exception.getMessage());
             }
 
         }
