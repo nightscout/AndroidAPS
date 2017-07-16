@@ -77,7 +77,7 @@ public class RuffyScripter {
                     // converted into a command failure, but it's not classified as unrecoverable;
                     // eventually we might try to recover ... check docs, there's also another
                     // execption we should watch interacting with a remote service.
-                    unrecoverableError = "Ruffy went away";
+                    unrecoverableError = "Ruffy service went away";
                 } catch (RemoteException e) {
                     log.debug("Exception in idle disconnect monitor thread, carrying on", e);
                 }
@@ -350,7 +350,6 @@ public class RuffyScripter {
     }
 
     public void verifyMenuIsDisplayed(MenuType expectedMenu, String failureMessage) {
-        waitForMenuUpdate();
         int retries = 5;
         while (currentMenu.getType() != expectedMenu) {
             if (retries > 0) {
