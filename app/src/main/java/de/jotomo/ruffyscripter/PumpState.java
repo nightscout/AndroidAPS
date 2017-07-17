@@ -12,6 +12,7 @@ public class PumpState {
     public double tbrRate = -1;
     public int tbrRemainingDuration = -1;
     public String errorMsg;
+    public boolean suspended;
 
     public PumpState tbrActive(boolean tbrActive) {
         this.tbrActive = tbrActive;
@@ -38,6 +39,11 @@ public class PumpState {
         return this;
     }
 
+    public PumpState suspended(boolean suspended) {
+        this.suspended = suspended;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "PumpState{" +
@@ -46,6 +52,7 @@ public class PumpState {
                 ", tbrRate=" + tbrRate +
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
                 ", errorMsg=" + errorMsg +
+                ", suspended=" + suspended +
                 ", timestamp=" + timestamp +
                 '}';
     }

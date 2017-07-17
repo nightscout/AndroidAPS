@@ -195,6 +195,11 @@ public class RuffyScripter {
                                     return;
                                 }
                             }
+                            // don't execute anything if STOP menu is shown (pump is noisy already and user is probably changing the cartridge)
+                            if (currentMenu == null || currentMenu.getType() == MenuType.STOP) {
+                                returnable.cmdResult = new CommandResult().success(true).enacted(false);
+                                return;
+                            }
                             log.debug("Cmd execution: connection ready, executing cmd " + cmd);
                             returnable.cmdResult = cmd.execute(scripter);
                         } catch (CommandException e) {
@@ -401,6 +406,8 @@ public class RuffyScripter {
             }
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
             state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
+        } else if (menuType == MenuType.STOP) {
+            state.suspended = true;
         } else {
             StringBuilder sb = new StringBuilder();
             for (MenuAttribute menuAttribute : menu.attributes()) {

@@ -129,7 +129,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 int id = 1000;
                 long lastAlarmTime = 0;
                 while (true) {
-                    String errorMsg = pumpState.errorMsg;
+                    PumpState ps = ComboPlugin.this.pumpState;
+                    String errorMsg = ps.errorMsg;
                     if (errorMsg != null) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
@@ -155,7 +156,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + errorMsg);
                         }
                     } else {
-                        log.trace("Pump state normal");
+                        log.trace("Pump state: " + (ps.suspended ? "suspended" : "normal"));
                     }
                     SystemClock.sleep(5 * 1000);
                 }
