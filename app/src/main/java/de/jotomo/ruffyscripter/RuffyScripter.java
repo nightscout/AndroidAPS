@@ -170,10 +170,9 @@ public class RuffyScripter {
 
         synchronized (RuffyScripter.class) {
             try {
-                ensureConnected();
-
-                final RuffyScripter scripter = this;
                 activeCmd = cmd;
+                ensureConnected();
+                final RuffyScripter scripter = this;
                 final Returnable returnable = new Returnable();
                 Thread cmdThread = new Thread(new Runnable() {
                     @Override
