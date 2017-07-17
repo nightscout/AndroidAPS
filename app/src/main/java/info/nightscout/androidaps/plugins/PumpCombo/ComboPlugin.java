@@ -84,43 +84,37 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public ComboPlugin() {
         definePumpCapabilities();
         MainApp.bus().register(this);
+        startAlerter();
         bindRuffyService();
     }
 
-    private void bindRuffyService() {
-        Context context = MainApp.instance().getApplicationContext();
+    private void definePumpCapabilities() {
+        pumpDescription.isBolusCapable = true;
+        pumpDescription.bolusStep = 0.1d;
 
-        Intent intent = new Intent()
-                .setComponent(new ComponentName(
-                        // this must be the base package of the app (check package attribute in
-                        // manifest element in the manifest file of the providing app)
-                        "org.monkey.d.ruffy.ruffy",
-                        // full path to the driver
-                        // in the logs this service is mentioned as (note the slash)
-                        // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
-                        "org.monkey.d.ruffy.ruffy.driver.Ruffy"
-                ));
-        context.startService(intent);
+        pumpDescription.isExtendedBolusCapable = false; // TODO
+        pumpDescription.extendedBolusStep = 0.1d;
+        pumpDescription.extendedBolusDurationStep = 15;
+        pumpDescription.extendedBolusMaxDuration = 12 * 60;
 
-        mRuffyServiceConnection = new ServiceConnection() {
+        pumpDescription.isTempBasalCapable = true;
+        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
 
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
-                log.debug("ruffy serivce connected");
-            }
+        pumpDescription.maxTempPercent = 500;
+        pumpDescription.tempPercentStep = 10;
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                log.debug("ruffy service disconnected");
-            }
-        };
+        pumpDescription.tempDurationStep = 15;
+        pumpDescription.tempMaxDuration = 24 * 60;
 
-        boolean success = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
-        if (!success) {
-            log.error("Binding to ruffy service failed");
-        }
 
+        pumpDescription.isSetBasalProfileCapable = false; // TODO
+        pumpDescription.basalStep = 0.01d;
+        pumpDescription.basalMinimumRate = 0.0d;
+
+        pumpDescription.isRefillingCapable = false;
+    }
+
+    private void startAlerter() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -164,28 +158,34 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }, "combo-alerter").start();
     }
 
-    private void definePumpCapabilities() {
-        pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
+    private void bindRuffyService() {
+        Context context = MainApp.instance().getApplicationContext();
 
-        pumpDescription.isExtendedBolusCapable = false; // TODO
-        pumpDescription.extendedBolusStep = 0.1d;
-        pumpDescription.extendedBolusDurationStep = 15;
-        pumpDescription.extendedBolusMaxDuration = 12 * 60;
+        Intent intent = new Intent()
+                .setComponent(new ComponentName(
+                        // this must be the base package of the app (check package attribute in
+                        // manifest element in the manifest file of the providing app)
+                        "org.monkey.d.ruffy.ruffy",
+                        // full path to the driver
+                        // in the logs this service is mentioned as (note the slash)
+                        // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
+                        "org.monkey.d.ruffy.ruffy.driver.Ruffy"
+                ));
+        context.startService(intent);
 
-        pumpDescription.isTempBasalCapable = true;
-        pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
+        mRuffyServiceConnection = new ServiceConnection() {
 
-        pumpDescription.maxTempPercent = 500;
-        pumpDescription.tempPercentStep = 10;
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
+                log.debug("ruffy serivce connected");
+            }
 
-        pumpDescription.tempDurationStep = 15;
-        pumpDescription.tempMaxDuration = 24 * 60;
-
-
-        pumpDescription.isSetBasalProfileCapable = false; // TODO
-        pumpDescription.basalStep = 0.01d;
-        pumpDescription.basalMinimumRate = 0.0d;
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                log.debug("ruffy service disconnected");
+            }
+        };
 
         boolean success = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
         if (!success) {
