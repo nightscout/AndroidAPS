@@ -266,7 +266,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isSuspended() {
-        return false;
+        return pumpState.suspended;
     }
 
     @Override
