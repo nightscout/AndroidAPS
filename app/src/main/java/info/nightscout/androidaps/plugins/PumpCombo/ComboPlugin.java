@@ -365,7 +365,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             statusSummary = "Idle";
             pumpState = commandResult.state;
         } else {
-            statusSummary = "Command failed: " + command;
+            statusSummary = "Error";
             pumpState = new PumpState();
             pumpState.errorMsg = commandResult.message != null
                     ? commandResult.message
