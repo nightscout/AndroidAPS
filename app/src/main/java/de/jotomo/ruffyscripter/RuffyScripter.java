@@ -215,7 +215,10 @@ public class RuffyScripter {
                                 return;
                             }
                             log.debug("Cmd execution: connection ready, executing cmd " + cmd);
+                            long cmdStartTime = System.currentTimeMillis();
                             returnable.cmdResult = cmd.execute(scripter);
+                            long cmdEndTime = System.currentTimeMillis();
+                            log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
                         } catch (CommandException e) {
                             returnable.cmdResult = e.toCommandResult();
                         } catch (Exception e) {
