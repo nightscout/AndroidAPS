@@ -108,12 +108,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
                 log.debug("ruffy serivce connected");
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        log.debug("Querying pump for initial state");
-                    }
-                }).start();
             }
 
             @Override
@@ -136,9 +130,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 long lastAlarmTime = 0;
                 while (true) {
                     String errorMsg = pumpState.errorMsg;
-                    long now = System.currentTimeMillis();
-                    long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
-                    if (errorMsg != null)
+                    if (errorMsg != null) {
+                        long now = System.currentTimeMillis();
+                        long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         if (now > fiveMinutesSinceLastAlarm) {
                             log.warn("Pump is in error state, raising alert: " + errorMsg);
                             log.warn("  LastCmd: " + lastCmd);
@@ -159,8 +153,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             lastAlarmTime = now;
                         } else {
                             log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + errorMsg);
+                        }
                     } else {
-                        log.debug("Pump state normal");
+                        log.trace("Pump state normal");
                     }
                     SystemClock.sleep(5 * 1000);
                 }
@@ -257,9 +252,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isInitialized() {
-        // TODO
-        // hm, lastCmdDate > 0, like the DanaR does it?
-        return true; // scripter does this as needed; ruffyScripter != null;
+        // consider initialized when the pump's state was initially fetched
+        return lastCmdTime.getTime() > 0;
     }
 
     @Override

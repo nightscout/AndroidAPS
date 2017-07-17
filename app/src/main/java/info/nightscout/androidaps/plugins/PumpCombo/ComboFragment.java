@@ -53,16 +53,9 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         lastCmdTime = (TextView) view.findViewById(R.id.combo_last_command_time);
         lastCmdResult = (TextView) view.findViewById(R.id.combo_last_command_result);
 
-        status.setText("Initializing");
-        tbrPercentage.setText("");
-        tbrDurationRemaining.setText("");
-        tbrRate.setText("");
-        lastCmd.setText("");
-        lastCmdTime.setText("");
-        lastCmdResult.setText("");
-
         refresh.setOnClickListener(this);
 
+        updateGUI();
         return view;
     }
 
@@ -87,12 +80,10 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.combo_refresh:
-                status.setText("Refreshing");
                 Thread thread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         getPlugin().refreshDataFromPump("User request");
-                        updateGUI();
                     }
                 });
                 thread.start();
@@ -107,25 +98,27 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void run() {
                     status.setText(getPlugin().statusSummary);
-                    PumpState ps = getPlugin().pumpState;
-                    boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
-                    if (tbrActive) {
-                        tbrPercentage.setText("" + ps.tbrPercent + "%");
-                        tbrDurationRemaining.setText("" + ps.tbrRemainingDuration + " min");
-                        tbrRate.setText("" + ps.tbrRate + " U/h");
-                    } else {
-                        tbrPercentage.setText("Default basal rate running");
-                        tbrDurationRemaining.setText("");
-                        tbrRate.setText("" + getPlugin().getBaseBasalRate() + " U/h");
-                    }
-                    if (getPlugin().lastCmd != null) {
-                        lastCmd.setText("" + getPlugin().lastCmd);
-                        lastCmdTime.setText(ps.timestamp.toLocaleString());
-                        lastCmdResult.setText(ps.errorMsg == null ? "Success" : ps.errorMsg);
-                    } else {
-                        lastCmd.setText("");
-                        lastCmdTime.setText("");
-                        lastCmdResult.setText("");
+                    if (getPlugin().isInitialized()) {
+                        PumpState ps = getPlugin().pumpState;
+                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                        if (tbrActive) {
+                            tbrPercentage.setText("" + ps.tbrPercent + "%");
+                            tbrDurationRemaining.setText("" + ps.tbrRemainingDuration + " min");
+                            tbrRate.setText("" + ps.tbrRate + " U/h");
+                        } else {
+                            tbrPercentage.setText("Default basal rate running");
+                            tbrDurationRemaining.setText("");
+                            tbrRate.setText("" + getPlugin().getBaseBasalRate() + " U/h");
+                        }
+                        if (getPlugin().lastCmd != null) {
+                            lastCmd.setText("" + getPlugin().lastCmd);
+                            lastCmdTime.setText(ps.timestamp.toLocaleString());
+                            lastCmdResult.setText(ps.errorMsg == null ? "Success" : ps.errorMsg);
+                        } else {
+                            lastCmd.setText("");
+                            lastCmdTime.setText("");
+                            lastCmdResult.setText("");
+                        }
                     }
                 }
             });
