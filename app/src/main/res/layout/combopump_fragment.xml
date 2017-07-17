@@ -122,7 +122,7 @@
                     android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
-                    android:text="TBR duration remaining"
+                    android:text="TBR duration"
                     android:textSize="14sp" />
 
                 <TextView
@@ -136,7 +136,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/combo_tbr_duration_remaining"
+                    android:id="@+id/combo_tbr_duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

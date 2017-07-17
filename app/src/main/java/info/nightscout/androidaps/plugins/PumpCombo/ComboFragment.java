@@ -33,7 +33,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     private Button refresh;
     private TextView status;
     private TextView tbrPercentage;
-    private TextView tbrDurationRemaining;
+    private TextView tbrDuration;
     private TextView tbrRate;
     private TextView lastCmd;
     private TextView lastCmdTime;
@@ -47,7 +47,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         refresh = (Button) view.findViewById(R.id.combo_refresh);
         status = (TextView) view.findViewById(R.id.combo_status);
         tbrPercentage = (TextView) view.findViewById(R.id.combo_tbr_percentage);
-        tbrDurationRemaining = (TextView) view.findViewById(R.id.combo_tbr_duration_remaining);
+        tbrDuration = (TextView) view.findViewById(R.id.combo_tbr_duration);
         tbrRate = (TextView) view.findViewById(R.id.combo_tbr_rate);
         lastCmd = (TextView) view.findViewById(R.id.combo_last_command);
         lastCmdTime = (TextView) view.findViewById(R.id.combo_last_command_time);
@@ -103,11 +103,11 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                         boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
                         if (tbrActive) {
                             tbrPercentage.setText("" + ps.tbrPercent + "%");
-                            tbrDurationRemaining.setText("" + ps.tbrRemainingDuration + " min");
+                            tbrDuration.setText("" + ps.tbrRemainingDuration + " min");
                             tbrRate.setText("" + ps.tbrRate + " U/h");
                         } else {
                             tbrPercentage.setText("Default basal rate running");
-                            tbrDurationRemaining.setText("");
+                            tbrDuration.setText("");
                             tbrRate.setText("" + getPlugin().getBaseBasalRate() + " U/h");
                         }
                         if (getPlugin().lastCmd != null) {
