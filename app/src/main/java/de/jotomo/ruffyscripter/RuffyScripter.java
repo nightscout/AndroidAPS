@@ -155,7 +155,9 @@ public class RuffyScripter {
         CommandResult cmdResult;
     }
 
-    /** Always returns a CommandResult, never throws */
+    /**
+     * Always returns a CommandResult, never throws
+     */
     public CommandResult runCommand(final Command cmd) {
         if (unrecoverableError != null) {
             return new CommandResult().success(false).enacted(false).message(unrecoverableError);
@@ -168,6 +170,8 @@ public class RuffyScripter {
 
         synchronized (RuffyScripter.class) {
             try {
+                ensureConnected();
+
                 final RuffyScripter scripter = this;
                 activeCmd = cmd;
                 final Returnable returnable = new Returnable();
@@ -175,19 +179,13 @@ public class RuffyScripter {
                     @Override
                     public void run() {
                         try {
-                            ensureConnected();
-                            // wait till pump is ready for input
-                            waitForMenuUpdate();
-                            // wait a bit longer to make extra sure we have a valid menu to work with
-                            for (int i = 0; currentMenu == null && i < 20; i++) {
-                                log.debug("Extra wait required before pump is ready");
-                                SystemClock.sleep(50);
-                            }
                             // check if pump is an an error state
                             if (currentMenu == null || currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                                 try {
                                     PumpState pumpState = null;
-                                    try { pumpState = readPumpState(); } catch (Exception e) { /* We tried ... */ }
+                                    try {
+                                        pumpState = readPumpState();
+                                    } catch (Exception e) { /* We tried ... */ }
                                     returnable.cmdResult = new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
                                     return;
                                 } catch (Exception e) {
@@ -257,6 +255,7 @@ public class RuffyScripter {
         }
     }
 
+    /** If there's an issue, this times out eventually and throws a CommandException */
     private void ensureConnected() {
         boolean menuUpdateRecentlyReceived = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
         log.debug("ensureConnect, connected: " + connected + ", receiving menu updates: " + menuUpdateRecentlyReceived);
@@ -265,19 +264,19 @@ public class RuffyScripter {
             return;
         }
 
-        try {
-            boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
-            log.debug("Connect init successful: " + connectInitSuccessful);
-            while (currentMenu == null) {
-                log.debug("Waiting for first menu update to be sent");
-                // waitForMenuUpdate times out after 60s and throws a CommandException
-                waitForMenuUpdate();
+            try {
+                boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
+                log.debug("Connect init successful: " + connectInitSuccessful);
+                while (currentMenu == null) {
+                    log.debug("Waiting for first menu update to be sent");
+                    // waitForMenuUpdate times out after 60s and throws a CommandException
+                    waitForMenuUpdate();
+                }
+                connected = true;
+            } catch (RemoteException e) {
+                throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
             }
-            connected = true;
-        } catch (RemoteException e) {
-            throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
-    }
 
     // below: methods to be used by commands
     // TODO move into a new Operations(scripter) class commands can delegate to,
