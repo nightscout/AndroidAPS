@@ -7,6 +7,8 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
@@ -18,6 +20,17 @@ public class BolusCommand implements Command {
 
     public BolusCommand(double bolus) {
         this.bolus = bolus;
+    }
+
+    @Override
+    public List<String> validateArguments() {
+        List<String> violations = new ArrayList<>();
+
+        if (bolus > 0 && bolus < 25) {
+            violations.add("Requested bolus " + bolus + " out of limits (0-25)");
+        }
+
+        return violations;
     }
 
     @Override
@@ -37,7 +50,7 @@ public class BolusCommand implements Command {
 
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Pump did not return to MAIN_MEU from BOLUS_ENTER to deliver bolus. "
-                    + "Check pump manually, the bolus might not have been delivered.");
+                            + "Check pump manually, the bolus might not have been delivered.");
 
             // wait for bolus delivery to complete
             Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
@@ -53,7 +66,7 @@ public class BolusCommand implements Command {
             // make sure no alert (occlusion, cartridge empty) has occurred.
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Bolus delivery did not complete as expected. "
-                    + "Check pump manually, the bolus might not have been delivered.");
+                            + "Check pump manually, the bolus might not have been delivered.");
 
             return new CommandResult().success(true).enacted(true)
                     .message(String.format(Locale.US, "Delivered %02.1f U", bolus));

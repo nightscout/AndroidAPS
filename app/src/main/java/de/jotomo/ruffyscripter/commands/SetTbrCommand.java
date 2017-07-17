@@ -8,8 +8,9 @@ import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
 
@@ -22,26 +23,33 @@ public class SetTbrCommand implements Command {
     public SetTbrCommand(long percentage, long duration) {
         this.percentage = percentage;
         this.duration = duration;
+    }
+
+    @Override
+    public List<String> validateArguments() {
+        List<String> violations = new ArrayList<>();
 
         if (percentage % 10 != 0) {
-            throw new IllegalArgumentException("TBR percentage must be set in 10% steps");
+            violations.add("TBR percentage must be set in 10% steps");
         }
         if (percentage < 0 || percentage > 500) {
-            throw new IllegalArgumentException("TBR percentage must be within 0-500%");
+            violations.add("TBR percentage must be within 0-500%");
         }
 
         if (percentage != 100) {
             if (duration % 15 != 0) {
-                throw new IllegalArgumentException("TBR duration can only be set in 15 minute steps");
+                violations.add("TBR duration can only be set in 15 minute steps");
             }
             if (duration > 60 * 24) {
-                throw new IllegalArgumentException("Maximum TBR duration is 24 hours");
+                violations.add("Maximum TBR duration is 24 hours");
             }
         }
 
         if (percentage == 0 && duration > 120) {
-            throw new IllegalArgumentException("Max allowed zero-temp duration is 2h");
+            violations.add("Max allowed zero-temp duration is 2h");
         }
+
+        return  violations;
     }
 
     @Override
@@ -72,7 +80,7 @@ public class SetTbrCommand implements Command {
 
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Pump did not return to MAIN_MEU after setting TBR. " +
-                    "Check pump manually, the TBR might not have been set/cancelled.");
+                            "Check pump manually, the TBR might not have been set/cancelled.");
 
             // check main menu shows the same values we just set
             if (percentage == 100) {

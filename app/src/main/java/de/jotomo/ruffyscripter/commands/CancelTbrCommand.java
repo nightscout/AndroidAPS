@@ -5,6 +5,9 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
+import java.util.List;
+
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?
@@ -12,6 +15,11 @@ import de.jotomo.ruffyscripter.RuffyScripter;
 // given we need some time to process the request).
 public class CancelTbrCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(CancelTbrCommand.class);
+
+    @Override
+    public List<String> validateArguments() {
+        return Collections.emptyList();
+    }
 
     @Override
     public CommandResult execute(RuffyScripter scripter) {

@@ -4,6 +4,8 @@ import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
 
+import com.google.common.base.Joiner;
+
 import org.monkey.d.ruffy.ruffy.driver.IRTHandler;
 import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.monkey.d.ruffy.ruffy.driver.display.Menu;
@@ -12,6 +14,8 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
@@ -156,6 +160,12 @@ public class RuffyScripter {
         if (unrecoverableError != null) {
             return new CommandResult().success(false).enacted(false).message(unrecoverableError);
         }
+
+        List<String> violations = cmd.validateArguments();
+        if (!violations.isEmpty()) {
+            return new CommandResult().message(Joiner.on("\n").join(violations));
+        }
+
         synchronized (RuffyScripter.class) {
             try {
                 final RuffyScripter scripter = this;
