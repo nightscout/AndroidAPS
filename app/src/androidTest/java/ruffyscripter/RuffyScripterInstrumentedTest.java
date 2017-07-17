@@ -20,12 +20,18 @@ import org.slf4j.LoggerFactory;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
-import info.nightscout.androidaps.MainApp;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+/* Timing notes
+
+ Bolusing 15 U: input 15 U (150x button up):  ~40s
+                pump wait after confirm    :   ~5s
+                delivering                 :  ~75s
+                total                      : ~120s
+ */
 
 /**
  * Instrumentation test, which will execute on an Android device.
