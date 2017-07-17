@@ -188,7 +188,8 @@ public class RuffyScripter {
                                     return;
                                 }
                             }
-                            // don't execute anything if STOP menu is shown (pump is noisy already and user is probably changing the cartridge)
+                            // don't execute anything if STOP menu is shown (pump is noisy already and user is probably changing the cartridge),
+                            // just return state, including the suspended flag
                             if (currentMenu == null || currentMenu.getType() == MenuType.STOP) {
                                 returnable.cmdResult = new CommandResult().success(true).enacted(false);
                                 return;
