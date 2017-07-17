@@ -20,6 +20,7 @@ import java.util.List;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.CommandResult;
+import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -188,10 +189,29 @@ public class RuffyScripter {
                                     return;
                                 }
                             }
-                            // don't execute anything if STOP menu is shown (pump is noisy already and user is probably changing the cartridge),
-                            // just return state, including the suspended flag
+                            // Except for ReadPumpStateCommand: fail on all requests if the pump is suspended.
+                            // All trickery of not executing but returning success, so that AAPS can non-sensically TBR away when suspended
+                            // are dangerous in the current model where commands are dispatched without checking state beforehand, so
+                            // the above tactic would result in boluses not being applied and no warning being raised.
+                            // (Doing this check on the ComboPlugin level would require the plugin to fetch state from the pump,
+                            //  deal with states changes (running/stopped), propagating that to AAPS and so on, adding more state,
+                            //  which adds complexity I don't want in v1 and which requires more up-front design to do well,
+                            //  esp. with AAPS).
+
+                            // So, for v1, just check the pump is not suspended before executing commands and raising an error for all
+                            // but the ReadPumpStateCommand. For v2, we'll have to come up with a better idea how to deal with the pump's
+                            // state. Maybe having read-only commands and write/treatment commands treated differently, or maybe
+                            // build an abstraction on top of the commands, so that e.g. a method on RuffyScripter encapsulates checking
+                            // pre-condititions, running one or several commands, checking-post conditions and what not.
+                            // Or maybe stick with commands, have them specify if they can run in stop mode. Think properly at which
+                            // level to handle state and logic.
+                            // For now, when changing cartridges and such: tell AAPS to stop the loop, change cartridge and resume the loop.
                             if (currentMenu == null || currentMenu.getType() == MenuType.STOP) {
-                                returnable.cmdResult = new CommandResult().success(true).enacted(false);
+                                if (cmd instanceof ReadPumpStateCommand) {
+                                    returnable.cmdResult = new CommandResult().success(true).enacted(false);
+                                } else {
+                                    returnable.cmdResult = new CommandResult().success(false).enacted(false).message("Pump is suspended");
+                                }
                                 return;
                             }
                             log.debug("Cmd execution: connection ready, executing cmd " + cmd);
