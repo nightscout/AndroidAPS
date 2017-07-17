@@ -187,7 +187,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.0d;
 
-        pumpDescription.isRefillingCapable = false;
+        boolean success = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
+        if (!success) {
+            log.error("Binding to ruffy service failed");
+            // AAPS will still crash since it continues trying to access the pump, even when isInitalized
+            // returns false and isBusy returns true; this will however not crash the alerter
+            // which will raise an exception. Not really ideal.
+            pumpState.errorMsg = "Failed to bind to ruffy service";
+        }
     }
 
     @Override
@@ -363,7 +370,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         lastCmd = command;
         lastCmdTime = new Date();
         if (commandResult.success) {
-            statusSummary = "Idle";
+            statusSummary = commandResult.state.suspended ? "Suspended" : "Idle";
             pumpState = commandResult.state;
         } else {
             statusSummary = "Error";
