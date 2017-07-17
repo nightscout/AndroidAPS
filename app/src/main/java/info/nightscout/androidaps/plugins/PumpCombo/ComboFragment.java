@@ -35,8 +35,9 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     private TextView tbrPercentage;
     private TextView tbrDurationRemaining;
     private TextView tbrRate;
-    private TextView errorMsg;
-    private TextView lastUpdate;
+    private TextView lastCmd;
+    private TextView lastCmdTime;
+    private TextView lastCmdResult;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -48,13 +49,20 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         tbrPercentage = (TextView) view.findViewById(R.id.combo_tbr_percentage);
         tbrDurationRemaining = (TextView) view.findViewById(R.id.combo_tbr_duration_remaining);
         tbrRate = (TextView) view.findViewById(R.id.combo_tbr_rate);
-        errorMsg = (TextView) view.findViewById(R.id.combo_error_message);
-        lastUpdate = (TextView) view.findViewById(R.id.combo_last_update);
+        lastCmd = (TextView) view.findViewById(R.id.combo_last_command);
+        lastCmdTime = (TextView) view.findViewById(R.id.combo_last_command_time);
+        lastCmdResult = (TextView) view.findViewById(R.id.combo_last_command_result);
+
+        status.setText("Initializing");
+        tbrPercentage.setText("");
+        tbrDurationRemaining.setText("");
+        tbrRate.setText("");
+        lastCmd.setText("");
+        lastCmdTime.setText("");
+        lastCmdResult.setText("");
 
         refresh.setOnClickListener(this);
-        status.setText("Initializing");
 
-        updateGUI();
         return view;
     }
 
@@ -74,7 +82,6 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     public void onStatusEvent(final EventComboPumpUpdateGUI ev) {
         updateGUI();
     }
-
 
     @Override
     public void onClick(View view) {
@@ -111,8 +118,15 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                         tbrDurationRemaining.setText("");
                         tbrRate.setText("" + getPlugin().getBaseBasalRate() + " U/h");
                     }
-                    errorMsg.setText(ps.errorMsg != null ? ps.errorMsg : "");
-                    lastUpdate.setText(ps.timestamp.toLocaleString());
+                    if (getPlugin().lastCmd != null) {
+                        lastCmd.setText("" + getPlugin().lastCmd);
+                        lastCmdTime.setText(ps.timestamp.toLocaleString());
+                        lastCmdResult.setText(ps.errorMsg == null ? "Success" : ps.errorMsg);
+                    } else {
+                        lastCmd.setText("");
+                        lastCmdTime.setText("");
+                        lastCmdResult.setText("");
+                    }
                 }
             });
     }

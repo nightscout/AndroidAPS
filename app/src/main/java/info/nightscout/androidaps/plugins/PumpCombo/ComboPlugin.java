@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
@@ -60,9 +61,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private PumpDescription pumpDescription = new PumpDescription();
 
     private RuffyScripter ruffyScripter;
-    private Date lastCmdTime = new Date(0);
     private ServiceConnection mRuffyServiceConnection;
 
+    @Nullable
+    volatile Command lastCmd;
+    @NonNull
+    private Date lastCmdTime = new Date(0);
     @NonNull
     volatile PumpState pumpState = new PumpState();
 
@@ -79,8 +83,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     public ComboPlugin() {
         definePumpCapabilities();
-        bindRuffyService();
         MainApp.bus().register(this);
+        bindRuffyService();
     }
 
     private void bindRuffyService() {
@@ -137,6 +141,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     if (errorMsg != null)
                         if (now > sixMinutesSinceLastAlarm) {
                             log.warn("Pump is in error state, raising alert: " + errorMsg);
+                            log.warn("  LastCmd: " + lastCmd);
+                            log.warn("  LastCmdTime: " + lastCmdTime);
                             long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000};
                             Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                             NotificationCompat.Builder notificationBuilder =
@@ -144,7 +150,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                                             .setSmallIcon(R.drawable.notif_icon)
                                             .setSmallIcon(R.drawable.icon_bolus)
                                             .setContentTitle("Combo communication error")
-                                            .setContentText(errorMsg)
+                                            .setContentText("Error: " + errorMsg +
+                                                    "\nCommand: " + lastCmd +
+                                                    "\nTime: " + lastCmdTime)
                                             .setPriority(NotificationCompat.PRIORITY_MAX)
                                             .setLights(Color.BLUE, 1000, 0)
                                             .setSound(uri)
@@ -283,14 +291,16 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return lastCmdTime;
     }
 
-    // TODO
+    // this method is regularly called from info.nightscout.androidaps.receivers.KeepAliveReceiver
     @Override
     public void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
 
-        // this is called regulary from keepalive
-
-        runCommand(new ReadPumpStateCommand());
+        if (lastCmdTime.getTime() > 0 && System.currentTimeMillis() > lastCmdTime.getTime() + 60 * 1000) {
+           log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
+        } else {
+            runCommand(new ReadPumpStateCommand());
+        }
     }
 
     // TODO uses profile values for the time being
@@ -355,12 +365,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         CommandResult commandResult = ruffyScripter.runCommand(command);
         log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
 
+        lastCmd = command;
         lastCmdTime = new Date();
         if (commandResult.success) {
             statusSummary = "Idle";
             pumpState = commandResult.state;
         } else {
             statusSummary = "Command failed: " + command;
+            pumpState = new PumpState();
             pumpState.errorMsg = commandResult.message != null
                     ? commandResult.message
                     : "Unknown error";

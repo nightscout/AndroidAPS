@@ -187,7 +187,7 @@ public class RuffyScripter {
                             if (currentMenu == null || currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                                 try {
                                     PumpState pumpState = null;
-                                    try { pumpState = readPumpState(); } catch (Exception e) {}
+                                    try { pumpState = readPumpState(); } catch (Exception e) { /* We tried ... */ }
                                     returnable.cmdResult = new CommandResult().message("Pump is in an error state: " + currentMenu.getAttribute(MenuAttribute.MESSAGE)).state(pumpState);
                                     return;
                                 } catch (Exception e) {
