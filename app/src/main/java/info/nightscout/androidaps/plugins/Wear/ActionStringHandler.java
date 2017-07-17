@@ -4,8 +4,14 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
@@ -15,17 +21,24 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.db.DanaRHistoryRecord;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
+import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Actions.dialogs.FillDialog;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -251,6 +264,58 @@ public class ActionStringHandler {
                 rAction = actionstring;
             }
 
+        } else if("tddstats".equals(act[0])){
+            Object activePump = MainApp.getConfigBuilder().getActivePump();
+            PumpInterface dana = (PumpInterface) MainApp.getSpecificPlugin(DanaRPlugin.class);
+            PumpInterface danaV2 = (PumpInterface) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+            PumpInterface danaKorean = (PumpInterface) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+
+
+            if((dana == null || dana != activePump) &&
+                    (danaV2 == null || danaV2 != activePump) &&
+                    (danaKorean == null || danaKorean != activePump)
+                    ){
+                sendError("Pump does not support TDDs!");
+                return;
+            } else {
+                // check if DB up to date
+                List<DanaRHistoryRecord> dummies = new LinkedList<DanaRHistoryRecord>();
+                List<DanaRHistoryRecord> historyList = getTDDList(dummies);
+
+                if(isOldData(historyList)){
+                    rTitle = "TDD";
+                    rAction = "statusmessage";
+                    rMessage = "OLD DATA - ";
+
+                    //if pump is not busy: try to fetch data
+                    final PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+                    if (pump.isBusy()) {
+                        rMessage += MainApp.instance().getString(R.string.pumpbusy);
+                    } else {
+                        rMessage += "trying to fetch data from pump.";
+                        Handler handler = new Handler(handlerThread.getLooper());
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ((DanaRInterface)pump).loadHistory(RecordTypes.RECORD_TYPE_DAILY);
+                                List<DanaRHistoryRecord> dummies = new LinkedList<DanaRHistoryRecord>();
+                                List<DanaRHistoryRecord> historyList = getTDDList(dummies);
+                                if(isOldData(historyList)){
+                                    sendStatusmessage("TDD", "TDD: Still old data! Cannot load from pump.");
+                                } else {
+                                    sendStatusmessage("TDD", generateTDDMessage(historyList, dummies));
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    // if up to date: prepare, send (check if CPP is activated -> add CPP stats)
+                    rTitle = "TDD";
+                    rAction = "statusmessage";
+                    rMessage = generateTDDMessage(historyList, dummies);
+                }
+            }
+
         }
         else return;
 
@@ -259,6 +324,62 @@ public class ActionStringHandler {
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(rTitle, rMessage, rAction);
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = rAction;
+    }
+
+    private static String generateTDDMessage(List<DanaRHistoryRecord> historyList, List<DanaRHistoryRecord> dummies) {
+
+        DateFormat df = new SimpleDateFormat("dd.MM.");
+        String message = "TDD:\n";
+
+        //TODO: if CPP add weighted
+        message += "\n\n";
+
+
+        //add TDDs:
+        for (DanaRHistoryRecord record : historyList) {
+            double tdd = record.recordDailyBolus + record.recordDailyBasal;
+            message += df.format(new Date(record.recordDate)) + " " +  DecimalFormatter.to2Decimal(tdd) +"U" + (dummies.contains(record)?"x":"") +"\n";
+        }
+        return message;
+    }
+
+    public static boolean isOldData(List<DanaRHistoryRecord> historyList) {
+        DateFormat df = new SimpleDateFormat("dd.MM.");
+        return (historyList.size() < 3 || !(df.format(new Date(historyList.get(0).recordDate)).equals(df.format(new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24)))));
+    }
+
+    @NonNull
+    public static List<DanaRHistoryRecord> getTDDList(List<DanaRHistoryRecord> returnDummies) {
+        List<DanaRHistoryRecord> historyList = MainApp.getDbHelper().getDanaRHistoryRecordsByType(RecordTypes.RECORD_TYPE_DAILY);
+
+        //only use newest 10
+        historyList = historyList.subList(0, Math.min(10, historyList.size()));
+
+        //fill single gaps
+        List<DanaRHistoryRecord> dummies = (returnDummies!=null)?returnDummies:(new LinkedList());
+        DateFormat df = new SimpleDateFormat("dd.MM.");
+        for(int i = 0; i < historyList.size()-1; i++){
+            DanaRHistoryRecord elem1 = historyList.get(i);
+            DanaRHistoryRecord elem2 = historyList.get(i+1);
+
+            if (!df.format(new Date(elem1.recordDate)).equals(df.format(new Date(elem2.recordDate + 25*60*60*1000)))){
+                DanaRHistoryRecord dummy = new DanaRHistoryRecord();
+                dummy.recordDate = elem1.recordDate - 24*60*60*1000;
+                dummy.recordDailyBasal = elem1.recordDailyBasal/2;
+                dummy.recordDailyBolus = elem1.recordDailyBolus/2;
+                dummies.add(dummy);
+                elem1.recordDailyBasal /= 2;
+                elem1.recordDailyBolus /= 2;
+            }
+        }
+        historyList.addAll(dummies);
+        Collections.sort(historyList, new Comparator<DanaRHistoryRecord>() {
+            @Override
+            public int compare(DanaRHistoryRecord lhs, DanaRHistoryRecord rhs) {
+                return (int) (rhs.recordDate-lhs.recordDate);
+            }
+        });
+        return historyList;
     }
 
     @NonNull
@@ -496,6 +617,13 @@ public class ActionStringHandler {
 
     private synchronized static void sendError(String errormessage) {
         WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation("ERROR", errormessage, "error");
+        lastSentTimestamp = System.currentTimeMillis();
+        lastConfirmActionString = null;
+        lastBolusWizard = null;
+    }
+
+    private synchronized static void sendStatusmessage(String title, String message) {
+        WearFragment.getPlugin(MainApp.instance()).requestActionConfirmation(title, message, "statusmessage");
         lastSentTimestamp = System.currentTimeMillis();
         lastConfirmActionString = null;
         lastBolusWizard = null;

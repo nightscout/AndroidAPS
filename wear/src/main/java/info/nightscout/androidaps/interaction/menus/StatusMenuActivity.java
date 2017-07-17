@@ -14,7 +14,9 @@ public class StatusMenuActivity extends MenuListActivity {
         return new String[] {
                 "Pump",
                 "Loop",
-                "CPP"};
+                "CPP",
+                "TDD"};
+
 
     }
 
@@ -26,6 +28,8 @@ public class StatusMenuActivity extends MenuListActivity {
             ListenerService.initiateAction(this, "status loop");
         } else if ("CPP".equals(action)) {
             ListenerService.initiateAction(this, "opencpp");
+        } else if ("TDD".equals(action)) {
+            ListenerService.initiateAction(this, "tddstats");
         }
     }
 }
