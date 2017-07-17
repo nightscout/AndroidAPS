@@ -49,16 +49,31 @@ public class SetTbrCommand implements Command {
             violations.add("Max allowed zero-temp duration is 2h");
         }
 
-        return  violations;
+        return violations;
     }
 
     @Override
     public CommandResult execute(RuffyScripter scripter) {
         try {
             enterTbrMenu(scripter);
-            inputTbrPercentage(scripter);
-            SystemClock.sleep(500);
-            verifyDisplayedTbrPercentage(scripter);
+
+            boolean tbrPercentInputSuccess = false;
+            int tbrPercentInputRetries = 2;
+            while (!tbrPercentInputSuccess) {
+                try {
+                    inputTbrPercentage(scripter);
+                    SystemClock.sleep(750);
+                    verifyDisplayedTbrPercentage(scripter);
+                    tbrPercentInputSuccess = true;
+                } catch (CommandException e) {
+                    if (tbrPercentInputRetries >= 0) {
+                        log.warn("Setting TBR percentage failed, retrying", e);
+                        tbrPercentInputRetries--;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
 
             if (percentage == 100) {
                 cancelTbrAndConfirmCancellationWarning(scripter);
@@ -69,9 +84,23 @@ public class SetTbrCommand implements Command {
                 scripter.waitForMenuUpdate();
                 scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
-                inputTbrDuration(scripter);
-                SystemClock.sleep(500);
-                verifyDisplayedTbrDuration(scripter);
+                boolean tbrDurationSuccess = false;
+                int tbrDurationRetries = 2;
+                while (!tbrDurationSuccess) {
+                    try {
+                        inputTbrDuration(scripter);
+                        SystemClock.sleep(750);
+                        verifyDisplayedTbrDuration(scripter);
+                        tbrDurationSuccess = true;
+                    } catch (CommandException e) {
+                        if (tbrDurationRetries >= 0) {
+                            log.warn("Setting TBR duration failed, retrying", e);
+                            tbrDurationRetries--;
+                        } else {
+                            throw e;
+                        }
+                    }
+                }
 
                 // confirm TBR
                 scripter.pressCheckKey();

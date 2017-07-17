@@ -37,9 +37,24 @@ public class BolusCommand implements Command {
     public CommandResult execute(RuffyScripter scripter) {
         try {
             enterBolusMenu(scripter);
-            inputBolusAmount(scripter);
-            SystemClock.sleep(500);
-            verifyDisplayedBolusAmount(scripter);
+
+            boolean bolusAmountInputSuccess = false;
+            int bolusAmountInputRetries = 2;
+            while (!bolusAmountInputSuccess) {
+                try {
+                    inputBolusAmount(scripter);
+                    SystemClock.sleep(750);
+                    verifyDisplayedBolusAmount(scripter);
+                    bolusAmountInputSuccess = true;
+                } catch (CommandException e) {
+                    if (bolusAmountInputRetries >= 0) {
+                        log.warn("Failed to set bolus amount, retrying", e);
+                        bolusAmountInputRetries--;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
 
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
