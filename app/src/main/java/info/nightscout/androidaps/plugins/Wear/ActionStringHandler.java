@@ -36,6 +36,7 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
@@ -329,16 +330,52 @@ public class ActionStringHandler {
     private static String generateTDDMessage(List<DanaRHistoryRecord> historyList, List<DanaRHistoryRecord> dummies) {
 
         DateFormat df = new SimpleDateFormat("dd.MM.");
-        String message = "TDD:\n";
+        String message = "";
 
-        //TODO: if CPP add weighted
-        message += "\n\n";
+        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) MainApp.getSpecificPlugin(CircadianPercentageProfilePlugin.class);
+        boolean isCPP = (cpp!= null && cpp.isEnabled(PluginBase.PROFILE));
+        double refTDD = 100;
+        if(isCPP) refTDD = cpp.baseBasalSum()*2;
 
+        int i = 0;
+        double sum = 0d;
+        double weighted03 = 0d;
+        double weighted05 = 0d;
+        double weighted07 = 0d;
 
-        //add TDDs:
+        Collections.reverse(historyList);
         for (DanaRHistoryRecord record : historyList) {
             double tdd = record.recordDailyBolus + record.recordDailyBasal;
-            message += df.format(new Date(record.recordDate)) + " " +  DecimalFormatter.to2Decimal(tdd) +"U" + (dummies.contains(record)?"x":"") +"\n";
+            if (i == 0) {
+                weighted03 = tdd;
+                weighted05 = tdd;
+                weighted07 = tdd;
+
+            } else {
+                weighted07 = (weighted07 * 0.3 + tdd * 0.7);
+                weighted05 = (weighted05 * 0.5 + tdd * 0.5);
+                weighted03 = (weighted03 * 0.7 + tdd * 0.3);
+            }
+            i++;
+        }
+        message += "weighted:\n";
+        message += "0.3: " + DecimalFormatter.to2Decimal(weighted03) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*weighted03/refTDD) + "%"):"") + "\n";
+        message += "0.5: " + DecimalFormatter.to2Decimal(weighted05) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*weighted05/refTDD) + "%"):"") + "\n";
+        message += "0.7: " + DecimalFormatter.to2Decimal(weighted07) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*weighted07/refTDD) + "%"):"") + "\n";
+        message += "\n";
+
+        PumpInterface pump = MainApp.getConfigBuilder().getActivePump();
+        if (pump != null && pump instanceof DanaRPlugin) {
+            double tdd = DanaRPump.getInstance().dailyTotalUnits;
+            message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U "  + (isCPP?(DecimalFormatter.to0Decimal(100*tdd/refTDD) + "%"):"") + "\n";
+            message += "\n";
+        }
+
+        //add TDDs:
+        Collections.reverse(historyList);
+        for (DanaRHistoryRecord record : historyList) {
+            double tdd = record.recordDailyBolus + record.recordDailyBasal;
+            message += df.format(new Date(record.recordDate)) + " " +  DecimalFormatter.to2Decimal(tdd) +"U "  + (isCPP?(DecimalFormatter.to0Decimal(100*tdd/refTDD) + "%"):"") + (dummies.contains(record)?"x":"") +"\n";
         }
         return message;
     }
