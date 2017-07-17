@@ -137,9 +137,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 while (true) {
                     String errorMsg = pumpState.errorMsg;
                     long now = System.currentTimeMillis();
-                    long sixMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
+                    long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                     if (errorMsg != null)
-                        if (now > sixMinutesSinceLastAlarm) {
+                        if (now > fiveMinutesSinceLastAlarm) {
                             log.warn("Pump is in error state, raising alert: " + errorMsg);
                             log.warn("  LastCmd: " + lastCmd);
                             log.warn("  LastCmdTime: " + lastCmdTime);
@@ -150,9 +150,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                                             .setSmallIcon(R.drawable.notif_icon)
                                             .setSmallIcon(R.drawable.icon_bolus)
                                             .setContentTitle("Combo communication error")
-                                            .setContentText("Error: " + errorMsg +
-                                                    "\nCommand: " + lastCmd +
-                                                    "\nTime: " + lastCmdTime)
+                                            .setContentText(errorMsg)
                                             .setPriority(NotificationCompat.PRIORITY_MAX)
                                             .setLights(Color.BLUE, 1000, 0)
                                             .setSound(uri)
@@ -164,7 +162,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     } else {
                         log.debug("Pump state normal");
                     }
-                    SystemClock.sleep(60 * 1000);
+                    SystemClock.sleep(5 * 1000);
                 }
             }
         }, "combo-alerter").start();
@@ -296,7 +294,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
 
-        if (lastCmdTime.getTime() > 0 && System.currentTimeMillis() > lastCmdTime.getTime() + 60 * 1000) {
+        if (!reason.toLowerCase().contains("user")
+                && lastCmdTime.getTime() > 0
+                && System.currentTimeMillis() > lastCmdTime.getTime() + 60 * 1000) {
            log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
             runCommand(new ReadPumpStateCommand());
@@ -359,7 +359,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private CommandResult runCommand(Command command) {
-        statusSummary = "Busy running command: " + command;
+        statusSummary = "Executing " + command;
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
