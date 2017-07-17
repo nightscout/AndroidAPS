@@ -110,12 +110,21 @@ public class BolusCommand implements Command {
     }
 
     private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        double displayedBolus = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+        double displayedBolus = readDisplayedBolusAmount(scripter);
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
         }
+    }
+
+    private double readDisplayedBolusAmount(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
+        Object amountObj = scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+        while (!(amountObj instanceof Double)) {
+            scripter.waitForMenuUpdate();
+            amountObj = scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+        }
+        return (double) amountObj;
     }
 
     @Override
