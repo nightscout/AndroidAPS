@@ -208,31 +208,32 @@ public class RuffyScripter {
                 }, cmd.toString());
                 cmdThread.start();
 
-                long timeout = System.currentTimeMillis() + 60 * 1000;
+                // time out if nothing has been happening for more than 30s or after 4m
+                long dynamicTimeout = System.currentTimeMillis() + 30 * 1000;
+                long overallTimeout = System.currentTimeMillis() + 4 * 60 * 1000;
                 while (cmdThread.isAlive()) {
                     log.trace("Waiting for running command to complete");
                     SystemClock.sleep(500);
                     long now = System.currentTimeMillis();
-                    if (now > timeout) {
-                        log.error("Running command " + activeCmd + " timed out");
-                        cmdThread.interrupt();
-                        SystemClock.sleep(5000);
-                        log.error("Timed out thread dead yet? " + cmdThread.isAlive());
-                        return new CommandResult().success(false).enacted(false).message("Command timed out");
+                    if (now > dynamicTimeout) {
+                        boolean menuRecentlyUpdated = now < menuLastUpdated + 5 * 1000;
+                        boolean inMenuNotMainMenu = currentMenu != null && currentMenu.getType() != MenuType.MAIN_MENU;
+                        if (menuRecentlyUpdated || inMenuNotMainMenu) {
+                            // command still working (or waiting for pump to complete, e.g. bolus delivery)
+                            dynamicTimeout = now + 30 * 1000;
+                        } else {
+                            log.error("Dynamic timeout running command " + activeCmd);
+                            cmdThread.interrupt();
+                            SystemClock.sleep(5000);
+                            log.error("Timed out thread dead yet? " + cmdThread.isAlive());
+                            return new CommandResult().success(false).enacted(false).message("Command stalled, check pump!");
+                        }
                     }
-                    // TODO this is an extra safety measure when the user interrupts a command by using the pump
-                    // and the pump returns before the timeout, the command might continue to try, but will
-                    // very likely safely fail, still ....
-                    // TODO if ruffyscripter ensures the meun is ready for a command: then
-                    // operations of a command should all timeout after 5-10 seconds, right?
-                    // anything else can't be right. and the pump quits menus after what, 8 seconds? alright, twenty
-//                    if (currentMenu != null && now > menuLastUpdated + 5 * 1000) {
-//                        log.debug("Stopped receiving menu updates while running command, aborting the command");
-//                        cmdThread.interrupt();
-//                        SystemClock.sleep(5000);
-//                        log.error("Thread not receiving menu updates dead yet? " + cmdThread.isAlive());
-//                        return new CommandResult().success(false).enacted(false).message("Pump stopped sending state updates");
-//                    }
+                    if (now > overallTimeout) {
+                        String msg = "Command " + cmd + " timed out after 4 min, check pump!";
+                        log.error(msg);
+                        return new CommandResult().success(false).enacted(false).message(msg);
+                    }
                 }
 
                 if (returnable.cmdResult.state == null) {
