@@ -188,6 +188,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe
@@ -195,7 +196,7 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
         updateGUI();
     }
 
-    void updateGUI() {
+    private void updateGUI() {
         Activity activity = getActivity();
         updateAge(activity, sage, iage, cage, pbage);
     }

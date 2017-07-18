@@ -164,6 +164,7 @@ public class DanaRKoreanFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe

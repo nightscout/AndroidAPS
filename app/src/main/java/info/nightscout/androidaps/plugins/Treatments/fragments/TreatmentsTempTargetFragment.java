@@ -211,6 +211,7 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe
@@ -218,7 +219,7 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
         updateGUI();
     }
 
-    void updateGUI() {
+    private void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

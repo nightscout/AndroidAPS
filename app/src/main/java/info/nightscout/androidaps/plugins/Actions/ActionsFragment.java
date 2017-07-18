@@ -82,7 +82,7 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
         tempBasal.setOnClickListener(this);
         fill.setOnClickListener(this);
 
-        updateGUIIfVisible();
+        updateGUI();
         return view;
     }
 
@@ -96,29 +96,30 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
-        updateGUIIfVisible();
+        updateGUI();
     }
 
     @Subscribe
     public void onStatusEvent(final EventRefreshOverview ev) {
-        updateGUIIfVisible();
+        updateGUI();
     }
 
     @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange ev) {
-        updateGUIIfVisible();
+        updateGUI();
     }
 
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
-        updateGUIIfVisible();
+        updateGUI();
     }
 
-    void updateGUIIfVisible() {
+    private void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

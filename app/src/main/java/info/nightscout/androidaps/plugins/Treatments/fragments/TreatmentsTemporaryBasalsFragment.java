@@ -212,6 +212,7 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe

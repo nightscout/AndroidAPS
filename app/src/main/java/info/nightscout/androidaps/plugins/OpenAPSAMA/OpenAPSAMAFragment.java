@@ -91,6 +91,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe
@@ -103,7 +104,7 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
         updateResultGUI(ev.text);
     }
 
-    void updateGUI() {
+    private void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

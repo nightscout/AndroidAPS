@@ -163,6 +163,7 @@ public class DanaRv2Fragment extends Fragment {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe

@@ -190,6 +190,7 @@ public class TreatmentsProfileSwitchFragment extends Fragment implements View.On
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe
@@ -197,7 +198,7 @@ public class TreatmentsProfileSwitchFragment extends Fragment implements View.On
         updateGUI();
     }
 
-    void updateGUI() {
+    private void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

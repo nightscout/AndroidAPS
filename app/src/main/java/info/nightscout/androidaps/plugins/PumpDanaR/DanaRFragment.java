@@ -166,6 +166,7 @@ public class DanaRFragment extends Fragment {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe
