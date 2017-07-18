@@ -11,6 +11,12 @@ public class PumpState {
     public int tbrPercent = -1;
     public double tbrRate = -1;
     public int tbrRemainingDuration = -1;
+    /** This is the error message (if any) displayed by the pump if there is an alarm,
+       e.g. if a "TBR cancelled alarm" is active, the value will be "TBR CANCELLED".
+       Generally, an error code is also displayed, but it flashes and it might take
+       longer to read that and the pump connection gets interrupted if we're not
+       reacting quickly.
+     */
     public String errorMsg;
     public boolean suspended;
 

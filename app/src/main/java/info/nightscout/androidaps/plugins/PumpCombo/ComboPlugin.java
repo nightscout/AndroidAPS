@@ -63,15 +63,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private RuffyScripter ruffyScripter;
     private ServiceConnection mRuffyServiceConnection;
 
-    @Nullable
-    volatile Command lastCmd;
-    @NonNull
-    private Date lastCmdTime = new Date(0);
-    @NonNull
-    volatile PumpState pumpState = new PumpState();
-
+    // TODO is volatile really needed here?
     @NonNull
     volatile String statusSummary = "Initializing";
+    @Nullable
+    volatile Command lastCmd;
+    @Nullable
+    volatile CommandResult lastCmdResult;
+    @NonNull
+    volatile Date lastCmdTime = new Date(0);
+    @NonNull
+    volatile PumpState pumpState = new PumpState();
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -260,7 +262,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isInitialized() {
-        // consider initialized when the pump's state was initially fetched
+        // consider initialized when the pump's state was initially fetched,
+        // after that lastCmd* variables will have values
         return lastCmdTime.getTime() > 0;
     }
 
@@ -372,22 +375,23 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
         log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
+        if (commandResult.exception != null) {
+            log.error("Exception received from pump", commandResult.exception);
+        }
 
         lastCmd = command;
         lastCmdTime = new Date();
-        if (commandResult.success) {
-            statusSummary = commandResult.state.suspended ? "Suspended" : "Idle";
-            pumpState = commandResult.state;
+        lastCmdResult = commandResult;
+        pumpState = commandResult.state;
+
+        if (commandResult.success && commandResult.state.suspended) {
+            statusSummary = "Suspended";
+        } else if (commandResult.success) {
+            statusSummary = "Idle";
         } else {
             statusSummary = "Error";
-            pumpState = new PumpState();
-            pumpState.errorMsg = commandResult.message != null
-                    ? commandResult.message
-                    : "Unknown error";
-            if (commandResult.exception != null) {
-                log.error("Exception received from pump", commandResult.exception);
-            }
         }
+
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
     }

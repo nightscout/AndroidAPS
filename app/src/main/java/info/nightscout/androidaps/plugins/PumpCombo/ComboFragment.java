@@ -17,6 +17,8 @@ import org.slf4j.LoggerFactory;
 
 
 import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.commands.Command;
+import de.jotomo.ruffyscripter.commands.CommandResult;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
@@ -31,13 +33,13 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     }
 
     private Button refresh;
-    private TextView status;
-    private TextView tbrPercentage;
-    private TextView tbrDuration;
-    private TextView tbrRate;
-    private TextView lastCmd;
-    private TextView lastCmdTime;
-    private TextView lastCmdResult;
+    private TextView statusText;
+    private TextView tbrPercentageText;
+    private TextView tbrDurationText;
+    private TextView tbrRateText;
+    private TextView lastCmdText;
+    private TextView lastCmdTimeText;
+    private TextView lastCmdResultText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -45,13 +47,13 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
-        status = (TextView) view.findViewById(R.id.combo_status);
-        tbrPercentage = (TextView) view.findViewById(R.id.combo_tbr_percentage);
-        tbrDuration = (TextView) view.findViewById(R.id.combo_tbr_duration);
-        tbrRate = (TextView) view.findViewById(R.id.combo_tbr_rate);
-        lastCmd = (TextView) view.findViewById(R.id.combo_last_command);
-        lastCmdTime = (TextView) view.findViewById(R.id.combo_last_command_time);
-        lastCmdResult = (TextView) view.findViewById(R.id.combo_last_command_result);
+        statusText = (TextView) view.findViewById(R.id.combo_status);
+        tbrPercentageText = (TextView) view.findViewById(R.id.combo_tbr_percentage);
+        tbrDurationText = (TextView) view.findViewById(R.id.combo_tbr_duration);
+        tbrRateText = (TextView) view.findViewById(R.id.combo_tbr_rate);
+        lastCmdText = (TextView) view.findViewById(R.id.combo_last_command);
+        lastCmdTimeText = (TextView) view.findViewById(R.id.combo_last_command_time);
+        lastCmdResultText = (TextView) view.findViewById(R.id.combo_last_command_result);
 
         refresh.setOnClickListener(this);
 
@@ -98,27 +100,37 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    status.setText(getPlugin().statusSummary);
+                    statusText.setText(getPlugin().statusSummary);
                     if (getPlugin().isInitialized()) {
                         PumpState ps = getPlugin().pumpState;
                         boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
                         if (tbrActive) {
-                            tbrPercentage.setText("" + ps.tbrPercent + "%");
-                            tbrDuration.setText("" + ps.tbrRemainingDuration + " min");
-                            tbrRate.setText("" + ps.tbrRate + " U/h");
+                            tbrPercentageText.setText("" + ps.tbrPercent + "%");
+                            tbrDurationText.setText("" + ps.tbrRemainingDuration + " min");
+                            tbrRateText.setText("" + ps.tbrRate + " U/h");
                         } else {
-                            tbrPercentage.setText("Default basal rate running");
-                            tbrDuration.setText("");
-                            tbrRate.setText("" + getPlugin().getBaseBasalRate() + " U/h");
+                            tbrPercentageText.setText("Default basal rate running");
+                            tbrDurationText.setText("");
+                            tbrRateText.setText("" + getPlugin().getBaseBasalRate() + " U/h");
                         }
-                        if (getPlugin().lastCmd != null) {
-                            lastCmd.setText("" + getPlugin().lastCmd);
-                            lastCmdTime.setText(ps.timestamp.toLocaleString());
-                            lastCmdResult.setText(ps.errorMsg == null ? "Success" : ps.errorMsg);
+                        Command lastCmd = getPlugin().lastCmd;
+                        if (lastCmd != null) {
+                            lastCmdText.setText("" + lastCmd);
+                            lastCmdTimeText.setText(getPlugin().lastCmdTime.toLocaleString());
+                            CommandResult lastCmdResult = getPlugin().lastCmdResult;
+                            if (lastCmdResult != null) {
+                                String message = lastCmdResult.message;
+                                if (ps.errorMsg != null) {
+                                    message = message + "\nPump is in error state:\n" + ps.errorMsg;
+                                }
+                                lastCmdResultText.setText(message);
+                            } else {
+                                lastCmdResultText.setText("");
+                            }
                         } else {
-                            lastCmd.setText("");
-                            lastCmdTime.setText("");
-                            lastCmdResult.setText("");
+                            ComboFragment.this.lastCmdText.setText("");
+                            lastCmdTimeText.setText("");
+                            lastCmdResultText.setText("");
                         }
                     }
                 }
