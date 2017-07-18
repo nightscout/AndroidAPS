@@ -296,6 +296,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public void refreshDataFromPump(String reason) {
         log.debug("RefreshDataFromPump called");
 
+        // if Android is sluggish this might get called before ruffy is bound
+        if (ruffyScripter == null) {
+            log.debug("Rejecting call to RefreshDataFromPump: ruffy service not bound yet");
+            return;
+        }
+
         if (!reason.toLowerCase().contains("user")
                 && lastCmdTime.getTime() > 0
                 && System.currentTimeMillis() > lastCmdTime.getTime() + 60 * 1000) {
