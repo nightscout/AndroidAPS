@@ -408,11 +408,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
         }
+        /* GL jotomo/AndroidAPS#18
         int stepSize = pumpDescription.tempDurationStep;
         if (durationInMinutes > stepSize) {
             log.debug("Reducing requested duration of " + durationInMinutes + "m to minimal duration supported by the pump: " + stepSize + "m");
             durationInMinutes = stepSize;
         }
+        */
         return setTempBasalPercent(roundedPercentage, durationInMinutes);
     }
 
