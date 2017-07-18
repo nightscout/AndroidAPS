@@ -34,8 +34,7 @@ public class CancelTbrCommand implements Command {
                 // to make sure we can inspect this situation.
                 // Set enacted=true, so I record is created and AAPS stops thinking a TBR still
                 // running and trying again to cancel it.
-                return new CommandResult().success(false).enacted(true)
-                        .state(new PumpState().errorMsg("NO TBR active"));
+                return new CommandResult().success(false).enacted(true).message("No TBR active");
                   /*
                         .success(true)
                         .enacted(true) // technically, nothing was enacted, but AAPS needs this to recover
