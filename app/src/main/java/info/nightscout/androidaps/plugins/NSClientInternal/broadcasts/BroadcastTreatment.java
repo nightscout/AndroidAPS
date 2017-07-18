@@ -17,6 +17,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 20.02.2016.
@@ -25,6 +26,9 @@ public class BroadcastTreatment {
     private static Logger log = LoggerFactory.getLogger(BroadcastTreatment.class);
 
     public static void handleNewTreatment(NSTreatment treatment, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.getData().toString());
         bundle.putBoolean("delta", isDelta);
@@ -42,6 +46,9 @@ public class BroadcastTreatment {
     }
 
     public static void handleNewTreatment(JSONArray treatments, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         List<JSONArray> splitted = splitArray(treatments);
         for (JSONArray part: splitted) {
             Bundle bundle = new Bundle();
@@ -62,6 +69,9 @@ public class BroadcastTreatment {
     }
 
     public void handleChangedTreatment(JSONObject treatment, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.toString());
         bundle.putBoolean("delta", isDelta);
@@ -78,6 +88,9 @@ public class BroadcastTreatment {
     }
 
     public static void handleChangedTreatment(JSONArray treatments, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         List<JSONArray> splitted = splitArray(treatments);
         for (JSONArray part: splitted) {
             Bundle bundle = new Bundle();
@@ -98,6 +111,9 @@ public class BroadcastTreatment {
     }
 
     public static void handleRemovedTreatment(JSONObject treatment, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.toString());
         bundle.putBoolean("delta", isDelta);
@@ -116,6 +132,9 @@ public class BroadcastTreatment {
     }
 
     public static void handleRemovedTreatment(JSONArray treatments, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatments", treatments.toString());
         bundle.putBoolean("delta", isDelta);

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.utils.SP;
 
 
 public class BroadcastDeviceStatus {
@@ -35,6 +36,11 @@ public class BroadcastDeviceStatus {
         }
     }
     public static void handleNewDeviceStatus(JSONArray statuses, Context context, boolean isDelta) {
+
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
+
         List<JSONArray> splitted = BroadcastTreatment.splitArray(statuses);
         for (JSONArray part: splitted) {
             Bundle bundle = new Bundle();

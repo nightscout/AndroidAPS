@@ -12,6 +12,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSAlarm;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 11.06.2017.
@@ -21,6 +22,7 @@ public class BroadcastAckAlarm {
     private static Logger log = LoggerFactory.getLogger(BroadcastAckAlarm.class);
 
     public static void handleClearAlarm(NSAlarm originalAlarm, Context context, long silenceTimeInMsec) {
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
         Bundle bundle = new Bundle();
         bundle.putInt("level", originalAlarm.getLevel());
         bundle.putString("group", originalAlarm.getGroup());

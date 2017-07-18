@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 26.06.2016.
@@ -20,6 +21,9 @@ public class BroadcastCals {
     private static Logger log = LoggerFactory.getLogger(BroadcastCals.class);
 
     public static void handleNewCal(JSONArray cals, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("cals", cals.toString());
         bundle.putBoolean("delta", isDelta);

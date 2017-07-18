@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 22.02.2016.
@@ -21,6 +22,9 @@ public class BroadcastSgvs {
     private static Logger log = LoggerFactory.getLogger(BroadcastSgvs.class);
 
     public static void handleNewSgv(JSONObject sgv, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("sgv", sgv.toString());
         bundle.putBoolean("delta", isDelta);

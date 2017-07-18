@@ -580,6 +580,7 @@
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="key_ns_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insulin</string>
@@ -685,4 +686,5 @@
     <string name="cpp_valuesnotstored">Values not stored!</string>
     <string name="wear_overviewnotifications">Overview Notifications</string>
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
+    <string name="ns_localbroadcasts">Enable loacal broadcasts to other apps (like xDrip).</string>
 </resources>
