@@ -30,7 +30,9 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_ns_localbroadcasts"
-            android:title="@string/ns_localbroadcasts" />
+            android:title="@string/ns_localbroadcasts_title"
+            android:summary="@string/ns_localbroadcasts"/>
+
 
         <PreferenceScreen android:title="@string/ns_alarmoptions">
 

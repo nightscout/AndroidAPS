@@ -687,4 +687,5 @@
     <string name="wear_overviewnotifications">Overview Notifications</string>
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
     <string name="ns_localbroadcasts">Enable loacal broadcasts to other apps (like xDrip).</string>
+    <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
 </resources>
