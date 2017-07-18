@@ -63,17 +63,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private RuffyScripter ruffyScripter;
     private ServiceConnection mRuffyServiceConnection;
 
-    // TODO is volatile really needed here?
+    // package-protected only so ComboFragment can access these
     @NonNull
-    volatile String statusSummary = "Initializing";
+    String statusSummary = "Initializing";
     @Nullable
-    volatile Command lastCmd;
+    Command lastCmd;
     @Nullable
-    volatile CommandResult lastCmdResult;
+    CommandResult lastCmdResult;
     @NonNull
-    volatile Date lastCmdTime = new Date(0);
+    Date lastCmdTime = new Date(0);
     @NonNull
-    volatile PumpState pumpState = new PumpState();
+    PumpState pumpState = new PumpState();
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -125,23 +125,23 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 int id = 1000;
                 long lastAlarmTime = 0;
                 while (true) {
-                    PumpState ps = ComboPlugin.this.pumpState;
-                    String errorMsg = ps.errorMsg;
-                    if (errorMsg != null) {
+                    if (lastCmdResult != null && !lastCmdResult.success) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         if (now > fiveMinutesSinceLastAlarm) {
-                            log.warn("Pump is in error state, raising alert: " + errorMsg);
-                            log.warn("  LastCmd: " + lastCmd);
-                            log.warn("  LastCmdTime: " + lastCmdTime);
-                            long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000, 1000, 2000};
+                            log.error("Command failed: " + lastCmd);
+                            log.error("Command result: " + lastCmdResult);
+                            if (pumpState.errorMsg != null) {
+                                log.warn("Pump is in error state, displayng; " + pumpState.errorMsg);
+                            }
+                            long[] vibratePattern = new long[]{1000, 1000, 1000, 1000, 1000};
                             Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                             NotificationCompat.Builder notificationBuilder =
                                     new NotificationCompat.Builder(context)
                                             .setSmallIcon(R.drawable.notif_icon)
                                             .setSmallIcon(R.drawable.icon_bolus)
                                             .setContentTitle("Combo communication error")
-                                            .setContentText(errorMsg)
+                                            .setContentText(lastCmdResult.message)
                                             .setPriority(NotificationCompat.PRIORITY_MAX)
                                             .setLights(Color.BLUE, 1000, 0)
                                             .setSound(uri)
@@ -149,10 +149,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             mgr.notify(id, notificationBuilder.build());
                             lastAlarmTime = now;
                         } else {
-                            log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + errorMsg);
+                            log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + lastCmdResult.message);
                         }
-                    } else {
-                        log.trace("Pump state: " + (ps.suspended ? "suspended" : "normal"));
                     }
                     SystemClock.sleep(5 * 1000);
                 }
@@ -195,7 +193,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             // AAPS will still crash since it continues trying to access the pump, even when isInitalized
             // returns false and isBusy returns true; this will however not crash the alerter
             // which will raise an exception. Not really ideal.
-            pumpState.errorMsg = "Failed to bind to ruffy service";
+            statusSummary = "Failed to bind to ruffy service";
         }
     }
 

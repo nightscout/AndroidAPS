@@ -113,13 +113,11 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             tbrDurationText.setText("");
                             tbrRateText.setText("" + getPlugin().getBaseBasalRate() + " U/h");
                         }
-                        Command lastCmd = getPlugin().lastCmd;
-                        if (lastCmd != null) {
-                            lastCmdText.setText("" + lastCmd);
+                        if (getPlugin().lastCmd != null) {
+                            lastCmdText.setText("" + getPlugin().lastCmd);
                             lastCmdTimeText.setText(getPlugin().lastCmdTime.toLocaleString());
-                            CommandResult lastCmdResult = getPlugin().lastCmdResult;
-                            if (lastCmdResult != null) {
-                                String message = lastCmdResult.message;
+                            if (getPlugin().lastCmdResult != null) {
+                                String message = getPlugin().lastCmdResult.message;
                                 if (ps.errorMsg != null) {
                                     message = message + "\nPump is in error state:\n" + ps.errorMsg;
                                 }
