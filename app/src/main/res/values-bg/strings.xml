@@ -675,18 +675,7 @@
     <string name="lock_screen">Заключен екран</string>
     <string name="lock_screen_short">Закл</string>
     <string name="sensitivity_warning">Когато включите Autosense feature трябва да въвеждате ВСИЧКИ въглехидрати. В противен случай те ще се изчисляват грешно като повишена чувствителност!!</string>
-	<string name="openapsma_smb_label">SMB резултат</string>
-	<string name="smb">SMB</string>
-	<string name="smb_shortname">SMB</string>
-	<string name="key_smb" translatable="false">key_smb</string>
-	<string name="enablesmb">SMB enable</string>
-	<string name="enablesmb_summary">Super Micro Boluses is used when there are COB and more insulin is needed</string>
-    <string name="uam">UAM</string>
-	<string name="uam_shortname">UAM</string>
-	<string name="key_uam" translatable="false">key_uam</string>
-	<string name="enableuam">Enable UAM</string>
-	<string name="enableuam_summary">UnAnounced Meals  - Необявени хранения - трябва да помага при неправилно изчислени и въведени въглехидрати.</string>
-	<string name="openapssmb">Rumen SMB</string>
+
     <string name="sensitivityweightedaverage">Алгоритъм на Среднопретеглената стойност</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdtp_cancel">Откажи</string>
