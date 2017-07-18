@@ -222,6 +222,7 @@ public class RuffyScripter {
                         } catch (CommandException e) {
                             returnable.cmdResult = e.toCommandResult();
                         } catch (Exception e) {
+                            log.error("Unexpected exception running cmd", e);
                             returnable.cmdResult = new CommandResult().exception(e).message("Unexpected exception running cmd");
                         } finally {
                             lastCmdExecutionTime = System.currentTimeMillis();
