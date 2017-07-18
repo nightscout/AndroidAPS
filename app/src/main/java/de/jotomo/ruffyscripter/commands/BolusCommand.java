@@ -100,6 +100,7 @@ public class BolusCommand implements Command {
     }
 
     private void inputBolusAmount(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         // press 'up' once for each 0.1 U increment
         long steps = Math.round(bolus * 10);
         for (int i = 0; i < steps; i++) {
@@ -110,6 +111,7 @@ public class BolusCommand implements Command {
     }
 
     private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         double displayedBolus = readDisplayedBolusAmount(scripter);
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {

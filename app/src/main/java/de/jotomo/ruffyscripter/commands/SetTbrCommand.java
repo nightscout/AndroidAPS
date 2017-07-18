@@ -157,6 +157,7 @@ public class SetTbrCommand implements Command {
     }
 
     private void verifyDisplayedTbrPercentage(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long displayedPercentage = readDisplayedTbrPercentage(scripter);
         if (displayedPercentage != this.percentage) {
             log.debug("Final displayed TBR percentage: " + displayedPercentage);
@@ -176,6 +177,7 @@ public class SetTbrCommand implements Command {
     }
 
     private void inputTbrDuration(RuffyScripter scripter) {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long currentDuration = readDisplayedTbrDuration(scripter);
         if (currentDuration % 15 != 0) {
             // The duration displayed is how long an active TBR will still run,
