@@ -30,6 +30,7 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventProfileSwitchChange;
 import info.nightscout.androidaps.events.EventTempTargetChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -40,7 +41,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 13/01/17.
  */
 
-public class TreatmentsProfileSwitchFragment extends Fragment implements View.OnClickListener {
+public class TreatmentsProfileSwitchFragment extends SubscriberFragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -180,25 +181,13 @@ public class TreatmentsProfileSwitchFragment extends Fragment implements View.On
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventProfileSwitchChange ev) {
         updateGUI();
     }
 
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

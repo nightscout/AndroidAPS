@@ -13,10 +13,11 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.utils.DecimalFormatter;
 
-public class NSProfileFragment extends Fragment {
+public class NSProfileFragment extends SubscriberFragment {
     private static NSProfilePlugin nsProfilePlugin = new NSProfilePlugin();
 
     public static NSProfilePlugin getPlugin() {
@@ -50,19 +51,6 @@ public class NSProfileFragment extends Fragment {
         return layout;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventNSProfileUpdateGUI ev) {
         Activity activity = getActivity();
@@ -75,7 +63,8 @@ public class NSProfileFragment extends Fragment {
             });
     }
 
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         if (MainApp.getConfigBuilder().getProfile() == null) {
             noProfile.setVisibility(View.VISIBLE);
             return;

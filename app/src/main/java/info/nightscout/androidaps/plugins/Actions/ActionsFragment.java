@@ -31,11 +31,12 @@ import info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class ActionsFragment extends Fragment implements View.OnClickListener {
+public class ActionsFragment extends SubscriberFragment implements View.OnClickListener {
 
     static ActionsPlugin actionsPlugin = new ActionsPlugin();
 
@@ -86,19 +87,6 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged ev) {
         updateGUI();
@@ -119,7 +107,8 @@ public class ActionsFragment extends Fragment implements View.OnClickListener {
         updateGUI();
     }
 
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

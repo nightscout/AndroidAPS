@@ -32,13 +32,14 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.androidaps.data.OverlappingIntervals;
 
 
-public class TreatmentsTemporaryBasalsFragment extends Fragment {
+public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(TreatmentsTemporaryBasalsFragment.class);
 
     RecyclerView recyclerView;
@@ -202,19 +203,6 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
         updateGUI();
@@ -225,7 +213,8 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         updateGUI();
     }
 
-    public void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

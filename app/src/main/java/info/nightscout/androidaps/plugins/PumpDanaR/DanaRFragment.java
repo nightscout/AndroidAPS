@@ -27,6 +27,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRStatsActivity;
@@ -35,7 +36,7 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
 
-public class DanaRFragment extends Fragment {
+public class DanaRFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
 
     private static DanaRPlugin danaRPlugin;
@@ -156,19 +157,6 @@ public class DanaRFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventPumpStatusChanged c) {
         Activity activity = getActivity();
@@ -205,7 +193,8 @@ public class DanaRFragment extends Fragment {
     }
 
     // GUI functions
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null && basaBasalRateView != null)
             activity.runOnUiThread(new Runnable() {

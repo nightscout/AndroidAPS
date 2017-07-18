@@ -19,9 +19,10 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 
-public class CareportalFragment extends Fragment implements View.OnClickListener {
+public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
 
     static CareportalPlugin careportalPlugin;
 
@@ -178,25 +179,13 @@ public class CareportalFragment extends Fragment implements View.OnClickListener
             newDialog.show(manager, "NewNSTreatmentDialog");
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventCareportalEventChange c) {
         updateGUI();
     }
 
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         updateAge(activity, sage, iage, cage, pbage);
     }
