@@ -69,6 +69,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     public void onResume() {
         super.onResume();
         MainApp.bus().register(this);
+        updateGUI();
     }
 
     @Subscribe
