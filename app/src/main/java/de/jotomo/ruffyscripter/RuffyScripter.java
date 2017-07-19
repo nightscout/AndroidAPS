@@ -70,7 +70,6 @@ public class RuffyScripter {
                             // don't disconnect too frequently, confuses ruffy?
                             && now > lastDisconnect + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
-                        connected = false;
                         lastDisconnect = now;
                         ruffyService.doRTDisconnect();
                         SystemClock.sleep(1000);
@@ -295,7 +294,6 @@ public class RuffyScripter {
                     // waitForMenuUpdate times out after 60s and throws a CommandException
                     waitForMenuUpdate();
                 }
-                connected = true;
             } catch (RemoteException e) {
                 throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
             }
