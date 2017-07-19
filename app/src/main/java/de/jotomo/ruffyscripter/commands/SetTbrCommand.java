@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 public class SetTbrCommand implements Command {
@@ -53,7 +54,7 @@ public class SetTbrCommand implements Command {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter) {
+    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
         try {
             enterTbrMenu(scripter);
 

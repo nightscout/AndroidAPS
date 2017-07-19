@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 public class BolusCommand implements Command {
@@ -34,7 +35,7 @@ public class BolusCommand implements Command {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter) {
+    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
         try {
             enterBolusMenu(scripter);
 
