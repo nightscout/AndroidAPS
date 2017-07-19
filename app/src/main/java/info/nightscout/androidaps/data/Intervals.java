@@ -18,7 +18,7 @@ public abstract class Intervals<T extends Interval> {
 
     LongSparseArray<T> rawData = new LongSparseArray<T>(); // oldest at index 0
 
-    public Intervals reset() {
+    public synchronized Intervals reset() {
         rawData = new LongSparseArray<T>();
         return this;
     }
@@ -29,7 +29,7 @@ public abstract class Intervals<T extends Interval> {
      * The List must be sorted by `T.start()` in ascending order
      *
      * */
-    public void add(List<T> list) {
+    public synchronized void add(List<T> list) {
         for (T interval : list) {
             rawData.put(interval.start(), interval);
         }
@@ -38,21 +38,21 @@ public abstract class Intervals<T extends Interval> {
 
 
 
-    public List<T> getList() {
+    public synchronized List<T> getList() {
         List<T> list = new ArrayList<>();
         for (int i = 0; i < rawData.size(); i++)
             list.add(rawData.valueAt(i));
         return list;
     }
 
-    public List<T> getReversedList() {
+    public synchronized List<T> getReversedList() {
         List<T> list = new ArrayList<>();
         for (int i = rawData.size() -1; i>=0; i--)
             list.add(rawData.valueAt(i));
         return list;
     }
 
-    protected int binarySearch(long value) {
+    protected synchronized int binarySearch(long value) {
         int lo = 0;
         int hi = rawData.size() - 1;
 
@@ -73,15 +73,15 @@ public abstract class Intervals<T extends Interval> {
 
     public abstract T getValueByInterval(long time);
 
-    public int size() {
+    public synchronized int size() {
         return rawData.size();
     }
 
-    public T get(int index) {
+    public synchronized T get(int index) {
         return rawData.valueAt(index);
     }
 
-    public T getReversed(int index) {
+    public synchronized T getReversed(int index) {
         return rawData.valueAt(size() - 1 - index);
     }
 
