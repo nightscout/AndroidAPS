@@ -45,6 +45,8 @@ public class RuffyScripter {
     private volatile long lastCmdExecutionTime;
     private volatile Command activeCmd = null;
 
+    private volatile boolean connected = false;
+
     public RuffyScripter(final IRuffyService ruffyService) {
         this.ruffyService = ruffyService;
         try {
@@ -54,8 +56,6 @@ public class RuffyScripter {
             throw new RuntimeException(e);
         }
     }
-
-    private volatile boolean connected = false;
 
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
         @Override
@@ -72,6 +72,7 @@ public class RuffyScripter {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
                         lastDisconnect = now;
                         ruffyService.doRTDisconnect();
+                        connected = false;
                         SystemClock.sleep(1000);
                     }
                 } catch (DeadObjectException doe) {
@@ -132,6 +133,8 @@ public class RuffyScripter {
 
             currentMenu = menu;
             menuLastUpdated = System.currentTimeMillis();
+
+            connected = true;
 
             // note that a WARNING_OR_ERROR menu can be a valid temporary state (cancelling TBR)
             // of a running command
@@ -279,25 +282,25 @@ public class RuffyScripter {
 
     /** If there's an issue, this times out eventually and throws a CommandException */
     private void ensureConnected() {
-        boolean menuUpdateRecentlyReceived = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
-        log.debug("ensureConnect, connected: " + connected + ", receiving menu updates: " + menuUpdateRecentlyReceived);
-        if (menuUpdateRecentlyReceived) {
-            log.debug("Pump is sending us menu updates, so we're connected");
-            return;
-        }
-
-            try {
-                boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
-                log.debug("Connect init successful: " + connectInitSuccessful);
-                while (currentMenu == null) {
-                    log.debug("Waiting for first menu update to be sent");
-                    // waitForMenuUpdate times out after 60s and throws a CommandException
-                    waitForMenuUpdate();
-                }
-            } catch (RemoteException e) {
-                throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
+        try {
+            boolean menuUpdateRecentlyReceived = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
+            log.debug("ensureConnect, connected: " + connected + ", receiving menu updates: " + menuUpdateRecentlyReceived);
+            if (menuUpdateRecentlyReceived) {
+                log.debug("Pump is sending us menu updates, so we're connected");
+                return;
             }
+
+            boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
+            log.debug("Connect init successful: " + connectInitSuccessful);
+            while (currentMenu == null) {
+                log.debug("Waiting for first menu update to be sent");
+                // waitForMenuUpdate times out after 60s and throws a CommandException
+                waitForMenuUpdate();
+            }
+        } catch (RemoteException e) {
+            throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
+    }
 
     // below: methods to be used by commands
     // TODO move into a new Operations(scripter) class commands can delegate to,

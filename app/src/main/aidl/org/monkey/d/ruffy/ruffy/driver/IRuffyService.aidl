@@ -11,4 +11,5 @@ interface IRuffyService {
     void doRTDisconnect();
     void rtSendKey(byte keyCode, boolean changed);
     void resetPairing();
+    boolean isConnected();
 }
