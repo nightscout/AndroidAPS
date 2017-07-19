@@ -22,7 +22,7 @@ public abstract class MenuListActivity extends Activity
 
     protected abstract String[] getElements();
 
-    protected abstract void doAction(int position);
+    protected abstract void doAction(String position);
 
     @Override
     protected void onPause(){
@@ -50,7 +50,7 @@ public abstract class MenuListActivity extends Activity
     // WearableListView click listener
     @Override
     public void onClick(WearableListView.ViewHolder v) {
-        Integer tag = (Integer) v.itemView.getTag();
+        String tag = (String) v.itemView.getTag();
         doAction(tag);
         //ActionsDefinitions.doAction(v.getAdapterPosition(), this);
         finish();
@@ -105,7 +105,7 @@ public abstract class MenuListActivity extends Activity
             // replace text contents
             view.setText(mDataset[position]);
             // replace list item's metadata
-            holder.itemView.setTag(position);
+            holder.itemView.setTag(mDataset[position]);
         }
 
         // Return the size of your dataset
