@@ -26,18 +26,16 @@ public class CancelTbrCommand implements Command {
         try {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             if (!initialPumpState.tbrActive) {
-                // this is likely a relatively harmless error like AAPS trying to cancel a TBR
-                // that has run out in the last minute or so, but for debugging lets raise an error
-                // to make sure we can inspect this situation.
-                // Set enacted=true, so I record is created and AAPS stops thinking a TBR still
-                // running and trying again to cancel it.
-                return new CommandResult().success(false).enacted(true).message("No TBR active");
-                  /*
-                        .success(true)
-                        .enacted(true) // technically, nothing was enacted, but AAPS needs this to recover
-                        // when there was an issue and AAPS thinks a TBR is still active
+                log.warn("No TBR active to cancel");
+                return new CommandResult()
+                        // Raise a warning about this, until we know it's safe to ignore.
+                        .success(false)
+                        // Technically, nothing was enacted, but AAPS needs this to recover
+                        // when there was an issue and AAPS thinks a TBR is still active,
+                        // so the ComboPlugin can create a TempporaryBasel to mark the TBR
+                        // as finished to get in sync with the pump state.
+                        .enacted(true)
                         .message("No TBR active");
-                  */
             }
             log.debug("Cancelling active TBR of " + initialPumpState.tbrPercent
                     + "% with " + initialPumpState.tbrRemainingDuration + " min remaining");
