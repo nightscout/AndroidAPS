@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import info.nightscout.androidaps.Services.Intents;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 22.02.2016.
@@ -21,6 +22,9 @@ public class BroadcastSgvs {
     private static Logger log = LoggerFactory.getLogger(BroadcastSgvs.class);
 
     public static void handleNewSgv(JSONObject sgv, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("sgv", sgv.toString());
         bundle.putBoolean("delta", isDelta);
@@ -28,9 +32,6 @@ public class BroadcastSgvs {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        log.debug("SGV " + x.size() + " receivers");
     }
 
     public static void handleNewSgv(JSONArray sgvs, Context context, boolean isDelta) {
@@ -41,9 +42,6 @@ public class BroadcastSgvs {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        log.debug("SGV " + x.size() + " receivers");
     }
 
 }

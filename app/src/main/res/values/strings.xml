@@ -580,6 +580,7 @@
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="key_ns_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insulin</string>
@@ -688,4 +689,6 @@
     <string name="combopump">Accu-Chek Combo</string>
     <string name="combopump_settings">Accu-Chek Combo settings</string>
     <string name="combopump_shortname">COMBO</string>
+    <string name="ns_localbroadcasts">Enable loacal broadcasts to other apps (like xDrip).</string>
+    <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
 </resources>

@@ -14,7 +14,7 @@ public class FillMenuActivity extends MenuListActivity {
 
     @Override
     protected String[] getElements() {
-        return new String[] {
+        return new String[]{
                 "Preset 1",
                 "Preset 2",
                 "Preset 3",
@@ -23,23 +23,17 @@ public class FillMenuActivity extends MenuListActivity {
     }
 
     @Override
-    protected void doAction(int position) {
-        switch (position) {
-            case 0:
-                ListenerService.initiateAction(this, "fillpreset 1");
-                break;
-            case 1:
-                ListenerService.initiateAction(this, "fillpreset 2");
-                break;
-            case 2:
-                ListenerService.initiateAction(this, "fillpreset 3");
-                break;
-            case 3:
-                Intent intent = new Intent(this, FillActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
-                break;
+    protected void doAction(String action) {
+        if ("Preset 1".equals(action)) {
+            ListenerService.initiateAction(this, "fillpreset 1");
+        } else if ("Preset 2".equals(action)) {
+            ListenerService.initiateAction(this, "fillpreset 2");
+        } else if ("Preset 3".equals(action)) {
+            ListenerService.initiateAction(this, "fillpreset 3");
+        } else if ("Free amount".equals(action)) {
+            Intent intent = new Intent(this, FillActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
         }
-
     }
 }

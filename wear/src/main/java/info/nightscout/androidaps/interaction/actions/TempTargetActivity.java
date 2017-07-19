@@ -50,7 +50,7 @@ public class TempTargetActivity extends ViewSelectorActivity {
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         isMGDL = sp.getBoolean("units_mgdl", true);
-        isSingleTarget =  sp.getBoolean("singletarget", false);
+        isSingleTarget =  sp.getBoolean("singletarget", true);
     }
 
 
