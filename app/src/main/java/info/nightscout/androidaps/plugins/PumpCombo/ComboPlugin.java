@@ -441,9 +441,25 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.debug("Rounded requested percentage from " + percent + " to " + rounded);
             percent = rounded;
         }
+        // TODO experimenting .... with the BT connect costing time, this leads to the TBR
+        // still running on the last minute when OpenAPS is run again, which will NOT enact
+        // anything as it sees a TBR is still running. So fake that the TBR has started earlier
+        // and is assumed to be over already. With the Combo, setting a TBR while an existing TBR
+        // is still running is a no-issue: the new TBR simply overrides the existing.
+
+        // can this lead to errors where AAPS tries to cancel a TBR that isn't running? ...
+        // hm, TBRs on teh pump run 20s later, so no, it'd have to be the other way round. sounds good.
+
+
+        // TODO check: if new TBR overrides existing one: who makes call to TempBasel end???
+
+        long tbrStart = System.currentTimeMillis();
+        // TODO DanaR sets tempStart to now -1 to acound for delay from pump?
+
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
-            TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
+            // make sure we're not skipping a loop iteration by a few secs
+            TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime - 5_000);
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = percent;
             tempStart.isAbsolute = false;
