@@ -83,7 +83,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         MainApp.bus().register(this);
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");
-        ;
     }
 
     @Override

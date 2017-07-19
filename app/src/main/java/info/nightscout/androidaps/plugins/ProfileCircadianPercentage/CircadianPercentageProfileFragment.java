@@ -434,7 +434,6 @@ public class CircadianPercentageProfileFragment extends Fragment {
 
                 if (i == 0) {
                     copyprevbutton.setVisibility(View.INVISIBLE);
-                    ;
                 } else {
                     final int j = i; //needs to be final to be passed to inner class.
                     copyprevbutton.setOnClickListener(new View.OnClickListener() {
