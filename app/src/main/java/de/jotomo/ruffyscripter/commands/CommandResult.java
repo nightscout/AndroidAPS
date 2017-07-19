@@ -1,11 +1,15 @@
 package de.jotomo.ruffyscripter.commands;
 
+import java.util.Date;
+
 import de.jotomo.ruffyscripter.History;
 import de.jotomo.ruffyscripter.PumpState;
 
 public class CommandResult {
     public boolean success;
     public boolean enacted;
+    // TODO not really happy with that name "time the command finished executing"
+    public long completionTime;
     public Exception exception;
     public String message;
     public PumpState state;
@@ -21,6 +25,11 @@ public class CommandResult {
 
     public CommandResult enacted(boolean enacted) {
         this.enacted = enacted;
+        return this;
+    }
+
+    public CommandResult completionTime(long completionTime) {
+        this.completionTime = completionTime ;
         return this;
     }
 
@@ -49,6 +58,7 @@ public class CommandResult {
         return "CommandResult{" +
                 "success=" + success +
                 ", enacted=" + enacted +
+                ", completienTime=" + completionTime + "(" + new Date(completionTime) + ")" +
                 ", exception=" + exception +
                 ", message='" + message + '\'' +
                 ", state=" + state +

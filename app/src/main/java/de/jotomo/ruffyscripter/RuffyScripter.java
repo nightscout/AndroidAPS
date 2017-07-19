@@ -220,6 +220,7 @@ public class RuffyScripter {
                             long cmdStartTime = System.currentTimeMillis();
                             returnable.cmdResult = cmd.execute(scripter, pumpState);
                             long cmdEndTime = System.currentTimeMillis();
+                            returnable.cmdResult.completionTime = cmdEndTime;
                             log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
                         } catch (CommandException e) {
                             returnable.cmdResult = e.toCommandResult();
