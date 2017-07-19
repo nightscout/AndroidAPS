@@ -50,13 +50,6 @@ public class BroadcastDeviceStatus {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            try {
-            List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-            log.debug("DEVICESTATUS " + part.length() + " records " + x.size() + " receivers");
-            } catch (Exception e){
-                //for testing
-            }
         }
     }
 }

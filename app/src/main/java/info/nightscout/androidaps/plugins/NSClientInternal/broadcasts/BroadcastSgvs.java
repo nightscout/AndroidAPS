@@ -49,13 +49,6 @@ public class BroadcastSgvs {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        try {
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        log.debug("SGV " + x.size() + " receivers");
-        } catch (Exception e){
-            //for testing
-        }
     }
 
 }
