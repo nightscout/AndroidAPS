@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
+import android.os.TransactionTooLargeException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 20.02.2016.
@@ -24,6 +26,9 @@ public class BroadcastTreatment {
     private static Logger log = LoggerFactory.getLogger(BroadcastTreatment.class);
 
     public static void handleNewTreatment(NSTreatment treatment, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.getData().toString());
         bundle.putBoolean("delta", isDelta);
@@ -31,12 +36,12 @@ public class BroadcastTreatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        log.debug("TREAT_ADD " + treatment.getEventType() + " " + x.size() + " receivers");
     }
 
     public static void handleNewTreatment(JSONArray treatments, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         List<JSONArray> splitted = splitArray(treatments);
         for (JSONArray part: splitted) {
             Bundle bundle = new Bundle();
@@ -46,13 +51,13 @@ public class BroadcastTreatment {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-            log.debug("TREAT_ADD " + part.length() + " " + x.size() + " receivers");
         }
     }
 
     public void handleChangedTreatment(JSONObject treatment, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.toString());
         bundle.putBoolean("delta", isDelta);
@@ -60,15 +65,12 @@ public class BroadcastTreatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        try {
-            log.debug("TREAT_CHANGE " + treatment.getString("_id") + " " + x.size() + " receivers");
-        } catch (JSONException e) {
-        }
     }
 
     public static void handleChangedTreatment(JSONArray treatments, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         List<JSONArray> splitted = splitArray(treatments);
         for (JSONArray part: splitted) {
             Bundle bundle = new Bundle();
@@ -78,13 +80,13 @@ public class BroadcastTreatment {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-            log.debug("TREAT_CHANGE " + part.length() + " " + x.size() + " receivers");
         }
     }
 
     public static void handleRemovedTreatment(JSONObject treatment, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatment", treatment.toString());
         bundle.putBoolean("delta", isDelta);
@@ -92,15 +94,12 @@ public class BroadcastTreatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        try {
-            log.debug("TREAT_REMOVE " + treatment.getString("_id") + " " + x.size() + " receivers");
-        } catch (JSONException e) {
-        }
     }
 
     public static void handleRemovedTreatment(JSONArray treatments, Context context, boolean isDelta) {
+
+        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+
         Bundle bundle = new Bundle();
         bundle.putString("treatments", treatments.toString());
         bundle.putBoolean("delta", isDelta);
@@ -108,9 +107,6 @@ public class BroadcastTreatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        log.debug("TREAT_REMOVE " + treatments.length() + " treatments " + x.size() + " receivers");
     }
 
 
