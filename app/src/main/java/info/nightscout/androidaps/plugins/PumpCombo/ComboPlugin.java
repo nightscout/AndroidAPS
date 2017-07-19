@@ -327,34 +327,45 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            PumpEnactResult result = new PumpEnactResult();
             if (detailedBolusInfo.insulin > 0) {
+                // bolus needed, ask pump to deliver it
                 CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
+                PumpEnactResult result = new PumpEnactResult();
                 result.success = bolusCmdResult.success;
                 result.enacted = bolusCmdResult.enacted;
-                // TODO if no error occurred, the requested bolus is what the pump delievered,
-                // that has been checked. If an error occurred, we should check how much insulin
-                // was delivered, e.g. when the cartridge went empty mid-bolus
-                // For the first iteration, the alert the pump raises must suffice
-                result.bolusDelivered = detailedBolusInfo.insulin;
                 result.comment = bolusCmdResult.message;
+
+                // if enacted, add bolus and carbs to treatment history
+                if (result.enacted) {
+                    // TODO if no error occurred, the requested bolus is what the pump delievered,
+                    // that has been checked. If an error occurred, we should check how much insulin
+                    // was delivered, e.g. when the cartridge went empty mid-bolus
+                    // For the first iteration, the alert the pump raises must suffice
+                    result.bolusDelivered = detailedBolusInfo.insulin;
+                    result.carbsDelivered = detailedBolusInfo.carbs;
+
+                    detailedBolusInfo.date = bolusCmdResult.completionTime;
+                    MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                } else {
+                    result.bolusDelivered = 0d;
+                    result.carbsDelivered = 0d;
+                }
+                return result;
             } else {
+                // no bolus required
+
                 // TODO the ui freezes when the calculator issues a carb-only treatment
                 // so just wait, yeah, this is dumb. for now; proper fix via GL#10
                 // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
                 SystemClock.sleep(6000);
+                PumpEnactResult result = new PumpEnactResult();
                 result.success = true;
                 result.enacted = true;
-                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-            }
-            if (result.enacted) {
+                result.bolusDelivered = 0d;
                 result.carbsDelivered = detailedBolusInfo.carbs;
-                if (Config.logPumpActions)
-                    log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
-                detailedBolusInfo.date = new Date().getTime();
-                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+                return result;
             }
-            return result;
         } else {
             PumpEnactResult result = new PumpEnactResult();
             result.success = false;
@@ -432,7 +443,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
-            TemporaryBasal tempStart = new TemporaryBasal(System.currentTimeMillis());
+            TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = percent;
             tempStart.isAbsolute = false;
@@ -463,7 +474,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         log.debug("cancelTempBasal called");
         CommandResult commandResult = runCommand(new CancelTbrCommand());
         if (commandResult.enacted) {
-            TemporaryBasal tempStop = new TemporaryBasal(System.currentTimeMillis());
+            TemporaryBasal tempStop = new TemporaryBasal(commandResult.completionTime);
             tempStop.durationInMinutes = 0; // ending temp basal
             tempStop.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
