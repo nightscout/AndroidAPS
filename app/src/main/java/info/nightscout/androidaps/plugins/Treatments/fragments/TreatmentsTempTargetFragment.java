@@ -30,7 +30,7 @@ import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.utils.SP;
 
 /**
@@ -47,10 +47,12 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
 
-        OverlappingIntervals<TempTarget> tempTargetList;
+        Intervals<TempTarget> tempTargetList;
+        TempTarget currentlyActiveTarget;
 
-        RecyclerViewAdapter(OverlappingIntervals<TempTarget> TempTargetList) {
+        RecyclerViewAdapter(Intervals<TempTarget> TempTargetList) {
             this.tempTargetList = TempTargetList;
+            currentlyActiveTarget = tempTargetList.getValueByInterval(System.currentTimeMillis());
         }
 
         @Override
@@ -81,10 +83,18 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
                 holder.reasonLabel.setText("");
                 holder.reasonColon.setText("");
             }
-            if (tempTarget.isInProgress())
-                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-            else
+            if (tempTarget.isInProgress()) {
+                if(tempTarget == currentlyActiveTarget){
+                    // active as newest
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
+                } else {
+                    // other's that might become active again after the latest (overlapping) is over
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+                }
+            }
+            else {
                 holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
+            }
             holder.remove.setTag(tempTarget);
         }
 
