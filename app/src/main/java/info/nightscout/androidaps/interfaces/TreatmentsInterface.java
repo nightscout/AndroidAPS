@@ -10,7 +10,7 @@ import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.ProfileIntervals;
 
 /**
@@ -42,18 +42,18 @@ public interface TreatmentsInterface {
     TemporaryBasal getTempBasalFromHistory(long time);
     double getTempBasalAbsoluteRateHistory();
     double getTempBasalRemainingMinutesFromHistory();
-    OverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory();
+    Intervals<TemporaryBasal> getTemporaryBasalsFromHistory();
 
     boolean isInHistoryExtendedBoluslInProgress();
     ExtendedBolus getExtendedBolusFromHistory(long time);
-    OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory();
+    Intervals<ExtendedBolus> getExtendedBolusesFromHistory();
 
     boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus);
 
     boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo);
 
     TempTarget getTempTargetFromHistory(long time);
-    OverlappingIntervals<TempTarget> getTempTargetsFromHistory();
+    Intervals<TempTarget> getTempTargetsFromHistory();
 
     ProfileSwitch getProfileSwitchFromHistory(long time);
     ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory();
