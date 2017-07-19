@@ -105,7 +105,7 @@ public class SetTbrCommand implements Command {
 
                 // confirm TBR
                 scripter.pressCheckKey();
-                SystemClock.sleep(500);
+                scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
             }
 
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
