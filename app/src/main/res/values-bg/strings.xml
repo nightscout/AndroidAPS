@@ -457,17 +457,11 @@
     <string name="danar_model" formatted="false">Медел: %02X Протокол: %02X Код: %02X</string>
     <string name="profile">Профил</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3\nТова е основен параметър в сигурността на OpenAPS. Той лимитира максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, но внимавайте, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
-    <string name="openapsama_current_basal_safety_multiplier" translatable="false">current_basal_safety_multiplier</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от "3x от най-високия дневен; 4x от текущия". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
-    <string name="openapsama_autosens_max" translatable="false">autosens_max</string>
     <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е максималният множител на autosens (а скоро autotune) за да позволи 20% максимален лимит на autosens коефициента, който от своя страна настройва базалите, колко може да намали ISF, и колко ниско може да свали целевата КЗ.</string>
-    <string name="openapsama_autosens_min" translatable="false">autosens_min</string>
     <string name="openapsama_autosens_min_summary">По подразбиране: 0.7\nДругата част от сигурността на autosens, слагайки ограничение на колко ниско може да ограничи базалите, колко да повиши чувствителността (ISF) и целевите КЗ.</string>
-    <string name="openapsama_autosens_adjusttargets" translatable="false">autosens_adjust_targets</string>
     <string name="openapsama_autosens_adjusttargets_summary">По подразбиране: разрешено\nТова позволява на autosens да променя и целевите КЗ(освен чувствителност и базал).</string>
-    <string name="openapsama_bolussnooze_dia_divisor" translatable="false">bolussnooze_dia_divisor</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така цикъла няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
-    <string name="openapsama_min_5m_carbimpact" translatable="false">min_5m_carbimpact</string>
     <string name="openapsama_min_5m_carbimpact_summary">По подразбиране: 3.0\nТова е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл/5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
@@ -524,34 +518,11 @@
     <string name="queue">Опашка:</string>
     <string name="status">Статус:</string>
     <string name="paused">пауза</string>
-    <string name="key_nsclientinternal_url" translatable="false">nsclientinternal_url</string>
-    <string name="key_nsclientinternal_api_secret" translatable="false">nsclientinternal_api_secret</string>
-    <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
-    <string name="key_danar_password" translatable="false">danar_password</string>
-    <string name="key_danar_useextended" translatable="false">danar_useextended</string>
-    <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
-    <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
-    <string name="clearlog">Изчисти лога</string>
-    <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
-    <string name="key_nsclientinternal_paused" translatable="false">nsclientinternal_paused</string>
-    <string name="nowritepermission">NSCLIENT права за запис. Грешен API secret?</string>
-    <string name="wear_settings">Wear настройки(часовник)</string>
-    <string name="wear_detailedIOB_title">Показвай подробен IOB</string>
-    <string name="wear_detailedIOB_summary">аздели IOB на болус и базал IOB на часовника</string>
-    <string name="nosuccess">неуспешно - моля проверете в телефона</string>
-    <string name="notavailable">Недостъпно</string>
-    <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
-    <string name="key_smscommunicator_remotecommandsallowed" translatable="false">smscommunicator_remotecommandsallowed</string>
     <string name="patientage">Възраст на пациента</string>
     <string name="child">Дете</string>
     <string name="teenage">Тийнейджър</string>
     <string name="adult">Възрастен</string>
-    <string name="key_age" translatable="false">age</string>
-    <string name="key_child" translatable="false">child</string>
-    <string name="key_teenage" translatable="false">teenage</string>
-    <string name="key_adult" translatable="false">adult</string>
     <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
-    <string name="key_i_understand" translatable="false">I_understand</string>
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Устройството изглежда не подържа изключване на оптимизиране на батерията!</string>
     <string name="pleaseallowpermission">Моля, позволете рарешение</string>
@@ -577,7 +548,6 @@
     <string name="treatments_wizard_cob_label">COB</string>
     <string name="superbolus">Суперболус</string>
     <string name="ns_logappstartedevent">Записвай всяко стартиране на AndroidAPS в NS</string>
-    <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
     <string name="restartingapp">Рестартирам за да се приложат новите настройки.</string>
     <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Инсулин</string>
@@ -585,7 +555,6 @@
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">ИНС</string>
     <string name="fastactinginsulinprolonged">Бързодействащ инсулин с удължаване</string>
-    <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="iob">IOB</string>
@@ -605,8 +574,6 @@
     <string name="wear_showbgi_summary">Добави BGI към статуса</string>
     <string name="ns_noupload">Без качване на данни в NS</string>
     <string name="ns_noupload_summary">Всички данни за NS се пропускат. AAPS е свързан с NS, но не прави промени в NS</string>
-    <string name="key_ns_upload_only" translatable="false">ns_upload_only</string>
-    <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="basal_step">Стъпка за базал</string>
     <string name="bolus_step">Стъпка за болус</string>
     <string name="extendedbolus">Удължен болус</string>
@@ -626,14 +593,6 @@
     <string name="careportal_pbage_label">Възраст на батерията на помпата</string>
     <string name="careportal_pumpbatterychange">Смяна на батерия</string>
     <string name="ns_alarmoptions">Опции за аларми</string>
-    <string name="key_nsalarm_urgent_high" translatable="false">nsalarm_urgent_high</string>
-    <string name="key_nsalarm_high" translatable="false">nsalarm_high</string>
-    <string name="key_nsalarm_low" translatable="false">nsalarm_low</string>
-    <string name="key_nsalarm_urgent_low" translatable="false">nsalarm_urgent_low</string>
-	<string name="key_nsalarm_staledata" translatable="false">nsalarm_staledata</string>
-    <string name="key_nsalarm_urgent_staledata" translatable="false">nsalarm_urgent_staledata</string>
-    <string name="key_nsalarm_staledatavalue" translatable="false">nsalarm_staledatavalue</string>
-    <string name="key_nsalarm_urgent_staledatavalue" translatable="false">nsalarm_urgent_staledatavalue</string>
     <string name="nsalarm_urgenthigh">Много висока</string>
     <string name="nsalarm_high">Висока</string>
     <string name="nsalarm_low">Ниска</string>
@@ -645,7 +604,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Много стари данни при повече от [мин]</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>
     <string name="openapsama_autosens_period_summary">Брой часове назад за определяне на чувствителността (приемът на въглехидрати е изключен)</string>
-    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
     <string name="ratio_short">RAT</string>
     <string name="key_do_not_track_profile_switch">do_not_track_profile_switch</string>
     <string name="do_not_track_profile_switch">Игнорирай събитията от тип Смяна на профил</string>
@@ -659,10 +617,8 @@
     <string name="sensitivityoref0">Алгоритъм на Oref0</string>
     <string name="sensitivityaaps">Алгоритъм на AAPS</string>
     <string name="absorptionsettings_title">Настройки за абсорбция</string>
-    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
     <string name="absorption_maxtime_title">Максимално време за усвояване на храненето [ч]</string>
     <string name="absorption_maxtime_summary">Брой часове, за които се очаква храненето да бъде напълно усвоено в организма</string>
-    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
     <string name="danar_visualizeextendedaspercentage_title">Показвай удължените болуси като %</string>
     <string name="careportal_sensorage_label_short">ВСенз</string>
     <string name="careportal_insulinage_label_short">ВИнс</string>
