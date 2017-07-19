@@ -34,9 +34,12 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
 
     private Button refresh;
     private TextView statusText;
+
     private TextView tbrPercentageText;
     private TextView tbrDurationText;
     private TextView tbrRateText;
+    private TextView pumpErrorText;
+
     private TextView lastCmdText;
     private TextView lastCmdTimeText;
     private TextView lastCmdResultText;
@@ -48,9 +51,12 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
         statusText = (TextView) view.findViewById(R.id.combo_status);
+
         tbrPercentageText = (TextView) view.findViewById(R.id.combo_tbr_percentage);
         tbrDurationText = (TextView) view.findViewById(R.id.combo_tbr_duration);
         tbrRateText = (TextView) view.findViewById(R.id.combo_tbr_rate);
+        pumpErrorText = (TextView) view.findViewById(R.id.combo_pump_error);
+
         lastCmdText = (TextView) view.findViewById(R.id.combo_last_command);
         lastCmdTimeText = (TextView) view.findViewById(R.id.combo_last_command_time);
         lastCmdResultText = (TextView) view.findViewById(R.id.combo_last_command_result);
@@ -113,17 +119,13 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             tbrDurationText.setText("");
                             tbrRateText.setText("" + getPlugin().getBaseBasalRate() + " U/h");
                         }
+                        pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg :"");
                         if (getPlugin().lastCmd != null) {
                             lastCmdText.setText("" + getPlugin().lastCmd);
                             lastCmdTimeText.setText(getPlugin().lastCmdTime.toLocaleString());
                             if (getPlugin().lastCmdResult != null) {
                                 String message = getPlugin().lastCmdResult.message;
-                                if (ps.errorMsg != null) {
-                                    message = message + "\nPump is in error state:\n" + ps.errorMsg;
-                                }
-                                lastCmdResultText.setText(message);
-                            } else {
-                                lastCmdResultText.setText("");
+                                lastCmdResultText.setText(message != null ? message : "");
                             }
                         } else {
                             ComboFragment.this.lastCmdText.setText("");
