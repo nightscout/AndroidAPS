@@ -36,13 +36,6 @@ public class BroadcastTreatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        try {
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-        log.debug("TREAT_ADD " + treatment.getEventType() + " " + x.size() + " receivers");
-        } catch (Exception e){
-            //for testing
-        }
     }
 
     public static void handleNewTreatment(JSONArray treatments, Context context, boolean isDelta) {
@@ -58,13 +51,6 @@ public class BroadcastTreatment {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            try {
-                List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-                log.debug("TREAT_ADD " + part.length() + " " + x.size() + " receivers");
-            } catch (Exception e){
-            //for testing
-        }
-
         }
     }
 
@@ -79,12 +65,6 @@ public class BroadcastTreatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        try {
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-            log.debug("TREAT_CHANGE " + treatment.getString("_id") + " " + x.size() + " receivers");
-        } catch (Exception e) {
-        }
     }
 
     public static void handleChangedTreatment(JSONArray treatments, Context context, boolean isDelta) {
@@ -100,13 +80,6 @@ public class BroadcastTreatment {
             intent.putExtras(bundle);
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
             context.sendBroadcast(intent);
-            try {
-            List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-            log.debug("TREAT_CHANGE " + part.length() + " " + x.size() + " receivers");
-            } catch (Exception e){
-                //for testing
-            }
         }
     }
 
@@ -121,14 +94,6 @@ public class BroadcastTreatment {
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         context.sendBroadcast(intent);
-        try {
-        List<ResolveInfo> x = context.getPackageManager().queryBroadcastReceivers(intent, 0);
-
-
-            log.debug("TREAT_REMOVE " + treatment.getString("_id") + " " + x.size() + " receivers");
-        } catch (Exception e){
-            //for testing
-        }
     }
 
     public static void handleRemovedTreatment(JSONArray treatments, Context context, boolean isDelta) {
