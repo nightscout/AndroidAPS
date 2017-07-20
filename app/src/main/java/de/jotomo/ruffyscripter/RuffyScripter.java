@@ -294,8 +294,11 @@ public class RuffyScripter {
             log.debug("Connect init successful: " + connectInitSuccessful);
             while (currentMenu == null) {
                 log.debug("Waiting for first menu update to be sent");
-                // waitForMenuUpdate times out after 60s and throws a CommandException
-                waitForMenuUpdate();
+                // waitForMenuUpdate times out after 60s and throws a CommandException.
+                // if the user just pressed a button on the combo, the screen needs to time first
+                // before a connection is possible. In that case, it takes 45s before the
+                // connection comes up.
+                waitForMenuUpdate(90);
             }
         } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
@@ -343,7 +346,11 @@ public class RuffyScripter {
      * Wait until the menu update is in
      */
     public void waitForMenuUpdate() {
-        long timeoutExpired = System.currentTimeMillis() + 60 * 1000;
+       waitForMenuUpdate(60);
+    }
+
+    public void waitForMenuUpdate(long timeoutInSeconds) {
+        long timeoutExpired = System.currentTimeMillis() + timeoutInSeconds * 1000;
         long initialUpdateTime = menuLastUpdated;
         while (initialUpdateTime == menuLastUpdated) {
             if (System.currentTimeMillis() > timeoutExpired) {
