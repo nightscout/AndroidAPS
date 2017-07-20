@@ -123,27 +123,26 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 int id = 1000;
                 long lastAlarmTime = 0;
                 while (true) {
-                    CommandResult lastCmdResult = ComboPlugin.this.lastCmdResult;
-                    if (lastCmdResult != null && !lastCmdResult.success) {
+                    Command localLastCmd = lastCmd;
+                    CommandResult localLastCmdResult = lastCmdResult;
+                    if (localLastCmdResult != null && !localLastCmdResult.success) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         if (now > fiveMinutesSinceLastAlarm) {
-                            log.error("Command failed: " + lastCmd);
-                            log.error("Command result: " + lastCmdResult);
-                            PumpState pumpState = ComboPlugin.this.pumpState;
-                            if (pumpState!=null) {
-                                if (pumpState.errorMsg != null) {
-                                    log.warn("Pump is in error state, displayng; " + pumpState.errorMsg);
-                                }
+                            log.error("Command failed: " + localLastCmd);
+                            log.error("Command result: " + localLastCmdResult);
+                            PumpState localPumpState = pumpState;
+                            if (localPumpState != null && localPumpState.errorMsg != null) {
+                                log.warn("Pump is in error state, displayng; " + localPumpState.errorMsg);
                             }
-                            long[] vibratePattern = new long[]{1000, 1000, 1000, 1000, 1000};
+                            long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000};
                             Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                             NotificationCompat.Builder notificationBuilder =
                                     new NotificationCompat.Builder(context)
                                             .setSmallIcon(R.drawable.notif_icon)
                                             .setSmallIcon(R.drawable.icon_bolus)
                                             .setContentTitle("Combo communication error")
-                                            .setContentText(lastCmdResult.message)
+                                            .setContentText(localLastCmdResult.message)
                                             .setPriority(NotificationCompat.PRIORITY_MAX)
                                             .setLights(Color.BLUE, 1000, 0)
                                             .setSound(uri)
@@ -151,7 +150,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             mgr.notify(id, notificationBuilder.build());
                             lastAlarmTime = now;
                         } else {
-                            log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + lastCmdResult.message);
+                            log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + localLastCmdResult.message);
                         }
                     }
                     SystemClock.sleep(5 * 1000);
@@ -336,27 +335,27 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
-                PumpEnactResult result = new PumpEnactResult();
-                result.success = bolusCmdResult.success;
-                result.enacted = bolusCmdResult.enacted;
-                result.comment = bolusCmdResult.message;
+                PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                pumpEnactResult.success = bolusCmdResult.success;
+                pumpEnactResult.enacted = bolusCmdResult.enacted;
+                pumpEnactResult.comment = bolusCmdResult.message;
 
                 // if enacted, add bolus and carbs to treatment history
-                if (result.enacted) {
+                if (pumpEnactResult.enacted) {
                     // TODO if no error occurred, the requested bolus is what the pump delievered,
                     // that has been checked. If an error occurred, we should check how much insulin
                     // was delivered, e.g. when the cartridge went empty mid-bolus
                     // For the first iteration, the alert the pump raises must suffice
-                    result.bolusDelivered = detailedBolusInfo.insulin;
-                    result.carbsDelivered = detailedBolusInfo.carbs;
+                    pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
+                    pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
 
                     detailedBolusInfo.date = bolusCmdResult.completionTime;
                     MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 } else {
-                    result.bolusDelivered = 0d;
-                    result.carbsDelivered = 0d;
+                    pumpEnactResult.bolusDelivered = 0d;
+                    pumpEnactResult.carbsDelivered = 0d;
                 }
-                return result;
+                return pumpEnactResult;
             } else {
                 // no bolus required
 
@@ -364,23 +363,24 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 // so just wait, yeah, this is dumb. for now; proper fix via GL#10
                 // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
                 SystemClock.sleep(6000);
-                PumpEnactResult result = new PumpEnactResult();
-                result.success = true;
-                result.enacted = true;
-                result.bolusDelivered = 0d;
-                result.carbsDelivered = detailedBolusInfo.carbs;
-                result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-                return result;
+                PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                pumpEnactResult.success = true;
+                pumpEnactResult.enacted = true;
+                pumpEnactResult.bolusDelivered = 0d;
+                pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+                pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+                return pumpEnactResult;
             }
         } else {
-            PumpEnactResult result = new PumpEnactResult();
-            result.success = false;
-            result.enacted = false;
-            result.bolusDelivered = 0d;
-            result.carbsDelivered = 0d;
-            result.comment = MainApp.instance().getString(R.string.danar_invalidinput);
+            // neither carbs nor bolus requested
+            PumpEnactResult pumpEnactResult = new PumpEnactResult();
+            pumpEnactResult.success = false;
+            pumpEnactResult.enacted = false;
+            pumpEnactResult.bolusDelivered = 0d;
+            pumpEnactResult.carbsDelivered = 0d;
+            pumpEnactResult.comment = MainApp.instance().getString(R.string.danar_invalidinput);
             log.error("deliverTreatment: Invalid input");
-            return result;
+            return pumpEnactResult;
         }
     }
 
@@ -463,7 +463,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
-            // make sure we're not skipping a loop iteration by a few secs
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
             // we should check this, but really ... something must be really screwed up if that number was anything different

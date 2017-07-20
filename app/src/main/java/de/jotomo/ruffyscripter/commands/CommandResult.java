@@ -8,7 +8,6 @@ import de.jotomo.ruffyscripter.PumpState;
 public class CommandResult {
     public boolean success;
     public boolean enacted;
-    // TODO not really happy with that name "time the command finished executing"
     public long completionTime;
     public Exception exception;
     public String message;
