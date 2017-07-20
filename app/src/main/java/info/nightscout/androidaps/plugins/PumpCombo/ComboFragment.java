@@ -109,33 +109,33 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                     statusText.setText(getPlugin().statusSummary);
                     if (getPlugin().isInitialized()) {
                         PumpState ps = getPlugin().pumpState;
-                        if (ps == null) {
-                            return;
-                        }
-                        boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
-                        if (tbrActive) {
-                            tbrPercentageText.setText("" + ps.tbrPercent + "%");
-                            tbrDurationText.setText("" + ps.tbrRemainingDuration + " min");
-                            tbrRateText.setText("" + ps.tbrRate + " U/h");
-                        } else {
-                            tbrPercentageText.setText("Default basal rate running");
-                            tbrDurationText.setText("");
-                            tbrRateText.setText("" + getPlugin().getBaseBasalRate() + " U/h");
-                        }
-                        pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg :"");
-                        if (getPlugin().lastCmd != null) {
-                            lastCmdText.setText("" + getPlugin().lastCmd);
-                            lastCmdTimeText.setText(getPlugin().lastCmdTime.toLocaleString());
-                            CommandResult lastCmdResult = getPlugin().lastCmdResult;
-                            if (lastCmdResult != null) {
-                                String message = lastCmdResult.message;
-                                lastCmdResultText.setText(message != null ? message : "");
+                        if (ps != null) {
+                            boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
+                            if (tbrActive) {
+                                tbrPercentageText.setText("" + ps.tbrPercent + "%");
+                                tbrDurationText.setText("" + ps.tbrRemainingDuration + " min");
+                                tbrRateText.setText("" + ps.tbrRate + " U/h");
                             } else {
-                                lastCmdResultText.setText("");
+                                tbrPercentageText.setText("Default basal rate running");
+                                tbrDurationText.setText("");
+                                tbrRateText.setText("" + getPlugin().getBaseBasalRate() + " U/h");
                             }
+                            pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg : "");
+                        }
+
+                        Command lastCmd = getPlugin().lastCmd;
+                        if (lastCmd != null) {
+                            lastCmdText.setText(lastCmd.toString());
+                            lastCmdTimeText.setText(getPlugin().lastCmdTime.toLocaleString());
                         } else {
-                            ComboFragment.this.lastCmdText.setText("");
+                            lastCmdText.setText("");
                             lastCmdTimeText.setText("");
+                        }
+
+                        CommandResult lastCmdResult = getPlugin().lastCmdResult;
+                        if (lastCmdResult != null && lastCmdResult.message != null) {
+                            lastCmdResultText.setText(lastCmdResult.message);
+                        } else {
                             lastCmdResultText.setText("");
                         }
                     }
