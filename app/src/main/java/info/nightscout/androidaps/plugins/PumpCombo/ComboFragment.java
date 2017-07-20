@@ -109,6 +109,9 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                     statusText.setText(getPlugin().statusSummary);
                     if (getPlugin().isInitialized()) {
                         PumpState ps = getPlugin().pumpState;
+                        if (ps == null) {
+                            return;
+                        }
                         boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
                         if (tbrActive) {
                             tbrPercentageText.setText("" + ps.tbrPercent + "%");
