@@ -8,7 +8,6 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.DeadObjectException;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -34,7 +33,6 @@ import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffyscripter.PumpState;
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -120,8 +118,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                 give AAPS time to bootup, there's quit a lot going on
-//                SystemClock.sleep(60 * 1000);
                 Context context = MainApp.instance().getApplicationContext();
                 NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 int id = 1000;
@@ -499,7 +495,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
-        long tbrEnd = System.currentTimeMillis();
         CommandResult commandResult = runCommand(new CancelTbrCommand());
         if (commandResult.enacted) {
             TemporaryBasal tempStop = new TemporaryBasal(commandResult.completionTime);

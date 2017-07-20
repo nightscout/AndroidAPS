@@ -126,9 +126,12 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                         if (getPlugin().lastCmd != null) {
                             lastCmdText.setText("" + getPlugin().lastCmd);
                             lastCmdTimeText.setText(getPlugin().lastCmdTime.toLocaleString());
-                            if (getPlugin().lastCmdResult != null) {
-                                String message = getPlugin().lastCmdResult.message;
+                            CommandResult lastCmdResult = getPlugin().lastCmdResult;
+                            if (lastCmdResult != null) {
+                                String message = lastCmdResult.message;
                                 lastCmdResultText.setText(message != null ? message : "");
+                            } else {
+                                lastCmdResultText.setText("");
                             }
                         } else {
                             ComboFragment.this.lastCmdText.setText("");
