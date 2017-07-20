@@ -8,6 +8,7 @@ import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.DeadObjectException;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
@@ -65,15 +66,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     // package-protected only so ComboFragment can access these
     @NonNull
-    String statusSummary = "Initializing";
+    volatile String statusSummary = "Initializing";
     @Nullable
-    Command lastCmd;
+    volatile Command lastCmd;
     @Nullable
-    CommandResult lastCmdResult;
+    volatile CommandResult lastCmdResult;
     @NonNull
-    Date lastCmdTime = new Date(0);
-    @NonNull
-    PumpState pumpState = new PumpState();
+    volatile Date lastCmdTime = new Date(0);
+    volatile PumpState pumpState = new PumpState();
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -86,8 +86,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public ComboPlugin() {
         definePumpCapabilities();
         MainApp.bus().register(this);
-        startAlerter();
         bindRuffyService();
+        startAlerter();
     }
 
     private void definePumpCapabilities() {
@@ -120,19 +120,25 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         new Thread(new Runnable() {
             @Override
             public void run() {
+//                 give AAPS time to bootup, there's quit a lot going on
+//                SystemClock.sleep(60 * 1000);
                 Context context = MainApp.instance().getApplicationContext();
                 NotificationManager mgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 int id = 1000;
                 long lastAlarmTime = 0;
                 while (true) {
+                    CommandResult lastCmdResult = ComboPlugin.this.lastCmdResult;
                     if (lastCmdResult != null && !lastCmdResult.success) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         if (now > fiveMinutesSinceLastAlarm) {
                             log.error("Command failed: " + lastCmd);
                             log.error("Command result: " + lastCmdResult);
-                            if (pumpState.errorMsg != null) {
-                                log.warn("Pump is in error state, displayng; " + pumpState.errorMsg);
+                            PumpState pumpState = ComboPlugin.this.pumpState;
+                            if (pumpState!=null) {
+                                if (pumpState.errorMsg != null) {
+                                    log.warn("Pump is in error state, displayng; " + pumpState.errorMsg);
+                                }
                             }
                             long[] vibratePattern = new long[]{1000, 1000, 1000, 1000, 1000};
                             Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
@@ -195,6 +201,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             // which will raise an exception. Not really ideal.
             statusSummary = "Failed to bind to ruffy service";
         }
+    }
+
+    private void unbindRuffyService() {
+        MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
     }
 
     @Override
@@ -267,7 +277,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isSuspended() {
-        return pumpState.suspended;
+        return pumpState != null && pumpState.suspended;
     }
 
     @Override
@@ -383,6 +393,26 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
+        if (commandResult.exception != null) {
+            log.error("CommandResult has exception, rebinding ruffy service");
+
+            unbindRuffyService();
+            SystemClock.sleep(5000);
+            bindRuffyService();
+            SystemClock.sleep(5000);
+
+            if (ruffyScripter == null) {
+                log.error("Rebinding failed");
+            }
+
+            // retry command, but make sure it wasn't enacted and don't retry
+            // bolus commands (use is interacting with AAPS right now so he can
+            // deal with it and we don't want to deliver a bolus twice
+            if (!commandResult.enacted && !(command instanceof BolusCommand)) {
+               commandResult = ruffyScripter.runCommand(command) ;
+            }
+        }
+
         log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
         if (commandResult.exception != null) {
             log.error("Exception received from pump", commandResult.exception);
@@ -456,10 +486,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         long tbrStart = System.currentTimeMillis();
         // TODO DanaR sets tempStart to now -1 to acound for delay from pump?
 
+
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
             // make sure we're not skipping a loop iteration by a few secs
-            TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime - 5_000);
+            TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime); // - 5_000);
+            // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
+            // we should check this, but really ... something must be really screwed up if that number was anything different
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = percent;
             tempStart.isAbsolute = false;
@@ -488,6 +521,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
+        long tbrEnd = System.currentTimeMillis();
         CommandResult commandResult = runCommand(new CancelTbrCommand());
         if (commandResult.enacted) {
             TemporaryBasal tempStop = new TemporaryBasal(commandResult.completionTime);
@@ -572,7 +606,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @SuppressWarnings("UnusedParameters")
     @Subscribe
     public void onStatusEvent(final EventAppExit e) {
-        MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
+        unbindRuffyService();
     }
 }
 
