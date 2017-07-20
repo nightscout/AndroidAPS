@@ -168,7 +168,7 @@ public class RuffyScripter {
 
         List<String> violations = cmd.validateArguments();
         if (!violations.isEmpty()) {
-            return new CommandResult().message(Joiner.on("\n").join(violations));
+            return new CommandResult().message(Joiner.on("\n").join(violations)).state(readPumpState());
         }
 
         synchronized (RuffyScripter.class) {
