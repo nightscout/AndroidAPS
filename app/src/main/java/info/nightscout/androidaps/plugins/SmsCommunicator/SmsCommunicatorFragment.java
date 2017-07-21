@@ -20,13 +20,14 @@ import java.util.Comparator;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventSmsCommunicatorUpdateGui;
 import info.nightscout.utils.DateUtil;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SmsCommunicatorFragment extends Fragment {
+public class SmsCommunicatorFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(SmsCommunicatorFragment.class);
 
     private static SmsCommunicatorPlugin smsCommunicatorPlugin;
@@ -56,25 +57,14 @@ public class SmsCommunicatorFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventSmsCommunicatorUpdateGui ev) {
         updateGUI();
     }
 
 
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

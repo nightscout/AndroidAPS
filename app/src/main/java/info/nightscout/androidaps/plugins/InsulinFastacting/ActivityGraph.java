@@ -63,6 +63,7 @@ public class ActivityGraph extends GraphView {
         getViewport().setMaxX(hours * 60);
         getGridLabelRenderer().setNumHorizontalLabels(hours + 1);
         getGridLabelRenderer().setHorizontalAxisTitle("[min]");
+        getGridLabelRenderer().setVerticalLabelsColor(activitySeries.getColor());
 
         DataPoint[] iobDataPoints = new DataPoint[iobArray.size()];
         iobDataPoints = iobArray.toArray(iobDataPoints);
@@ -72,5 +73,6 @@ public class ActivityGraph extends GraphView {
         iobSeries.setBackgroundColor(Color.argb(70, 255, 0, 255));
         getSecondScale().setMinY(0);
         getSecondScale().setMaxY(1);
+        getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.MAGENTA);
     }
 }

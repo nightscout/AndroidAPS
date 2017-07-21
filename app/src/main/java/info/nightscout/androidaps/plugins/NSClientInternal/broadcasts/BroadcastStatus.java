@@ -33,7 +33,7 @@ public class BroadcastStatus {
             bundle.putInt("nsclientversioncode", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-        };
+        }
         bundle.putString("nightscoutversionname", NSClientService.nightscoutVersionName);
         bundle.putInt("nightscoutversioncode", NSClientService.nightscoutVersionCode);
         bundle.putString("status", status.getData().toString());

@@ -26,6 +26,7 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
@@ -36,7 +37,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 13/01/17.
  */
 
-public class TreatmentsTempTargetFragment extends Fragment implements View.OnClickListener {
+public class TreatmentsTempTargetFragment extends SubscriberFragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -210,24 +211,13 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventTempTargetChange ev) {
         updateGUI();
     }
 
-    void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

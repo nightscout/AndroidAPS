@@ -387,11 +387,10 @@
     <string name="send_to_pump">ENVIAR A BOMBA</string>
     <string name="short_avgdelta">Media corta delta</string>
     <string name="sms_bolus">Bolo:</string>
-    <string name="sms_lastbg">Ultimo BG:</string>
+    <string name="sms_lastbg">Último BG:</string>
     <string name="sms_minago">%dmin antes</string>
     <string name="smscommunicator_bolusdelivered">Bolo %.2fU enviado correctamente</string>
     <string name="target_range">Rango Objetivo:</string>
-    <string name="timeshift_hint"></string>
     <string name="units">Unidades:</string>
     <string name="error_only_numeric_digits_allowed">Sólo se permiten caracteres numéricos</string>
     <string name="error_only_numeric_digits_range_allowed">Sólo se permiten dígitos en el rango %1$s - %2$s</string>

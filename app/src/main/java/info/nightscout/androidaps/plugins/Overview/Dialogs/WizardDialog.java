@@ -213,9 +213,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         bgTrendInsulin = (TextView) view.findViewById(R.id.treatments_wizard_bgtrendinsulin);
         cobLayout = (LinearLayout) view.findViewById(R.id.treatments_wizard_cob_layout);
         cob = (TextView) view.findViewById(R.id.treatments_wizard_cob);
-        ;
         cobInsulin = (TextView) view.findViewById(R.id.treatments_wizard_cobinsulin);
-        ;
 
         bgCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgcheckbox);
         bolusIobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bolusiobcheckbox);

@@ -173,7 +173,7 @@ public class ActionStringHandler {
                 rTitle += " LOOP";
                 rMessage = "TARGETS:\n" + getTargetsStatus();
                 rMessage += "\n\n" +  getLoopStatus();
-                rMessage += "\n\nOAPS RESULT:\n" +  getOAPSResultStatus();;
+                rMessage += "\n\nOAPS RESULT:\n" +  getOAPSResultStatus();
             }
 
         } else if ("wizard".equals(act[0])) {
