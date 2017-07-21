@@ -357,7 +357,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 }
                 return pumpEnactResult;
             } else {
-                // no bolus required
+                // no bolus required, carb only treatment
 
                 // TODO the ui freezes when the calculator issues a carb-only treatment
                 // so just wait, yeah, this is dumb. for now; proper fix via GL#10
@@ -369,6 +369,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 pumpEnactResult.bolusDelivered = 0d;
                 pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
                 pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+                MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 return pumpEnactResult;
             }
         } else {
