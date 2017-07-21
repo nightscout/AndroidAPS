@@ -24,7 +24,7 @@ public class NSSgv {
             }
         }
         return ret;
-    };
+    }
 
     private Integer getIntegerOrNull(String key) {
         Integer ret = null;
@@ -36,7 +36,7 @@ public class NSSgv {
             }
         }
         return ret;
-    };
+    }
 
     private Long getLongOrNull(String key) {
         Long ret = null;
@@ -48,7 +48,7 @@ public class NSSgv {
             }
         }
         return ret;
-    };
+    }
 
     public JSONObject getData () { return data; }
     public Integer getMgdl () { return getIntegerOrNull("mgdl"); }

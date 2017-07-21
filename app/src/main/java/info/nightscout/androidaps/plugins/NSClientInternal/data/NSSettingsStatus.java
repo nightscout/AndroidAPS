@@ -207,8 +207,6 @@ public class NSSettingsStatus {
         return ret;
     }
 
-    ;
-
     private Integer getIntegerOrNull(String key) {
         Integer ret = null;
         if (data.has(key)) {
@@ -220,8 +218,6 @@ public class NSSettingsStatus {
         }
         return ret;
     }
-
-    ;
 
     private Long getLongOrNull(String key) {
         Long ret = null;
@@ -235,8 +231,6 @@ public class NSSettingsStatus {
         return ret;
     }
 
-    ;
-
     private Date getDateOrNull(String key) {
         Date ret = null;
         if (data.has(key)) {
@@ -248,8 +242,6 @@ public class NSSettingsStatus {
         }
         return ret;
     }
-
-    ;
 
     private boolean getBooleanOrNull(String key) {
         boolean ret = false;
