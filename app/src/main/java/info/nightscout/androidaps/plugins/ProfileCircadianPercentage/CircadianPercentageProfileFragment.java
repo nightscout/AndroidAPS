@@ -39,10 +39,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SafeParse;
 
-public class CircadianPercentageProfileFragment extends Fragment {
+public class CircadianPercentageProfileFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfileFragment.class);
 
     private static CircadianPercentageProfilePlugin circadianPercentageProfilePlugin = new CircadianPercentageProfilePlugin();
@@ -309,16 +310,14 @@ public class CircadianPercentageProfileFragment extends Fragment {
         percentageView.addTextChangedListener(textWatch);
         timeshiftView.addTextChangedListener(textWatch);
 
-        updateGui();
+        updateGUI();
 
         onStatusEvent(new EventInitializationChanged());
 
         return layout;
     }
 
-    public void updateGui() {
-
-
+    public void updateGUI() {
         updateProfileInfo();
 
         diaView.removeTextChangedListener(textWatch);
@@ -485,15 +484,12 @@ public class CircadianPercentageProfileFragment extends Fragment {
         }
         basalEditDialog = null;
 
-        MainApp.bus().unregister(this);
         fl.requestFocusFromTouch();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        updateGui();
-        MainApp.bus().register(this);
         onStatusEvent(new EventInitializationChanged());
         fl.requestFocusFromTouch();
     }
@@ -521,7 +517,7 @@ public class CircadianPercentageProfileFragment extends Fragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    updateGui();
+                    updateGUI();
                 }
             });
     }
