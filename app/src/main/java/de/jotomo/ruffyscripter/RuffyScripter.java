@@ -342,6 +342,10 @@ public class RuffyScripter {
         log.debug("Releasing menu key");
     }
 
+    // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
+    // then anything longer than a few seconds is an error;
+    // only ensureConnected() uses the method with the timeout parameter; inline that code,
+    // so we can use a custom timeout and give a better error message in case of failure
     /**
      * Wait until the menu update is in
      */
