@@ -188,11 +188,13 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         }
 
         if (!MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
-            for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
-                ExtendedBolus e = extendedBoluses.get(pos);
-                if (e.date > time) continue;
-                IobTotal calc = e.iobCalc(time);
-                total.plus(calc);
+            synchronized (extendedBoluses) {
+                for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
+                    ExtendedBolus e = extendedBoluses.get(pos);
+                    if (e.date > time) continue;
+                    IobTotal calc = e.iobCalc(time);
+                    total.plus(calc);
+                }
             }
         return total;
     }
@@ -292,20 +294,24 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public IobTotal getCalculationToTimeTempBasals(long time) {
         IobTotal total = new IobTotal(time);
-        for (Integer pos = 0; pos < tempBasals.size(); pos++) {
-            TemporaryBasal t = tempBasals.get(pos);
-            if (t.date > time) continue;
-            IobTotal calc = t.iobCalc(time);
-            //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
-            total.plus(calc);
+        synchronized (tempBasals) {
+            for (Integer pos = 0; pos < tempBasals.size(); pos++) {
+                TemporaryBasal t = tempBasals.get(pos);
+                if (t.date > time) continue;
+                IobTotal calc = t.iobCalc(time);
+                //log.debug("BasalIOB " + new Date(time) + " >>> " + calc.basaliob);
+                total.plus(calc);
+            }
         }
         if (MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
             IobTotal totalExt = new IobTotal(time);
-            for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
-                ExtendedBolus e = extendedBoluses.get(pos);
-                if (e.date > time) continue;
-                IobTotal calc = e.iobCalc(time);
-                totalExt.plus(calc);
+            synchronized (extendedBoluses) {
+                for (Integer pos = 0; pos < extendedBoluses.size(); pos++) {
+                    ExtendedBolus e = extendedBoluses.get(pos);
+                    if (e.date > time) continue;
+                    IobTotal calc = e.iobCalc(time);
+                    totalExt.plus(calc);
+                }
             }
             // Convert to basal iob
             totalExt.basaliob = totalExt.iob;
@@ -420,12 +426,18 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     @Override
     public long oldestDataAvailable() {
         long oldestTime = System.currentTimeMillis();
-        if (tempBasals.size() > 0)
-            oldestTime = Math.min(oldestTime, tempBasals.get(0).date);
-        if (extendedBoluses.size() > 0)
-            oldestTime = Math.min(oldestTime, extendedBoluses.get(0).date);
-        if (treatments.size() > 0)
-            oldestTime = Math.min(oldestTime, treatments.get(treatments.size() - 1).date);
+        synchronized (tempBasals) {
+            if (tempBasals.size() > 0)
+                oldestTime = Math.min(oldestTime, tempBasals.get(0).date);
+        }
+        synchronized (extendedBoluses) {
+            if (extendedBoluses.size() > 0)
+                oldestTime = Math.min(oldestTime, extendedBoluses.get(0).date);
+        }
+        synchronized (treatments) {
+            if (treatments.size() > 0)
+                oldestTime = Math.min(oldestTime, treatments.get(treatments.size() - 1).date);
+        }
         oldestTime -= 15 * 60 * 1000L; // allow 15 min before
         return oldestTime;
     }
