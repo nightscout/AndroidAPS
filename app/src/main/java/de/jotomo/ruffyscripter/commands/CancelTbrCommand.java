@@ -9,6 +9,7 @@ import java.util.List;
 
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.MainApp;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?
 // Hm, we could just ignore TBRs that run out within the next 60s (0:01 or even 0:02
@@ -26,6 +27,14 @@ public class CancelTbrCommand implements Command {
         try {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             if (!initialPumpState.tbrActive) {
+                log.debug("active temp basal 90s ago: " +
+                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 90 * 1000));
+                log.debug("active temp basal 60s ago: " +
+                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 30 * 1000));
+                log.debug("active temp basal 30s ago: " +
+                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 30 * 1000));
+                log.debug("active temp basal now:: " +
+                        MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()));
                 log.warn("No TBR active to cancel");
                 return new CommandResult()
                         // Raise a warning about this, until we know it's safe to ignore.
