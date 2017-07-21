@@ -391,7 +391,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
         if (commandResult.exception != null) {
-            log.error("CommandResult has exception, rebinding ruffy service");
+            log.error("CommandResult has exception, rebinding ruffy service", commandResult.exception);
 
             unbindRuffyService();
             SystemClock.sleep(5000);
@@ -403,7 +403,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
 
             // retry command, but make sure it wasn't enacted and don't retry
-            // bolus commands (use is interacting with AAPS right now so he can
+            // bolus commands (user is interacting with AAPS right now so he can
             // deal with it and we don't want to deliver a bolus twice
             if (!commandResult.enacted && !(command instanceof BolusCommand)) {
                commandResult = ruffyScripter.runCommand(command) ;
