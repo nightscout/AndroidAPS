@@ -311,7 +311,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!reason.toLowerCase().contains("user")
                 && lastCmdTime.getTime() > 0
                 && System.currentTimeMillis() > lastCmdTime.getTime() + 60 * 1000) {
-           log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
+            log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
             runCommand(new ReadPumpStateCommand());
         }
@@ -390,7 +390,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
-        if (commandResult.exception != null) {
+        if (!commandResult.success && commandResult.exception != null) {
             log.error("CommandResult has exception, rebinding ruffy service", commandResult.exception);
 
             unbindRuffyService();
@@ -400,13 +400,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
             if (ruffyScripter == null) {
                 log.error("Rebinding failed");
-            }
-
-            // retry command, but make sure it wasn't enacted and don't retry
-            // bolus commands (user is interacting with AAPS right now so he can
-            // deal with it and we don't want to deliver a bolus twice
-            if (!commandResult.enacted && !(command instanceof BolusCommand)) {
-               commandResult = ruffyScripter.runCommand(command) ;
+            } else if (!commandResult.enacted && !(command instanceof BolusCommand)) {
+                // retry command, but make sure it wasn't enacted and don't retry
+                // bolus commands (user is interacting with AAPS right now so he can
+                // deal with it and we don't want to deliver a bolus twice)
+                CommandResult retriedCommandResult = ruffyScripter.runCommand(command);
+                if (retriedCommandResult.success) {
+                    commandResult = retriedCommandResult;
+                }
             }
         }
 
