@@ -293,14 +293,17 @@ public class RuffyScripter {
 
             boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
-            while (currentMenu == null) {
-                log.debug("Waiting for first menu update to be sent");
-                // waitForMenuUpdate times out after 60s and throws a CommandException.
-                // if the user just pressed a button on the combo, the screen needs to time first
-                // before a connection is possible. In that case, it takes 45s before the
-                // connection comes up.
-                waitForMenuUpdate(90);
-            }
+            log.debug("Waiting for first menu update to be sent");
+            // Note: there was an 'if(currentMenu == null)' around the next call, since
+            // the rtDisconnected callback sets currentMenu = null. However, there were
+            // race conditions, so it was removed. And really, waiting for an update
+            // to come in is a much safer bet.
+
+            // waitForMenuUpdate times out after 60s and throws a CommandException.
+            // if the user just pressed a button on the combo, the screen needs to time first
+            // before a connection is possible. In that case, it takes 45s before the
+            // connection comes up.
+            waitForMenuUpdate(90);
         } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
