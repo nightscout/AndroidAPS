@@ -60,9 +60,19 @@ public class SetTbrCommand implements Command {
 
             boolean tbrPercentInputSuccess = false;
             int tbrPercentInputRetries = 2;
+            // Setting TBR percentage/duration works most of the time. Occassionnally though,
+            // button presses don't take, e.g. we press down 10 times to go from 100% to 0%
+            // but the pump ends on 30%. In that case restarting inputing the TBR, so we start
+            // again and push down 3 times.
+            // Either our timings are of, or the pump sometimes is sluggish. I suspect the later,
+            // based on an error when switching from TBR_SET to TBR_DURATION took more than 1.1s
+            // and 4 menu updates were sent before the menu was finally switched. This happened
+            // around the time when a running TBR was about to run out. So maybe the pump was busy
+            // updating its history records.
             while (!tbrPercentInputSuccess) {
                 try {
                     inputTbrPercentage(scripter);
+                    // TODO v2 this can probably be removed by now
                     SystemClock.sleep(750);
                     verifyDisplayedTbrPercentage(scripter);
                     tbrPercentInputSuccess = true;
@@ -87,9 +97,11 @@ public class SetTbrCommand implements Command {
 
                 boolean tbrDurationSuccess = false;
                 int tbrDurationRetries = 2;
+                // see above why we loop here
                 while (!tbrDurationSuccess) {
                     try {
                         inputTbrDuration(scripter);
+                        // TODO v2 this can probably be removed by now
                         SystemClock.sleep(750);
                         verifyDisplayedTbrDuration(scripter);
                         tbrDurationSuccess = true;
@@ -167,6 +179,7 @@ public class SetTbrCommand implements Command {
     }
 
     private long readDisplayedTbrPercentage(RuffyScripter scripter) {
+        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
         // this as a bit hacky, the display value is blinking, so we might catch that, so
         // keep trying till we get the Double we want
@@ -219,6 +232,7 @@ public class SetTbrCommand implements Command {
     }
 
     private long readDisplayedTbrDuration(RuffyScripter scripter) {
+        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
         // this as a bit hacky, the display value is blinking, so we might catch that, so

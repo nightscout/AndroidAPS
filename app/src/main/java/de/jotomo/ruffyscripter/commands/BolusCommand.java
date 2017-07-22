@@ -41,9 +41,11 @@ public class BolusCommand implements Command {
 
             boolean bolusAmountInputSuccess = false;
             int bolusAmountInputRetries = 2;
+            // see SetTbrCommand.execute for an explanation why we're looping here
             while (!bolusAmountInputSuccess) {
                 try {
                     inputBolusAmount(scripter);
+                    // TODO v2 this call can probably be removed by now
                     SystemClock.sleep(750);
                     verifyDisplayedBolusAmount(scripter);
                     bolusAmountInputSuccess = true;
@@ -68,7 +70,8 @@ public class BolusCommand implements Command {
                     "Pump did not return to MAIN_MEU from BOLUS_ENTER to deliver bolus. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
-            // wait for bolus delivery to complete
+            // wait for bolus delivery to complete; the remaining units to deliver are counted
+            // down and are displayed on the main menu.
             Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             while (bolusRemaining != null) {
                 log.debug("Delivering bolus, remaining: " + bolusRemaining);
@@ -121,7 +124,9 @@ public class BolusCommand implements Command {
     }
 
     private double readDisplayedBolusAmount(RuffyScripter scripter) {
+        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
+        // bolus amount is blinking, so we need to make sure we catch it at the right moment
         Object amountObj = scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
         while (!(amountObj instanceof Double)) {
             scripter.waitForMenuUpdate();
