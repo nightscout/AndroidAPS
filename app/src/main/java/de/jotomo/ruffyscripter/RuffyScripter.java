@@ -61,7 +61,6 @@ public class RuffyScripter {
         @Override
         public void run() {
             long lastDisconnect = System.currentTimeMillis();
-            SystemClock.sleep(1000);
             while (unrecoverableError == null) {
                 try {
                     long now = System.currentTimeMillis();
@@ -85,6 +84,7 @@ public class RuffyScripter {
                 } catch (RemoteException e) {
                     log.debug("Exception in idle disconnect monitor thread, carrying on", e);
                 }
+                SystemClock.sleep(1000);
             }
         }
     }, "idle-disconnect-monitor");
