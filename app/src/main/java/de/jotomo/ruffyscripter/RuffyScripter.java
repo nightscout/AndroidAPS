@@ -236,8 +236,9 @@ public class RuffyScripter {
                 }, cmd.toString());
                 cmdThread.start();
 
-                // time out if nothing has been happening for more than 30s or after 4m
-                long dynamicTimeout = System.currentTimeMillis() + 30 * 1000;
+                // time out if nothing has been happening for more than 90s or after 4m
+                // (to fail before the next loop iteration issues the next command)
+                long dynamicTimeout = System.currentTimeMillis() + 90 * 1000;
                 long overallTimeout = System.currentTimeMillis() + 4 * 60 * 1000;
                 while (cmdThread.isAlive()) {
                     log.trace("Waiting for running command to complete");
@@ -394,7 +395,7 @@ public class RuffyScripter {
      * Wait till a menu changed has completed, "away" from the menu provided as argument.
      */
     public void waitForMenuToBeLeft(MenuType menuType) {
-        long timeout = System.currentTimeMillis() + 30 * 1000;
+        long timeout = System.currentTimeMillis() + 60 * 1000;
         while (currentMenu.getType() == menuType) {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException().message("Timeout waiting for menu " + menuType + " to be left");
@@ -408,10 +409,10 @@ public class RuffyScripter {
     }
 
     public void verifyMenuIsDisplayed(MenuType expectedMenu, String failureMessage) {
-        int retries = 5;
+        int retries = 600;
         while (currentMenu.getType() != expectedMenu) {
             if (retries > 0) {
-                SystemClock.sleep(200);
+                SystemClock.sleep(100);
                 retries = retries - 1;
             } else {
                 if (failureMessage == null) {

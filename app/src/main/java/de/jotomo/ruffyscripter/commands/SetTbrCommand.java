@@ -72,6 +72,7 @@ public class SetTbrCommand implements Command {
             while (!tbrPercentInputSuccess) {
                 try {
                     inputTbrPercentage(scripter);
+                    // TODO v2 this can probably be removed by now
                     SystemClock.sleep(750);
                     verifyDisplayedTbrPercentage(scripter);
                     tbrPercentInputSuccess = true;
@@ -96,9 +97,11 @@ public class SetTbrCommand implements Command {
 
                 boolean tbrDurationSuccess = false;
                 int tbrDurationRetries = 2;
+                // see above why we loop here
                 while (!tbrDurationSuccess) {
                     try {
                         inputTbrDuration(scripter);
+                        // TODO v2 this can probably be removed by now
                         SystemClock.sleep(750);
                         verifyDisplayedTbrDuration(scripter);
                         tbrDurationSuccess = true;
@@ -176,6 +179,7 @@ public class SetTbrCommand implements Command {
     }
 
     private long readDisplayedTbrPercentage(RuffyScripter scripter) {
+        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
         // this as a bit hacky, the display value is blinking, so we might catch that, so
         // keep trying till we get the Double we want
@@ -228,6 +232,7 @@ public class SetTbrCommand implements Command {
     }
 
     private long readDisplayedTbrDuration(RuffyScripter scripter) {
+        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
         // this as a bit hacky, the display value is blinking, so we might catch that, so
