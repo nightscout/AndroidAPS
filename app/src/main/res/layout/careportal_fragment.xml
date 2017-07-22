@@ -189,7 +189,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="3" />
 
-            </android.support.v7.widget.GridLayout>
+</android.support.v7.widget.GridLayout>
 
 
             <TextView
@@ -230,20 +230,21 @@
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="1" />
-
-                <Button
-                    android:id="@+id/careportal_pumpsitechange"
+				<Button
+                    android:id="@+id/careportal_openapsoffline"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_pump_canula"
+                    android:drawableTop="@drawable/icon_cp_aaps_offline"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/careportal_pumpsitechange"
+                    android:text="@string/careportal_openapsoffline"
                     app:layout_column="2"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="1" />
+
+                
 
                 <Button
                     android:id="@+id/careportal_cgmsensorinsert"
@@ -287,6 +288,19 @@
                 android:layout_centerHorizontal="true"
                 android:padding="10dip"
                 app:columnCount="3">
+				<Button
+                    android:id="@+id/careportal_pumpsitechange"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_cp_pump_canula"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/careportal_pumpsitechange"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="0" />
 
                 <Button
                     android:id="@+id/careportal_insulincartridgechange"
@@ -297,10 +311,10 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/careportal_insulincartridgechange"
-                    app:layout_column="0"
+                    app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="5" />
+                    app:layout_row="0" />
 
                 <Button
                     android:id="@+id/careportal_profileswitch"
@@ -311,24 +325,12 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/careportal_profileswitch"
-                    app:layout_column="1"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill"
-                    app:layout_row="5" />
-
-                <Button
-                    android:id="@+id/careportal_openapsoffline"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_aaps_offline"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/careportal_openapsoffline"
                     app:layout_column="2"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="5" />
+                    app:layout_row="0" />
+
+                
 
                 <Button
                     android:id="@+id/careportal_temporarytarget"
