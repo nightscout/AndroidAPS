@@ -33,15 +33,16 @@
                 android:layout_centerHorizontal="true"
                 android:padding="10dip"
                 app:columnCount="3">
+
                 <Button
                     android:id="@+id/careportal_bgcheck"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0px"
                     android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_cp_bgcheck"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/careportal_bgcheck"
-                    android:drawableTop="@drawable/icon_cp_bgcheck"
 
                     app:layout_column="0"
                     app:layout_columnWeight="1"
@@ -189,7 +190,7 @@
                     app:layout_gravity="fill"
                     app:layout_row="3" />
 
-</android.support.v7.widget.GridLayout>
+            </android.support.v7.widget.GridLayout>
 
 
             <TextView
@@ -197,12 +198,14 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="15dp"
                 android:text="@string/careportal_cgm_label" />
+
             <android.support.v7.widget.GridLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:padding="10dip"
                 app:columnCount="3">
+
                 <Button
                     android:id="@+id/careportal_announcement"
                     style="@style/ButtonSmallFontStyle"
@@ -230,7 +233,8 @@
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="1" />
-				<Button
+
+                <Button
                     android:id="@+id/careportal_openapsoffline"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -244,7 +248,6 @@
                     app:layout_gravity="fill"
                     app:layout_row="1" />
 
-                
 
                 <Button
                     android:id="@+id/careportal_cgmsensorinsert"
@@ -282,13 +285,15 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="15dp"
                 android:text="@string/careportal_pump_label" />
+
             <android.support.v7.widget.GridLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:padding="10dip"
                 app:columnCount="3">
-				<Button
+
+                <Button
                     android:id="@+id/careportal_pumpsitechange"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -330,17 +335,16 @@
                     app:layout_gravity="fill"
                     app:layout_row="0" />
 
-                
 
                 <Button
                     android:id="@+id/careportal_temporarytarget"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:text="@string/careportal_temporarytarget"
                     android:drawableTop="@drawable/icon_cp_cgm_target"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
+                    android:text="@string/careportal_temporarytarget"
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
