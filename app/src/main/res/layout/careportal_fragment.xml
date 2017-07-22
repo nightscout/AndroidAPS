@@ -64,18 +64,20 @@
                     app:layout_row="0" />
 
                 <Button
-                    android:id="@+id/careportal_note"
+                    android:id="@+id/careportal_temporarytarget"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_note"
+                    android:drawableTop="@drawable/icon_cp_cgm_target"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/careportal_note"
+                    android:text="@string/careportal_temporarytarget"
                     app:layout_column="2"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="0" />
+
+
             </android.support.v7.widget.GridLayout>
 
 
@@ -207,32 +209,34 @@
                 app:columnCount="3">
 
                 <Button
-                    android:id="@+id/careportal_announcement"
+                    android:id="@+id/careportal_cgmsensorstart"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_announcement"
+                    android:drawableTop="@drawable/icon_cp_cgm_start"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/careportal_announcement"
+                    android:text="@string/careportal_cgmsensorstart"
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="1" />
 
+
                 <Button
-                    android:id="@+id/careportal_question"
+                    android:id="@+id/careportal_cgmsensorinsert"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_question"
+                    android:drawableTop="@drawable/icon_cp_cgm_insert"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/careportal_question"
+                    android:text="@string/careportal_cgmsensorinsert"
                     app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="1" />
+
 
                 <Button
                     android:id="@+id/careportal_openapsoffline"
@@ -250,29 +254,43 @@
 
 
                 <Button
-                    android:id="@+id/careportal_cgmsensorinsert"
+                    android:id="@+id/careportal_announcement"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_cgm_insert"
+                    android:drawableTop="@drawable/icon_cp_announcement"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/careportal_cgmsensorinsert"
+                    android:text="@string/careportal_announcement"
                     app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="4" />
 
                 <Button
-                    android:id="@+id/careportal_cgmsensorstart"
+                    android:id="@+id/careportal_question"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
                     android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_cgm_start"
+                    android:drawableTop="@drawable/icon_cp_question"
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
-                    android:text="@string/careportal_cgmsensorstart"
+                    android:text="@string/careportal_question"
                     app:layout_column="1"
+                    app:layout_columnWeight="1"
+                    app:layout_gravity="fill"
+                    app:layout_row="4" />
+
+                <Button
+                    android:id="@+id/careportal_note"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="fill_parent"
+                    android:drawableTop="@drawable/icon_cp_note"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/careportal_note"
+                    app:layout_column="2"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="4" />
@@ -337,20 +355,6 @@
 
 
                 <Button
-                    android:id="@+id/careportal_temporarytarget"
-                    style="@style/ButtonSmallFontStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="fill_parent"
-                    android:drawableTop="@drawable/icon_cp_cgm_target"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="@string/careportal_temporarytarget"
-                    app:layout_column="0"
-                    app:layout_columnWeight="1"
-                    app:layout_gravity="fill"
-                    app:layout_row="6" />
-
-                <Button
                     android:id="@+id/careportal_pumpbatterychange"
                     style="@style/ButtonSmallFontStyle"
                     android:layout_width="0dp"
@@ -359,7 +363,7 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/careportal_pumpbatterychange"
-                    app:layout_column="1"
+                    app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="6" />
