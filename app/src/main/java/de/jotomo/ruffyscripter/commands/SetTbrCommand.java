@@ -60,6 +60,15 @@ public class SetTbrCommand implements Command {
 
             boolean tbrPercentInputSuccess = false;
             int tbrPercentInputRetries = 2;
+            // Setting TBR percentage/duration works most of the time. Occassionnally though,
+            // button presses don't take, e.g. we press down 10 times to go from 100% to 0%
+            // but the pump ends on 30%. In that case restarting inputing the TBR, so we start
+            // again and push down 3 times.
+            // Either our timings are of, or the pump sometimes is sluggish. I suspect the later,
+            // based on an error when switching from TBR_SET to TBR_DURATION took more than 1.1s
+            // and 4 menu updates were sent before the menu was finally switched. This happened
+            // around the time when a running TBR was about to run out. So maybe the pump was busy
+            // updating its history records.
             while (!tbrPercentInputSuccess) {
                 try {
                     inputTbrPercentage(scripter);

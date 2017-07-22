@@ -41,6 +41,7 @@ public class BolusCommand implements Command {
 
             boolean bolusAmountInputSuccess = false;
             int bolusAmountInputRetries = 2;
+            // see SetTbrCommand.execute for an explanation why we're looping here
             while (!bolusAmountInputSuccess) {
                 try {
                     inputBolusAmount(scripter);
