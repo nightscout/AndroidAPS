@@ -35,10 +35,11 @@ public class CancelTbrCommand implements Command {
                         MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 30 * 1000));
                 log.debug("active temp basal now:: " +
                         MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()));
+                // TODO keep checking logs to ensure this case only happens because CancelTbrCommand was called
+                // twice by AAPS
                 log.warn("No TBR active to cancel");
                 return new CommandResult()
-                        // Raise a warning about this, until we know it's safe to ignore.
-                        .success(false)
+                        .success(true)
                         // Technically, nothing was enacted, but AAPS needs this to recover
                         // when there was an issue and AAPS thinks a TBR is still active,
                         // so the ComboPlugin can create a TempporaryBasel to mark the TBR
