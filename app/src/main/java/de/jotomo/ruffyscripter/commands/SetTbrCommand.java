@@ -250,8 +250,10 @@ public class SetTbrCommand implements Command {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         scripter.pressCheckKey();
 
-        // we could read remaining duration from MAIN_MENU, but but the time we're here,
-        // we could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED alert"
+        // A "TBR CANCELLED alert" is only raised by the pump when the remaining time is
+        // greater than 60s (displayed as 0:01, the pump goes from there to finished.
+        // We could read the remaining duration from MAIN_MENU, but by the time we're here,
+        // the pmup could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED alert"
         // is raised and if so dismiss it
         long inTwoSeconds = System.currentTimeMillis() + 5 * 1000;
         boolean alertProcessed = false;
