@@ -133,7 +133,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             log.error("Command result: " + localLastCmdResult);
                             PumpState localPumpState = pumpState;
                             if (localPumpState != null && localPumpState.errorMsg != null) {
-                                log.warn("Pump is in error state, displayng; " + localPumpState.errorMsg);
+                                log.warn("Pump is in error state, displaying; " + localPumpState.errorMsg);
                             }
                             long[] vibratePattern = new long[]{1000, 2000, 1000, 2000, 1000};
                             Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);

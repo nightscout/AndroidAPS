@@ -443,6 +443,10 @@ public class RuffyScripter {
                 state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
                 state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
             }
+            // TODO v2, read current base basal rate, which is shown center when no TBR is active.
+            // Check if that holds true when an extended bolus is running.
+            // Add a field to PumpStatus, rather than renaming/overloading tbrRate to mean
+            // either TBR rate or basal rate depending on whether a TBR is active.
         } else if (menuType == MenuType.WARNING_OR_ERROR) {
             state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
         } else if (menuType == MenuType.STOP) {
