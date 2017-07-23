@@ -58,9 +58,6 @@
             <intent-filter>
                 <!-- Receiver from NSClient -->
                 <action android:name="info.nightscout.client.NEW_SGV" />
-                <action android:name="info.nightscout.client.NEW_TREATMENT" />
-                <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
-                <action android:name="info.nightscout.client.REMOVED_TREATMENT" />
                 <action android:name="info.nightscout.client.NEW_PROFILE" />
                 <action android:name="info.nightscout.client.NEW_STATUS" />
                 <action android:name="info.nightscout.client.NEW_MBG" />
