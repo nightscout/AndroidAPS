@@ -118,7 +118,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             } else {
                                 tbrPercentageText.setText("Default basal rate running");
                                 tbrDurationText.setText("");
-                                tbrRateText.setText("" + getPlugin().getBaseBasalRate() + " U/h");
+                                tbrRateText.setText("");
                             }
                             pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg : "");
                         }
