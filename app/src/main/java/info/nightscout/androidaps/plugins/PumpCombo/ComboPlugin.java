@@ -502,6 +502,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         CommandResult commandResult = runCommand(new SetTbrCommand(adjustedPercent, durationInMinutes));
+
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
