@@ -426,6 +426,8 @@ public class RuffyScripter {
         }
     }
 
+    // TODO v2 add remaining info we can extract from the main menu, low battery and low
+    // cartridge warnings, running extended bolus (how does that look if a TBR is active as well?)
     private PumpState readPumpState() {
         PumpState state = new PumpState();
         Menu menu = currentMenu;

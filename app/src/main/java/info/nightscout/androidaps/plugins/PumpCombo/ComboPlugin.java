@@ -519,16 +519,18 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return OPERATION_NOT_SUPPORTED;
     }
 
-    // TODO
-    // cache as much as possible - every time we interact with the pump it vibrates at the end
+    // Returns the state of the pump as it was received during last pump comms.
+    // TODO v2 add battery, reservoir info when we start reading that and clean up the code
     @Override
     public JSONObject getJSONStatus() {
-        /// TODO not doing that just yet
-        if (1 == 1) return null;
-        JSONObject pump = new JSONObject();
-        JSONObject status = new JSONObject();
-        JSONObject extended = new JSONObject();
+        if (lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+            return null;
+        }
+
         try {
+            JSONObject pump = new JSONObject();
+            JSONObject status = new JSONObject();
+            JSONObject extended = new JSONObject();
             status.put("status", statusSummary);
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
@@ -537,22 +539,30 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             }
             status.put("timestamp", lastCmdTime);
 
-            PumpState ps = this.pumpState;
+            PumpState ps = pumpState;
             if (ps != null) {
-                extended.put("TempBasalAbsoluteRate", ps.tbrRate);
-                // TODO best guess at this point ...
-                extended.put("TempBasalStart", DateUtil.dateAndTimeString(System.currentTimeMillis() - (ps.tbrRemainingDuration - 15 * 60 * 1000)));
-                extended.put("TempBasalRemaining", ps.tbrRemainingDuration);
+                if (ps.tbrActive) {
+                    extended.put("TempBasalAbsoluteRate", ps.tbrRate);
+                    extended.put("TempBasalPercent", ps.tbrPercent);
+                    extended.put("TempBasalRemaining", ps.tbrRemainingDuration);
+                }
+                if (ps.errorMsg != null) {
+                    extended.put("ErrorMessage", ps.errorMsg);
+                }
             }
 
 // more info here .... look at dana plugin
 
             pump.put("status", status);
             pump.put("extended", extended);
-            pump.put("clock", DateUtil.toISOString(new Date()));
-        } catch (JSONException e) {
+            pump.put("clock", DateUtil.toISOString(lastCmdTime));
+
+            return pump;
+        } catch (Exception e) {
+            log.warn("Failed to gather device status for upload", e);
         }
-        return pump;
+
+        return null;
     }
 
     // TODO
