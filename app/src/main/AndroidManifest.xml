@@ -96,14 +96,6 @@
                 <action android:name="info.nightscout.client.DBACCESS" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".plugins.NSClientInternal.receivers.AckAlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.ACK_ALARM" />
-            </intent-filter>
-        </receiver>
 
         <!-- Service processing incomming data -->
         <service

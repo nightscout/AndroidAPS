@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.InsulinFastactingProlonged.InsulinFast
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
@@ -84,7 +85,7 @@ public class MainApp extends Application {
 
     private static DataReceiver dataReceiver = new DataReceiver();
     private static NSAlarmReceiver alarmReciever = new NSAlarmReceiver();
-
+    private static AckAlarmReceiver ackAlarmReciever = new AckAlarmReceiver();
     private LocalBroadcastManager lbm;
 
     @Override
@@ -188,9 +189,8 @@ public class MainApp extends Application {
         lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_CLEAR_ALARM));
         lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_URGENT_ALARM));
 
-
         //register ack alarm
-
+        lbm.registerReceiver(ackAlarmReciever, new IntentFilter(Intents.ACTION_ACK_ALARM));
     }
 
     private void startKeepAliveService() {
