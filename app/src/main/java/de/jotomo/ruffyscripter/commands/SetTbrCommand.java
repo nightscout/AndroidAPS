@@ -259,10 +259,12 @@ public class SetTbrCommand implements Command {
         boolean alertProcessed = false;
         while (System.currentTimeMillis() < inTwoSeconds && !alertProcessed) {
             if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                // check the raised alarm is TBR CANCELLED.
-                // note that the message is permanently displayed, while the error code is blinking.
-                // wait till the error code can be read results in the code hanging, despite
-                // menu updates coming in, so just check the message
+                // Check the raised alarm is TBR CANCELLED, so we're not accidentally cancelled
+                // a different that might be raised at the same time.
+                // Note that the message is permanently displayed, while the error code is blinking.
+                // A wait till the error code can be read results in the code hanging, despite
+                // menu updates coming in, so just check the message.
+                // TODO v2 this only works when the pump's language is English
                 String errorMsg = (String) scripter.currentMenu.getAttribute(MenuAttribute.MESSAGE);
                 if (!errorMsg.equals("TBR CANCELLED")) {
                     throw new CommandException().success(false).enacted(false)
