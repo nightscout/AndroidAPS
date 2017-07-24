@@ -114,6 +114,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.isRefillingCapable = true;
     }
 
+    /**
+     * The alerter frequently checks the result of the last executed command via the lastCmdResult
+     * field and shows a notification with sound and vibration if an error occurred.
+     * More details on the error can then be looked up in the Combo tab.
+     *
+     * The alarm is re-raised every 5 minutes for as long as the error persist. As soon
+     * as a command succeeds no more new alerts are raised.
+     */
     private void startAlerter() {
         new Thread(new Runnable() {
             @Override
@@ -161,40 +169,41 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private void bindRuffyService() {
         Context context = MainApp.instance().getApplicationContext();
+        boolean boundSucceeded = false;
 
-        Intent intent = new Intent()
-                .setComponent(new ComponentName(
-                        // this must be the base package of the app (check package attribute in
-                        // manifest element in the manifest file of the providing app)
-                        "org.monkey.d.ruffy.ruffy",
-                        // full path to the driver
-                        // in the logs this service is mentioned as (note the slash)
-                        // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
-                        "org.monkey.d.ruffy.ruffy.driver.Ruffy"
-                ));
-        context.startService(intent);
+        try {
+            Intent intent = new Intent()
+                    .setComponent(new ComponentName(
+                            // this must be the base package of the app (check package attribute in
+                            // manifest element in the manifest file of the providing app)
+                            "org.monkey.d.ruffy.ruffy",
+                            // full path to the driver
+                            // in the logs this service is mentioned as (note the slash)
+                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
+                            "org.monkey.d.ruffy.ruffy.driver.Ruffy"
+                    ));
+            context.startService(intent);
 
-        mRuffyServiceConnection = new ServiceConnection() {
+            mRuffyServiceConnection = new ServiceConnection() {
 
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
-                log.debug("ruffy serivce connected");
-            }
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
+                    log.debug("ruffy serivce connected");
+                }
 
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                log.debug("ruffy service disconnected");
-            }
-        };
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    log.debug("ruffy service disconnected");
+                }
+            };
+            boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
+        } catch (Exception e) {
+            log.error("Binding to ruffy service failed", e);
+        }
 
-        boolean success = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
-        if (!success) {
-            log.error("Binding to ruffy service failed");
-            // AAPS will still crash since it continues trying to access the pump, even when isInitalized
-            // returns false and isBusy returns true; this will however not crash the alerter
-            // which will raise an exception. Not really ideal.
-            statusSummary = "Failed to bind to ruffy service";
+        if (!boundSucceeded) {
+            statusSummary = "No connection to ruffy. Pump control not available.";
         }
     }
 
@@ -277,7 +286,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isBusy() {
-        return ruffyScripter.isPumpBusy();
+        return ruffyScripter == null || ruffyScripter.isPumpBusy();
     }
 
     // TODO
@@ -304,7 +313,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         // if Android is sluggish this might get called before ruffy is bound
         if (ruffyScripter == null) {
-            log.debug("Rejecting call to RefreshDataFromPump: ruffy service not bound yet");
+            log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
             return;
         }
 
@@ -386,6 +395,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private CommandResult runCommand(Command command) {
+        if (ruffyScripter == null) {
+            String msg = "No connection to ruffy. Pump control not available.";
+            statusSummary = msg;
+            return new CommandResult().message(msg);
+        }
+
         statusSummary = "Executing " + command;
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
@@ -393,10 +408,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!commandResult.success && commandResult.exception != null) {
             log.error("CommandResult has exception, rebinding ruffy service", commandResult.exception);
 
-            unbindRuffyService();
-            SystemClock.sleep(5000);
-            bindRuffyService();
-            SystemClock.sleep(5000);
+            // attempt to rebind the ruffy service, will start ruffy again if it crashed
+            try {
+                unbindRuffyService();
+                SystemClock.sleep(5000);
+                bindRuffyService();
+                SystemClock.sleep(5000);
+            } catch (Exception e) {
+                String msg = "No connection to ruffy. Pump control not available.";
+                statusSummary = msg;
+                return new CommandResult().message(msg);
+            }
 
             if (ruffyScripter == null) {
                 log.error("Rebinding failed");
