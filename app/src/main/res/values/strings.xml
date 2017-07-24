@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="treatmentssafety_title">Tratments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -691,4 +691,9 @@
     <string name="combopump_shortname">COMBO</string>
     <string name="ns_localbroadcasts">Enable loacal broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
+	<string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
+	<string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
+	<string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
+	<string name="careportal_pump_label">PUMP</string>
 </resources>
+
