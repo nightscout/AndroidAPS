@@ -56,8 +56,6 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <!-- Receiver from NSClient -->
-                <action android:name="info.nightscout.client.NEW_CAL" />
                 <!-- Receive new SMS messages -->
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
