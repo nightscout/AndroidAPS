@@ -300,6 +300,7 @@ public class RuffyScripter {
             // to come up. So for v1, just wait. This happens rarely, so no overly fancy logic needed.
             // TODO v2 see if we can do this cleaner, use isDisconnected as well maybe. GL#34.
             if (System.currentTimeMillis() < lastDisconnected + 10 * 1000) {
+                log.debug("Waiting 10s to let pump settle after recent disconnect");
                 SystemClock.sleep(10 * 1000);
             }
 
