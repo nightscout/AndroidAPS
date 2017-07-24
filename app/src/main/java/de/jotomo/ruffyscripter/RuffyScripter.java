@@ -46,6 +46,7 @@ public class RuffyScripter {
     private volatile Command activeCmd = null;
 
     private volatile boolean connected = false;
+    private volatile long lastDisconnected = 0;
 
     public RuffyScripter(final IRuffyService ruffyService) {
         this.ruffyService = ruffyService;
@@ -72,7 +73,9 @@ public class RuffyScripter {
                         lastDisconnect = now;
                         ruffyService.doRTDisconnect();
                         connected = false;
-                        SystemClock.sleep(1000);
+                        lastDisconnect = System.currentTimeMillis();
+                        // don't attempt anything fancy in the next 10s, let the pump settle
+                        SystemClock.sleep(10 * 1000);
                     }
                 } catch (DeadObjectException doe) {
                     // TODO do we need to catch this exception somewhere else too? right now it's
@@ -289,6 +292,15 @@ public class RuffyScripter {
             if (menuUpdateRecentlyReceived) {
                 log.debug("Pump is sending us menu updates, so we're connected");
                 return;
+            }
+
+            // Occasionally the rtConnect is called a few seconds after the rtDisconnected
+            // callback was called, in response to your disconnect request via doRtDisconnect.
+            // When connecting again shortly after disconnecting, the pump sometimes fails
+            // to come up. So for v1, just wait. This happens rarely, so no overly fancy logic needed.
+            // TODO v2 see if we can do this cleaner, use isDisconnected as well maybe. GL#34.
+            if (System.currentTimeMillis() < lastDisconnected + 10 * 1000) {
+                SystemClock.sleep(10 * 1000);
             }
 
             boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
