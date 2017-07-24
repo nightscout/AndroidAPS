@@ -64,6 +64,7 @@ import info.nightscout.androidaps.plugins.Wear.WearFragment;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
+import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.utils.NSUpload;
 import io.fabric.sdk.android.Fabric;
 
@@ -82,6 +83,8 @@ public class MainApp extends Application {
     private static ArrayList<PluginBase> pluginsList = null;
 
     private static DataReceiver dataReceiver = new DataReceiver();
+    private static NSAlarmReceiver alarmReciever = new NSAlarmReceiver();
+
     private LocalBroadcastManager lbm;
 
     @Override
@@ -178,6 +181,15 @@ public class MainApp extends Application {
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_MBG));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_DEVICESTATUS));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_CAL));
+
+        //register alarms
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_ALARM));
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_ANNOUNCEMENT));
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_CLEAR_ALARM));
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_URGENT_ALARM));
+
+
+        //register ack alarm
 
     }
 

@@ -66,20 +66,6 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".receivers.NSAlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <!-- Receiver from NSClient -->
-                <action android:name="info.nightscout.client.ANNOUNCEMENT" />
-                <action android:name="info.nightscout.client.ALARM" />
-                <action android:name="info.nightscout.client.URGENT_ALARM" />
-                <action android:name="info.nightscout.client.CLEAR_ALARM" />
-            </intent-filter>
-
-        </receiver>
-
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
