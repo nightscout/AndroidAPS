@@ -176,10 +176,7 @@ public class MainApp extends Application {
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_PROFILE));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_STATUS));
         lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_MBG));
-
-
-
-
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_DEVICESTATUS));
     }
 
     private void startKeepAliveService() {
