@@ -463,6 +463,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             percent = rounded;
         }
 
+        //FIXME maybe needs a flag in pump config?
+        percent = percent > 500 ? 500 : percent;
+
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
