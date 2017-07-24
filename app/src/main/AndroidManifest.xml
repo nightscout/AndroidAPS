@@ -57,7 +57,6 @@
             android:exported="true">
             <intent-filter>
                 <!-- Receiver from NSClient -->
-                <action android:name="info.nightscout.client.NEW_MBG" />
                 <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
                 <action android:name="info.nightscout.client.NEW_CAL" />
                 <!-- Receive new SMS messages -->
