@@ -159,7 +159,7 @@ public class NSClientInternalPlugin implements PluginBase {
         MainApp.bus().post(new EventNSClientUpdateGUI());
     }
 
-    void clearLog() {
+    synchronized void clearLog() {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -169,7 +169,7 @@ public class NSClientInternalPlugin implements PluginBase {
         });
     }
 
-    private void addToLog(final EventNSClientNewLog ev) {
+    private synchronized void addToLog(final EventNSClientNewLog ev) {
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -183,7 +183,7 @@ public class NSClientInternalPlugin implements PluginBase {
         });
     }
 
-    static void updateLog() {
+    static synchronized void updateLog() {
         try {
             StringBuilder newTextLog = new StringBuilder();
             List<EventNSClientNewLog> temporaryList = new ArrayList<>(listLog);
