@@ -687,7 +687,7 @@
     <string name="cpp_valuesnotstored">Values not stored!</string>
     <string name="wear_overviewnotifications">Overview Notifications</string>
     <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
-    <string name="ns_localbroadcasts">Enable loacal broadcasts to other apps (like xDrip).</string>
+    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
 	<string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
 	<string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
