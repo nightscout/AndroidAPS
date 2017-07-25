@@ -649,6 +649,7 @@
     <string name="openapsama_autosens_period">Interval for autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
     <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
+    <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
     <string name="ratio_short">RAT</string>
     <string name="key_do_not_track_profile_switch">do_not_track_profile_switch</string>
     <string name="do_not_track_profile_switch">Ignore profile switch events</string>

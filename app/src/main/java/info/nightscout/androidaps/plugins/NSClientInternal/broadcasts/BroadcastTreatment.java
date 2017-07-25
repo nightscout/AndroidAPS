@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.utils.SP;
@@ -38,7 +39,7 @@ public class BroadcastTreatment {
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
-        if(SP.getBoolean("nsclient_localbroadcasts", true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
             bundle = new Bundle();
             bundle.putString("treatment", treatment.getData().toString());
             bundle.putBoolean("delta", isDelta);
@@ -62,7 +63,7 @@ public class BroadcastTreatment {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if(SP.getBoolean("nsclient_localbroadcasts", true)){
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)){
             splitted = splitArray(treatments);
             for (JSONArray part: splitted) {
                 Bundle bundle = new Bundle();
@@ -87,7 +88,7 @@ public class BroadcastTreatment {
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
 
-        if(SP.getBoolean("nsclient_localbroadcasts", true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
             bundle = new Bundle();
             bundle.putString("treatment", treatment.toString());
             bundle.putBoolean("delta", isDelta);
@@ -111,7 +112,7 @@ public class BroadcastTreatment {
             LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
         }
 
-        if(SP.getBoolean("nsclient_localbroadcasts", true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
             splitted = splitArray(treatments);
             for (JSONArray part : splitted) {
                 Bundle bundle = new Bundle();
@@ -136,7 +137,7 @@ public class BroadcastTreatment {
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
 
-        if(SP.getBoolean("nsclient_localbroadcasts", true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
             bundle = new Bundle();
             bundle.putString("treatment", treatment.toString());
             bundle.putBoolean("delta", isDelta);
@@ -158,7 +159,7 @@ public class BroadcastTreatment {
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
 
-        if(SP.getBoolean("nsclient_localbroadcasts", true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
             bundle = new Bundle();
             bundle.putString("treatments", treatments.toString());
             bundle.putBoolean("delta", isDelta);

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.utils.SP;
 
@@ -30,7 +31,7 @@ public class BroadcastUrgentAlarm {
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         LocalBroadcastManager.getInstance(MainApp.instance()).sendBroadcast(intent);
 
-        if(SP.getBoolean("nsclient_localbroadcasts", true)) {
+        if(SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) {
             bundle = new Bundle();
             bundle.putString("data", urgentalarm.toString());
             intent = new Intent(Intents.ACTION_URGENT_ALARM);
