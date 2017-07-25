@@ -506,7 +506,7 @@ public class DataService extends IntentService {
             MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
         }
 
-        if (trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
             long date = trJson.getLong("mills");
             long now = System.currentTimeMillis();
             if (date > now - 15 * 60 * 1000L && trJson.has("notes")) {
