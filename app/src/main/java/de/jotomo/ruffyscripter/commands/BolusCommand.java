@@ -39,25 +39,8 @@ public class BolusCommand implements Command {
         try {
             enterBolusMenu(scripter);
 
-            boolean bolusAmountInputSuccess = false;
-            int bolusAmountInputRetries = 2;
-            // see SetTbrCommand.execute for an explanation why we're looping here
-            while (!bolusAmountInputSuccess) {
-                try {
-                    inputBolusAmount(scripter);
-                    // TODO v2 this call can probably be removed by now
-                    SystemClock.sleep(750);
-                    verifyDisplayedBolusAmount(scripter);
-                    bolusAmountInputSuccess = true;
-                } catch (CommandException e) {
-                    if (bolusAmountInputRetries >= 0) {
-                        log.warn("Failed to set bolus amount, retrying", e);
-                        bolusAmountInputRetries--;
-                    } else {
-                        throw e;
-                    }
-                }
-            }
+            inputBolusAmount(scripter);
+            verifyDisplayedBolusAmount(scripter);
 
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
@@ -112,6 +95,9 @@ public class BolusCommand implements Command {
             scripter.pressUpKey();
             SystemClock.sleep(100);
         }
+        // Give the pump time to finish any scrolling that might still be going on, can take
+        // up to 1100ms. Plus some extra time to be sure
+        SystemClock.sleep(2000);
     }
 
     private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
@@ -120,6 +106,14 @@ public class BolusCommand implements Command {
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
+        }
+
+        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        SystemClock.sleep(2000);
+        double refreshedDisplayedBolus = readDisplayedBolusAmount(scripter);
+        if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
+            throw new CommandException().message("Failed to set bolus: bolus changed after input stopped from "
+                    + displayedBolus + " -> " + refreshedDisplayedBolus);
         }
     }
 
