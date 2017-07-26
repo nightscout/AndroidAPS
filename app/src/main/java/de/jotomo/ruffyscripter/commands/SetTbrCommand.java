@@ -125,7 +125,7 @@ public class SetTbrCommand implements Command {
             log.debug("Push #" + (i + 1));
         }
         // Give the pump time to finish any scrolling that might still be going on, can take
-        // up to 1100s. Plus some extra time to be sure
+        // up to 1100ms. Plus some extra time to be sure
         SystemClock.sleep(2000);
     }
 
@@ -190,7 +190,7 @@ public class SetTbrCommand implements Command {
             log.debug("Push #" + (i + 1));
         }
         // Give the pump time to finish any scrolling that might still be going on, can take
-        // up to 1100s. Plus some extra time to be sure
+        // up to 1100ms. Plus some extra time to be sure
         SystemClock.sleep(2000);
     }
 
