@@ -621,19 +621,23 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
 
-    public void doTestAction() {
-        ToastUtils.showToastInUiThread(MainApp.instance(), "TestAction called");
+    public void updateCapabilities() {
 
         // if Android is sluggish this might get called before ruffy is bound
         if (ruffyScripter == null) {
             log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
-            ToastUtils.showToastInUiThread(MainApp.instance(), "Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
-
+            ToastUtils.showToastInUiThread(MainApp.instance(), "Ruffy not initialized.");
+            return;
+        }
+        if (isBusy()){
+            ToastUtils.showToastInUiThread(MainApp.instance(), "Pump busy!");
             return;
         }
         CommandResult result = runCommand(new DetermineCapabilitiesCommand());
         if (result.success){
-            ToastUtils.showToastInUiThread(MainApp.instance(), "max%: " + result.capabilities.maxTempPercent);
+            //TODO: write to settings result.capabilities.maxTempPercent
+            pumpDescription.maxTempPercent = (int) result.capabilities.maxTempPercent;
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
         } else {
             ToastUtils.showToastInUiThread(MainApp.instance(), "No success with test Command.");
         }
