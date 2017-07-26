@@ -172,7 +172,7 @@ public class SetTbrCommand implements Command {
     private void verifyDisplayedTbrPercentage(RuffyScripter scripter) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long displayedPercentage = readDisplayedTbrPercentage(scripter);
-        if (displayedPercentage != this.percentage) {
+        if (displayedPercentage != percentage) {
             log.debug("Final displayed TBR percentage: " + displayedPercentage);
             throw new CommandException().message("Failed to set TBR percentage");
         }
