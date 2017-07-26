@@ -3,6 +3,7 @@ package de.jotomo.ruffyscripter.commands;
 import java.util.Date;
 
 import de.jotomo.ruffyscripter.History;
+import de.jotomo.ruffyscripter.PumpCapabilities;
 import de.jotomo.ruffyscripter.PumpState;
 
 public class CommandResult {
@@ -13,6 +14,7 @@ public class CommandResult {
     public String message;
     public PumpState state;
     public History history;
+    public PumpCapabilities capabilities;
 
     public CommandResult() {
     }
@@ -49,6 +51,11 @@ public class CommandResult {
 
     public CommandResult history(History history) {
         this.history = history;
+        return  this;
+    }
+
+    public CommandResult capabilities(PumpCapabilities capabilities) {
+        this.capabilities = capabilities;
         return  this;
     }
 

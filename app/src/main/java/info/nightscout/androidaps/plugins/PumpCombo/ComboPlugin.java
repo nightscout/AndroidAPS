@@ -29,6 +29,7 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
+import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffyscripter.PumpState;
@@ -47,6 +48,7 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
@@ -617,6 +619,27 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public void onStatusEvent(final EventAppExit e) {
         unbindRuffyService();
     }
+
+
+    public void doTestAction() {
+        ToastUtils.showToastInUiThread(MainApp.instance(), "TestAction called");
+
+        // if Android is sluggish this might get called before ruffy is bound
+        if (ruffyScripter == null) {
+            log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
+            ToastUtils.showToastInUiThread(MainApp.instance(), "Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
+
+            return;
+        }
+        CommandResult result = runCommand(new DetermineCapabilitiesCommand());
+        if (result.success){
+            ToastUtils.showToastInUiThread(MainApp.instance(), "max%: " + result.capabilities.maxTempPercent);
+        } else {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "No success with test Command.");
+        }
+    }
+
+
 }
 
 

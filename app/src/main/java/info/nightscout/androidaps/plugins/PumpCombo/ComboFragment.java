@@ -33,6 +33,8 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     }
 
     private Button refresh;
+    private Button testButton;
+
     private TextView statusText;
 
     private TextView tbrPercentageText;
@@ -50,6 +52,8 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
+        testButton = (Button) view.findViewById(R.id.combo_testaction);
+
         statusText = (TextView) view.findViewById(R.id.combo_status);
 
         tbrPercentageText = (TextView) view.findViewById(R.id.combo_tbr_percentage);
@@ -62,6 +66,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         lastCmdResultText = (TextView) view.findViewById(R.id.combo_last_command_result);
 
         refresh.setOnClickListener(this);
+        testButton.setOnClickListener(this);
 
         updateGUI();
         return view;
@@ -96,6 +101,14 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                     }
                 });
                 thread.start();
+                break;
+            case R.id.combo_testaction:
+                (new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPlugin().doTestAction();
+                    }
+                })).start();
                 break;
         }
     }
