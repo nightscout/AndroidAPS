@@ -189,6 +189,7 @@ public class ActionStringHandler {
             boolean useBG = Boolean.parseBoolean(act[2]);
             boolean useBolusIOB = Boolean.parseBoolean(act[3]);
             boolean useBasalIOB = Boolean.parseBoolean(act[4]);
+            int percentage = Integer.parseInt(act[5]);
 
             Profile profile = MainApp.getConfigBuilder().getProfile();
             if (profile == null) {
@@ -203,7 +204,7 @@ public class ActionStringHandler {
             }
             DecimalFormat format = new DecimalFormat("0.00");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, useBolusIOB, useBasalIOB, false, false);
+            bolusWizard.doCalc(profile, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
 
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(bolusWizard.calculatedTotalInsulin);
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
@@ -233,6 +234,9 @@ public class ActionStringHandler {
                 rMessage += "\nBolus IOB: " + format.format(bolusWizard.insulingFromBolusIOB) + "U";
             if (useBasalIOB)
                 rMessage += "\nBasal IOB: " + format.format(bolusWizard.insulingFromBasalsIOB) + "U";
+            if(percentage != 100){
+                rMessage += "\nPercentage: " +format.format(bolusWizard.totalBeforePercentageAdjustment) + "U * " + percentage + "% -> ~" + format.format(bolusWizard.calculatedTotalInsulin) + "U";
+            }
 
             lastBolusWizard = bolusWizard;
 
