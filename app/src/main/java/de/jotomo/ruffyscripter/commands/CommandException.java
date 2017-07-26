@@ -23,6 +23,11 @@ public class CommandException extends RuntimeException {
         return this;
     }
 
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
     public CommandException message(String message) {
         this.message = message;
         return this;
