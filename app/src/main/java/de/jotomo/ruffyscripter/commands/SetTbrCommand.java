@@ -297,7 +297,7 @@ public class SetTbrCommand implements Command {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         // new TBR set; percentage and duration must be displayed ...
         if (!scripter.currentMenu.attributes().contains(MenuAttribute.TBR) ||
-                !scripter.currentMenu.attributes().contains(MenuAttribute.TBR)) {
+                !scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME)) {
             throw new CommandException().message("Setting TBR failed, according to MAIN_MENU no TBR is active");
         }
         Double mmTbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
