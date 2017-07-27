@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -47,6 +48,9 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     private TextView lastCmdResultText;
 
     private TextView tbrCapabilityText;
+    private TextView pumpstateBatteryText;
+    private TextView insulinstateText;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,6 +71,8 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         lastCmdTimeText = (TextView) view.findViewById(R.id.combo_last_command_time);
         lastCmdResultText = (TextView) view.findViewById(R.id.combo_last_command_result);
         tbrCapabilityText = (TextView) view.findViewById(R.id.combo_tbr_capability);
+        pumpstateBatteryText = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
+        insulinstateText = (TextView) view.findViewById(R.id.combo_insulinstate);
 
         refresh.setOnClickListener(this);
         updateCapabilities.setOnClickListener(this);
@@ -114,7 +120,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    updateCapabilities.setText("{fa-bluetooth}");
+                                    updateCapabilities.setText("{fa-bluetooth spin}");
                                 }
                             });
 
@@ -172,6 +178,25 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                         } else {
                             lastCmdResultText.setText("");
                         }
+                        if(getPlugin().pumpState.lowBattery){
+                            pumpstateBatteryText.setText("{fa-battery-empty}");
+                            pumpstateBatteryText.setTextColor(Color.RED);
+                        } else {
+                            pumpstateBatteryText.setText("{fa-battery-three-quarters}");
+                            pumpstateBatteryText.setTextColor(Color.WHITE);
+                        }
+                        switch (getPlugin().pumpState.insulinState){
+                            case 0: insulinstateText.setText("ok");
+                                insulinstateText.setTextColor(Color.WHITE);
+                                break;
+                            case 1: insulinstateText.setText("low");
+                                insulinstateText.setTextColor(Color.YELLOW);
+                                break;
+                            case 2: insulinstateText.setText("empty");
+                                insulinstateText.setTextColor(Color.RED);
+                                break;
+                        }
+
 
                     }
                     tbrCapabilityText.setText(getPlugin().getPumpDescription().maxTempPercent + "%");
