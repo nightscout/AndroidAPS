@@ -325,7 +325,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         if (!reason.toLowerCase().contains("user")
                 && lastCmdTime.getTime() > 0
-                && System.currentTimeMillis() > lastCmdTime.getTime() + 60 * 1000) {
+                && System.currentTimeMillis() < lastCmdTime.getTime() + 60 * 1000) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
             runCommand(new ReadPumpStateCommand());
