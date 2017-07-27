@@ -39,25 +39,8 @@ public class BolusCommand implements Command {
         try {
             enterBolusMenu(scripter);
 
-            boolean bolusAmountInputSuccess = false;
-            int bolusAmountInputRetries = 2;
-            // see SetTbrCommand.execute for an explanation why we're looping here
-            while (!bolusAmountInputSuccess) {
-                try {
-                    inputBolusAmount(scripter);
-                    // TODO v2 this call can probably be removed by now
-                    SystemClock.sleep(750);
-                    verifyDisplayedBolusAmount(scripter);
-                    bolusAmountInputSuccess = true;
-                } catch (CommandException e) {
-                    if (bolusAmountInputRetries >= 0) {
-                        log.warn("Failed to set bolus amount, retrying", e);
-                        bolusAmountInputRetries--;
-                    } else {
-                        throw e;
-                    }
-                }
-            }
+            inputBolusAmount(scripter);
+            verifyDisplayedBolusAmount(scripter);
 
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
@@ -87,6 +70,35 @@ public class BolusCommand implements Command {
                     "Bolus delivery did not complete as expected. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
+            // read last bolus record; those menus display static data and therefore
+            // only a single menu update is sent
+            scripter.navigateToMenu(MenuType.MY_DATA_MENU);
+            scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
+            scripter.pressCheckKey();
+            if (scripter.currentMenu.getType() != MenuType.BOLUS_DATA) {
+                scripter.waitForMenuUpdate();
+            }
+
+            if (!scripter.currentMenu.attributes().contains(MenuAttribute.BOLUS)) {
+                throw new CommandException().success(false).enacted(true)
+                        .message("Bolus was delivered, but unable to confirm it with history record");
+            }
+
+            double lastBolusInHistory = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+            if (Math.abs(bolus - lastBolusInHistory) > 0.05) {
+                throw new CommandException().success(false).enacted(true)
+                        .message("Last bolus shows " + lastBolusInHistory
+                                + " U delievered, but " + bolus + " U were requested");
+            }
+            log.debug("Bolus record in history confirms delivered bolus");
+
+            // leave menu to go back to main menu
+            scripter.pressCheckKey();
+            scripter.waitForMenuToBeLeft(MenuType.BOLUS_DATA);
+            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
+                    "Bolus was correctly delivered and checked against history, but we "
+                            + "did not return the main menu successfully.");
+
             return new CommandResult().success(true).enacted(true)
                     .message(String.format(Locale.US, "Delivered %02.1f U", bolus));
         } catch (CommandException e) {
@@ -112,6 +124,9 @@ public class BolusCommand implements Command {
             scripter.pressUpKey();
             SystemClock.sleep(100);
         }
+        // Give the pump time to finish any scrolling that might still be going on, can take
+        // up to 1100ms. Plus some extra time to be sure
+        SystemClock.sleep(2000);
     }
 
     private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
@@ -120,6 +135,14 @@ public class BolusCommand implements Command {
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
+        }
+
+        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        SystemClock.sleep(2000);
+        double refreshedDisplayedBolus = readDisplayedBolusAmount(scripter);
+        if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
+            throw new CommandException().message("Failed to set bolus: bolus changed after input stopped from "
+                    + displayedBolus + " -> " + refreshedDisplayedBolus);
         }
     }
 

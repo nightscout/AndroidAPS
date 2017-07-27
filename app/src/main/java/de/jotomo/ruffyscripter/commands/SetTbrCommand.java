@@ -57,34 +57,8 @@ public class SetTbrCommand implements Command {
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
         try {
             enterTbrMenu(scripter);
-
-            boolean tbrPercentInputSuccess = false;
-            int tbrPercentInputRetries = 2;
-            // Setting TBR percentage/duration works most of the time. Occassionnally though,
-            // button presses don't take, e.g. we press down 10 times to go from 100% to 0%
-            // but the pump ends on 30%. In that case restarting inputing the TBR, so we start
-            // again and push down 3 times.
-            // Either our timings are of, or the pump sometimes is sluggish. I suspect the later,
-            // based on an error when switching from TBR_SET to TBR_DURATION took more than 1.1s
-            // and 4 menu updates were sent before the menu was finally switched. This happened
-            // around the time when a running TBR was about to run out. So maybe the pump was busy
-            // updating its history records.
-            while (!tbrPercentInputSuccess) {
-                try {
-                    inputTbrPercentage(scripter);
-                    // TODO v2 this can probably be removed by now
-                    SystemClock.sleep(750);
-                    verifyDisplayedTbrPercentage(scripter);
-                    tbrPercentInputSuccess = true;
-                } catch (CommandException e) {
-                    if (tbrPercentInputRetries >= 0) {
-                        log.warn("Setting TBR percentage failed, retrying", e);
-                        tbrPercentInputRetries--;
-                    } else {
-                        throw e;
-                    }
-                }
-            }
+            inputTbrPercentage(scripter);
+            verifyDisplayedTbrPercentage(scripter);
 
             if (percentage == 100) {
                 cancelTbrAndConfirmCancellationWarning(scripter);
@@ -95,25 +69,8 @@ public class SetTbrCommand implements Command {
                 scripter.waitForMenuUpdate();
                 scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
-                boolean tbrDurationSuccess = false;
-                int tbrDurationRetries = 2;
-                // see above why we loop here
-                while (!tbrDurationSuccess) {
-                    try {
-                        inputTbrDuration(scripter);
-                        // TODO v2 this can probably be removed by now
-                        SystemClock.sleep(750);
-                        verifyDisplayedTbrDuration(scripter);
-                        tbrDurationSuccess = true;
-                    } catch (CommandException e) {
-                        if (tbrDurationRetries >= 0) {
-                            log.warn("Setting TBR duration failed, retrying", e);
-                            tbrDurationRetries--;
-                        } else {
-                            throw e;
-                        }
-                    }
-                }
+                inputTbrDuration(scripter);
+                verifyDisplayedTbrDuration(scripter);
 
                 // confirm TBR
                 scripter.pressCheckKey();
@@ -167,14 +124,26 @@ public class SetTbrCommand implements Command {
             SystemClock.sleep(100);
             log.debug("Push #" + (i + 1));
         }
+        // Give the pump time to finish any scrolling that might still be going on, can take
+        // up to 1100ms. Plus some extra time to be sure
+        SystemClock.sleep(2000);
     }
 
     private void verifyDisplayedTbrPercentage(RuffyScripter scripter) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long displayedPercentage = readDisplayedTbrPercentage(scripter);
-        if (displayedPercentage != this.percentage) {
+        if (displayedPercentage != percentage) {
             log.debug("Final displayed TBR percentage: " + displayedPercentage);
             throw new CommandException().message("Failed to set TBR percentage");
+        }
+
+        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        SystemClock.sleep(2000);
+        long refreshedDisplayedTbrPecentage = readDisplayedTbrPercentage(scripter);
+        if (displayedPercentage != refreshedDisplayedTbrPecentage) {
+            throw new CommandException().message("Failed to set TBR percentage: " +
+                    "percentage changed after input stopped from "
+                    + displayedPercentage + " -> " + refreshedDisplayedTbrPecentage);
         }
     }
 
@@ -220,6 +189,9 @@ public class SetTbrCommand implements Command {
             SystemClock.sleep(100);
             log.debug("Push #" + (i + 1));
         }
+        // Give the pump time to finish any scrolling that might still be going on, can take
+        // up to 1100ms. Plus some extra time to be sure
+        SystemClock.sleep(2000);
     }
 
     private void verifyDisplayedTbrDuration(RuffyScripter scripter) {
@@ -228,6 +200,15 @@ public class SetTbrCommand implements Command {
         if (displayedDuration != duration) {
             log.debug("Final displayed TBR duration: " + displayedDuration);
             throw new CommandException().message("Failed to set TBR duration");
+        }
+
+        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        SystemClock.sleep(2000);
+        long refreshedDisplayedTbrDuration = readDisplayedTbrDuration(scripter);
+        if (displayedDuration != refreshedDisplayedTbrDuration) {
+            throw new CommandException().message("Failed to set TBR duration: " +
+                    "duration changed after input stopped from "
+                    + displayedDuration + " -> " + refreshedDisplayedTbrDuration);
         }
     }
 
@@ -253,14 +234,14 @@ public class SetTbrCommand implements Command {
         // A "TBR CANCELLED alert" is only raised by the pump when the remaining time is
         // greater than 60s (displayed as 0:01, the pump goes from there to finished.
         // We could read the remaining duration from MAIN_MENU, but by the time we're here,
-        // the pmup could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED alert"
+        // the pumup could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
         // is raised and if so dismiss it
-        long inTwoSeconds = System.currentTimeMillis() + 5 * 1000;
+        long inFiveSeconds = System.currentTimeMillis() + 5 * 1000;
         boolean alertProcessed = false;
-        while (System.currentTimeMillis() < inTwoSeconds && !alertProcessed) {
+        while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
             if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                // Check the raised alarm is TBR CANCELLED, so we're not accidentally cancelled
-                // a different that might be raised at the same time.
+                // Check the raised alarm is TBR CANCELLED, so we're not accidentally cancelling
+                // a different alarm that might be raised at the same time.
                 // Note that the message is permanently displayed, while the error code is blinking.
                 // A wait till the error code can be read results in the code hanging, despite
                 // menu updates coming in, so just check the message.
@@ -271,10 +252,10 @@ public class SetTbrCommand implements Command {
                             .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
                                     + errorMsg + ". Please check the pump.");
                 }
-                // confirm "TBR CANCELLED alert"
+                // confirm "TBR CANCELLED" alert
                 scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 scripter.pressCheckKey();
-                // dismiss "TBR CANCELLED alert"
+                // dismiss "TBR CANCELLED" alert
                 scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 scripter.pressCheckKey();
                 scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
@@ -297,7 +278,7 @@ public class SetTbrCommand implements Command {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         // new TBR set; percentage and duration must be displayed ...
         if (!scripter.currentMenu.attributes().contains(MenuAttribute.TBR) ||
-                !scripter.currentMenu.attributes().contains(MenuAttribute.TBR)) {
+                !scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME)) {
             throw new CommandException().message("Setting TBR failed, according to MAIN_MENU no TBR is active");
         }
         Double mmTbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
