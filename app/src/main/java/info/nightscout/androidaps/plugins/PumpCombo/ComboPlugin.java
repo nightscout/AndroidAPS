@@ -5,11 +5,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -48,12 +50,14 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class ComboPlugin implements PluginBase, PumpInterface {
+    public static final String COMBO_MAX_TEMP_PERCENT_SP = "combo_maxTempPercent";
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
     private boolean fragmentEnabled = false;
@@ -102,7 +106,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.isTempBasalCapable = true;
         pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
 
-        pumpDescription.maxTempPercent = 500;
+        pumpDescription.maxTempPercent = SP.getInt(COMBO_MAX_TEMP_PERCENT_SP, 500);
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 15;
@@ -634,11 +638,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
         CommandResult result = runCommand(new DetermineCapabilitiesCommand());
         if (result.success){
-            //TODO: write to settings result.capabilities.maxTempPercent
             pumpDescription.maxTempPercent = (int) result.capabilities.maxTempPercent;
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt(COMBO_MAX_TEMP_PERCENT_SP, pumpDescription.maxTempPercent);
+            editor.commit();
             MainApp.bus().post(new EventComboPumpUpdateGUI());
         } else {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "No success with test Command.");
+            ToastUtils.showToastInUiThread(MainApp.instance(), "No success.");
         }
     }
 
