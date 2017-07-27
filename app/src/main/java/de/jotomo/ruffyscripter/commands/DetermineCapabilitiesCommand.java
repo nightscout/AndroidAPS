@@ -22,6 +22,7 @@ import de.jotomo.ruffyscripter.RuffyScripter;
 public class DetermineCapabilitiesCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(DetermineCapabilitiesCommand.class);
     public static final int UP_STEPS = 75;
+    public static final int RETRIES = 5;
 
     @Override
     public List<String> validateArguments() {
@@ -86,7 +87,7 @@ public class DetermineCapabilitiesCommand implements Command {
         for (int i = 0; i < UP_STEPS; i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
             scripter.pressUpKey();
-            SystemClock.sleep(100);
+            SystemClock.sleep(200);
             log.debug("Push #" + (i + 1));
         }
 
@@ -97,25 +98,24 @@ public class DetermineCapabilitiesCommand implements Command {
         //reset the TBR in a controlled manner
         long percentageChange = maximumTempBasal - activeTempBasal;
         long percentageSteps = percentageChange / 10;
-        log.debug("Pressing down " + percentageSteps + " times to get to previous value");
-        for (int i = 0; i < percentageSteps; i++) {
+
+        int retries= 0;
+        while (percentageSteps > 0 && retries < RETRIES) {
+            log.debug("Pressing down " + percentageSteps + " times to get to previous value. Retry " + retries);
+            for (int i = 0; i < percentageSteps; i++) {
+                scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+                scripter.pressDownKey();
+                SystemClock.sleep(200);
+                log.debug("Push #" + (i + 1));
+            }
+            //do the rest if button-presses failed.
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-            scripter.pressDownKey();
-            SystemClock.sleep(100);
-            log.debug("Push #" + (i + 1));
+            long currentPercentage = readDisplayedTbrPercentage(scripter);
+            percentageChange = currentPercentage - activeTempBasal;
+            percentageSteps = percentageChange / 10;
+            retries++;
         }
 
-
-        //do the rest if button-presses failed.
-        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        int i= 0;
-        while (readDisplayedTbrPercentage(scripter) > activeTempBasal && i < percentageSteps) {
-            scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-            scripter.pressDownKey();
-            SystemClock.sleep(100);
-            log.debug("Push again as previous buttons failed: #" + i);
-            i++;
-        }
 
         //exit menu
         scripter.pressCheckKey();
@@ -125,7 +125,7 @@ public class DetermineCapabilitiesCommand implements Command {
 
 
     private long readDisplayedTbrPercentage(RuffyScripter scripter) {
-        SystemClock.sleep(250);
+        SystemClock.sleep(1000);
         // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
         // this as a bit hacky, the display value is blinking, so we might catch that, so
