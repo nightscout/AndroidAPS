@@ -70,6 +70,35 @@ public class BolusCommand implements Command {
                     "Bolus delivery did not complete as expected. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
+            // read last bolus record; those menus display static data and therefore
+            // only a single menu update is sent
+            scripter.navigateToMenu(MenuType.MY_DATA_MENU);
+            scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
+            scripter.pressCheckKey();
+            if (scripter.currentMenu.getType() != MenuType.BOLUS_DATA) {
+                scripter.waitForMenuUpdate();
+            }
+
+            if (!scripter.currentMenu.attributes().contains(MenuAttribute.BOLUS)) {
+                throw new CommandException().success(false).enacted(true)
+                        .message("Bolus was delivered, but enable to confirm it with history record");
+            }
+
+            double lastBolusInHistory = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+            if (Math.abs(bolus - lastBolusInHistory) > 0.05) {
+                throw new CommandException().success(false).enacted(true)
+                        .message("Last bolus shows " + lastBolusInHistory
+                                + " U delievered, but " + bolus + " U were requested");
+            }
+            log.debug("Bolus record in history confirms delivered bolus");
+
+            // leave menu to go back to main menu
+            scripter.pressCheckKey();
+            scripter.waitForMenuToBeLeft(MenuType.BOLUS_DATA);
+            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
+                    "Bolus was correctly delivered and checked against history, but we "
+                            + "did not return the main menu successfully.");
+
             return new CommandResult().success(true).enacted(true)
                     .message(String.format(Locale.US, "Delivered %02.1f U", bolus));
         } catch (CommandException e) {
