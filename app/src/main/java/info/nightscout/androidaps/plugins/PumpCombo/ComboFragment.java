@@ -161,6 +161,24 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                                 tbrRateText.setText("");
                             }
                             pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg : "");
+                            if(ps.lowBattery){
+                                pumpstateBatteryText.setText("{fa-battery-empty}");
+                                pumpstateBatteryText.setTextColor(Color.RED);
+                            } else {
+                                pumpstateBatteryText.setText("{fa-battery-three-quarters}");
+                                pumpstateBatteryText.setTextColor(Color.WHITE);
+                            }
+                            switch (ps.insulinState){
+                                case 0: insulinstateText.setText("ok");
+                                    insulinstateText.setTextColor(Color.WHITE);
+                                    break;
+                                case 1: insulinstateText.setText("low");
+                                    insulinstateText.setTextColor(Color.YELLOW);
+                                    break;
+                                case 2: insulinstateText.setText("empty");
+                                    insulinstateText.setTextColor(Color.RED);
+                                    break;
+                            }
                         }
 
                         Command lastCmd = getPlugin().lastCmd;
@@ -178,26 +196,6 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                         } else {
                             lastCmdResultText.setText("");
                         }
-                        if(getPlugin().pumpState.lowBattery){
-                            pumpstateBatteryText.setText("{fa-battery-empty}");
-                            pumpstateBatteryText.setTextColor(Color.RED);
-                        } else {
-                            pumpstateBatteryText.setText("{fa-battery-three-quarters}");
-                            pumpstateBatteryText.setTextColor(Color.WHITE);
-                        }
-                        switch (getPlugin().pumpState.insulinState){
-                            case 0: insulinstateText.setText("ok");
-                                insulinstateText.setTextColor(Color.WHITE);
-                                break;
-                            case 1: insulinstateText.setText("low");
-                                insulinstateText.setTextColor(Color.YELLOW);
-                                break;
-                            case 2: insulinstateText.setText("empty");
-                                insulinstateText.setTextColor(Color.RED);
-                                break;
-                        }
-
-
                     }
                     tbrCapabilityText.setText(getPlugin().getPumpDescription().maxTempPercent + "%");
                 }
