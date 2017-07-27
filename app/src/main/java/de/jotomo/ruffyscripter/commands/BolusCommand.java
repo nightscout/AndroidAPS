@@ -81,7 +81,7 @@ public class BolusCommand implements Command {
 
             if (!scripter.currentMenu.attributes().contains(MenuAttribute.BOLUS)) {
                 throw new CommandException().success(false).enacted(true)
-                        .message("Bolus was delivered, but enable to confirm it with history record");
+                        .message("Bolus was delivered, but unable to confirm it with history record");
             }
 
             double lastBolusInHistory = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
