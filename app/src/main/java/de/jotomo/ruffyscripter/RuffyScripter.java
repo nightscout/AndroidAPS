@@ -51,7 +51,7 @@ public class RuffyScripter {
     public RuffyScripter(final IRuffyService ruffyService) {
         this.ruffyService = ruffyService;
         try {
-            ruffyService.setHandler(mHandler);
+            ruffyService.addHandler(mHandler);
             idleDisconnectMonitorThread.start();
         } catch (RemoteException e) {
             throw new RuntimeException(e);
