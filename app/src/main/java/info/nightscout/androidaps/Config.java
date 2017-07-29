@@ -15,6 +15,7 @@ public class Config {
 
     public static final boolean NSCLIENT = BuildConfig.NSCLIENTOLNY;
 
+    public static final boolean COMBO = true && BuildConfig.PUMPDRIVERS;
     public static final boolean DANAR = true && BuildConfig.PUMPDRIVERS;
     public static final boolean DANARv2 = true && BuildConfig.PUMPDRIVERS;
 

@@ -263,7 +263,9 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public boolean isTempBasalInProgress() {
-        return getTempBasalFromHistory(System.currentTimeMillis()) != null;
+        TemporaryBasal tempBasalFromHistory = getTempBasalFromHistory(System.currentTimeMillis());
+        log.debug("activeTempbasal: " + tempBasalFromHistory);
+        return tempBasalFromHistory != null && tempBasalFromHistory.getPlannedRemainingSeconds() > 60;
     }
 
     @Override
