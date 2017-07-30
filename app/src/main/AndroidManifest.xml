@@ -56,16 +56,6 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <!-- Receiver from NSClient -->
-                <action android:name="info.nightscout.client.NEW_SGV" />
-                <action android:name="info.nightscout.client.NEW_TREATMENT" />
-                <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
-                <action android:name="info.nightscout.client.REMOVED_TREATMENT" />
-                <action android:name="info.nightscout.client.NEW_PROFILE" />
-                <action android:name="info.nightscout.client.NEW_STATUS" />
-                <action android:name="info.nightscout.client.NEW_MBG" />
-                <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
-                <action android:name="info.nightscout.client.NEW_CAL" />
                 <!-- Receive new SMS messages -->
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
@@ -76,20 +66,6 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
             </intent-filter>
         </receiver>
-        <receiver
-            android:name=".receivers.NSAlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <!-- Receiver from NSClient -->
-                <action android:name="info.nightscout.client.ANNOUNCEMENT" />
-                <action android:name="info.nightscout.client.ALARM" />
-                <action android:name="info.nightscout.client.URGENT_ALARM" />
-                <action android:name="info.nightscout.client.CLEAR_ALARM" />
-            </intent-filter>
-
-        </receiver>
-
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
@@ -118,14 +94,6 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="info.nightscout.client.DBACCESS" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name=".plugins.NSClientInternal.receivers.AckAlarmReceiver"
-            android:enabled="true"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="info.nightscout.client.ACK_ALARM" />
             </intent-filter>
         </receiver>
 

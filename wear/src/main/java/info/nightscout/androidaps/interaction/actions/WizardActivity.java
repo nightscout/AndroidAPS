@@ -2,8 +2,10 @@ package info.nightscout.androidaps.interaction.actions;
 
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.wearable.view.DotsPageIndicator;
 import android.support.wearable.view.GridPagerAdapter;
 import android.support.wearable.view.GridViewPager;
@@ -28,10 +30,13 @@ import info.nightscout.androidaps.interaction.utils.SafeParse;
 public class WizardActivity extends ViewSelectorActivity {
 
     PlusMinusEditText editCarbs;
+    PlusMinusEditText editPercentage;
 
     boolean useBG;
     boolean includeBolusIOB;
     boolean includeBasalIOB;
+    boolean hasPercentage;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +48,8 @@ public class WizardActivity extends ViewSelectorActivity {
         pager.setAdapter(new MyGridViewPagerAdapter());
         DotsPageIndicator dotsPageIndicator = (DotsPageIndicator) findViewById(R.id.page_indicator);
         dotsPageIndicator.setPager(pager);
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+        hasPercentage =  sp.getBoolean("wizardpercentage", false);
     }
 
 
@@ -56,7 +63,7 @@ public class WizardActivity extends ViewSelectorActivity {
     private class MyGridViewPagerAdapter extends GridPagerAdapter {
         @Override
         public int getColumnCount(int arg0) {
-            return 5;
+            return hasPercentage?6:5;
         }
 
         @Override
@@ -151,6 +158,17 @@ public class WizardActivity extends ViewSelectorActivity {
                 });
                 container.addView(view);
                 return view;
+            } else if(col == 4 && hasPercentage){
+                final View view = getInflatedPlusMinusView(container);
+                if (editPercentage == null) {
+                    editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, 100d, 50d, 150d, 1d, new DecimalFormat("0"), false);
+                } else {
+                    double def = SafeParse.stringToDouble(editPercentage.editText.getText().toString());
+                    editPercentage = new PlusMinusEditText(view, R.id.amountfield, R.id.plusbutton, R.id.minusbutton, def, 50d, 150d, 1d, new DecimalFormat("0"), false);
+                }
+                setLabelToPlusMinusView(view, "percentage");
+                container.addView(view);
+                return view;
             } else {
 
                 final View view = LayoutInflater.from(getApplicationContext()).inflate(R.layout.action_send_item, container, false);
@@ -162,10 +180,15 @@ public class WizardActivity extends ViewSelectorActivity {
                         //check if it can happen that the fagment is never created that hold data?
                         // (you have to swipe past them anyways - but still)
 
+                        int percentage = 100;
+
+                        if (editPercentage != null) percentage = SafeParse.stringToInt(editPercentage.editText.getText().toString());
+
                         String actionstring = "wizard " + SafeParse.stringToInt(editCarbs.editText.getText().toString())
                                 + " " + useBG
                                 + " " + includeBolusIOB
-                                + " " + includeBasalIOB;
+                                + " " + includeBasalIOB
+                                + " " + percentage;
                         ListenerService.initiateAction(WizardActivity.this, actionstring);
                         finish();
                     }
