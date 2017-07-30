@@ -162,7 +162,8 @@ public class SetTbrCommand implements Command {
     private void inputTbrDuration(RuffyScripter scripter) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long currentDuration = readDisplayedTbrDuration(scripter);
-        if (currentDuration % 15 != 0) {
+        while(currentDuration % 15 != 0)
+        {
             // The duration displayed is how long an active TBR will still run,
             // which might be something like 0:13, hence not in 15 minute steps.
             // Pressing up will go to the next higher 15 minute step.
