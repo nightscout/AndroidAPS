@@ -121,12 +121,12 @@ public class SetTbrCommand implements Command {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
             if (increasePercentage) scripter.pressUpKey();
             else scripter.pressDownKey();
-            SystemClock.sleep(100);
+            SystemClock.sleep(400);
             log.debug("Push #" + (i + 1));
         }
         // Give the pump time to finish any scrolling that might still be going on, can take
         // up to 1100ms. Plus some extra time to be sure
-        SystemClock.sleep(2000);
+        SystemClock.sleep(750);
     }
 
     private void verifyDisplayedTbrPercentage(RuffyScripter scripter) {
@@ -138,7 +138,7 @@ public class SetTbrCommand implements Command {
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(2000);
+        SystemClock.sleep(750);
         long refreshedDisplayedTbrPecentage = readDisplayedTbrPercentage(scripter);
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
             throw new CommandException().message("Failed to set TBR percentage: " +
@@ -186,12 +186,12 @@ public class SetTbrCommand implements Command {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
             if (increaseDuration) scripter.pressUpKey();
             else scripter.pressDownKey();
-            SystemClock.sleep(100);
+            SystemClock.sleep(400);
             log.debug("Push #" + (i + 1));
         }
         // Give the pump time to finish any scrolling that might still be going on, can take
         // up to 1100ms. Plus some extra time to be sure
-        SystemClock.sleep(2000);
+        SystemClock.sleep(750);
     }
 
     private void verifyDisplayedTbrDuration(RuffyScripter scripter) {
@@ -203,7 +203,7 @@ public class SetTbrCommand implements Command {
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(2000);
+        SystemClock.sleep(750);
         long refreshedDisplayedTbrDuration = readDisplayedTbrDuration(scripter);
         if (displayedDuration != refreshedDisplayedTbrDuration) {
             throw new CommandException().message("Failed to set TBR duration: " +
@@ -261,7 +261,7 @@ public class SetTbrCommand implements Command {
                 scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
                 alertProcessed = true;
             }
-            SystemClock.sleep(10);
+            SystemClock.sleep(20);
         }
     }
 
