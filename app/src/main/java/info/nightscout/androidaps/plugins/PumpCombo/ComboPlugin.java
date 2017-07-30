@@ -16,7 +16,6 @@ import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.slf4j.Logger;
@@ -189,11 +188,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
+                    ruffyScripter.start();
                     log.debug("ruffy serivce connected");
                 }
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
+                    ruffyScripter.stop();
+                    ruffyScripter = null;
                     log.debug("ruffy service disconnected");
                 }
             };

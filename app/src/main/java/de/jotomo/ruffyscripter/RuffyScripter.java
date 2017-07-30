@@ -48,14 +48,34 @@ public class RuffyScripter {
     private volatile boolean connected = false;
     private volatile long lastDisconnected = 0;
 
+    private boolean started = false;
+
     public RuffyScripter(final IRuffyService ruffyService) {
         this.ruffyService = ruffyService;
+    }
+
+    public void start() {
         try {
-            ruffyService.setHandler(mHandler);
+            ruffyService.addHandler(mHandler);
             idleDisconnectMonitorThread.start();
+            started = true;
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void stop() {
+        if (started) {
+            try {
+                ruffyService.removeHandler(mHandler);
+            } catch (RemoteException e) {
+                log.warn("Removing IRTHandler from Ruffy service failed, ignoring", e);
+            }
+        }
+    }
+
+    public boolean isRunning() {
+        return started;
     }
 
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
