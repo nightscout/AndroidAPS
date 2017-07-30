@@ -414,6 +414,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             try {
                 unbindRuffyService();
                 SystemClock.sleep(5000);
+            } catch (Exception e) {
+                /*String msg = "No connection to ruffy. Pump control not available.";
+                statusSummary = msg;
+                return new CommandResult().message(msg);*/
+            }
+            try {
                 bindRuffyService();
                 SystemClock.sleep(5000);
             } catch (Exception e) {
