@@ -404,7 +404,7 @@ public class RuffyScripter {
     private void pressKey(final byte key) {
         try {
             ruffyService.rtSendKey(key, true);
-            SystemClock.sleep(100);
+            SystemClock.sleep(200);
             ruffyService.rtSendKey(Key.NO_KEY, true);
         } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");
