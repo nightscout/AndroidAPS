@@ -1,6 +1,5 @@
 package de.jotomo.ruffyscripter;
 
-import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
 
@@ -59,16 +58,17 @@ public class RuffyScripter {
             ruffyService.addHandler(mHandler);
             idleDisconnectMonitorThread.start();
             started = true;
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public void stop() {
         if (started) {
+            started=false;
             try {
                 ruffyService.removeHandler(mHandler);
-            } catch (RemoteException e) {
+            } catch (Exception e) {
                 log.warn("Removing IRTHandler from Ruffy service failed, ignoring", e);
             }
         }
@@ -97,14 +97,13 @@ public class RuffyScripter {
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
                     }
-                } catch (DeadObjectException doe) {
+                } catch (Exception e) {
                     // TODO do we need to catch this exception somewhere else too? right now it's
                     // converted into a command failure, but it's not classified as unrecoverable;
                     // eventually we might try to recover ... check docs, there's also another
                     // execption we should watch interacting with a remote service.
                     // SecurityException was the other, when there's an AIDL mismatch;
-                    unrecoverableError = "Ruffy service went away";
-                } catch (RemoteException e) {
+                    //unrecoverableError = "Ruffy service went away";
                     log.debug("Exception in idle disconnect monitor thread, carrying on", e);
                 }
                 SystemClock.sleep(1000);
@@ -337,7 +336,7 @@ public class RuffyScripter {
             // before a connection is possible. In that case, it takes 45s before the
             // connection comes up.
             waitForMenuUpdate(180);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
     }
@@ -406,7 +405,7 @@ public class RuffyScripter {
             ruffyService.rtSendKey(key, true);
             SystemClock.sleep(200);
             ruffyService.rtSendKey(Key.NO_KEY, true);
-        } catch (RemoteException e) {
+        } catch (Exception e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");
         }
     }
