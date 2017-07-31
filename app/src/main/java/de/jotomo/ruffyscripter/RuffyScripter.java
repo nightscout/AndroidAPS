@@ -336,7 +336,7 @@ public class RuffyScripter {
             // if the user just pressed a button on the combo, the screen needs to time first
             // before a connection is possible. In that case, it takes 45s before the
             // connection comes up.
-            waitForMenuUpdate(90);
+            waitForMenuUpdate(180);
         } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
@@ -387,7 +387,7 @@ public class RuffyScripter {
      * Wait until the menu update is in
      */
     public void waitForMenuUpdate() {
-       waitForMenuUpdate(60);
+       waitForMenuUpdate(120);
     }
 
     public void waitForMenuUpdate(long timeoutInSeconds) {
