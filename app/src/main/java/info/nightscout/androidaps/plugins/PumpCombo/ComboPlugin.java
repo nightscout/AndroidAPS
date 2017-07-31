@@ -158,6 +158,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             lastAlarmTime = now;
                         } else {
                             log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + localLastCmdResult.message);
+                            refreshDataFromPump("from Error Recovery");
                         }
                     }
                     SystemClock.sleep(5 * 1000);
@@ -166,7 +167,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }, "combo-alerter").start();
     }
 
-    private void bindRuffyService() {
+    private boolean bindRuffyService() {
+
+        if(ruffyScripter != null)
+        {
+            log.debug("ruffy service already connected!");
+            return false;
+        }
         Context context = MainApp.instance().getApplicationContext();
         boolean boundSucceeded = false;
 
@@ -207,6 +214,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!boundSucceeded) {
             statusSummary = "No connection to ruffy. Pump control not available.";
         }
+        return true;
     }
 
     private void unbindRuffyService() {
