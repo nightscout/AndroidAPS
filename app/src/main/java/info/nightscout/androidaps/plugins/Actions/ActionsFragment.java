@@ -20,6 +20,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventRefreshOverview;
@@ -49,6 +50,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     Button extendedBolus;
     Button extendedBolusCancel;
     Button tempBasal;
+    Button tempBasalCancel;
     Button fill;
 
     private static Handler sHandler;
@@ -74,6 +76,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         extendedBolus = (Button) view.findViewById(R.id.actions_extendedbolus);
         extendedBolusCancel = (Button) view.findViewById(R.id.actions_extendedbolus_cancel);
         tempBasal = (Button) view.findViewById(R.id.actions_settempbasal);
+        tempBasalCancel = (Button) view.findViewById(R.id.actions_canceltempbasal);
         fill = (Button) view.findViewById(R.id.actions_fill);
 
         profileSwitch.setOnClickListener(this);
@@ -81,6 +84,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
         extendedBolus.setOnClickListener(this);
         extendedBolusCancel.setOnClickListener(this);
         tempBasal.setOnClickListener(this);
+        tempBasalCancel.setOnClickListener(this);
         fill.setOnClickListener(this);
 
         updateGUI();
@@ -114,33 +118,59 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() == null)
+                    if (MainApp.getConfigBuilder().getActiveProfileInterface().getProfile() == null) {
+                        tempTarget.setVisibility(View.GONE);
+                        profileSwitch.setVisibility(View.GONE);
+                        extendedBolus.setVisibility(View.GONE);
+                        extendedBolusCancel.setVisibility(View.GONE);
+                        tempBasal.setVisibility(View.GONE);
+                        tempBasalCancel.setVisibility(View.GONE);
+                        fill.setVisibility(View.GONE);
                         return;
+                    }
                     boolean allowProfileSwitch = MainApp.getConfigBuilder().getActiveProfileInterface().getProfile().getProfileList().size() > 1;
                     if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !allowProfileSwitch)
                         profileSwitch.setVisibility(View.GONE);
                     else
                         profileSwitch.setVisibility(View.VISIBLE);
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
+
+
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
                         extendedBolus.setVisibility(View.GONE);
-                    else {
-                        extendedBolus.setVisibility(View.VISIBLE);
-                    }
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() || MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
                         extendedBolusCancel.setVisibility(View.GONE);
-                    else {
-                        extendedBolusCancel.setVisibility(View.VISIBLE);
-                        ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
-                        extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + running.toString());
+                    } else {
+                        if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
+                            extendedBolus.setVisibility(View.GONE);
+                            extendedBolusCancel.setVisibility(View.VISIBLE);
+                            ExtendedBolus running = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+                            extendedBolusCancel.setText(MainApp.instance().getString(R.string.cancel) + " " + running.toString());
+                        } else {
+                            extendedBolus.setVisibility(View.VISIBLE);
+                            extendedBolusCancel.setVisibility(View.GONE);
+                        }
                     }
-                    if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || MainApp.getConfigBuilder().isTempBasalInProgress())
+
+
+                    if (!MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
                         tempBasal.setVisibility(View.GONE);
-                    else
-                        tempBasal.setVisibility(View.VISIBLE);
+                        tempBasalCancel.setVisibility(View.GONE);
+                    } else {
+                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                            tempBasal.setVisibility(View.GONE);
+                            tempBasalCancel.setVisibility(View.VISIBLE);
+                            final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+                            tempBasalCancel.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
+                        } else {
+                            tempBasal.setVisibility(View.VISIBLE);
+                            tempBasalCancel.setVisibility(View.GONE);
+                        }
+                    }
+
                     if (!MainApp.getConfigBuilder().getPumpDescription().isRefillingCapable || !MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended())
                         fill.setVisibility(View.GONE);
                     else
                         fill.setVisibility(View.VISIBLE);
+
                     if (!Config.APS)
                         tempTarget.setVisibility(View.GONE);
                     else

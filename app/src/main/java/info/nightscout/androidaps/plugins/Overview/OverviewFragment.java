@@ -175,7 +175,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     LinearLayoutManager llm;
 
     LinearLayout acceptTempLayout;
-    Button cancelTempButton;
     Button treatmentButton;
     Button wizardButton;
     Button calibrationButton;
@@ -269,9 +268,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
         iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
 
-        cancelTempButton = (Button) view.findViewById(R.id.overview_canceltempbutton);
-        if (cancelTempButton != null)
-            cancelTempButton.setOnClickListener(this);
         treatmentButton = (Button) view.findViewById(R.id.overview_treatmentbutton);
         treatmentButton.setOnClickListener(this);
         wizardButton = (Button) view.findViewById(R.id.overview_wizardbutton);
@@ -1020,15 +1016,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
-        if (cancelTempButton != null) {
-            if (activeTemp != null) {
-                cancelTempButton.setVisibility(View.VISIBLE);
-                cancelTempButton.setText(MainApp.instance().getString(R.string.cancel) + "\n" + activeTemp.toStringShort());
-            } else {
-                cancelTempButton.setVisibility(View.GONE);
-            }
-        }
-
         String basalText = "";
         if (shorttextmode) {
             if (activeTemp != null) {
