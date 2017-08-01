@@ -57,12 +57,17 @@ public class VirtualPumpFragment extends SubscriberFragment {
         batteryView = (TextView) view.findViewById(R.id.virtualpump_battery);
         reservoirView = (TextView) view.findViewById(R.id.virtualpump_reservoir);
 
-        updateGUI();
         return view;
     }
 
     @Subscribe
     public void onStatusEvent(final EventVirtualPumpUpdateGui ev) {
+        updateGUI();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         updateGUI();
     }
 
@@ -73,8 +78,8 @@ public class VirtualPumpFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-
-                    basaBasalRateView.setText(VirtualPumpPlugin.getInstance().getBaseBasalRate() + "U");
+                    VirtualPumpPlugin virtualPump = VirtualPumpPlugin.getInstance();
+                    basaBasalRateView.setText(virtualPump.getBaseBasalRate() + "U");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                         tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                     } else {
@@ -85,8 +90,8 @@ public class VirtualPumpFragment extends SubscriberFragment {
                     } else {
                         extendedBolusView.setText("");
                     }
-                    batteryView.setText(VirtualPumpPlugin.getInstance().batteryPercent + "%");
-                    reservoirView.setText(VirtualPumpPlugin.getInstance().reservoirInUnits + "U");
+                    batteryView.setText(virtualPump.batteryPercent + "%");
+                    reservoirView.setText(virtualPump.reservoirInUnits + "U");
                 }
             });
     }
