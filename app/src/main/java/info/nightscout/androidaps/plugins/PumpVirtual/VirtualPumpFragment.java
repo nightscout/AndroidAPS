@@ -66,12 +66,6 @@ public class VirtualPumpFragment extends SubscriberFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        updateGUI();
-    }
-
-    @Override
     protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null && basaBasalRateView != null)

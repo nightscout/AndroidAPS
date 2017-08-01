@@ -60,7 +60,6 @@
     <string name="careportal_newnstreatment_glucosetype">тип глюкозы</string>
     <string name="careportal_newnstreatment_insulin_label">инсулин</string>
     <string name="careportal_newnstreatment_meter">глюкометр</string>
-    <string name="careportal_newnstreatment_minutes">минут</string>
     <string name="careportal_newnstreatment_notes_label">заметки</string>
     <string name="careportal_newnstreatment_other">другое</string>
     <string name="careportal_newnstreatment_percent_label">процент</string>
@@ -387,7 +386,7 @@
     <string name="overview_editquickwizard_valid">использовать до:</string>
     <string name="overview_editquickwizardlistactivity_add">добавить</string>
     <string name="overview_extendedbolus_button">расширенный болюс</string>
-    <string name="overview_newtempbasal_basal_label">величина базала</string>
+    <string name="overview_newtempbasal_basalpercent">величина базала</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="overview_quickwizard_item_edit_button">редактировать</string>
     <string name="overview_quickwizard_item_remove_button">удалить</string>

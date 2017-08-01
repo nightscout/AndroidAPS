@@ -27,6 +27,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
@@ -35,14 +36,14 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
     RadioButton percentRadio;
     RadioButton absoluteRadio;
     RadioGroup basalTypeRadioGroup;
-    RelativeLayout typeSelectorLayout;
+    LinearLayout typeSelectorLayout;
 
     LinearLayout percentLayout;
     LinearLayout absoluteLayout;
 
-    PlusMinusEditText basalPercent;
-    PlusMinusEditText basalAbsolute;
-    PlusMinusEditText duration;
+    NumberPicker basalPercent;
+    NumberPicker basalAbsolute;
+    NumberPicker duration;
 
     Handler mHandler;
     public static HandlerThread mHandlerThread;
@@ -65,22 +66,24 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         percentRadio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_percent_radio);
         basalTypeRadioGroup = (RadioGroup) view.findViewById(R.id.overview_newtempbasal_radiogroup);
         absoluteRadio = (RadioButton) view.findViewById(R.id.overview_newtempbasal_absolute_radio);
-        typeSelectorLayout = (RelativeLayout) view.findViewById(R.id.overview_newtempbasal_typeselector_layout);
+        typeSelectorLayout = (LinearLayout) view.findViewById(R.id.overview_newtempbasal_typeselector_layout);
 
         PumpDescription pumpDescription = MainApp.getConfigBuilder().getPumpDescription();
 
-        basalPercent = new PlusMinusEditText(view, R.id.overview_newtempbasal_basalpercentinput, R.id.overview_newtempbasal_basalpercent_plus, R.id.overview_newtempbasal_basalpercent_minus,
-                100d, 0d, (double) pumpDescription.maxTempPercent, (double) pumpDescription.tempPercentStep, new DecimalFormat("0"), true);
+        basalPercent =  (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalpercentinput);
+        double maxTempPercent = pumpDescription.maxTempPercent;
+        double tempPercentStep = pumpDescription.tempPercentStep;
+        basalPercent.setParams(100d, 0d, maxTempPercent, tempPercentStep, new DecimalFormat("0"), true);
 
         Profile profile = MainApp.getConfigBuilder().getProfile();
-        Double currentBasal = profile.getBasal();
-        basalAbsolute = new PlusMinusEditText(view, R.id.overview_newtempbasal_basalabsoluteinput, R.id.overview_newtempbasal_basalabsolute_plus, R.id.overview_newtempbasal_basalabsolute_minus,
-                currentBasal, 0d, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, new DecimalFormat("0.00"), true);
+        Double currentBasal = profile != null ? profile.getBasal() : 0d;
+        basalAbsolute = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_basalabsoluteinput);
+        basalAbsolute.setParams(currentBasal, 0d, pumpDescription.maxTempAbsolute, pumpDescription.tempAbsoluteStep, new DecimalFormat("0.00"), true);
 
-        double tempDurationStep = MainApp.getConfigBuilder().getPumpDescription().tempDurationStep;
-        double tempMaxDuration = MainApp.getConfigBuilder().getPumpDescription().tempMaxDuration;
-        duration = new PlusMinusEditText(view, R.id.overview_newtempbasal_duration, R.id.overview_newtempbasal_duration_plus, R.id.overview_newtempbasal_duration_minus,
-                tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, new DecimalFormat("0"), false);
+        double tempDurationStep = pumpDescription.tempDurationStep;
+        double tempMaxDuration = pumpDescription.tempMaxDuration;
+        duration = (NumberPicker) view.findViewById(R.id.overview_newtempbasal_duration);
+        duration.setParams(tempDurationStep, tempDurationStep, tempMaxDuration, tempDurationStep, new DecimalFormat("0"), false);
 
         if ((pumpDescription.tempBasalStyle & PumpDescription.PERCENT) == PumpDescription.PERCENT && (pumpDescription.tempBasalStyle & PumpDescription.ABSOLUTE) == PumpDescription.ABSOLUTE) {
             // Both allowed
@@ -105,13 +108,6 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
         view.findViewById(R.id.cancel).setOnClickListener(this);
         basalTypeRadioGroup.setOnCheckedChangeListener(this);
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (getDialog() != null)
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     @Override

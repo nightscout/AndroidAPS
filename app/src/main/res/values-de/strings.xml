@@ -33,7 +33,6 @@
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
     <string name="careportal_newnstreatment_absolute_label">Absolut</string>
     <string name="careportal_newnstreatment_carbs_label">Kohlehydrate</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_insulin_label">Insulin</string>
     <string name="careportal_newnstreatment_glucosetype">Glukose-Art</string>
     <string name="careportal_newnstreatment_eventtype">Ereignis-Typ</string>
@@ -119,7 +118,7 @@
     <string name="danar_useextended_title">Benutze extended Bolus für hohe temps (\>200%)></string>
     <string name="objectives_pumpstatusavailableinns">Pumpen Status verfügbar in NS</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
-    <string name="overview_newtempbasal_basal_label">Basal Wert</string>
+    <string name="overview_newtempbasal_basalpercent">Basal Wert [%]</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
     <string name="overview">Übersicht</string>
     <string name="openloop_newsuggestion">Neue Empfehlung verfügbar</string>

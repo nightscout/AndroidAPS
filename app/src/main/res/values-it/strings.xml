@@ -47,7 +47,6 @@
     <string name="careportal_newnstreatment_glucosetype">Tipo di glucosio</string>
     <string name="careportal_newnstreatment_insulin_label">Insulina</string>
     <string name="careportal_newnstreatment_meter">Glucometro</string>
-    <string name="careportal_newnstreatment_minutes">Minimo</string>
     <string name="careportal_newnstreatment_notes_label">Note</string>
     <string name="careportal_newnstreatment_other">Altro</string>
     <string name="careportal_newnstreatment_percent_label">Percentuale</string>
@@ -310,7 +309,7 @@
     <string name="overview_editquickwizard_valid">Valido:</string>
     <string name="overview_editquickwizardlistactivity_add">Aggiungere</string>
     <string name="overview_extendedbolus_button">Bolo Esteso</string>
-    <string name="overview_newtempbasal_basal_label">Valore Basale</string>
+    <string name="overview_newtempbasal_basalpercent">Valore Basale [%]</string>
     <string name="overview_quickwizard_item_edit_button">Uscire</string>
     <string name="overview_quickwizard_item_remove_button">Eliminare</string>
     <string name="overview_shortname">HOME</string>

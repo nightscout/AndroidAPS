@@ -114,7 +114,7 @@
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="treatmentdeliveryerror">Грешка при подаване на болус</string>
     <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
-    <string name="overview_newtempbasal_basal_label">Стойност на базал</string>
+    <string name="overview_newtempbasal_basalpercent">Стойност на базал [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = текущ)</string>
     <string name="setbasalquestion">Приложи нов временен базал:</string>
     <string name="overview_bolus_label">Болус</string>
@@ -183,7 +183,6 @@
     <string name="careportal_newnstreatment_duration_label">Продължителност</string>
     <string name="careportal_newnstreatment_percent_label">Процент</string>
     <string name="careportal_newnstreatment_absolute_label">Абсолютна</string>
-    <string name="careportal_newnstreatment_minutes">мин</string>
     <string name="careportal_newnstreatment_notes_label">Бележки</string>
     <string name="careportal_newnstreatment_eventtime_label">Време на събитие</string>
     <string name="careportal_newnstreatment_profile_label">Профил</string>

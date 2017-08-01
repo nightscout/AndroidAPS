@@ -114,7 +114,7 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basal_label">Basal value</string>
+    <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_bolus_label">Bolus</string>
@@ -183,7 +183,6 @@
     <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
@@ -691,5 +690,7 @@
 	<string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
 	<string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
 	<string name="careportal_pump_label">PUMP</string>
+    <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
+    <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
 </resources>
 
