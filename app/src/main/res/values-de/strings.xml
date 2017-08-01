@@ -354,4 +354,17 @@
     <string name="wear_detailedIOB_summary">Trenne IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="wrongpassword">Falsches Passwort</string>
     <string name="it_lang">Italian</string>
+    <string name="Glimp">Glimp</string>
+    <string name="MM640g">MM640g</string>
+    <string name="absorption_maxtime_summary">Zeit in Stunden in der zu erwarten ist, dass alle Kohlenhydrate resorbiert sein werden</string>
+    <string name="absorption_maxtime_title">Maximale Essens-Resorptionszeit [h]</string>
+    <string name="absorptionsettings_title">Resorptions-Einstellungen</string>
+    <string name="activity">Aktivität</string>
+    <string name="adult">Erwachsener</string>
+    <string name="advancedsettings_title">Erweiter</string>
+    <string name="app_name">AndroidAPS</string>
+    <string name="basal_short">BAS</string>
+    <string name="basal_step">Basal-Schritt</string>
+    <string name="basalmissing">Basal fehlt im Profil. Verwende Standardwert.</string>
+    <string name="basalvaluebelowminimum">Basalwert unter dem Minimum. Profil nicht gesetzt!</string>
 </resources>

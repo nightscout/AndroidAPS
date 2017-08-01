@@ -567,4 +567,5 @@
     <string name="xdripstatus_settings">"состояние xdrip (часы) "</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="youareonallowedlimit">разрешенный предел достигнут</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>
