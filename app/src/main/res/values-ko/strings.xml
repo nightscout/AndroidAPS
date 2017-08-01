@@ -358,8 +358,6 @@
     <string name="edit_base_ic">Edit Base-IC:</string>
     <string name="base_profile_label">Base Profile:</string>
     <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
-    <string name="androidaps_tempbasalendnote">Basal Temp End</string>
-    <string name="androidaps_tempbasalstartnote">Basal Temp Start</string>
     <string name="prefs_range_title">차트 표시 범위</string>
     <string name="prefs_range_summary">Overview/스마트워치 차트 표시용 고/저혈당 선</string>
     <string name="low_mark">저혈당 선</string>

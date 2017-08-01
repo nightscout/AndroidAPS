@@ -332,8 +332,6 @@
     <string name="smscommunicator_unknowncommand">Comando desconocido o respuesta incorrecta</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
     <string formatted="false" name="smscommunicator_basalreplywithcode">Para iniciar basal %.2fU/h responder con código %s</string>
-    <string name="androidaps_tempbasalstartnote">Inicio Basal Temporal</string>
-    <string name="androidaps_tempbasalendnote">Fin Basal Temporal</string>
     <string name="actions_shortname">" "</string>
     <string name="wear_shortname">" "</string>
     <string name="virtualpump_shortname">" "</string>

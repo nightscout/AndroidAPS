@@ -12,8 +12,6 @@
     <string name="always_use_shortavg">всегда используйте укороченное среднее приращение вместо простого</string>
     <string name="androidaps_start">AndroidAPS запущен</string>
     <string name="always_use_shortavg_summary">полезно когда данные из нефильтруемых источников вроде Xdrip зашумляются</string>
-    <string name="androidaps_tempbasalendnote">конец действия временного базала</string>
-    <string name="androidaps_tempbasalstartnote">начало действия временного базала</string>
     <string name="approachingdailylimit">приближается суточный лимит инсулина</string>
     <string name="apsmode_title">режим APS</string>
     <string name="array_of_elements" formatted="false">массив %d элементов. актуальная величина:</string>
