@@ -601,8 +601,6 @@
     <string name="nsalarm_urgent_staledatavalue_label">Много стари данни при повече от [мин]</string>
     <string name="openapsama_autosens_period">Интервал за autosens [ч]</string>
     <string name="openapsama_autosens_period_summary">Брой часове назад за определяне на чувствителността (приемът на въглехидрати е изключен)</string>
-    <string name="ratio_short">RAT</string>
-    <string name="key_do_not_track_profile_switch">do_not_track_profile_switch</string>
     <string name="do_not_track_profile_switch">Игнорирай събитията от тип Смяна на профил</string>
     <string name="do_not_track_profile_switch_summary">Всички смени на профила се игнорират и винаги се използва текущия профил</string>
     <string name="pump">Помпа</string>
