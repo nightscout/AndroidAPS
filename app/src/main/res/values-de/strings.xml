@@ -367,4 +367,15 @@
     <string name="basal_step">Basal-Schritt</string>
     <string name="basalmissing">Basal fehlt im Profil. Verwende Standardwert.</string>
     <string name="basalvaluebelowminimum">Basalwert unter dem Minimum. Profil nicht gesetzt!</string>
+    <string name="batteryoptimalizationerror">Gerät untertützt anscheinend das deaktivieren der Akku-Leistungsoptimierung nicht.</string>
+    <string name="bolus_step">Bolus-Schritt</string>
+    <string name="bolusrequested">Werde %.2fE abgeben</string>
+    <string name="careportal_activity_label">AKTIVITÄT &amp; FEEDBACK</string>
+    <string name="careportal_canulaage_label">Katheter-Liegedauer</string>
+    <string name="careportal_canulaage_label_short">CAGE</string>
+    <string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
+    <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
+    <string name="careportal_insulinage_label"></string>
+    <string name="careportal_newnstreatment_duration_min_label">Dauer [min]</string>
+    <string name="paused"></string>
 </resources>
