@@ -286,7 +286,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            result = cancelTempBasal();
+            result = cancelTempBasal(false);
             if (!result.success)
                 return result;
         }
@@ -337,7 +337,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;

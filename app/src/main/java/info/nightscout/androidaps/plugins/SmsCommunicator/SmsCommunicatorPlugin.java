@@ -272,7 +272,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
-                                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                                    PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                                     MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_STOP"));
                                     reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeendisabled)+ " " +
                                             MainApp.sResources.getString(result.success?R.string.smscommunicator_tempbasalcanceled:R.string.smscommunicator_tempbasalcancelfailed);
@@ -506,7 +506,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
                             danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.cancelTempBasal();
+                            PumpEnactResult result = pumpInterface.cancelTempBasal(true);
                             if (result.success) {
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcanceled);
                                 if (danaRPlugin != null)
@@ -535,7 +535,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         suspendWaitingForConfirmation.processed = true;
                         final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
                         activeloop.suspendTo(System.currentTimeMillis() + suspendWaitingForConfirmation.duration * 60L * 1000);
-                        PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal();
+                        PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
                         NSUpload.uploadOpenAPSOffline(suspendWaitingForConfirmation.duration * 60);
                         MainApp.bus().post(new EventRefreshOverview("SMS_LOOP_SUSPENDED"));
                         reply = MainApp.sResources.getString(R.string.smscommunicator_loopsuspended) + " " +
