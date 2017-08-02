@@ -625,9 +625,6 @@
     <string name="cpp_sync_setting_missing">трябва да е активно за да изпрати стойностите към помпата!</string>
     <string name="cpp_notloadedplugins">Не всички профили са заредени!</string>
     <string name="cpp_valuesnotstored">Стойностите не са запазени!</string>
-    <string name="androidaps_tempbasalendnote">Край на временен базал</string>
-    <string name="androidaps_tempbasalstartnote">Старт на временен базал</string>
-    <string name="careportal_newnstreatment_minutes">мин.</string>
     <string name="clearlog">Изчисти лога</string>
     <string name="nosuccess">неуспешно - моля проверете телефона</string>
     <string name="notavailable">Недостъпно</string>
@@ -636,7 +633,7 @@
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
     <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
     <string name="overview_newtempbasal_basal_label">Базална стойност</string>
-    <string name="ro_lang">Romanian</string>
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>

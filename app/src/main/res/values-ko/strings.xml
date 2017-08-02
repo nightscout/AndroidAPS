@@ -512,4 +512,5 @@
     <string name="adult">성인</string>
     <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="it_lang">Italian</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>
