@@ -632,7 +632,6 @@
     <string name="ns_localbroadcasts">Разреши предаване към други приложения (напр. xDrip)</string>
     <string name="ns_localbroadcasts_title">Разреши локално предаване на данни</string>
     <string name="objectives_0_gate">Потвърждаване, че КЗ е достъпна в Найтскаут и данните за помпата се качват там</string>
-    <string name="overview_newtempbasal_basal_label">Базална стойност</string>
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
     <string name="app_name">AndroidAPS</string>

@@ -34,7 +34,9 @@ public interface PumpInterface {
     PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes);
     PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes);
     PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes);
-    PumpEnactResult cancelTempBasal();
+    //some pumps might set a very short temp close to 100% as canecelling a temp can be noisy
+    //when the cancel request is requested by the user, the pump should always do a real cancel
+    PumpEnactResult cancelTempBasal(boolean userRequested);
     PumpEnactResult cancelExtendedBolus();
 
     // Status to be passed to NS
