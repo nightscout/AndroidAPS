@@ -111,9 +111,9 @@ public class Notification {
             return true;
         if (level == ANNOUNCEMENT)
             return true;
-        if (level == NORMAL && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false))
+        if (level == NORMAL && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_staledata, false))
             return true;
-        if (level == URGENT && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_urgent_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_urgent_high, false))
+        if (level == URGENT && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_urgent_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_urgent_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_urgent_staledata, false))
             return true;
         return false;
     }
@@ -139,6 +139,21 @@ public class Notification {
             return false;
         if (bgReading.value >= threshold)
             return true;
+        return false;
+    }
+    
+    boolean isAlarmForStaleData(){
+        BgReading bgReading = MainApp.getDbHelper().lastBg();
+        if (bgReading == null)
+            return false;
+        long bgReadingAgo = System.currentTimeMillis() - bgReading.date;
+        int bgReadingAgoMin = (int) (bgReadingAgo / (1000 * 60));
+        //Integer staleDataThreshold = NSSettingsStatus.getInstance().getIntegerOrNull("alarmTimeagoWarnMins");
+        //if (staleDataThreshold == null)
+        //    return false;
+        if(bgReadingAgoMin > SP.getInt(R.string.key_nsalarm_staledatavalue,16)){
+            return true;
+        } 
         return false;
     }
 }
