@@ -214,6 +214,17 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                     });
                 }
                 break;
+            case R.id.actions_canceltempbasal:
+                if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+                    sHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            pump.cancelTempBasal(true);
+                            Answers.getInstance().logCustom(new CustomEvent("CancelExtended"));
+                        }
+                    });
+                }
+                break;
             case R.id.actions_settempbasal:
                 NewTempBasalDialog newTempDialog = new NewTempBasalDialog();
                 newTempDialog.show(manager, "NewTempDialog");
