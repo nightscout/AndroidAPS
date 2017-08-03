@@ -220,7 +220,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                         @Override
                         public void run() {
                             pump.cancelTempBasal(true);
-                            Answers.getInstance().logCustom(new CustomEvent("CancelExtended"));
+                            Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
                         }
                     });
                 }
