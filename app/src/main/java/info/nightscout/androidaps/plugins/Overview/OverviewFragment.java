@@ -583,18 +583,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
                 break;
-            case R.id.overview_canceltempbutton:
-                final PumpInterface pump = MainApp.getConfigBuilder();
-                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pump.cancelTempBasal(true);
-                            Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
-                        }
-                    });
-                }
-                break;
             case R.id.overview_pumpstatus:
                 if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
                     sHandler.post(new Runnable() {
@@ -1044,6 +1032,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
             }
         }
+        if (activeTemp != null) {
+            baseBasalView.setTextColor(MainApp.sResources.getColor(R.color.basal));
+        } else {
+            baseBasalView.setTextColor(Color.WHITE);
+
+        }
+
         baseBasalView.setText(basalText);
 
         final ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());

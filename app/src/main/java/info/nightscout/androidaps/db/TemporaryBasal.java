@@ -289,17 +289,17 @@ public class TemporaryBasal implements Interval {
             Profile profile = MainApp.getConfigBuilder().getProfile();
             Double currentBasalRate = profile.getBasal();
             double rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
-            return DecimalFormatter.to2Decimal(rate) + "U/h ("+DecimalFormatter.to2Decimal(netExtendedRate)+"E) @" +
+            return getCalcuatedPercentageIfNeeded() + DecimalFormatter.to2Decimal(rate) + "U/h ("+DecimalFormatter.to2Decimal(netExtendedRate)+"E) @" +
                     DateUtil.timeString(date) +
-                    " " + getRealDuration() + "/" + durationInMinutes + "min";
+                    " " + getRealDuration() + "/" + durationInMinutes + "'";
         } else if (isAbsolute) {
             return DecimalFormatter.to2Decimal(absoluteRate) + "U/h @" +
                     DateUtil.timeString(date) +
-                    " " + getRealDuration() + "/" + durationInMinutes + "min";
+                    " " + getRealDuration() + "/" + durationInMinutes + "'";
         } else { // percent
             return percentRate + "% @" +
                     DateUtil.timeString(date) +
-                    " " + getRealDuration() + "/" + durationInMinutes + "min";
+                    " " + getRealDuration() + "/" + durationInMinutes + "'";
         }
     }
 
@@ -328,6 +328,31 @@ public class TemporaryBasal implements Interval {
         } else { // percent
             return percentRate + "% ";
         }
+    }
+
+    private String getCalcuatedPercentageIfNeeded(){
+        if (isAbsolute || isFakeExtended) {
+
+            double rate  = 0d;
+            if (isFakeExtended) {
+                Profile profile = MainApp.getConfigBuilder().getProfile();
+                Double currentBasalRate = profile.getBasal();
+                rate = (currentBasalRate == null)?0d:(currentBasalRate+netExtendedRate);
+            } else if (isAbsolute){
+                rate = absoluteRate;
+            }
+
+            if(SP.getBoolean(R.string.key_danar_visualizeextendedaspercentage, false) && SP.getBoolean(R.string.key_danar_useextended, false)){
+                Profile profile = MainApp.getConfigBuilder().getProfile();
+                if(profile != null) {
+                    double basal = profile.getBasal();
+                    if(basal != 0){
+                        return Math.round(rate*100d/basal) + "% ";
+                    }
+                }
+            }
+        }
+        return "";
     }
 
     public String toStringVeryShort() {
