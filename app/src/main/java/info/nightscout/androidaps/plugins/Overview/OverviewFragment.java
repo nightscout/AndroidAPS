@@ -583,18 +583,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 NewTreatmentDialog treatmentDialogFragment = new NewTreatmentDialog();
                 treatmentDialogFragment.show(manager, "TreatmentDialog");
                 break;
-            case R.id.overview_canceltempbutton:
-                final PumpInterface pump = MainApp.getConfigBuilder();
-                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                    sHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            pump.cancelTempBasal(true);
-                            Answers.getInstance().logCustom(new CustomEvent("CancelTemp"));
-                        }
-                    });
-                }
-                break;
             case R.id.overview_pumpstatus:
                 if (MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().isInitialized())
                     sHandler.post(new Runnable() {
