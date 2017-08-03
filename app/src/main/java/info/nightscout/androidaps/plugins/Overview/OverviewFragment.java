@@ -1044,6 +1044,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 basalText += "(" + DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + "U/h)";
             }
         }
+        if (activeTemp != null) {
+            baseBasalView.setTextColor(MainApp.sResources.getColor(R.color.basal));
+        } else {
+            baseBasalView.setTextColor(Color.WHITE);
+
+        }
+
         baseBasalView.setText(basalText);
 
         final ExtendedBolus extendedBolus = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
