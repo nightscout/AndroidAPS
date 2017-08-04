@@ -746,14 +746,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             public void run() {
                 scheduleUpdateGUI("refreshLoop");
                 sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
-                // Added by Rumen for STALE DATA ALARM
-                boolean isThereStaleData = Notification.isAlarmForStaleData();
-                log.debug("isThereIsStaleData: "+isThereStaleData);
-                if(isThereStaleData){
-                    Notification notification = new Notification(Notification.NSALARM, getString(R.string.nsalarm_staledata), Notification.URGENT);
-                    MainApp.bus().post(new EventNewNotification(notification));
-                }
-                // end of insert
             }
         };
         sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
@@ -1764,6 +1756,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
+            if(notification.text == MainApp.sResources.getString(R.string.nsalarm_staledata))
+                holder.dismiss.setText("snooze");
             holder.text.setText(notification.text);
             holder.time.setText(DateUtil.timeString(notification.date));
             if (notification.level == Notification.URGENT)
