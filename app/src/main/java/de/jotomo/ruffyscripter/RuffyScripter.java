@@ -15,11 +15,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
+import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -34,7 +36,7 @@ public class RuffyScripter {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
 
-    private final IRuffyService ruffyService;
+    private IRuffyService ruffyService;
     private final long connectionTimeOutMs = 5000;
     private String unrecoverableError = null;
 
@@ -49,15 +51,18 @@ public class RuffyScripter {
 
     private boolean started = false;
 
-    public RuffyScripter(final IRuffyService ruffyService) {
-        this.ruffyService = ruffyService;
+    public RuffyScripter() {
+
     }
 
-    public void start() {
+    public void start(IRuffyService newService) {
         try {
-            ruffyService.addHandler(mHandler);
-            idleDisconnectMonitorThread.start();
-            started = true;
+            if(newService!=null) {
+                this.ruffyService = newService;
+                idleDisconnectMonitorThread.start();
+                started = true;
+                try{newService.addHandler(mHandler);}catch (Exception e){}
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -66,11 +71,6 @@ public class RuffyScripter {
     public void stop() {
         if (started) {
             started=false;
-            try {
-                ruffyService.removeHandler(mHandler);
-            } catch (Exception e) {
-                log.warn("Removing IRTHandler from Ruffy service failed, ignoring", e);
-            }
         }
     }
 
@@ -78,6 +78,7 @@ public class RuffyScripter {
         return started;
     }
 
+    private boolean canDisconnect = false;
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -91,11 +92,16 @@ public class RuffyScripter {
                             && now > lastDisconnect + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
                         lastDisconnect = now;
-                        ruffyService.doRTDisconnect();
+                        canDisconnect=true;
+                        ruffyService.doRTDisconnect(mHandler);
                         connected = false;
                         lastDisconnect = System.currentTimeMillis();
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
+                    }
+                    else
+                    {
+                        canDisconnect=false;
                     }
                 } catch (Exception e) {
                     // TODO do we need to catch this exception somewhere else too? right now it's
@@ -128,6 +134,11 @@ public class RuffyScripter {
         }
 
         @Override
+        public boolean canDisconnect() throws RemoteException {
+            return canDisconnect;
+        }
+
+        @Override
         public void rtStopped() throws RemoteException {
             log.debug("rtStopped callback invoked");
             currentMenu = null;
@@ -149,7 +160,7 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleMenu(Menu menu) throws RemoteException {
+        public void rtDisplayHandleMenu(Menu menu, int sequence) throws RemoteException {
             // method is called every ~500ms
             log.debug("rtDisplayHandleMenu: " + menu.getType());
 
@@ -166,14 +177,35 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleNoMenu() throws RemoteException {
+        public void rtDisplayHandleNoMenu(int sequence) throws RemoteException {
             log.debug("rtDisplayHandleNoMenu callback invoked");
+        }
+
+
+        @Override
+        public void keySent(int sequence) throws RemoteException {
+            synchronized (keylock)
+            {
+                keylock.notify();
+            }
+        }
+
+        @Override
+        public String getServiceIdentifier() throws RemoteException {
+            return this.toString();
         }
 
     };
 
+    private Object keylock = new Object();
     public boolean isPumpBusy() {
         return activeCmd != null;
+    }
+
+    public void unbind() {
+        if(ruffyService!=null)
+            try{ruffyService.removeHandler(mHandler);}catch (Exception e){}
+        this.ruffyService = null;
     }
 
     private static class Returnable {
@@ -323,7 +355,8 @@ public class RuffyScripter {
                 SystemClock.sleep(10 * 1000);
             }
 
-            boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
+            canDisconnect=false;
+            boolean connectInitSuccessful = ruffyService.doRTConnect(mHandler) == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
             log.debug("Waiting for first menu update to be sent");
             // Note: there was an 'if(currentMenu == null)' around the next call, since
@@ -403,8 +436,12 @@ public class RuffyScripter {
     private void pressKey(final byte key) {
         try {
             ruffyService.rtSendKey(key, true);
-            SystemClock.sleep(200);
+            //SystemClock.sleep(200);
             ruffyService.rtSendKey(Key.NO_KEY, true);
+            synchronized (keylock)
+            {
+                keylock.wait(2500);
+            }
         } catch (Exception e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");
         }

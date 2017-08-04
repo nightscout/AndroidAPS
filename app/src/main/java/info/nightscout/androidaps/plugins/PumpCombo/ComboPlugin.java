@@ -85,6 +85,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().register(this);
         bindRuffyService();
         startAlerter();
+        ruffyScripter = new RuffyScripter();
     }
 
     private void definePumpCapabilities() {
@@ -169,11 +170,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private boolean bindRuffyService() {
 
-        if(ruffyScripter != null)
-        {
-            log.debug("ruffy service already connected!");
-            return false;
-        }
         Context context = MainApp.instance().getApplicationContext();
         boolean boundSucceeded = false;
 
@@ -186,6 +182,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             // full path to the driver
                             // in the logs this service is mentioned as (note the slash)
                             // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
+                            //org.monkey.d.ruffy.ruffy is the base package identifier and /.driver.Ruffy the service within the package
                             "org.monkey.d.ruffy.ruffy.driver.Ruffy"
                     ));
             context.startService(intent);
@@ -194,16 +191,22 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
-                    ruffyScripter.start();
+                    keepUnbound=false;
+                    ruffyScripter.start(IRuffyService.Stub.asInterface(service));
                     log.debug("ruffy serivce connected");
                 }
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
                     ruffyScripter.stop();
-                    ruffyScripter = null;
                     log.debug("ruffy service disconnected");
+                    if(!keepUnbound) {
+                        try {
+                            Thread.sleep(250);
+                        } catch (Exception e) {
+                        }
+                        bindRuffyService();
+                    }
                 }
             };
             boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
@@ -217,7 +220,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return true;
     }
 
+    private boolean keepUnbound = false;
     private void unbindRuffyService() {
+        keepUnbound = true;
+        ruffyScripter.unbind();
         MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
     }
 

@@ -107,7 +107,7 @@ public class SetTbrCommand implements Command {
         switch (state)
         {
             case BEFORE:
-                if(scripter.currentMenu.getType()==MenuType.MAIN_MENU)
+                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.MAIN_MENU)
                 {
                     updateState(MAIN,120);
                     lastMenu = MenuType.MAIN_MENU;
@@ -115,7 +115,7 @@ public class SetTbrCommand implements Command {
                 }
                 break;
             case MAIN:
-                if(scripter.currentMenu.getType()==MenuType.TBR_MENU)
+                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_MENU)
                 {
                     updateState(TBR,30);
                     scripter.pressCheckKey();
@@ -126,46 +126,31 @@ public class SetTbrCommand implements Command {
                         e.printStackTrace();
                     }
                 }
-                else if(scripter.currentMenu.getType()!=lastMenu)
+                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()!=lastMenu)
                 {
                     lastMenu = scripter.currentMenu.getType();
                     updateState(MAIN,30);
                     scripter.pressMenuKey();
                     log.debug("found Menu:"+lastMenu+" -> state:MAIN");
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
                 else
                 {
                     scripter.pressMenuKey();
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
                 break;
             case TBR:
-                if(scripter.currentMenu.getType()==MenuType.TBR_SET)
+                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_SET)
                 {
                     updateState(SET_TBR,60);
                 }
                 else
                 {
                     scripter.pressMenuKey();
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     updateState(TBR,60);
                 }
                 break;
             case SET_TBR:
-                if(scripter.currentMenu.getType()==MenuType.TBR_SET)
+                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_SET)
                 {
                     Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
                     if(percentageObj != null && percentageObj instanceof Double)
@@ -175,21 +160,11 @@ public class SetTbrCommand implements Command {
                         {
                             scripter.pressUpKey();
                             updateState(SET_TBR,30);
-                            try {
-                                Thread.sleep(750);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }
                         else if(currentPercentage > percentage)
                         {
                             scripter.pressDownKey();
                             updateState(SET_TBR,30);
-                            try {
-                                Thread.sleep(750);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }
                         else
                         {
@@ -205,15 +180,10 @@ public class SetTbrCommand implements Command {
                         }
                     }
                 }
-                else if(scripter.currentMenu.getType()==MenuType.TBR_DURATION)
+                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_DURATION)
                 {
                     scripter.pressMenuKey();
-                    updateState(TBR,60);
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    updateState(SET_TBR,60);
                 }
                 else
                 {
@@ -221,7 +191,7 @@ public class SetTbrCommand implements Command {
                 }
                 break;
             case SET_TIME:
-                if(scripter.currentMenu.getType()==MenuType.TBR_DURATION)
+                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_DURATION)
                 {
                     Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
                     if(durationObj != null && durationObj instanceof MenuTime)
@@ -232,43 +202,23 @@ public class SetTbrCommand implements Command {
                         {
                             scripter.pressUpKey();
                             updateState(SET_TIME,30);
-                            try {
-                                Thread.sleep(750);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }
                         else if(currentDuration > duration)
                         {
                             scripter.pressDownKey();
                             updateState(SET_TIME,30);
-                            try {
-                                Thread.sleep(750);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }
                         else
                         {
                             scripter.pressCheckKey();
                             updateState(SET, 30);
-                            try {
-                                Thread.sleep(750);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
                         }
                     }
                 }
-                else if(scripter.currentMenu.getType()==MenuType.TBR_SET)
+                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_SET)
                 {
                     scripter.pressMenuKey();
                     updateState(SET_TIME,60);
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
                 else
                 {
@@ -276,18 +226,13 @@ public class SetTbrCommand implements Command {
                 }
                 break;
             case SET:
-                if(scripter.currentMenu.getType()==MenuType.WARNING_OR_ERROR)
+                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.WARNING_OR_ERROR)
                 {
                     lastMenu = scripter.currentMenu.getType();
                     scripter.pressCheckKey();
                     updateState(SET, 30);
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                 }
-                else if(scripter.currentMenu.getType()==MenuType.MAIN_MENU) {
+                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.MAIN_MENU) {
                     Object setPercentage = scripter.currentMenu.getAttribute(MenuAttribute.TBR);
                     Object setDuration = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
                     if (setPercentage== null ||setDuration==null) {
