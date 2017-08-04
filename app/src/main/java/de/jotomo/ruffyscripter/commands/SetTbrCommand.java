@@ -21,6 +21,7 @@ import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.SET;
 import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.SET_TBR;
 import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.SET_TIME;
 import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.TBR;
+import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.TIME;
 
 public class SetTbrCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
@@ -66,6 +67,7 @@ public class SetTbrCommand implements Command {
         MAIN,
         TBR,
         SET_TBR,
+        TIME,
         SET_TIME,
         SET,
         AFTER,
@@ -102,6 +104,7 @@ public class SetTbrCommand implements Command {
         timeout = timeoutSec*1000;
     }
     private MenuType lastMenu;
+    private int retries = 0;
     private void tick()
     {
         switch (state)
@@ -112,42 +115,29 @@ public class SetTbrCommand implements Command {
                     updateState(MAIN,120);
                     lastMenu = MenuType.MAIN_MENU;
                     log.debug("found MAIN_MENU -> state:MAIN");
+                    retries=3;
                 }
                 break;
             case MAIN:
-                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_MENU)
-                {
-                    updateState(TBR,30);
-                    scripter.pressCheckKey();
-                    log.debug("found TBR_MENU -> state:TBR");
-                    try {
-                        Thread.sleep(750);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                if(retries>0)
+                    if(scripter.goToMainMenuScreen(MenuType.TBR_MENU,30000))
+                    {
+                        updateState(TBR,30);
+                        retries=0;
                     }
-                }
-                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()!=lastMenu)
-                {
-                    lastMenu = scripter.currentMenu.getType();
-                    updateState(MAIN,30);
-                    scripter.pressMenuKey();
-                    log.debug("found Menu:"+lastMenu+" -> state:MAIN");
-                }
+                    else
+                        retries--;
                 else
-                {
-                    scripter.pressMenuKey();
-                }
+                    updateState(ERROR,30);
                 break;
             case TBR:
-                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_SET)
+                if(scripter.enterMenu(MenuType.TBR_MENU,MenuType.TBR_SET, RuffyScripter.Key.CHECK,20000))
                 {
                     updateState(SET_TBR,60);
+                    retries = 10;
                 }
                 else
-                {
-                    scripter.pressMenuKey();
-                    updateState(TBR,60);
-                }
+                    updateState(ERROR,30);
                 break;
             case SET_TBR:
                 if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_SET)
@@ -156,39 +146,45 @@ public class SetTbrCommand implements Command {
                     if(percentageObj != null && percentageObj instanceof Double)
                     {
                         double currentPercentage = ((Double) percentageObj).doubleValue();
-                        if(currentPercentage < percentage)
+
+                        if(currentPercentage!=percentage)
                         {
-                            scripter.pressUpKey();
-                            updateState(SET_TBR,30);
-                        }
-                        else if(currentPercentage > percentage)
-                        {
-                            scripter.pressDownKey();
-                            updateState(SET_TBR,30);
+                            if(retries>0) {
+                                retries--;
+                                int steps = (int) ((percentage - currentPercentage) / 10.0);
+                                scripter.step(steps,(steps<0? RuffyScripter.Key.DOWN: RuffyScripter.Key.UP), 3000);
+                            }
+                            else
+                                updateState(ERROR,30);
                         }
                         else
                         {
                             if(percentage==100)
                             {
                                 scripter.pressCheckKey();
-                                updateState(SET, 30);
+                                updateState(SET,30);
                             }
                             else {
-                                scripter.pressMenuKey();
-                                updateState(SET_TIME, 30);
+                                updateState(TIME, 30);
                             }
+                            retries=10;
                         }
                     }
-                }
-                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_DURATION)
-                {
-                    scripter.pressMenuKey();
-                    updateState(SET_TBR,60);
                 }
                 else
                 {
                     updateState(ERROR,30);
                 }
+                break;
+            case TIME:
+                if((scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_DURATION) || scripter.enterMenu(MenuType.TBR_SET,MenuType.TBR_DURATION, RuffyScripter.Key.MENU,20000))
+                {
+                    updateState(SET_TIME,60);
+                    retries = 10;
+                }
+                else if(retries==0)
+                    updateState(ERROR,30);
+                else retries--;
                 break;
             case SET_TIME:
                 if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_DURATION)
@@ -198,27 +194,25 @@ public class SetTbrCommand implements Command {
                     {
                         MenuTime time = (MenuTime) durationObj;
                         double currentDuration = (time.getHour()*60)+time.getMinute();
-                        if(currentDuration < duration)
+                        if(currentDuration!=duration)
                         {
-                            scripter.pressUpKey();
-                            updateState(SET_TIME,30);
+                            if(retries>0) {
+                                retries--;
+                                int steps = (int)((currentDuration - duration)/15.0);
+                                if(currentDuration+(steps*15)<duration)
+                                    steps++;
+                                else if(currentDuration+(steps*15)>duration)
+                                    steps--;
+                                scripter.step(steps,(steps>0? RuffyScripter.Key.UP: RuffyScripter.Key.DOWN), 3000);
+                            }
+                            else
+                                updateState(ERROR,30);
                         }
-                        else if(currentDuration > duration)
-                        {
-                            scripter.pressDownKey();
-                            updateState(SET_TIME,30);
-                        }
-                        else
-                        {
+                        else {
                             scripter.pressCheckKey();
                             updateState(SET, 30);
                         }
                     }
-                }
-                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_SET)
-                {
-                    scripter.pressMenuKey();
-                    updateState(SET_TIME,60);
                 }
                 else
                 {
