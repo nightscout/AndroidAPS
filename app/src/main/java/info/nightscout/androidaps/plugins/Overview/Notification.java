@@ -60,7 +60,6 @@ public class Notification {
     }
 
     public Notification(int id, Date date, String text, int level, Date validTo) {
-        log.debug("Initialized Notification.class 1");
         this.id = id;
         this.date = date;
         this.text = text;
@@ -69,7 +68,6 @@ public class Notification {
     }
 
     public Notification(int id, String text, int level, int validMinutes) {
-        log.debug("Initialized Notification.class 2");
         this.id = id;
         this.date = new Date();
         this.text = text;
@@ -78,7 +76,6 @@ public class Notification {
     }
 
     public Notification(int id, String text, int level) {
-        log.debug("Initialized Notification.class 3");
         this.id = id;
         this.date = new Date();
         this.text = text;
@@ -155,7 +152,7 @@ public class Notification {
     static boolean isAlarmForStaleData(){
         if(SP.getLong("snoozedTo", 0L) != 0L){
             if(System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
-                log.debug("Alarm is snoozed for next "+(SP.getLong("snoozedTo", 0L)-System.currentTimeMillis())/1000+" seconds");
+                //log.debug("Alarm is snoozed for next "+(SP.getLong("snoozedTo", 0L)-System.currentTimeMillis())/1000+" seconds");
                 return false;
             }
         } 
@@ -165,9 +162,11 @@ public class Notification {
         long bgReadingAgo = System.currentTimeMillis() - bgReading.date;
         int bgReadingAgoMin = (int) (bgReadingAgo / (1000 * 60));
         // Added for testing
-        //bgReadingAgoMin = 20;
+        bgReadingAgoMin = 20;
         log.debug("bgReadingAgoMin value is:"+bgReadingAgoMin);
-        if(bgReadingAgoMin > SP.getInt(R.string.key_nsalarm_staledatavalue,15) && SP.getBoolean(R.string.key_nsalarm_staledata, false)){
+        Double threshold = NSSettingsStatus.getInstance().getThreshold("alarmTimeagoWarnMins");
+        if(threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue,15D);
+        if(bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false)){
             return true;
         } 
         return false;
