@@ -51,6 +51,11 @@ public class RuffyScripter {
 
     private boolean started = false;
 
+    private Object keylock = new Object();
+    private int keynotwait = 0;
+
+    private Object screenlock = new Object();
+
     public RuffyScripter() {
 
     }
@@ -167,6 +172,11 @@ public class RuffyScripter {
             currentMenu = menu;
             menuLastUpdated = System.currentTimeMillis();
 
+            synchronized (screenlock)
+            {
+                screenlock.notifyAll();
+            }
+
             connected = true;
 
             // note that a WARNING_OR_ERROR menu can be a valid temporary state (cancelling TBR)
@@ -186,7 +196,10 @@ public class RuffyScripter {
         public void keySent(int sequence) throws RemoteException {
             synchronized (keylock)
             {
-                keylock.notify();
+                if(keynotwait>0)
+                    keynotwait--;
+                else
+                    keylock.notify();
             }
         }
 
@@ -197,7 +210,6 @@ public class RuffyScripter {
 
     };
 
-    private Object keylock = new Object();
     public boolean isPumpBusy() {
         return activeCmd != null;
     }
@@ -379,35 +391,35 @@ public class RuffyScripter {
     // so this class can focus on providing a connection to run commands
     // (or maybe reconsider putting it into a base class)
 
-    private static class Key {
-        static byte NO_KEY = (byte) 0x00;
-        static byte MENU = (byte) 0x03;
-        static byte CHECK = (byte) 0x0C;
-        static byte UP = (byte) 0x30;
-        static byte DOWN = (byte) 0xC0;
+    public static class Key {
+        public static byte NO_KEY = (byte) 0x00;
+        public static byte MENU = (byte) 0x03;
+        public static byte CHECK = (byte) 0x0C;
+        public static byte UP = (byte) 0x30;
+        public static byte DOWN = (byte) 0xC0;
     }
 
     public void pressUpKey() {
         log.debug("Pressing up key");
-        pressKey(Key.UP);
+        pressKey(Key.UP,2000);
         log.debug("Releasing up key");
     }
 
     public void pressDownKey() {
         log.debug("Pressing down key");
-        pressKey(Key.DOWN);
+        pressKey(Key.DOWN,2000);
         log.debug("Releasing down key");
     }
 
     public void pressCheckKey() {
         log.debug("Pressing check key");
-        pressKey(Key.CHECK);
+        pressKey(Key.CHECK,2000);
         log.debug("Releasing check key");
     }
 
     public void pressMenuKey() {
         log.debug("Pressing menu key");
-        pressKey(Key.MENU);
+        pressKey(Key.MENU,2000);
         log.debug("Releasing menu key");
     }
 
@@ -433,14 +445,24 @@ public class RuffyScripter {
         }
     }
 
-    private void pressKey(final byte key) {
+    private void pressKey(final byte key, long timeout) {
         try {
             ruffyService.rtSendKey(key, true);
             //SystemClock.sleep(200);
             ruffyService.rtSendKey(Key.NO_KEY, true);
-            synchronized (keylock)
+            if(timeout > 0)
             {
-                keylock.wait(2500);
+                synchronized (keylock)
+                {
+                    keylock.wait(timeout);
+                }
+            }
+            else
+            {
+                synchronized (keylock)
+                {
+                    keynotwait++;
+                }
             }
         } catch (Exception e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");
