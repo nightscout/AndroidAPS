@@ -9,11 +9,16 @@ import info.nightscout.androidaps.plugins.NSClientInternal.data.NSAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.utils.SP;
 
+// Added by Rumen for debugging
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Created by mike on 03.12.2016.
  */
 
 public class Notification {
+    private static Logger log = LoggerFactory.getLogger(Notification.class);
+    
     public static final int URGENT = 0;
     public static final int NORMAL = 1;
     public static final int LOW = 2;
@@ -55,6 +60,7 @@ public class Notification {
     }
 
     public Notification(int id, Date date, String text, int level, Date validTo) {
+        log.debug("Initialized Notification.class 1");
         this.id = id;
         this.date = date;
         this.text = text;
@@ -63,6 +69,7 @@ public class Notification {
     }
 
     public Notification(int id, String text, int level, int validMinutes) {
+        log.debug("Initialized Notification.class 2");
         this.id = id;
         this.date = new Date();
         this.text = text;
@@ -71,6 +78,7 @@ public class Notification {
     }
 
     public Notification(int id, String text, int level) {
+        log.debug("Initialized Notification.class 3");
         this.id = id;
         this.date = new Date();
         this.text = text;
@@ -93,7 +101,7 @@ public class Notification {
                 this.id = NSALARM;
                 this.level = NORMAL;
                 this.text = nsAlarm.getTile();
-                if (isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false))
+                if (isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_staledata,false))
                     this.soundId = R.raw.alarm;
                 break;
             case 2:
@@ -112,7 +120,9 @@ public class Notification {
         if (level == ANNOUNCEMENT)
             return true;
         if (level == NORMAL && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_staledata, false))
+        {   
             return true;
+        }
         if (level == URGENT && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_urgent_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_urgent_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_urgent_staledata, false))
             return true;
         return false;
@@ -142,16 +152,22 @@ public class Notification {
         return false;
     }
     
-    boolean isAlarmForStaleData(){
+    static boolean isAlarmForStaleData(){
+        if(SP.getLong("snoozedTo", 0L) != 0L){
+            if(System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
+                log.debug("Alarm is snoozed for next "+(SP.getLong("snoozedTo", 0L)-System.currentTimeMillis())/1000+" seconds");
+                return false;
+            }
+        } 
         BgReading bgReading = MainApp.getDbHelper().lastBg();
         if (bgReading == null)
             return false;
         long bgReadingAgo = System.currentTimeMillis() - bgReading.date;
         int bgReadingAgoMin = (int) (bgReadingAgo / (1000 * 60));
-        //Integer staleDataThreshold = NSSettingsStatus.getInstance().getIntegerOrNull("alarmTimeagoWarnMins");
-        //if (staleDataThreshold == null)
-        //    return false;
-        if(bgReadingAgoMin > SP.getInt(R.string.key_nsalarm_staledatavalue,16)){
+        // Added for testing
+        //bgReadingAgoMin = 20;
+        log.debug("bgReadingAgoMin value is:"+bgReadingAgoMin);
+        if(bgReadingAgoMin > SP.getInt(R.string.key_nsalarm_staledatavalue,15) && SP.getBoolean(R.string.key_nsalarm_staledata, false)){
             return true;
         } 
         return false;
