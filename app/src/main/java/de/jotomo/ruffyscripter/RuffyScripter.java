@@ -430,7 +430,7 @@ public class RuffyScripter {
         log.debug("Releasing back key");
     }
 
-    private boolean waitScreen(long timeout)
+    public boolean waitScreen(long timeout)
     {
         synchronized (screenlock) {
             try {
