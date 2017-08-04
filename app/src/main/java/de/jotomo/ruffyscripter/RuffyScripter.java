@@ -397,6 +397,7 @@ public class RuffyScripter {
         public static byte CHECK = (byte) 0x0C;
         public static byte UP = (byte) 0x30;
         public static byte DOWN = (byte) 0xC0;
+        public static byte BACK = (byte) 0x33;
     }
 
     public void pressUpKey() {
@@ -423,6 +424,11 @@ public class RuffyScripter {
         log.debug("Releasing menu key");
     }
 
+    public void pressBackKey() {
+        log.debug("Pressing back key");
+        pressKey(Key.BACK,2000);
+        log.debug("Releasing back key");
+    }
     // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
     // then anything longer than a few seconds is an error;
     // only ensureConnected() uses the method with the timeout parameter; inline that code,
