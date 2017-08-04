@@ -547,20 +547,51 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
-        CommandResult commandResult = runCommand(new CancelTbrCommand());
-        if (commandResult.enacted) {
-            TemporaryBasal tempStop = new TemporaryBasal(commandResult.completionTime);
-            tempStop.durationInMinutes = 0; // ending temp basal
-            tempStop.source = Source.USER;
-            ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
-            treatmentsInterface.addToHistoryTempBasal(tempStop);
+
+        CommandResult commandResult = null;
+        TemporaryBasal tempBasal = null;
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+
+        final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+
+        if (activeTemp == null) {
+            log.debug("cancelTempBasal really cancelling tbr.");
+            commandResult = runCommand(new CancelTbrCommand());
+            if (commandResult.enacted) {
+                tempBasal = new TemporaryBasal(commandResult.completionTime);
+                tempBasal.durationInMinutes = 0;
+                tempBasal.source = Source.USER;
+                pumpEnactResult.isTempCancel = true;
+            }
+        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15 ) {
+            // do nothing.
+            log.debug("cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
+            pumpEnactResult.comment = "cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.";
+            pumpEnactResult.enacted = true; // all fine though...
+            pumpEnactResult.success = true; // just roll with it...
+        } else {
+            long percentage = (activeTemp.percentRate > 100) ? 110:90;
+            log.debug("cancelTempBasal changing tbr to " + percentage + "% for 15 mins.");
+            commandResult = runCommand(new SetTbrCommand(percentage, 15));
+            if (commandResult.enacted) {
+                tempBasal = new TemporaryBasal(commandResult.completionTime);
+                tempBasal.durationInMinutes = 15;
+                tempBasal.source = Source.USER;
+                tempBasal.percentRate = (int) percentage;
+                tempBasal.isAbsolute = false;
+            }
         }
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = commandResult.success;
-        pumpEnactResult.enacted = commandResult.enacted;
-        pumpEnactResult.comment = commandResult.message;
-        pumpEnactResult.isTempCancel = true;
+        if (tempBasal != null) {
+            ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
+            treatmentsInterface.addToHistoryTempBasal(tempBasal);
+        }
+
+        if (commandResult != null) {
+            pumpEnactResult.success = commandResult.success;
+            pumpEnactResult.enacted = commandResult.enacted;
+            pumpEnactResult.comment = commandResult.message;
+        }
         return pumpEnactResult;
     }
 
