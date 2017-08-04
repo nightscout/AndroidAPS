@@ -429,6 +429,57 @@ public class RuffyScripter {
         pressKey(Key.BACK,2000);
         log.debug("Releasing back key");
     }
+
+    private boolean waitScreen(long timeout)
+    {
+        synchronized (screenlock) {
+            try {
+                screenlock.wait(timeout);
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean goToMainMenuScreen(MenuType screen, long timeout)
+    {
+        long start = System.currentTimeMillis();
+        while((currentMenu == null || currentMenu.getType()!=screen) && start+timeout>System.currentTimeMillis())
+        {
+            if(currentMenu!=null && currentMenu.getType()==MenuType.WARNING_OR_ERROR)
+            {
+                //FIXME bad thing to do :D
+                pressCheckKey();
+            }
+            else if(currentMenu!=null && !currentMenu.getType().isMaintype())
+            {
+                pressBackKey();
+            }
+            else
+                pressMenuKey();
+            waitScreen(250);
+        }
+        return currentMenu != null && currentMenu.getType()==screen;
+    }
+
+    public boolean enterMenu(MenuType startType, MenuType targetType, byte key, long timeout)
+    {
+        if(currentMenu==null || currentMenu.getType() != startType)
+            return false;
+        long start = System.currentTimeMillis();
+        pressKey(key,2000);
+        while((currentMenu == null || currentMenu.getType()!=targetType) && start+timeout>System.currentTimeMillis()) {
+            waitScreen(100);
+        }
+        return currentMenu!=null && currentMenu.getType()==targetType;
+    }
+
+    public void step(int steps, byte key, long timeout) {
+        for(int i = 0; i < Math.abs(steps);i++)
+            pressKey(key,timeout);
+    }
+
     // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
     // then anything longer than a few seconds is an error;
     // only ensureConnected() uses the method with the timeout parameter; inline that code,
