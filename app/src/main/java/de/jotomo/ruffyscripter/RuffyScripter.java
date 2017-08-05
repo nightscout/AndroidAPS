@@ -57,7 +57,10 @@ public class RuffyScripter {
     public void start() {
         try {
             ruffyService.addHandler(mHandler);
-            idleDisconnectMonitorThread.start();
+            // TODO this'll be done better in v2 via ConnectionManager
+            if (idleDisconnectMonitorThread.getState() == Thread.State.NEW) {
+                idleDisconnectMonitorThread.start();
+            }
             started = true;
         } catch (RemoteException e) {
             throw new RuntimeException(e);
