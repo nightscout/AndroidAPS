@@ -204,7 +204,11 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
 
     @Override
     public double getBaseBasalRate() {
-        return MainApp.getConfigBuilder().getProfile().getBasal();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile != null)
+            return profile.getBasal();
+        else
+            return 0d;
     }
 
     @Override
@@ -282,7 +286,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            result = cancelTempBasal();
+            result = cancelTempBasal(false);
             if (!result.success)
                 return result;
         }
@@ -333,7 +337,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;

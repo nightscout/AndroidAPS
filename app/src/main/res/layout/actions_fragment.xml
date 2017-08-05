@@ -53,6 +53,19 @@
                 android:text="@string/overview_tempbasal_button" />
 
             <Button
+                android:id="@+id/actions_canceltempbasal"
+                style="?android:attr/buttonStyle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="3dp"
+                android:layout_weight="0.5"
+                android:drawableTop="@drawable/icon_cancelbasal"
+                android:text="Cancel temp basal" />
+
+            <Button
                 android:id="@+id/actions_extendedbolus"
                 style="?android:attr/buttonStyle"
                 android:layout_width="fill_parent"

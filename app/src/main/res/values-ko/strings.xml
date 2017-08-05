@@ -108,7 +108,7 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">식사주입 전송 에러</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basal_label">기초주입 값</string>
+    <string name="overview_newtempbasal_basalpercent">기초주입 값 [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = 현재)</string>
     <string name="setbasalquestion">새 임시기초주입 적용:</string>
     <string name="overview_bolus_label">식사주입</string>
@@ -171,7 +171,6 @@
     <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
@@ -358,8 +357,6 @@
     <string name="edit_base_ic">Edit Base-IC:</string>
     <string name="base_profile_label">Base Profile:</string>
     <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
-    <string name="androidaps_tempbasalendnote">Basal Temp End</string>
-    <string name="androidaps_tempbasalstartnote">Basal Temp Start</string>
     <string name="prefs_range_title">차트 표시 범위</string>
     <string name="prefs_range_summary">Overview/스마트워치 차트 표시용 고/저혈당 선</string>
     <string name="low_mark">저혈당 선</string>
@@ -515,4 +512,5 @@
     <string name="adult">성인</string>
     <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="it_lang">Italian</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>

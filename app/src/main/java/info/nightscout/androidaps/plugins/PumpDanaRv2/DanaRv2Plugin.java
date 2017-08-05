@@ -340,7 +340,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: Stopping temp basal (doTempOff)");
-                return cancelTempBasal();
+                return cancelTempBasal(false);
             }
             result.success = true;
             result.enacted = false;
@@ -507,7 +507,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         PumpEnactResult result = new PumpEnactResult();
         if (pump.isTempBasalInProgress) {
             sExecutionService.tempBasalStop();
