@@ -168,8 +168,10 @@ public class SetTbrCommand implements Command {
                         {
                             if(retries>0) {
                                 retries--;
-                                int steps = (int) ((percentage - currentPercentage) / 10.0);
-                                Log.v("SetTbrCommand:tick",state+": adjusting basal with "+steps+" steps and "+retries+" retries left");
+                                int requestedPercentage = (int) percentage;
+                                int actualPercentage = (int) currentPercentage;
+                                int steps = (requestedPercentage - actualPercentage) / 10;
+                                Log.v("SetTbrCommand:tick",state+": adjusting basal("+requestedPercentage+"/"+actualPercentage+") with "+steps+" steps and "+retries+" retries left");
                                 scripter.step(steps,(steps<0? RuffyScripter.Key.DOWN: RuffyScripter.Key.UP), 500);
                                 scripter.waitScreen(1000);
                             }
@@ -232,12 +234,14 @@ public class SetTbrCommand implements Command {
                         {
                             if(retries>0) {
                                 retries--;
-                                int steps = (int)((currentDuration - duration)/15.0);
-                                if(currentDuration+(steps*15)<duration)
+                                int requestedDuration = (int) duration;
+                                int actualDuration = (int) currentDuration;
+                                int steps = (requestedDuration - actualDuration)/15;
+                                if(currentDuration+(steps*15)<requestedDuration)
                                     steps++;
-                                else if(currentDuration+(steps*15)>duration)
+                                else if(currentDuration+(steps*15)>requestedDuration)
                                     steps--;
-                                Log.v("SetTbrCommand:tick",state+": adjusting duration with "+steps+" steps and "+retries+" retries left");
+                                Log.v("SetTbrCommand:tick",state+": adjusting duration("+requestedDuration+"/"+actualDuration+") with "+steps+" steps and "+retries+" retries left");
                                 scripter.step(steps,(steps>0? RuffyScripter.Key.UP: RuffyScripter.Key.DOWN), 500);
                                 scripter.waitScreen(1000);
                             }
