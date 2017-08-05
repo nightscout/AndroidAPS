@@ -548,7 +548,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         log.debug("cancelTempBasal called");
 
         CommandResult commandResult = null;
@@ -557,8 +557,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
 
-        if (activeTemp == null) {
-            log.debug("cancelTempBasal really cancelling tbr.");
+        if (activeTemp == null || userRequested) {
+            /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
+            log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
             commandResult = runCommand(new CancelTbrCommand());
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(commandResult.completionTime);
@@ -567,14 +568,20 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 pumpEnactResult.isTempCancel = true;
             }
         } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15 ) {
-            // do nothing.
-            log.debug("cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
+            // Let fake neutral temp keep running (see below)
+            log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
             pumpEnactResult.comment = "cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.";
+            // TODO check what AAPS does with this; no DB update is required;
+            // looking at info/nightscout/androidaps/plugins/Loop/LoopPlugin.java:280
+            // both values are used as one:
+            //   if (applyResult.enacted || applyResult.success) { ...
             pumpEnactResult.enacted = true; // all fine though...
             pumpEnactResult.success = true; // just roll with it...
         } else {
+            // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
+            // on whether the TBR we're cancelling is above or below 100%.
             long percentage = (activeTemp.percentRate > 100) ? 110:90;
-            log.debug("cancelTempBasal changing tbr to " + percentage + "% for 15 mins.");
+            log.debug("cancelTempBasal: changing tbr to " + percentage + "% for 15 mins.");
             commandResult = runCommand(new SetTbrCommand(percentage, 15));
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(commandResult.completionTime);
