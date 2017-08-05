@@ -169,8 +169,9 @@ public class SetTbrCommand implements Command {
                             if(retries>0) {
                                 retries--;
                                 int steps = (int) ((percentage - currentPercentage) / 10.0);
-                                scripter.step(steps,(steps<0? RuffyScripter.Key.DOWN: RuffyScripter.Key.UP), 3000);
                                 Log.v("SetTbrCommand:tick",state+": adjusting basal with "+steps+" steps and "+retries+" retries left");
+                                scripter.step(steps,(steps<0? RuffyScripter.Key.DOWN: RuffyScripter.Key.UP), 500);
+                                scripter.waitScreen(1000);
                             }
                             else
                             {
@@ -236,8 +237,9 @@ public class SetTbrCommand implements Command {
                                     steps++;
                                 else if(currentDuration+(steps*15)>duration)
                                     steps--;
-                                scripter.step(steps,(steps>0? RuffyScripter.Key.UP: RuffyScripter.Key.DOWN), 3000);
                                 Log.v("SetTbrCommand:tick",state+": adjusting duration with "+steps+" steps and "+retries+" retries left");
+                                scripter.step(steps,(steps>0? RuffyScripter.Key.UP: RuffyScripter.Key.DOWN), 500);
+                                scripter.waitScreen(1000);
                             }
                             else
                             {
