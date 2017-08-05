@@ -23,7 +23,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -83,7 +83,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         MainApp.bus().register(this);
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");
-        ;
     }
 
     @Override
@@ -510,8 +509,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
-        PumpEnactResult result = activePump.cancelTempBasal();
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+        PumpEnactResult result = activePump.cancelTempBasal(userRequested);
         if (Config.logCongigBuilderActions)
             log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
         return result;
@@ -560,7 +559,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             if (isTempBasalInProgress()) {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: cancelTempBasal()");
-                result = cancelTempBasal();
+                result = cancelTempBasal(false);
             } else {
                 result = new PumpEnactResult();
                 result.absolute = request.rate;
@@ -827,7 +826,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public OverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
+    public Intervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
         return activeTreatments.getTemporaryBasalsFromHistory();
     }
 
@@ -874,7 +873,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory() {
+    public Intervals<ExtendedBolus> getExtendedBolusesFromHistory() {
         return activeTreatments.getExtendedBolusesFromHistory();
     }
 
@@ -896,7 +895,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public OverlappingIntervals<TempTarget> getTempTargetsFromHistory() {
+    public Intervals<TempTarget> getTempTargetsFromHistory() {
         return activeTreatments.getTempTargetsFromHistory();
     }
 

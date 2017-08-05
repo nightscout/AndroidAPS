@@ -23,8 +23,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -32,13 +30,14 @@ import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 
 
-public class TreatmentsTemporaryBasalsFragment extends Fragment {
+public class TreatmentsTemporaryBasalsFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(TreatmentsTemporaryBasalsFragment.class);
 
     RecyclerView recyclerView;
@@ -50,9 +49,9 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempBasalsViewHolder> {
 
-        OverlappingIntervals<TemporaryBasal> tempBasalList;
+        Intervals<TemporaryBasal> tempBasalList;
 
-        RecyclerViewAdapter(OverlappingIntervals<TemporaryBasal> tempBasalList) {
+        RecyclerViewAdapter(Intervals<TemporaryBasal> tempBasalList) {
             this.tempBasalList = tempBasalList;
         }
 
@@ -202,18 +201,6 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventTempBasalChange ev) {
         updateGUI();
@@ -224,7 +211,8 @@ public class TreatmentsTemporaryBasalsFragment extends Fragment {
         updateGUI();
     }
 
-    public void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

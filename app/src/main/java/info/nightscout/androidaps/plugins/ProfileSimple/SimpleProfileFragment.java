@@ -25,9 +25,10 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.SafeParse;
 
-public class SimpleProfileFragment extends Fragment {
+public class SimpleProfileFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(SimpleProfileFragment.class);
 
     private static SimpleProfilePlugin simpleProfilePlugin = new SimpleProfilePlugin();
@@ -66,7 +67,7 @@ public class SimpleProfileFragment extends Fragment {
             layout.findViewById(R.id.simpleprofile_basalrate_label).setVisibility(View.GONE);
         }
 
-        onStatusEvent(null);
+        updateGUI();
 
         mgdlView.setChecked(simpleProfilePlugin.mgdl);
         mmolView.setChecked(simpleProfilePlugin.mmol);
@@ -138,26 +139,18 @@ public class SimpleProfileFragment extends Fragment {
         targetlowView.addTextChangedListener(textWatch);
         targethighView.addTextChangedListener(textWatch);
 
-        onStatusEvent(null);
+        updateGUI();
 
         return layout;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        onStatusEvent(null);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged e) {
+        updateGUI();
+    }
+
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

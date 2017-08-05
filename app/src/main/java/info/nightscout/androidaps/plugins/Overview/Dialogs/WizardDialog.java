@@ -213,9 +213,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         bgTrendInsulin = (TextView) view.findViewById(R.id.treatments_wizard_bgtrendinsulin);
         cobLayout = (LinearLayout) view.findViewById(R.id.treatments_wizard_cob_layout);
         cob = (TextView) view.findViewById(R.id.treatments_wizard_cob);
-        ;
         cobInsulin = (TextView) view.findViewById(R.id.treatments_wizard_cobinsulin);
-        ;
 
         bgCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgcheckbox);
         bolusIobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bolusiobcheckbox);
@@ -315,6 +313,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                                 activeloop.superBolusTo(System.currentTimeMillis() + 2 * 60L * 60 * 1000);
                                                 MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                             }
+                                            pump.cancelTempBasal(true);
                                             result = pump.setTempBasalAbsolute(0d, 120);
                                             if (!result.success) {
                                                 OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror), result.comment, null);
