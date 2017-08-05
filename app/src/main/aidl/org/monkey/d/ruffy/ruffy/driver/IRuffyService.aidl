@@ -13,10 +13,10 @@ interface IRuffyService {
     *
     * @return 0 if successful, -1 otherwise
     */
-    int doRTConnect();
+    int doRTConnect(IRTHandler handler);
 
     /** Disconnect from the pump */
-    void doRTDisconnect();
+    void doRTDisconnect(IRTHandler handler);
 
     /*What's the meaning of 'changed'?
      * changed means if a button state has been changed, like btton pressed is a change and button release another*/

@@ -85,6 +85,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().register(this);
         bindRuffyService();
         startAlerter();
+        ruffyScripter = new RuffyScripter();
     }
 
     private void definePumpCapabilities() {
@@ -160,6 +161,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             // TODO would it be useful to have a 'last error' field in the ui showing the most recent
                             // failed command? the next command that runs successful with will override this error
                             log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + localLastCmdResult.message);
+                            refreshDataFromPump("from Error Recovery");
                         }
                     }
                     SystemClock.sleep(5 * 1000);
@@ -168,7 +170,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }, "combo-alerter").start();
     }
 
-    private void bindRuffyService() {
+    private boolean bindRuffyService() {
+
         Context context = MainApp.instance().getApplicationContext();
         boolean boundSucceeded = false;
 
@@ -181,6 +184,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             // full path to the driver
                             // in the logs this service is mentioned as (note the slash)
                             // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
+                            //org.monkey.d.ruffy.ruffy is the base package identifier and /.driver.Ruffy the service within the package
                             "org.monkey.d.ruffy.ruffy.driver.Ruffy"
                     ));
             context.startService(intent);
@@ -189,16 +193,22 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
-                    ruffyScripter.start();
+                    keepUnbound=false;
+                    ruffyScripter.start(IRuffyService.Stub.asInterface(service));
                     log.debug("ruffy serivce connected");
                 }
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
                     ruffyScripter.stop();
-                    ruffyScripter = null;
                     log.debug("ruffy service disconnected");
+                    if(!keepUnbound) {
+                        try {
+                            Thread.sleep(250);
+                        } catch (Exception e) {
+                        }
+                        bindRuffyService();
+                    }
                 }
             };
             boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
@@ -209,9 +219,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!boundSucceeded) {
             statusSummary = "No connection to ruffy. Pump control not available.";
         }
+        return true;
     }
 
+    private boolean keepUnbound = false;
     private void unbindRuffyService() {
+        keepUnbound = true;
+        ruffyScripter.unbind();
         MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
     }
 
@@ -417,6 +431,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             try {
                 unbindRuffyService();
                 SystemClock.sleep(5000);
+            } catch (Exception e) {
+                /*String msg = "No connection to ruffy. Pump control not available.";
+                statusSummary = msg;
+                return new CommandResult().message(msg);*/
+            }
+            try {
                 bindRuffyService();
                 SystemClock.sleep(5000);
             } catch (Exception e) {
@@ -530,20 +550,51 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
-        CommandResult commandResult = runCommand(new CancelTbrCommand());
-        if (commandResult.enacted) {
-            TemporaryBasal tempStop = new TemporaryBasal(commandResult.completionTime);
-            tempStop.durationInMinutes = 0; // ending temp basal
-            tempStop.source = Source.USER;
-            ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
-            treatmentsInterface.addToHistoryTempBasal(tempStop);
+
+        CommandResult commandResult = null;
+        TemporaryBasal tempBasal = null;
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+
+        final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+
+        if (activeTemp == null) {
+            log.debug("cancelTempBasal really cancelling tbr.");
+            commandResult = runCommand(new CancelTbrCommand());
+            if (commandResult.enacted) {
+                tempBasal = new TemporaryBasal(commandResult.completionTime);
+                tempBasal.durationInMinutes = 0;
+                tempBasal.source = Source.USER;
+                pumpEnactResult.isTempCancel = true;
+            }
+        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15 ) {
+            // do nothing.
+            log.debug("cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
+            pumpEnactResult.comment = "cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.";
+            pumpEnactResult.enacted = true; // all fine though...
+            pumpEnactResult.success = true; // just roll with it...
+        } else {
+            long percentage = (activeTemp.percentRate > 100) ? 110:90;
+            log.debug("cancelTempBasal changing tbr to " + percentage + "% for 15 mins.");
+            commandResult = runCommand(new SetTbrCommand(percentage, 15));
+            if (commandResult.enacted) {
+                tempBasal = new TemporaryBasal(commandResult.completionTime);
+                tempBasal.durationInMinutes = 15;
+                tempBasal.source = Source.USER;
+                tempBasal.percentRate = (int) percentage;
+                tempBasal.isAbsolute = false;
+            }
         }
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = commandResult.success;
-        pumpEnactResult.enacted = commandResult.enacted;
-        pumpEnactResult.comment = commandResult.message;
-        pumpEnactResult.isTempCancel = true;
+        if (tempBasal != null) {
+            ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
+            treatmentsInterface.addToHistoryTempBasal(tempBasal);
+        }
+
+        if (commandResult != null) {
+            pumpEnactResult.success = commandResult.success;
+            pumpEnactResult.enacted = commandResult.enacted;
+            pumpEnactResult.comment = commandResult.message;
+        }
         return pumpEnactResult;
     }
 
