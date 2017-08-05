@@ -184,8 +184,6 @@
     <string name="nav_export">Exportovat nastavení</string>
     <string name="nav_import">Importovat nastavení</string>
     <string name="de_lang">German</string>
-    <string name="openapsma_high_summary">Maximální hodnota glykémie ještě v rozsahu</string>
-    <string name="openapsma_low_summary">Minimální hodnota glykémie ještě v rozsahu</string>
     <string name="bg_lang">Bulgarian</string>
     <string name="dismiss">POTVRDIT</string>
     <string name="language">Jazyk</string>
@@ -282,7 +280,6 @@
     <string name="objectives_5_objective">Upravit bazály a koeficinty, když bude potřeba a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_6_objective">Povolit další fukce pro běžné používání jako AMA</string>
     <string name="youareonallowedlimit">Dosaženo limitu</string>
-    <string name="openapsma_target_bg">Cílová hodnota pro výpočty</string>
     <string name="bolusdelivering" formatted="false">Aplikováno %.2fU</string>
     <string name="smscommunicator_loophasbeendisabled">Smyčka byla zakázána</string>
     <string name="smscommunicator_loophasbeenenabled">Smyčka byla povolena</string>

@@ -204,8 +204,6 @@
     <string name="el_lang">Greek</string>
     <string name="it_lang">Italian</string>
     <string name="ru_lang">Russian</string>
-    <string name="openapsma_low_summary">Мин. стойност, която е в границите</string>
-    <string name="openapsma_high_summary">Максималната стойност на КЗ за да бъде в границите.</string>
     <string name="openapsma_maxbasal_title">Максимално позволен временен базал Е/ч</string>
     <string name="openapsma_maxbasal_summary">Макс. лимит на временен базал [Е/ч] </string>
     <string name="openapsma_maxiob_title">Максимален IOB</string>
@@ -311,7 +309,6 @@
     <string name="objectives_5_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
     <string name="objectives_6_objective">Активиране на допълнителни функции за дневно използване, включително и advanced meal assist </string>
     <string name="youareonallowedlimit">Достигнахте лимита</string>
-    <string name="openapsma_target_bg">Целева стойност използвана в изчисленията</string>
     <string name="noprofileselected">Няма избран профил</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>

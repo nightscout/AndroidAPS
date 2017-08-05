@@ -195,8 +195,6 @@
     <string name="de_lang">German</string>
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
-    <string name="openapsma_low_summary">목표범위 최소 혈당값</string>
-    <string name="openapsma_high_summary">목표범위 최대 혈당값</string>
     <string name="openapsma_maxbasal_title">임시기초주입 최대량 [U/hr]</string>
     <string name="openapsma_maxbasal_summary">이 값은 OpenAPS에서 Max Basal(임시기초주입 최대량)로 설정되는 값입니다</string>
     <string name="openapsma_maxiob_title">OpenAPS가 주입할수 있는 최대 기초주입 IOB [U]</string>
@@ -304,7 +302,6 @@
     <string name="objectives_5_gate">평소 먹는 탄수화물 입력하면서 Loop를 실행하고 1주일간 성공적으로 낮시간을 관리한다.</string>
     <string name="objectives_6_objective">AMA(Advanced Meal Assist)같은 주간용을 위한 추가적인 기능들을 실행하여 본다.</string>
     <string name="youareonallowedlimit">허용된 제한값에 도달하였습니다</string>
-    <string name="openapsma_target_bg">계산을 위한 목표 혈당 값</string>
     <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
     <string name="smscommunicator_loophasbeendisabled">Loop가 중지되었습니다.</string>
     <string name="smscommunicator_loophasbeenenabled">Loop가 실행되었습니다.</string>

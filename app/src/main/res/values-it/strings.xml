@@ -264,9 +264,7 @@
     <string name="openapsma">OpenAPS MA</string>
     <string name="openapsma_disabled">Plugin e\' disabilitato</string>
     <string name="openapsma_glucosestatus_label">Stato glucosio</string>
-    <string name="openapsma_high_summary">Valore massimo di Bg nel range</string>
     <string name="openapsma_inputparameters_label">Entrata parametro</string>
-    <string name="openapsma_low_summary">Valore minimo di Bg nel range</string>
     <string name="openapsma_maxbasal_summary">Il valore e\' chiamati basale in OpenAPS</string>
     <string name="openapsma_maxiob_title">Basale Massima in IOB OpenAPS</string>
     <string name="openapsma_minbg_label">Obbietivo minimo</string>
@@ -344,7 +342,6 @@
     <string name="objectives_0_objective">Impostazione di visualizzazione, monitoraggio e analisi basali e rapporti</string>
     <string name="objectives_1_gate">Eseguire in modalità Open Loop per alcuni giorni e impostare manualmente la basale tempor</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
-    <string name="openapsma_target_bg">Target per calcolare</string>
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="smscommunicator_allowednumbers">Numero di telefono acettato</string>
     <string name="smscommunicator_bolusfailed">Bolo fallito</string>
