@@ -305,6 +305,7 @@ public class NSSettingsStatus {
         return 0d;
     }
 
+	
     @Nullable
     public JSONObject extentendedPumpSettings() {
         try {
@@ -343,5 +344,16 @@ public class NSSettingsStatus {
         return "";
     }
 
+	    public boolean openAPSEnabledAlerts() {
+        try {
+            JSONObject pump = extentendedPumpSettings();
+            if (pump != null && pump.has("openaps")) {
+                return pump.getBoolean("enableAlerts");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
