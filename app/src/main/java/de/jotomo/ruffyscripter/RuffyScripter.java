@@ -51,10 +51,10 @@ public class RuffyScripter {
 
     private boolean started = false;
 
-    private Object keylock = new Object();
+    private final Object keylock = new Object();
     private int keynotwait = 0;
 
-    private Object screenlock = new Object();
+    private final Object screenlock = new Object();
 
     public RuffyScripter() {
 
