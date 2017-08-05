@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpCombo;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -33,6 +34,8 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     }
 
     private Button refresh;
+    private TextView updateCapabilities;
+
     private TextView statusText;
 
     private TextView tbrPercentageText;
@@ -44,12 +47,19 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     private TextView lastCmdTimeText;
     private TextView lastCmdResultText;
 
+    private TextView tbrCapabilityText;
+    private TextView pumpstateBatteryText;
+    private TextView insulinstateText;
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
+        updateCapabilities = (TextView) view.findViewById(R.id.combo_update_capabilities);
+
         statusText = (TextView) view.findViewById(R.id.combo_status);
 
         tbrPercentageText = (TextView) view.findViewById(R.id.combo_tbr_percentage);
@@ -60,8 +70,12 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         lastCmdText = (TextView) view.findViewById(R.id.combo_last_command);
         lastCmdTimeText = (TextView) view.findViewById(R.id.combo_last_command_time);
         lastCmdResultText = (TextView) view.findViewById(R.id.combo_last_command_result);
+        tbrCapabilityText = (TextView) view.findViewById(R.id.combo_tbr_capability);
+        pumpstateBatteryText = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
+        insulinstateText = (TextView) view.findViewById(R.id.combo_insulinstate);
 
         refresh.setOnClickListener(this);
+        updateCapabilities.setOnClickListener(this);
 
         updateGUI();
         return view;
@@ -97,6 +111,32 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                 });
                 thread.start();
                 break;
+            case R.id.combo_update_capabilities:
+                (new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Activity activity = getActivity();
+                        if (activity != null)
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateCapabilities.setText("{fa-bluetooth spin}");
+                                }
+                            });
+
+                        getPlugin().updateCapabilities();
+
+                        if (activity != null)
+                            activity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateCapabilities.setText("{fa-bluetooth-b}");
+                                }
+                            });
+
+                    }
+                })).start();
+                break;
         }
     }
 
@@ -121,6 +161,24 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                                 tbrRateText.setText("");
                             }
                             pumpErrorText.setText(ps.errorMsg != null ? ps.errorMsg : "");
+                            if(ps.lowBattery){
+                                pumpstateBatteryText.setText("{fa-battery-empty}");
+                                pumpstateBatteryText.setTextColor(Color.RED);
+                            } else {
+                                pumpstateBatteryText.setText("{fa-battery-three-quarters}");
+                                pumpstateBatteryText.setTextColor(Color.WHITE);
+                            }
+                            switch (ps.insulinState){
+                                case 0: insulinstateText.setText("ok");
+                                    insulinstateText.setTextColor(Color.WHITE);
+                                    break;
+                                case 1: insulinstateText.setText("low");
+                                    insulinstateText.setTextColor(Color.YELLOW);
+                                    break;
+                                case 2: insulinstateText.setText("empty");
+                                    insulinstateText.setTextColor(Color.RED);
+                                    break;
+                            }
                         }
 
                         Command lastCmd = getPlugin().lastCmd;
@@ -139,6 +197,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             lastCmdResultText.setText("");
                         }
                     }
+                    tbrCapabilityText.setText(getPlugin().getPumpDescription().maxTempPercent + "%");
                 }
             });
     }

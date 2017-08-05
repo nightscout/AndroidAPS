@@ -19,6 +19,8 @@ public class PumpState {
      */
     public String errorMsg;
     public boolean suspended;
+    public boolean lowBattery;
+    public int insulinState;
 
     public PumpState tbrActive(boolean tbrActive) {
         this.tbrActive = tbrActive;
@@ -59,6 +61,8 @@ public class PumpState {
                 ", tbrRemainingDuration=" + tbrRemainingDuration +
                 ", errorMsg=" + errorMsg +
                 ", suspended=" + suspended +
+                ", lowBattery=" + lowBattery +
+                ", insulinState=" + insulinState +
                 ", timestamp=" + timestamp +
                 '}';
     }

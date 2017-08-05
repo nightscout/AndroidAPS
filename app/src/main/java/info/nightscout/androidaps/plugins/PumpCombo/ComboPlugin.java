@@ -5,11 +5,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -29,6 +31,7 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
+import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffyscripter.PumpState;
@@ -47,11 +50,14 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.SP;
+import info.nightscout.utils.ToastUtils;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class ComboPlugin implements PluginBase, PumpInterface {
+    public static final String COMBO_MAX_TEMP_PERCENT_SP = "combo_maxTempPercent";
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
     private boolean fragmentEnabled = false;
@@ -100,7 +106,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.isTempBasalCapable = true;
         pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
 
-        pumpDescription.maxTempPercent = 500;
+        pumpDescription.maxTempPercent = SP.getInt(COMBO_MAX_TEMP_PERCENT_SP, 500);
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 15;
@@ -317,9 +323,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             return;
         }
 
-        if (!reason.toLowerCase().contains("user")
-                && lastCmdTime.getTime() > 0
-                && System.currentTimeMillis() > lastCmdTime.getTime() + 60 * 1000) {
+        boolean notAUserRequest = !reason.toLowerCase().contains("user");
+        boolean wasRunAtLeastOnce = lastCmdTime.getTime() > 0;
+        boolean ranWithinTheLastMinute = System.currentTimeMillis() < lastCmdTime.getTime() + 60 * 1000;
+        if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
             runCommand(new ReadPumpStateCommand());
@@ -485,6 +492,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             percent = rounded;
         }
 
+        percent = percent > pumpDescription.maxTempPercent ? pumpDescription.maxTempPercent : percent;
+
         CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
@@ -614,6 +623,34 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public void onStatusEvent(final EventAppExit e) {
         unbindRuffyService();
     }
+
+
+    public void updateCapabilities() {
+
+        // if Android is sluggish this might get called before ruffy is bound
+        if (ruffyScripter == null) {
+            log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
+            ToastUtils.showToastInUiThread(MainApp.instance(), "Ruffy not initialized.");
+            return;
+        }
+        if (isBusy()){
+            ToastUtils.showToastInUiThread(MainApp.instance(), "Pump busy!");
+            return;
+        }
+        CommandResult result = runCommand(new DetermineCapabilitiesCommand());
+        if (result.success){
+            pumpDescription.maxTempPercent = (int) result.capabilities.maxTempPercent;
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt(COMBO_MAX_TEMP_PERCENT_SP, pumpDescription.maxTempPercent);
+            editor.commit();
+            MainApp.bus().post(new EventComboPumpUpdateGUI());
+        } else {
+            ToastUtils.showToastInUiThread(MainApp.instance(), "No success.");
+        }
+    }
+
+
 }
 
 
