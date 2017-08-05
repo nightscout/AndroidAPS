@@ -1808,7 +1808,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         }
                         // Adding current time to snooze if we got staleData
                         log.debug("Notification text is: "+notification.text);
-                        if(notification.text == MainApp.sResources.getString(R.string.nsalarm_staledata)){
+                        if(notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))){
                             NotificationStore nstore = getPlugin().notificationStore;
                             long msToSnooze = SP.getInt("nsalarm_staledatavalue",15)*60*1000L;
                             log.debug("snooze nsalarm_staledatavalue in minutes is "+SP.getInt("nsalarm_staledatavalue",15)+"\n in ms is: "+msToSnooze+" currentTimeMillis is: "+System.currentTimeMillis());
