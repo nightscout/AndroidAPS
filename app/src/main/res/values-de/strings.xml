@@ -128,7 +128,6 @@
     <string name="openapsma_nopump">Keine Pumpe verfügbar</string>
     <string name="openapsma_noprofile">Kein Profil verfügbar</string>
     <string name="openapsma_noglucosedata">Keine BZ Daten verfügbar</string>
-    <string name="openapsma_minbg_label">Low target</string>
     <string name="openapsma_mealdata_label">Mahlzeiten Daten</string>
     <string name="openapsma_lastrun_label">Last run</string>
     <string name="openapsma_lastenact_label">Last enacted</string>

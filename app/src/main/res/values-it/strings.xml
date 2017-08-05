@@ -267,7 +267,6 @@
     <string name="openapsma_inputparameters_label">Entrata parametro</string>
     <string name="openapsma_maxbasal_summary">Il valore e\' chiamati basale in OpenAPS</string>
     <string name="openapsma_maxiob_title">Basale Massima in IOB OpenAPS</string>
-    <string name="openapsma_minbg_label">Obbietivo minimo</string>
     <string name="openapsma_iobdata_label">IOB dati</string>
     <string name="openapsma_lastenact_label">Ultimo attuato</string>
     <string name="openapsma_lastrun_label">Ultimo corsa</string>

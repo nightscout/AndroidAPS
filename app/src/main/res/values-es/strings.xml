@@ -66,7 +66,6 @@
     <string name="openapsma_nopump">No se dispone de bomba</string>
     <string name="nochangerequested">Ninguna acción requerida</string>
     <string name="openapsma_request_label">Solicitud</string>
-    <string name="openapsma_minbg_label">Objetivo mínimo</string>
     <string name="rate">Dosis</string>
     <string name="duration">Duración</string>
     <string name="reason">Razón</string>

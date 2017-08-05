@@ -104,7 +104,6 @@
     <string name="openapsma_lastenact_label">Poslední provedení</string>
     <string name="openapsma_lastrun_label">Poslední spuštění</string>
     <string name="openapsma_mealdata_label">Data o jídle</string>
-    <string name="openapsma_minbg_label">Cílová nízká glykémie</string>
     <string name="openapsma_noglucosedata">Nedostupná data o glykémiích</string>
     <string name="openapsma_noprofile">Nedostupný profil</string>
     <string name="openapsma_nopump">Žádná pumpa</string>

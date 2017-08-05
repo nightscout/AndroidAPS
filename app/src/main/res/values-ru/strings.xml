@@ -354,8 +354,7 @@
     <string name="openapsma_maxiob_summary">эта величина называется макс IOB (макс активн инс) в OpenAPS. Значение по умолчанию 0. Через несколько дней или недель пользования величину можно юстировать в зависимости от вашего уровня комфорта.</string>
     <string name="openapsma_maxiob_title">макс базал активн инс подаваемый с OpenAPS (ед)</string>
     <string name="openapsma_mealdata_label">данные приема пищи</string>
-    <string name="openapsma_minbg_label">нижнее целевое значение СК</string>
-    <string name="openapsma_noglucosedata">данные гликемии недоступны</string>
+   <string name="openapsma_noglucosedata">данные гликемии недоступны</string>
     <string name="openapsma_noprofile">профиль недоступен</string>
     <string name="openapsma_nopump">помпа недоступна</string>
     <string name="openapsma_profile_label">профиль</string>
