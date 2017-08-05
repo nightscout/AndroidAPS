@@ -101,7 +101,7 @@ public class GetBasalCommand implements Command {
                 if(retries>0)
                     if(scripter.goToMainMenuScreen(MenuType.BASAL_1_MENU,30000))
                     {
-                        if(scripter.enterMenu(MenuType.BASAL_1_MENU,MenuType.BASAL_TOTAL, RuffyScripter.Key.CHECK,2000));
+                        if(scripter.enterMenu(MenuType.BASAL_1_MENU,MenuType.BASAL_TOTAL, RuffyScripter.Key.CHECK,2000))
                         {
                             updateState(BASAL_OVERVIEW, 30);
                             retries=0;
