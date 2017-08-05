@@ -157,6 +157,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             mgr.notify(id, notificationBuilder.build());
                             lastAlarmTime = now;
                         } else {
+                            // TODO would it be useful to have a 'last error' field in the ui showing the most recent
+                            // failed command? the next command that runs successful with will override this error
                             log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + localLastCmdResult.message);
                         }
                     }
@@ -407,6 +409,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
+        // TODO extract this into a recovery method and check the logic of restarting and rebinding ruffy
         if (!commandResult.success && commandResult.exception != null) {
             log.error("CommandResult has exception, rebinding ruffy service", commandResult.exception);
 
