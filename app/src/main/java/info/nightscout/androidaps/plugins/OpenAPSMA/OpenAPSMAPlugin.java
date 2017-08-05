@@ -160,8 +160,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
-        double minBg = profile.getTargetLow();
-        double maxBg = profile.getTargetHigh();
+        double minBg =  Profile.toMgdl(profile.getTargetLow(), units);
+        double maxBg =  Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = (minBg + maxBg) / 2;
 
         minBg = Round.roundTo(minBg, 0.1d);
