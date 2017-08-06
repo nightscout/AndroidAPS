@@ -244,6 +244,7 @@ public class SetTbrCommand implements Command {
                                 Log.v("SetTbrCommand:tick",state+": adjusting duration("+requestedDuration+"/"+actualDuration+") with "+steps+" steps and "+retries+" retries left");
                                 scripter.step(steps,(steps>0? RuffyScripter.Key.UP: RuffyScripter.Key.DOWN), 500);
                                 scripter.waitScreen(1000);
+                                scripter.waitScreen(1000);
                             }
                             else
                             {
