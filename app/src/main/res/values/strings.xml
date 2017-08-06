@@ -114,7 +114,7 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basal_label">Basal value</string>
+    <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_bolus_label">Bolus</string>
@@ -183,7 +183,6 @@
     <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
@@ -375,8 +374,6 @@
     <string name="edit_base_ic">Edit Base-IC:</string>
     <string name="base_profile_label">Base Profile:</string>
     <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
-    <string name="androidaps_tempbasalendnote">Basal Temp End</string>
-    <string name="androidaps_tempbasalstartnote">Basal Temp Start</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
@@ -649,8 +646,9 @@
     <string name="openapsama_autosens_period">Interval for autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
     <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
-    <string name="ratio_short">RAT</string>
-    <string name="key_do_not_track_profile_switch">do_not_track_profile_switch</string>
+    <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
+    <string name="ratio_short">SEN</string>
+    <string name="key_do_not_track_profile_switch" translatable="false">do_not_track_profile_switch</string>
     <string name="do_not_track_profile_switch">Ignore profile switch events</string>
     <string name="do_not_track_profile_switch_summary">All profile switch events are ignored and active profile is always used</string>
     <string name="pump">Pump</string>
@@ -689,11 +687,13 @@
     <string name="combopump">Accu-Chek Combo</string>
     <string name="combopump_settings">Accu-Chek Combo settings</string>
     <string name="combopump_shortname">COMBO</string>
-    <string name="ns_localbroadcasts">Enable loacal broadcasts to other apps (like xDrip).</string>
+    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
     <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
 	<string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
 	<string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
 	<string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
 	<string name="careportal_pump_label">PUMP</string>
+    <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
+    <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
 </resources>
 

@@ -18,7 +18,6 @@ import android.support.v4.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.slf4j.Logger;
@@ -195,11 +194,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
                     ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
+                    ruffyScripter.start();
                     log.debug("ruffy serivce connected");
                 }
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
+                    ruffyScripter.stop();
+                    ruffyScripter = null;
                     log.debug("ruffy service disconnected");
                 }
             };
@@ -485,22 +487,27 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes) {
         log.debug("setTempBasalPercent called with " + percent + "% for " + durationInMinutes + "min");
-        if (percent % 10 != 0) {
-            int rounded = percent;
-            while (rounded % 10 != 0) rounded = rounded - 1;
-            log.debug("Rounded requested percentage from " + percent + " to " + rounded);
-            percent = rounded;
+
+        int adjustedPercent = percent;
+
+        if (adjustedPercent > pumpDescription.maxTempPercent) {
+            log.debug("Reducing requested TBR to the maximum support by the pump: " + percent + " -> " + pumpDescription.maxTempPercent);
+            adjustedPercent = pumpDescription.maxTempPercent;
         }
 
-        percent = percent > pumpDescription.maxTempPercent ? pumpDescription.maxTempPercent : percent;
+        if (adjustedPercent % 10 != 0) {
+            Long rounded = Math.round(adjustedPercent / 10d) * 10;
+            log.debug("Rounded requested percentage:" + adjustedPercent + " -> " + rounded);
+            adjustedPercent = rounded.intValue();
+        }
 
-        CommandResult commandResult = runCommand(new SetTbrCommand(percent, durationInMinutes));
+        CommandResult commandResult = runCommand(new SetTbrCommand(adjustedPercent, durationInMinutes));
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
             // we should check this, but really ... something must be really screwed up if that number was anything different
             tempStart.durationInMinutes = durationInMinutes;
-            tempStart.percentRate = percent;
+            tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
             tempStart.source = Source.USER;
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
@@ -514,7 +521,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpEnactResult.isPercent = true;
         // Combo would have bailed if this wasn't set properly. Maybe we should
         // have the command return this anyways ...
-        pumpEnactResult.percent = percent;
+        pumpEnactResult.percent = adjustedPercent;
         pumpEnactResult.duration = durationInMinutes;
         return pumpEnactResult;
     }

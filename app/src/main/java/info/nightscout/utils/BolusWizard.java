@@ -47,9 +47,14 @@ public class BolusWizard {
 
     // Result
     public Double calculatedTotalInsulin = 0d;
+    public Double totalBeforePercentageAdjustment = 0d;
     public Double carbsEquivalent = 0d;
 
     public Double doCalc(Profile specificProfile, Integer carbs, Double cob, Double bg, Double correction, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
+        return doCalc(specificProfile, carbs, cob, bg, correction, 100d, includeBolusIOB, includeBasalIOB, superBolus, trend);
+    }
+
+        public Double doCalc(Profile specificProfile, Integer carbs, Double cob, Double bg, Double correction, double percentageCorrection, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
         this.specificProfile = specificProfile;
         this.carbs = carbs;
         this.bg = bg;
@@ -103,7 +108,13 @@ public class BolusWizard {
         }
 
         // Total
-        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB;
+            calculatedTotalInsulin = totalBeforePercentageAdjustment = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB;
+
+            //percentage
+            if(totalBeforePercentageAdjustment > 0){
+                calculatedTotalInsulin = totalBeforePercentageAdjustment*percentageCorrection/100d;
+            }
+
 
         if (calculatedTotalInsulin < 0) {
             carbsEquivalent = -calculatedTotalInsulin * ic;

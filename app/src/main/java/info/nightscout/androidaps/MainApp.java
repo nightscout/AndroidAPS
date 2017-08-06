@@ -2,8 +2,10 @@ package info.nightscout.androidaps;
 
 import android.app.Application;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
+import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -32,6 +35,7 @@ import info.nightscout.androidaps.plugins.InsulinFastactingProlonged.InsulinFast
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
+import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
@@ -60,7 +64,9 @@ import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsFragment;
 import info.nightscout.androidaps.plugins.Wear.WearFragment;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
+import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.receivers.KeepAliveReceiver;
+import info.nightscout.androidaps.receivers.NSAlarmReceiver;
 import info.nightscout.utils.NSUpload;
 import io.fabric.sdk.android.Fabric;
 
@@ -78,6 +84,11 @@ public class MainApp extends Application {
 
     private static ArrayList<PluginBase> pluginsList = null;
 
+    private static DataReceiver dataReceiver = new DataReceiver();
+    private static NSAlarmReceiver alarmReciever = new NSAlarmReceiver();
+    private static AckAlarmReceiver ackAlarmReciever = new AckAlarmReceiver();
+    private LocalBroadcastManager lbm;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -92,6 +103,8 @@ public class MainApp extends Application {
         sBus = new Bus(ThreadEnforcer.ANY);
         sInstance = this;
         sResources = getResources();
+
+        registerLocalBroadcastReceiver();
 
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
@@ -157,6 +170,29 @@ public class MainApp extends Application {
             }
         });
         t.start();
+
+    }
+
+    private void registerLocalBroadcastReceiver() {
+        lbm = LocalBroadcastManager.getInstance(this);
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_TREATMENT));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_CHANGED_TREATMENT));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_REMOVED_TREATMENT));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_SGV));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_PROFILE));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_STATUS));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_MBG));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_DEVICESTATUS));
+        lbm.registerReceiver(dataReceiver, new IntentFilter(Intents.ACTION_NEW_CAL));
+
+        //register alarms
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_ALARM));
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_ANNOUNCEMENT));
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_CLEAR_ALARM));
+        lbm.registerReceiver(alarmReciever, new IntentFilter(Intents.ACTION_URGENT_ALARM));
+
+        //register ack alarm
+        lbm.registerReceiver(ackAlarmReciever, new IntentFilter(Intents.ACTION_ACK_ALARM));
     }
 
     private void startKeepAliveService() {

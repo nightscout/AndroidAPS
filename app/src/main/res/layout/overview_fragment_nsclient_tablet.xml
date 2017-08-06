@@ -756,20 +756,6 @@
                     android:textSize="10sp"
                     android:visibility="gone" />
 
-                <Button
-                    android:id="@+id/overview_canceltempbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_cancelbasal"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="Cancel temp basal"
-                    android:textColor="@color/colorCancelTempButton"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
             </LinearLayout>
 
         </LinearLayout>

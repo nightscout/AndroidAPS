@@ -509,8 +509,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
-        PumpEnactResult result = activePump.cancelTempBasal();
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+        PumpEnactResult result = activePump.cancelTempBasal(userRequested);
         if (Config.logCongigBuilderActions)
             log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
         return result;
@@ -559,7 +559,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             if (isTempBasalInProgress()) {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: cancelTempBasal()");
-                result = cancelTempBasal();
+                result = cancelTempBasal(false);
             } else {
                 result = new PumpEnactResult();
                 result.absolute = request.rate;

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.PowerManager;
 
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.utils.SP;
 
@@ -14,7 +15,7 @@ import info.nightscout.utils.SP;
 public class BroadcastQueueStatus {
     public static void handleNewStatus(int size, Context context) {
 
-        if(!SP.getBoolean("nsclient_localbroadcasts", true)) return;
+        if(!SP.getBoolean(R.string.key_nsclient_localbroadcasts, true)) return;
 
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
