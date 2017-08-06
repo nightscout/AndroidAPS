@@ -58,7 +58,7 @@ public class BolusCommand implements Command {
             Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             while (bolusRemaining != null) {
                 log.debug("Delivering bolus, remaining: " + bolusRemaining);
-                SystemClock.sleep(300);
+                SystemClock.sleep(200);
                 bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
 
@@ -122,11 +122,11 @@ public class BolusCommand implements Command {
         for (int i = 0; i < steps; i++) {
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressUpKey();
-            SystemClock.sleep(400);
+            SystemClock.sleep(100);
         }
         // Give the pump time to finish any scrolling that might still be going on, can take
         // up to 1100ms. Plus some extra time to be sure
-        SystemClock.sleep(750);
+        SystemClock.sleep(2000);
     }
 
     private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
@@ -138,7 +138,7 @@ public class BolusCommand implements Command {
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(750);
+        SystemClock.sleep(2000);
         double refreshedDisplayedBolus = readDisplayedBolusAmount(scripter);
         if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
             throw new CommandException().message("Failed to set bolus: bolus changed after input stopped from "

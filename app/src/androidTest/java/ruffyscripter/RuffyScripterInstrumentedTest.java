@@ -64,7 +64,7 @@ public class RuffyScripterInstrumentedTest {
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                ruffyScripter = new RuffyScripter();
+                ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
                 log.debug("ruffy serivce connected");
             }
 

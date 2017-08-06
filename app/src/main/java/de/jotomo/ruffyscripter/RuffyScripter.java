@@ -1,5 +1,6 @@
 package de.jotomo.ruffyscripter;
 
+import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
 
@@ -15,13 +16,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Objects;
 
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandException;
 import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
-import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -36,7 +35,7 @@ public class RuffyScripter {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
 
-    private IRuffyService ruffyService;
+    private final IRuffyService ruffyService;
     private final long connectionTimeOutMs = 5000;
     private String unrecoverableError = null;
 
@@ -51,41 +50,27 @@ public class RuffyScripter {
 
     private boolean started = false;
 
-    private final Object keylock = new Object();
-    private int keynotwait = 0;
-
-    private final Object screenlock = new Object();
-
-    public RuffyScripter() {
-
+    public RuffyScripter(final IRuffyService ruffyService) {
+        this.ruffyService = ruffyService;
     }
 
-    public void start(IRuffyService newService) {
+    public void start() {
         try {
-            if(newService!=null) {
-                this.ruffyService = newService;
-                // TODO this'll be done better in v2 via ConnectionManager
-                if (idleDisconnectMonitorThread.getState() == Thread.State.NEW) {
-                    idleDisconnectMonitorThread.start();
-                }
-                started = true;
-                try{newService.addHandler(mHandler);}catch (Exception e){}
-            }
-        } catch (Exception e) {
+            ruffyService.addHandler(mHandler);
+            idleDisconnectMonitorThread.start();
+            started = true;
+        } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void stop() {
         if (started) {
-            started=false;
-            // TODO ruffy removes dead handlers automatically by now.
-            // still, check this when going through recovery logic
-/*            try {
+            try {
                 ruffyService.removeHandler(mHandler);
             } catch (RemoteException e) {
                 log.warn("Removing IRTHandler from Ruffy service failed, ignoring", e);
-            }*/
+            }
         }
     }
 
@@ -93,7 +78,6 @@ public class RuffyScripter {
         return started;
     }
 
-    private boolean canDisconnect = false;
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -107,24 +91,20 @@ public class RuffyScripter {
                             && now > lastDisconnect + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
                         lastDisconnect = now;
-                        canDisconnect=true;
-                        ruffyService.doRTDisconnect(mHandler);
+                        ruffyService.doRTDisconnect();
                         connected = false;
                         lastDisconnect = System.currentTimeMillis();
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
                     }
-                    else
-                    {
-                        canDisconnect=false;
-                    }
-                } catch (Exception e) {
+                } catch (DeadObjectException doe) {
                     // TODO do we need to catch this exception somewhere else too? right now it's
                     // converted into a command failure, but it's not classified as unrecoverable;
                     // eventually we might try to recover ... check docs, there's also another
                     // execption we should watch interacting with a remote service.
                     // SecurityException was the other, when there's an AIDL mismatch;
-                    //unrecoverableError = "Ruffy service went away";
+                    unrecoverableError = "Ruffy service went away";
+                } catch (RemoteException e) {
                     log.debug("Exception in idle disconnect monitor thread, carrying on", e);
                 }
                 SystemClock.sleep(1000);
@@ -149,11 +129,6 @@ public class RuffyScripter {
         }
 
         @Override
-        public boolean canDisconnect() throws RemoteException {
-            return canDisconnect;
-        }
-
-        @Override
         public void rtStopped() throws RemoteException {
             log.debug("rtStopped callback invoked");
             currentMenu = null;
@@ -175,17 +150,12 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleMenu(Menu menu, int sequence) throws RemoteException {
+        public void rtDisplayHandleMenu(Menu menu) throws RemoteException {
             // method is called every ~500ms
             log.debug("rtDisplayHandleMenu: " + menu.getType());
 
             currentMenu = menu;
             menuLastUpdated = System.currentTimeMillis();
-
-            synchronized (screenlock)
-            {
-                screenlock.notifyAll();
-            }
 
             connected = true;
 
@@ -197,37 +167,14 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleNoMenu(int sequence) throws RemoteException {
+        public void rtDisplayHandleNoMenu() throws RemoteException {
             log.debug("rtDisplayHandleNoMenu callback invoked");
-        }
-
-
-        @Override
-        public void keySent(int sequence) throws RemoteException {
-            synchronized (keylock)
-            {
-                if(keynotwait>0)
-                    keynotwait--;
-                else
-                    keylock.notify();
-            }
-        }
-
-        @Override
-        public String getServiceIdentifier() throws RemoteException {
-            return this.toString();
         }
 
     };
 
     public boolean isPumpBusy() {
         return activeCmd != null;
-    }
-
-    public void unbind() {
-        if(ruffyService!=null)
-            try{ruffyService.removeHandler(mHandler);}catch (Exception e){}
-        this.ruffyService = null;
     }
 
     private static class Returnable {
@@ -377,8 +324,7 @@ public class RuffyScripter {
                 SystemClock.sleep(10 * 1000);
             }
 
-            canDisconnect=false;
-            boolean connectInitSuccessful = ruffyService.doRTConnect(mHandler) == 0;
+            boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
             log.debug("Waiting for first menu update to be sent");
             // Note: there was an 'if(currentMenu == null)' around the next call, since
@@ -390,8 +336,8 @@ public class RuffyScripter {
             // if the user just pressed a button on the combo, the screen needs to time first
             // before a connection is possible. In that case, it takes 45s before the
             // connection comes up.
-            waitForMenuUpdate(180);
-        } catch (Exception e) {
+            waitForMenuUpdate(90);
+        } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
     }
@@ -401,93 +347,36 @@ public class RuffyScripter {
     // so this class can focus on providing a connection to run commands
     // (or maybe reconsider putting it into a base class)
 
-    public static class Key {
-        public static byte NO_KEY = (byte) 0x00;
-        public static byte MENU = (byte) 0x03;
-        public static byte CHECK = (byte) 0x0C;
-        public static byte UP = (byte) 0x30;
-        public static byte DOWN = (byte) 0xC0;
-        public static byte BACK = (byte) 0x33;
+    private static class Key {
+        static byte NO_KEY = (byte) 0x00;
+        static byte MENU = (byte) 0x03;
+        static byte CHECK = (byte) 0x0C;
+        static byte UP = (byte) 0x30;
+        static byte DOWN = (byte) 0xC0;
     }
 
     public void pressUpKey() {
         log.debug("Pressing up key");
-        pressKey(Key.UP,2000);
+        pressKey(Key.UP);
         log.debug("Releasing up key");
     }
 
     public void pressDownKey() {
         log.debug("Pressing down key");
-        pressKey(Key.DOWN,2000);
+        pressKey(Key.DOWN);
         log.debug("Releasing down key");
     }
 
     public void pressCheckKey() {
         log.debug("Pressing check key");
-        pressKey(Key.CHECK,2000);
+        pressKey(Key.CHECK);
         log.debug("Releasing check key");
     }
 
     public void pressMenuKey() {
         log.debug("Pressing menu key");
-        pressKey(Key.MENU,2000);
+        pressKey(Key.MENU);
         log.debug("Releasing menu key");
-    }
-
-    public void pressBackKey() {
-        log.debug("Pressing back key");
-        pressKey(Key.BACK,2000);
-        log.debug("Releasing back key");
-    }
-
-    public boolean waitScreen(long timeout)
-    {
-        synchronized (screenlock) {
-            try {
-                screenlock.wait(timeout);
-            } catch (Exception e) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean goToMainMenuScreen(MenuType screen, long timeout)
-    {
-        long start = System.currentTimeMillis();
-        while((currentMenu == null || currentMenu.getType()!=screen) && start+timeout>System.currentTimeMillis())
-        {
-            if(currentMenu!=null && currentMenu.getType()==MenuType.WARNING_OR_ERROR)
-            {
-                //FIXME bad thing to do :D
-                pressCheckKey();
-            }
-            else if(currentMenu!=null && !currentMenu.getType().isMaintype())
-            {
-                pressBackKey();
-            }
-            else
-                pressMenuKey();
-            waitScreen(250);
-        }
-        return currentMenu != null && currentMenu.getType()==screen;
-    }
-
-    public boolean enterMenu(MenuType startType, MenuType targetType, byte key, long timeout)
-    {
-        if(currentMenu==null || currentMenu.getType() != startType)
-            return false;
-        long start = System.currentTimeMillis();
-        pressKey(key,2000);
-        while((currentMenu == null || currentMenu.getType()!=targetType) && start+timeout>System.currentTimeMillis()) {
-            waitScreen(100);
-        }
-        return currentMenu!=null && currentMenu.getType()==targetType;
-    }
-
-    public void step(int steps, byte key, long timeout) {
-        for(int i = 0; i < Math.abs(steps);i++)
-            pressKey(key,timeout);
     }
 
     // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
@@ -498,7 +387,7 @@ public class RuffyScripter {
      * Wait until the menu update is in
      */
     public void waitForMenuUpdate() {
-       waitForMenuUpdate(120);
+       waitForMenuUpdate(60);
     }
 
     public void waitForMenuUpdate(long timeoutInSeconds) {
@@ -512,26 +401,12 @@ public class RuffyScripter {
         }
     }
 
-    private void pressKey(final byte key, long timeout) {
+    private void pressKey(final byte key) {
         try {
             ruffyService.rtSendKey(key, true);
-            //SystemClock.sleep(200);
+            SystemClock.sleep(100);
             ruffyService.rtSendKey(Key.NO_KEY, true);
-            if(timeout > 0)
-            {
-                synchronized (keylock)
-                {
-                    keylock.wait(timeout);
-                }
-            }
-            else
-            {
-                synchronized (keylock)
-                {
-                    keynotwait++;
-                }
-            }
-        } catch (Exception e) {
+        } catch (RemoteException e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");
         }
     }
