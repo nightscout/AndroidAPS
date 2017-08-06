@@ -254,8 +254,8 @@ public class SetTbrCommand implements Command {
                         else {
                             Log.v("SetTbrCommand:tick",state+": setting");
                             scripter.pressCheckKey();
-                            scripter.waitScreen(300);
-                            if(scripter.currentMenu.getType()==MenuType.MAIN_MENU || scripter.currentMenu.getType()!=MenuType.WARNING_OR_ERROR)
+                            scripter.waitScreen(500);
+                            if(scripter.currentMenu.getType()==MenuType.MAIN_MENU || scripter.currentMenu.getType()==MenuType.WARNING_OR_ERROR)
                             {
                                 Log.v("SetTbrCommand:tick",state+": set and going to SET");
                                 updateState(SET, 30);
