@@ -3,22 +3,6 @@
     <PreferenceCategory
         android:key="openaps"
         android:title="@string/openapsma">
-        <EditTextPreference
-            android:defaultValue=""
-            android:key="openapsma_min_bg"
-            android:numeric="decimal"
-            android:title="@string/openapsma_low_summary" />
-        <EditTextPreference
-            android:defaultValue=""
-            android:key="openapsma_max_bg"
-            android:numeric="decimal"
-            android:title="@string/openapsma_high_summary" />
-
-        <EditTextPreference
-            android:defaultValue=""
-            android:key="openapsma_target_bg"
-            android:numeric="decimal"
-            android:title="@string/openapsma_target_bg" />
 
         <EditTextPreference
             android:defaultValue="1"
