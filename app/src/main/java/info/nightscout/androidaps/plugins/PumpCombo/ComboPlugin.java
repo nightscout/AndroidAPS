@@ -533,7 +533,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal() {
         log.debug("cancelTempBasal called");
 
         CommandResult commandResult = null;
@@ -578,14 +578,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         if (tempBasal != null) {
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
-            treatmentsInterface.addToHistoryTempBasal(tempBasal);
+            treatmentsInterface.addToHistoryTempBasal(tempStop);
         }
 
-        if (commandResult != null) {
-            pumpEnactResult.success = commandResult.success;
-            pumpEnactResult.enacted = commandResult.enacted;
-            pumpEnactResult.comment = commandResult.message;
-        }
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = commandResult.success;
+        pumpEnactResult.enacted = commandResult.enacted;
+        pumpEnactResult.comment = commandResult.message;
+        pumpEnactResult.isTempCancel = true;
         return pumpEnactResult;
     }
 
