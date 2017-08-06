@@ -252,6 +252,7 @@ public class NSUpload {
             if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
             data.put("created_at", DateUtil.toISOString(detailedBolusInfo.date));
             data.put("date", detailedBolusInfo.date);
+            data.put("isSMB", detailedBolusInfo.isSMB);
             if (detailedBolusInfo.pumpId != 0)
                 data.put("pumpId", detailedBolusInfo.pumpId);
             if (detailedBolusInfo.glucose != 0d)
