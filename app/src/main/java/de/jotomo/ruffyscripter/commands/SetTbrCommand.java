@@ -273,6 +273,11 @@ public class SetTbrCommand implements Command {
                         }
                     }
                 }
+                else if(scripter.currentMenu.getType()==MenuType.MAIN_MENU || scripter.currentMenu.getType()==MenuType.WARNING_OR_ERROR)
+                {
+                    Log.v("SetTbrCommand:tick",state+": set and going to SET");
+                    updateState(SET, 30);
+                }
                 else
                 {
                     Log.v("SetTbrCommand:tick",state+": not in "+ MenuType.TBR_DURATION+" but in "+scripter.currentMenu);
