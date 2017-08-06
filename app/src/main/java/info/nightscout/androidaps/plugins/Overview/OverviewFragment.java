@@ -1403,7 +1403,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             int lastCob = 0;
             for (long time = fromTime; time <= now; time += 5 * 60 * 1000L) {
                 if (showIobView.isChecked()) {
-                    double iob = IobCobCalculatorPlugin.calulateFromTreatmentsAndTemps(time).iob;
+                    double iob = IobCobCalculatorPlugin.calculateFromTreatmentsAndTempsSynchronized(time).iob;
                     if (Math.abs(lastIob - iob) > 0.02) {
                         if (Math.abs(lastIob - iob) > 0.2)
                             iobArray.add(new DataPoint(time, lastIob));
