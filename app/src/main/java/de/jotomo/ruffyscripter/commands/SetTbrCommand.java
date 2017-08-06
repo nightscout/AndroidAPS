@@ -252,9 +252,24 @@ public class SetTbrCommand implements Command {
                             }
                         }
                         else {
-                            Log.v("SetTbrCommand:tick",state+": setting and going to SET");
+                            Log.v("SetTbrCommand:tick",state+": setting");
                             scripter.pressCheckKey();
-                            updateState(SET, 30);
+                            scripter.waitScreen(300);
+                            if(scripter.currentMenu.getType()==MenuType.MAIN_MENU || scripter.currentMenu.getType()!=MenuType.WARNING_OR_ERROR)
+                            {
+                                Log.v("SetTbrCommand:tick",state+": set and going to SET");
+                                updateState(SET, 30);
+                            }
+                            else if(retries>0)
+                            {
+                                Log.v("SetTbrCommand:tick",state+": not set, wait");
+                                retries--;
+                            }
+                            else
+                            {
+                                Log.v("SetTbrCommand:tick",state+": no retry left");
+                                updateState(ERROR,30);
+                            }
                         }
                     }
                 }
