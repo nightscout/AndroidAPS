@@ -189,8 +189,7 @@ public class NSSettingsStatus {
                     }
                 }
                 if (settingsO.has("alarmTimeagoWarnMins") && what == "alarmTimeagoWarnMins"){
-                    JSONObject tObject = settingsO.getJSONObject("alarmTimeagoWarnMins");
-                    Double result = tObject.getDouble(what);
+                    Double result = settingsO.getDouble(what);
                     return result;
                 }
             }
