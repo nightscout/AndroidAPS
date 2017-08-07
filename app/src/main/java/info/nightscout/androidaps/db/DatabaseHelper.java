@@ -689,7 +689,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
             treatment.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
             treatment._id = trJson.getString("_id");
-            treatment.isSMB = trJson.getBoolean("isSMB");
+            if (trJson.has("isSMB"))
+                treatment.isSMB = trJson.getBoolean("isSMB");
             if (trJson.has("eventType")) {
                 treatment.mealBolus = !trJson.get("eventType").equals("Correction Bolus");
                 double carbs = treatment.carbs;
@@ -1267,6 +1268,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             scheduleExtendedBolusChange();
         }
     }
+
     public ExtendedBolus findExtendedBolusById(String _id) {
         try {
             QueryBuilder<ExtendedBolus, Long> queryBuilder = null;
