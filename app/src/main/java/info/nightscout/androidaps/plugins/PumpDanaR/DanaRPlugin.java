@@ -380,6 +380,9 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
             if (percentRate > getPumpDescription().maxTempPercent) {
                 percentRate = getPumpDescription().maxTempPercent;
             }
+            if (Config.logPumpActions)
+                log.debug("setTempBasalAbsolute: Calculated percent rate: " + percentRate);
+
             // If extended in progress
             if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
                 if (Config.logPumpActions)
@@ -393,7 +396,10 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
+                TemporaryBasal running = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+                if (Config.logPumpActions)
+                    log.debug("setTempBasalAbsolute: currently running: " + running.toString());
+                if (running.percentRate == percentRate) {
                     result.success = true;
                     result.percent = percentRate;
                     result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();

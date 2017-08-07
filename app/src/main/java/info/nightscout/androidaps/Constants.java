@@ -33,14 +33,6 @@ public class Constants {
     public static final int CPP_MIN_PERCENTAGE = 50;
     public static final int CPP_MAX_PERCENTAGE = 200;
 
-    // Defaults for settings
-    public static final Double MAX_BG_DEFAULT_MGDL = 180d;
-    public static final Double MAX_BG_DEFAULT_MMOL = 10d;
-    public static final Double MIN_BG_DEFAULT_MGDL = 100d;
-    public static final Double MIN_BG_DEFAULT_MMOL = 5d;
-    public static final Double TARGET_BG_DEFAULT_MGDL = 150d;
-    public static final Double TARGET_BG_DEFAULT_MMOL = 7d;
-
     // Very Hard Limits Ranges
     // First value is the Lowest and second value is the Highest a Limit can define
     public static final int[] VERY_HARD_LIMIT_MIN_BG = {72,180};

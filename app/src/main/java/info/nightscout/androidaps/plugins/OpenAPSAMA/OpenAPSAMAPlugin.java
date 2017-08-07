@@ -158,22 +158,11 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
 
         String units = profile.getUnits();
 
-        double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-        double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-        double targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
-        if (!units.equals(Constants.MGDL)) {
-            maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
-            minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
-            targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
-        }
-
-        Date now = new Date();
-
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SP.getDouble("openapsma_max_basal", 1d);
-        double minBg = Profile.toMgdl(SP.getDouble("openapsma_min_bg", minBgDefault), units);
-        double maxBg = Profile.toMgdl(SP.getDouble("openapsma_max_bg", maxBgDefault), units);
-        double targetBg = Profile.toMgdl(SP.getDouble("openapsma_target_bg", targetBgDefault), units);
+        double minBg =  Profile.toMgdl(profile.getTargetLow(), units);
+        double maxBg =  Profile.toMgdl(profile.getTargetHigh(), units);
+        double targetBg = (minBg + maxBg) / 2;
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
@@ -247,6 +236,8 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         determineBasalResultAMA.iob = iobArray[0];
 
         determineBasalAdapterAMAJS.release();
+
+        Date now = new Date();
 
         try {
             determineBasalResultAMA.json.put("timestamp", DateUtil.toISOString(now));
