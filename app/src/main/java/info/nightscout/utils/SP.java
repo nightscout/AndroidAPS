@@ -88,12 +88,6 @@ public class SP {
         editor.apply();
     }
 
-    static public void removeBoolean(int resourceID) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(MainApp.sResources.getString(resourceID));
-        editor.apply();
-    }
-
     static public void putLong(String key, long value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
@@ -130,9 +124,15 @@ public class SP {
         editor.apply();
     }
 
-    static public void removeString(int resourceID) {
+    static public void remove(int resourceID) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(MainApp.sResources.getString(resourceID));
+        editor.apply();
+    }
+
+    static public void remove(String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(key);
         editor.apply();
     }
 }

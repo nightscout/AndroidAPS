@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -34,9 +33,6 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.BasalData;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventAutosensCalculationFinished;
 import info.nightscout.androidaps.plugins.IobCobCalculator.events.EventNewHistoryData;
-import info.nightscout.utils.Round;
-import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 
 /**
  * Created by mike on 24.04.2017.
@@ -390,7 +386,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 }
                 delta = (bg - bucketed_data.get(i + 1).value);
 
-                IobTotal iob = calulateFromTreatmentsAndTemps(bgTime);
+                IobTotal iob = calculateFromTreatmentsAndTemps(bgTime);
 
                 double bgi = -iob.activity * sens * 5;
                 double deviation = delta - bgi;
@@ -463,14 +459,20 @@ public class IobCobCalculatorPlugin implements PluginBase {
         return getBGDataFrom;
     }
 
-    public static IobTotal calulateFromTreatmentsAndTemps(long time) {
+    public static IobTotal calculateFromTreatmentsAndTempsSynchronized(long time) {
+        synchronized (dataLock) {
+            return calculateFromTreatmentsAndTemps(time);
+        }
+    }
+
+    public static IobTotal calculateFromTreatmentsAndTemps(long time) {
         long now = System.currentTimeMillis();
         time = roundUpTime(time);
         if (time < now && iobTable.get(time) != null) {
-            //og.debug(">>> calulateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
+            //og.debug(">>> calculateFromTreatmentsAndTemps Cache hit " + new Date(time).toLocaleString());
             return iobTable.get(time);
         } else {
-            //log.debug(">>> calulateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
+            //log.debug(">>> calculateFromTreatmentsAndTemps Cache miss " + new Date(time).toLocaleString());
         }
         IobTotal bolusIob = MainApp.getConfigBuilder().getCalculationToTimeTreatments(time).round();
         IobTotal basalIob = MainApp.getConfigBuilder().getCalculationToTimeTempBasals(time).round();
@@ -559,7 +561,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
         int pos = 0;
         for (int i = 0; i < len; i++) {
             long t = time + i * 5 * 60000;
-            IobTotal iob = calulateFromTreatmentsAndTemps(t);
+            IobTotal iob = calculateFromTreatmentsAndTempsSynchronized(t);
             array[pos] = iob;
             pos++;
         }

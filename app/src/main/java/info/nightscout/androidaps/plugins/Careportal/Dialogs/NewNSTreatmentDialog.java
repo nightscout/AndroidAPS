@@ -183,7 +183,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         profile = MainApp.getConfigBuilder().getProfile();
         profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
         ArrayList<CharSequence> profileList;
-        units = profile.getUnits();
+        units = profile != null ? profile.getUnits() : Constants.MGDL;
         profileList = profileStore.getProfileList();
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<CharSequence>(getContext(),
                 R.layout.spinner_centered, profileList);

@@ -60,7 +60,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_CAREPORTALEVENTS = "CareportalEvents";
     public static final String DATABASE_PROFILESWITCHES = "ProfileSwitches";
 
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     private static Long earliestDataChange = null;
 
@@ -113,17 +113,23 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase database, ConnectionSource connectionSource, int oldVersion, int newVersion) {
         try {
-            log.info(DatabaseHelper.class.getName(), "onUpgrade");
-            TableUtils.dropTable(connectionSource, TempTarget.class, true);
-            TableUtils.dropTable(connectionSource, Treatment.class, true);
-            TableUtils.dropTable(connectionSource, BgReading.class, true);
-            TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
-            TableUtils.dropTable(connectionSource, DbRequest.class, true);
-            TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
-            TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
-            TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
-            TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
-            onCreate(database, connectionSource);
+            if (oldVersion == 7 && newVersion == 8) {
+                log.debug("Upgrading database from v7 to v8");
+                TableUtils.dropTable(connectionSource, Treatment.class, true);
+                TableUtils.createTableIfNotExists(connectionSource, Treatment.class);
+            } else {
+                log.info(DatabaseHelper.class.getName(), "onUpgrade");
+                TableUtils.dropTable(connectionSource, TempTarget.class, true);
+                TableUtils.dropTable(connectionSource, Treatment.class, true);
+                TableUtils.dropTable(connectionSource, BgReading.class, true);
+                TableUtils.dropTable(connectionSource, DanaRHistoryRecord.class, true);
+                TableUtils.dropTable(connectionSource, DbRequest.class, true);
+                TableUtils.dropTable(connectionSource, TemporaryBasal.class, true);
+                TableUtils.dropTable(connectionSource, ExtendedBolus.class, true);
+                TableUtils.dropTable(connectionSource, CareportalEvent.class, true);
+                TableUtils.dropTable(connectionSource, ProfileSwitch.class, true);
+                onCreate(database, connectionSource);
+            }
         } catch (SQLException e) {
             log.error("Can't drop databases", e);
             throw new RuntimeException(e);
@@ -683,6 +689,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             treatment.insulin = trJson.has("insulin") ? trJson.getDouble("insulin") : 0d;
             treatment.pumpId = trJson.has("pumpId") ? trJson.getLong("pumpId") : 0;
             treatment._id = trJson.getString("_id");
+            treatment.isSMB = trJson.getBoolean("isSMB");
             if (trJson.has("eventType")) {
                 treatment.mealBolus = !trJson.get("eventType").equals("Correction Bolus");
                 double carbs = treatment.carbs;

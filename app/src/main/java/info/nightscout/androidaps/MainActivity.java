@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CASE_STORAGE);
         }
         askForBatteryOptimizationPermission();
+        checkUpgradeToProfileTarget();
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
@@ -151,6 +153,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent intent = new Intent(getApplicationContext(), AgreementActivity.class);
             startActivity(intent);
             finish();
+        }
+    }
+
+    private void checkUpgradeToProfileTarget() { // TODO: can be removed in the future
+        boolean oldKeyExists = SP.contains("openapsma_min_bg");
+        if (oldKeyExists) {
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            String oldRange = SP.getDouble("openapsma_min_bg", 0d) + " - " + SP.getDouble("openapsma_max_bg", 0d);
+            String newRange = "";
+            if (profile != null) {
+                newRange = profile.getTargetLow() + " - " + profile.getTargetHigh();
+            }
+            String message = "Target range is changed in current version.\n\nIt's not taken from preferences but from profile.\n\n!!! REVIEW YOUR SETTINGS !!!";
+            message += "\n\nOld settings: " + oldRange;
+            message += "\nProfile settings: " + newRange;
+            OKDialog.show(this, "Target range change", message, new Runnable() {
+                @Override
+                public void run() {
+                    SP.remove("openapsma_min_bg");
+                    SP.remove("openapsma_max_bg");
+                    SP.remove("openapsma_target_bg");
+                }
+            });
         }
     }
 
