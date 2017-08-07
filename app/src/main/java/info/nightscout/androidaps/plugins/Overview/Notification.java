@@ -1,3 +1,4 @@
+
 package info.nightscout.androidaps.plugins.Overview;
 
 import java.util.Date;
@@ -174,6 +175,9 @@ public class Notification {
         if((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false))||(bgReadingAgoMin > threshold && openAPSEnabledAlerts)){
             return true;
         } 
+	//snoozing for threshold
+        SP.putLong("snoozedTo", (long) (bgReading.date+(threshold*1000*60L)));
+	//log.debug("New bg data is available Alarm is snoozed for next "+threshold*1000*60+" seconds");
         return false;
     }
 }
