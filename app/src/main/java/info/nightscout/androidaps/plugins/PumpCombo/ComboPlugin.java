@@ -532,7 +532,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         log.debug("cancelTempBasal called");
 
         CommandResult commandResult = null;
@@ -541,7 +541,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
 
-        if (activeTemp == null) {
+        if (activeTemp == null || userRequested) {
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
             commandResult = runCommand(new CancelTbrCommand());
             if (commandResult.enacted) {
