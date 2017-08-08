@@ -149,4 +149,11 @@
         android:title="Wizard Percentage"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+    <info.nightscout.androidaps.interaction.utils.VersionPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="version_number"
+        android:summary="Input Design"
+        android:title="Version:" />
 </PreferenceScreen>
