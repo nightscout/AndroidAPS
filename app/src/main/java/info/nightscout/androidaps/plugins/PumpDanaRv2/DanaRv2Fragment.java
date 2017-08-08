@@ -66,6 +66,8 @@ public class DanaRv2Fragment extends SubscriberFragment {
     TextView reservoirView;
     TextView iobView;
     TextView firmwareView;
+    TextView basalStepView;
+    TextView bolusStepView;
     Button viewProfileButton;
     Button historyButton;
     Button statsButton;
@@ -112,6 +114,8 @@ public class DanaRv2Fragment extends SubscriberFragment {
         viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
         historyButton = (Button) view.findViewById(R.id.danar_history);
         statsButton = (Button) view.findViewById(R.id.danar_stats);
+        basalStepView = (TextView) view.findViewById(R.id.danar_basalstep);
+        bolusStepView = (TextView) view.findViewById(R.id.danar_bolusstep);
 
 
         viewProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -236,6 +240,8 @@ public class DanaRv2Fragment extends SubscriberFragment {
                     } else {
                         firmwareView.setText("OLD");
                     }
+                    basalStepView.setText("" + pump.basalStep);
+                    bolusStepView.setText("" + pump.bolusStep);
                 }
             });
 
