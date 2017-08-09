@@ -51,7 +51,7 @@ public class TempTarget implements Interval {
             return false;
         if (high != other.high)
             return false;
-        if (reason != other.reason)
+        if (!Objects.equals(reason, other.reason))
             return false;
         if (!Objects.equals(_id, other._id))
             return false;
@@ -115,7 +115,7 @@ public class TempTarget implements Interval {
 
     @Override
     public boolean isInProgress() {
-        return match(new Date().getTime());
+        return match(System.currentTimeMillis());
     }
 
     @Override

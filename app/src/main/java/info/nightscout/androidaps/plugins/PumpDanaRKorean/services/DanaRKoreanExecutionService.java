@@ -196,9 +196,9 @@ public class DanaRKoreanExecutionService extends Service {
             getBTSocketForSelectedPump();
             if (mRfcommSocket == null || mBTDevice == null)
                 return; // Device not found
-            long startTime = new Date().getTime();
-            while (!isConnected() && startTime + maxConnectionTime >= new Date().getTime()) {
-                long secondsElapsed = (new Date().getTime() - startTime) / 1000L;
+            long startTime = System.currentTimeMillis();
+            while (!isConnected() && startTime + maxConnectionTime >= System.currentTimeMillis()) {
+                long secondsElapsed = (System.currentTimeMillis() - startTime) / 1000L;
                 MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
                 if (Config.logDanaBTComm)
                     log.debug("connect waiting " + secondsElapsed + "sec from: " + from);
@@ -225,7 +225,7 @@ public class DanaRKoreanExecutionService extends Service {
                         if (!MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP))
                             return;
                         getBTSocketForSelectedPump();
-                        startTime = new Date().getTime();
+                        startTime = System.currentTimeMillis();
                     }
                 }
             }
@@ -347,6 +347,11 @@ public class DanaRKoreanExecutionService extends Service {
     public boolean tempBasal(int percent, int durationInHours) {
         connect("tempBasal");
         if (!isConnected()) return false;
+        if (danaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            waitMsec(500);
+        }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
@@ -393,7 +398,7 @@ public class DanaRKoreanExecutionService extends Service {
         if (!isConnected()) return false;
 
         if (carbs > 0) {
-            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(new Date().getTime(), carbs));
+            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(System.currentTimeMillis(), carbs));
         }
 
         MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
@@ -407,7 +412,7 @@ public class DanaRKoreanExecutionService extends Service {
         }
         while (!stop.stopped && !start.failed) {
             waitMsec(100);
-            if ((new Date().getTime() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+            if ((System.currentTimeMillis() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
                 stop.stopped = true;
                 stop.forced = true;
                 log.debug("Communication stopped");
@@ -438,7 +443,7 @@ public class DanaRKoreanExecutionService extends Service {
     public boolean carbsEntry(int amount) {
         connect("carbsEntry");
         if (!isConnected()) return false;
-        MsgSetCarbsEntry msg = new MsgSetCarbsEntry(new Date().getTime(), amount);
+        MsgSetCarbsEntry msg = new MsgSetCarbsEntry(System.currentTimeMillis(), amount);
         mSerialIOThread.sendMessage(msg);
         return true;
     }
@@ -504,7 +509,7 @@ public class DanaRKoreanExecutionService extends Service {
     private double[] buildDanaRProfileRecord(Profile nsProfile) {
         double[] record = new double[24];
         for (Integer hour = 0; hour < 24; hour++) {
-            double value = Math.round(100d * nsProfile.getBasal(hour * 60 * 60))/100d + 0.00001;
+            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
             if (Config.logDanaMessageDetail)
                 log.debug("NS basal value for " + hour + ":00 is " + value);
             record[hour] = value;

@@ -11,8 +11,6 @@ import android.support.v7.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
@@ -27,12 +25,11 @@ import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -57,7 +54,7 @@ public class PersistentNotificationPlugin implements PluginBase {
 
     @Override
     public String getFragmentClass() {
-        return PersistentNotificationFragment.class.getName();
+        return null;
     }
 
     @Override
@@ -118,17 +115,20 @@ public class PersistentNotificationPlugin implements PluginBase {
 
 
         String line1 = ctx.getString(R.string.noprofile);
-        Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || MainApp.getConfigBuilder().getProfile() == null)
+            return;
+        String units = MainApp.getConfigBuilder().getProfileUnits();
 
 
         BgReading lastBG = DatabaseHelper.lastBg();
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if (profile != null && lastBG != null) {
-            line1 = lastBG.valueToUnitsToString(profile.getUnits());
+        if (lastBG != null) {
+            line1 = lastBG.valueToUnitsToString(units);
             if (glucoseStatus != null) {
-                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
-                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
+                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
             } else {
                 line1 += " " +
                         ctx.getString(R.string.old_data) +
@@ -139,7 +139,7 @@ public class PersistentNotificationPlugin implements PluginBase {
         PumpInterface pump = MainApp.getConfigBuilder();
 
         if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime());
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
             line1 += "  " + activeTemp.toStringShort();
         }
 
@@ -258,7 +258,7 @@ public class PersistentNotificationPlugin implements PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshGui ev) {
+    public void onStatusEvent(final EventRefreshOverview ev) {
         updateNotification();
     }
 

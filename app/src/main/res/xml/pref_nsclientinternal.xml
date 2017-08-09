@@ -6,25 +6,94 @@
         android:title="@string/nsclientinternal_title">
 
         <com.andreabaccega.widget.ValidatingEditTextPreference
-            validate:testType="webUrl"
             android:defaultValue="https://{YOUR-SITE}.azurewebsites.net/"
-            android:selectAllOnFocus="true"
-            android:inputType="textUri"
-            android:title="@string/nsclientinternal_url_title"
             android:dialogMessage="@string/nsclientinternal_url_dialogmessage"
-            android:key="@string/key_nsclientinternal_url" />
+            android:inputType="textUri"
+            android:key="@string/key_nsclientinternal_url"
+            android:selectAllOnFocus="true"
+            android:title="@string/nsclientinternal_url_title"
+            validate:testType="webUrl" />
+
         <EditTextPreference
-            android:title="@string/nsclientinternal_secret_title"
-            android:key="@string/key_nsclientinternal_api_secret"
-            android:dialogTitle="@string/nsclientinternal_secret_dialogtitle"
-            android:dialogMessage="@string/nsclientinternal_secret_dialogmessage"
             android:defaultValue=""
-            android:inputType="textPassword">
-        </EditTextPreference>
+            android:dialogMessage="@string/nsclientinternal_secret_dialogmessage"
+            android:dialogTitle="@string/nsclientinternal_secret_dialogtitle"
+            android:inputType="textPassword"
+            android:key="@string/key_nsclientinternal_api_secret"
+            android:title="@string/nsclientinternal_secret_title" />
+
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_ns_logappstartedevent"
             android:title="@string/ns_logappstartedevent" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_ns_localbroadcasts"
+            android:title="@string/ns_localbroadcasts_title"
+            android:summary="@string/ns_localbroadcasts"/>
+
+
+        <PreferenceScreen android:title="@string/ns_alarmoptions">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_nsalarm_urgent_high"
+                android:title="@string/nsalarm_urgenthigh"/>
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_nsalarm_high"
+                android:title="@string/nsalarm_high"/>
+
+           <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_nsalarm_low"
+                android:title="@string/nsalarm_low"/>
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_nsalarm_urgent_low"
+                android:title="@string/nsalarm_urgentlow"/>
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_nsalarm_staledata"
+                android:title="@string/nsalarm_staledata"/>
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                validate:testType="numericRange"
+                validate:minNumber="15"
+                validate:maxNumber="120"
+                android:digits="0123456789"
+                android:defaultValue="16"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="number"
+                android:maxLines="20"
+                android:title="@string/nsalarm_staledatavalue_label"
+                android:key="@string/key_nsalarm_staledatavalue" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_nsalarm_urgent_staledata"
+                android:title="@string/nsalarm_urgentstaledata"/>
+
+            <com.andreabaccega.widget.ValidatingEditTextPreference
+                validate:testType="numericRange"
+                validate:minNumber="30"
+                validate:maxNumber="180"
+                android:digits="0123456789"
+                android:defaultValue="31"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"
+                android:inputType="number"
+                android:maxLines="20"
+                android:title="@string/nsalarm_urgent_staledatavalue_label"
+                android:key="@string/key_nsalarm_urgent_staledatavalue" />
+
+        </PreferenceScreen>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

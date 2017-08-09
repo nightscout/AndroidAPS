@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 
@@ -285,12 +286,19 @@ public class TimeListEdit {
 
     public void editItem(int index, int timeAsSeconds, double value1, double value2) {
         try {
+            String time;
+            int hour = timeAsSeconds / 60 / 60;
+            DecimalFormat df = new DecimalFormat("00");
+            time = df.format(hour) + ":00";
+
             JSONObject newObject1 = new JSONObject();
+            newObject1.put("time", time);
             newObject1.put("timeAsSeconds", timeAsSeconds);
             newObject1.put("value", value1);
             data1.put(index, newObject1);
             if (data2 != null) {
                 JSONObject newObject2 = new JSONObject();
+                newObject1.put("time", time);
                 newObject2.put("timeAsSeconds", timeAsSeconds);
                 newObject2.put("value", value2);
                 data2.put(index, newObject2);

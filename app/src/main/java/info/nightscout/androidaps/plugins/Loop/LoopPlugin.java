@@ -167,7 +167,7 @@ public class LoopPlugin implements PluginBase {
         if (loopSuspendedTill == 0)
             return 0;
 
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
         long msecDiff = loopSuspendedTill - now;
 
         if (loopSuspendedTill <= now) { // time exceeded
@@ -182,7 +182,7 @@ public class LoopPlugin implements PluginBase {
         if (loopSuspendedTill == 0)
             return false;
 
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
 
         if (loopSuspendedTill <= now) { // time exceeded
             suspendTo(0L);
@@ -196,7 +196,7 @@ public class LoopPlugin implements PluginBase {
         if (loopSuspendedTill == 0)
             return false;
 
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
 
         if (loopSuspendedTill <= now) { // time exceeded
             suspendTo(0L);
@@ -209,7 +209,7 @@ public class LoopPlugin implements PluginBase {
     public void invoke(String initiator, boolean allowNotification) {
         try {
             if (Config.logFunctionCalls)
-                log.debug("invoke");
+                log.debug("invoke from " + initiator);
             ConstraintsInterface constraintsInterface = MainApp.getConfigBuilder();
             if (!constraintsInterface.isLoopEnabled()) {
                 log.debug(MainApp.sResources.getString(R.string.loopdisabled));
@@ -231,6 +231,12 @@ public class LoopPlugin implements PluginBase {
             if (configBuilder.isSuspended()) {
                 log.debug(MainApp.sResources.getString(R.string.pumpsuspended));
                 MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.pumpsuspended)));
+                return;
+            }
+
+            if (configBuilder.getProfile() == null) {
+                log.debug(MainApp.sResources.getString(R.string.noprofileselected));
+                MainApp.bus().post(new EventLoopSetLastRunGui(MainApp.sResources.getString(R.string.noprofileselected)));
                 return;
             }
 

@@ -38,16 +38,20 @@ import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAddAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSAuthAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.acks.NSUpdateAck;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAlarm;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAnnouncement;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastCals;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastClearAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastDeviceStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastMbgs;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastSgvs;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastTreatment;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSCal;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastUrgentAlarm;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.AlarmAck;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSTreatment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
@@ -152,6 +156,7 @@ public class NSClientService extends Service {
                 ev.isChanged(R.string.key_nsclientinternal_api_secret) ||
                 ev.isChanged(R.string.key_nsclientinternal_paused)
                 ) {
+            latestDateInReceivedData = 0;
             destroy();
             initialize();
         }
@@ -160,6 +165,7 @@ public class NSClientService extends Service {
     @Subscribe
     public void onStatusEvent(EventConfigBuilderChange ev) {
         if (nsEnabled != MainApp.getSpecificPlugin(NSClientInternalPlugin.class).isEnabled(PluginBase.GENERAL)) {
+            latestDateInReceivedData = 0;
             destroy();
             initialize();
         }
@@ -201,6 +207,10 @@ public class NSClientService extends Service {
                 MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "do connect"));
                 mSocket.connect();
                 mSocket.on("dataUpdate", onDataUpdate);
+                mSocket.on("announcement", onAnnouncement);
+                mSocket.on("alarm", onAlarm);
+                mSocket.on("urgent_alarm", onUrgentAlarm);
+                mSocket.on("clear_alarm", onClearAlarm);
             } catch (URISyntaxException | RuntimeException e) {
                 MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "Wrong URL syntax"));
                 MainApp.bus().post(new EventNSClientStatus("Wrong URL syntax"));
@@ -297,6 +307,99 @@ public class NSClientService extends Service {
         }
     };
 
+    private Emitter.Listener onAnnouncement = new Emitter.Listener() {
+/*
+{
+"level":0,
+"title":"Announcement",
+"message":"test",
+"plugin":{"name":"treatmentnotify","label":"Treatment Notifications","pluginType":"notification","enabled":true},
+"group":"Announcement",
+"isAnnouncement":true,
+"key":"9ac46ad9a1dcda79dd87dae418fce0e7955c68da"
+}
+ */
+        @Override
+        public void call(final Object... args) {
+            JSONObject data = (JSONObject) args[0];
+            if (Config.detailedLog)
+                try {
+                    MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", data.has("message") ? data.getString("message") : "received"));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
+            log.debug(data.toString());
+        }
+    };
+
+    private Emitter.Listener onAlarm = new Emitter.Listener() {
+/*
+{
+"level":1,
+"title":"Warning HIGH",
+"message":"BG Now: 5 -0.2 → mmol\/L\nRaw BG: 4.8 mmol\/L Čistý\nBG 15m: 4.8 mmol\/L\nIOB: -0.02U\nCOB: 0g",
+"eventName":"high",
+"plugin":{"name":"simplealarms","label":"Simple Alarms","pluginType":"notification","enabled":true},
+"pushoverSound":"climb",
+"debug":{"lastSGV":5,"thresholds":{"bgHigh":180,"bgTargetTop":75,"bgTargetBottom":72,"bgLow":70}},
+"group":"default",
+"key":"simplealarms_1"
+}
+ */
+        @Override
+        public void call(final Object... args) {
+            if (Config.detailedLog)
+                MainApp.bus().post(new EventNSClientNewLog("ALARM", "received"));
+            JSONObject data = (JSONObject) args[0];
+            BroadcastAlarm.handleAlarm(data, getApplicationContext());
+            log.debug(data.toString());
+        }
+    };
+
+    private Emitter.Listener onUrgentAlarm = new Emitter.Listener() {
+/*
+{
+"level":2,
+"title":"Urgent HIGH",
+"message":"BG Now: 5.2 -0.1 → mmol\/L\nRaw BG: 5 mmol\/L Čistý\nBG 15m: 5 mmol\/L\nIOB: 0.00U\nCOB: 0g",
+"eventName":"high",
+"plugin":{"name":"simplealarms","label":"Simple Alarms","pluginType":"notification","enabled":true},
+"pushoverSound":"persistent",
+"debug":{"lastSGV":5.2,"thresholds":{"bgHigh":80,"bgTargetTop":75,"bgTargetBottom":72,"bgLow":70}},
+"group":"default",
+"key":"simplealarms_2"
+}
+ */
+        @Override
+        public void call(final Object... args) {
+            JSONObject data = (JSONObject) args[0];
+            if (Config.detailedLog)
+                MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
+            BroadcastUrgentAlarm.handleUrgentAlarm(data, getApplicationContext());
+            log.debug(data.toString());
+        }
+    };
+
+    private Emitter.Listener onClearAlarm = new Emitter.Listener() {
+/*
+{
+"clear":true,
+"title":"All Clear",
+"message":"default - Urgent was ack'd",
+"group":"default"
+}
+ */
+        @Override
+        public void call(final Object... args) {
+            if (Config.detailedLog)
+                MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
+            JSONObject data = (JSONObject) args[0];
+            BroadcastClearAlarm.handleClearAlarm(data, getApplicationContext());
+            log.debug(data.toString());
+        }
+    };
+
     private Emitter.Listener onDataUpdate = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -329,19 +432,17 @@ public class NSClientService extends Service {
 
                             if (data.has("status")) {
                                 JSONObject status = data.getJSONObject("status");
-                                NSStatus nsStatus = new NSStatus(status);
+                                NSSettingsStatus nsSettingsStatus = NSSettingsStatus.getInstance().setData(status);
 
                                 if (!status.has("versionNum")) {
-                                    if (status.getInt("versionNum") < 900) {
+                                    if (status.getInt("versionNum") < Config.SUPPORTEDNSVERSION) {
                                         MainApp.bus().post(new EventNSClientNewLog("ERROR", "Unsupported Nightscout version !!!!"));
                                     }
                                 } else {
-                                    nightscoutVersionName = status.getString("version");
-                                    nightscoutVersionCode = status.getInt("versionNum");
+                                    nightscoutVersionName = nsSettingsStatus.getVersion();
+                                    nightscoutVersionCode = nsSettingsStatus.getVersionNum();
                                 }
-
-                                BroadcastStatus bs = new BroadcastStatus();
-                                bs.handleNewStatus(nsStatus, MainApp.instance().getApplicationContext(), isDelta);
+                                BroadcastStatus.handleNewStatus(nsSettingsStatus, MainApp.instance().getApplicationContext(), isDelta);
 
                     /*  Other received data to 2016/02/10
                         {
@@ -365,17 +466,15 @@ public class NSClientService extends Service {
 
                             // If new profile received or change detected broadcast it
                             if (broadcastProfile && profileStore != null) {
-                                BroadcastProfile bp = new BroadcastProfile();
-                                bp.handleNewTreatment(profileStore, MainApp.instance().getApplicationContext(), isDelta);
+                                BroadcastProfile.handleNewTreatment(profileStore, MainApp.instance().getApplicationContext(), isDelta);
                                 MainApp.bus().post(new EventNSClientNewLog("PROFILE", "broadcasting"));
                             }
 
                             if (data.has("treatments")) {
-                                JSONArray treatments = (JSONArray) data.getJSONArray("treatments");
+                                JSONArray treatments = data.getJSONArray("treatments");
                                 JSONArray removedTreatments = new JSONArray();
                                 JSONArray updatedTreatments = new JSONArray();
                                 JSONArray addedTreatments = new JSONArray();
-                                BroadcastTreatment bt = new BroadcastTreatment();
                                 if (treatments.length() > 0)
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + treatments.length() + " treatments"));
                                 for (Integer index = 0; index < treatments.length(); index++) {
@@ -385,7 +484,7 @@ public class NSClientService extends Service {
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonTreatment);
                                     //Find latest date in treatment
-                                    if (treatment.getMills() != null && treatment.getMills() < new Date().getTime())
+                                    if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
                                         if (treatment.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = treatment.getMills();
 
@@ -394,23 +493,22 @@ public class NSClientService extends Service {
                                     } else if (treatment.getAction().equals("update")) {
                                         updatedTreatments.put(jsonTreatment);
                                     } else if (treatment.getAction().equals("remove")) {
-                                        if (treatment.getMills() != null && treatment.getMills() > new Date().getTime() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
+                                        if (treatment.getMills() != null && treatment.getMills() > System.currentTimeMillis() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
                                         removedTreatments.put(jsonTreatment);
                                     }
                                 }
                                 if (removedTreatments.length() > 0) {
-                                    bt.handleRemovedTreatment(removedTreatments, MainApp.instance().getApplicationContext(), isDelta);
+                                    BroadcastTreatment.handleRemovedTreatment(removedTreatments, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                                 if (updatedTreatments.length() > 0) {
-                                    bt.handleChangedTreatment(updatedTreatments, MainApp.instance().getApplicationContext(), isDelta);
+                                    BroadcastTreatment.handleChangedTreatment(updatedTreatments, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                                 if (addedTreatments.length() > 0) {
-                                    bt.handleNewTreatment(addedTreatments, MainApp.instance().getApplicationContext(), isDelta);
+                                    BroadcastTreatment.handleNewTreatment(addedTreatments, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                             }
                             if (data.has("devicestatus")) {
-                                BroadcastDeviceStatus bds = new BroadcastDeviceStatus();
-                                JSONArray devicestatuses = (JSONArray) data.getJSONArray("devicestatus");
+                                JSONArray devicestatuses = data.getJSONArray("devicestatus");
                                 if (devicestatuses.length() > 0) {
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + devicestatuses.length() + " devicestatuses"));
                                     for (Integer index = 0; index < devicestatuses.length(); index++) {
@@ -418,13 +516,11 @@ public class NSClientService extends Service {
                                         // remove from upload queue if Ack is failing
                                         UploadQueue.removeID(jsonStatus);
                                     }
-                                    // send only last record
-                                    bds.handleNewDeviceStatus(devicestatuses.getJSONObject(devicestatuses.length() - 1), MainApp.instance().getApplicationContext(), isDelta);
+                                    BroadcastDeviceStatus.handleNewDeviceStatus(devicestatuses, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                             }
                             if (data.has("mbgs")) {
-                                BroadcastMbgs bmbg = new BroadcastMbgs();
-                                JSONArray mbgs = (JSONArray) data.getJSONArray("mbgs");
+                                JSONArray mbgs = data.getJSONArray("mbgs");
                                 if (mbgs.length() > 0)
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + mbgs.length() + " mbgs"));
                                 for (Integer index = 0; index < mbgs.length(); index++) {
@@ -432,11 +528,10 @@ public class NSClientService extends Service {
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonMbg);
                                 }
-                                bmbg.handleNewMbg(mbgs, MainApp.instance().getApplicationContext(), isDelta);
+                                BroadcastMbgs.handleNewMbg(mbgs, MainApp.instance().getApplicationContext(), isDelta);
                             }
                             if (data.has("cals")) {
-                                BroadcastCals bc = new BroadcastCals();
-                                JSONArray cals = (JSONArray) data.getJSONArray("cals");
+                                JSONArray cals = data.getJSONArray("cals");
                                 if (cals.length() > 0)
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + cals.length() + " cals"));
                                 // Retreive actual calibration
@@ -444,11 +539,10 @@ public class NSClientService extends Service {
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(cals.optJSONObject(index));
                                 }
-                                bc.handleNewCal(cals, MainApp.instance().getApplicationContext(), isDelta);
+                                BroadcastCals.handleNewCal(cals, MainApp.instance().getApplicationContext(), isDelta);
                             }
                             if (data.has("sgvs")) {
-                                BroadcastSgvs bs = new BroadcastSgvs();
-                                JSONArray sgvs = (JSONArray) data.getJSONArray("sgvs");
+                                JSONArray sgvs = data.getJSONArray("sgvs");
                                 if (sgvs.length() > 0)
                                     MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"));
                                 for (Integer index = 0; index < sgvs.length(); index++) {
@@ -459,11 +553,11 @@ public class NSClientService extends Service {
                                     // remove from upload queue if Ack is failing
                                     UploadQueue.removeID(jsonSgv);
                                     //Find latest date in sgv
-                                    if (sgv.getMills() != null && sgv.getMills() < new Date().getTime())
+                                    if (sgv.getMills() != null && sgv.getMills() < System.currentTimeMillis())
                                         if (sgv.getMills() > latestDateInReceivedData)
                                             latestDateInReceivedData = sgv.getMills();
                                 }
-                                bs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);
+                                BroadcastSgvs.handleNewSgv(sgvs, MainApp.instance().getApplicationContext(), isDelta);
                             }
                             MainApp.bus().post(new EventNSClientNewLog("LAST", DateUtil.dateAndTimeString(latestDateInReceivedData)));
                         } catch (JSONException e) {
@@ -543,6 +637,12 @@ public class NSClientService extends Service {
         }
     }
 
+    public void sendAlarmAck(AlarmAck alarmAck) {
+        if (!isConnected || !hasWriteAuth) return;
+        mSocket.emit("ack", alarmAck.level, alarmAck.group, alarmAck.silenceTime);
+        MainApp.bus().post(new EventNSClientNewLog("ALARMACK ", alarmAck.level + " " + alarmAck.group + " " + alarmAck.silenceTime));
+    }
+
     @Subscribe
     public void onStatusEvent(NSAddAck ack) {
         if (ack.nsClientID != null) {
@@ -575,11 +675,11 @@ public class NSClientService extends Service {
             public void run() {
                 if (mSocket == null || !mSocket.connected()) return;
 
-                if (lastResendTime  > new Date().getTime() - 10 * 1000L) {
-                    log.debug("Skipping resend by lastResendTime: " + ((new Date().getTime() - lastResendTime) / 1000L) + " sec");
+                if (lastResendTime  > System.currentTimeMillis() - 10 * 1000L) {
+                    log.debug("Skipping resend by lastResendTime: " + ((System.currentTimeMillis() - lastResendTime) / 1000L) + " sec");
                     return;
                 }
-                lastResendTime = new Date().getTime();
+                lastResendTime = System.currentTimeMillis();
 
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 

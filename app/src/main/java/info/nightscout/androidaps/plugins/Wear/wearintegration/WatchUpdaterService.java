@@ -19,6 +19,9 @@ import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -37,6 +40,7 @@ import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.DecimalFormatter;
@@ -71,6 +75,9 @@ public class WatchUpdaterService extends WearableListenerService implements
     boolean wear_integration = false;
     SharedPreferences mPrefs;
     private static boolean lastLoopStatus;
+
+    private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
+
 
     @Override
     public void onCreate() {
@@ -169,13 +176,13 @@ public class WatchUpdaterService extends WearableListenerService implements
 
             if (event != null && event.getPath().equals(WEARABLE_INITIATE_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                ToastUtils.showToastInUiThread(this, "Wear: " + actionstring);
+                log.debug("Wear: " + actionstring);
                 ActionStringHandler.handleInitiate(actionstring);
             }
 
             if (event != null && event.getPath().equals(WEARABLE_CONFIRM_ACTIONSTRING_PATH)) {
                 String actionstring = new String(event.getData());
-                ToastUtils.showToastInUiThread(this, "Wear Confirm: " + actionstring);
+                log.debug("Wear Confirm: " + actionstring);
                 ActionStringHandler.handleConfirmation(actionstring);
             }
         }
@@ -209,14 +216,13 @@ public class WatchUpdaterService extends WearableListenerService implements
     }
 
     private DataMap dataMapSingleBG(BgReading lastBG, GlucoseStatus glucoseStatus) {
-        Profile profile = MainApp.getConfigBuilder().getProfile();
-        if (profile == null) return null;
+        String units = MainApp.getConfigBuilder().getProfileUnits();
 
         Double lowLine = SafeParse.stringToDouble(mPrefs.getString("low_mark", "0"));
         Double highLine = SafeParse.stringToDouble(mPrefs.getString("high_mark", "0"));
 
         //convert to mg/dl
-        if (!profile.getUnits().equals(Constants.MGDL)) {
+        if (!units.equals(Constants.MGDL)) {
             lowLine *= Constants.MMOLL_TO_MGDL;
             highLine *= Constants.MMOLL_TO_MGDL;
 
@@ -239,7 +245,7 @@ public class WatchUpdaterService extends WearableListenerService implements
         DataMap dataMap = new DataMap();
 
         int battery = getBatteryLevel(getApplicationContext());
-        dataMap.putString("sgvString", lastBG.valueToUnitsToString(profile.getUnits()));
+        dataMap.putString("sgvString", lastBG.valueToUnitsToString(units));
         dataMap.putDouble("timestamp", lastBG.date);
         if (glucoseStatus == null) {
             dataMap.putString("slopeArrow", "");
@@ -247,8 +253,8 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMap.putString("avgDelta", "");
         } else {
             dataMap.putString("slopeArrow", slopeArrow(glucoseStatus.delta));
-            dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
-            dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits()));
+            dataMap.putString("delta", deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units));
+            dataMap.putString("avgDelta", deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units));
         }
         dataMap.putString("battery", "" + battery);
         dataMap.putLong("sgvLevel", sgvLevel);
@@ -498,7 +504,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             dataMapRequest.getDataMap().putString("message", message);
             dataMapRequest.getDataMap().putString("actionstring", actionstring);
 
-            ToastUtils.showToastInUiThread(this, "Requesting confirmation from wear: " + actionstring);
+            log.debug("Requesting confirmation from wear: " + actionstring);
 
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
@@ -526,7 +532,12 @@ public class WatchUpdaterService extends WearableListenerService implements
     @NonNull
     private String generateStatusString() {
         String status = "";
-        boolean shortString = true;
+
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (profile == null) {
+            status = MainApp.sResources.getString(R.string.noprofile);
+            return status;
+        }
 
         LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
 
@@ -541,12 +552,9 @@ public class WatchUpdaterService extends WearableListenerService implements
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(new Date().getTime());
-            if (shortString) {
-                status += activeTemp.toStringShort();
-            } else {
-                status += activeTemp.toStringMedium();
-            }
+            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+            status += activeTemp.toStringShort();
+
         }
 
         //IOB
@@ -554,14 +562,13 @@ public class WatchUpdaterService extends WearableListenerService implements
         IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
         treatmentsInterface.updateTotalIOBTempBasals();
         IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += (shortString ? "" : (getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
 
         if (mPrefs.getBoolean("wear_detailediob", true)) {
             status += "("
                     + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
-        Profile profile = MainApp.getConfigBuilder().getProfile();
         if (!mPrefs.getBoolean("wear_showbgi", false)) {
             return status;
         }

@@ -2,6 +2,7 @@ package info.nightscout.androidaps.Services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Telephony;
 
@@ -11,10 +12,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Config;
-import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.db.BgReading;
@@ -25,18 +23,20 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSMbg;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
-import info.nightscout.androidaps.plugins.PumpDanaR.History.DanaRNSHistorySync;
+import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRNSHistorySync;
 import info.nightscout.androidaps.plugins.SmsCommunicator.events.EventNewSMS;
 import info.nightscout.androidaps.plugins.SourceGlimp.SourceGlimpPlugin;
 import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gPlugin;
 import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
 import info.nightscout.utils.SP;
 
 
@@ -229,19 +229,27 @@ public class DataService extends IntentService {
 
 
         if (intent.getAction().equals(Intents.ACTION_NEW_STATUS)) {
-            if (Config.logIncommingData)
-                log.debug("Received status: " + bundles);
             if (bundles.containsKey("nsclientversioncode")) {
                 ConfigBuilderPlugin.nightscoutVersionCode = bundles.getInt("nightscoutversioncode"); // for ver 1.2.3 contains 10203
                 ConfigBuilderPlugin.nightscoutVersionName = bundles.getString("nightscoutversionname");
                 ConfigBuilderPlugin.nsClientVersionCode = bundles.getInt("nsclientversioncode"); // for ver 1.17 contains 117
                 ConfigBuilderPlugin.nsClientVersionName = bundles.getString("nsclientversionname");
                 log.debug("Got versions: NSClient: " + ConfigBuilderPlugin.nsClientVersionName + " Nightscout: " + ConfigBuilderPlugin.nightscoutVersionName);
-                if (ConfigBuilderPlugin.nsClientVersionCode < 121) {
-                    Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                try {
+                    if (ConfigBuilderPlugin.nsClientVersionCode < MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode) {
+                        Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
+                        MainApp.bus().post(new EventNewNotification(notification));
+                    } else {
+                        MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
+                    Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.URGENT);
                     MainApp.bus().post(new EventNewNotification(notification));
                 } else {
-                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
+                    MainApp.bus().post(new EventDismissNotification(Notification.OLD_NS));
                 }
             } else {
                 Notification notification = new Notification(Notification.OLD_NSCLIENT, MainApp.sResources.getString(R.string.unsupportedclientver), Notification.URGENT);
@@ -250,18 +258,15 @@ public class DataService extends IntentService {
             if (bundles.containsKey("status")) {
                 try {
                     JSONObject statusJson = new JSONObject(bundles.getString("status"));
-                    if (statusJson.has("settings")) {
-                        JSONObject settings = statusJson.getJSONObject("settings");
-                        if (settings.has("thresholds")) {
-                            JSONObject thresholds = settings.getJSONObject("thresholds");
-                            if (thresholds.has("bgTargetTop")) {
-                                OverviewPlugin.bgTargetHigh = thresholds.getDouble("bgTargetTop");
-                            }
-                            if (thresholds.has("bgTargetBottom")) {
-                                OverviewPlugin.bgTargetLow = thresholds.getDouble("bgTargetBottom");
-                            }
-                        }
-                    }
+                    NSSettingsStatus.getInstance().setData(statusJson);
+                    if (Config.logIncommingData)
+                        log.debug("Received status: " + statusJson.toString());
+                    Double targetHigh = NSSettingsStatus.getInstance().getThreshold("bgTargetTop");
+                    Double targetlow = NSSettingsStatus.getInstance().getThreshold("bgTargetBottom");
+                    if (targetHigh != null)
+                        OverviewPlugin.bgTargetHigh = targetHigh;
+                    if (targetlow != null)
+                        OverviewPlugin.bgTargetLow = targetlow;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -270,8 +275,8 @@ public class DataService extends IntentService {
         if (intent.getAction().equals(Intents.ACTION_NEW_DEVICESTATUS)) {
             try {
                 if (bundles.containsKey("devicestatus")) {
-                    String devicestatusesstring = bundles.getString("devicestatus");
                     JSONObject devicestatusJson = new JSONObject(bundles.getString("devicestatus"));
+                    NSDeviceStatus.getInstance().setData(devicestatusJson);
                     if (devicestatusJson.has("pump")) {
                         // Objectives 0
                         ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
@@ -281,8 +286,9 @@ public class DataService extends IntentService {
                 if (bundles.containsKey("devicestatuses")) {
                     String devicestatusesstring = bundles.getString("devicestatuses");
                     JSONArray jsonArray = new JSONArray(devicestatusesstring);
-                    if (jsonArray.length() > 0) {
-                        JSONObject devicestatusJson = jsonArray.getJSONObject(0);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject devicestatusJson = jsonArray.getJSONObject(i);
+                        NSDeviceStatus.getInstance().setData(devicestatusJson);
                         if (devicestatusJson.has("pump")) {
                             // Objectives 0
                             ObjectivesPlugin.pumpStatusIsAvailableInNS = true;
@@ -500,11 +506,11 @@ public class DataService extends IntentService {
             MainApp.getDbHelper().createCareportalEventFromJsonIfNotExists(trJson);
         }
 
-        if (trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
+        if (trJson.has("eventType") && trJson.getString("eventType").equals(CareportalEvent.ANNOUNCEMENT)) {
             long date = trJson.getLong("mills");
-            long now = new Date().getTime();
+            long now = System.currentTimeMillis();
             if (date > now - 15 * 60 * 1000L && trJson.has("notes")) {
-                Notification announcement = new Notification(Notification.ANNOUNCEMENT, trJson.getString("notes"), Notification.URGENT);
+                Notification announcement = new Notification(Notification.NSANNOUNCEMENT, trJson.getString("notes"), Notification.ANNOUNCEMENT, 60);
                 MainApp.bus().post(new EventNewNotification(announcement));
             }
         }

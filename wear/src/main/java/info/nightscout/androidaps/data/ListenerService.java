@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.interaction.AAPSPreferences;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.interaction.actions.CPPActivity;
+import info.nightscout.androidaps.interaction.utils.SafeParse;
 
 /**
  * Created by emmablack on 12/26/14.
@@ -252,7 +254,21 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                     String title = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("title");
                     String message = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("message");
                     String actionstring = DataMapItem.fromDataItem(event.getDataItem()).getDataMap().getString("actionstring");
-                    showConfirmationDialog(title, message, actionstring);
+
+                    if("opencpp".equals(title) && actionstring.startsWith("opencpp")){
+                        String[] act = actionstring.split("\\s+");
+                        Intent intent = new Intent(this, CPPActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        //TODO adrian: parse actionstring and add parameters
+                        Bundle params = new Bundle();
+                        params.putInt("percentage", SafeParse.stringToInt(act[1]));
+                        params.putInt("timeshift", SafeParse.stringToInt(act[2]));
+                        intent.putExtras(params);
+                        startActivity(intent);
+                    } else {
+                        showConfirmationDialog(title, message, actionstring);
+                    }
+
                 }else if (path.equals(NEW_STATUS_PATH)) {
                     dataMap = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                     Intent messageIntent = new Intent();
@@ -336,6 +352,8 @@ public class ListenerService extends WearableListenerService implements GoogleAp
                         .setContentIntent(actionPendingIntent)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVibrate(vibratePattern)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                        .extend(new NotificationCompat.WearableExtender())
                         .addAction(R.drawable.ic_confirm, title, actionPendingIntent);
 
         NotificationManagerCompat notificationManager =

@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.InsulinFastactingProlonged;
 
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
@@ -89,7 +90,7 @@ public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInte
 
     @Override
     public double getDia() {
-        return MainApp.getConfigBuilder().getProfile().getDia();
+        return MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : Constants.defaultDIA;
     }
 
     @Override

@@ -3,6 +3,7 @@ package info.nightscout.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
@@ -47,8 +48,7 @@ public class NSUpload {
             if (temporaryBasal.pumpId != 0)
                 data.put("pumpId", temporaryBasal.pumpId);
             data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.absoluteRate + "u/h " + temporaryBasal.durationInMinutes + " min"); // ECOR
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (originalExtendedAmount != null)
                 data.put("originalExtendedAmount", originalExtendedAmount); // for back synchronization
             Bundle bundle = new Bundle();
@@ -86,8 +86,7 @@ public class NSUpload {
                 if (temporaryBasal.pumpId != 0)
                     data.put("pumpId", temporaryBasal.pumpId);
                 data.put("created_at", DateUtil.toISOString(temporaryBasal.date));
-                data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-                data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalstartnote) + " " + temporaryBasal.percentRate + "% " + temporaryBasal.durationInMinutes + " min"); // ECOR
+                data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
                 Bundle bundle = new Bundle();
                 bundle.putString("action", "dbAdd");
                 bundle.putString("collection", "treatments");
@@ -109,8 +108,7 @@ public class NSUpload {
             JSONObject data = new JSONObject();
             data.put("eventType", CareportalEvent.TEMPBASAL);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
-            data.put("notes", MainApp.sResources.getString(R.string.androidaps_tempbasalendnote)); // ECOR
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (isFakedTempBasal)
                 data.put("isFakedTempBasal", isFakedTempBasal);
             if (pumpId != 0)
@@ -142,7 +140,7 @@ public class NSUpload {
             if (extendedBolus.pumpId != 0)
                 data.put("pumpId", extendedBolus.pumpId);
             data.put("created_at", DateUtil.toISOString(extendedBolus.date));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");
@@ -168,7 +166,7 @@ public class NSUpload {
             data.put("enteredinsulin", 0);
             data.put("relative", 0);
             data.put("created_at", DateUtil.toISOString(time));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             if (pumpId != 0)
                 data.put("pumpId", pumpId);
             Bundle bundle = new Bundle();
@@ -189,7 +187,7 @@ public class NSUpload {
         DeviceStatus deviceStatus = new DeviceStatus();
         try {
             LoopPlugin.LastRun lastRun = LoopPlugin.lastRun;
-            if (lastRun != null && lastRun.lastAPSRun.getTime() > new Date().getTime() - 300 * 1000L) {
+            if (lastRun != null && lastRun.lastAPSRun.getTime() > System.currentTimeMillis() - 300 * 1000L) {
                 // do not send if result is older than 1 min
                 APSResult apsResult = lastRun.request;
                 apsResult.json().put("timestamp", DateUtil.toISOString(lastRun.lastAPSRun));
@@ -221,7 +219,7 @@ public class NSUpload {
             } else {
                 log.debug("OpenAPS data too old to upload");
             }
-            deviceStatus.device = "openaps://" + MainApp.getConfigBuilder().deviceID();
+            deviceStatus.device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL;
             JSONObject pumpstatus = MainApp.getConfigBuilder().getJSONStatus();
             if (pumpstatus != null) {
                 deviceStatus.pump = pumpstatus;
@@ -254,6 +252,7 @@ public class NSUpload {
             if (detailedBolusInfo.carbs != 0d) data.put("carbs", (int) detailedBolusInfo.carbs);
             data.put("created_at", DateUtil.toISOString(detailedBolusInfo.date));
             data.put("date", detailedBolusInfo.date);
+            data.put("isSMB", detailedBolusInfo.isSMB);
             if (detailedBolusInfo.pumpId != 0)
                 data.put("pumpId", detailedBolusInfo.pumpId);
             if (detailedBolusInfo.glucose != 0d)
@@ -301,7 +300,7 @@ public class NSUpload {
                 if (data.has("enteredBy")) prebolus.put("enteredBy", data.get("enteredBy"));
                 if (data.has("notes")) prebolus.put("notes", data.get("notes"));
                 long mills = DateUtil.fromISODateString(data.getString("created_at")).getTime();
-                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L);
+                Date preBolusDate = new Date(mills + data.getInt("preBolus") * 60000L + 1000L);
                 prebolus.put("created_at", DateUtil.toISOString(preBolusDate));
                 uploadCareportalEntryToNS(prebolus);
             }
@@ -346,7 +345,7 @@ public class NSUpload {
             data.put("eventType", "OpenAPS Offline");
             data.put("duration", durationInMinutes);
             data.put("created_at", DateUtil.toISOString(new Date()));
-            data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
+            data.put("enteredBy", "openaps://" + MainApp.instance().getString(R.string.app_name));
             Bundle bundle = new Bundle();
             bundle.putString("action", "dbAdd");
             bundle.putString("collection", "treatments");

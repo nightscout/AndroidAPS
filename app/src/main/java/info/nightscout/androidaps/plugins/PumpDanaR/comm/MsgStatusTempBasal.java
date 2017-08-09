@@ -55,16 +55,16 @@ public class MsgStatusTempBasal extends MessageBase {
 
     @NonNull
     private Date getDateFromTempBasalSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(new Date().getTime() / 1000d) - tempBasalAgoSecs) * 1000);
+        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
     }
 
     public static void updateTempBasalInDB() {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         DanaRPump danaRPump = DanaRPump.getInstance();
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
 
         if (treatmentsInterface.isInHistoryRealTempBasalInProgress()) {
-            TemporaryBasal tempBasal = treatmentsInterface.getRealTempBasalFromHistory(new Date().getTime());
+            TemporaryBasal tempBasal = treatmentsInterface.getRealTempBasalFromHistory(System.currentTimeMillis());
             if (danaRPump.isTempBasalInProgress) {
                 if (tempBasal.percentRate != danaRPump.tempBasalPercent) {
                     // Close current temp basal

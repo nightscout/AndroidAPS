@@ -37,13 +37,14 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Treatments.TreatmentsPlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
-public class TreatmentsBolusFragment extends Fragment implements View.OnClickListener {
+public class TreatmentsBolusFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsBolusFragment.class);
 
     RecyclerView recyclerView;
@@ -78,7 +79,7 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
             holder.date.setText(DateUtil.dateAndTimeString(t.date));
             holder.insulin.setText(DecimalFormatter.to2Decimal(t.insulin) + " U");
             holder.carbs.setText(DecimalFormatter.to0Decimal(t.carbs) + " g");
-            Iob iob = t.iobCalc(new Date().getTime(), profile.getDia());
+            Iob iob = t.iobCalc(System.currentTimeMillis(), profile.getDia());
             holder.iob.setText(DecimalFormatter.to2Decimal(iob.iobContrib) + " U");
             holder.activity.setText(DecimalFormatter.to3Decimal(iob.activityContrib) + " U");
             holder.mealOrCorrection.setText(t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
@@ -205,19 +206,6 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventTreatmentChange ev) {
         updateGUI();
@@ -228,7 +216,8 @@ public class TreatmentsBolusFragment extends Fragment implements View.OnClickLis
         updateGUI();
     }
 
-    public void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

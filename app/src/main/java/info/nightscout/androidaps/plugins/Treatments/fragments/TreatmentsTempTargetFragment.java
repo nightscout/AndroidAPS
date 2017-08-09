@@ -26,18 +26,18 @@ import info.nightscout.androidaps.Services.Intents;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventTempTargetChange;
-import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 13/01/17.
  */
 
-public class TreatmentsTempTargetFragment extends Fragment implements View.OnClickListener {
+public class TreatmentsTempTargetFragment extends SubscriberFragment implements View.OnClickListener {
 
     RecyclerView recyclerView;
     LinearLayoutManager llm;
@@ -47,10 +47,12 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TempTargetsViewHolder> {
 
-        OverlappingIntervals<TempTarget> tempTargetList;
+        Intervals<TempTarget> tempTargetList;
+        TempTarget currentlyActiveTarget;
 
-        RecyclerViewAdapter(OverlappingIntervals<TempTarget> TempTargetList) {
+        RecyclerViewAdapter(Intervals<TempTarget> TempTargetList) {
             this.tempTargetList = TempTargetList;
+            currentlyActiveTarget = tempTargetList.getValueByInterval(System.currentTimeMillis());
         }
 
         @Override
@@ -62,16 +64,15 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
         @Override
         public void onBindViewHolder(TempTargetsViewHolder holder, int position) {
-            Profile profile = MainApp.getConfigBuilder().getProfile();
-            if (profile == null) return;
+            String units = MainApp.getConfigBuilder().getProfileUnits();
             TempTarget tempTarget = tempTargetList.getReversed(position);
             holder.ph.setVisibility(tempTarget.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(tempTarget._id != null ? View.VISIBLE : View.GONE);
             if (!tempTarget.isEndingEvent()) {
                 holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date) + " - " + DateUtil.timeString(tempTarget.originalEnd()));
                 holder.duration.setText(DecimalFormatter.to0Decimal(tempTarget.durationInMinutes) + " min");
-                holder.low.setText(tempTarget.lowValueToUnitsToString(profile.getUnits()));
-                holder.high.setText(tempTarget.highValueToUnitsToString(profile.getUnits()));
+                holder.low.setText(tempTarget.lowValueToUnitsToString(units));
+                holder.high.setText(tempTarget.highValueToUnitsToString(units));
                 holder.reason.setText(tempTarget.reason);
             } else {
                 holder.date.setText(DateUtil.dateAndTimeString(tempTarget.date));
@@ -82,10 +83,18 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
                 holder.reasonLabel.setText("");
                 holder.reasonColon.setText("");
             }
-            if (tempTarget.isInProgress())
-                holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
-            else
+            if (tempTarget.isInProgress()) {
+                if(tempTarget == currentlyActiveTarget){
+                    // active as newest
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorInProgress));
+                } else {
+                    // other's that might become active again after the latest (overlapping) is over
+                    holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
+                }
+            }
+            else {
                 holder.date.setTextColor(holder.reasonColon.getCurrentTextColor());
+            }
             holder.remove.setTag(tempTarget);
         }
 
@@ -202,24 +211,13 @@ public class TreatmentsTempTargetFragment extends Fragment implements View.OnCli
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventTempTargetChange ev) {
         updateGUI();
     }
 
-    void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

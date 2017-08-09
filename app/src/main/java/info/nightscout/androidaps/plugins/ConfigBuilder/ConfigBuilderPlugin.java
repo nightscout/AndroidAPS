@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.ConfigBuilder;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
@@ -22,7 +23,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.data.PumpEnactResult;
@@ -40,16 +41,19 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog;
+import info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressHelperActivity;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.utils.NSUpload;
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 05.08.2016.
@@ -64,6 +68,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     private static APSInterface activeAPS;
     private static LoopPlugin activeLoop;
     private static InsulinInterface activeInsulin;
+    private static SensitivityInterface activeSensitivity;
 
     static public String nightscoutVersionName = "";
     static public Integer nightscoutVersionCode = 0;
@@ -78,7 +83,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         MainApp.bus().register(this);
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "ConfigBuilderPlugin");
-        ;
     }
 
     @Override
@@ -208,11 +212,20 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activeLoop;
     }
 
+    public static PumpInterface getActivePump() {
+        return activePump;
+    }
+
+   public static SensitivityInterface getActiveSensitivity() {
+        return activeSensitivity;
+    }
+
     void logPluginStatus() {
         for (PluginBase p : pluginList) {
             log.debug(p.getName() + ":" +
                     (p.isEnabled(1) ? " GENERAL" : "") +
                     (p.isEnabled(2) ? " TREATMENT" : "") +
+                    (p.isEnabled(3) ? " SENSITIVITY" : "") +
                     (p.isEnabled(4) ? " PROFILE" : "") +
                     (p.isEnabled(5) ? " APS" : "") +
                     (p.isEnabled(6) ? " PUMP" : "") +
@@ -248,6 +261,17 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         for (PluginBase p : pluginsInCategory) {
             if (!p.getName().equals(((PluginBase) activeInsulin).getName())) {
                 p.setFragmentVisible(PluginBase.INSULIN, false);
+            }
+        }
+
+        // PluginBase.SENSITIVITY
+        pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
+        activeSensitivity = (SensitivityInterface) getTheOneEnabledInArray(pluginsInCategory, PluginBase.SENSITIVITY);
+        if (Config.logConfigBuilder)
+            log.debug("Selected sensitivity interface: " + ((PluginBase) activeSensitivity).getName());
+        for (PluginBase p : pluginsInCategory) {
+            if (!p.getName().equals(((PluginBase) activeSensitivity).getName())) {
+                p.setFragmentVisible(PluginBase.SENSITIVITY, false);
             }
         }
 
@@ -406,43 +430,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             return 0d;
     }
 
-    /*
-        public PumpEnactResult deliverTreatmentFromBolusWizard(InsulinInterface insulinType, Context context, Double insulin, Integer carbs, Double glucose, String glucoseType, int carbTime, JSONObject boluscalc) {
-            mWakeLock.acquire();
-            PumpEnactResult result;
-            insulin = applyBolusConstraints(insulin);
-            carbs = applyCarbsConstraints(carbs);
-
-            BolusProgressDialog bolusProgressDialog = null;
-            if (context != null) {
-                bolusProgressDialog = new BolusProgressDialog();
-                bolusProgressDialog.setInsulin(insulin);
-                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
-            }
-
-            MainApp.bus().post(new EventBolusRequested(insulin));
-
-            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
-
-            BolusProgressDialog.bolusEnded = true;
-
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
-
-            if (result.success) {
-                Treatment t = new Treatment(insulinType);
-                t.insulin = result.bolusDelivered;
-                if (carbTime == 0)
-                    t.carbs = (double) result.carbsDelivered; // with different carbTime record will come back from nightscout
-                t.date = new Date().getTime();
-                t.mealBolus = result.carbsDelivered > 0;
-                addToHistoryTreatment(t);
-                t.carbs = (double) result.carbsDelivered;
-                NSUpload.uploadBolusWizardRecord(t, glucose, glucoseType, carbTime, boluscalc);
-            }
-            mWakeLock.release();
-            return result;
-        }
-    */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         mWakeLock.acquire();
@@ -455,7 +442,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
             bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
+        } else {
+            Intent i = new Intent();
+            i.putExtra("insulin", detailedBolusInfo.insulin);
+            i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            MainApp.instance().startActivity(i);
         }
+
 
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
@@ -468,56 +462,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return result;
     }
 
-    /*
-        @Override
-        public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
-            return deliverTreatment(insulinType, insulin, carbs, context, true);
-        }
-
-        public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context, boolean createTreatment) {
-            mWakeLock.acquire();
-            PumpEnactResult result;
-            insulin = applyBolusConstraints(insulin);
-            carbs = applyCarbsConstraints(carbs);
-
-            BolusProgressDialog bolusProgressDialog = null;
-            if (context != null) {
-                bolusProgressDialog = new BolusProgressDialog();
-                bolusProgressDialog.setInsulin(insulin);
-                bolusProgressDialog.show(((AppCompatActivity) context).getSupportFragmentManager(), "BolusProgress");
-            } else {
-                Intent i = new Intent();
-                i.putExtra("insulin", insulin.doubleValue());
-                i.setClass(MainApp.instance(), BolusProgressHelperActivity.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                MainApp.instance().startActivity(i);
-            }
-
-            MainApp.bus().post(new EventBolusRequested(insulin));
-
-            result = activePump.deliverTreatment(insulinType, insulin, carbs, context);
-
-            BolusProgressDialog.bolusEnded = true;
-
-            MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
-
-            if (Config.logCongigBuilderActions)
-                log.debug("deliverTreatment insulin: " + insulin + " carbs: " + carbs + " success: " + result.success + " enacted: " + result.enacted + " bolusDelivered: " + result.bolusDelivered);
-
-            if (result.success && createTreatment) {
-                Treatment t = new Treatment(insulinType);
-                t.insulin = result.bolusDelivered;
-                t.carbs = (double) result.carbsDelivered;
-                t.date = new Date().getTime();
-                t.mealBolus = t.carbs > 0;
-                addToHistoryTreatment(t);
-                NSUpload.uploadTreatment(t);
-            }
-            mWakeLock.release();
-            return result;
-        }
-
-    */
     @Override
     public void stopBolusDelivering() {
         activePump.stopBolusDelivering();
@@ -565,8 +509,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
-        PumpEnactResult result = activePump.cancelTempBasal();
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+        PumpEnactResult result = activePump.cancelTempBasal(userRequested);
         if (Config.logCongigBuilderActions)
             log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
         return result;
@@ -615,7 +559,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             if (isTempBasalInProgress()) {
                 if (Config.logCongigBuilderActions)
                     log.debug("applyAPSRequest: cancelTempBasal()");
-                result = cancelTempBasal();
+                result = cancelTempBasal(false);
             } else {
                 result = new PumpEnactResult();
                 result.absolute = request.rate;
@@ -629,7 +573,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         } else if (isTempBasalInProgress() && Math.abs(request.rate - getTempBasalAbsoluteRateHistory()) < 0.05) {
             result = new PumpEnactResult();
             result.absolute = getTempBasalAbsoluteRateHistory();
-            result.duration = getTempBasalFromHistory(new Date().getTime()).getPlannedRemainingMinutes();
+            result.duration = getTempBasalFromHistory(System.currentTimeMillis()).getPlannedRemainingMinutes();
             result.enacted = false;
             result.comment = "Temp basal set correctly";
             result.success = true;
@@ -684,8 +628,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
-        if (Config.NSCLIENT)
-            return false;
         return activePump.isFakingTempsByExtendedBoluses();
     }
 
@@ -884,7 +826,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public OverlappingIntervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
+    public Intervals<TemporaryBasal> getTemporaryBasalsFromHistory() {
         return activeTreatments.getTemporaryBasalsFromHistory();
     }
 
@@ -931,7 +873,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public OverlappingIntervals<ExtendedBolus> getExtendedBolusesFromHistory() {
+    public Intervals<ExtendedBolus> getExtendedBolusesFromHistory() {
         return activeTreatments.getExtendedBolusesFromHistory();
     }
 
@@ -953,7 +895,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public OverlappingIntervals<TempTarget> getTempTargetsFromHistory() {
+    public Intervals<TempTarget> getTempTargetsFromHistory() {
         return activeTreatments.getTempTargetsFromHistory();
     }
 
@@ -980,7 +922,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public String getProfileName() {
-        return getProfileName(new Date().getTime());
+        return getProfileName(System.currentTimeMillis());
     }
 
     public String getProfileName(long time) {
@@ -1003,28 +945,33 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public Profile getProfile() {
-        return getProfile(new Date().getTime());
+        return getProfile(System.currentTimeMillis());
+    }
+
+    public String getProfileUnits() {
+        return activeProfile.getUnits();
     }
 
     public Profile getProfile(long time) {
-        //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
-        ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
-        if (profileSwitch != null) {
-            if (profileSwitch.profileJson != null) {
-                try {
-                    return new Profile(new JSONObject(profileSwitch.profileJson));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
-                if (profile != null)
-                    return profile;
-            }
-        }
-        // Unable to determine profile, failover to default
-        if (activeProfile.getProfile() == null)
+        if (activeTreatments == null)
             return null; //app not initialized
+        //log.debug("Profile for: " + new Date(time).toLocaleString() + " : " + getProfileName(time));
+        boolean ignoreProfileSwitchEvents = SP.getBoolean(R.string.key_do_not_track_profile_switch, false);
+        if (!ignoreProfileSwitchEvents) {
+            ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
+            if (profileSwitch != null) {
+                if (profileSwitch.profileJson != null) {
+                    return profileSwitch.getProfileObject();
+                } else if (activeProfile.getProfile() != null) {
+                    Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
+                    if (profile != null)
+                        return profile;
+                }
+            }
+            // Unable to determine profile, failover to default
+            if (activeProfile.getProfile() == null)
+                return null; //app not initialized
+        }
         Profile defaultProfile = activeProfile.getProfile().getDefaultProfile();
         if (defaultProfile != null)
             return defaultProfile;

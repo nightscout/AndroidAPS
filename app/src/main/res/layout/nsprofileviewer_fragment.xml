@@ -32,7 +32,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
                     android:text="@string/nsprofileview_activeprofile_label"
@@ -77,7 +77,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
                     android:text="@string/nsprofileview_units_label"
@@ -122,7 +122,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
                     android:text="@string/nsprofileview_dia_label"
@@ -167,7 +167,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
                     android:text="@string/nsprofileview_ic_label"
@@ -212,7 +212,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
                     android:text="@string/nsprofileview_isf_label"
@@ -257,7 +257,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
                     android:text="@string/nsprofileview_basal_label"
@@ -302,7 +302,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="end"
                     android:paddingRight="5dp"
                     android:text="@string/nsprofileview_target_label"

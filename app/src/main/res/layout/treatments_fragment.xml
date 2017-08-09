@@ -10,11 +10,16 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical|center_horizontal"
-            android:orientation="horizontal">
+            android:background="@color/defaultbackground"
+            app:alignContent="stretch"
+            app:alignItems="stretch"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:justifyContent="space_between">
 
             <TextView
                 android:id="@+id/treatments_treatments"
@@ -22,6 +27,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="@string/bolus" />
 
             <TextView
@@ -30,6 +37,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="@string/extendedbolus" />
 
             <TextView
@@ -38,6 +47,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="@string/tempbasal" />
 
             <TextView
@@ -46,6 +57,8 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="@string/temptarget" />
 
             <TextView
@@ -54,9 +67,11 @@
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
                 android:text="@string/profileswitch" />
 
-        </LinearLayout>
+        </com.google.android.flexbox.FlexboxLayout>
 
         <FrameLayout
             android:id="@+id/treatments_fragment_container"

@@ -124,29 +124,21 @@
                         android:gravity="top"
                         android:orientation="vertical">
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/overview_timeago"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
                             android:layout_weight="0.5"
-                            android:orientation="vertical">
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-                            <TextView
-                                android:id="@+id/overview_timeago"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.5"
-                                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                            <TextView
-                                android:id="@+id/overview_delta"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginLeft="10dp"
-                                android:layout_weight="0.5"
-                                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-                        </LinearLayout>
+                        <TextView
+                            android:id="@+id/overview_delta"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="0.5"
+                            android:textAppearance="?android:attr/textAppearanceMedium" />
 
                         <TextView
                             android:id="@+id/overview_avgdelta"
@@ -188,12 +180,54 @@
 
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/overview_iob"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    android:paddingTop="5dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/iob"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/overview_iob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dp"
+                        android:text=""
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:text="@string/cob" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text=":" />
+
+                    <TextView
+                        android:id="@+id/overview_cob"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:text="23 g" />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -287,6 +321,22 @@
                         android:layout_marginBottom="-5dp"
                         android:layout_marginTop="-9dp"
                         app:buttonTint="@color/deviations" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/ratio_short"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textStyle="bold" />
+
+                    <CheckBox
+                        android:id="@+id/overview_showratios"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="-5dp"
+                        android:layout_marginTop="-9dp" />
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -305,7 +355,8 @@
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/overview_iobgraph"
                         android:layout_width="wrap_content"
-                        android:layout_height="100dp" />
+                        android:layout_height="100dp"
+                        android:visibility="gone" />
 
                 </LinearLayout>
 
@@ -335,7 +386,8 @@
                     android:layout_marginTop="3dp"
                     android:layout_weight="0.5"
                     android:text="Accept new temp\n0.25U/h"
-                    android:textColor="@color/colorAcceptTempButton" />
+                    android:textColor="@color/colorAcceptTempButton"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout
@@ -355,7 +407,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_bolus_label"
                     android:textColor="@color/colorTreatmentButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/overview_wizardbutton"
@@ -369,7 +422,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_calculator_label"
                     android:textColor="@color/colorCalculatorButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/overview_calibrationbutton"
@@ -383,7 +437,8 @@
                     android:paddingRight="0dp"
                     android:text="@string/overview_calibration"
                     android:textColor="@color/colorCalibrationButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/overview_quickwizardbutton"
@@ -397,20 +452,8 @@
                     android:paddingRight="0dp"
                     android:text="Quick wizard"
                     android:textColor="@color/colorQuickWizardButton"
-                    android:textSize="10sp" />
-
-                <Button
-                    android:id="@+id/overview_canceltempbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="0px"
-                    android:layout_height="fill_parent"
-                    android:layout_weight="0.5"
-                    android:drawableTop="@drawable/icon_cancelbasal"
-                    android:paddingLeft="0dp"
-                    android:paddingRight="0dp"
-                    android:text="Cancel temp basal"
-                    android:textColor="@color/colorCancelTempButton"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

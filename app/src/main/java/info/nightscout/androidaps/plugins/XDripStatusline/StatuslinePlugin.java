@@ -9,23 +9,21 @@ import android.support.annotation.NonNull;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -46,6 +44,17 @@ public class StatuslinePlugin implements PluginBase {
     private final Context ctx;
     SharedPreferences mPrefs;
 
+    private static StatuslinePlugin statuslinePlugin;
+
+    public static StatuslinePlugin getPlugin(Context ctx) {
+
+        if (statuslinePlugin == null) {
+            statuslinePlugin = new StatuslinePlugin(ctx);
+        }
+
+        return statuslinePlugin;
+    }
+
     StatuslinePlugin(Context ctx) {
         this.ctx = ctx;
         this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -58,7 +67,7 @@ public class StatuslinePlugin implements PluginBase {
 
     @Override
     public String getFragmentClass() {
-        return StatuslineFragment.class.getName();
+        return null;
     }
 
     @Override
@@ -151,8 +160,6 @@ public class StatuslinePlugin implements PluginBase {
     @NonNull
     private String buildStatusString() {
         String status = "";
-        boolean shortString = true; // make setting?
-
         LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
 
         if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
@@ -166,12 +173,9 @@ public class StatuslinePlugin implements PluginBase {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
         if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(new Date().getTime());
-            if (shortString) {
-                status += activeTemp.toStringShort();
-            } else {
-                status += activeTemp.toStringMedium();
-            }
+            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+            status += activeTemp.toStringShort();
+
         }
 
         //IOB
@@ -179,7 +183,7 @@ public class StatuslinePlugin implements PluginBase {
         IobTotal bolusIob = treatmentsInterface.getLastCalculationTreatments().round();
         treatmentsInterface.updateTotalIOBTempBasals();
         IobTotal basalIob = treatmentsInterface.getLastCalculationTempBasals().round();
-        status += (shortString ? "" : (ctx.getString(R.string.treatments_iob_label_string) + " ")) + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
+        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob);
 
 
         if (mPrefs.getBoolean("xdripstatus_detailediob", true)) {
@@ -227,7 +231,7 @@ public class StatuslinePlugin implements PluginBase {
     }
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshGui ev) {
+    public void onStatusEvent(final EventRefreshOverview ev) {
 
         //Filter events where loop is (de)activated
 

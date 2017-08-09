@@ -40,7 +40,7 @@ public class KeepAliveReceiver extends BroadcastReceiver {
             boolean isStatusOutdated = false;
 
             Date lastConnection = pump.lastDataTime();
-            if (lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime())
+            if (lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis())
                 isStatusOutdated = true;
             if (Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep)
                 isBasalOutdated = true;

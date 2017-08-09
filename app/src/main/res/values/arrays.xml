@@ -20,6 +20,7 @@
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
         <item>@string/ru_lang</item>
+        <item>@string/sv_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
         <item>en</item>
@@ -31,6 +32,7 @@
         <item>it</item>
         <item>ko</item>
         <item>ru</item>
+        <item>sv</item>
     </string-array>
 
     <string-array name="ageArray">
@@ -43,6 +45,4 @@
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
     </string-array>
-
-    <string name="ro_lang">Russian</string>
 </resources>

@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,10 +35,14 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.tabs.SlidingTabLayout;
 import info.nightscout.androidaps.tabs.TabPageAdapter;
 import info.nightscout.utils.ImportExportPrefs;
@@ -58,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     ImageButton menuButton;
 
+    protected PowerManager.WakeLock mWakeLock;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +80,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, CASE_STORAGE);
         }
         askForBatteryOptimizationPermission();
+        checkUpgradeToProfileTarget();
         if (Config.logFunctionCalls)
             log.debug("onCreate");
 
+        onStatusEvent(new EventSetWakeLock(SP.getBoolean("lockscreen", false)));
+
         registerBus();
         setUpTabs(false);
+    }
+
+    @Subscribe
+    public void onStatusEvent(final EventSetWakeLock ev) {
+        final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        if (ev.lock) {
+            mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
+            mWakeLock.acquire();
+        } else {
+            if (mWakeLock != null)
+                mWakeLock.release();
+        }
     }
 
     @Subscribe
@@ -90,10 +111,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void run() {
                 recreate();
                 try { // activity may be destroyed
-                    setUpTabs(ev.isSwitchToLast());
+                    setUpTabs(true);
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
                 }
+                boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
+                if (lockScreen)
+                    getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                else
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             }
         });
     }
@@ -130,6 +156,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void checkUpgradeToProfileTarget() { // TODO: can be removed in the future
+        boolean oldKeyExists = SP.contains("openapsma_min_bg");
+        if (oldKeyExists) {
+            Profile profile = MainApp.getConfigBuilder().getProfile();
+            String oldRange = SP.getDouble("openapsma_min_bg", 0d) + " - " + SP.getDouble("openapsma_max_bg", 0d);
+            String newRange = "";
+            if (profile != null) {
+                newRange = profile.getTargetLow() + " - " + profile.getTargetHigh();
+            }
+            String message = "Target range is changed in current version.\n\nIt's not taken from preferences but from profile.\n\n!!! REVIEW YOUR SETTINGS !!!";
+            message += "\n\nOld settings: " + oldRange;
+            message += "\nProfile settings: " + newRange;
+            OKDialog.show(this, "Target range change", message, new Runnable() {
+                @Override
+                public void run() {
+                    SP.remove("openapsma_min_bg");
+                    SP.remove("openapsma_max_bg");
+                    SP.remove("openapsma_target_bg");
+                }
+            });
+        }
+    }
+
     //check for sms permission if enable in prefernces
     @Subscribe
     public void onStatusEvent(final EventPreferenceChange ev) {
@@ -154,6 +203,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         askForSMSPermissions();
     }
 
+    @Override
+    public void onDestroy() {
+        if (mWakeLock != null)
+            mWakeLock.release();
+        super.onDestroy();
+    }
+
     private void askForBatteryOptimizationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             final String packageName = getPackageName();
@@ -162,7 +218,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (!pm.isIgnoringBatteryOptimizations(packageName)) {
                 log.debug("Requesting ignore battery optimization");
 
-                OKDialog.show(getParent(), getString(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), getString(R.string.app_name)), new Runnable() {
+                OKDialog.show(this, getString(R.string.pleaseallowpermission), String.format(getString(R.string.needwhitelisting), getString(R.string.app_name)), new Runnable() {
 
                     @Override
                     public void run() {
@@ -299,7 +355,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     builder.setIcon(R.mipmap.yellowowl);
                                 else
                                     builder.setIcon(R.mipmap.blueowl);
-                                builder.setMessage("Build: " + BuildConfig.BUILDVERSION);
+                                String message = "Build: " + BuildConfig.BUILDVERSION + "\n";
+                                message += MainApp.sResources.getString(R.string.configbuilder_nightscoutversion_label) + " " + ConfigBuilderPlugin.nightscoutVersionName;
+                                builder.setMessage(message);
                                 builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                 AlertDialog alertDialog = builder.create();
                                 alertDialog.show();

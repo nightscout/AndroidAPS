@@ -38,7 +38,7 @@ public class ActivityGraph extends GraphView {
         double dia = insulin.getDia();
         int hours = (int) Math.floor(dia + 1);
 
-        Treatment t = new Treatment(insulin);
+        Treatment t = new Treatment(insulin, dia);
         t.date = 0;
         t.insulin = 1d;
 
@@ -63,6 +63,7 @@ public class ActivityGraph extends GraphView {
         getViewport().setMaxX(hours * 60);
         getGridLabelRenderer().setNumHorizontalLabels(hours + 1);
         getGridLabelRenderer().setHorizontalAxisTitle("[min]");
+        getGridLabelRenderer().setVerticalLabelsColor(activitySeries.getColor());
 
         DataPoint[] iobDataPoints = new DataPoint[iobArray.size()];
         iobDataPoints = iobArray.toArray(iobDataPoints);
@@ -72,5 +73,6 @@ public class ActivityGraph extends GraphView {
         iobSeries.setBackgroundColor(Color.argb(70, 255, 0, 255));
         getSecondScale().setMinY(0);
         getSecondScale().setMaxY(1);
+        getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.MAGENTA);
     }
 }

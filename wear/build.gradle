@@ -1,5 +1,25 @@
 apply plugin: 'com.android.application'
 
+def generateGitBuild = { ->
+
+    StringBuilder stringBuilder = new StringBuilder();
+    stringBuilder.append('"')
+    try {
+        def stdout = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'describe', '--always'
+            standardOutput = stdout
+        }
+        String commitObject = stdout.toString().trim()
+        stringBuilder.append(commitObject)
+    } catch (ignored) {
+        stringBuilder.append('NoGitSystemAvailable')
+    }
+    stringBuilder.append('-')
+    stringBuilder.append((new Date()).format('yyyy.MM.dd'))
+    stringBuilder.append('"')
+    return stringBuilder.toString()
+}
 
 android {
     compileSdkVersion 23
@@ -11,6 +31,7 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0.2"
+        buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
     buildTypes {
         release {
@@ -27,6 +48,7 @@ android {
             resValue "string", "label_xdrip", "AAPS"
             resValue "string", "label_xdrip_large", "AAPS(Large)"
             resValue "string", "label_xdrip_big_chart", "AAPS(BigChart)"
+            resValue "string", "label_xdrip_no_chart", "AAPS(NoChart)"
             resValue "string", "label_xdrip_circle", "AAPS(Circle)"
             resValue "string", "label_xdrip_activity", "AAPS Prefs."
             resValue "string", "app_settings", "AAPS Settings"
@@ -39,6 +61,7 @@ android {
             resValue "string", "label_xdrip", "AAPS"
             resValue "string", "label_xdrip_large", "AAPS(Large)"
             resValue "string", "label_xdrip_big_chart", "AAPS(BigChart)"
+            resValue "string", "label_xdrip_no_chart", "AAPS(NoChart)"
             resValue "string", "label_xdrip_circle", "AAPS(Circle)"
             resValue "string", "label_xdrip_activity", "AAPS Prefs."
             resValue "string", "app_settings", "AAPS Settings"

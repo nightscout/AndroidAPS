@@ -23,8 +23,6 @@ import com.squareup.otto.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.IobTotal;
@@ -32,13 +30,14 @@ import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventNewBG;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.NSUpload;
-import info.nightscout.androidaps.data.OverlappingIntervals;
+import info.nightscout.androidaps.data.Intervals;
 
 
-public class TreatmentsExtendedBolusesFragment extends Fragment {
+public class TreatmentsExtendedBolusesFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(TreatmentsExtendedBolusesFragment.class);
 
     RecyclerView recyclerView;
@@ -48,9 +47,9 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
 
     public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ExtendedBolusesViewHolder> {
 
-        OverlappingIntervals<ExtendedBolus> extendedBolusList;
+        Intervals<ExtendedBolus> extendedBolusList;
 
-        RecyclerViewAdapter(OverlappingIntervals<ExtendedBolus> extendedBolusList) {
+        RecyclerViewAdapter(Intervals<ExtendedBolus> extendedBolusList) {
             this.extendedBolusList = extendedBolusList;
         }
 
@@ -82,7 +81,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                 holder.duration.setText(DecimalFormatter.to0Decimal(extendedBolus.durationInMinutes) + " min");
                 holder.insulin.setText(DecimalFormatter.to2Decimal(extendedBolus.insulin) + " U");
                 holder.realDuration.setText(DecimalFormatter.to0Decimal(extendedBolus.getRealDuration()) + " min");
-                IobTotal iob = extendedBolus.iobCalc(new Date().getTime());
+                IobTotal iob = extendedBolus.iobCalc(System.currentTimeMillis());
                 holder.iob.setText(DecimalFormatter.to2Decimal(iob.iob) + " U");
                 holder.insulinSoFar.setText(DecimalFormatter.to2Decimal(extendedBolus.insulinSoFar()) + " U");
                 holder.ratio.setText(DecimalFormatter.to2Decimal(extendedBolus.absoluteRate()) + " U/h");
@@ -90,7 +89,7 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
                     holder.date.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 else
                     holder.date.setTextColor(holder.insulin.getCurrentTextColor());
-                if (extendedBolus.iobCalc(new Date().getTime()).iob != 0)
+                if (extendedBolus.iobCalc(System.currentTimeMillis()).iob != 0)
                     holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
                 else
                     holder.iob.setTextColor(holder.insulin.getCurrentTextColor());
@@ -183,18 +182,6 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventExtendedBolusChange ev) {
         updateGUI();
@@ -205,7 +192,8 @@ public class TreatmentsExtendedBolusesFragment extends Fragment {
         updateGUI();
     }
 
-    public void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null && recyclerView != null)
             activity.runOnUiThread(new Runnable() {

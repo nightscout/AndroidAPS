@@ -62,13 +62,12 @@
     <string name="openapsma_iobdata_label">IOB 데이터</string>
     <string name="openapsma_profile_label">프로파일</string>
     <string name="openapsma_mealdata_label">식사 데이터</string>
-    <string name="openapsma_result_label">결과</string>
+    <string name="result">결과</string>
     <string name="openapsma_noglucosedata">혈당 데이터 없음</string>
     <string name="openapsma_noprofile">프로파일 없음</string>
     <string name="openapsma_nopump">No pump available</string>
     <string name="nochangerequested">변경사항 없음</string>
     <string name="openapsma_request_label">요청</string>
-    <string name="openapsma_minbg_label">Low target</string>
     <string name="rate">Rate</string>
     <string name="duration">기간</string>
     <string name="reason">근거</string>
@@ -108,7 +107,7 @@
     <string name="constraints_violation">제한 위반</string>
     <string name="treatmentdeliveryerror">식사주입 전송 에러</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basal_label">기초주입 값</string>
+    <string name="overview_newtempbasal_basalpercent">기초주입 값 [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = 현재)</string>
     <string name="setbasalquestion">새 임시기초주입 적용:</string>
     <string name="overview_bolus_label">식사주입</string>
@@ -171,7 +170,6 @@
     <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
@@ -180,7 +178,6 @@
     <string name="noprofile">아직 NS에서 프로파일을 로드하지 못했습니다.</string>
     <string name="overview_tempbasal_button">임시기초주입</string>
     <string name="overview_extendedbolus_button">확장식사주입</string>
-    <string name="configbuilder_nsclientversion_label">NSClient 버전:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout 버전:</string>
     <string name="send">보내기</string>
     <string name="missing">Missing</string>
@@ -197,8 +194,6 @@
     <string name="de_lang">German</string>
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
-    <string name="openapsma_low_summary">목표범위 최소 혈당값</string>
-    <string name="openapsma_high_summary">목표범위 최대 혈당값</string>
     <string name="openapsma_maxbasal_title">임시기초주입 최대량 [U/hr]</string>
     <string name="openapsma_maxbasal_summary">이 값은 OpenAPS에서 Max Basal(임시기초주입 최대량)로 설정되는 값입니다</string>
     <string name="openapsma_maxiob_title">OpenAPS가 주입할수 있는 최대 기초주입 IOB [U]</string>
@@ -306,7 +301,6 @@
     <string name="objectives_5_gate">평소 먹는 탄수화물 입력하면서 Loop를 실행하고 1주일간 성공적으로 낮시간을 관리한다.</string>
     <string name="objectives_6_objective">AMA(Advanced Meal Assist)같은 주간용을 위한 추가적인 기능들을 실행하여 본다.</string>
     <string name="youareonallowedlimit">허용된 제한값에 도달하였습니다</string>
-    <string name="openapsma_target_bg">계산을 위한 목표 혈당 값</string>
     <string name="noprofileselected">프로파일이 선택되지 않았습니다</string>
     <string name="smscommunicator_loophasbeendisabled">Loop가 중지되었습니다.</string>
     <string name="smscommunicator_loophasbeenenabled">Loop가 실행되었습니다.</string>
@@ -359,8 +353,6 @@
     <string name="edit_base_ic">Edit Base-IC:</string>
     <string name="base_profile_label">Base Profile:</string>
     <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
-    <string name="androidaps_tempbasalendnote">Basal Temp End</string>
-    <string name="androidaps_tempbasalstartnote">Basal Temp Start</string>
     <string name="prefs_range_title">차트 표시 범위</string>
     <string name="prefs_range_summary">Overview/스마트워치 차트 표시용 고/저혈당 선</string>
     <string name="low_mark">저혈당 선</string>
@@ -516,4 +508,5 @@
     <string name="adult">성인</string>
     <string name="patientage_summary">안전제한을 설정하기 위해 당뇨인의 나이를 선택하세요</string>
     <string name="it_lang">Italian</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>

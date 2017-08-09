@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="130dp"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:background="@drawable/background_darkgray">
+
+    <Button
+        android:id="@+id/decrement"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        android:textColor="@color/mdtp_white"
+        android:background="@null"
+        android:textStyle="bold"
+        android:text="—"/>
+
+    <EditText
+        android:id="@+id/display"
+        android:layout_width="70dp"
+        android:background="@drawable/border_gray"
+        android:layout_height="match_parent"
+        android:text="1"
+        android:textColor="@android:color/black"
+        android:inputType="numberDecimal"
+        android:digits="0123456789.,"
+        android:gravity="center"
+        android:imeOptions="actionDone"
+        />
+    <Button
+        android:id="@+id/increment"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:padding="0dp"
+        android:textSize="25sp"
+        android:textColor="@color/mdtp_white"
+        android:background="@null"
+        android:text="+"/>
+</LinearLayout>

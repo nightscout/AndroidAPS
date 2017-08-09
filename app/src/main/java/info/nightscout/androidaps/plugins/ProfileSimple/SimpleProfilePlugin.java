@@ -183,11 +183,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
             json.put("defaultProfile", "SimpleProfile");
             json.put("store", store);
             profile.put("dia", dia);
-            profile.put("carbratio", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", ic)));
-            profile.put("sens", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", isf)));
-            profile.put("basal", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", basal)));
-            profile.put("target_low", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetLow)));
-            profile.put("target_high", new JSONArray().put(new JSONObject().put("timeAsSeconds", 0).put("value", targetHigh)));
+            profile.put("carbratio", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", ic)));
+            profile.put("sens", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", isf)));
+            profile.put("basal", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", basal)));
+            profile.put("target_low", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", targetLow)));
+            profile.put("target_high", new JSONArray().put(new JSONObject().put("time", "00:00").put("timeAsSeconds", 0).put("value", targetHigh)));
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);
             store.put("SimpleProfile", profile);
         } catch (JSONException e) {
@@ -199,6 +199,11 @@ public class SimpleProfilePlugin implements PluginBase, ProfileInterface {
     @Override
     public ProfileStore getProfile() {
         return convertedProfile;
+    }
+
+    @Override
+    public String getUnits() {
+        return mgdl ? Constants.MGDL : Constants.MMOL;
     }
 
     @Override

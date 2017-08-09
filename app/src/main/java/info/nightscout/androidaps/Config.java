@@ -4,6 +4,8 @@ package info.nightscout.androidaps;
  * Created by mike on 07.06.2016.
  */
 public class Config {
+    public static int SUPPORTEDNSVERSION = 1000; // 0.10.00
+
     // MAIN FUCTIONALITY
     public static final boolean APS = BuildConfig.APS;
     // PLUGINS
@@ -29,19 +31,16 @@ public class Config {
 
     public static final boolean detailedLog = true;
     public static final boolean logFunctionCalls = true;
-    public static final boolean logIncommingBG = true;
     public static final boolean logIncommingData = true;
     public static final boolean logAPSResult = true;
     public static final boolean logPumpComm = true;
     public static final boolean logPrefsChange = true;
     public static final boolean logConfigBuilder = true;
     public static final boolean logConstraintsChanges = true;
-    public static final boolean logTempBasalsCut = true;
     public static final boolean logNSUpload = true;
     public static final boolean logPumpActions = true;
-    public static final boolean logSMSComm = true;
     public static final boolean logCongigBuilderActions = true;
-    public static final boolean logAutosensData = false;
+    public static final boolean logAutosensData = true;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;

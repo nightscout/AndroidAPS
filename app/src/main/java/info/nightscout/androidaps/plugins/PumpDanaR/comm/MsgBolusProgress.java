@@ -30,13 +30,13 @@ public class MsgBolusProgress extends MessageBase {
         this();
         this.amount = amount;
         this.t = t;
-        lastReceive = new Date().getTime();
+        lastReceive = System.currentTimeMillis();
     }
 
     @Override
     public void handleMessage(byte[] bytes) {
         progress = intFromBuff(bytes, 0, 2);
-        lastReceive = new Date().getTime();
+        lastReceive = System.currentTimeMillis();
         Double done = (amount * 100 - progress) / 100d;
         t.insulin = done;
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();

@@ -35,6 +35,24 @@
             </intent-filter>
         </service>
         <service
+            android:name=".watchfaces.NOChart"
+            android:allowEmbedded="true"
+            android:label="@string/label_xdrip_no_chart"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/watch_face" />
+            <meta-data
+                android:name="com.google.android.wearable.watchface.preview"
+                android:resource="@drawable/watchface_nochart" />
+
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+            </intent-filter>
+        </service>
+        <service
             android:name=".watchfaces.Home"
             android:allowEmbedded="true"
             android:label="@string/label_xdrip"
@@ -121,6 +139,10 @@
         <activity
             android:name=".interaction.actions.BolusActivity"
             android:label="Bolus">
+        </activity>
+        <activity
+            android:name=".interaction.actions.CPPActivity"
+            android:label="CPP">
         </activity>
         <activity
             android:name=".interaction.actions.FillActivity"

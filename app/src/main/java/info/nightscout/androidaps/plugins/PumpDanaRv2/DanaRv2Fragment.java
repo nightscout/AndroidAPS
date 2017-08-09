@@ -27,16 +27,17 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.events.EventTempBasalChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.Dialogs.ProfileViewDialog;
+import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRHistoryActivity;
+import info.nightscout.androidaps.plugins.PumpDanaR.activities.DanaRStatsActivity;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.History.DanaRHistoryActivity;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.History.DanaRStatsActivity;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SetWarnColor;
 
-public class DanaRv2Fragment extends Fragment {
+public class DanaRv2Fragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(DanaRv2Fragment.class);
 
     private static DanaRv2Plugin danaRPlugin;
@@ -65,6 +66,8 @@ public class DanaRv2Fragment extends Fragment {
     TextView reservoirView;
     TextView iobView;
     TextView firmwareView;
+    TextView basalStepView;
+    TextView bolusStepView;
     Button viewProfileButton;
     Button historyButton;
     Button statsButton;
@@ -111,6 +114,8 @@ public class DanaRv2Fragment extends Fragment {
         viewProfileButton = (Button) view.findViewById(R.id.danar_viewprofile);
         historyButton = (Button) view.findViewById(R.id.danar_history);
         statsButton = (Button) view.findViewById(R.id.danar_stats);
+        basalStepView = (TextView) view.findViewById(R.id.danar_basalstep);
+        bolusStepView = (TextView) view.findViewById(R.id.danar_bolusstep);
 
 
         viewProfileButton.setOnClickListener(new View.OnClickListener() {
@@ -153,18 +158,6 @@ public class DanaRv2Fragment extends Fragment {
         return view;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventPumpStatusChanged c) {
         Activity activity = getActivity();
@@ -201,7 +194,8 @@ public class DanaRv2Fragment extends Fragment {
     }
 
     // GUI functions
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null && basaBasalRateView != null)
             activity.runOnUiThread(new Runnable() {
@@ -210,13 +204,13 @@ public class DanaRv2Fragment extends Fragment {
                 public void run() {
                     DanaRPump pump = DanaRPump.getInstance();
                     if (pump.lastConnection.getTime() != 0) {
-                        Long agoMsec = new Date().getTime() - pump.lastConnection.getTime();
+                        Long agoMsec = System.currentTimeMillis() - pump.lastConnection.getTime();
                         int agoMin = (int) (agoMsec / 60d / 1000d);
                         lastConnectionView.setText(DateUtil.timeString(pump.lastConnection) + " (" + String.format(MainApp.sResources.getString(R.string.minago), agoMin) + ")");
                         SetWarnColor.setColor(lastConnectionView, agoMin, 16d, 31d);
                     }
                     if (pump.lastBolusTime.getTime() != 0) {
-                        Long agoMsec = new Date().getTime() - pump.lastBolusTime.getTime();
+                        Long agoMsec = System.currentTimeMillis() - pump.lastBolusTime.getTime();
                         double agoHours = agoMsec / 60d / 60d / 1000d;
                         if (agoHours < 6) // max 6h back
                             lastBolusView.setText(DateUtil.timeString(pump.lastBolusTime) + " (" + DecimalFormatter.to1Decimal(agoHours) + " " + MainApp.sResources.getString(R.string.hoursago) + ") " + DecimalFormatter.to2Decimal(DanaRPump.getInstance().lastBolusAmount) + " U");
@@ -227,12 +221,12 @@ public class DanaRv2Fragment extends Fragment {
                     SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
                     basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getPlugin().getBaseBasalRate()) + " U/h");
                     if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
-                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(new Date().getTime()).toStringFull());
+                        tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
                     } else {
                         tempBasalView.setText("");
                     }
                     if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime()).toString());
+                        extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString());
                     } else {
                         extendedBolusView.setText("");
                     }
@@ -246,6 +240,8 @@ public class DanaRv2Fragment extends Fragment {
                     } else {
                         firmwareView.setText("OLD");
                     }
+                    basalStepView.setText("" + pump.basalStep);
+                    bolusStepView.setText("" + pump.bolusStep);
                 }
             });
 

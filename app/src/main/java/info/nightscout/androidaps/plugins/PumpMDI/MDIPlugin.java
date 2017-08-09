@@ -12,11 +12,11 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -30,6 +30,14 @@ public class MDIPlugin implements PluginBase, PumpInterface {
 
     PumpDescription pumpDescription = new PumpDescription();
 
+    static MDIPlugin plugin = null;
+
+    public static MDIPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new MDIPlugin();
+        return plugin;
+    }
+
     public MDIPlugin() {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;
@@ -42,7 +50,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
 
     @Override
     public String getFragmentClass() {
-        return MDIFragment.class.getName();
+        return null;
     }
 
     @Override
@@ -188,7 +196,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.pumperror);

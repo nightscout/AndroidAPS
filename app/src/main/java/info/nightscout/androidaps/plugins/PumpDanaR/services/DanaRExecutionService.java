@@ -200,9 +200,9 @@ public class DanaRExecutionService extends Service {
             getBTSocketForSelectedPump();
             if (mRfcommSocket == null || mBTDevice == null)
                 return; // Device not found
-            long startTime = new Date().getTime();
-            while (!isConnected() && startTime + maxConnectionTime >= new Date().getTime()) {
-                long secondsElapsed = (new Date().getTime() - startTime) / 1000L;
+            long startTime = System.currentTimeMillis();
+            while (!isConnected() && startTime + maxConnectionTime >= System.currentTimeMillis()) {
+                long secondsElapsed = (System.currentTimeMillis() - startTime) / 1000L;
                 MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
                 if (Config.logDanaBTComm)
                     log.debug("connect waiting " + secondsElapsed + "sec from: " + from);
@@ -229,7 +229,7 @@ public class DanaRExecutionService extends Service {
                         if (!MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PUMP))
                             return;
                         getBTSocketForSelectedPump();
-                        startTime = new Date().getTime();
+                        startTime = System.currentTimeMillis();
                     }
                 }
             }
@@ -353,6 +353,11 @@ public class DanaRExecutionService extends Service {
     public boolean tempBasal(int percent, int durationInHours) {
         connect("tempBasal");
         if (!isConnected()) return false;
+        if (danaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
+            mSerialIOThread.sendMessage(new MsgSetTempBasalStop());
+            waitMsec(500);
+        }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         mSerialIOThread.sendMessage(new MsgSetTempBasalStart(percent, durationInHours));
         mSerialIOThread.sendMessage(new MsgStatusTempBasal());
@@ -399,12 +404,12 @@ public class DanaRExecutionService extends Service {
         if (!isConnected()) return false;
 
         if (carbs > 0) {
-            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(new Date().getTime(), carbs));
+            mSerialIOThread.sendMessage(new MsgSetCarbsEntry(System.currentTimeMillis(), carbs));
         }
 
         MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
         MainApp.bus().post(new EventDanaRBolusStart());
-        long startTime = new Date().getTime();
+        long startTime = System.currentTimeMillis();
 
         if (!stop.stopped) {
             mSerialIOThread.sendMessage(start);
@@ -414,7 +419,7 @@ public class DanaRExecutionService extends Service {
         }
         while (!stop.stopped && !start.failed) {
             waitMsec(100);
-            if ((new Date().getTime() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+            if ((System.currentTimeMillis() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
                 stop.stopped = true;
                 stop.forced = true;
                 log.debug("Communication stopped");
@@ -425,7 +430,7 @@ public class DanaRExecutionService extends Service {
         // try to find real amount if bolusing was interrupted or comm failed
         if (t.insulin != amount) {
             disconnect("bolusingInterrupted");
-            long now = new Date().getTime();
+            long now = System.currentTimeMillis();
             long estimatedBolusEnd = (long) (startTime + amount / 5d * 60 * 1000); // std delivery rate 5 U/min
             waitMsec(Math.max(5000, estimatedBolusEnd - now + 3000));
             connect("bolusingInterrupted");
@@ -461,7 +466,7 @@ public class DanaRExecutionService extends Service {
     public boolean carbsEntry(int amount) {
         connect("carbsEntry");
         if (!isConnected()) return false;
-        MsgSetCarbsEntry msg = new MsgSetCarbsEntry(new Date().getTime(), amount);
+        MsgSetCarbsEntry msg = new MsgSetCarbsEntry(System.currentTimeMillis(), amount);
         mSerialIOThread.sendMessage(msg);
         return true;
     }
@@ -531,7 +536,7 @@ public class DanaRExecutionService extends Service {
         for (Integer hour = 0; hour < 24; hour++) {
             //Some values get truncated to the next lower one.
             // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
-            double value = Math.round(100d * nsProfile.getBasal(hour * 60 * 60))/100d + 0.00001;
+            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
             if (Config.logDanaMessageDetail)
                 log.debug("NS basal value for " + hour + ":00 is " + value);
             record[hour] = value;

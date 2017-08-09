@@ -4,9 +4,7 @@
     <string name="it_lang">Italiano</string>
     <string name="MM640g">MM640g</string>
     <string name="absolute">assoluto</string>
-    <string name="app_name"></string>
     <string name="actions">azioni</string>
-    <string name="actions_shortname"></string>
     <string name="activity">attivita\'</string>
     <string name="adult">adulto</string>
     <string name="advancedsettings_title">settaggi avanzati</string>
@@ -49,7 +47,6 @@
     <string name="careportal_newnstreatment_glucosetype">Tipo di glucosio</string>
     <string name="careportal_newnstreatment_insulin_label">Insulina</string>
     <string name="careportal_newnstreatment_meter">Glucometro</string>
-    <string name="careportal_newnstreatment_minutes">Minimo</string>
     <string name="careportal_newnstreatment_notes_label">Note</string>
     <string name="careportal_newnstreatment_other">Altro</string>
     <string name="careportal_newnstreatment_percent_label">Percentuale</string>
@@ -81,7 +78,6 @@
     <string name="configbuilder_insulin">Insulina</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_nightscoutversion_label">Versione Nightscout</string>
-    <string name="configbuilder_nsclientversion_label">Versione NSClient</string>
     <string name="configbuilder_profile">Profilo</string>
     <string name="configbuilder_pump">Microinfusore</string>
     <string name="configbuilder_shortname">Configurazione</string>
@@ -268,12 +264,9 @@
     <string name="openapsma">OpenAPS MA</string>
     <string name="openapsma_disabled">Plugin e\' disabilitato</string>
     <string name="openapsma_glucosestatus_label">Stato glucosio</string>
-    <string name="openapsma_high_summary">Valore massimo di Bg nel range</string>
     <string name="openapsma_inputparameters_label">Entrata parametro</string>
-    <string name="openapsma_low_summary">Valore minimo di Bg nel range</string>
     <string name="openapsma_maxbasal_summary">Il valore e\' chiamati basale in OpenAPS</string>
     <string name="openapsma_maxiob_title">Basale Massima in IOB OpenAPS</string>
-    <string name="openapsma_minbg_label">Obbietivo minimo</string>
     <string name="openapsma_iobdata_label">IOB dati</string>
     <string name="openapsma_lastenact_label">Ultimo attuato</string>
     <string name="openapsma_lastrun_label">Ultimo corsa</string>
@@ -299,7 +292,7 @@
     <string name="dont_show_again">Non mostrarlo più</string>
     <string name="enablesuperbolus_summary">Abilita funzionalità superbolus nella procedura guidata. Non abilitare fino a quando non impari quello che realmente fa. PUÒ CAUSARE L\'INVERTIMENTO INSULINO SE USATO BLINDLY!</string>
     <string name="openapsma_request_label">Richiesta</string>
-    <string name="openapsma_result_label">Esito</string>
+    <string name="result">Esito</string>
     <string name="openapsma_run">Avvia ora</string>
     <string name="openloop">Apertura Loop</string>
     <string name="othersettings_title">Altro</string>
@@ -313,7 +306,7 @@
     <string name="overview_editquickwizard_valid">Valido:</string>
     <string name="overview_editquickwizardlistactivity_add">Aggiungere</string>
     <string name="overview_extendedbolus_button">Bolo Esteso</string>
-    <string name="overview_newtempbasal_basal_label">Valore Basale</string>
+    <string name="overview_newtempbasal_basalpercent">Valore Basale [%]</string>
     <string name="overview_quickwizard_item_edit_button">Uscire</string>
     <string name="overview_quickwizard_item_remove_button">Eliminare</string>
     <string name="overview_shortname">HOME</string>
@@ -348,7 +341,6 @@
     <string name="objectives_0_objective">Impostazione di visualizzazione, monitoraggio e analisi basali e rapporti</string>
     <string name="objectives_1_gate">Eseguire in modalità Open Loop per alcuni giorni e impostare manualmente la basale tempor</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
-    <string name="openapsma_target_bg">Target per calcolare</string>
     <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="smscommunicator_allowednumbers">Numero di telefono acettato</string>
     <string name="smscommunicator_bolusfailed">Bolo fallito</string>
@@ -500,5 +492,6 @@
     <string name="profileviewer">Profilo NS</string>
     <string name="profile_set_ok">Profilo Basale aggiornato nel Micro</string>
     <string name="profile_set_failed">Impostazione Profilo Basale fallito</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>
 

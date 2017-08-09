@@ -4,6 +4,7 @@
     <color name="basal">#00ffff</color>
     <color name="iob">#FFFB8C00</color>
     <color name="cob">#8BC34A</color>
+    <color name="ratio">#FFFFFF</color>
     <color name="inrange">#00FF00</color>
     <color name="low">#FF0000</color>
     <color name="high">#FFFF00</color>
@@ -16,6 +17,7 @@
     <color name="tempbasal">#C803A9F4</color>
     <color name="graphgrid">#757575</color>
     <color name="updating">#50ffffff</color>
+    <color name="colorLightGray">#d8d8d8</color>
 
     <color name="defaultbackground">#424242</color>
 
@@ -55,6 +57,7 @@
     <color name="loopdisabled">#FFDD7792</color>
     <color name="looppumpsuspended">#ff0400</color>
 
+    <color name="notificationAnnouncement">#FF8C00</color>
     <color name="notificationUrgent">#ff0400</color>
     <color name="notificationNormal">#ff5e55</color>
     <color name="notificationLow">#ff827c</color>

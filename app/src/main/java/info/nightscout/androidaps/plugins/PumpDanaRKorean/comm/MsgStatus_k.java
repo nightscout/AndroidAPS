@@ -20,7 +20,7 @@ public class MsgStatus_k extends MessageBase {
         pump.isExtendedInProgress = intFromBuff(bytes, 3, 1) == 1;
         pump.extendedBolusMinutes = intFromBuff(bytes, 4, 2);
         pump.extendedBolusAmount = intFromBuff(bytes, 6, 2) / 100d;
-        Double lastBolusAmount = intFromBuff(bytes, 13, 2) / 100d;
+        double lastBolusAmount = intFromBuff(bytes, 13, 2) / 100d;
 //        if (lastBolusAmount != 0d) {
 //            pump.lastBolusTime = dateTimeFromBuff(bytes, 8);
 //            pump.lastBolusAmount = lastBolusAmount;

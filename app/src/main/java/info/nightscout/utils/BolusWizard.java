@@ -47,9 +47,14 @@ public class BolusWizard {
 
     // Result
     public Double calculatedTotalInsulin = 0d;
+    public Double totalBeforePercentageAdjustment = 0d;
     public Double carbsEquivalent = 0d;
 
     public Double doCalc(Profile specificProfile, Integer carbs, Double cob, Double bg, Double correction, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
+        return doCalc(specificProfile, carbs, cob, bg, correction, 100d, includeBolusIOB, includeBasalIOB, superBolus, trend);
+    }
+
+        public Double doCalc(Profile specificProfile, Integer carbs, Double cob, Double bg, Double correction, double percentageCorrection, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
         this.specificProfile = specificProfile;
         this.carbs = carbs;
         this.bg = bg;
@@ -97,20 +102,27 @@ public class BolusWizard {
         // Insulin from superbolus for 2h. Get basal rate now and after 1h
         if (superBolus) {
             insulinFromSuperBolus = specificProfile.getBasal();
-            long timeAfter1h = new Date().getTime();
+            long timeAfter1h = System.currentTimeMillis();
             timeAfter1h += 60L * 60 * 1000;
-            insulinFromSuperBolus += specificProfile.getBasal(Profile.secondsFromMidnight(new Date(timeAfter1h)));
+            insulinFromSuperBolus += specificProfile.getBasal(timeAfter1h);
         }
 
         // Total
-        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB;
+            calculatedTotalInsulin = totalBeforePercentageAdjustment = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB;
+
+            //percentage
+            if(totalBeforePercentageAdjustment > 0){
+                calculatedTotalInsulin = totalBeforePercentageAdjustment*percentageCorrection/100d;
+            }
+
 
         if (calculatedTotalInsulin < 0) {
             carbsEquivalent = -calculatedTotalInsulin * ic;
             calculatedTotalInsulin = 0d;
         }
 
-        calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, 0.05d);
+        double bolusStep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        calculatedTotalInsulin = Round.roundTo(calculatedTotalInsulin, bolusStep);
 
         return calculatedTotalInsulin;
     }

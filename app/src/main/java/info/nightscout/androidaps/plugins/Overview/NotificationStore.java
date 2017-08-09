@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview;
 
+import android.content.Intent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -8,6 +10,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 
 
 /**
@@ -41,23 +48,39 @@ public class NotificationStore {
                 return;
             }
         }
+        if (n.soundId != null) {
+            Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+            alarm.putExtra("soundid", n.soundId);
+            MainApp.instance().startService(alarm);
+        }
         store.add(n);
+
+        WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
+        if(wearPlugin!= null && wearPlugin.isEnabled()) {
+            wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
+        }
+
         Collections.sort(store, new NotificationComparator());
     }
 
-    public void remove(int id) {
+    public boolean remove(int id) {
         for (int i = 0; i < store.size(); i++) {
             if (get(i).id == id) {
+                if (get(i).soundId != null) {
+                    Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+                    MainApp.instance().stopService(alarm);
+                }
                 store.remove(i);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public void removeExpired() {
         for (int i = 0; i < store.size(); i++) {
             Notification n = get(i);
-            if (n.validTo.getTime() != 0 && n.validTo.getTime() < new Date().getTime()) {
+            if (n.validTo.getTime() != 0 && n.validTo.getTime() < System.currentTimeMillis()) {
                 store.remove(i);
                 i--;
             }

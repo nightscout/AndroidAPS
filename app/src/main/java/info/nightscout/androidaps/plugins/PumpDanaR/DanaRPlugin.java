@@ -30,6 +30,7 @@ import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
+import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
@@ -50,7 +51,7 @@ import info.nightscout.utils.SP;
 /**
  * Created by mike on 05.08.2016.
  */
-public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
+public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, ConstraintsInterface, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(DanaRPlugin.class);
 
     @Override
@@ -82,7 +83,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.bolusStep = 0.1d;
 
         pumpDescription.isExtendedBolusCapable = true;
-        pumpDescription.extendedBolusStep = 0.1d;
+        pumpDescription.extendedBolusStep = 0.05d;
         pumpDescription.extendedBolusDurationStep = 30;
         pumpDescription.extendedBolusMaxDuration = 8 * 60;
 
@@ -265,7 +266,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         int basalIncrement = pump.basal48Enable ? 30 * 60 : 60 * 60;
         for (int h = 0; h < basalValues; h++) {
             Double pumpValue = pump.pumpProfiles[pump.activeProfile][h];
-            Double profileValue = profile.getBasal(h * basalIncrement);
+            Double profileValue = profile.getBasal((Integer) (h * basalIncrement));
             if (profileValue == null) return true;
             if (Math.abs(pumpValue - profileValue) > getPumpDescription().basalStep) {
                 log.debug("Diff found. Hour: " + h + " Pump: " + pumpValue + " Profile: " + profileValue);
@@ -308,7 +309,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (Config.logPumpActions)
                 log.debug("deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered);
             detailedBolusInfo.insulin = t.insulin;
-            detailedBolusInfo.date = new Date().getTime();
+            detailedBolusInfo.date = System.currentTimeMillis();
             MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
             return result;
         } else {
@@ -335,7 +336,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
         // Recheck pump status if older than 30 min
-        if (pump.lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime()) {
+        if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
             doConnect("setTempBasalAbsolute old data");
         }
 
@@ -379,6 +380,9 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             if (percentRate > getPumpDescription().maxTempPercent) {
                 percentRate = getPumpDescription().maxTempPercent;
             }
+            if (Config.logPumpActions)
+                log.debug("setTempBasalAbsolute: Calculated percent rate: " + percentRate);
+
             // If extended in progress
             if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
                 if (Config.logPumpActions)
@@ -392,7 +396,10 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime()).percentRate == percentRate) {
+                TemporaryBasal running = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+                if (Config.logPumpActions)
+                    log.debug("setTempBasalAbsolute: currently running: " + running.toString());
+                if (running.percentRate == percentRate) {
                     result.success = true;
                     result.percent = percentRate;
                     result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
@@ -403,15 +410,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     if (Config.logPumpActions)
                         log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
                     return result;
-                } else {
-                    if (Config.logPumpActions)
-                        log.debug("setTempBasalAbsolute: Stopping temp basal (doLowTemp || doHighTemp)");
-                    result = cancelRealTempBasal();
-                    // Check for proper result
-                    if (!result.success) {
-                        log.error("setTempBasalAbsolute: Failed to stop previous temp basal (doLowTemp || doHighTemp)");
-                        return result;
-                    }
                 }
             }
             // Convert duration from minutes to hours
@@ -438,7 +436,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             Double extendedRateToSet = absoluteRate - getBaseBasalRate();
             extendedRateToSet = configBuilderPlugin.applyBasalConstraints(extendedRateToSet);
             // needs to be rounded to 0.1
-            extendedRateToSet = Round.roundTo(extendedRateToSet, 0.1d);
+            extendedRateToSet = Round.roundTo(extendedRateToSet, pumpDescription.extendedBolusStep * 2); // *2 because of halfhours
 
             // What is current rate of extended bolusing in u/h?
             if (Config.logPumpActions) {
@@ -503,6 +501,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
+            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: Correct value already set");
@@ -517,6 +516,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             result.isTempCancel = false;
             result.duration = pump.tempBasalRemainingMin;
             result.percent = pump.tempBasalPercent;
+            result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
             result.isPercent = true;
             if (Config.logPumpActions)
                 log.debug("setTempBasalPercent: OK");
@@ -534,7 +534,8 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         insulin = configBuilderPlugin.applyBolusConstraints(insulin);
         // needs to be rounded
-        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep);
+        int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
+        insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep * (1 + durationInHalfHours % 1));
 
         PumpEnactResult result = new PumpEnactResult();
         if (pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
@@ -549,7 +550,6 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 log.debug("setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulin);
             return result;
         }
-        int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         boolean connectionOK = sExecutionService.extendedBolus(insulin, durationInHalfHours);
         if (connectionOK && pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = true;
@@ -572,7 +572,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {
@@ -650,7 +650,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public JSONObject getJSONStatus() {
-        if (pump.lastConnection.getTime() + 5 * 60 * 1000L < new Date().getTime()) {
+        if (pump.lastConnection.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
         JSONObject pumpjson = new JSONObject();
@@ -667,13 +667,13 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 extended.put("LastBolus", pump.lastBolusTime.toLocaleString());
                 extended.put("LastBolusAmount", pump.lastBolusAmount);
             }
-            TemporaryBasal tb = MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime());
+            TemporaryBasal tb = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
             if (tb != null) {
-                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(new Date().getTime()));
+                extended.put("TempBasalAbsoluteRate", tb.tempBasalConvertedToAbsolute(System.currentTimeMillis()));
                 extended.put("TempBasalStart", DateUtil.dateAndTimeString(tb.date));
                 extended.put("TempBasalRemaining", tb.getPlannedRemainingMinutes());
             }
-            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime());
+            ExtendedBolus eb = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
             if (eb != null) {
                 extended.put("ExtendedBolusAbsoluteRate", eb.absoluteRate());
                 extended.put("ExtendedBolusStart", DateUtil.dateAndTimeString(eb.date));
@@ -704,6 +704,15 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public PumpDescription getPumpDescription() {
         return pumpDescription;
+    }
+
+    /**
+     * DanaR interface
+     */
+
+    @Override
+    public boolean loadHistory(byte type) {
+        return sExecutionService.loadHistory(type);
     }
 
     /**
@@ -789,6 +798,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     @Override
+    public String getUnits() {
+        return pump.getUnits();
+    }
+
+    @Override
     public String getProfileName() {
         return pump.createConvertedProfileName();
     }
@@ -797,7 +811,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public String shortStatus(boolean veryShort) {
         String ret = "";
         if (pump.lastConnection.getTime() != 0) {
-            Long agoMsec = new Date().getTime() - pump.lastConnection.getTime();
+            Long agoMsec = System.currentTimeMillis() - pump.lastConnection.getTime();
             int agoMin = (int) (agoMsec / 60d / 1000d);
             ret += "LastConn: " + agoMin + " minago\n";
         }
@@ -805,10 +819,10 @@ public class DanaRPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             ret += "LastBolus: " + DecimalFormatter.to2Decimal(pump.lastBolusAmount) + "U @" + android.text.format.DateFormat.format("HH:mm", pump.lastBolusTime) + "\n";
         }
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(new Date().getTime()).toStringFull() + "\n";
+            ret += "Temp: " + MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull() + "\n";
         }
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
-            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(new Date().getTime()).toString() + "\n";
+            ret += "Extended: " + MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString() + "\n";
         }
         if (!veryShort) {
             ret += "TDD: " + DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U\n";

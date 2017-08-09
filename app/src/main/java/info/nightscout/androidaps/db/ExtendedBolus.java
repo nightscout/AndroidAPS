@@ -139,7 +139,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     @Override
     public boolean isInProgress() {
-        return match(new Date().getTime());
+        return match(System.currentTimeMillis());
     }
 
     @Override
@@ -171,31 +171,27 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
 
     public IobTotal iobCalc(long time) {
         IobTotal result = new IobTotal(time);
-        Profile profile = MainApp.getConfigBuilder().getProfile(time);
         InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
-
-        if (profile == null)
-            return result;
 
         int realDuration = getDurationToTime(time);
 
         if (realDuration > 0) {
-            Double dia_ago = time - profile.getDia() * 60 * 60 * 1000;
+            double dia_ago = time - dia * 60 * 60 * 1000;
             int aboutFiveMinIntervals = (int) Math.ceil(realDuration / 5d);
             double spacing = realDuration / aboutFiveMinIntervals;
 
-            for (Long j = 0L; j < aboutFiveMinIntervals; j++) {
+            for (long j = 0L; j < aboutFiveMinIntervals; j++) {
                 // find middle of the interval
-                Long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
+                long calcdate = (long) (date + j * spacing * 60 * 1000 + 0.5d * spacing * 60 * 1000);
 
                 if (calcdate > dia_ago && calcdate <= time) {
                     double tempBolusSize = absoluteRate() * spacing / 60d;
 
-                    Treatment tempBolusPart = new Treatment(insulinInterface);
+                    Treatment tempBolusPart = new Treatment(insulinInterface, dia);
                     tempBolusPart.insulin = tempBolusSize;
                     tempBolusPart.date = calcdate;
 
-                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, profile.getDia());
+                    Iob aIOB = insulinInterface.iobCalcForTreatment(tempBolusPart, time, dia);
                     result.iob += aIOB.iobContrib;
                     result.activity += aIOB.activityContrib;
                     result.extendedBolusInsulin += tempBolusPart.insulin;
@@ -206,7 +202,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public int getRealDuration() {
-        return getDurationToTime(new Date().getTime());
+        return getDurationToTime(System.currentTimeMillis());
     }
 
     private int getDurationToTime(long time) {
@@ -216,7 +212,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
     }
 
     public int getPlannedRemainingMinutes() {
-        float remainingMin = (end() - new Date().getTime()) / 1000f / 60;
+        float remainingMin = (end() - System.currentTimeMillis()) / 1000f / 60;
         return (remainingMin < 0) ? 0 : Math.round(remainingMin);
     }
 

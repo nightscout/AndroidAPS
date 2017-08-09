@@ -4,7 +4,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
 
 /**
  * Created by mike on 05.08.2016.
@@ -12,9 +11,17 @@ import info.nightscout.androidaps.plugins.SourceMM640g.SourceMM640gFragment;
 public class SourceGlimpPlugin implements PluginBase, BgSourceInterface {
     boolean fragmentEnabled = false;
 
+    static SourceGlimpPlugin plugin = null;
+
+    public static SourceGlimpPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new SourceGlimpPlugin();
+        return plugin;
+    }
+
     @Override
     public String getFragmentClass() {
-        return SourceGlimpFragment.class.getName();
+        return null;
     }
 
     @Override

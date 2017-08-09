@@ -61,16 +61,16 @@ public class MsgStatusBolusExtended extends MessageBase {
 
     @NonNull
     private Date getDateFromSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(new Date().getTime() / 1000d) - tempBasalAgoSecs) * 1000);
+        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
     }
 
     public static void updateExtendedBolusInDB() {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         DanaRPump pump = DanaRPump.getInstance();
-        long now = new Date().getTime();
+        long now = System.currentTimeMillis();
 
         if (treatmentsInterface.isInHistoryExtendedBoluslInProgress()) {
-            ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolusFromHistory(new Date().getTime());
+            ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolusFromHistory(System.currentTimeMillis());
             if (pump.isExtendedInProgress) {
                 if (extendedBolus.absoluteRate() != pump.extendedBolusAbsoluteRate) {
                     // Close current extended

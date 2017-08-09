@@ -53,7 +53,7 @@ public class MsgStatusTempBasal_v2 extends MessageBase {
 
     @NonNull
     private Date getDateFromTempBasalSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(new Date().getTime() / 1000d) - tempBasalAgoSecs) * 1000);
+        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
     }
 
 }

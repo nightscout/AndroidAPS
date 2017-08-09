@@ -47,6 +47,8 @@ public class Treatment implements DataPointWithLabelInterface {
     public double carbs = 0d;
     @DatabaseField
     public boolean mealBolus = true; // true for meal bolus , false for correction bolus
+    @DatabaseField
+    public boolean isSMB = false;
 
     @DatabaseField
     public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN;
@@ -65,8 +67,13 @@ public class Treatment implements DataPointWithLabelInterface {
         dia = insulin.getDia();
     }
 
+    public Treatment(InsulinInterface insulin, double dia) {
+        insulinInterfaceID = insulin.getId();
+        this.dia = dia;
+    }
+
     public long getMillisecondsFromStart() {
-        return new Date().getTime() - date;
+        return System.currentTimeMillis() - date;
     }
 
     public String toString() {
@@ -74,6 +81,7 @@ public class Treatment implements DataPointWithLabelInterface {
                 "date= " + date +
                 ", date= " + DateUtil.dateAndTimeString(date) +
                 ", isValid= " + isValid +
+                ", isSMB= " + isSMB +
                 ", _id= " + _id +
                 ", pumpId= " + pumpId +
                 ", insulin= " + insulin +
@@ -105,6 +113,8 @@ public class Treatment implements DataPointWithLabelInterface {
             return false;
         if (pumpId != other.pumpId)
             return false;
+        if (isSMB != other.isSMB)
+            return false;
         if (!Objects.equals(_id, other._id))
             return false;
         return true;
@@ -117,6 +127,7 @@ public class Treatment implements DataPointWithLabelInterface {
         carbs = t.carbs;
         mealBolus = t.mealBolus;
         pumpId = t.pumpId;
+        isSMB = t.isSMB;
     }
 
     //  ----------------- DataPointInterface --------------------
