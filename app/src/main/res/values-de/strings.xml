@@ -109,8 +109,8 @@
     <string name="treatments_newtreatment_carbsamount_label">Kohlehydrat Menge</string>
     <string name="treatments_newtreatment_insulinamount_label">Insulin Menge</string>
     <string name="treatments">Treatments</string>
-    <string name="treatmentssafety_maxbolus_title">Max erlaubter Bolus</string>
-    <string name="treatmentssafety_maxcarbs_title">Max erlaubte Kohlehydrate</string>
+    <string name="treatmentssafety_maxbolus_title">Max erlaubter Bolus [U]</string>
+    <string name="treatmentssafety_maxcarbs_title">Max erlaubte Kohlehydrate [g]</string>
     <string name="treatmentssafety_title">Tratments Sicherheit</string>
     <string name="simpleprofile">Einfaches Profil</string>
     <string name="setextendedbolusquestion">Setze neuen extended Bolus:</string>
