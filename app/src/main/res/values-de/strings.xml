@@ -55,7 +55,7 @@
     <string name="configbuilder_tempbasals">Temp Basals</string>
     <string name="delta">Delta</string>
     <string name="duration">Dauer</string>
-    <string name="en_lang">Englisch</string>
+    <string name="en_lang">English</string>
     <string name="loop_aps_label">APS</string>
     <string name="glucose">Glukose</string>
     <string name="nav_backup">Backup</string>
@@ -160,7 +160,7 @@
     <string name="configbuilder_treatments">Treatments</string>
     <string name="constraintapllied">Constraint applied!</string>
     <string name="constraints_violation">Constraints violation</string>
-    <string name="cs_lang">Tschechisch</string>
+    <string name="cs_lang">Czech</string>
     <string name="loop_setbypump_label">Gesetzt durch Pumpe</string>
     <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
@@ -181,10 +181,10 @@
     <string name="setting_imported">Einstellungen importiert</string>
     <string name="nav_export">Einstellungen exportieren</string>
     <string name="nav_import">Einstellungen importieren</string>
-    <string name="de_lang">Deutsch</string>
+    <string name="de_lang">German</string>
     <string name="openapsma_maxbasal_summary">Max U/hr die man für eine Temp Basal setzen kann</string>
     <string name="openapsma_maxiob_summary">Maximale Menge von nicht bolus IOB die OpenAPs abgeben kann</string>
-    <string name="bg_lang">Bulgarisch</string>
+    <string name="bg_lang">Bulgarian</string>
     <string name="nightscout">Nightscout</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="absolute">Absolut</string>
@@ -231,7 +231,7 @@
     <string name="nobtadapter">Kein Bluetoothadapter gefunden</string>
     <string name="smscommunicator_remotebolusnotallowed">Remote Bolus nicht erlaubt</string>
     <string formatted="false" name="smscommunicator_bolusreplywithcode">Um Bolus %.2fU bitte mit  %s antworten</string>
-    <string name="ko_lang">Koreanisch</string>
+    <string name="ko_lang">Korean</string>
     <string name="youareonallowedlimit">Limit erreicht</string>
     <string name="wrongpumppassword">Falsches Pumpen-Passwort!</string>
     <string name="waitingforpumpclicktorefresh">Warte auf Pumpe. Click to refresh.</string>
@@ -278,7 +278,7 @@
     <string name="overview_bolusprogress_goingtodeliver">%.2fU werden abgegeben werden</string>
     <string name="primefill">Vorfüllen / Füllen</string>
     <string name="uploading">Hochladen</string>
-    <string name="es_lang">Spanisch</string>
+    <string name="es_lang">Spanish</string>
     <string name="basal_rate">Basalrate:</string>
     <string name="base_profile_label">Basisprofil:</string>
     <string name="batterydischarged">Pumpenbatterie entladen</string>
@@ -350,7 +350,7 @@
     <string name="wear_detailedIOB_title">Zeige detailliertes IOB</string>
     <string name="wear_detailedIOB_summary">Trenne IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="wrongpassword">Falsches Passwort</string>
-    <string name="it_lang">Italienisch</string>
+    <string name="it_lang">Italian</string>
     <string name="Glimp">Glimp</string>
     <string name="MM640g">MM640g</string>
     <string name="absorption_maxtime_summary">Zeit in Stunden in der zu erwarten ist, dass alle Kohlenhydrate resorbiert sein werden</string>
@@ -394,7 +394,7 @@
     <string name="virtualpump_uploadstatus_title">Status zu NS hochladen</string>
     <string name="superbolus">Superbolus</string>
     <string name="suspendloopfor10h">Pausiere Loop für 10h</string>
-    <string name="array_of_elements">Anzahl %d Einträge. Aktuelle Einträge:</string>
+    <string name="array_of_elements">Insgesamt %d Einträge. Aktuelle Einträge:</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_pbage_label">Batteriealter</string>
     <string name="careportal_pump_label">PUMP</string>
@@ -429,7 +429,7 @@
     <string name="dont_show_again">Nicht erneut anzeigen</string>
     <string name="eatingsoon">Bald essen</string>
     <string name="edit_base_basal">Bearbeite Basis-Basal:</string>
-    <string name="el_lang">Griechisch</string>
+    <string name="el_lang">Greek</string>
     <string name="enableloop">aktiviere Loop</string>
     <string name="enablesuperbolus">Aktiviere SuperBolus im Wizard</string>
     <string name="executing">Führe aus</string>
@@ -516,7 +516,7 @@
     <string name="restart">Restart</string>
     <string name="restartingapp">Beende Applikation um neue Einstellungen zu laden.</string>
     <string name="resume">Fortsetzten</string>
-    <string name="ru_lang">Russisch</string>
+    <string name="ru_lang">Russian</string>
     <string name="send_calibration">Kalibrierung %.1f an xDrip senden?</string>
     <string name="settings_password">Passwort für die Einstellungen</string>
     <string name="settingtempbasal">Setzte temp Basal</string>
@@ -534,7 +534,7 @@
     <string name="suspendloopfor1h">Pausiere Loop für 1h</string>
     <string name="suspendloopfor2h">Pausiere Loop für 2h</string>
     <string name="suspendloopfor3h">Pausiere Loop für 3h</string>
-    <string name="sv_lang">Schwedisch</string>
+    <string name="sv_lang">Schwedish</string>
     <string name="updatingbasalrates">Aktualisere Basal Raten</string>
     <string name="wear_overviewnotifications">Übersicht Benachrichtigungen</string>
 </resources>
