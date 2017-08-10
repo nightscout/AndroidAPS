@@ -16,6 +16,10 @@ public class IobTotal {
     public double netbasalinsulin;
     public double hightempinsulin;
 
+    // oref1
+    public double microBolusInsulin;
+    public double microBolusIOB;
+
     public double netInsulin = 0d; // for calculations from temp basals only
     public double netRatio = 0d; // net ratio at start of temp basal
 
@@ -30,6 +34,8 @@ public class IobTotal {
         this.basaliob = 0d;
         this.netbasalinsulin = 0d;
         this.hightempinsulin = 0d;
+        this.microBolusInsulin = 0d;
+        this.microBolusIOB = 0d;
         this.time = time;
     }
 
@@ -42,6 +48,8 @@ public class IobTotal {
         hightempinsulin += other.hightempinsulin;
         netInsulin += other.netInsulin;
         extendedBolusInsulin += other.extendedBolusInsulin;
+        microBolusInsulin += other.microBolusInsulin;
+        microBolusIOB += other.microBolusIOB;
         return this;
     }
 
@@ -53,6 +61,8 @@ public class IobTotal {
         result.basaliob = basalIob.basaliob;
         result.netbasalinsulin = basalIob.netbasalinsulin;
         result.hightempinsulin = basalIob.hightempinsulin;
+        result.microBolusInsulin = bolusIOB.microBolusInsulin + basalIob.microBolusInsulin;
+        result.microBolusIOB = bolusIOB.microBolusIOB + basalIob.microBolusIOB;
         return result;
     }
 
@@ -63,6 +73,8 @@ public class IobTotal {
         this.basaliob = Round.roundTo(this.basaliob, 0.001);
         this.netbasalinsulin = Round.roundTo(this.netbasalinsulin, 0.001);
         this.hightempinsulin = Round.roundTo(this.hightempinsulin, 0.001);
+        this.microBolusInsulin = Round.roundTo(this.microBolusInsulin, 0.001);
+        this.microBolusIOB = Round.roundTo(this.microBolusIOB, 0.001);
         return this;
     }
 
