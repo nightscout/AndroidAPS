@@ -183,8 +183,13 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             Iob tIOB = t.iobCalc(time, dia);
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
-            Iob bIOB = t.iobCalc(time, dia / SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
-            total.bolussnooze += bIOB.iobContrib;
+            if (!t.isSMB) {
+                Iob bIOB = t.iobCalc(time, dia / SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                total.bolussnooze += bIOB.iobContrib;
+            } else {
+                total.basaliob += t.insulin;
+                total.microBolusIOB += tIOB.iobContrib;
+            }
         }
 
         if (!MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses())
