@@ -13,8 +13,6 @@
     <string name="always_use_shortavg">Använd alltid kort medel delta istället för enkel delta</string>
     <string name="always_use_shortavg_summary">Användbart när ofiltrerade källor som xDrip ger brusvärden</string>
     <string name="androidaps_start">AndroidAPS startar</string>
-    <string name="androidaps_tempbasalendnote">Temp Basal Slut</string>
-    <string name="androidaps_tempbasalstartnote">Basal Temp Start</string>
     <string name="approachingdailylimit">Snart daglig max av insulin</string>
     <string name="apsmode_title">APS Mode</string>
     <string name="avgdelta">Medel delta</string>
@@ -29,9 +27,9 @@
     <string name="bolus">Bolus</string>
     <string name="bolus_step">Bolus Steg</string>
     <string name="bolusconstraintapplied">Bolus spärr aktiverad</string>
-    <string name="bolusdelivered">Bolus %.2fU korrekt tillförd</string>
-    <string name="bolusdelivering">Ger %.2fU</string>
-    <string name="bolusrequested">Kommer att ge %.2fU</string>
+    <string name="bolusdelivered" formatted="false">Bolus %.2fU korrekt tillförd</string>
+    <string name="bolusdelivering" formatted="false">Ger %.2fU</string>
+    <string name="bolusrequested" formatted="false">Kommer att ge %.2fU</string>
     <string name="button1">Knapp 1</string>
     <string name="button2">Knapp 2</string>
     <string name="button3">Knapp 3</string>
@@ -43,7 +41,6 @@
     <string name="careportal_announcement">Meddelande</string>
     <string name="careportal_bgcheck">BG Kontroll</string>
     <string name="careportal_canulaage_label">Kanyl ålder</string>
-    <string name="careportal_canulaage_label_short"></string>
     <string name="careportal_carbscorrection">Kolhydrat korrektion</string>
     <string name="careportal_cgmsensorinsert">CGM Sensor Insättning</string>
     <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
@@ -63,7 +60,6 @@
     <string name="careportal_newnstreatment_glucosetype">Glukos sort</string>
     <string name="careportal_newnstreatment_insulin_label">Insulin</string>
     <string name="careportal_newnstreatment_meter">Mätare</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notering</string>
     <string name="careportal_newnstreatment_other">Annat</string>
     <string name="careportal_newnstreatment_percent_label">Procent</string>
@@ -120,9 +116,7 @@
     <string name="danar_bt_name_title">DanaR Bluetooth Pump</string>
     <string name="danar_carbohydrate">kolhydrat</string>
     <string name="danar_dailyunits">Enheter/Dag</string>
-    <string name="danar_debolus"></string>
     <string name="danar_disableeasymode">Avaktivera EasyUI mode in pump</string>
-    <string name="danar_dsbolus"></string>
     <string name="danar_enableextendedbolus">Aktivera förlängd bolus i pump</string>
     <string name="danar_error">Fel</string>
     <string name="danar_glucose">Glukos</string>
@@ -131,7 +125,7 @@
     <string name="danar_history_basalhours">Basal Timmar</string>
     <string name="danar_history_bolus">Bolusar</string>
     <string name="danar_history_carbohydrates">Kolhydrater</string>
-    <string name="danar_history_connectingfor">Sammankopplar för %d s</string>
+    <string name="danar_history_connectingfor" formatted="false">Sammankopplar för %d s</string>
     <string name="danar_history_dailyinsulin">Daglig insulinmängd</string>
     <string name="danar_history_errors">Fel</string>
     <string name="danar_history_glucose">Glukos</string>
@@ -141,18 +135,14 @@
     <string name="danar_invalidinput">Fel på inlagd data</string>
     <string name="danar_iob_label">Pump IOB</string>
     <string name="danar_lastbolus">Sista bolus</string>
-    <string name="danar_model"></string>
     <string name="danar_password_title">Lösenord Pump</string>
     <string name="danar_pump_settings">DanaR pump inställningar</string>
     <string name="danar_refill">Påfyllnad</string>
-    <string name="danar_sbolus"></string>
-    <string name="danar_stats"></string>
     <string name="danar_stats_cumulative_tdd">Kumulativ TDD</string>
     <string name="danar_stats_date">Datum</string>
     <string name="danar_stats_expweight">Exponentiellt viktad TDD</string>
     <string name="danar_stats_olddata_Message">Gammal Data Vg tryck \"Ladda om\"</string>
     <string name="danar_stats_ratio">Ratio</string>
-    <string name="danar_stats_tbb"></string>
     <string name="danar_useextended_title">Använd förlängd bolus med >200%</string>
     <string name="danar_valuenotsetproperly">Värde ej korrekt angivet</string>
     <string name="danar_viewprofile">Se profil</string>
@@ -168,7 +158,6 @@
     <string name="deliver_now">Ge nu</string>
     <string name="delta">Delta</string>
     <string name="dev">DEV</string>
-    <string name="device"></string>
     <string name="devicenotfound">Vald enhet ej funnen</string>
     <string name="dia">DIA</string>
     <string name="disabledloop">Loop Frånkopplad</string>
@@ -198,7 +187,7 @@
     <string name="entertreatmentquestion">Ange ny behandling</string>
     <string name="error_field_must_not_be_empty">Denna kolumn får ej vara tom</string>
     <string name="error_only_numeric_digits_allowed">Endast siffror får användas</string>
-    <string name="error_only_numeric_digits_range_allowed">\"Endast siffror är tillåtna inom %1$s - %2$\"</string>
+    <string name="error_only_numeric_digits_range_allowed">Endast siffror är tillåtna inom %1$s - %2$s</string>
     <string name="error_phone_not_valid">Ej giltigt telefonnummer</string>
     <string name="es_lang">Spanska</string>
     <string name="executing">Utför</string>
@@ -208,7 +197,6 @@
     <string name="failedupdatebasalprofile">Lyckades ej uppdatera basalprofil</string>
     <string name="fastactinginsulin">Snabbverkande Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog, Apidra</string>
-    <string name="fastactinginsulinprolonged"></string>
     <string name="filenotfound">Data ej funnen</string>
     <string name="fillbolus_title">Fyll/Förfyll standard insulin mängd</string>
     <string name="fillwarning">Vg försäkra dig om att mängd motsvarar det som är specificerat för just ditt infusionsset</string>
@@ -221,7 +209,6 @@
     <string name="hoursago">h sedan</string>
     <string name="import_from">Importera inställningar från</string>
     <string name="initializing">Startar...</string>
-    <string name="insulin_shortname"></string>
     <string name="invalidprofile">Ogiltig profil !!!</string>
     <string name="iob">IOB</string>
     <string name="it_lang">Italienska</string>
@@ -229,7 +216,6 @@
     <string name="language">Språk</string>
     <string name="localprofile">Lokal Profil</string>
     <string name="localprofile_shortname">LP</string>
-    <string name="long_avgdelta"></string>
     <string name="loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">Efter avklarade begränsningar</string>
@@ -237,7 +223,7 @@
     <string name="loop_shortname">LOOP</string>
     <string name="loopdisabled">LOOP STOPPAD PGA BEGRÄNSNINGAR</string>
     <string name="loopmenu">Loop meny</string>
-    <string name="loopsuperbolusfor">Superbolus (%d m</string>
+    <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m</string>
     <string name="loopsuspended">Loop avstängd</string>
     <string name="low_mark">LÅG markering</string>
     <string name="lowbattery">Svagt Batteri</string>
@@ -364,7 +350,6 @@
     <string name="treatments_activity_string">Aktivitet:</string>
     <string name="treatments">Behandlingar</string>
     <string name="treatmentdeliveryerror">Bolus ej tillförd</string>
-    <string name="timeshift_hint"></string>
     <string name="temptargetrange_shortname">TT</string>
     <string name="temptarget">TempMål</string>
     <string name="tempbasals_shortname">TB</string>
@@ -390,11 +375,11 @@
     <string name="status">Status:</string>
     <string name="smscommunicator_wrongduration">Fel duration:</string>
     <string name="smscommunicator_unknowncommand">Okänt kommando eller fel svar</string>
-    <string name="smscommunicator_tempbasalset">"Temp basal %.2fU/h for %d min startad "</string>
-    <string name="smscommunicator_tempbasalfailed">"Fel vid Temp basal start "</string>
+    <string name="smscommunicator_tempbasalset" formatted="false">Temp basal %.2fU/h for %d min startad</string>
+    <string name="smscommunicator_tempbasalfailed">Fel vid Temp basal start</string>
     <string name="smscommunicator_tempbasalcancelfailed">Gick ej att avbryta temp basal</string>
     <string name="smscommunicator_tempbasalcanceled">Temp basal avbruten</string>
-    <string name="smscommunicator_suspendreplywithcode">För att avbryta loop i %d minuter svara med kod %s</string>
+    <string name="smscommunicator_suspendreplywithcode" formatted="false">För att avbryta loop i %d minuter svara med kod %s</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="smscommunicator_remotecommandsallowed">Tillåt fjärrkommandon via SMS</string>
     <string name="smscommunicator_remotecommandnotallowed">Fjärrkommandon tillåts ej</string>
@@ -410,13 +395,13 @@
     <string name="smscommunicator_loophasbeendisabled">Loop är avstängd</string>
     <string name="smscommunicator_invalidphonennumber">Icke giltigt telefonnummer för SMS</string>
     <string name="smscommunicator_calibrationsent">Kalibrering skickad. xDrip måste tillåta att ta emot kalibrering i inställningarna</string>
-    <string name="smscommunicator_calibrationreplywithcode">För att skicka kalibrering %.2f svar med kod %s</string>
+    <string name="smscommunicator_calibrationreplywithcode" formatted="false">För att skicka kalibrering %.2f svar med kod %s</string>
     <string name="smscommunicator_calibrationfailed">xDrip tar inte emot kalibreringar</string>
-    <string name="smscommunicator_bolusreplywithcode">För att ge bolus %.2fU svar med kod %s</string>
+    <string name="smscommunicator_bolusreplywithcode" formatted="false">För att ge bolus %.2fU svar med kod %s</string>
     <string name="smscommunicator_bolusfailed">Bolus ej given</string>
-    <string name="smscommunicator_bolusdelivered">Bolus %.2fU tillförd</string>
+    <string name="smscommunicator_bolusdelivered" formatted="false">Bolus %.2fU tillförd</string>
     <string name="smscommunicator_basalstopreplywithcode">För att stoppa temp basal svara med kod %s</string>
-    <string name="smscommunicator_basalreplywithcode">För att starta basal %.2fU/h svara med kod %s</string>
+    <string name="smscommunicator_basalreplywithcode" formatted="false">För att starta basal %.2fU/h svara med kod %s</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_allowednumbers">Tillåtna telefonnummer</string>
     <string name="smscommunicator">SMS Tjänst</string>
@@ -429,7 +414,7 @@
     <string name="setextendedbolusquestion">Ställ in ny förlängd bolus:</string>
     <string name="setbasalquestion">Acceptera ny temp basal:</string>
     <string name="send_to_pump">SKICKA TILL PUMP</string>
-    <string name="send_calibration">Skicka kalibrering %.1f till xDrip?</string>
+    <string name="send_calibration" formatted="false">Skicka kalibrering %.1f till xDrip?</string>
     <string name="send">SKICKA</string>
     <string name="save">Spara</string>
     <string name="safety">Säkerhet</string>
@@ -476,7 +461,6 @@
     <string name="overview_quickwizard_item_remove_button">Ta bort</string>
     <string name="overview_quickwizard_item_edit_button">Editera</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
-    <string name="overview_newtempbasal_basal_label">Basal värde</string>
     <string name="overview_extendedbolus_cancel_button">Stoppa Förlängd Bolus</string>
     <string name="overview_extendedbolus_button">Förlängd Bolus</string>
     <string name="overview_editquickwizardlistactivity_add">Lägg till</string>
@@ -489,41 +473,37 @@
     <string name="overview_bolusprogress_stoppressed">STOPP NEDTRYCKT</string>
     <string name="overview_bolusprogress_stoped">Stoppad</string>
     <string name="overview_bolusprogress_stop">Stopp</string>
-    <string name="overview_bolusprogress_goingtodeliver">Kommer tillföra %.2fU</string>
+    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Kommer tillföra %.2fU</string>
     <string name="overview_bolusprogress_delivered">Tillförd</string>
     <string name="overview_bolus_label">Bolus</string>
     <string name="overview">Översikt</string>
     <string name="othersettings_title">Andra</string>
     <string name="openloop_newsuggestion">Ny behandlingsrekommendation tillgänglig</string>
     <string name="openloop">Open Loop</string>
-    <string name="openapsma_valueoutofrange">Värde %s är utanför gränserna</string>
-    <string name="openapsma_valuelimitedto">%.2f begränsad till %.2f</string>
-    <string name="openapsma_target_bg">Målvärde för kalkylatorn</string>
+    <string name="openapsma_valueoutofrange" formatted="false">Värde %s är utanför gränserna</string>
+    <string name="openapsma_valuelimitedto" formatted="false">%.2f begränsad till %.2f</string>
     <string name="openapsma_run">Kör nu</string>
     <string name="openapsma_request_label">Fråga</string>
     <string name="openapsma_profile_label">Profil</string>
     <string name="openapsma_nopump">Ingen pump tillgänglig</string>
     <string name="openapsma_noprofile">Ingen profil tillänglig</string>
     <string name="openapsma_noglucosedata">Ingen glukos data tillänglig</string>
-    <string name="openapsma_minbg_label">Nedre målvärde</string>
     <string name="openapsma_mealdata_label">Måltids data</string>
     <string name="openapsma_maxiob_title">Maximal basal IOB som OpenAPS kan ge [E]</string>
     <string name="openapsma_maxiob_summary">Detta värde kallas Max IOB i OpenAPS. Det är ställt till noll från start. Efter flera dagar till veckor, beroende på hur du känner, kan du välja att justera denna.</string>
     <string name="openapsma_maxbasal_title">Max E/h som Temp Basal kan ställas in på</string>
     <string name="openapsma_maxbasal_summary">Detta värde kallas max basal inom OpenAPS</string>
-    <string name="openapsma_low_summary">Nedre BG gräns för önskat BG</string>
     <string name="openapsma_lastrun_label">Senaste körning</string>
     <string name="openapsma_lastenact_label">Senast startad</string>
     <string name="openapsma_iobdata_label">IOB data</string>
     <string name="openapsma_inputparameters_label">Ange värden</string>
-    <string name="openapsma_high_summary">Övre BG gräns för önskat BG</string>
     <string name="openapsma_glucosestatus_label">Status Glukos</string>
     <string name="openapsma_disabled">Plug in är avaktiverad</string>
     <string name="openapsma_currenttemp_label">Nuvarande temp</string>
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma">OpenAPS MA</string>
     <string name="openapsama_useautosens">Använd AMA autosens funktioner</string>
-    <string name="openapsama_min_5m_carbimpact_summary">Inställt värde: 3.0 Detta är grundinställning för KH.absorption per 5 min. 3 mg/dl/5 min. Detta styr hur snabbt COB minskar, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat\"</string>
+    <string name="openapsama_min_5m_carbimpact_summary">Inställt värde: 3.0 Detta är grundinställning för KH.absorption per 5 min. 3 mg/dl/5 min. Detta styr hur snabbt COB minskar, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat"</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Inställt värde: 3 Detta är en grundsten i OpenAPS säkerhetsaspekt. Detta begränsar din basal till att vara 3x din största basalhastighet. Du behöver ofta inte ändra detta värde, Läs på och förstå skilnaden på 3x nuvarande och 3x daglig max som säkerhetsinställningar.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Viktigt! Normalt behöver du inte ändra dessa värden. Vg KLICKA HÄR och LÄS texten och försäkra dig om att du FÖRSTÅTT innan du ändrar dessa värden.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Inställt värde: 4 Detta är andra delen i grunden för säkerhet i OpenAPS, dvs kring 3x och 4 x daglig och nuvarnde basaler. Detta värde innebär att din nuvarande basal, oberoende av din max basalhastighet, kan aldrig bli högre än 4x nuvarande basal. Detta för att undvika att man farliga inställningar. Om man når taket i denna inställning så kanske ändringar i andra inställningar behövs. De flesta behöver inte ändra denna inställning.</string>
@@ -564,17 +544,14 @@
     <string name="absorption_maxtime_summary">Tid i timmar när alla KH väntas vara absorberade</string>
     <string name="absorption_maxtime_title">Måltids max absorptions tid (h)</string>
     <string name="absorptionsettings_title">Absorptions inställningar</string>
-    <string name="app_name">AndroidAPS</string>
     <string name="bg_lang">Bulgariska</string>
     <string name="careportal_pump_label">PUMP</string>
     <string name="careportal_pumpbatterychange">Batteribyte Pump</string>
     <string name="careportal_sensorage_label">Sensor ålder</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
-    <string name="configbuilder_sensitivity"></string>
     <string name="cpp_sync_setting_missing">Måste vara aktiverad för att kunna skicka värden till pumpen</string>
     <string name="cpp_valuesnotstored">Värden sparas inte</string>
     <string name="danar_stats_warning_Message">Möjligen felvärde om man använder bolus för att priming/fyllning!</string>
-    <string name="danar_stats_weight"></string>
     <string name="edit_base_ic">Ändra Base-IC:</string>
     <string name="edit_base_isf">Ändra Base-ISF:</string>
     <string name="el_lang">Grekiska</string>
@@ -583,11 +560,10 @@
     <string name="lock_screen">Lås skärm</string>
     <string name="lock_screen_short">Lås</string>
     <string name="mmol">mmol/l</string>
-    <string name="minago">%dmin sedan</string>
+    <string name="minago" formatted="false">%dmin sedan</string>
     <string name="mgdl">mg/dl</string>
     <string name="mdtp_ok">OK</string>
     <string name="mdi">MDI</string>
-    <string name="nsalarm_urgent_staledatavalue_label"></string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
@@ -604,5 +580,5 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
-    <string name="sms_minago">%dmin sedan</string>
+    <string name="sms_minago" formatted="false">%dmin sedan</string>
 </resources>
