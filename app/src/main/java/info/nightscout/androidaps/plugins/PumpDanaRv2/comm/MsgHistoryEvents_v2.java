@@ -11,6 +11,7 @@ import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 
@@ -62,7 +63,15 @@ public class MsgHistoryEvents_v2 extends MessageBase {
         extendedBolus.source = Source.PUMP;
         extendedBolus.pumpId = datetime.getTime();
 
-        DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+        DetailedBolusInfo detailedBolusInfo = DetailedBolusInfoStorage.findDetailedBolusInfo(datetime.getTime());
+        if (detailedBolusInfo == null) {
+            log.debug("DetailedBolusInfo not found for " + datetime.toLocaleString());
+            detailedBolusInfo = new DetailedBolusInfo();
+        } else {
+            log.debug("DetailedBolusInfo found for " + datetime.toLocaleString() + ": " + new Date(detailedBolusInfo.date).toLocaleString());
+            detailedBolusInfo.carbTime = 0;
+            detailedBolusInfo.carbs = 0;
+        }
         detailedBolusInfo.date = datetime.getTime();
         detailedBolusInfo.source = Source.PUMP;
         detailedBolusInfo.pumpId = datetime.getTime();
@@ -122,7 +131,7 @@ public class MsgHistoryEvents_v2 extends MessageBase {
                 log.debug("EVENT PRIME (" + recordCode + ") " + datetime.toLocaleString() + " Amount: " + param1 / 100d + "U");
                 break;
             case DanaRPump.PROFILECHANGE:
-                log.debug("EVENT PROFILECHANGE (" + recordCode + ") " + datetime.toLocaleString() + " No: " + param1 + "U CurrentRate: " + param2 + "U/h");
+                log.debug("EVENT PROFILECHANGE (" + recordCode + ") " + datetime.toLocaleString() + " No: " + param1 + " CurrentRate: " + (param2 / 100d) + "U/h");
                 break;
             case DanaRPump.CARBS:
                 log.debug("EVENT CARBS (" + recordCode + ") " + datetime.toLocaleString() + " Carbs: " + param1 + "g");

@@ -522,20 +522,22 @@ public class IobCobCalculatorPlugin implements PluginBase {
 
     @Nullable
     public static AutosensData getAutosensData(long time) {
-        long now = System.currentTimeMillis();
-        if (time > now)
-            return null;
-        Long previous = findPreviousTimeFromBucketedData(time);
-        if (previous == null)
-            return null;
-        time = roundUpTime(previous);
-        AutosensData data = autosensDataTable.get(time);
-        if (data != null) {
-            //log.debug(">>> getAutosensData Cache hit " + data.log(time));
-            return data;
-        } else {
-            //log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
-            return null;
+        synchronized (dataLock) {
+            long now = System.currentTimeMillis();
+            if (time > now)
+                return null;
+            Long previous = findPreviousTimeFromBucketedData(time);
+            if (previous == null)
+                return null;
+            time = roundUpTime(previous);
+            AutosensData data = autosensDataTable.get(time);
+            if (data != null) {
+                //log.debug(">>> getAutosensData Cache hit " + data.log(time));
+                return data;
+            } else {
+                //log.debug(">>> getAutosensData Cache miss " + new Date(time).toLocaleString());
+                return null;
+            }
         }
     }
 

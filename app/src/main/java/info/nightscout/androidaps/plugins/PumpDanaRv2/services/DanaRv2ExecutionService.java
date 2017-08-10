@@ -502,6 +502,7 @@ public class DanaRv2ExecutionService extends Service {
 
     public boolean loadEvents() {
         if (!isConnected()) return false;
+        waitMsec(300);
         MsgHistoryEvents_v2 msg;
         if (lastHistoryFetched == 0) {
             msg = new MsgHistoryEvents_v2();

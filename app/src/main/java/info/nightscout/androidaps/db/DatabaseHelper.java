@@ -950,6 +950,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             if (tempBasal.source == Source.NIGHTSCOUT) {
                 old = getDaoTemporaryBasal().queryForId(tempBasal.date);
                 if (old != null) {
+                    if (!old.isAbsolute && tempBasal.isAbsolute) { // converted to absolute by "ns_sync_use_absolute"
+                        // so far ignore, do not convert back because it may not be accurate
+                        return false;
+                    }
                     if (!old.isEqual(tempBasal)) {
                         long oldDate = old.date;
                         getDaoTemporaryBasal().delete(old); // need to delete/create because date may change too
