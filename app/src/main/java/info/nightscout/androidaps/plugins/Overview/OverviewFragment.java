@@ -126,7 +126,9 @@ import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
-
+//Added By Rumen for staledata alarm
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
@@ -1748,6 +1750,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
+            if(notification.text == MainApp.sResources.getString(R.string.nsalarm_staledata))
+                holder.dismiss.setText("snooze");
             holder.text.setText(notification.text);
             holder.time.setText(DateUtil.timeString(notification.date));
             if (notification.level == Notification.URGENT)
@@ -1796,6 +1800,14 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         if (notification.nsAlarm != null) {
                             BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
                         }
+                        // Adding current time to snooze if we got staleData
+                        log.debug("Notification text is: "+notification.text);
+                        if(notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))){
+                            NotificationStore nstore = getPlugin().notificationStore;
+                            long msToSnooze = SP.getInt("nsalarm_staledatavalue",15)*60*1000L;
+                            log.debug("snooze nsalarm_staledatavalue in minutes is "+SP.getInt("nsalarm_staledatavalue",15)+"\n in ms is: "+msToSnooze+" currentTimeMillis is: "+System.currentTimeMillis());
+                            nstore.snoozeTo(System.currentTimeMillis()+(SP.getInt("nsalarm_staledatavalue",15)*60*1000L));
+                        }
                         break;
                 }
             }
@@ -1810,6 +1822,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 public void run() {
                     NotificationStore nstore = getPlugin().notificationStore;
                     nstore.removeExpired();
+                    nstore.unSnooze();
                     if (nstore.store.size() > 0) {
                         RecyclerViewAdapter adapter = new RecyclerViewAdapter(nstore.store);
                         notificationsView.setAdapter(adapter);

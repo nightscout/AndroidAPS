@@ -188,6 +188,10 @@ public class NSSettingsStatus {
                         return result;
                     }
                 }
+                if (settingsO.has("alarmTimeagoWarnMins") && what == "alarmTimeagoWarnMins"){
+                    Double result = settingsO.getDouble(what);
+                    return result;
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -271,7 +275,6 @@ public class NSSettingsStatus {
       , warnBattP: sbx.extendedSettings.warnBattP || 30
       , urgentBattP: sbx.extendedSettings.urgentBattP || 20
       , enableAlerts: sbx.extendedSettings.enableAlerts || false
-
      */
 
     public double extendedPumpSettings(String setting) {
@@ -301,6 +304,7 @@ public class NSSettingsStatus {
         return 0d;
     }
 
+	
     @Nullable
     public JSONObject extentendedPumpSettings() {
         try {
@@ -339,5 +343,16 @@ public class NSSettingsStatus {
         return "";
     }
 
+	    public boolean openAPSEnabledAlerts() {
+        try {
+            JSONObject pump = extentendedPumpSettings();
+            if (pump != null && pump.has("openaps")) {
+                return pump.getBoolean("enableAlerts");
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
