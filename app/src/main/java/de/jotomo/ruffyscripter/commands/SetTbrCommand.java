@@ -15,22 +15,17 @@ import java.util.Locale;
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.AFTER;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.BEFORE;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.ERROR;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.MAIN;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.SET;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.SET_TBR;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.SET_TIME;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.TBR;
-import static de.jotomo.ruffyscripter.commands.SetTbrCommand.State.TIME;
+import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.MAIN_MENU;
+import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_DURATION;
+import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_MENU;
+import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_SET;
+import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.WARNING_OR_ERROR;
 
 public class SetTbrCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
 
     private final long percentage;
     private final long duration;
-    private RuffyScripter scripter;
 
     public SetTbrCommand(long percentage, long duration) {
         this.percentage = percentage;
@@ -64,297 +59,211 @@ public class SetTbrCommand implements Command {
         return violations;
     }
 
-    enum State {
-        BEFORE,
-        MAIN,
-        TBR,
-        SET_TBR,
-        TIME,
-        SET_TIME,
-        SET,
-        AFTER,
-        ERROR
-    };
-    private State lastState,state;
-    private long last;
-    private long timeout;
-    private Thread timeoutThread = new Thread()
-    {
-        @Override
-        public void run() {
-            while(state != ERROR && state!=AFTER) {
-                if (timeout + last < System.currentTimeMillis()) {
-                    lastState = state;
-                    state = ERROR;
-                    log.debug("timeout reached -> state:ERROR");
-                }
-                tick();
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            tick();
-        }
-    };
-    private void updateState(State newState,long timeoutSec)
-    {
-        lastState = state;
-        state = newState;
-        last = System.currentTimeMillis();
-        timeout = timeoutSec*1000;
-    }
-    private MenuType lastMenu;
-    private int retries = 0;
-    private void tick()
-    {
-        Log.v("SetTbrCommand:tick",state+": "+scripter.currentMenu);
-        switch (state)
-        {
-            case BEFORE:
-                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.MAIN_MENU)
-                {
-                    updateState(MAIN,120);
-                    lastMenu = MenuType.MAIN_MENU;
-                    log.debug("found MAIN_MENU -> state:MAIN");
-                    retries=3;
-                }
-                break;
-            case MAIN:
-                if(retries>0)
-                    if(scripter.goToMainMenuScreen(MenuType.TBR_MENU,30000))
-                    {
-                        updateState(TBR,30);
-                        retries=0;
-                    }
-                    else
-                        retries--;
-                else
-                {
-                    Log.v("SetTbrCommand:tick",state+": no retries left for adjusting basals");
-                    updateState(ERROR,30);
-                }
-                break;
-            case TBR:
-                if(scripter.enterMenu(MenuType.TBR_MENU,MenuType.TBR_SET, RuffyScripter.Key.CHECK,20000))
-                {
-                    updateState(SET_TBR,60);
-                    retries = 10;
-                }
-                else
-                {
-                    Log.v("SetTbrCommand:tick",state+": no retries left for adjusting basals");
-                    updateState(ERROR,30);
-                }
-                break;
-            case SET_TBR:
-                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_SET)
-                {
-                    Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
-                    Log.v("SetTbrCommand:tick",state+": requested basal: "+percentage+" actual percetage: "+percentageObj);
-                    if(percentageObj != null && percentageObj instanceof Double)
-                    {
-                        double currentPercentage = ((Double) percentageObj).doubleValue();
-
-                        if(currentPercentage!=percentage)
-                        {
-                            if(retries>0) {
-                                retries--;
-                                int requestedPercentage = (int) percentage;
-                                int actualPercentage = (int) currentPercentage;
-                                int steps = (requestedPercentage - actualPercentage) / 10;
-                                Log.v("SetTbrCommand:tick",state+": adjusting basal("+requestedPercentage+"/"+actualPercentage+") with "+steps+" steps and "+retries+" retries left");
-                                scripter.step(steps,(steps<0? RuffyScripter.Key.DOWN: RuffyScripter.Key.UP), 500);
-                                scripter.waitScreen(1000);
-                            }
-                            else
-                            {
-                                Log.v("SetTbrCommand:tick",state+": no retries left for adjusting basals");
-                                updateState(ERROR,30);
-                            }
-                        }
-                        else
-                        {
-                            if(percentage==100)
-                            {
-                                Log.v("SetTbrCommand:tick",state+": percentage 100 going to SET");
-                                scripter.pressCheckKey();
-                                updateState(SET,30);
-                            }
-                            else {
-                                Log.v("SetTbrCommand:tick",state+": basal set, going to TIME");
-                                updateState(TIME, 30);
-                            }
-                            retries=10;
-                        }
-                    }
-                }
-                else
-                {
-                    Log.v("SetTbrCommand:tick",state+": not in correct menu: "+scripter.currentMenu+" expected "+MenuType.TBR_SET);
-                    updateState(ERROR,30);
-                }
-                break;
-            case TIME:
-                if((scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_DURATION) || scripter.enterMenu(MenuType.TBR_SET,MenuType.TBR_DURATION, RuffyScripter.Key.MENU,20000))
-                {
-                    Log.v("SetTbrCommand:tick",state+": going to SET_TIME");
-                    updateState(SET_TIME,60);
-                    retries = 10;
-                }
-                else if(retries==0)
-                {
-                    Log.v("SetTbrCommand:tick",state+": no retries left");
-                    updateState(ERROR,30);
-                }
-                else
-                {
-                    retries--;
-                    Log.v("SetTbrCommand:tick",state+": next retry "+retries+"left");
-                }
-                break;
-            case SET_TIME:
-                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.TBR_DURATION)
-                {
-                    Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-                    Log.v("SetTbrCommand:tick",state+": requested time: "+duration+" actual time: "+durationObj);
-                    if(durationObj != null && durationObj instanceof MenuTime)
-                    {
-                        MenuTime time = (MenuTime) durationObj;
-                        double currentDuration = (time.getHour()*60)+time.getMinute();
-                        if(currentDuration!=duration)
-                        {
-                            if(retries>0) {
-                                retries--;
-                                int requestedDuration = (int) duration;
-                                int actualDuration = (int) currentDuration;
-                                int steps = (requestedDuration - actualDuration)/15;
-                                if(currentDuration+(steps*15)<requestedDuration)
-                                    steps++;
-                                else if(currentDuration+(steps*15)>requestedDuration)
-                                    steps--;
-                                Log.v("SetTbrCommand:tick",state+": adjusting duration("+requestedDuration+"/"+actualDuration+") with "+steps+" steps and "+retries+" retries left");
-                                scripter.step(steps,(steps>0? RuffyScripter.Key.UP: RuffyScripter.Key.DOWN), 500);
-                                scripter.waitScreen(1000);
-                                scripter.waitScreen(1000);
-                            }
-                            else
-                            {
-                                Log.v("SetTbrCommand:tick",state+": no retry left");
-                                updateState(ERROR,30);
-                            }
-                        }
-                        else {
-                            Log.v("SetTbrCommand:tick",state+": setting");
-                            scripter.pressCheckKey();
-                            scripter.waitScreen(500);
-                            if(scripter.currentMenu.getType()==MenuType.MAIN_MENU || scripter.currentMenu.getType()==MenuType.WARNING_OR_ERROR)
-                            {
-                                Log.v("SetTbrCommand:tick",state+": set and going to SET");
-                                updateState(SET, 30);
-                            }
-                            else if(retries>0)
-                            {
-                                Log.v("SetTbrCommand:tick",state+": not set, wait");
-                                retries--;
-                            }
-                            else
-                            {
-                                Log.v("SetTbrCommand:tick",state+": no retry left");
-                                updateState(ERROR,30);
-                            }
-
-                        }
-                    }
-                }
-                else if(scripter.currentMenu.getType()==MenuType.MAIN_MENU || scripter.currentMenu.getType()==MenuType.WARNING_OR_ERROR)
-                {
-                    Log.v("SetTbrCommand:tick",state+": set and going to SET");
-                    updateState(SET, 30);
-                }
-                else
-                {
-                    Log.v("SetTbrCommand:tick",state+": not in "+ MenuType.TBR_DURATION+" but in "+scripter.currentMenu);
-                    updateState(ERROR,60);
-                }
-                break;
-            case SET:
-                if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.WARNING_OR_ERROR)
-                {
-                    Log.v("SetTbrCommand:tick",state+": in ERROR_WARNING acking");
-                    lastMenu = scripter.currentMenu.getType();
-                    scripter.pressCheckKey();
-                    updateState(SET, 30);
-                }
-                else if(scripter.currentMenu!=null && scripter.currentMenu.getType()==MenuType.MAIN_MENU) {
-                    Object setPercentage = scripter.currentMenu.getAttribute(MenuAttribute.TBR);
-                    Object setDuration = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-                    Log.v("SetTbrCommand:tick",state+": got percentage: "+setPercentage+" requestes: "+percentage+" duration: "+setDuration+" request: "+duration);
-                    if (setPercentage== null ||setDuration==null) {
-                        if(percentage!=100)
-                        {
-                            Log.v("SetTbrCommand:tick",state+": fail because nothign set");
-                            updateState(ERROR,10);
-                        }
-                        else
-                        {
-                            Log.v("SetTbrCommand:tick",state+": finished");
-                            if(lastMenu==MenuType.WARNING_OR_ERROR)
-                                updateState(AFTER,10);
-                            else
-                                updateState(SET,10);
-                        }
-                    }
-                    else {
-                        double mmTbrPercentage = (Double) setPercentage;
-                        MenuTime mmTbrDuration = (MenuTime) setDuration;
-                        // ... and be the same as what we set
-                        // note that displayed duration might have already counted down, e.g. from 30 minutes to
-                        // 29 minutes and 59 seconds, so that 29 minutes are displayed
-                        int mmTbrDurationInMinutes = mmTbrDuration.getHour() * 60 + mmTbrDuration.getMinute();
-                        if (mmTbrPercentage == percentage && mmTbrDurationInMinutes <= duration) {
-                            Log.v("SetTbrCommand:tick",state+": finished, correctly set");
-                            updateState(AFTER, 10);
-                        } else {
-                            Log.v("SetTbrCommand:tick",state+": failed");
-                            updateState(ERROR, 10);
-                        }
-                    }
-                }
-                break;
-            case ERROR:
-            case AFTER:
-                synchronized(SetTbrCommand.this) {
-                    SetTbrCommand.this.notify();
-                }
-                break;
-        }
-    }
     @Override
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
-        state = BEFORE;
-        this.scripter = scripter;
-        updateState(BEFORE,120);
-        timeoutThread.start();
 
         try {
-            synchronized (this) {
-                this.wait();
+            Log.v("SetTbrCommand","1. going from "+scripter.currentMenu+" to TBR_MENU");
+            int retries = 5;
+            while(!scripter.goToMainMenuScreen(TBR_MENU,3000))
+            {
+                retries--;
+                if(retries==0)
+                    throw new Exception("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
+                Thread.sleep(500);
+                if(scripter.currentMenu.getType()== TBR_MENU)
+                    break;
             }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return new CommandResult().success(false).message("failed to wait: "+e.getMessage());
-        }
-        if(state==AFTER)
-        {
+
+            if(scripter.currentMenu.getType()!=TBR_MENU)
+                throw new Exception("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
+
+            Log.v("SetTbrCommand","2. entering "+scripter.currentMenu);
+            retries = 5;
+            while(!scripter.enterMenu(TBR_MENU,MenuType.TBR_SET, RuffyScripter.Key.CHECK,2000))
+            {
+                retries--;
+                if(retries==0)
+                    throw new Exception("not able to find TBR_SET: stuck in "+scripter.currentMenu);
+                Thread.sleep(500);
+                if(scripter.currentMenu.getType()== TBR_SET)
+                    break;
+                if(scripter.currentMenu.getType()== TBR_DURATION)
+                {
+                    scripter.pressMenuKey();
+                    scripter.waitScreen(1000);
+                }
+            }
+
+            Log.v("SetTbrCommand","3. getting/setting basal in "+scripter.currentMenu);
+            retries = 30;
+
+            double currentPercentage = -100;
+            while(currentPercentage!=percentage && retries>=0) {
+                retries--;
+                Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
+
+                if (percentageObj != null && (percentageObj instanceof Double)) {
+                    currentPercentage = ((Double) percentageObj).doubleValue();
+
+                    if (currentPercentage != percentage) {
+                        int requestedPercentage = (int) percentage;
+                        int actualPercentage = (int) currentPercentage;
+                        int steps = (requestedPercentage - actualPercentage) / 10;
+                        Log.v("SetTbrCommand", "Adjusting basal(" + requestedPercentage + "/" + actualPercentage + ") with " + steps + " steps and " + retries + " retries left");
+                        scripter.step(steps, (steps < 0 ? RuffyScripter.Key.DOWN : RuffyScripter.Key.UP), 500);
+                        scripter.waitScreen(1000);
+                    }
+
+                }
+                else
+                    currentPercentage=-100;
+                scripter.waitScreen(1000);
+            }
+            if(currentPercentage<0 ||retries < 0)
+                throw new Exception("unable to set basalrate");
+
+            Log.v("SetTbrCommand","4. checking basal in "+scripter.currentMenu);
+            scripter.waitScreen(1000);
+            currentPercentage= -1000;
+            retries=10;
+            while(currentPercentage<0 && retries>=0) {
+                retries--;
+                Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
+
+                if (percentageObj != null && (percentageObj instanceof Double)) {
+                    currentPercentage = ((Double) percentageObj).doubleValue();
+                }
+                else
+                    scripter.waitScreen(1000);
+            }
+
+            if(retries<0 ||currentPercentage!=percentage)
+                throw new Exception("wrong rate!");
+
+            if(currentPercentage!=100) {
+                Log.v("SetTbrCommand", "5. change to TBR_DURATION from " + scripter.currentMenu);
+                retries = 5;
+                while (retries >=0 && !scripter.enterMenu(TBR_SET, MenuType.TBR_DURATION, RuffyScripter.Key.MENU, 2000)) {
+                    retries--;
+                    if (retries == 0)
+                        throw new Exception("not able to find TBR_SET: stuck in " + scripter.currentMenu);
+                    Thread.sleep(500);
+                    if (scripter.currentMenu.getType() == TBR_DURATION)
+                        break;
+                    if (scripter.currentMenu.getType() == TBR_SET) {
+                        scripter.pressMenuKey();
+                        scripter.waitScreen(1000);
+                    }
+                }
+
+                Log.v("SetTbrCommand", "6. getting/setting duration in " + scripter.currentMenu);
+                retries = 30;
+
+                double currentDuration = -100;
+                while (currentDuration != duration && retries >= 0) {
+                    retries--;
+                    Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
+                    Log.v("SetTbrCommand", "Requested time: " + duration + " actual time: " + durationObj);
+                    if (durationObj != null && durationObj instanceof MenuTime) {
+                        MenuTime time = (MenuTime) durationObj;
+                        currentDuration = (time.getHour() * 60) + time.getMinute();
+                        if (currentDuration != duration) {
+                            int requestedDuration = (int) duration;
+                            int actualDuration = (int) currentDuration;
+                            int steps = (requestedDuration - actualDuration) / 15;
+                            if (currentDuration + (steps * 15) < requestedDuration)
+                                steps++;
+                            else if (currentDuration + (steps * 15) > requestedDuration)
+                                steps--;
+                            Log.v("SetTbrCommand", "Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
+                            scripter.step(steps, (steps > 0 ? RuffyScripter.Key.UP : RuffyScripter.Key.DOWN), 500);
+                            scripter.waitScreen(1000);
+                        } else {
+                            break;
+                        }
+                    }
+                    else
+                        scripter.waitScreen(1000);
+                }
+                if (currentDuration < 0 || retries < 0)
+                    throw new Exception("unable to set duration");
+
+                Log.v("SetTbrCommand", "7. checking time in " + scripter.currentMenu);
+                scripter.waitScreen(1000);
+                currentDuration = -1000;
+                retries = 10;
+                while (currentDuration < 0 && retries >= 0) {
+                    retries--;
+                    Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
+
+                    if (durationObj != null && durationObj instanceof MenuTime) {
+                        MenuTime time = (MenuTime) durationObj;
+                        currentDuration = (time.getHour() * 60) + time.getMinute();
+                    }
+                    else
+                        scripter.waitScreen(1000);
+                }
+                if (retries < 0 || currentDuration != duration)
+                    throw new Exception("wrong time!");
+            }
+
+            Log.v("SetTbrCommand", "8. setting from " + scripter.currentMenu);
+            retries=5;
+            while(retries>= 0 && (scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET))
+            {
+                retries--;
+                scripter.pressCheckKey();
+                scripter.waitScreen(1000);
+            }
+            if(retries<0 || scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET)
+                throw new Exception("failed setting basal!");
+            retries=10;
+            boolean canceledError = true;
+            if(percentage==100)
+                canceledError=false;
+            while(retries>=0 && scripter.currentMenu.getType()!=MAIN_MENU )
+            {
+                if(percentage==100 && scripter.currentMenu.getType()==WARNING_OR_ERROR)
+                {
+                    scripter.pressCheckKey();
+                    retries++;
+                    canceledError = true;
+                }
+                else {
+                    retries--;
+                    if (scripter.currentMenu.getType() == MAIN_MENU && canceledError)
+                        break;
+                }
+            }
+            if(retries<0 || scripter.currentMenu.getType()!=MAIN_MENU )
+                throw new Exception("failed going to main!");
+
+            Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.TBR);
+            Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
+
+            if(percentageObj == null || !(percentageObj instanceof Double))
+                throw new Exception("not percentage");
+
+            if(((double)percentageObj)!=percentage)
+                throw new Exception("wrong percentage set!");
+
             if(percentage==100)
                 return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
 
+            if(durationObj==null || !(durationObj instanceof MenuTime))
+                throw new Exception("not time");
+
+            MenuTime t = (MenuTime) durationObj;
+            if(t.getMinute()+(60*t.getHour())> duration || t.getMinute()+(60*t.getHour())< duration-5)
+                throw new Exception("wrong time set!");
+
             return new CommandResult().success(true).enacted(true).message(
                     String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
+        } catch (Exception e) {
+            Log.e("SetTbrCommand", "got exception: ", e);
+            return new CommandResult().success(false).message("failed to wait: " + e.getMessage());
         }
-        return new CommandResult().success(false).message("failed with state: "+state+" from: "+lastState);
     }
 
     @Override
