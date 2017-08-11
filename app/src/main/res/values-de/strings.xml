@@ -588,7 +588,7 @@
     <string name="unlock_settings">Einstellungen freischalten</string>
     <string formatted="false" name="openapsma_valuelimitedto">%.2f limitiert auf %.2f</string>
     <string name="danar_sbolus">S Bolus</string>
-    <string formatted="false" name="danar_model">Model: %02X Protokol: %02X Code: %02X</string>
+    <string formatted="false" name="danar_model">Model: %02X Protokoll: %02X Code: %02X</string>
     <string name="configbuilder_sensitivity">Empfindlichkeitserkennung</string>
     <string name="cob">COB</string>
 </resources>
