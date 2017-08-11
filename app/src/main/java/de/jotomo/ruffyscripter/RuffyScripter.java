@@ -475,6 +475,8 @@ public class RuffyScripter {
 
     public boolean enterMenu(MenuType startType, MenuType targetType, byte key, long timeout)
     {
+        if(currentMenu.getType()==targetType)
+            return true;
         if(currentMenu==null || currentMenu.getType() != startType)
             return false;
         long start = System.currentTimeMillis();
