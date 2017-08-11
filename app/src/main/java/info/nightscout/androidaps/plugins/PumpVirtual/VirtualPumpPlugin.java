@@ -258,7 +258,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         TemporaryBasal tempBasal = new TemporaryBasal();
         tempBasal.date = System.currentTimeMillis();

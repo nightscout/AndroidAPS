@@ -475,12 +475,16 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
      * @return
      */
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
         Double rateAfterConstraints = applyBasalConstraints(absoluteRate);
-        PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes);
+        PumpEnactResult result = activePump.setTempBasalAbsolute(rateAfterConstraints, durationInMinutes, force);
         if (Config.logCongigBuilderActions)
             log.debug("setTempBasalAbsolute rate: " + rateAfterConstraints + " durationInMinutes: " + durationInMinutes + " success: " + result.success + " enacted: " + result.enacted);
         return result;
+    }
+
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+        return setTempBasalAbsolute(absoluteRate, durationInMinutes, false);
     }
 
     /**

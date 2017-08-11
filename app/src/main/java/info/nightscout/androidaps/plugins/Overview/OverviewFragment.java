@@ -504,8 +504,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    MainApp.getConfigBuilder().cancelTempBasal(true);
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 30);
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 30, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -519,8 +518,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    MainApp.getConfigBuilder().cancelTempBasal(true);
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 60);
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -534,8 +532,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    MainApp.getConfigBuilder().cancelTempBasal(true);
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 2 * 60);
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 2 * 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }
@@ -549,8 +546,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             sHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    MainApp.getConfigBuilder().cancelTempBasal(true);
-                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 3 * 60);
+                    PumpEnactResult result = MainApp.getConfigBuilder().setTempBasalAbsolute(0d, 3 * 60, true);
                     if (!result.success) {
                         ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror));
                     }

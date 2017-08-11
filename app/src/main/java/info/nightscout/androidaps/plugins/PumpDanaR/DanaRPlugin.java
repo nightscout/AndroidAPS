@@ -334,7 +334,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
 
     // This is called from APS
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
         // Recheck pump status if older than 30 min
         if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
             doConnect("setTempBasalAbsolute old data");
@@ -399,7 +399,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
                 TemporaryBasal running = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: currently running: " + running.toString());
-                if (running.percentRate == percentRate) {
+                if (running.percentRate == percentRate && force == false) {
                     result.success = true;
                     result.percent = percentRate;
                     result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();

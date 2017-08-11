@@ -166,7 +166,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.pumperror);
