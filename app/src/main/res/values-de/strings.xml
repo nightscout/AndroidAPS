@@ -556,9 +556,9 @@
     <string name="prefs_range_summary">Hoch und niedrig Werte für die Übersicht- und die Smartwatch-Anzeige</string>
     <string name="prefs_range_title">Zielbereich für die Grafikanzeige</string>
     <string name="sensitivity_warning">Bei aktivierter Autosense-Funktion, bitte stell sicher, das du alle gegessenen Kohlenhydrate eingibts. Ansonsten können die Kohlenhydrate-Abweichung als falsche Resistens/Empfindlichkeit identifziert werden!!!</string>
-    <string name="sensitivityaaps">Empfindlichkeit AAPS</string>
-    <string name="sensitivityoref0">Empfindlichkeit Oref0</string>
-    <string name="sensitivityweightedaverage">Durschnittliche Empfindlichkeitsgewichtung</string>
+    <string name="sensitivityaaps">Sensitivität AAPS</string>
+    <string name="sensitivityoref0">Sensitivität Oref0</string>
+    <string name="sensitivityweightedaverage">Durschnittliche Sensitivität</string>
     <string name="settingextendedbolus">Einstellung Extended Bolus</string>
     <string name="sms_minago">vor %dMin</string>
     <string formatted="false" name="smscommunicator_basalstopreplywithcode">"Um das temp Basal zu stoppen, antworte mit dem Code %s"</string>
