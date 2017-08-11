@@ -364,18 +364,23 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
             // Check if some temp is already in progress
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 // Correct basal already set ?
-                if (MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate && force == false) {
-                    result.success = true;
-                    result.percent = percentRate;
-                    result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
-                    result.enacted = false;
-                    result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
-                    result.isPercent = true;
-                    result.isTempCancel = false;
-                    if (Config.logPumpActions)
-                        log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
-                    return result;
-                }            }
+                if (MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
+                    if (force == true) {
+                        cancelTempBasal(true);
+                    } else {
+                        result.success = true;
+                        result.percent = percentRate;
+                        result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
+                        result.enacted = false;
+                        result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
+                        result.isPercent = true;
+                        result.isTempCancel = false;
+                        if (Config.logPumpActions)
+                            log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
+                        return result;
+                    }
+                }
+            }
             // Convert duration from minutes to hours
             if (Config.logPumpActions)
                 log.debug("setTempBasalAbsolute: Setting temp basal " + percentRate + "% for " + durationInMinutes + " mins (doLowTemp || doHighTemp)");

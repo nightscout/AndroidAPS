@@ -399,17 +399,21 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
                 TemporaryBasal running = MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: currently running: " + running.toString());
-                if (running.percentRate == percentRate && force == false) {
-                    result.success = true;
-                    result.percent = percentRate;
-                    result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
-                    result.enacted = false;
-                    result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
-                    result.isPercent = true;
-                    result.isTempCancel = false;
-                    if (Config.logPumpActions)
-                        log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
-                    return result;
+                if (running.percentRate == percentRate) {
+                    if (force == true) {
+                         cancelTempBasal(true);
+                    } else {
+                        result.success = true;
+                        result.percent = percentRate;
+                        result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
+                        result.enacted = false;
+                        result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
+                        result.isPercent = true;
+                        result.isTempCancel = false;
+                        if (Config.logPumpActions)
+                            log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
+                        return result;
+                    }
                 }
             }
             // Convert duration from minutes to hours
