@@ -391,10 +391,10 @@
     <string name="virtualpump_extendedbolus_label_short">EXT</string>
     <string name="virtualpump_firmware_label">Firmware</string>
     <string name="virtualpump_settings">Virtuelle Pumpe Einstellungen</string>
-    <string name="virtualpump_uploadstatus_title">Status zu NS hochladen</string>
+    <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <string name="superbolus">Superbolus</string>
     <string name="suspendloopfor10h">Pausiere Loop für 10h</string>
-    <string name="array_of_elements">Insgesamt %d Einträge. Aktuelle Einträge:</string>
+    <string name="array_of_elements">Insgesamt %d Einträge. Aktueller Wert:</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_pbage_label">Batteriealter</string>
     <string name="careportal_pump_label">PUMP</string>
@@ -460,9 +460,9 @@
     <string name="ns_alarmoptions">Alarm Optionen</string>
     <string name="ns_localbroadcasts">Aktiviere Broadcast für andere Apps (z.B. xDrip).</string>
     <string name="ns_localbroadcasts_title">Aktiviere lokalen Broadcast.</string>
-    <string name="ns_logappstartedevent">Logge App-Start in NS</string>
-    <string name="ns_noupload">Kein Upload zu NS</string>
-    <string name="ns_noupload_summary">Alle an NS gesendete Daten verworfen. AAPS ist verbunden, aber keine Änderungen in NS</string>
+    <string name="ns_logappstartedevent">Logge App-Start in Nightscout</string>
+    <string name="ns_noupload">Kein Upload zu Nightscout</string>
+    <string name="ns_noupload_summary">Alle an Nightscout gesendete Daten verworfen. AAPS ist verbunden, aber keine Änderungen in NS</string>
     <string name="nsalarm_high">Hoch</string>
     <string name="nsalarm_low">Niedrig</string>
     <string name="nsalarm_summary">Gesetzt zu %f</string>
@@ -471,17 +471,17 @@
     <string name="nsclientinternal_autoscroll">Autoscroll</string>
     <string name="nsclientinternal_devicename_dialogtitle">Gerätenamen eingeben</string>
     <string name="nsclientinternal_devicename_title">Gerätename</string>
-    <string name="nsclientinternal_secret_dialogmessage">NS API-Key eingeben (min 12 Zeichen)</string>
-    <string name="nsclientinternal_secret_dialogtitle">NS API-Key</string>
-    <string name="nsclientinternal_secret_title">NS API-Key</string>
+    <string name="nsclientinternal_secret_dialogmessage">Nightscout API-Key eingeben (min 12 Zeichen)</string>
+    <string name="nsclientinternal_secret_dialogtitle">Nightscout API-Key</string>
+    <string name="nsclientinternal_secret_title">Nightscout API-Key</string>
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_url_dialogmessage">Nightscout URL eingeben</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
-    <string name="objectives_0_gate">Verifziere, dass der BZ und Pumpen Insulin Daten in Nightscout erfolgreich hoch geladen wurden</string>
+    <string name="objectives_0_gate">Verifiziere, dass der BZ und Pumpen Insulin Daten in Nightscout erfolgreich hoch geladen wurden</string>
     <string name="objectives_0_objective">Konfiguriere Anzeige und das Monitoring und analysiere Basal und die Faktoren</string>
     <string name="objectives_1_gate">Lasse den OpenLoop Modus für ein paar Tage laufen und setzte manuell temp Basal-Raten</string>
     <string name="objectives_1_objective">Starte ein OpenLoop</string>
-    <string name="old_data">ALTE DATEN</string>
+    <string name="old_data">VERALTETE DATEN</string>
     <string name="ongoingnotificaction">Laufende Benachrichtigungen</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
     <string name="openaps">OpenAPS</string>
@@ -506,7 +506,7 @@
     <string name="pumpsuspendedclicktorefresh">Pumpe pausiert. Klicken zum aktualisieren des Status</string>
     <string name="queue">Queue:</string>
     <string name="quickwizard">QuickWizard</string>
-    <string name="refresheventsfromnightscout">Aktualisiere Einträge von NS</string>
+    <string name="refresheventsfromnightscout">Aktualisiere Einträge von Nightscout</string>
     <string name="removerecord">Lösche Eintrag:</string>
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzten?</string>
@@ -533,6 +533,6 @@
     <string name="suspendloopfor3h">Pausiere Loop für 3h</string>
     <string name="sv_lang">Schwedish</string>
     <string name="updatingbasalrates">Aktualisere Basal Raten</string>
-    <string name="wear_overviewnotifications">Übersicht Benachrichtigungen</string>
+    <string name="wear_overviewnotifications">PopUp Benachrichtigungen</string>
     <string name="careportal_sensorage_label">Sensoralter</string>
 </resources>
