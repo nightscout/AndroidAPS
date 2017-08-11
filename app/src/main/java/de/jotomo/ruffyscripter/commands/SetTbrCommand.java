@@ -121,7 +121,7 @@ public class SetTbrCommand implements Command {
                 scripter.waitScreen(1000);
             }
             if(currentPercentage<0 ||retries < 0)
-                throw new Exception("unable to set basalrate");
+                 throw new Exception("unable to set basalrate");
 
             Log.v("SetTbrCommand","4. checking basal in "+scripter.currentMenu);
             scripter.waitScreen(1000);
@@ -179,12 +179,9 @@ public class SetTbrCommand implements Command {
                             Log.v("SetTbrCommand", "Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
                             scripter.step(steps, (steps > 0 ? RuffyScripter.Key.UP : RuffyScripter.Key.DOWN), 500);
                             scripter.waitScreen(1000);
-                        } else {
-                            break;
                         }
                     }
-                    else
-                        scripter.waitScreen(1000);
+                    scripter.waitScreen(1000);
                 }
                 if (currentDuration < 0 || retries < 0)
                     throw new Exception("unable to set duration");
@@ -229,6 +226,7 @@ public class SetTbrCommand implements Command {
                     scripter.pressCheckKey();
                     retries++;
                     canceledError = true;
+                    scripter.waitScreen(1000);
                 }
                 else {
                     retries--;
