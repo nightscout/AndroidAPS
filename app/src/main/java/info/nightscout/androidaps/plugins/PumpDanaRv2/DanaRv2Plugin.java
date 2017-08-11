@@ -365,7 +365,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 // Correct basal already set ?
                 if (MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
-                    if (force == true) {
+                    if (force) {
                         cancelTempBasal(true);
                     } else {
                         result.success = true;
@@ -515,7 +515,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         if (pump.isTempBasalInProgress) {
             sExecutionService.tempBasalStop();

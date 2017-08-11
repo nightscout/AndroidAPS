@@ -400,7 +400,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: currently running: " + running.toString());
                 if (running.percentRate == percentRate) {
-                    if (force == true) {
+                    if (force) {
                          cancelTempBasal(true);
                     } else {
                         result.success = true;
@@ -576,7 +576,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal(boolean force) {
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {

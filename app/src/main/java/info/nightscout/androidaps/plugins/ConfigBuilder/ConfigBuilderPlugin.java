@@ -513,8 +513,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
-        PumpEnactResult result = activePump.cancelTempBasal(userRequested);
+    public PumpEnactResult cancelTempBasal(boolean force) {
+        PumpEnactResult result = activePump.cancelTempBasal(force);
         if (Config.logCongigBuilderActions)
             log.debug("cancelTempBasal success: " + result.success + " enacted: " + result.enacted);
         return result;

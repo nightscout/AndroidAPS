@@ -398,7 +398,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
             if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
                 // Correct basal already set ?
                 if (MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
-                    if (force == true) {
+                    if (force) {
                         cancelTempBasal(true);
                     } else {
                         result.success = true;
@@ -574,7 +574,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal(boolean force) {
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {

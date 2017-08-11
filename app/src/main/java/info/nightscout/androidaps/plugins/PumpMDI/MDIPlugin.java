@@ -196,7 +196,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.pumperror);

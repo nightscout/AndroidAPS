@@ -337,7 +337,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal(boolean force) {
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
