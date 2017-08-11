@@ -35,30 +35,32 @@ public class Menu implements Parcelable{
                 String clas = in.readString();
                 String value = in.readString();
 
-                MenuAttribute a = MenuAttribute.valueOf(attr);
-                Object o = null;
-                if (Integer.class.toString().equals(clas)) {
-                    o = new Integer(value);
-                } else if (Double.class.toString().equals(clas)) {
-                    o = new Double(value);
-                } else if (Boolean.class.toString().equals(clas)) {
-                    o = new Boolean(value);
-                } else if (MenuDate.class.toString().equals(clas)) {
-                    o = new MenuDate(value);
-                } else if (MenuTime.class.toString().equals(clas)) {
-                    o = new MenuTime(value);
-                } else if (MenuBlink.class.toString().equals(clas)) {
-                    o = new MenuBlink();
-                } else if (BolusType.class.toString().equals(clas)) {
-                    o = BolusType.valueOf(value);
-                } else if (String.class.toString().equals(clas)) {
-                    o = new String(value);
-                }
+                if(attr!=null && clas!=null && value!=null) {
+                    MenuAttribute a = MenuAttribute.valueOf(attr);
+                    Object o = null;
+                    if (Integer.class.toString().equals(clas)) {
+                        o = new Integer(value);
+                    } else if (Double.class.toString().equals(clas)) {
+                        o = new Double(value);
+                    } else if (Boolean.class.toString().equals(clas)) {
+                        o = new Boolean(value);
+                    } else if (MenuDate.class.toString().equals(clas)) {
+                        o = new MenuDate(value);
+                    } else if (MenuTime.class.toString().equals(clas)) {
+                        o = new MenuTime(value);
+                    } else if (MenuBlink.class.toString().equals(clas)) {
+                        o = new MenuBlink();
+                    } else if (BolusType.class.toString().equals(clas)) {
+                        o = BolusType.valueOf(value);
+                    } else if (String.class.toString().equals(clas)) {
+                        o = new String(value);
+                    }
 
-                if (o != null) {
-                    attributes.put(a, o);
-                } else {
-                    Log.e("MenuIn", "failed to parse: " + attr + " / " + clas + " / " + value);
+                    if (o != null) {
+                        attributes.put(a, o);
+                    } else {
+                        Log.e("MenuIn", "failed to parse: " + attr + " / " + clas + " / " + value);
+                    }
                 }
             }catch(Exception e)
             {
@@ -120,4 +122,12 @@ public class Menu implements Parcelable{
                     return new Menu[size];
                 }
             };
+
+    @Override
+    public String toString() {
+        String to = "Menu: "+getType()+" atr:";
+        for(MenuAttribute atr : attributes())
+            to+=atr.toString()+"="+getAttribute(atr)+";";
+        return to;
+    }
 }

@@ -91,6 +91,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().register(this);
         bindRuffyService();
         startAlerter();
+        ruffyScripter = new RuffyScripter();
     }
 
     private void definePumpCapabilities() {
@@ -163,7 +164,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             mgr.notify(id, notificationBuilder.build());
                             lastAlarmTime = now;
                         } else {
+                            // TODO would it be useful to have a 'last error' field in the ui showing the most recent
+                            // failed command? the next command that runs successful with will override this error
                             log.warn("Pump still in error state, but alarm raised recently, so not triggering again: " + localLastCmdResult.message);
+                            refreshDataFromPump("from Error Recovery");
                         }
                     }
                     SystemClock.sleep(5 * 1000);
@@ -172,7 +176,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }, "combo-alerter").start();
     }
 
-    private void bindRuffyService() {
+    private boolean bindRuffyService() {
+
         Context context = MainApp.instance().getApplicationContext();
         boolean boundSucceeded = false;
 
@@ -185,6 +190,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             // full path to the driver
                             // in the logs this service is mentioned as (note the slash)
                             // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
+                            //org.monkey.d.ruffy.ruffy is the base package identifier and /.driver.Ruffy the service within the package
                             "org.monkey.d.ruffy.ruffy.driver.Ruffy"
                     ));
             context.startService(intent);
@@ -193,16 +199,22 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
-                    ruffyScripter.start();
+                    keepUnbound=false;
+                    ruffyScripter.start(IRuffyService.Stub.asInterface(service));
                     log.debug("ruffy serivce connected");
                 }
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
                     ruffyScripter.stop();
-                    ruffyScripter = null;
                     log.debug("ruffy service disconnected");
+                    if(!keepUnbound) {
+                        try {
+                            Thread.sleep(250);
+                        } catch (Exception e) {
+                        }
+                        bindRuffyService();
+                    }
                 }
             };
             boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
@@ -213,9 +225,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (!boundSucceeded) {
             statusSummary = "No connection to ruffy. Pump control not available.";
         }
+        return true;
     }
 
+    private boolean keepUnbound = false;
     private void unbindRuffyService() {
+        keepUnbound = true;
+        ruffyScripter.unbind();
         MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
     }
 
@@ -414,6 +430,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
+        // TODO extract this into a recovery method and check the logic of restarting and rebinding ruffy
         if (!commandResult.success && commandResult.exception != null) {
             log.error("CommandResult has exception, rebinding ruffy service", commandResult.exception);
 
@@ -421,6 +438,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             try {
                 unbindRuffyService();
                 SystemClock.sleep(5000);
+            } catch (Exception e) {
+                /*String msg = "No connection to ruffy. Pump control not available.";
+                statusSummary = msg;
+                return new CommandResult().message(msg);*/
+            }
+            try {
                 bindRuffyService();
                 SystemClock.sleep(5000);
             } catch (Exception e) {
@@ -533,7 +556,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean userRequested) {
         log.debug("cancelTempBasal called");
 
         CommandResult commandResult = null;
@@ -543,6 +566,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         final TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
 
         if (activeTemp == null || userRequested) {
+            /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
             commandResult = runCommand(new CancelTbrCommand());
             if (commandResult.enacted) {
@@ -578,14 +602,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         if (tempBasal != null) {
             ConfigBuilderPlugin treatmentsInterface = MainApp.getConfigBuilder();
-            treatmentsInterface.addToHistoryTempBasal(tempStop);
+            treatmentsInterface.addToHistoryTempBasal(tempBasal);
         }
 
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = commandResult.success;
-        pumpEnactResult.enacted = commandResult.enacted;
-        pumpEnactResult.comment = commandResult.message;
-        pumpEnactResult.isTempCancel = true;
+        if (commandResult != null) {
+            pumpEnactResult.success = commandResult.success;
+            pumpEnactResult.enacted = commandResult.enacted;
+            pumpEnactResult.comment = commandResult.message;
+        }
         return pumpEnactResult;
     }
 
