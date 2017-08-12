@@ -85,7 +85,7 @@ public class GetBasalCommand implements Command {
 //                        } else {
 //                            retries--;
 //                            scripter.pressMenuKey();
-//                            scripter.waitScreen(250);
+//                            scripter.waitForScreenUpdate(250);
 //                        }
 //                    } else {
 //                        updateState(ERROR, 30);

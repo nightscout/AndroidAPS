@@ -440,7 +440,7 @@ public class RuffyScripter {
         log.debug("Releasing back key");
     }
 
-    public boolean waitScreen(long timeout)
+    public boolean waitForScreenUpdate(long timeout)
     {
         synchronized (screenlock) {
             try {
@@ -472,7 +472,7 @@ public class RuffyScripter {
             }
             else
                 pressMenuKey();
-            waitScreen(250);
+            waitForScreenUpdate(250);
         }
         return currentMenu != null && currentMenu.getType()==screen;
     }
@@ -486,7 +486,7 @@ public class RuffyScripter {
         long start = System.currentTimeMillis();
         pressKey(key,2000);
         while((currentMenu == null || currentMenu.getType()!=targetType) && start+timeout>System.currentTimeMillis()) {
-            waitScreen(100);
+            waitForScreenUpdate(100);
         }
         return currentMenu!=null && currentMenu.getType()==targetType;
     }

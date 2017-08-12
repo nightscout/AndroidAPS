@@ -90,7 +90,7 @@ public class SetTbrCommand implements Command {
                 if(scripter.currentMenu.getType()== TBR_DURATION)
                 {
                     scripter.pressMenuKey();
-                    scripter.waitScreen(1000);
+                    scripter.waitForScreenUpdate(1000);
                 }
             }
 
@@ -111,19 +111,19 @@ public class SetTbrCommand implements Command {
                         int steps = (requestedPercentage - actualPercentage) / 10;
                         log.debug("Adjusting basal(" + requestedPercentage + "/" + actualPercentage + ") with " + steps + " steps and " + retries + " retries left");
                         scripter.step(steps, (steps < 0 ? RuffyScripter.Key.DOWN : RuffyScripter.Key.UP), 500);
-                        scripter.waitScreen(1000);
+                        scripter.waitForScreenUpdate(1000);
                     }
 
                 }
                 else
                     currentPercentage=-100;
-                scripter.waitScreen(1000);
+                scripter.waitForScreenUpdate(1000);
             }
             if(currentPercentage<0 ||retries < 0)
                  throw new CommandException().message("unable to set basalrate");
 
             log.debug("4. checking basal in "+scripter.currentMenu);
-            scripter.waitScreen(1000);
+            scripter.waitForScreenUpdate(1000);
             currentPercentage= -1000;
             retries=10;
             while(currentPercentage<0 && retries>=0) {
@@ -134,7 +134,7 @@ public class SetTbrCommand implements Command {
                     currentPercentage = ((Double) percentageObj).doubleValue();
                 }
                 else
-                    scripter.waitScreen(1000);
+                    scripter.waitForScreenUpdate(1000);
             }
 
             if(retries<0 ||currentPercentage!=percentage)
@@ -152,7 +152,7 @@ public class SetTbrCommand implements Command {
                         break;
                     if (scripter.currentMenu.getType() == TBR_SET) {
                         scripter.pressMenuKey();
-                        scripter.waitScreen(1000);
+                        scripter.waitForScreenUpdate(1000);
                     }
                 }
 
@@ -177,16 +177,16 @@ public class SetTbrCommand implements Command {
                                 steps--;
                             log.debug("Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
                             scripter.step(steps, (steps > 0 ? RuffyScripter.Key.UP : RuffyScripter.Key.DOWN), 500);
-                            scripter.waitScreen(1000);
+                            scripter.waitForScreenUpdate(1000);
                         }
                     }
-                    scripter.waitScreen(1000);
+                    scripter.waitForScreenUpdate(1000);
                 }
                 if (currentDuration < 0 || retries < 0)
                     throw new CommandException().message("unable to set duration, requested:" + duration + ", displayed on pump: " + currentDuration);
 
                 log.debug("7. checking time in " + scripter.currentMenu);
-                scripter.waitScreen(1000);
+                scripter.waitForScreenUpdate(1000);
                 currentDuration = -1000;
                 retries = 10;
                 while (currentDuration < 0 && retries >= 0) {
@@ -198,7 +198,7 @@ public class SetTbrCommand implements Command {
                         currentDuration = (time.getHour() * 60) + time.getMinute();
                     }
                     else
-                        scripter.waitScreen(1000);
+                        scripter.waitForScreenUpdate(1000);
                 }
                 if (retries < 0 || currentDuration != duration)
                     throw new CommandException().message("wrong time!");
@@ -210,7 +210,7 @@ public class SetTbrCommand implements Command {
             {
                 retries--;
                 scripter.pressCheckKey();
-                scripter.waitScreen(1000);
+                scripter.waitForScreenUpdate(1000);
             }
             if(retries<0 || scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET)
                 throw new CommandException().message("failed setting basal!");
@@ -225,7 +225,7 @@ public class SetTbrCommand implements Command {
                     scripter.pressCheckKey();
                     retries++;
                     canceledError = true;
-                    scripter.waitScreen(1000);
+                    scripter.waitForScreenUpdate(1000);
                 }
                 else {
                     retries--;
