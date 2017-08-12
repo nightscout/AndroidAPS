@@ -177,7 +177,7 @@ public class RuffyScripter {
         @Override
         public void rtDisplayHandleMenu(Menu menu, int sequence) throws RemoteException {
             // method is called every ~500ms
-            log.debug("rtDisplayHandleMenu: " + menu.getType());
+            log.debug("rtDisplayHandleMenu: " + menu);
 
             currentMenu = menu;
             menuLastUpdated = System.currentTimeMillis();
