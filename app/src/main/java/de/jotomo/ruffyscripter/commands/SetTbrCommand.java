@@ -1,5 +1,7 @@
 package de.jotomo.ruffyscripter.commands;
 
+import android.os.SystemClock;
+
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
@@ -67,7 +69,7 @@ public class SetTbrCommand implements Command {
                 retries--;
                 if(retries==0)
                     throw new CommandException().message("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
-                Thread.sleep(500);
+                SystemClock.sleep(500);
                 if(scripter.currentMenu.getType()== TBR_MENU)
                     break;
             }
@@ -82,7 +84,7 @@ public class SetTbrCommand implements Command {
                 retries--;
                 if(retries==0)
                     throw new CommandException().message("not able to find TBR_SET: stuck in "+scripter.currentMenu);
-                Thread.sleep(500);
+                SystemClock.sleep(500);
                 if(scripter.currentMenu.getType()== TBR_SET)
                     break;
                 if(scripter.currentMenu.getType()== TBR_DURATION)
@@ -145,7 +147,7 @@ public class SetTbrCommand implements Command {
                     retries--;
                     if (retries == 0)
                         throw new CommandException().message("not able to find TBR_SET: stuck in " + scripter.currentMenu);
-                    Thread.sleep(500);
+                    SystemClock.sleep(500);
                     if (scripter.currentMenu.getType() == TBR_DURATION)
                         break;
                     if (scripter.currentMenu.getType() == TBR_SET) {

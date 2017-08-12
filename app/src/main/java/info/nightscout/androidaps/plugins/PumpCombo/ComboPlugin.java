@@ -209,10 +209,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     ruffyScripter.stop();
                     log.debug("ruffy service disconnected");
                     if(!keepUnbound) {
-                        try {
-                            Thread.sleep(250);
-                        } catch (Exception e) {
-                        }
+                        SystemClock.sleep(250);
                         bindRuffyService();
                     }
                 }
