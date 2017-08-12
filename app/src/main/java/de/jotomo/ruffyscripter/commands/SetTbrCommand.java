@@ -66,14 +66,14 @@ public class SetTbrCommand implements Command {
             {
                 retries--;
                 if(retries==0)
-                    throw new Exception("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
+                    throw new CommandException().message("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
                 Thread.sleep(500);
                 if(scripter.currentMenu.getType()== TBR_MENU)
                     break;
             }
 
             if(scripter.currentMenu.getType()!=TBR_MENU)
-                throw new Exception("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
+                throw new CommandException().message("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
 
             log.debug("2. entering "+scripter.currentMenu);
             retries = 5;
@@ -81,7 +81,7 @@ public class SetTbrCommand implements Command {
             {
                 retries--;
                 if(retries==0)
-                    throw new Exception("not able to find TBR_SET: stuck in "+scripter.currentMenu);
+                    throw new CommandException().message("not able to find TBR_SET: stuck in "+scripter.currentMenu);
                 Thread.sleep(500);
                 if(scripter.currentMenu.getType()== TBR_SET)
                     break;
@@ -118,7 +118,7 @@ public class SetTbrCommand implements Command {
                 scripter.waitScreen(1000);
             }
             if(currentPercentage<0 ||retries < 0)
-                 throw new Exception("unable to set basalrate");
+                 throw new CommandException().message("unable to set basalrate");
 
             log.debug("4. checking basal in "+scripter.currentMenu);
             scripter.waitScreen(1000);
@@ -136,7 +136,7 @@ public class SetTbrCommand implements Command {
             }
 
             if(retries<0 ||currentPercentage!=percentage)
-                throw new Exception("wrong rate!");
+                throw new CommandException().message("Unable to set percentage. Desired: " + percentage + ", value displayed on pump: " + currentPercentage);
 
             if(currentPercentage!=100) {
                 log.debug("5. change to TBR_DURATION from " + scripter.currentMenu);
@@ -144,7 +144,7 @@ public class SetTbrCommand implements Command {
                 while (retries >=0 && !scripter.enterMenu(TBR_SET, MenuType.TBR_DURATION, RuffyScripter.Key.MENU, 2000)) {
                     retries--;
                     if (retries == 0)
-                        throw new Exception("not able to find TBR_SET: stuck in " + scripter.currentMenu);
+                        throw new CommandException().message("not able to find TBR_SET: stuck in " + scripter.currentMenu);
                     Thread.sleep(500);
                     if (scripter.currentMenu.getType() == TBR_DURATION)
                         break;
@@ -181,7 +181,7 @@ public class SetTbrCommand implements Command {
                     scripter.waitScreen(1000);
                 }
                 if (currentDuration < 0 || retries < 0)
-                    throw new Exception("unable to set duration");
+                    throw new CommandException().message("unable to set duration");
 
                 log.debug("7. checking time in " + scripter.currentMenu);
                 scripter.waitScreen(1000);
@@ -199,7 +199,7 @@ public class SetTbrCommand implements Command {
                         scripter.waitScreen(1000);
                 }
                 if (retries < 0 || currentDuration != duration)
-                    throw new Exception("wrong time!");
+                    throw new CommandException().message("wrong time!");
             }
 
             log.debug("8. setting from " + scripter.currentMenu);
@@ -211,7 +211,7 @@ public class SetTbrCommand implements Command {
                 scripter.waitScreen(1000);
             }
             if(retries<0 || scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET)
-                throw new Exception("failed setting basal!");
+                throw new CommandException().message("failed setting basal!");
             retries=10;
             boolean canceledError = true;
             if(percentage==100)
@@ -232,26 +232,26 @@ public class SetTbrCommand implements Command {
                 }
             }
             if(retries<0 || scripter.currentMenu.getType()!=MAIN_MENU )
-                throw new Exception("failed going to main!");
+                throw new CommandException().message("failed going to main!");
 
             Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.TBR);
             Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
 
             if(percentageObj == null || !(percentageObj instanceof Double))
-                throw new Exception("not percentage");
+                throw new CommandException().message("not percentage");
 
             if(((double)percentageObj)!=percentage)
-                throw new Exception("wrong percentage set!");
+                throw new CommandException().message("wrong percentage set!");
 
             if(percentage==100)
                 return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
 
             if(durationObj==null || !(durationObj instanceof MenuTime))
-                throw new Exception("not time");
+                throw new CommandException().message("not time");
 
             MenuTime t = (MenuTime) durationObj;
             if(t.getMinute()+(60*t.getHour())> duration || t.getMinute()+(60*t.getHour())< duration-5)
-                throw new Exception("wrong time set!");
+                throw new CommandException().message("wrong time set!");
 
             return new CommandResult().success(true).enacted(true).message(
                     String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
