@@ -60,16 +60,25 @@ public class RuffyScripter {
 
     public void start(IRuffyService newService) {
         try {
-            if(ruffyService!=null)
-                try{ruffyService.removeHandler(mHandler);}catch(Exception e){};
-            if(newService!=null) {
+            if (ruffyService != null) {
+                try {
+                    ruffyService.removeHandler(mHandler);
+                } catch (Exception e) {
+                    // ignore
+                }
+            }
+            if (newService != null) {
                 this.ruffyService = newService;
                 // TODO this'll be done better in v2 via ConnectionManager
                 if (idleDisconnectMonitorThread.getState() == Thread.State.NEW) {
                     idleDisconnectMonitorThread.start();
                 }
                 started = true;
-                try{newService.addHandler(mHandler);}catch (Exception e){}
+                try {
+                    newService.addHandler(mHandler);
+                } catch (Exception e) {
+                    // ignore
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -78,7 +87,7 @@ public class RuffyScripter {
 
     public void stop() {
         if (started) {
-            started=false;
+            started = false;
             // TODO ruffy removes dead handlers automatically by now.
             // still, check this when going through recovery logic
 /*            try {
@@ -107,16 +116,14 @@ public class RuffyScripter {
                             && now > lastDisconnect + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
                         lastDisconnect = now;
-                        canDisconnect=true;
+                        canDisconnect = true;
                         ruffyService.doRTDisconnect(mHandler);
                         connected = false;
                         lastDisconnect = System.currentTimeMillis();
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
-                    }
-                    else
-                    {
-                        canDisconnect=false;
+                    } else {
+                        canDisconnect = false;
                     }
                 } catch (Exception e) {
                     // TODO do we need to catch this exception somewhere else too? right now it's
@@ -182,11 +189,12 @@ public class RuffyScripter {
             currentMenu = menu;
             menuLastUpdated = System.currentTimeMillis();
 
-            synchronized (screenlock)
-            {
+            synchronized (screenlock) {
                 screenlock.notifyAll();
             }
 
+            // TODO v2 switch to using IRuffyService.isConnected, rather than guessing connectivity state
+            // passed on screen updates
             connected = true;
 
             // note that a WARNING_OR_ERROR menu can be a valid temporary state (cancelling TBR)
@@ -204,9 +212,8 @@ public class RuffyScripter {
 
         @Override
         public void keySent(int sequence) throws RemoteException {
-            synchronized (keylock)
-            {
-                if(keynotwait>0)
+            synchronized (keylock) {
+                if (keynotwait > 0)
                     keynotwait--;
                 else
                     keylock.notify();
@@ -225,8 +232,12 @@ public class RuffyScripter {
     }
 
     public void unbind() {
-        if(ruffyService!=null)
-            try{ruffyService.removeHandler(mHandler);}catch (Exception e){}
+        if (ruffyService != null)
+            try {
+                ruffyService.removeHandler(mHandler);
+            } catch (Exception e) {
+                // ignore
+            }
         this.ruffyService = null;
     }
 
@@ -357,7 +368,9 @@ public class RuffyScripter {
         }
     }
 
-    /** If there's an issue, this times out eventually and throws a CommandException */
+    /**
+     * If there's an issue, this times out eventually and throws a CommandException
+     */
     private void ensureConnected() {
         try {
             boolean menuUpdateRecentlyReceived = currentMenu != null && menuLastUpdated + 1000 > System.currentTimeMillis();
@@ -377,7 +390,7 @@ public class RuffyScripter {
                 SystemClock.sleep(10 * 1000);
             }
 
-            canDisconnect=false;
+            canDisconnect = false;
             boolean connectInitSuccessful = ruffyService.doRTConnect(mHandler) == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
             log.debug("Waiting for first menu update to be sent");
@@ -412,36 +425,35 @@ public class RuffyScripter {
 
     public void pressUpKey() {
         log.debug("Pressing up key");
-        pressKey(Key.UP,2000);
+        pressKey(Key.UP, 2000);
         log.debug("Releasing up key");
     }
 
     public void pressDownKey() {
         log.debug("Pressing down key");
-        pressKey(Key.DOWN,2000);
+        pressKey(Key.DOWN, 2000);
         log.debug("Releasing down key");
     }
 
     public void pressCheckKey() {
         log.debug("Pressing check key");
-        pressKey(Key.CHECK,2000);
+        pressKey(Key.CHECK, 2000);
         log.debug("Releasing check key");
     }
 
     public void pressMenuKey() {
         log.debug("Pressing menu key");
-        pressKey(Key.MENU,2000);
+        pressKey(Key.MENU, 2000);
         log.debug("Releasing menu key");
     }
 
     public void pressBackKey() {
         log.debug("Pressing back key");
-        pressKey(Key.BACK,2000);
+        pressKey(Key.BACK, 2000);
         log.debug("Releasing back key");
     }
 
-    public boolean waitForScreenUpdate(long timeout)
-    {
+    public boolean waitForScreenUpdate(long timeout) {
         synchronized (screenlock) {
             try {
                 screenlock.wait(timeout);
@@ -452,59 +464,53 @@ public class RuffyScripter {
         return true;
     }
 
-    public boolean goToMainTypeScreen(MenuType screen, long timeout)
-    {
+    public boolean goToMainTypeScreen(MenuType screen, long timeout) {
         long start = System.currentTimeMillis();
-        while((currentMenu == null || currentMenu.getType()!=screen) && start+timeout>System.currentTimeMillis())
-        {
-            if(currentMenu!=null && currentMenu.getType()==MenuType.WARNING_OR_ERROR)
-            {
+        while ((currentMenu == null || currentMenu.getType() != screen) && start + timeout > System.currentTimeMillis()) {
+            if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                 throw new CommandException().message("Warning/errors raised by pump, please check pump");
                 // since warnings and errors can occur at any time, they should be dealt with in
                 // a more general way, see the handleMenuUpdate callback above
                 //FIXME bad thing to do :D
                 // yup, commenting this out since I don't want an occlusionn alert to hidden by this :-)
                 //pressCheckKey();
-            }
-            else if(currentMenu!=null && !currentMenu.getType().isMaintype())
-            {
+            } else if (currentMenu != null && !currentMenu.getType().isMaintype()) {
                 pressBackKey();
-            }
-            else
+            } else
                 pressMenuKey();
             waitForScreenUpdate(250);
         }
-        return currentMenu != null && currentMenu.getType()==screen;
+        return currentMenu != null && currentMenu.getType() == screen;
     }
 
-    public boolean enterMenu(MenuType startType, MenuType targetType, byte key, long timeout)
-    {
-        if(currentMenu.getType()==targetType)
+    public boolean enterMenu(MenuType startType, MenuType targetType, byte key, long timeout) {
+        if (currentMenu.getType() == targetType)
             return true;
-        if(currentMenu==null || currentMenu.getType() != startType)
+        if (currentMenu == null || currentMenu.getType() != startType)
             return false;
         long start = System.currentTimeMillis();
-        pressKey(key,2000);
-        while((currentMenu == null || currentMenu.getType()!=targetType) && start+timeout>System.currentTimeMillis()) {
+        pressKey(key, 2000);
+        while ((currentMenu == null || currentMenu.getType() != targetType) && start + timeout > System.currentTimeMillis()) {
             waitForScreenUpdate(100);
         }
-        return currentMenu!=null && currentMenu.getType()==targetType;
+        return currentMenu != null && currentMenu.getType() == targetType;
     }
 
     public void step(int steps, byte key, long timeout) {
-        for(int i = 0; i < Math.abs(steps);i++)
-            pressKey(key,timeout);
+        for (int i = 0; i < Math.abs(steps); i++)
+            pressKey(key, timeout);
     }
 
     // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
     // then anything longer than a few seconds is an error;
     // only ensureConnected() uses the method with the timeout parameter; inline that code,
     // so we can use a custom timeout and give a better error message in case of failure
+
     /**
      * Wait until the menu update is in
      */
     public void waitForMenuUpdate() {
-       waitForMenuUpdate(60);
+        waitForMenuUpdate(60);
     }
 
     public void waitForMenuUpdate(long timeoutInSeconds) {
@@ -523,17 +529,12 @@ public class RuffyScripter {
             ruffyService.rtSendKey(key, true);
             //SystemClock.sleep(200);
             ruffyService.rtSendKey(Key.NO_KEY, true);
-            if(timeout > 0)
-            {
-                synchronized (keylock)
-                {
+            if (timeout > 0) {
+                synchronized (keylock) {
                     keylock.wait(timeout);
                 }
-            }
-            else
-            {
-                synchronized (keylock)
-                {
+            } else {
+                synchronized (keylock) {
                     keynotwait++;
                 }
             }

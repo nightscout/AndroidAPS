@@ -58,47 +58,44 @@ public class SetTbrCommand implements Command {
 
         return violations;
     }
+
     @Override
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
-
         try {
-            log.debug("1. going from "+scripter.currentMenu+" to TBR_MENU");
+            log.debug("1. going from " + scripter.currentMenu + " to TBR_MENU");
             int retries = 5;
-            while(!scripter.goToMainTypeScreen(TBR_MENU,3000))
-            {
+            while (!scripter.goToMainTypeScreen(TBR_MENU, 3000)) {
                 retries--;
-                if(retries==0)
-                    throw new CommandException().message("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
+                if (retries == 0)
+                    throw new CommandException().message("not able to find TBR_MENU: stuck in " + scripter.currentMenu);
                 SystemClock.sleep(500);
-                if(scripter.currentMenu.getType()== TBR_MENU)
+                if (scripter.currentMenu.getType() == TBR_MENU)
                     break;
             }
 
-            if(scripter.currentMenu.getType()!=TBR_MENU)
-                throw new CommandException().message("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
+            if (scripter.currentMenu.getType() != TBR_MENU)
+                throw new CommandException().message("not able to find TBR_MENU: stuck in " + scripter.currentMenu);
 
-            log.debug("2. entering "+scripter.currentMenu);
+            log.debug("2. entering " + scripter.currentMenu);
             retries = 5;
-            while(!scripter.enterMenu(TBR_MENU,MenuType.TBR_SET, RuffyScripter.Key.CHECK,2000))
-            {
+            while (!scripter.enterMenu(TBR_MENU, MenuType.TBR_SET, RuffyScripter.Key.CHECK, 2000)) {
                 retries--;
-                if(retries==0)
-                    throw new CommandException().message("not able to find TBR_SET: stuck in "+scripter.currentMenu);
+                if (retries == 0)
+                    throw new CommandException().message("not able to find TBR_SET: stuck in " + scripter.currentMenu);
                 SystemClock.sleep(500);
-                if(scripter.currentMenu.getType()== TBR_SET)
+                if (scripter.currentMenu.getType() == TBR_SET)
                     break;
-                if(scripter.currentMenu.getType()== TBR_DURATION)
-                {
+                if (scripter.currentMenu.getType() == TBR_DURATION) {
                     scripter.pressMenuKey();
                     scripter.waitForScreenUpdate(1000);
                 }
             }
 
-            log.debug("SetTbrCommand: 3. getting/setting basal percentage in "+scripter.currentMenu);
+            log.debug("SetTbrCommand: 3. getting/setting basal percentage in " + scripter.currentMenu);
             retries = 30;
 
             double currentPercentage = -100;
-            while(currentPercentage!=percentage && retries>=0) {
+            while (currentPercentage != percentage && retries >= 0) {
                 retries--;
                 Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
 
@@ -114,36 +111,36 @@ public class SetTbrCommand implements Command {
                         scripter.waitForScreenUpdate(1000);
                     }
 
+                } else {
+                    currentPercentage = -100;
                 }
-                else
-                    currentPercentage=-100;
                 scripter.waitForScreenUpdate(1000);
             }
-            if(currentPercentage<0 ||retries < 0)
-                 throw new CommandException().message("unable to set basal percentage");
+            if (currentPercentage < 0 || retries < 0)
+                throw new CommandException().message("unable to set basal percentage");
 
-            log.debug("4. checking basal percentage in "+scripter.currentMenu);
+            log.debug("4. checking basal percentage in " + scripter.currentMenu);
             scripter.waitForScreenUpdate(1000);
-            currentPercentage= -1000;
-            retries=10;
-            while(currentPercentage<0 && retries>=0) {
+            currentPercentage = -1000;
+            retries = 10;
+            while (currentPercentage < 0 && retries >= 0) {
                 retries--;
                 Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
 
                 if (percentageObj != null && (percentageObj instanceof Double)) {
                     currentPercentage = ((Double) percentageObj).doubleValue();
-                }
-                else
+                } else {
                     scripter.waitForScreenUpdate(1000);
+                }
             }
 
-            if(retries<0 ||currentPercentage!=percentage)
+            if (retries < 0 || currentPercentage != percentage)
                 throw new CommandException().message("Unable to set percentage. Requested: " + percentage + ", value displayed on pump: " + currentPercentage);
 
-            if(currentPercentage!=100) {
+            if (currentPercentage != 100) {
                 log.debug("5. change to TBR_DURATION from " + scripter.currentMenu);
                 retries = 5;
-                while (retries >=0 && !scripter.enterMenu(TBR_SET, MenuType.TBR_DURATION, RuffyScripter.Key.MENU, 2000)) {
+                while (retries >= 0 && !scripter.enterMenu(TBR_SET, MenuType.TBR_DURATION, RuffyScripter.Key.MENU, 2000)) {
                     retries--;
                     if (retries == 0)
                         throw new CommandException().message("not able to find TBR_SET: stuck in " + scripter.currentMenu);
@@ -196,8 +193,7 @@ public class SetTbrCommand implements Command {
                     if (durationObj != null && durationObj instanceof MenuTime) {
                         MenuTime time = (MenuTime) durationObj;
                         currentDuration = (time.getHour() * 60) + time.getMinute();
-                    }
-                    else
+                    } else
                         scripter.waitForScreenUpdate(1000);
                 }
                 if (retries < 0 || currentDuration != duration)
@@ -205,62 +201,58 @@ public class SetTbrCommand implements Command {
             }
 
             log.debug("8. confirming TBR om " + scripter.currentMenu);
-            retries=5;
-            while(retries>= 0 && (scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET))
-            {
+            retries = 5;
+            while (retries >= 0 && (scripter.currentMenu.getType() == TBR_DURATION || scripter.currentMenu.getType() == TBR_SET)) {
                 retries--;
                 scripter.pressCheckKey();
                 scripter.waitForScreenUpdate(1000);
             }
-            if(retries<0 || scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET)
+            if (retries < 0 || scripter.currentMenu.getType() == TBR_DURATION || scripter.currentMenu.getType() == TBR_SET)
                 throw new CommandException().message("failed setting basal!");
-            retries=10;
-            boolean canceledError = true;
-            if(percentage==100)
-                canceledError=false;
-            while(retries>=0 && scripter.currentMenu.getType()!=MAIN_MENU )
-            {
+            retries = 10;
+            boolean cancelledError = true;
+            if (percentage == 100)
+                cancelledError = false;
+            while (retries >= 0 && scripter.currentMenu.getType() != MAIN_MENU) {
                 // TODO how probable is it, that a totally unrelated error (like occlusion alert)
                 // is raised at this point, which we'd cancel together with the TBR cancelled alert?
-                if(percentage==100 && scripter.currentMenu.getType()==WARNING_OR_ERROR)
-                {
+                if (percentage == 100 && scripter.currentMenu.getType() == WARNING_OR_ERROR) {
                     scripter.pressCheckKey();
                     retries++;
-                    canceledError = true;
+                    cancelledError = true;
                     scripter.waitForScreenUpdate(1000);
-                }
-                else {
+                } else {
                     retries--;
-                    if (scripter.currentMenu.getType() == MAIN_MENU && canceledError)
+                    if (scripter.currentMenu.getType() == MAIN_MENU && cancelledError)
                         break;
                 }
             }
 
             log.debug("9. verifying the main menu display the TBR we just set/cancelled");
-            if(retries<0 || scripter.currentMenu.getType()!=MAIN_MENU )
+            if (retries < 0 || scripter.currentMenu.getType() != MAIN_MENU)
                 throw new CommandException().message("failed going to main!");
 
             Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.TBR);
             Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
 
-            if(percentage==100) {
-                if (percentageObj != null || durationObj != null) 
+            if (percentage == 100) {
+                if (percentageObj != null || durationObj != null)
                     throw new CommandException().message("TBR cancelled, but main menu shows a running TBR");
 
                 return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
             }
 
-            if(percentageObj == null || !(percentageObj instanceof Double))
+            if (percentageObj == null || !(percentageObj instanceof Double))
                 throw new CommandException().message("not percentage");
 
-            if(((double)percentageObj)!=percentage)
+            if (((double) percentageObj) != percentage)
                 throw new CommandException().message("wrong percentage set!");
 
-            if(durationObj==null || !(durationObj instanceof MenuTime))
+            if (durationObj == null || !(durationObj instanceof MenuTime))
                 throw new CommandException().message("not time");
 
             MenuTime t = (MenuTime) durationObj;
-            if(t.getMinute()+(60*t.getHour())> duration || t.getMinute()+(60*t.getHour())< duration-5)
+            if (t.getMinute() + (60 * t.getHour()) > duration || t.getMinute() + (60 * t.getHour()) < duration - 5)
                 throw new CommandException().message("wrong time set!");
 
 
