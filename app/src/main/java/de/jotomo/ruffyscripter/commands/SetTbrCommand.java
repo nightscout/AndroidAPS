@@ -243,14 +243,18 @@ public class SetTbrCommand implements Command {
             Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.TBR);
             Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
 
+            if(percentage==100) {
+                if (percentageObj != null || durationObj != null) 
+                    throw new CommandException().message("TBR cancelled, but main menu shows a running TBR");
+
+                return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
+            }
+
             if(percentageObj == null || !(percentageObj instanceof Double))
                 throw new CommandException().message("not percentage");
 
             if(((double)percentageObj)!=percentage)
                 throw new CommandException().message("wrong percentage set!");
-
-            if(percentage==100)
-                return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
 
             if(durationObj==null || !(durationObj instanceof MenuTime))
                 throw new CommandException().message("not time");
@@ -258,6 +262,7 @@ public class SetTbrCommand implements Command {
             MenuTime t = (MenuTime) durationObj;
             if(t.getMinute()+(60*t.getHour())> duration || t.getMinute()+(60*t.getHour())< duration-5)
                 throw new CommandException().message("wrong time set!");
+
 
             return new CommandResult().success(true).enacted(true).message(
                     String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
