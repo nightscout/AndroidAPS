@@ -459,8 +459,12 @@ public class RuffyScripter {
         {
             if(currentMenu!=null && currentMenu.getType()==MenuType.WARNING_OR_ERROR)
             {
+                throw new CommandException().message("Warning/errors raised by pump, please check pump");
+                // since warnings and errors can occur at any time, they should be dealt with in
+                // a more general way, see the handleMenuUpdate callback above
                 //FIXME bad thing to do :D
-                pressCheckKey();
+                // yup, commenting this out since I don't want an occlusionn alert to hidden by this :-)
+                //pressCheckKey();
             }
             else if(currentMenu!=null && !currentMenu.getType().isMaintype())
             {
