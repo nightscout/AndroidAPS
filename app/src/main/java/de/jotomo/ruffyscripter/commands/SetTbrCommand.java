@@ -183,7 +183,7 @@ public class SetTbrCommand implements Command {
                     scripter.waitScreen(1000);
                 }
                 if (currentDuration < 0 || retries < 0)
-                    throw new CommandException().message("unable to set duration");
+                    throw new CommandException().message("unable to set duration, requested:" + duration + ", displayed on pump: " + currentDuration);
 
                 log.debug("7. checking time in " + scripter.currentMenu);
                 scripter.waitScreen(1000);
@@ -233,6 +233,8 @@ public class SetTbrCommand implements Command {
                         break;
                 }
             }
+
+            log.debug("9. verifying the main menu display the TBR we just set/cancelled");
             if(retries<0 || scripter.currentMenu.getType()!=MAIN_MENU )
                 throw new CommandException().message("failed going to main!");
 
