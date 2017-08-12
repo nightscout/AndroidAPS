@@ -62,7 +62,7 @@ public class SetTbrCommand implements Command {
         try {
             log.debug("1. going from "+scripter.currentMenu+" to TBR_MENU");
             int retries = 5;
-            while(!scripter.goToMainMenuScreen(TBR_MENU,3000))
+            while(!scripter.goToMainTypeScreen(TBR_MENU,3000))
             {
                 retries--;
                 if(retries==0)

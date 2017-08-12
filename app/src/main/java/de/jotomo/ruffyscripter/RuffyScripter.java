@@ -452,7 +452,7 @@ public class RuffyScripter {
         return true;
     }
 
-    public boolean goToMainMenuScreen(MenuType screen, long timeout)
+    public boolean goToMainTypeScreen(MenuType screen, long timeout)
     {
         long start = System.currentTimeMillis();
         while((currentMenu == null || currentMenu.getType()!=screen) && start+timeout>System.currentTimeMillis())
