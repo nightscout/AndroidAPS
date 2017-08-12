@@ -74,11 +74,7 @@ public class RuffyScripter {
                     idleDisconnectMonitorThread.start();
                 }
                 started = true;
-                try {
-                    newService.addHandler(mHandler);
-                } catch (Exception e) {
-                    // ignore
-                }
+                newService.addHandler(mHandler);
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
