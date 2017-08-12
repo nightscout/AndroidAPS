@@ -94,7 +94,7 @@ public class SetTbrCommand implements Command {
                 }
             }
 
-            log.debug("SetTbrCommand: 3. getting/setting basal in "+scripter.currentMenu);
+            log.debug("SetTbrCommand: 3. getting/setting basal percentage in "+scripter.currentMenu);
             retries = 30;
 
             double currentPercentage = -100;
@@ -120,9 +120,9 @@ public class SetTbrCommand implements Command {
                 scripter.waitForScreenUpdate(1000);
             }
             if(currentPercentage<0 ||retries < 0)
-                 throw new CommandException().message("unable to set basalrate");
+                 throw new CommandException().message("unable to set basal percentage");
 
-            log.debug("4. checking basal in "+scripter.currentMenu);
+            log.debug("4. checking basal percentage in "+scripter.currentMenu);
             scripter.waitForScreenUpdate(1000);
             currentPercentage= -1000;
             retries=10;
@@ -138,7 +138,7 @@ public class SetTbrCommand implements Command {
             }
 
             if(retries<0 ||currentPercentage!=percentage)
-                throw new CommandException().message("Unable to set percentage. Desired: " + percentage + ", value displayed on pump: " + currentPercentage);
+                throw new CommandException().message("Unable to set percentage. Requested: " + percentage + ", value displayed on pump: " + currentPercentage);
 
             if(currentPercentage!=100) {
                 log.debug("5. change to TBR_DURATION from " + scripter.currentMenu);
@@ -185,7 +185,7 @@ public class SetTbrCommand implements Command {
                 if (currentDuration < 0 || retries < 0)
                     throw new CommandException().message("unable to set duration, requested:" + duration + ", displayed on pump: " + currentDuration);
 
-                log.debug("7. checking time in " + scripter.currentMenu);
+                log.debug("7. checking duration in " + scripter.currentMenu);
                 scripter.waitForScreenUpdate(1000);
                 currentDuration = -1000;
                 retries = 10;
@@ -201,10 +201,10 @@ public class SetTbrCommand implements Command {
                         scripter.waitForScreenUpdate(1000);
                 }
                 if (retries < 0 || currentDuration != duration)
-                    throw new CommandException().message("wrong time!");
+                    throw new CommandException().message("wrong duration! Requested: " + duration + ", displayed on pump: " + currentDuration);
             }
 
-            log.debug("8. setting from " + scripter.currentMenu);
+            log.debug("8. confirming TBR om " + scripter.currentMenu);
             retries=5;
             while(retries>= 0 && (scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET))
             {
@@ -220,6 +220,8 @@ public class SetTbrCommand implements Command {
                 canceledError=false;
             while(retries>=0 && scripter.currentMenu.getType()!=MAIN_MENU )
             {
+                // TODO how probable is it, that a totally unrelated error (like occlusion alert)
+                // is raised at this point, which we'd cancel together with the TBR cancelled alert?
                 if(percentage==100 && scripter.currentMenu.getType()==WARNING_OR_ERROR)
                 {
                     scripter.pressCheckKey();
