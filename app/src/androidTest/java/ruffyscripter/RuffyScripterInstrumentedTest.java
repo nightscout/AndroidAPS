@@ -44,7 +44,7 @@ public class RuffyScripterInstrumentedTest {
 
     private static Context appContext = InstrumentationRegistry.getTargetContext();
     private static ServiceConnection mRuffyServiceConnection;
-    private static RuffyScripter ruffyScripter;
+    private static RuffyScripter ruffyScripter = new RuffyScripter();
 
     @BeforeClass
     public static void bindRuffy() {
@@ -64,7 +64,7 @@ public class RuffyScripterInstrumentedTest {
 
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                ruffyScripter = new RuffyScripter(IRuffyService.Stub.asInterface(service));
+                ruffyScripter.start(IRuffyService.Stub.asInterface(service));
                 log.debug("ruffy serivce connected");
             }
 
