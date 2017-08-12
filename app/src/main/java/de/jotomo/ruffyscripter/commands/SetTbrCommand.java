@@ -1,7 +1,5 @@
 package de.jotomo.ruffyscripter.commands;
 
-import android.util.Log;
-
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
@@ -62,7 +60,6 @@ public class SetTbrCommand implements Command {
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
 
         try {
-            Log.v("SetTbrCommand","1. going from "+scripter.currentMenu+" to TBR_MENU");
             log.debug("1. going from "+scripter.currentMenu+" to TBR_MENU");
             int retries = 5;
             while(!scripter.goToMainMenuScreen(TBR_MENU,3000))
@@ -78,7 +75,6 @@ public class SetTbrCommand implements Command {
             if(scripter.currentMenu.getType()!=TBR_MENU)
                 throw new Exception("not able to find TBR_MENU: stuck in "+scripter.currentMenu);
 
-            Log.v("SetTbrCommand","2. entering "+scripter.currentMenu);
             log.debug("2. entering "+scripter.currentMenu);
             retries = 5;
             while(!scripter.enterMenu(TBR_MENU,MenuType.TBR_SET, RuffyScripter.Key.CHECK,2000))
@@ -96,7 +92,6 @@ public class SetTbrCommand implements Command {
                 }
             }
 
-            Log.v("SetTbrCommand","3. getting/setting basal in "+scripter.currentMenu);
             log.debug("SetTbrCommand: 3. getting/setting basal in "+scripter.currentMenu);
             retries = 30;
 
@@ -112,7 +107,6 @@ public class SetTbrCommand implements Command {
                         int requestedPercentage = (int) percentage;
                         int actualPercentage = (int) currentPercentage;
                         int steps = (requestedPercentage - actualPercentage) / 10;
-                        Log.v("SetTbrCommand", "Adjusting basal(" + requestedPercentage + "/" + actualPercentage + ") with " + steps + " steps and " + retries + " retries left");
                         log.debug("Adjusting basal(" + requestedPercentage + "/" + actualPercentage + ") with " + steps + " steps and " + retries + " retries left");
                         scripter.step(steps, (steps < 0 ? RuffyScripter.Key.DOWN : RuffyScripter.Key.UP), 500);
                         scripter.waitScreen(1000);
@@ -126,7 +120,6 @@ public class SetTbrCommand implements Command {
             if(currentPercentage<0 ||retries < 0)
                  throw new Exception("unable to set basalrate");
 
-            Log.v("SetTbrCommand","4. checking basal in "+scripter.currentMenu);
             log.debug("4. checking basal in "+scripter.currentMenu);
             scripter.waitScreen(1000);
             currentPercentage= -1000;
@@ -146,7 +139,6 @@ public class SetTbrCommand implements Command {
                 throw new Exception("wrong rate!");
 
             if(currentPercentage!=100) {
-                Log.v("SetTbrCommand", "5. change to TBR_DURATION from " + scripter.currentMenu);
                 log.debug("5. change to TBR_DURATION from " + scripter.currentMenu);
                 retries = 5;
                 while (retries >=0 && !scripter.enterMenu(TBR_SET, MenuType.TBR_DURATION, RuffyScripter.Key.MENU, 2000)) {
@@ -162,7 +154,6 @@ public class SetTbrCommand implements Command {
                     }
                 }
 
-                Log.v("SetTbrCommand", "6. getting/setting duration in " + scripter.currentMenu);
                 log.debug("6. getting/setting duration in " + scripter.currentMenu);
                 retries = 30;
 
@@ -170,7 +161,6 @@ public class SetTbrCommand implements Command {
                 while (currentDuration != duration && retries >= 0) {
                     retries--;
                     Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-                    Log.v("SetTbrCommand", "Requested time: " + duration + " actual time: " + durationObj);
                     log.debug("Requested time: " + duration + " actual time: " + durationObj);
                     if (durationObj != null && durationObj instanceof MenuTime) {
                         MenuTime time = (MenuTime) durationObj;
@@ -183,7 +173,6 @@ public class SetTbrCommand implements Command {
                                 steps++;
                             else if (currentDuration + (steps * 15) > requestedDuration)
                                 steps--;
-                            Log.v("SetTbrCommand", "Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
                             log.debug("Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
                             scripter.step(steps, (steps > 0 ? RuffyScripter.Key.UP : RuffyScripter.Key.DOWN), 500);
                             scripter.waitScreen(1000);
@@ -194,7 +183,6 @@ public class SetTbrCommand implements Command {
                 if (currentDuration < 0 || retries < 0)
                     throw new Exception("unable to set duration");
 
-                Log.v("SetTbrCommand", "7. checking time in " + scripter.currentMenu);
                 log.debug("7. checking time in " + scripter.currentMenu);
                 scripter.waitScreen(1000);
                 currentDuration = -1000;
@@ -214,7 +202,6 @@ public class SetTbrCommand implements Command {
                     throw new Exception("wrong time!");
             }
 
-            Log.v("SetTbrCommand", "8. setting from " + scripter.currentMenu);
             log.debug("8. setting from " + scripter.currentMenu);
             retries=5;
             while(retries>= 0 && (scripter.currentMenu.getType()==TBR_DURATION ||scripter.currentMenu.getType()==TBR_SET))
@@ -269,7 +256,6 @@ public class SetTbrCommand implements Command {
             return new CommandResult().success(true).enacted(true).message(
                     String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
         } catch (Exception e) {
-            Log.e("SetTbrCommand", "got exception: ", e);
             log.error("got exception: ", e);
             return new CommandResult().success(false).message("failed to wait: " + e.getMessage());
         }
