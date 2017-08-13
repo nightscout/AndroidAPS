@@ -493,7 +493,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     // Note: AAPS calls this only to enact OpenAPS recommendations
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
+        // the force parameter isn't used currently since we always set the tbr - there might be room for optimization to
+        // first test the currently running tbr and only change it if it differs (as the DanaR plugin does).
+        // This approach might have other issues though (what happens if the tbr which wasn't re-set to the new value
+        // (and thus still has the old duration of e.g. 1 min) expires?)
         log.debug("setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
         int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
