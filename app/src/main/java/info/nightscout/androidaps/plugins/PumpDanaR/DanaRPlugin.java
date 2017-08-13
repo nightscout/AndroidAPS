@@ -334,7 +334,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
 
     // This is called from APS
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
         // Recheck pump status if older than 30 min
         if (pump.lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis()) {
             doConnect("setTempBasalAbsolute old data");
@@ -400,16 +400,20 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
                 if (Config.logPumpActions)
                     log.debug("setTempBasalAbsolute: currently running: " + running.toString());
                 if (running.percentRate == percentRate) {
-                    result.success = true;
-                    result.percent = percentRate;
-                    result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
-                    result.enacted = false;
-                    result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
-                    result.isPercent = true;
-                    result.isTempCancel = false;
-                    if (Config.logPumpActions)
-                        log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
-                    return result;
+                    if (force) {
+                         cancelTempBasal(true);
+                    } else {
+                        result.success = true;
+                        result.percent = percentRate;
+                        result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
+                        result.enacted = false;
+                        result.duration = ((Double) MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory()).intValue();
+                        result.isPercent = true;
+                        result.isTempCancel = false;
+                        if (Config.logPumpActions)
+                            log.debug("setTempBasalAbsolute: Correct temp basal already set (doLowTemp || doHighTemp)");
+                        return result;
+                    }
                 }
             }
             // Convert duration from minutes to hours
@@ -572,7 +576,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal(boolean userRequested) {
+    public PumpEnactResult cancelTempBasal(boolean force) {
         if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress())
             return cancelRealTempBasal();
         if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress() && useExtendedBoluses) {

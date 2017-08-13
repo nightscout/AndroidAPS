@@ -15,7 +15,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.AlarmSoundService;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
-
+//Added by Rumen for snooze time 
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 03.12.2016.
@@ -24,7 +25,7 @@ import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 public class NotificationStore {
     private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
     public List<Notification> store = new ArrayList<Notification>();
-
+    public long snoozedUntil = 0L;
     public NotificationStore() {
     }
 
@@ -84,6 +85,20 @@ public class NotificationStore {
                 store.remove(i);
                 i--;
             }
+        }
+    }
+    
+    public void snoozeTo(long timeToSnooze){
+        log.debug("Snoozing alarm until: "+timeToSnooze);
+        SP.putLong("snoozedTo", timeToSnooze);
+    }
+    
+    public void unSnooze(){
+        if(Notification.isAlarmForStaleData()){
+            Notification notification = new Notification(Notification.NSALARM, MainApp.sResources.getString(R.string.nsalarm_staledata), Notification.URGENT);
+            SP.putLong("snoozedTo", System.currentTimeMillis());
+            add(notification);
+            log.debug("Snoozed to current time and added back notification!");
         }
     }
 }

@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v7.app.NotificationCompat;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -277,6 +279,7 @@ public class LoopPlugin implements PluginBase {
                         @Override
                         public void run() {
                             final PumpEnactResult applyResult = configBuilder.applyAPSRequest(resultAfterConstraints);
+                            Answers.getInstance().logCustom(new CustomEvent("APSRequest"));
                             if (applyResult.enacted || applyResult.success) {
                                 lastRun.setByPump = applyResult;
                                 lastRun.lastEnact = lastRun.lastAPSRun;
