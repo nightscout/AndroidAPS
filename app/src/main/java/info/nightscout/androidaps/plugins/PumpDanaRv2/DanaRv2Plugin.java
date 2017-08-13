@@ -365,9 +365,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
             if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                 // Correct basal already set ?
                 if (MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).percentRate == percentRate) {
-                    if (force) {
-                        cancelTempBasal(true);
-                    } else {
+                    if (!force) {
                         result.success = true;
                         result.percent = percentRate;
                         result.absolute = MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory();
