@@ -201,6 +201,7 @@ public class NSSettingsStatus {
 
     private String getStringOrNull(String key) {
         String ret = null;
+        if(data == null) return null;
         if (data.has(key)) {
             try {
                 ret = data.getString(key);
@@ -309,6 +310,7 @@ public class NSSettingsStatus {
     public JSONObject extentendedPumpSettings() {
         try {
             JSONObject extended = getExtendedSettings();
+            if(extended == null) return null;
             if (extended.has("pump")) {
                 JSONObject pump = extended.getJSONObject("pump");
                 return pump;
