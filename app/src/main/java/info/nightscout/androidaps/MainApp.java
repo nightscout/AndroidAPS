@@ -32,6 +32,7 @@ import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragme
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
 import info.nightscout.androidaps.plugins.InsulinFastactingProlonged.InsulinFastactingProlongedFragment;
+import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefFreePeakFragment;
 import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefRapidActingFragment;
 import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefUltraRapidActingFragment;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
@@ -117,6 +118,7 @@ public class MainApp extends Application {
             pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
             pluginsList.add(InsulinOrefRapidActingFragment.getPlugin());
             pluginsList.add(InsulinOrefUltraRapidActingFragment.getPlugin());
+            pluginsList.add(InsulinOrefFreePeakFragment.getPlugin());
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
