@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinRapidActingOref;
+package info.nightscout.androidaps.plugins.InsulinOrefCurves;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,12 +15,9 @@ import info.nightscout.androidaps.plugins.InsulinFastacting.ActivityGraph;
  * Created by mike on 17.04.2017.
  */
 
-public class InsulinRapidActingOrefFragment extends Fragment {
-    static InsulinRapidActingOrefPlugin insulinRapidActingOrefPlugin = new InsulinRapidActingOrefPlugin();
+public abstract class InsulinOrefBaseFragment extends Fragment {
 
-    static public InsulinRapidActingOrefPlugin getPlugin() {
-        return insulinRapidActingOrefPlugin;
-    }
+    static InsulinOrefBasePlugin insulinPlugin = null;
 
     TextView insulinName;
     TextView insulinComment;
@@ -48,10 +45,10 @@ public class InsulinRapidActingOrefFragment extends Fragment {
     }
 
     private void updateGUI() {
-        insulinName.setText(insulinRapidActingOrefPlugin.getFriendlyName());
-        insulinComment.setText(insulinRapidActingOrefPlugin.getComment());
-        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + new Double(insulinRapidActingOrefPlugin.getDia()).toString() + "h");
-        insulinGraph.show(insulinRapidActingOrefPlugin);
+        insulinName.setText(insulinPlugin.getFriendlyName());
+        insulinComment.setText(insulinPlugin.getComment());
+        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + new Double(insulinPlugin.getDia()).toString() + "h");
+        insulinGraph.show(insulinPlugin);
     }
 
 }
