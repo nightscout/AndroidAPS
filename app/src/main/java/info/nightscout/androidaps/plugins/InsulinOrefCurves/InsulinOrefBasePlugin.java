@@ -7,6 +7,8 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.db.Treatment;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 /**
  * Created by adrian on 13.08.2017.
@@ -15,6 +17,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterface {
 
     public static double MIN_DIA = 5;
+
+    long lastWarned = 0;
 
     @Override
     public int getType() {
@@ -44,7 +48,16 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
     @Override
     public double getDia() {
         double dia = getUserDefinedDia();
-        return Math.max(MIN_DIA, dia);
+        if(dia >= MIN_DIA){
+            return dia;
+        } else {
+            if((System.currentTimeMillis() - lastWarned) > 60*1000) {
+                lastWarned = System.currentTimeMillis();
+                Notification notification = new Notification(Notification.SHORT_DIA, String.format(MainApp.sResources.getString(R.string.dia_too_short), dia, MIN_DIA), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
+            }
+            return MIN_DIA;
+        }
     }
 
     public double getUserDefinedDia() {
