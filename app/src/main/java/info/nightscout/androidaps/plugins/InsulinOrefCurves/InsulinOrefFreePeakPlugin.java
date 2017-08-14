@@ -37,7 +37,7 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
 
     @Override
     public String commentStandardText() {
-        return MainApp.sResources.getString(R.string.insulin_peak) + ": " + getPeak();
+        return MainApp.sResources.getString(R.string.insulin_peak_time) + ": " + getPeak();
     }
 
     @Override
