@@ -691,8 +691,8 @@
     <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
     <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
-    <string name="insulin_oref_peak">IOB Curve Peak</string>
-    <string name="insulin_peak">Peak [min]</string>
+    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
+    <string name="insulin_peak_time">Peak Time [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
