@@ -35,7 +35,7 @@ public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
     }
 
     @Override
-    public String getComment() {
+    public String commentStandardText() {
         return MainApp.sResources.getString(R.string.fastactinginsulincomment);
     }
 

@@ -35,7 +35,7 @@ public class InsulinOrefUltraRapidActingPlugin extends InsulinOrefBasePlugin {
     }
 
     @Override
-    public String getComment() {
+    public String commentStandardText() {
         return "Fiasp";
     }
 

@@ -43,17 +43,17 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
 
     @Override
     public double getDia() {
-        double dia = MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : Constants.defaultDIA;
+        double dia = getUserDefinedDia();
         return Math.max(MIN_DIA, dia);
-        //TODO: show on chart if restriction applied
+    }
+
+    public double getUserDefinedDia() {
+        return MainApp.getConfigBuilder().getProfile() != null ? MainApp.getConfigBuilder().getProfile().getDia() : Constants.defaultDIA;
     }
 
     @Override
     public Iob iobCalcForTreatment(Treatment treatment, long time, Double dia) {
         Iob result = new Iob();
-
-
-        //curveDefaults
 
         int peak = getPeak();
 
@@ -78,6 +78,18 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
         return result;
     }
 
+    @Override
+    public String getComment() {
+        String comment =  commentStandardText();
+        double userDia = getUserDefinedDia();
+        if(userDia < MIN_DIA){
+            comment += "\n" + String.format("DIA of %s too short - using %s instead!", userDia, MIN_DIA);
+        }
+        return comment;
+    }
+
     abstract int getPeak();
+
+    abstract String commentStandardText();
 
 }
