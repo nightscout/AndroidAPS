@@ -83,7 +83,7 @@ public abstract class InsulinOrefBasePlugin implements PluginBase, InsulinInterf
         String comment =  commentStandardText();
         double userDia = getUserDefinedDia();
         if(userDia < MIN_DIA){
-            comment += "\n" + String.format("DIA of %s too short - using %s instead!", userDia, MIN_DIA);
+            comment += "\n" + String.format(MainApp.sResources.getString(R.string.dia_too_short), userDia, MIN_DIA);
         }
         return comment;
     }

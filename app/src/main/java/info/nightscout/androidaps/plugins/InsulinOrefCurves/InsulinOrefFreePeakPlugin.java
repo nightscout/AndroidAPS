@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.InsulinOrefCurves;
 
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.utils.SP;
 
@@ -21,7 +22,7 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
 
     @Override
     public String getName() {
-        return "Free-Peak Oref";
+        return MainApp.sResources.getString(R.string.free_peak_oref);
     }
 
     @Override
@@ -31,12 +32,12 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
 
     @Override
     public String getFriendlyName() {
-        return "Free-Peak Oref";
+        return MainApp.sResources.getString(R.string.free_peak_oref);
     }
 
     @Override
     public String commentStandardText() {
-        return "Fiasp";
+        return MainApp.sResources.getString(R.string.insulin_peak) + ": " + getPeak();
     }
 
     @Override
