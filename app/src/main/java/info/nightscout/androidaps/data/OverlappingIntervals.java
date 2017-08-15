@@ -31,7 +31,7 @@ public class OverlappingIntervals<T extends Interval> extends Intervals<T> {
 
     @Nullable
     public synchronized T getValueByInterval(long time) {
-        for (int index = rawData.size()-1; index > 0; index--) { //begin with newest
+        for (int index = rawData.size()-1; index >= 0; index--) { //begin with newest
             T cur = rawData.valueAt(index);
             if (cur.match(time)){
                 return cur;
