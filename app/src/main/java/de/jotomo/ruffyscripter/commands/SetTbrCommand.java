@@ -236,7 +236,7 @@ public class SetTbrCommand implements Command {
             Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
 
             if (percentage == 100) {
-                if (percentageObj != null || durationObj != null)
+                if (durationObj != null)
                     throw new CommandException().message("TBR cancelled, but main menu shows a running TBR");
 
                 return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
@@ -260,7 +260,7 @@ public class SetTbrCommand implements Command {
                     String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
         } catch (Exception e) {
             log.error("got exception: ", e);
-            return new CommandResult().success(false).message("failed to wait: " + e.getMessage());
+            return new CommandResult().success(false).message(e.getMessage()).exception(e);
         }
     }
 
