@@ -962,9 +962,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             double low = MainApp.getConfigBuilder().getProfile().getTargetLow();
             double high = MainApp.getConfigBuilder().getProfile().getTargetHigh();
             if (low == high)
-                tempTargetView.setText("" + low);
+                tempTargetView.setText(Profile.toUnitsString(low, Profile.fromMgdlToUnits(low, units), units));
             else
-                tempTargetView.setText(low + " - " + high);
+                tempTargetView.setText(Profile.toUnitsString(low, Profile.fromMgdlToUnits(low, units), units) + " - " + Profile.toUnitsString(high, Profile.fromMgdlToUnits(high, units), units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
         if (Config.NSCLIENT && tempTarget == null) {
