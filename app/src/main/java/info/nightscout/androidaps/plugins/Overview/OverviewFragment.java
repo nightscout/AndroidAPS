@@ -953,18 +953,18 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
             if (tempTarget.low == tempTarget.high)
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units));
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, tempTarget.low, units));
             else
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, units), units));
+                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, tempTarget.low, units) + " - " + Profile.toUnitsString(tempTarget.high, tempTarget.high, units));
         } else {
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
             double low = MainApp.getConfigBuilder().getProfile().getTargetLow();
             double high = MainApp.getConfigBuilder().getProfile().getTargetHigh();
             if (low == high)
-                tempTargetView.setText(Profile.toUnitsString(low, Profile.fromMgdlToUnits(low, units), units));
+                tempTargetView.setText(Profile.toUnitsString(low, low, units));
             else
-                tempTargetView.setText(Profile.toUnitsString(low, Profile.fromMgdlToUnits(low, units), units) + " - " + Profile.toUnitsString(high, Profile.fromMgdlToUnits(high, units), units));
+                tempTargetView.setText(Profile.toUnitsString(low, low, units) + " - " + Profile.toUnitsString(high, high, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
         if (Config.NSCLIENT && tempTarget == null) {
