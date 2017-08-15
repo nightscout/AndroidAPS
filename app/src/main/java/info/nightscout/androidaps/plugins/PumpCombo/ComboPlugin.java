@@ -80,6 +80,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @NonNull
     volatile Date lastCmdTime = new Date(0);
     volatile PumpState pumpState = new PumpState();
+    @Nullable
+    private volatile BolusCommand runningBolusCommand;
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -364,6 +366,33 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
+    private static ProgressReportCallback bolusProgressReportCallback = new ProgressReportCallback() {
+        @Override
+        public void progress(ProgressReportCallback.State state, int percent, double delivered) {
+            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+            switch (state) {
+                // TODO move into enum as toString or so and make it translateb
+                case BOLUSING:
+                    bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
+                    break;
+                case PREPARING:
+                    bolusingEvent.status = "Preparing pump for bolus";
+                    break;
+                case FINISHED:
+                    bolusingEvent.status = "Bolus delivery finished successfully";
+                    break;
+                case CANCELLED:
+                    bolusingEvent.status = "Bolus delivery was cancelled";
+                    break;
+                case CANCELLING:
+                    bolusingEvent.status = "Cancelling bolus delivery";
+                    break;
+            }
+            bolusingEvent.percent = percent;
+            MainApp.bus().post(bolusingEvent);
+        }
+    };
+
     // what a mess: pump integration code reading carb info from Detailed**Bolus**Info,
     // writing carb treatments to the history table. What's PumpEnactResult for again?
     @Override
@@ -373,32 +402,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 // bolus needed, ask pump to deliver it
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 MainApp.bus().post(bolusingEvent);
-                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin, new ProgressReportCallback() {
-                    @Override
-                    public void progress(State state, int percent, double delivered) {
-                        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                        switch (state) {
-                            // TODO move into enum as toString or so and make it translateb
-                            case BOLUSING:
-                                bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
-                                break;
-                            case PREPARING:
-                                bolusingEvent.status = "Preparing pump for bolus";
-                                 break;
-                            case FINISHED:
-                                bolusingEvent.status = "Bolus delivery finished successfully";
-                                break;
-                            case CANCELLED:
-                                bolusingEvent.status = "Bolus delivery was cancelled";
-                                break;
-                            case CANCELLING:
-                                bolusingEvent.status = "Cancelling bolus delivery";
-                                break;
-                        }
-                        bolusingEvent.percent = percent;
-                        MainApp.bus().post(bolusingEvent);
-                    }
-                }));
+                // TODO move into enum as toString or so and make it translateb
+                runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
+                CommandResult bolusCmdResult = runCommand(runningBolusCommand);
+                runningBolusCommand = null;
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
                 pumpEnactResult.success = bolusCmdResult.success;
                 pumpEnactResult.enacted = bolusCmdResult.enacted;
@@ -484,9 +491,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public void stopBolusDelivering() {
-        // there's no way to stop the combo once delivery has started
-        // but before that, we could interrupt the command thread ... pause
-        // till pump times out or raises an error
+        if (runningBolusCommand != null) runningBolusCommand.requestCancellation();
     }
 
     // Note: AAPS calls this only to enact OpenAPS recommendations
