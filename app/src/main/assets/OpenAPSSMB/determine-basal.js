@@ -194,17 +194,17 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
         // if eventualBG, naive_eventualBG, and target_bg aren't all above adjustedMinBG, don’t use it
         //console.error("naive_eventualBG:",naive_eventualBG+", eventualBG:",eventualBG);
         if (eventualBG > adjustedMinBG && naive_eventualBG > adjustedMinBG && min_bg > adjustedMinBG) {
-            process.stderr.write("Adjusting targets for high BG: min_bg from "+min_bg+" to "+adjustedMinBG+"; ");
+            console.error("Adjusting targets for high BG: min_bg from "+min_bg+" to "+adjustedMinBG+"; ");
             min_bg = adjustedMinBG;
         } else {
-            process.stderr.write("min_bg unchanged: "+min_bg+"; ");
+            console.error("min_bg unchanged: "+min_bg+"; ");
         }
         // if eventualBG, naive_eventualBG, and target_bg aren't all above adjustedTargetBG, don’t use it
         if (eventualBG > adjustedTargetBG && naive_eventualBG > adjustedTargetBG && target_bg > adjustedTargetBG) {
-            process.stderr.write("target_bg from "+target_bg+" to "+adjustedTargetBG+"; ");
+            console.error("target_bg from "+target_bg+" to "+adjustedTargetBG+"; ");
             target_bg = adjustedTargetBG;
         } else {
-            process.stderr.write("target_bg unchanged: "+target_bg+"; ");
+            console.error("target_bg unchanged: "+target_bg+"; ");
         }
         // if eventualBG, naive_eventualBG, and max_bg aren't all above adjustedMaxBG, don’t use it
         if (eventualBG > adjustedMaxBG && naive_eventualBG > adjustedMaxBG && max_bg > adjustedMaxBG) {

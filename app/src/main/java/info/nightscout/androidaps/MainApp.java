@@ -38,6 +38,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragm
 import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBFragment;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfileFragment;
@@ -125,6 +126,7 @@ public class MainApp extends Application {
             if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
             if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSAMAFragment.getPlugin());
+            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSSMBFragment.getPlugin());
             pluginsList.add(NSProfileFragment.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(SimpleProfileFragment.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(LocalProfileFragment.getPlugin());

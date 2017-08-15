@@ -14,6 +14,7 @@ import android.preference.PreferenceManager;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -111,6 +112,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (Config.OPENAPSENABLED) {
                 addPreferencesFromResource(R.xml.pref_openapsma);
                 if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
+                    addPreferencesFromResource(R.xml.pref_openapsama);
+                if (MainApp.getSpecificPlugin(OpenAPSSMBPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSSMBPlugin.class).isEnabled(PluginBase.APS))
                     addPreferencesFromResource(R.xml.pref_openapsama);
             }
             if (MainApp.getSpecificPlugin(SensitivityAAPSPlugin.class) != null && MainApp.getSpecificPlugin(SensitivityAAPSPlugin.class).isEnabled(PluginBase.SENSITIVITY)

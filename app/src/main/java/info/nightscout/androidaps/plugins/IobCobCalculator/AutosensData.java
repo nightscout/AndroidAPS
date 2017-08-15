@@ -59,6 +59,8 @@ public class AutosensData {
 
     public double autosensRatio = 1d;
 
+    public double minDeviationSlope;
+
     public String log(long time) {
         return "AutosensData: " + new Date(time).toLocaleString() + " " + pastSensitivity + " Delta=" + delta + " Bgi=" + bgi + " Deviation=" + deviation + " Absorbed=" + absorbed + " CarbsFromBolus=" + carbsFromBolus + " COB=" + cob + " autosensRatio=" + autosensRatio;
     }

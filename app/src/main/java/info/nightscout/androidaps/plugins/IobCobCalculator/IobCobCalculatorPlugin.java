@@ -227,7 +227,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
     private BgReading findOlder(long time) {
         BgReading lastFound = bgReadings.get(bgReadings.size() - 1);
         if (lastFound.date > time) return null;
-        for (int i = bgReadings.size() - 2; i >=0 ; --i) {
+        for (int i = bgReadings.size() - 2; i >= 0; --i) {
             if (bgReadings.get(i).date < time) continue;
             lastFound = bgReadings.get(i);
             if (bgReadings.get(i).date > time) break;
@@ -246,7 +246,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
             long currentTime = bgReadings.get(0).date + 5 * 60 * 1000 - bgReadings.get(0).date % (5 * 60 * 1000) - 5 * 60 * 1000L;
             //log.debug("First reading: " + new Date(currentTime).toLocaleString());
 
-             while (true) {
+            while (true) {
                 // test if current value is older than current time
                 BgReading newer = findNewer(currentTime);
                 BgReading older = findOlder(currentTime);
@@ -353,6 +353,11 @@ public class IobCobCalculatorPlugin implements PluginBase {
             long prevDataTime = roundUpTime(bucketed_data.get(bucketed_data.size() - 3).date);
             log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
             AutosensData previous = autosensDataTable.get(prevDataTime);
+
+            double currentDeviation = 0;
+            double minDeviationSlope = 0;
+            double maxDeviation = 0;
+
             // start from oldest to be able sub cob
             for (int i = bucketed_data.size() - 4; i >= 0; i--) {
                 // check if data already exists
@@ -379,17 +384,45 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 double bg;
                 double avgDelta;
                 double delta;
+
                 bg = bucketed_data.get(i).value;
                 if (bg < 39 || bucketed_data.get(i + 3).value < 39) {
                     log.error("! value < 39");
                     continue;
                 }
+                avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
                 delta = (bg - bucketed_data.get(i + 1).value);
 
                 IobTotal iob = calculateFromTreatmentsAndTemps(bgTime);
 
                 double bgi = -iob.activity * sens * 5;
                 double deviation = delta - bgi;
+
+                /*
+                TODO: SMB: i don't undestand this part
+                long ciTime = System.currentTimeMillis();
+
+                if (i == bucketed_data.size() - 4) {
+                    currentDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
+                } else if (ciTime > bgTime) {
+                    double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
+                    double deviationSlope = (avgDeviation - currentDeviation) / (bgTime - ciTime) * 1000 * 60 * 5;
+                    if (avgDeviation > maxDeviation) {
+                        minDeviationSlope = Math.min(0, deviationSlope);
+                        maxDeviation = avgDeviation;
+                    }
+                    //console.error("Deviations:",bgTime, avgDeviation, deviationSlope, minDeviationSlope);
+                }
+
+                https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
+
+                Scott's comment
+                that stuff is used in UAM (unannounced meal) mode. what we're doing there is calculating the currentDeviation (how fast carbs are absorbing right now), and comparing that to the highest deviation we've seen in the last 45m to calculate the deviationSlope: the rate at which deviations are currently decreasing. We then project deviations to continue into the future starting at the currentDeviation rate and declining at deviationSlope until it gets back down to zero
+                that gives us an independent way to estimate how long deviations (likely carb absorption) will continue, even if we don't have (or don't want to fully trust) the user's carb estimate
+                the complexity comes from reusing the same COB calculation code to calculate both current and historical carb absorption rates
+
+                */
+
 
                 List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBackFromHistory(bgTime);
                 for (int ir = 0; ir < recentTreatments.size(); ir++) {
@@ -420,6 +453,7 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 autosensData.deviation = deviation;
                 autosensData.bgi = bgi;
                 autosensData.delta = delta;
+                autosensData.minDeviationSlope = minDeviationSlope;
 
                 // calculate autosens only without COB
                 if (autosensData.cob <= 0) {
@@ -669,8 +703,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
             for (int index = iobTable.size() - 1; index >= 0; index--) {
                 if (iobTable.keyAt(index) > time) {
                     if (Config.logAutosensData)
-                    if (Config.logAutosensData)
-                        log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
+                        if (Config.logAutosensData)
+                            log.debug("Removing from iobTable: " + new Date(iobTable.keyAt(index)).toLocaleString());
                     iobTable.removeAt(index);
                 } else {
                     break;

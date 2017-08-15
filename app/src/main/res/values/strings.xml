@@ -689,5 +689,13 @@
 	<string name="careportal_pump_label">PUMP</string>
     <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
+    <string name="openapssmb">OpenAPS SMB</string>
+    <string name="smb_shortname">SMB</string>
+    <string name="key_use_smb">use_smb</string>
+    <string name="key_use_uam">use_uam</string>
+    <string name="enableuam">Enable UAM</string>
+    <string name="enablesmb">Enable SMB</string>
+    <string name="enablesmb_summary">Use Super Micro Boluses instead of temp basal for faster action</string>
+    <string name="enableuam_summary">Detection of Unannounced meals</string>
 </resources>
 

@@ -19,6 +19,7 @@ public class IobTotal {
     // oref1
     public double microBolusInsulin;
     public double microBolusIOB;
+    public long lastBolusTime;
 
     public double netInsulin = 0d; // for calculations from temp basals only
     public double netRatio = 0d; // net ratio at start of temp basal
@@ -36,6 +37,7 @@ public class IobTotal {
         this.hightempinsulin = 0d;
         this.microBolusInsulin = 0d;
         this.microBolusIOB = 0d;
+        this.lastBolusTime = 0;
         this.time = time;
     }
 
@@ -63,6 +65,7 @@ public class IobTotal {
         result.hightempinsulin = basalIob.hightempinsulin;
         result.microBolusInsulin = bolusIOB.microBolusInsulin + basalIob.microBolusInsulin;
         result.microBolusIOB = bolusIOB.microBolusIOB + basalIob.microBolusIOB;
+        result.lastBolusTime = bolusIOB.lastBolusTime;
         return result;
     }
 
@@ -98,6 +101,7 @@ public class IobTotal {
             json.put("basaliob", basaliob);
             json.put("bolussnooze", bolussnooze);
             json.put("activity", activity);
+            json.put("lastBolusTime", lastBolusTime);
             json.put("time", DateUtil.toISOString(new Date(time)));
         } catch (JSONException e) {
             e.printStackTrace();

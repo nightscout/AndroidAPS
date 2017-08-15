@@ -187,6 +187,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
                 Iob bIOB = t.iobCalc(time, dia / SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
                 total.bolussnooze += bIOB.iobContrib;
             } else {
+                if (t.date > total.lastBolusTime)
+                    total.lastBolusTime = t.date;
                 total.basaliob += t.insulin;
                 total.microBolusIOB += tIOB.iobContrib;
             }
@@ -236,6 +238,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         AutosensData autosensData = IobCobCalculatorPlugin.getLastAutosensData();
         if (autosensData != null) {
             result.mealCOB = autosensData.cob;
+            result.minDeviationSlope = autosensData.minDeviationSlope;
         }
         return result;
     }
