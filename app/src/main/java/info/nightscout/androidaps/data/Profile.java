@@ -391,4 +391,9 @@ public class Profile {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(valueInMgdl);
         else return DecimalFormatter.to1Decimal(valueInMmol);
     }
+
+    public static String toTargetRangeString(double low, double high, String units) {
+        if (low == high) return toUnitsString(low, low, units);
+        else return toUnitsString(low, low, units) + " - " + toUnitsString(high, high, units);
+    }
 }

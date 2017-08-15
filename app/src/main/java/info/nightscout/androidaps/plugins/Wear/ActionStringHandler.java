@@ -472,7 +472,7 @@ public class ActionStringHandler {
         //Check for Temp-Target:
         TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
-            ret += "Temp Target: " + Profile.toUnitsString(tempTarget.low, tempTarget.low, profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, tempTarget.high, profile.getUnits());
+            ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, profile.getUnits());
             ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
             ret += "\n\n";
         }
