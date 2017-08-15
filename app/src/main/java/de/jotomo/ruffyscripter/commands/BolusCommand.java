@@ -14,12 +14,18 @@ import java.util.Locale;
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
+import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.BOLUSING;
+import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.FINISHED;
+import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.PREPARING;
+
 public class BolusCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
     private final double bolus;
+    private final ProgressReportCallback progressReportCallback;
 
-    public BolusCommand(double bolus) {
+    public BolusCommand(double bolus, ProgressReportCallback progressReportCallback) {
+        this.progressReportCallback = progressReportCallback;
         this.bolus = bolus;
     }
 
@@ -36,6 +42,7 @@ public class BolusCommand implements Command {
 
     @Override
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+        progressReportCallback.progress(PREPARING, 0, 0);
         try {
             enterBolusMenu(scripter);
 
@@ -45,6 +52,7 @@ public class BolusCommand implements Command {
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressCheckKey();
+            progressReportCallback.progress(BOLUSING, 0, 0);
 
             // the pump displays the entered bolus and waits a bit to let user check and cancel
             scripter.waitForMenuToBeLeft(MenuType.BOLUS_ENTER);
@@ -56,9 +64,15 @@ public class BolusCommand implements Command {
             // wait for bolus delivery to complete; the remaining units to deliver are counted
             // down and are displayed on the main menu.
             Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
+            double lastBolusReported = 0;
             while (bolusRemaining != null) {
-                log.debug("Delivering bolus, remaining: " + bolusRemaining);
-                SystemClock.sleep(200);
+                if (lastBolusReported != bolusRemaining) {
+                    log.debug("Delivering bolus, remaining: " + bolusRemaining);
+                    int percentDelivered = (int) (100 - (bolusRemaining / bolus * 100));
+                    progressReportCallback.progress(BOLUSING, percentDelivered, bolus - bolusRemaining);
+                    lastBolusReported = bolusRemaining;
+                }
+                SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
 
@@ -69,6 +83,8 @@ public class BolusCommand implements Command {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Bolus delivery did not complete as expected. "
                             + "Check pump manually, the bolus might not have been delivered.");
+
+            progressReportCallback.progress(FINISHED, 100, bolus);
 
             // read last bolus record; those menus display static data and therefore
             // only a single menu update is sent

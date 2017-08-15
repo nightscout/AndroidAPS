@@ -31,6 +31,7 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
+import de.jotomo.ruffyscripter.commands.ProgressReportCallback;
 import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
@@ -48,6 +49,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
@@ -369,7 +371,34 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
+                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                MainApp.bus().post(bolusingEvent);
+                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin, new ProgressReportCallback() {
+                    @Override
+                    public void progress(State state, int percent, double delivered) {
+                        EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                        switch (state) {
+                            // TODO move into enum as toString or so and make it translateb
+                            case BOLUSING:
+                                bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
+                                break;
+                            case PREPARING:
+                                bolusingEvent.status = "Preparing pump for bolus";
+                                 break;
+                            case FINISHED:
+                                bolusingEvent.status = "Bolus delivery finished successfully";
+                                break;
+                            case CANCELLED:
+                                bolusingEvent.status = "Bolus delivery was cancelled";
+                                break;
+                            case CANCELLING:
+                                bolusingEvent.status = "Cancelling bolus delivery";
+                                break;
+                        }
+                        bolusingEvent.percent = percent;
+                        MainApp.bus().post(bolusingEvent);
+                    }
+                }));
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
                 pumpEnactResult.success = bolusCmdResult.success;
                 pumpEnactResult.enacted = bolusCmdResult.enacted;
