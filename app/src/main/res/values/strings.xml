@@ -581,6 +581,7 @@
     <string name="configbuilder_insulin">Insulin</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
     <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
@@ -690,5 +691,16 @@
 	<string name="careportal_pump_label">PUMP</string>
     <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
     <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
+    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
+    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
+    <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short" formatted="false">"DIA of %s too short - using %s instead!"</string>
+
+
+
+
 </resources>
 

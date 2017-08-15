@@ -21,7 +21,6 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
  */
 
 public class ActivityGraph extends GraphView {
-
     Context context;
 
     public ActivityGraph(Context context) {
@@ -35,6 +34,8 @@ public class ActivityGraph extends GraphView {
     }
 
     public void show(InsulinInterface insulin) {
+        removeAllSeries();
+        mSecondScale = null;
         double dia = insulin.getDia();
         int hours = (int) Math.floor(dia + 1);
 
