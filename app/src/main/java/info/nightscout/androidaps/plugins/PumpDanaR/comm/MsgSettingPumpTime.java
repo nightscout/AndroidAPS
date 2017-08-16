@@ -27,7 +27,7 @@ public class MsgSettingPumpTime extends MessageBase {
                 );
 
         if (Config.logDanaMessageDetail)
-            log.debug("Pump time: " + time);
+            log.debug("Pump time: " + time + " Phone time: " + new Date());
 
         DanaRPump.getInstance().pumpTime = time;
     }

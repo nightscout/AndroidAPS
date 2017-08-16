@@ -13,9 +13,11 @@ import info.nightscout.androidaps.Config;
 
 public class MsgSetTime extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgSetTime.class);
+    private static Date time;
 
     public MsgSetTime(Date time) {
         SetCommand(0x330a);
+        this.time = time;
         AddParamDateTime(time);
     }
 
@@ -23,6 +25,6 @@ public class MsgSetTime extends MessageBase {
         int result = intFromBuff(bytes, 0, 1);
 
         if (Config.logDanaMessageDetail)
-            log.debug("Result: " + result);
+            log.debug("Result of setting time: " + time + " is " + result);
     }
 }
