@@ -156,9 +156,13 @@ public class SimpleProfileFragment extends SubscriberFragment {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
+                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
+                    } else if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
+                        profileswitchButton.setText(MainApp.instance().getText(R.string.activate_profile));
+                        profileswitchButton.setVisibility(View.VISIBLE);
                     } else {
+                        profileswitchButton.setText(MainApp.instance().getText(R.string.send_to_pump));
                         profileswitchButton.setVisibility(View.VISIBLE);
                     }
                 }

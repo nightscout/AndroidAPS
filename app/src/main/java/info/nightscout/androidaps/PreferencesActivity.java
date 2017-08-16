@@ -15,6 +15,7 @@ import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.OpenAPSSMB.OpenAPSSMBPlugin;
+import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -142,6 +143,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             if (virtualPumpPlugin != null && virtualPumpPlugin.isEnabled(PluginBase.PUMP)) {
                 addPreferencesFromResource(R.xml.pref_virtualpump);
             }
+            InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin = (InsulinOrefFreePeakPlugin) MainApp.getSpecificPlugin(InsulinOrefFreePeakPlugin.class);
+            if(insulinOrefFreePeakPlugin.isEnabled(PluginBase.INSULIN)){
+                addPreferencesFromResource(R.xml.pref_insulinoreffreepeak);
+            }
+
             NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
             if (nsClientInternalPlugin != null && nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
                 addPreferencesFromResource(R.xml.pref_nsclientinternal);

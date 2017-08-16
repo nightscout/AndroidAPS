@@ -952,19 +952,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
-            if (tempTarget.low == tempTarget.high)
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units));
-            else
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, units), units));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, units));
         } else {
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            double low = MainApp.getConfigBuilder().getProfile().getTargetLow();
-            double high = MainApp.getConfigBuilder().getProfile().getTargetHigh();
-            if (low == high)
-                tempTargetView.setText("" + low);
-            else
-                tempTargetView.setText(low + " - " + high);
+            tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
         if (Config.NSCLIENT && tempTarget == null) {
