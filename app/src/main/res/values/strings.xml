@@ -698,8 +698,7 @@
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short" formatted="false">"DIA of %s too short - using %s instead!"</string>
-
-
+    <string name="activate_profile">ACTIVATE PROFILE</string>
 
 
 </resources>
