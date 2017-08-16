@@ -356,6 +356,7 @@ public class RuffyScripter {
             } catch (CommandException e) {
                 return e.toCommandResult();
             } catch (Exception e) {
+                // TODO detect and report pump warnings/errors differently?
                 log.error("Error in ruffyscripter/ruffy", e);
                 return new CommandResult().exception(e).message("Unexpected exception communication with ruffy: " + e.getMessage());
             } finally {

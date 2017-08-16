@@ -368,23 +368,20 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private static ProgressReportCallback bolusProgressReportCallback = new ProgressReportCallback() {
         @Override
-        public void progress(ProgressReportCallback.State state, int percent, double delivered) {
+        public void report(ProgressReportCallback.State state, int percent, double delivered) {
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
             switch (state) {
                 // TODO move into enum as toString or so and make it translateb
-                case BOLUSING:
+                case DELIVERING:
                     bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
                     break;
-                case PREPARING:
-                    bolusingEvent.status = "Preparing pump for bolus";
-                    break;
-                case FINISHED:
+                case DELIVERED:
                     bolusingEvent.status = "Bolus delivery finished successfully";
                     break;
-                case CANCELLED:
+                case STOPPED:
                     bolusingEvent.status = "Bolus delivery was cancelled";
                     break;
-                case CANCELLING:
+                case STOPPING:
                     bolusingEvent.status = "Cancelling bolus delivery";
                     break;
             }
@@ -402,7 +399,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 // bolus needed, ask pump to deliver it
                 EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
                 MainApp.bus().post(bolusingEvent);
-                // TODO move into enum as toString or so and make it translateb
                 runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
                 CommandResult bolusCmdResult = runCommand(runningBolusCommand);
                 runningBolusCommand = null;
@@ -433,6 +429,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 // TODO the ui freezes when the calculator issues a carb-only treatment
                 // so just wait, yeah, this is dumb. for now; proper fix via GL#10
                 // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
+                // send event to indicate popup can be dismissed?
                 SystemClock.sleep(6000);
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
                 pumpEnactResult.success = true;

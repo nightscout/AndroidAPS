@@ -2,12 +2,11 @@ package de.jotomo.ruffyscripter.commands;
 
 public interface ProgressReportCallback {
     enum State {
-        PREPARING,
-        BOLUSING,
-        CANCELLING,
-        FINISHED,
-        CANCELLED
+        DELIVERING,
+        DELIVERED,
+        STOPPING,
+        STOPPED
     }
 
-    void progress(State state, int percent, double delivered);
+    void report(State state, int percent, double delivered);
 }

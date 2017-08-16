@@ -14,10 +14,10 @@ import java.util.Locale;
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.BOLUSING;
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.CANCELLED;
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.CANCELLING;
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.FINISHED;
+import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.DELIVERING;
+import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.STOPPED;
+import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.STOPPING;
+import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.DELIVERED;
 import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.PREPARING;
 
 public class BolusCommand implements Command {
@@ -45,55 +45,75 @@ public class BolusCommand implements Command {
 
     @Override
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
-        progressReportCallback.progress(PREPARING, 0, 0);
         try {
             enterBolusMenu(scripter);
-
             inputBolusAmount(scripter);
             verifyDisplayedBolusAmount(scripter);
+
+            if (cancelRequested) {
+                progressReportCallback.report(STOPPING, 0, 0);
+                scripter.goToMainTypeScreen(MenuType.MAIN_MENU, 30 * 1000);
+                progressReportCallback.report(STOPPED, 0, 0);
+                return new CommandResult().success(true).enacted(false)
+                        .message("Bolus cancelled as per user request with no insulin delivered");
+            }
 
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressCheckKey();
-            if (cancelRequested) {
-                scripter.goToMainTypeScreen(MenuType.MAIN_MENU, 30_000);
-                progressReportCallback.progress(CANCELLED, 0, 0);
-                return new CommandResult().success(true).enacted(false).message("Bolus cancelled as per user request with no insulin delivered");
-            }
-            progressReportCallback.progress(BOLUSING, 0, 0);
 
-            // the pump displays the entered bolus and waits a bit to let user check and cancel
-            // TODO pressing up (and possible other keys) cancels the bolus
-            scripter.waitForMenuToBeLeft(MenuType.BOLUS_ENTER);
+            // the pump displays the entered bolus and waits a few seconds to let user check and cancel
             while (scripter.currentMenu.getType() == MenuType.BOLUS_ENTER) {
                 if (cancelRequested) {
+                    progressReportCallback.report(STOPPING, 0, 0);
                     scripter.pressUpKey();
-                    // TODO deal with error; write a method to wait for and cancel a specific alarm
-                    // wait happens if the keypress comes too late? just try agoin below?
+                    // wait up to 1s for a BOLUS_CANCELLED alert, if it doesn't happen we missed
+                    // the window, simply continue and let the next cancel attempt try its luck
+                    boolean alertWasCancelled = confirmAlert("BOLUS CANCELLED", 1000);
+                    if (alertWasCancelled) {
+                        progressReportCallback.report(STOPPED, 0, 0);
+                        return new CommandResult().success(true).enacted(false)
+                                .message("Bolus cancelled as per user request with no insulin delivered");
+                    }
                 }
-                SystemClock.sleep(50);
+                SystemClock.sleep(10);
             }
-
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Pump did not return to MAIN_MEU from BOLUS_ENTER to deliver bolus. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
-            // wait for bolus delivery to complete; the remaining units to deliver are counted
-            // down and are displayed on the main menu.
+            progressReportCallback.report(DELIVERING, 0, 0);
             Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             double lastBolusReported = 0;
+            // wait for bolus delivery to complete; the remaining units to deliver are counted
+            // down and are displayed on the main menu.
             while (bolusRemaining != null) {
                 if (cancelRequested) {
+                    progressReportCallback.report(STOPPING, 0, 0);
                     // TODO press up 3s, deal with bolus cancelled error, retrieved amount actually delivered from history and return it
                     // since the cancellation takes three seconds some insulin will have definately been delivered (delivery speed is roughly 0.1U/s)
+                    progressReportCallback.report(STOPPED, 0, 0);
                 }
                 if (lastBolusReported != bolusRemaining) {
                     log.debug("Delivering bolus, remaining: " + bolusRemaining);
                     int percentDelivered = (int) (100 - (bolusRemaining / bolus * 100));
-                    progressReportCallback.progress(BOLUSING, percentDelivered, bolus - bolusRemaining);
+                    progressReportCallback.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
                     lastBolusReported = bolusRemaining;
                 }
                 // TODO deal with alarms that can arise; an oclussion with raise an oclussion alert as well as a bolus cancelled alert
+                // occlusion cancels the bolus -> abort routine to report back delivered bolus;
+                // low cartridge alert lets bolus run out
+                // also, any other error or warning can occur and we should return in a controlled fashion -
+                // communicating back what was actually delivered.
+                // generally: cancel an alert on the pump and raise the error in AAPS?
+                // letting the alert go off disrupts comms if the user interacts with the pump,
+                // then we need to schedule a history read in the near future, let thee user know
+                // the data will be out of sync for a bit.
+                // how does the dana handle pump errors? has no vibration, but sound i guess
+                // should this be configurabe? initially?
+                if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+
+                }
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
@@ -106,7 +126,7 @@ public class BolusCommand implements Command {
                     "Bolus delivery did not complete as expected. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
-            progressReportCallback.progress(FINISHED, 100, bolus);
+            progressReportCallback.report(DELIVERED, 100, bolus);
 
             // read last bolus record; those menus display static data and therefore
             // only a single menu update is sent
@@ -130,18 +150,21 @@ public class BolusCommand implements Command {
             }
             log.debug("Bolus record in history confirms delivered bolus");
 
-            // leave menu to go back to main menu
-            scripter.pressCheckKey();
-            scripter.waitForMenuToBeLeft(MenuType.BOLUS_DATA);
-            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
-                    "Bolus was correctly delivered and checked against history, but we "
-                            + "did not return the main menu successfully.");
+            if (!scripter.goToMainTypeScreen(MenuType.MAIN_MENU, 15 * 1000)) {
+                throw new CommandException().success(false).enacted(true)
+                        .message("Bolus was correctly delivered and checked against history, but we "
+                                + "did not return the main menu successfully.");
+            }
 
             return new CommandResult().success(true).enacted(true)
                     .message(String.format(Locale.US, "Delivered %02.1f U", bolus));
         } catch (CommandException e) {
             return e.toCommandResult();
         }
+    }
+
+    private boolean confirmAlert(String alertText, int maxWaitTillExpectedAlert) {
+
     }
 
     private void enterBolusMenu(RuffyScripter scripter) {
@@ -198,7 +221,7 @@ public class BolusCommand implements Command {
 
     public void requestCancellation() {
         cancelRequested = true;
-        progressReportCallback.progress(CANCELLING, 0, 0);
+        progressReportCallback.report(STOPPING, 0, 0);
     }
 
     @Override
