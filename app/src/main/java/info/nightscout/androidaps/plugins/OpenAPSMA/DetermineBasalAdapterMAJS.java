@@ -231,7 +231,7 @@ public class DetermineBasalAdapterMAJS {
         String units = profile.getUnits();
 
         mProfile.add("max_iob", maxIob);
-        mProfile.add("dia", profile.getDia());
+        mProfile.add("dia", Math.min(profile.getDia(), 3d));
         mProfile.add("type", "current");
         mProfile.add("max_daily_basal", profile.getMaxDailyBasal());
         mProfile.add("max_basal", maxBasal);
