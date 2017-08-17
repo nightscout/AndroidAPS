@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
@@ -33,7 +34,7 @@ import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
-import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.commands.SetTbrCommandAlt;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -493,12 +494,16 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             adjustedPercent = rounded.intValue();
         }
 
-        CommandResult commandResult = runCommand(new SetTbrCommand(adjustedPercent, durationInMinutes));
+        Command cmd = !BuildConfig.VERSION.contains("joe")
+                ? new SetTbrCommand(adjustedPercent, durationInMinutes)
+                : new SetTbrCommandAlt(adjustedPercent, durationInMinutes);
+        CommandResult commandResult = runCommand(cmd);
 
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
             // we should check this, but really ... something must be really screwed up if that number was anything different
+            // TODO actually ... might setting 29 help with gaps between TBRs? w/o the hack in TemporaryBasal?
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
