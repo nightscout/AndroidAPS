@@ -12,6 +12,10 @@ import info.nightscout.androidaps.db.Treatment;
 public interface InsulinInterface {
     final int FASTACTINGINSULIN = 0;
     final int FASTACTINGINSULINPROLONGED = 1;
+    final int OREF_RAPID_ACTING = 2;
+    final int OREF_ULTRA_RAPID_ACTING = 3;
+    final int OREF_FREE_PEAK = 4;
+
 
     int getId();
     String getFriendlyName();

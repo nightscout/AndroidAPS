@@ -37,6 +37,7 @@ import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientPlugin;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
 import info.nightscout.androidaps.receivers.DataReceiver;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
+import info.nightscout.utils.BundleLogger;
 import info.nightscout.utils.SP;
 
 
@@ -56,7 +57,7 @@ public class DataService extends IntentService {
     @Override
     protected void onHandleIntent(final Intent intent) {
         if (Config.logFunctionCalls)
-            log.debug("onHandleIntent " + intent);
+            log.debug("onHandleIntent " + BundleLogger.log(intent.getExtras()));
 
         if (ConfigBuilderPlugin.getActiveBgSource().getClass().equals(SourceXdripPlugin.class)) {
             xDripEnabled = true;

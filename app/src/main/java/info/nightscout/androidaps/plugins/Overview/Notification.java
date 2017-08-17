@@ -47,6 +47,9 @@ public class Notification {
     public static final int NSANNOUNCEMENT = 18;
     public static final int NSALARM = 19;
     public static final int NSURGENTALARM = 20;
+    public static final int SHORT_DIA = 21;
+    public static final int TOAST_ALARM = 22;
+
 
     public int id;
     public Date date;
