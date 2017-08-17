@@ -606,7 +606,7 @@
     <string name="objectives_2_gate">Anhand von dieser Erfahrung, entscheide wie hoch max Basal sein sollte und setzte dies in der Pumpe und den Einstellungen</string>
     <string name="objectives_3_gate">Lasse es im ClosedLoop Modus mit max IOB = 0 für ein paar Tage laufen ohne zu viele Unterzuckeren zu haben</string>
     <string name="objectives_3_objective">Starte den ClosedLoop Modus mit Abschaltung bei niedrigen Werte</string>
-    <string name="objectives_4_gate">Verwende es ein paar Tage, ohne das du in der Nacht ein Niedrig-Alarme (UZ) bekommst, bevor der BZ fällt</string>
+    <string name="objectives_4_gate">Verwende es ein paar Tage, und zumindest eine Nacht ohne Niedrig-Alarme (UZ), bevor du den BZ-Zielbereich senkst.</string>
     <string name="objectives_4_objective">Fein-Einstellung des Closed-Loops, Erhöhen von max IOB über 0 und langsames Heruntersetzen des Zielbereichs.</string>
     <string name="objectives_5_gate">Eine Woche erfolgreiches Looping am Tag mit regelmäßiger Kohlenhydrat-Eingabe</string>
     <string name="objectives_5_objective">Passe Basal und Faktoren an, falls notwendig, und aktiviere dann die Autosense-Funktion</string>
@@ -618,6 +618,6 @@
     <string name="insulin_oref_peak">IOB Kurve Peak Time</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string formatted="false" name="dia_too_short">DIA von %s ist zu kurz - aaps nutzt stattdessen %s!</string>
-    <string name="danar_stats_warning_Message">Möglicherweise ungenau, wenn zum befüllen ein Bolus verwendet wurde!</string>
+    <string name="danar_stats_warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
     <string name="danar_stats_ratio">Verhältnis</string>
 </resources>
