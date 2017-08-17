@@ -2,8 +2,6 @@ package de.jotomo.ruffyscripter.commands;
 
 import android.os.SystemClock;
 
-import com.j256.ormlite.stmt.query.In;
-
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import de.jotomo.ruffyscripter.PumpCapabilities;
 import de.jotomo.ruffyscripter.PumpState;
@@ -34,7 +31,7 @@ public class DetermineCapabilitiesCommand implements Command {
         try {
 
             //read main menu 100% or TBR? Read remaining duration.
-            long durationBefore =  readDisplayedTbrDurationMainMenu(scripter);
+            long durationBefore = readDisplayedTbrDurationMainMenu(scripter);
             long percentageBefore = readDisplayedTbrPercentageMainMenu(scripter);
 
             enterTbrMenu(scripter);
@@ -49,14 +46,14 @@ public class DetermineCapabilitiesCommand implements Command {
 
 
             //TODO: check if TBR is still the same or duration was less than 5 minutes
-            long durationAfter =  readDisplayedTbrDurationMainMenu(scripter);
+            long durationAfter = readDisplayedTbrDurationMainMenu(scripter);
             long percentageAfter = readDisplayedTbrPercentageMainMenu(scripter);
 
-            if(Math.abs(durationBefore-durationAfter) > 5){
+            if (Math.abs(durationBefore - durationAfter) > 5) {
                 throw new CommandException().message("Duration jump during DetermineCapabilities");
             }
-            if(percentageAfter != percentageBefore){
-                if(durationBefore<5 && percentageAfter == 100){
+            if (percentageAfter != percentageBefore) {
+                if (durationBefore < 5 && percentageAfter == 100) {
                     log.debug("(percentageBefore != percentageAfter) - ignoring as tbr is now 100% and had a very short duration left");
                 }
                 throw new CommandException().message("TBR changed while determining maxTBR.");
@@ -99,7 +96,7 @@ public class DetermineCapabilitiesCommand implements Command {
         long percentageChange = maximumTempBasal - activeTempBasal;
         long percentageSteps = percentageChange / 10;
 
-        int retries= 0;
+        int retries = 0;
         while (percentageSteps > 0 && retries < RETRIES) {
             log.debug("Pressing down " + percentageSteps + " times to get to previous value. Retry " + retries);
             for (int i = 0; i < percentageSteps; i++) {
@@ -139,7 +136,7 @@ public class DetermineCapabilitiesCommand implements Command {
 
     private int readDisplayedTbrDurationMainMenu(RuffyScripter scripter) {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        if(scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME)){
+        if (scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME)) {
             // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
             Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
             MenuTime duration = (MenuTime) durationObj;
@@ -151,8 +148,8 @@ public class DetermineCapabilitiesCommand implements Command {
 
     private int readDisplayedTbrPercentageMainMenu(RuffyScripter scripter) {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        if(scripter.currentMenu.attributes().contains(MenuAttribute.TBR)){
-            return (int)((Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR)).doubleValue();
+        if (scripter.currentMenu.attributes().contains(MenuAttribute.TBR)) {
+            return (int) ((Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR)).doubleValue();
         } else {
             return 100;
         }

@@ -124,7 +124,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
      * The alerter frequently checks the result of the last executed command via the lastCmdResult
      * field and shows a notification with sound and vibration if an error occurred.
      * More details on the error can then be looked up in the Combo tab.
-     *
+     * <p>
      * The alarm is re-raised every 5 minutes for as long as the error persist. As soon
      * as a command succeeds no more new alerts are raised.
      */
@@ -199,7 +199,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    keepUnbound=false;
+                    keepUnbound = false;
                     ruffyScripter.start(IRuffyService.Stub.asInterface(service));
                     log.debug("ruffy serivce connected");
                 }
@@ -210,7 +210,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     log.debug("ruffy service disconnected");
                     // try to reconnect ruffy service unless unbind was explicitely requested
                     // via unbindRuffyService
-                    if(!keepUnbound) {
+                    if (!keepUnbound) {
                         SystemClock.sleep(250);
                         bindRuffyService();
                     }
@@ -228,6 +228,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     }
 
     private boolean keepUnbound = false;
+
     private void unbindRuffyService() {
         keepUnbound = true;
         ruffyScripter.unbind();
@@ -543,7 +544,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 tempBasal.source = Source.USER;
                 pumpEnactResult.isTempCancel = true;
             }
-        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15 ) {
+        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep running (see below)
             log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
             pumpEnactResult.comment = "cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.";
@@ -556,7 +557,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         } else {
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
-            long percentage = (activeTemp.percentRate > 100) ? 110:90;
+            long percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing tbr to " + percentage + "% for 15 mins.");
             commandResult = runCommand(new SetTbrCommand(percentage, 15));
             if (commandResult.enacted) {
@@ -670,12 +671,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             ToastUtils.showToastInUiThread(MainApp.instance(), "Ruffy not initialized.");
             return;
         }
-        if (isBusy()){
+        if (isBusy()) {
             ToastUtils.showToastInUiThread(MainApp.instance(), "Pump busy!");
             return;
         }
         CommandResult result = runCommand(new DetermineCapabilitiesCommand());
-        if (result.success){
+        if (result.success) {
             pumpDescription.maxTempPercent = (int) result.capabilities.maxTempPercent;
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
             SharedPreferences.Editor editor = preferences.edit();

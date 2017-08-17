@@ -18,7 +18,8 @@ public class GetBasalCommand implements Command {
 
     private RuffyScripter scripter;
 
-    public GetBasalCommand() {}
+    public GetBasalCommand() {
+    }
 
     @Override
     public List<String> validateArguments() {
@@ -27,7 +28,7 @@ public class GetBasalCommand implements Command {
         return violations;
     }
 
-//    private void tick()
+    //    private void tick()
 //    {
 //        switch (state)
 //        {
@@ -104,15 +105,14 @@ public class GetBasalCommand implements Command {
     @Override
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
         try {
-            Map<Integer,Double> rate = new HashMap<>();
+            Map<Integer, Double> rate = new HashMap<>();
 
-            for(int i = 0; i < 24;i++)
-            {
-                Log.v("BASAL_RATE","BASAL_RATE from "+String.format("%02d",i)+":00 = "+rate.get(i));
+            for (int i = 0; i < 24; i++) {
+                Log.v("BASAL_RATE", "BASAL_RATE from " + String.format("%02d", i) + ":00 = " + rate.get(i));
             }
         } catch (Exception e) {
-            log.error("failed to get basal",e);
-            return new CommandResult().success(false).message("failed to get basal: "+e.getMessage());
+            log.error("failed to get basal", e);
+            return new CommandResult().success(false).message("failed to get basal: " + e.getMessage());
         }
         return new CommandResult().success(true).enacted(true).message("Basal Rate was read");
     }
