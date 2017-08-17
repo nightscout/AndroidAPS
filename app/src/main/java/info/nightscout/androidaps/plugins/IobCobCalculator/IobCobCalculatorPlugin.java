@@ -354,10 +354,6 @@ public class IobCobCalculatorPlugin implements PluginBase {
             log.debug("Prev data time: " + new Date(prevDataTime).toLocaleString());
             AutosensData previous = autosensDataTable.get(prevDataTime);
 
-            double currentDeviation = 0;
-            double minDeviationSlope = 0;
-            double maxDeviation = 0;
-
             // start from oldest to be able sub cob
             for (int i = bucketed_data.size() - 4; i >= 0; i--) {
                 // check if data already exists
@@ -381,48 +377,42 @@ public class IobCobCalculatorPlugin implements PluginBase {
                     autosensData.activeCarbsList = new ArrayList<>();
 
                 //console.error(bgTime , bucketed_data[i].glucose);
-                double bg;
-                double avgDelta;
-                double delta;
 
-                bg = bucketed_data.get(i).value;
+                double bg = bucketed_data.get(i).value;
                 if (bg < 39 || bucketed_data.get(i + 3).value < 39) {
                     log.error("! value < 39");
                     continue;
                 }
-                avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
-                delta = (bg - bucketed_data.get(i + 1).value);
+                double avgDelta = (bg - bucketed_data.get(i + 3).value) / 3;
+                double delta = (bg - bucketed_data.get(i + 1).value);
 
                 IobTotal iob = calculateFromTreatmentsAndTemps(bgTime);
 
                 double bgi = -iob.activity * sens * 5;
                 double deviation = delta - bgi;
+                double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
 
-                /*
-                TODO: SMB: i don't undestand this part
-                long ciTime = System.currentTimeMillis();
+                double currentDeviation;
+                double minDeviationSlope = 0;
+                double maxDeviation = 0;
 
-                if (i == bucketed_data.size() - 4) {
-                    currentDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
-                } else if (ciTime > bgTime) {
-                    double avgDeviation = Math.round((avgDelta - bgi) * 1000) / 1000;
-                    double deviationSlope = (avgDeviation - currentDeviation) / (bgTime - ciTime) * 1000 * 60 * 5;
-                    if (avgDeviation > maxDeviation) {
-                        minDeviationSlope = Math.min(0, deviationSlope);
-                        maxDeviation = avgDeviation;
+                // https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
+                if (i < bucketed_data.size() - 16) { // we need 1h of data to calculate minDeviationSlope
+                    long hourago = bgTime + 10 * 1000 - 60 * 60 * 1000L;
+                    AutosensData hourAgoData = getAutosensData(hourago);
+                    currentDeviation = hourAgoData.avgDeviation;
+                    int initialIndex = autosensDataTable.indexOfKey(hourAgoData.time);
+
+                    for (int past = 1; past < 12; past++) {
+                        AutosensData ad = autosensDataTable.valueAt(initialIndex + past);
+                        double deviationSlope = (ad.avgDeviation - currentDeviation) / (ad.time - bgTime) * 1000 * 60 * 5;
+                        if (ad.avgDeviation > maxDeviation) {
+                            minDeviationSlope = Math.min(0, deviationSlope);
+                            maxDeviation = ad.avgDeviation;
+                        }
+                        log.debug("Deviations: " + new Date(bgTime) + new Date(ad.time) + " avgDeviation=" + avgDeviation + " deviationSlope=" + deviationSlope + " minDeviationSlope=" + minDeviationSlope);
                     }
-                    //console.error("Deviations:",bgTime, avgDeviation, deviationSlope, minDeviationSlope);
                 }
-
-                https://github.com/openaps/oref0/blob/master/lib/determine-basal/cob-autosens.js#L169
-
-                Scott's comment
-                that stuff is used in UAM (unannounced meal) mode. what we're doing there is calculating the currentDeviation (how fast carbs are absorbing right now), and comparing that to the highest deviation we've seen in the last 45m to calculate the deviationSlope: the rate at which deviations are currently decreasing. We then project deviations to continue into the future starting at the currentDeviation rate and declining at deviationSlope until it gets back down to zero
-                that gives us an independent way to estimate how long deviations (likely carb absorption) will continue, even if we don't have (or don't want to fully trust) the user's carb estimate
-                the complexity comes from reusing the same COB calculation code to calculate both current and historical carb absorption rates
-
-                */
-
 
                 List<Treatment> recentTreatments = MainApp.getConfigBuilder().getTreatments5MinBackFromHistory(bgTime);
                 for (int ir = 0; ir < recentTreatments.size(); ir++) {
@@ -453,6 +443,8 @@ public class IobCobCalculatorPlugin implements PluginBase {
                 autosensData.deviation = deviation;
                 autosensData.bgi = bgi;
                 autosensData.delta = delta;
+                autosensData.avgDelta = avgDelta;
+                autosensData.avgDeviation = avgDeviation;
                 autosensData.minDeviationSlope = minDeviationSlope;
 
                 // calculate autosens only without COB
