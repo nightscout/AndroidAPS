@@ -88,7 +88,7 @@ public class ProfileViewerDialog extends DialogFragment {
     private void setContent() {
         Profile profile = null;
         ProfileSwitch profileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(time);
-        if(profileSwitch!=null){
+        if(profileSwitch!=null && profileSwitch.profileJson != null){
             profile = profileSwitch.getProfileObject();
         }
         if (profile != null) {
@@ -105,9 +105,4 @@ public class ProfileViewerDialog extends DialogFragment {
             noProfile.setVisibility(View.VISIBLE);
         }
     }
-
-
-
-
-
 }
