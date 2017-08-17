@@ -1597,7 +1597,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
 
         for (int tx = 0; tx < treatments.size(); tx++) {
-            DataPointWithLabelInterface t = treatments.get(tx);
+            Treatment t = treatments.get(tx);
+            if (!t.isValid)
+                continue;
             if (t.getX() < fromTime || t.getX() > endTime) continue;
             t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
             filteredTreatments.add(t);
