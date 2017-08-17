@@ -208,6 +208,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 public void onServiceDisconnected(ComponentName name) {
                     ruffyScripter.stop();
                     log.debug("ruffy service disconnected");
+                    // try to reconnect ruffy service unless unbind was explicitely requested
+                    // via unbindRuffyService
                     if(!keepUnbound) {
                         SystemClock.sleep(250);
                         bindRuffyService();
@@ -427,41 +429,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
-        // TODO extract this into a recovery method and check the logic of restarting and rebinding ruffy
-        if (!commandResult.success && commandResult.exception != null) {
-            log.error("CommandResult has exception, rebinding ruffy service", commandResult.exception);
-
-            // attempt to rebind the ruffy service, will start ruffy again if it crashed
-            try {
-                unbindRuffyService();
-                SystemClock.sleep(5000);
-            } catch (Exception e) {
-                /*String msg = "No connection to ruffy. Pump control not available.";
-                statusSummary = msg;
-                return new CommandResult().message(msg);*/
-            }
-            try {
-                bindRuffyService();
-                SystemClock.sleep(5000);
-            } catch (Exception e) {
-                String msg = "No connection to ruffy. Pump control not available.";
-                statusSummary = msg;
-                return new CommandResult().message(msg);
-            }
-
-            if (ruffyScripter == null) {
-                log.error("Rebinding failed");
-            } else if (!commandResult.enacted && !(command instanceof BolusCommand)) {
-                // retry command, but make sure it wasn't enacted and don't retry
-                // bolus commands (user is interacting with AAPS right now so he can
-                // deal with it and we don't want to deliver a bolus twice)
-                CommandResult retriedCommandResult = ruffyScripter.runCommand(command);
-                if (retriedCommandResult.success) {
-                    commandResult = retriedCommandResult;
-                }
-            }
-        }
-
         log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
         if (commandResult.exception != null) {
             log.error("Exception received from pump", commandResult.exception);
