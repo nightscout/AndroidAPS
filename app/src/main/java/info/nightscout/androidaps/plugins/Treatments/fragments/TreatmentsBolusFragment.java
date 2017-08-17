@@ -85,6 +85,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             holder.mealOrCorrection.setText(t.mealBolus ? MainApp.sResources.getString(R.string.mealbolus) : MainApp.sResources.getString(R.string.correctionbous));
             holder.ph.setVisibility(t.source == Source.PUMP ? View.VISIBLE : View.GONE);
             holder.ns.setVisibility(t._id != null ? View.VISIBLE : View.GONE);
+            holder.invalid.setVisibility(t.isValid ? View.GONE : View.VISIBLE);
             if (iob.iobContrib != 0)
                 holder.iob.setTextColor(ContextCompat.getColor(MainApp.instance(), R.color.colorActive));
             else
@@ -113,6 +114,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
             TextView remove;
             TextView ph;
             TextView ns;
+            TextView invalid;
 
             TreatmentsViewHolder(View itemView) {
                 super(itemView);
@@ -125,6 +127,7 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                 mealOrCorrection = (TextView) itemView.findViewById(R.id.treatments_mealorcorrection);
                 ph = (TextView) itemView.findViewById(R.id.pump_sign);
                 ns = (TextView) itemView.findViewById(R.id.ns_sign);
+                invalid = (TextView) itemView.findViewById(R.id.invalid_sign);
                 remove = (TextView) itemView.findViewById(R.id.treatments_remove);
                 remove.setOnClickListener(this);
                 remove.setPaintFlags(remove.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
@@ -141,10 +144,15 @@ public class TreatmentsBolusFragment extends SubscriberFragment implements View.
                         builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String _id = treatment._id;
-                                if (_id != null && !_id.equals("")) {
-                                    NSUpload.removeCareportalEntryFromNS(_id);
+                                if (treatment.source == Source.PUMP) {
+                                    treatment.isValid = false;
+                                    MainApp.getDbHelper().update(treatment);
+                                } else {
+                                    if (_id != null && !_id.equals("")) {
+                                        NSUpload.removeCareportalEntryFromNS(_id);
+                                    }
+                                    MainApp.getDbHelper().delete(treatment);
                                 }
-                                MainApp.getDbHelper().delete(treatment);
                                 updateGUI();
                                 Answers.getInstance().logCustom(new CustomEvent("RemoveTreatment"));
                             }

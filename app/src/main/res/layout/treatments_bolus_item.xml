@@ -80,7 +80,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginRight="30dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -105,6 +104,14 @@
                 android:layout_marginRight="10dp"
                 android:text="NS"
                 android:textColor="@color/colorSetTempButton" />
+
+            <TextView
+                android:id="@+id/invalid_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/invalid"
+                android:textColor="@android:color/holo_red_light" />
 
         </LinearLayout>
 
