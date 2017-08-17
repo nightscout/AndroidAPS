@@ -103,7 +103,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
-        pumpDescription.isExtendedBolusCapable = false; // TODO
+        pumpDescription.isExtendedBolusCapable = false;
         pumpDescription.extendedBolusStep = 0.1d;
         pumpDescription.extendedBolusDurationStep = 15;
         pumpDescription.extendedBolusMaxDuration = 12 * 60;
@@ -618,7 +618,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return pumpEnactResult;
     }
 
-    // TODO
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         return OPERATION_NOT_SUPPORTED;
