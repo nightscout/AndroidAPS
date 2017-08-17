@@ -10,6 +10,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
@@ -224,7 +225,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         if (!boundSucceeded) {
-            pump.stateSummary = "No connection to ruffy. Pump control not available.";
+            pump.stateSummary = "No connection to ruffy. Pump control unavailable.";
         }
         return true;
     }
@@ -393,36 +394,41 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-
-                // TODO read history to ensure there are no boluses delivered on the pump we aren't
-                // aware of and haven't included in the bolus calulation
-
-                // Note that the BolusCommand sends progress updates to the bolusProgressReporterCallback,
-                // which then posts appropriate events on the bus, so in this branch no posts are needed
-                runningBolusCommand = Config.comboExperimentalBolus
-                        ? new CancellableBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
-                        : new BolusCommand(detailedBolusInfo.insulin);
-                CommandResult bolusCmdResult = runCommand(runningBolusCommand);
-                runningBolusCommand = null;
-                PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                pumpEnactResult.success = bolusCmdResult.success;
-                pumpEnactResult.enacted = bolusCmdResult.enacted;
-                pumpEnactResult.comment = bolusCmdResult.message;
-
-                // if enacted by pump, add bolus and carbs to treatment history
-                if (pumpEnactResult.enacted) {
-                    pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
+                if (!Config.comboSplitBoluses) {
+                    return deliverBolus(detailedBolusInfo);
+                } else {
+                    // split up bolus into 2 U parts
+                    PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                    pumpEnactResult.success = true;
+                    pumpEnactResult.enacted = true;
+                    pumpEnactResult.bolusDelivered = 0d;
                     pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
 
-                    detailedBolusInfo.date = bolusCmdResult.completionTime;
+                    double remainingBolus = detailedBolusInfo.insulin;
+                    int split = 1;
+                    while (remainingBolus > 0.05) {
+                        double bolus = remainingBolus > 2 ? 2 : remainingBolus;
+                        DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
+                        bolusInfo.insulin = bolus;
+                        bolusInfo.isValid = false;
+                        log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
+                        PumpEnactResult bolusResult = deliverBolus(bolusInfo);
+                        if (!bolusResult.success) {
+                            return bolusResult;
+                        }
+                        pumpEnactResult.bolusDelivered += bolus;
+                        remainingBolus -= 2;
+                        split++;
+                    }
                     MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                } else {
-                    pumpEnactResult.bolusDelivered = 0d;
-                    pumpEnactResult.carbsDelivered = 0d;
+                    return pumpEnactResult;
                 }
-                return pumpEnactResult;
             } else {
                 // no bolus required, carb only treatment
+
+                // TODO the ui freezes when the calculator issues a carb-only treatment
+                // so just wait, yeah, this is dumb. for now; proper fix via GL#10
+                // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
                 SystemClock.sleep(6000);
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
                 pumpEnactResult.success = true;
@@ -448,6 +454,35 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.error("deliverTreatment: Invalid input");
             return pumpEnactResult;
         }
+    }
+
+    @NonNull
+    private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
+        runningBolusCommand = Config.comboExperimentalBolus
+                ? new CancellableBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
+                : new BolusCommand(detailedBolusInfo.insulin);
+        CommandResult bolusCmdResult = runCommand(runningBolusCommand);
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = bolusCmdResult.success;
+        pumpEnactResult.enacted = bolusCmdResult.enacted;
+        pumpEnactResult.comment = bolusCmdResult.message;
+
+        // if enacted, add bolus and carbs to treatment history
+        if (pumpEnactResult.enacted) {
+            // TODO if no error occurred, the requested bolus is what the pump delievered,
+            // that has been checked. If an error occurred, we should check how much insulin
+            // was delivered, e.g. when the cartridge went empty mid-bolus
+            // For the first iteration, the alert the pump raises must suffice
+            pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
+            pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+
+            detailedBolusInfo.date = bolusCmdResult.completionTime;
+            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        } else {
+            pumpEnactResult.bolusDelivered = 0d;
+            pumpEnactResult.carbsDelivered = 0d;
+        }
+        return pumpEnactResult;
     }
 
     @Override
@@ -553,7 +588,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
-        // TODO GL#70
         return OPERATION_NOT_SUPPORTED;
     }
 

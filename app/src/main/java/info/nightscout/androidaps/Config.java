@@ -49,5 +49,9 @@ public class Config {
     public static final boolean logDanaSerialEngine = true;
 
     // Combo specific
-    public static final boolean comboExperimentalBolus = false;
+    /** enable the UNFINISHED and currently BROKEN bolus cammand that reports progress and can be cancelled */
+    public static final boolean comboExperimentalBolus = true;
+    /** very quick hack to split up bolus into 2 U parts, spaced roughly 45s apart.
+     * Don't combine with experimental bolus */
+    public static final boolean comboSplitBoluses = false && !comboExperimentalBolus;
 }

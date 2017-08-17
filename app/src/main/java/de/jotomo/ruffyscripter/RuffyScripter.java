@@ -212,8 +212,8 @@ public class RuffyScripter {
 
         synchronized (RuffyScripter.class) {
             try {
-                long connectStart = System.currentTimeMillis();
                 activeCmd = cmd;
+                long connectStart = System.currentTimeMillis();
                 ensureConnected();
                 final RuffyScripter scripter = this;
                 final Returnable returnable = new Returnable();
