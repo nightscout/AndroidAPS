@@ -164,8 +164,8 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                                 DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                                 detailedBolusInfo.insulin = finalInsulinAfterConstraints;
                                 detailedBolusInfo.context = context;
-                                detailedBolusInfo.addToTreatments = false;
                                 detailedBolusInfo.source = Source.NONE;
+                                detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
                                 PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                 if (!result.success) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(context);

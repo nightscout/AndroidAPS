@@ -615,7 +615,7 @@ public class ActionStringHandler {
             public void run() {
                 DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                 detailedBolusInfo.insulin = amount;
-                detailedBolusInfo.addToTreatments = false;
+                detailedBolusInfo.isValid = false;
                 detailedBolusInfo.source = Source.USER;
                 PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
                 if (!result.success) {

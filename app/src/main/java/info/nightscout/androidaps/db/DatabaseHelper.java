@@ -598,6 +598,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         scheduleTreatmentChange();
     }
 
+    public void update(Treatment treatment) {
+        try {
+            getDaoTreatments().update(treatment);
+            updateEarliestDataChange(treatment.date);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        scheduleTreatmentChange();
+    }
+
     public void deleteTreatmentById(String _id) {
         Treatment stored = findTreatmentById(_id);
         if (stored != null) {
