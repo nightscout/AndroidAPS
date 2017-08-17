@@ -30,18 +30,18 @@ public class ProfileViewerDialog extends DialogFragment {
 
     private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
 
-    private  TextView noProfile;
-    private  TextView units;
-    private  TextView dia;
-    private  TextView activeProfile;
-    private  TextView ic;
-    private  TextView isf;
-    private  TextView basal;
-    private  TextView target;
-    private  View dateDelimiter;
-    private  LinearLayout dateLayout;
-    private  TextView dateTextView;
-    private  Button refreshButton;
+    private TextView noProfile;
+    private TextView units;
+    private TextView dia;
+    private TextView activeProfile;
+    private TextView ic;
+    private TextView isf;
+    private TextView basal;
+    private TextView target;
+    private View dateDelimiter;
+    private LinearLayout dateLayout;
+    private TextView dateTextView;
+    private Button refreshButton;
 
     static ProfileViewerDialog newInstance(long time) {
         ProfileViewerDialog dialog = new ProfileViewerDialog();
