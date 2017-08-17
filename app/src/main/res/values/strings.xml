@@ -702,6 +702,8 @@
     <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short" formatted="false">"DIA of %s too short - using %s instead!"</string>
     <string name="activate_profile">ACTIVATE PROFILE</string>
+    <string name="bolusstopping">Stopping bolus delivery</string>
+    <string name="bolusstopped">Bolus delivery stopped</string>
 
 
 </resources>

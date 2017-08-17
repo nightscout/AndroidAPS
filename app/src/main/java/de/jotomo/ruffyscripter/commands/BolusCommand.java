@@ -18,7 +18,6 @@ import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.DELI
 import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.STOPPED;
 import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.STOPPING;
 import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.DELIVERED;
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.PREPARING;
 
 public class BolusCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
@@ -164,7 +163,8 @@ public class BolusCommand implements Command {
     }
 
     private boolean confirmAlert(String alertText, int maxWaitTillExpectedAlert) {
-
+        // TODO
+        return false;
     }
 
     private void enterBolusMenu(RuffyScripter scripter) {

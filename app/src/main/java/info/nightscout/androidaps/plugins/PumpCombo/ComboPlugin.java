@@ -369,36 +369,38 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private static ProgressReportCallback bolusProgressReportCallback = new ProgressReportCallback() {
         @Override
         public void report(ProgressReportCallback.State state, int percent, double delivered) {
-            EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+            EventOverviewBolusProgress enent = EventOverviewBolusProgress.getInstance();
             switch (state) {
-                // TODO move into enum as toString or so and make it translateb
                 case DELIVERING:
-                    bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
+                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
                     break;
                 case DELIVERED:
-                    bolusingEvent.status = "Bolus delivery finished successfully";
-                    break;
-                case STOPPED:
-                    bolusingEvent.status = "Bolus delivery was cancelled";
+                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), delivered);
                     break;
                 case STOPPING:
-                    bolusingEvent.status = "Cancelling bolus delivery";
+                    enent.status = MainApp.sResources.getString(R.string.bolusstopping);
+                    break;
+                case STOPPED:
+                    enent.status = MainApp.sResources.getString(R.string.bolusstopped);
                     break;
             }
-            bolusingEvent.percent = percent;
-            MainApp.bus().post(bolusingEvent);
+            enent.percent = percent;
+            MainApp.bus().post(enent);
         }
     };
 
-    // what a mess: pump integration code reading carb info from Detailed**Bolus**Info,
-    // writing carb treatments to the history table. What's PumpEnactResult for again?
+    /** Updates Treatment records with carbs and boluses and delivers a bolus if needed */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
-                MainApp.bus().post(bolusingEvent);
+
+                // TODO read history to ensure there are no boluses delivered on the pump we aren't
+                // aware of and haven't included in the bolus calulation
+
+                // Note that the BolusCommand send progress updates to the bolusProgressReporterCallback,
+                // which then posts appropriate events on the bus, so in this branch no posts are needed
                 runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
                 CommandResult bolusCmdResult = runCommand(runningBolusCommand);
                 runningBolusCommand = null;
@@ -407,12 +409,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 pumpEnactResult.enacted = bolusCmdResult.enacted;
                 pumpEnactResult.comment = bolusCmdResult.message;
 
-                // if enacted, add bolus and carbs to treatment history
+                // if enacted by pump, add bolus and carbs to treatment history
                 if (pumpEnactResult.enacted) {
-                    // TODO if no error occurred, the requested bolus is what the pump delievered,
-                    // that has been checked. If an error occurred, we should check how much insulin
-                    // was delivered, e.g. when the cartridge went empty mid-bolus
-                    // For the first iteration, the alert the pump raises must suffice
                     pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
                     pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
 
@@ -425,11 +423,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 return pumpEnactResult;
             } else {
                 // no bolus required, carb only treatment
-
-                // TODO the ui freezes when the calculator issues a carb-only treatment
-                // so just wait, yeah, this is dumb. for now; proper fix via GL#10
-                // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
-                // send event to indicate popup can be dismissed?
                 SystemClock.sleep(6000);
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
                 pumpEnactResult.success = true;
@@ -438,6 +431,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
                 pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+
+                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                bolusingEvent.percent = 100;
+                MainApp.bus().post(bolusingEvent);
                 return pumpEnactResult;
             }
         } else {
@@ -451,6 +448,12 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.error("deliverTreatment: Invalid input");
             return pumpEnactResult;
         }
+    }
+
+    @Override
+    public void stopBolusDelivering() {
+        BolusCommand localRunningBolusCommand = runningBolusCommand;
+        if (localRunningBolusCommand != null) localRunningBolusCommand.requestCancellation();
     }
 
     private CommandResult runCommand(Command command) {
@@ -484,11 +487,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
-    }
-
-    @Override
-    public void stopBolusDelivering() {
-        if (runningBolusCommand != null) runningBolusCommand.requestCancellation();
     }
 
     // Note: AAPS calls this only to enact OpenAPS recommendations
