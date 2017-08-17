@@ -215,7 +215,7 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
                 }
                 break;
             case R.id.actions_canceltempbasal:
-                if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+                if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
                     sHandler.post(new Runnable() {
                         @Override
                         public void run() {
