@@ -212,7 +212,8 @@ public class Profile {
                     retValue += format.format(o2.getDouble("value"));
                 }
                 retValue += " " + units;
-                retValue += "\n";
+                if (index + 1 < array.length())
+                    retValue += "\n";
             } catch (JSONException e) {
                 e.printStackTrace();
             }

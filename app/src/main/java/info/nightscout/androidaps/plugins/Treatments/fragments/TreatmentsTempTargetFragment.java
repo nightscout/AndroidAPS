@@ -141,7 +141,6 @@ public class TreatmentsTempTargetFragment extends SubscriberFragment implements 
             @Override
             public void onClick(View v) {
                 final TempTarget tempTarget = (TempTarget) v.getTag();
-                final Context finalContext = context;
                 switch (v.getId()) {
                     case R.id.temptargetrange_remove:
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
