@@ -31,7 +31,6 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.ProgressReportCallback;
 import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
@@ -366,9 +365,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    private static ProgressReportCallback bolusProgressReportCallback = new ProgressReportCallback() {
+    private static BolusCommand.ProgressReportCallback bolusProgressReportCallback = new BolusCommand.ProgressReportCallback() {
         @Override
-        public void report(ProgressReportCallback.State state, int percent, double delivered) {
+        public void report(BolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
             EventOverviewBolusProgress enent = EventOverviewBolusProgress.getInstance();
             switch (state) {
                 case DELIVERING:
@@ -399,7 +398,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 // TODO read history to ensure there are no boluses delivered on the pump we aren't
                 // aware of and haven't included in the bolus calulation
 
-                // Note that the BolusCommand send progress updates to the bolusProgressReporterCallback,
+                // Note that the BolusCommand sends progress updates to the bolusProgressReporterCallback,
                 // which then posts appropriate events on the bus, so in this branch no posts are needed
                 runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
                 CommandResult bolusCmdResult = runCommand(runningBolusCommand);

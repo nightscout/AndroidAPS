@@ -14,10 +14,10 @@ import java.util.Locale;
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.DELIVERING;
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.STOPPED;
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.STOPPING;
-import static de.jotomo.ruffyscripter.commands.ProgressReportCallback.State.DELIVERED;
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.DELIVERING;
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.STOPPED;
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.STOPPING;
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.DELIVERED;
 
 public class BolusCommand implements Command {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
@@ -86,11 +86,23 @@ public class BolusCommand implements Command {
             double lastBolusReported = 0;
             // wait for bolus delivery to complete; the remaining units to deliver are counted
             // down and are displayed on the main menu.
+            // TODO extract into method
             while (bolusRemaining != null) {
                 if (cancelRequested) {
                     progressReportCallback.report(STOPPING, 0, 0);
+                    // TODO just press up 3s in a separated thread and let this loop run
+                    // and at the end handle the outcome and returned raise alarms, whether cancel was reuqested etc
+
                     // TODO press up 3s, deal with bolus cancelled error, retrieved amount actually delivered from history and return it
-                    // since the cancellation takes three seconds some insulin will have definately been delivered (delivery speed is roughly 0.1U/s)
+                    // since the cancellation takes three seconds some insulin will have definitely been delivered (delivery speed is roughly 0.1U/s),
+                    // but the pump may also finish delivering the bolus while we try to cancel it
+                    // so, press a button, keep it press and deal with three outcomes:
+                    // * delivery finished (no more remaining bolus displayed)
+                    // * bolus was cancelled (warning raised)
+                    // * any other error (low cartridge, occlusion, both will also trigger 'bolus cancelled' errors)
+                    // cancelBolusInDelivery()
+                    // TODO new thread to press button and then deal with outcomes below, since all errors can occur at all time, pressing
+                    // abort just forces an error (if keyrpess is in time)
                     progressReportCallback.report(STOPPED, 0, 0);
                 }
                 if (lastBolusReported != bolusRemaining) {
@@ -111,7 +123,7 @@ public class BolusCommand implements Command {
                 // how does the dana handle pump errors? has no vibration, but sound i guess
                 // should this be configurabe? initially?
                 if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-
+                    // see errors being dealt with trying to cancel
                 }
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
@@ -161,6 +173,8 @@ public class BolusCommand implements Command {
             return e.toCommandResult();
         }
     }
+
+    // TODO confirmAlarms? and report back which were cancelled?
 
     private boolean confirmAlert(String alertText, int maxWaitTillExpectedAlert) {
         // TODO
@@ -229,5 +243,16 @@ public class BolusCommand implements Command {
         return "BolusCommand{" +
                 "bolus=" + bolus +
                 '}';
+    }
+
+    public interface ProgressReportCallback {
+        enum State {
+            DELIVERING,
+            DELIVERED,
+            STOPPING,
+            STOPPED
+        }
+
+        void report(State state, int percent, double delivered);
     }
 }
