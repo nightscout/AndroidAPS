@@ -393,8 +393,9 @@ public class Profile {
         else return DecimalFormatter.to1Decimal(valueInMmol);
     }
 
+    // targets are stored in mg/dl
     public static String toTargetRangeString(double low, double high, String units) {
-        if (low == high) return toUnitsString(low, low, units);
-        else return toUnitsString(low, low, units) + " - " + toUnitsString(high, high, units);
+        if (low == high) return toUnitsString(low, Profile.fromMgdlToUnits(low, Constants.MMOL), units);
+        else return toUnitsString(low, Profile.fromMgdlToUnits(low, Constants.MMOL), units) + " - " + toUnitsString(high, Profile.fromMgdlToUnits(high, Constants.MMOL), units);
     }
 }
