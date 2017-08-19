@@ -187,8 +187,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             if (!t.isSMB) {
                 // instead of dividing the DIA that only worked on the bilinear curves,
                 // multiply the time the treatment is seen active.
-                long timeSinceTreatent = t.date - time;
-                long snoozeTime = t.date - (long)(timeSinceTreatent * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                long timeSinceTreatment =  time - t.date;
+                long snoozeTime = t.date + (long)(timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
                 Iob bIOB = t.iobCalc(snoozeTime, dia);
                 total.bolussnooze += bIOB.iobContrib;
             } else {
