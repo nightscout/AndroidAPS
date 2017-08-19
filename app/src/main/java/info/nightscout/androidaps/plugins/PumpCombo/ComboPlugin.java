@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
+import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
@@ -33,8 +34,9 @@ import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
 import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
-import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.commands.SetTbrCommandAlt;
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -367,28 +369,36 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
-                PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                pumpEnactResult.success = bolusCmdResult.success;
-                pumpEnactResult.enacted = bolusCmdResult.enacted;
-                pumpEnactResult.comment = bolusCmdResult.message;
-
-                // if enacted, add bolus and carbs to treatment history
-                if (pumpEnactResult.enacted) {
-                    // TODO if no error occurred, the requested bolus is what the pump delievered,
-                    // that has been checked. If an error occurred, we should check how much insulin
-                    // was delivered, e.g. when the cartridge went empty mid-bolus
-                    // For the first iteration, the alert the pump raises must suffice
-                    pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
-                    pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-
-                    detailedBolusInfo.date = bolusCmdResult.completionTime;
-                    MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                if (!Config.comboSplitBoluses) {
+                    return deliverBolus(detailedBolusInfo);
                 } else {
+                    // split up bolus into 2 U parts
+                    PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                    pumpEnactResult.success = true;
+                    pumpEnactResult.enacted = true;
                     pumpEnactResult.bolusDelivered = 0d;
-                    pumpEnactResult.carbsDelivered = 0d;
+                    pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+                    pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+
+                    double remainingBolus = detailedBolusInfo.insulin;
+                    int split = 1;
+                    while (remainingBolus > 0.05) {
+                        double bolus = remainingBolus > 2 ? 2 : remainingBolus;
+                        DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
+                        bolusInfo.insulin = bolus;
+                        bolusInfo.isValid = false;
+                        log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
+                        PumpEnactResult bolusResult = deliverBolus(bolusInfo);
+                        if (!bolusResult.success) {
+                            return bolusResult;
+                        }
+                        pumpEnactResult.bolusDelivered += bolus;
+                        remainingBolus -= 2;
+                        split++;
+                    }
+                    MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+                    return pumpEnactResult;
                 }
-                return pumpEnactResult;
             } else {
                 // no bolus required, carb only treatment
 
@@ -416,6 +426,32 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.error("deliverTreatment: Invalid input");
             return pumpEnactResult;
         }
+    }
+
+    @NonNull
+    private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
+        CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = bolusCmdResult.success;
+        pumpEnactResult.enacted = bolusCmdResult.enacted;
+        pumpEnactResult.comment = bolusCmdResult.message;
+
+        // if enacted, add bolus and carbs to treatment history
+        if (pumpEnactResult.enacted) {
+            // TODO if no error occurred, the requested bolus is what the pump delievered,
+            // that has been checked. If an error occurred, we should check how much insulin
+            // was delivered, e.g. when the cartridge went empty mid-bolus
+            // For the first iteration, the alert the pump raises must suffice
+            pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
+            pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+
+            detailedBolusInfo.date = bolusCmdResult.completionTime;
+            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        } else {
+            pumpEnactResult.bolusDelivered = 0d;
+            pumpEnactResult.carbsDelivered = 0d;
+        }
+        return pumpEnactResult;
     }
 
     private CommandResult runCommand(Command command) {
@@ -492,12 +528,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             adjustedPercent = rounded.intValue();
         }
 
-        CommandResult commandResult = runCommand(new SetTbrCommand(adjustedPercent, durationInMinutes));
+        Command cmd = !Config.comboUseAlternateSetTbrCommand
+                ? new SetTbrCommand(adjustedPercent, durationInMinutes)
+                : new SetTbrCommandAlt(adjustedPercent, durationInMinutes);
+        CommandResult commandResult = runCommand(cmd);
 
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
             // TODO commandResult.state.tbrRemainingDuration might already display 29 if 30 was set, since 29:59 is shown as 29 ...
             // we should check this, but really ... something must be really screwed up if that number was anything different
+            // TODO actually ... might setting 29 help with gaps between TBRs? w/o the hack in TemporaryBasal?
+            // nah, fucks up duration in treatment history
             tempStart.durationInMinutes = durationInMinutes;
             tempStart.percentRate = adjustedPercent;
             tempStart.isAbsolute = false;
