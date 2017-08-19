@@ -109,7 +109,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
         PumpInterface pump = MainApp.getConfigBuilder();
         if (SP.getBoolean("syncprofiletopump", false)) {
             if (pump.setNewBasalProfile(MainApp.getConfigBuilder().getProfile()) == PumpInterface.SUCCESS) {
-                SmsCommunicatorPlugin smsCommunicatorPlugin = (SmsCommunicatorPlugin) MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
+                SmsCommunicatorPlugin smsCommunicatorPlugin = MainApp.getSpecificPlugin(SmsCommunicatorPlugin.class);
                 if (smsCommunicatorPlugin != null && smsCommunicatorPlugin.isEnabled(PluginBase.GENERAL)) {
                     smsCommunicatorPlugin.sendNotificationToAllNumbers(MainApp.sResources.getString(R.string.profile_set_ok));
                 }

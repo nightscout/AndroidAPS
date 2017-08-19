@@ -615,7 +615,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     finalLastRun.lastEnact = new Date();
                                     finalLastRun.lastOpenModeAccept = new Date();
                                     NSUpload.uploadDeviceStatus();
-                                    ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                    ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
                                     if (objectivesPlugin != null) {
                                         ObjectivesPlugin.manualEnacts++;
                                         ObjectivesPlugin.saveProgress();
