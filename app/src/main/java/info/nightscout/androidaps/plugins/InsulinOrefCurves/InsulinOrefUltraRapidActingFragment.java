@@ -51,7 +51,7 @@ public class InsulinOrefUltraRapidActingFragment extends Fragment {
     private void updateGUI() {
         insulinName.setText(insulinPlugin.getFriendlyName());
         insulinComment.setText(insulinPlugin.getComment());
-        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + new Double(insulinPlugin.getDia()).toString() + "h");
+        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(insulinPlugin.getDia()) + "h");
         insulinGraph.show(insulinPlugin);
     }
 
