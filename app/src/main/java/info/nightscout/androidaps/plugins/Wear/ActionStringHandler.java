@@ -472,7 +472,7 @@ public class ActionStringHandler {
         //Check for Temp-Target:
         TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
         if (tempTarget != null) {
-            ret += "Temp Target: " + Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, profile.getUnits()), profile.getUnits()) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, profile.getUnits()), profile.getUnits());
+            ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, profile.getUnits());
             ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());
             ret += "\n\n";
         }
@@ -615,7 +615,7 @@ public class ActionStringHandler {
             public void run() {
                 DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                 detailedBolusInfo.insulin = amount;
-                detailedBolusInfo.addToTreatments = false;
+                detailedBolusInfo.isValid = false;
                 detailedBolusInfo.source = Source.USER;
                 PumpEnactResult result = MainApp.getConfigBuilder().deliverTreatment(detailedBolusInfo);
                 if (!result.success) {

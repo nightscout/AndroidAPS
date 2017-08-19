@@ -85,12 +85,16 @@ public class DateUtil {
     }
 
     public static int toSeconds(String hh_colon_mm) {
-        Pattern p = Pattern.compile("(\\d+):(\\d+)");
+        Pattern p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.|)");
         Matcher m = p.matcher(hh_colon_mm);
         int retval = 0;
 
         if (m.find()) {
             retval = SafeParse.stringToInt(m.group(1)) * 60 * 60 + SafeParse.stringToInt(m.group(2)) * 60;
+            if (m.group(3).equals(" .a.m") && m.group(1).equals("12"))
+                retval -= 12 * 60 * 60;
+            if (m.group(3).equals(" p.m.") && !m.group(1).equals("12"))
+                retval += 12 * 60 * 60;
         }
         return retval;
     }

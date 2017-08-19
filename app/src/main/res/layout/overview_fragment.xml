@@ -375,7 +375,8 @@
                 android:id="@+id/overview_accepttemplayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/overview_accepttempbutton"
@@ -386,8 +387,7 @@
                     android:layout_marginTop="3dp"
                     android:layout_weight="0.5"
                     android:text="Accept new temp\n0.25U/h"
-                    android:textColor="@color/colorAcceptTempButton"
-                    android:visibility="gone" />
+                    android:textColor="@color/colorAcceptTempButton" />
             </LinearLayout>
 
             <LinearLayout

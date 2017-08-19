@@ -952,19 +952,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
-            if (tempTarget.low == tempTarget.high)
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units));
-            else
-                tempTargetView.setText(Profile.toUnitsString(tempTarget.low, Profile.fromMgdlToUnits(tempTarget.low, units), units) + " - " + Profile.toUnitsString(tempTarget.high, Profile.fromMgdlToUnits(tempTarget.high, units), units));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, units));
         } else {
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            double low = MainApp.getConfigBuilder().getProfile().getTargetLow();
-            double high = MainApp.getConfigBuilder().getProfile().getTargetHigh();
-            if (low == high)
-                tempTargetView.setText("" + low);
-            else
-                tempTargetView.setText(low + " - " + high);
+            tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
         if (Config.NSCLIENT && tempTarget == null) {
@@ -1605,7 +1597,9 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         List<Treatment> treatments = MainApp.getConfigBuilder().getTreatmentsFromHistory();
 
         for (int tx = 0; tx < treatments.size(); tx++) {
-            DataPointWithLabelInterface t = treatments.get(tx);
+            Treatment t = treatments.get(tx);
+            if (!t.isValid)
+                continue;
             if (t.getX() < fromTime || t.getX() > endTime) continue;
             t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
             filteredTreatments.add(t);

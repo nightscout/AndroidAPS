@@ -6,6 +6,10 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+
 
 public class ToastUtils {
     public static void showToastInUiThread(final Context ctx,
@@ -25,6 +29,13 @@ public class ToastUtils {
 
         showToastInUiThread(ctx, string);
         playSound(ctx, soundID);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Notification notification = new Notification(Notification.TOAST_ALARM, string, Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(notification));
+            }
+        }).start();
     }
 
     private static void playSound(final Context ctx, final int soundID) {

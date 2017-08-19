@@ -179,6 +179,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
+            if (!t.isValid) continue;
             if (t.date > time) continue;
             Iob tIOB = t.iobCalc(time, dia);
             total.iob += tIOB.iobContrib;
@@ -222,6 +223,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         long dia_ago = now - (new Double(1.5d * profile.getDia() * 60 * 60 * 1000l)).longValue();
 
         for (Treatment treatment : treatments) {
+            if (!treatment.isValid)
+                continue;
             long t = treatment.date;
             if (t > dia_ago && t <= now) {
                 if (treatment.carbs >= 1) {
@@ -250,6 +253,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         List<Treatment> in5minback = new ArrayList<>();
         for (Integer pos = 0; pos < treatments.size(); pos++) {
             Treatment t = treatments.get(pos);
+            if (!t.isValid)
+                continue;
             if (t.date <= time && t.date > time - 5 * 60 * 1000 && t.carbs > 0)
                 in5minback.add(t);
         }
@@ -411,6 +416,8 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         treatment.source = detailedBolusInfo.source;
         treatment.pumpId = detailedBolusInfo.pumpId;
         treatment.insulin = detailedBolusInfo.insulin;
+        treatment.isValid = detailedBolusInfo.isValid;
+        treatment.isSMB = detailedBolusInfo.isSMB;
         if (detailedBolusInfo.carbTime == 0)
             treatment.carbs = detailedBolusInfo.carbs;
         treatment.source = detailedBolusInfo.source;

@@ -33,16 +33,16 @@ import info.nightscout.utils.DecimalFormatter;
 public class ProfileViewDialog extends DialogFragment {
     private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
 
-    private static TextView noProfile;
-    private static TextView units;
-    private static TextView dia;
-    private static TextView activeProfile;
-    private static TextView ic;
-    private static TextView isf;
-    private static TextView basal;
-    private static TextView target;
+    private  TextView noProfile;
+    private  TextView units;
+    private  TextView dia;
+    private  TextView activeProfile;
+    private  TextView ic;
+    private  TextView isf;
+    private  TextView basal;
+    private  TextView target;
 
-    private static Button refreshButton;
+    private  Button refreshButton;
 
     Handler mHandler;
     static HandlerThread mHandlerThread;

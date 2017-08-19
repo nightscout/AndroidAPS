@@ -212,7 +212,8 @@ public class Profile {
                     retValue += format.format(o2.getDouble("value"));
                 }
                 retValue += " " + units;
-                retValue += "\n";
+                if (index + 1 < array.length())
+                    retValue += "\n";
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -390,5 +391,11 @@ public class Profile {
     public static String toUnitsString(Double valueInMgdl, Double valueInMmol, String units) {
         if (units.equals(Constants.MGDL)) return DecimalFormatter.to0Decimal(valueInMgdl);
         else return DecimalFormatter.to1Decimal(valueInMmol);
+    }
+
+    // targets are stored in mg/dl
+    public static String toTargetRangeString(double low, double high, String units) {
+        if (low == high) return toUnitsString(low, Profile.fromMgdlToUnits(low, Constants.MMOL), units);
+        else return toUnitsString(low, Profile.fromMgdlToUnits(low, Constants.MMOL), units) + " - " + toUnitsString(high, Profile.fromMgdlToUnits(high, Constants.MMOL), units);
     }
 }

@@ -322,9 +322,15 @@ public class DanaRKoreanExecutionService extends Service {
                 //0x3201
                 mSerialIOThread.sendMessage(new MsgSettingMaxValues());
                 mSerialIOThread.sendMessage(new MsgSettingGlucose());
-                mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
-                mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
+                long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                log.debug("Pump time difference: " + timeDiff + " seconds");
+                if (Math.abs(timeDiff) > 10) {
+                    mSerialIOThread.sendMessage(new MsgSetTime(new Date()));
+                    mSerialIOThread.sendMessage(new MsgSettingPumpTime());
+                    timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                    log.debug("Pump time difference: " + timeDiff + " seconds");
+                }
                 danaRPump.lastSettingsRead = now;
             }
 
