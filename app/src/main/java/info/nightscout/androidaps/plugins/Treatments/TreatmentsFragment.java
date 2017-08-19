@@ -47,6 +47,9 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
         profileSwitchTab = (TextView) view.findViewById(R.id.treatments_profileswitches);
         treatmentsTab.setOnClickListener(this);
         extendedBolusesTab.setOnClickListener(this);
+        if (!MainApp.getConfigBuilder().getPumpDescription().isExtendedBolusCapable) {
+            extendedBolusesTab.setVisibility(View.GONE);
+        }
         tempBasalsTab.setOnClickListener(this);
         tempTargetTab.setOnClickListener(this);
         profileSwitchTab.setOnClickListener(this);
