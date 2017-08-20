@@ -84,9 +84,13 @@ public class BolusCommand implements Command {
             progressReportCallback.report(DELIVERING, 0, 0);
             Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             double lastBolusReported = 0;
+            List<String> alarmsRaised = new ArrayList<>();
             // wait for bolus delivery to complete; the remaining units to deliver are counted
             // down and are displayed on the main menu.
             // TODO extract into method
+
+            // TODO 'low cartrdige' alarm must be handled inside, since the bolus continues regardless;
+            // it must be claread so we can see the remaining bolus again;
             while (bolusRemaining != null) {
                 if (cancelRequested) {
                     progressReportCallback.report(STOPPING, 0, 0);
@@ -122,11 +126,30 @@ public class BolusCommand implements Command {
                 // the data will be out of sync for a bit.
                 // how does the dana handle pump errors? has no vibration, but sound i guess
                 // should this be configurabe? initially?
+
                 if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                    // see errors being dealt with trying to cancel
+                    String message = (String) scripter.currentMenu.getAttribute(MenuAttribute.MESSAGE);
+                    if (message.equals("LOW CARTRIDGE")) {
+                        alarmsRaised.add(message);
+                        // confirm, note alert was raised and continue bolusing)
+                    } else {
+                        // any other alert
+                        break;
+                    }
                 }
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
+            }
+
+            // wait up to 2s for any possible warning to be raised
+            long minWait = System.currentTimeMillis() + 2 * 1000;
+            while (scripter.currentMenu.getType() != MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < minWait) {
+                SystemClock.sleep(50);
+            }
+
+            // process warnings (confirm them, report back to AAPS about them)
+            while (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < minWait) {
+               // TODO
             }
 
             // TODO what if we hit 'cartridge low' alert here? is it immediately displayed or after the bolus?
@@ -137,7 +160,8 @@ public class BolusCommand implements Command {
                     "Bolus delivery did not complete as expected. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
-            progressReportCallback.report(DELIVERED, 100, bolus);
+
+            // TODO report back what was read from history
 
             // read last bolus record; those menus display static data and therefore
             // only a single menu update is sent
@@ -166,6 +190,8 @@ public class BolusCommand implements Command {
                         .message("Bolus was correctly delivered and checked against history, but we "
                                 + "did not return the main menu successfully.");
             }
+
+            progressReportCallback.report(DELIVERED, 100, bolus);
 
             return new CommandResult().success(true).enacted(true)
                     .message(String.format(Locale.US, "Delivered %02.1f U", bolus));
