@@ -90,7 +90,7 @@ public class UploadQueue {
                             log.debug("Removed item from UploadQueue. " + UploadQueue.status());
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        log.error("Unhandled exception", e);
                     }
                 }
             });
@@ -126,7 +126,7 @@ public class UploadQueue {
                 iterator.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return result;
     }

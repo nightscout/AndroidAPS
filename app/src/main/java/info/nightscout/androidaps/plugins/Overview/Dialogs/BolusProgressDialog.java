@@ -171,7 +171,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                                     try {
                                         dismiss();
                                     } catch (Exception e) {
-                                        e.printStackTrace(); // TODO: do this better way
+                                        log.error("Unhandled exception", e);
                                     }
                                 }
                             });

@@ -17,6 +17,9 @@ import android.widget.RadioButton;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
@@ -28,6 +31,7 @@ import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(NewExtendedBolusDialog.class);
 
     PlusMinusEditText editInsulin;
     PlusMinusEditText editDuration;
@@ -115,7 +119,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                     dismiss();
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
                 break;
             case R.id.cancel:

@@ -209,9 +209,9 @@ public class DanaRExecutionService extends Service {
                 try {
                     mRfcommSocket.connect();
                 } catch (IOException e) {
-                    //e.printStackTrace();
+                    //log.error("Unhandled exception", e);
                     if (e.getMessage().contains("socket closed")) {
-                        e.printStackTrace();
+                        log.error("Unhandled exception", e);
                         break;
                     }
                 }
@@ -352,7 +352,7 @@ public class DanaRExecutionService extends Service {
                 NSUpload.uploadError(MainApp.sResources.getString(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return true;
     }

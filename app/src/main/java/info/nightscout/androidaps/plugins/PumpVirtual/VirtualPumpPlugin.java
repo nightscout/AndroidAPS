@@ -415,7 +415,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
             pump.put("reservoir", reservoirInUnits);
             pump.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return pump;
     }

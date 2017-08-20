@@ -142,7 +142,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
                 JSONObject object = new JSONObject(json);
                 mbg = object.getDouble("mgdl");
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             return Profile.fromMgdlToUnits(mbg, units);
         }
@@ -155,7 +155,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
                 units = object.getString("units");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         if (glucose != 0d) {
             double mmol = 0d;
@@ -186,7 +186,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             if (object.has("notes"))
                 return object.getString("notes");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return Translator.translate(eventType);
     }
@@ -198,7 +198,7 @@ public class CareportalEvent implements DataPointWithLabelInterface {
             if (object.has("duration"))
                 return object.getInt("duration") * 60 * 1000L;
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return 0;
     }

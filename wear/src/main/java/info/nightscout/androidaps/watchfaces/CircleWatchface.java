@@ -507,7 +507,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("Unhandled exception", e);
                     }
                 }
                 setIsAnimated(false);

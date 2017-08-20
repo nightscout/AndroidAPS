@@ -112,7 +112,7 @@ public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnCli
                             JSONArray iobArray = new JSONArray(determineBasalAdapterAMAJS.getIobDataParam());
                             iobDataView.setText(String.format(MainApp.sResources.getString(R.string.array_of_elements), iobArray.length()) + "\n" + JSONFormatter.format(iobArray.getString(0)));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                             iobDataView.setText("JSONException");
                         }
                         profileView.setText(JSONFormatter.format(determineBasalAdapterAMAJS.getProfileParam()));

@@ -430,7 +430,7 @@ public class NOChart extends WatchFace implements SharedPreferences.OnSharedPref
                     try {
                         Thread.sleep(40);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        log.error("Unhandled exception", e);
                     }
                 }
                 mSgv.getPaint().setShader(null);
