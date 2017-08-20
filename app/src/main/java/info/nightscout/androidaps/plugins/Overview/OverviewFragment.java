@@ -55,6 +55,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -1740,7 +1741,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
-            if(notification.text == MainApp.sResources.getString(R.string.nsalarm_staledata))
+            if(Objects.equals(notification.text, MainApp.sResources.getString(R.string.nsalarm_staledata)))
                 holder.dismiss.setText("snooze");
             holder.text.setText(notification.text);
             holder.time.setText(DateUtil.timeString(notification.date));

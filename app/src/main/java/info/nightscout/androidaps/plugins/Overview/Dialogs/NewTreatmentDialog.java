@@ -20,6 +20,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -86,7 +87,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
 
                     confirmMessage += getString(R.string.bolus) + ": " + insulinAfterConstraints + "U";
                     confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
-                    if (insulinAfterConstraints - insulin != 0 || carbsAfterConstraints != carbs)
+                    if (insulinAfterConstraints - insulin != 0 || !Objects.equals(carbsAfterConstraints, carbs))
                         confirmMessage += "\n" + getString(R.string.constraintapllied);
 
                     final double finalInsulinAfterConstraints = insulinAfterConstraints;
