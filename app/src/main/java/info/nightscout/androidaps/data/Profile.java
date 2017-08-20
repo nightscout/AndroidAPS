@@ -75,7 +75,7 @@ public class Profile {
             ic = json.getJSONArray("carbratio");
             if (getIc(0) == null) {
                 int defaultIC = 25;
-                isf = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultIC + "\",\"timeAsSeconds\":\"0\"}]");
+                ic = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultIC + "\",\"timeAsSeconds\":\"0\"}]");
                 Notification noic = new Notification(Notification.IC_MISSING, MainApp.sResources.getString(R.string.icmissing), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(noic));
             } else {
@@ -84,7 +84,7 @@ public class Profile {
             basal = json.getJSONArray("basal");
             if (getBasal(0) == null) {
                 double defaultBasal = 0.1d;
-                isf = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultBasal + "\",\"timeAsSeconds\":\"0\"}]");
+                basal = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultBasal + "\",\"timeAsSeconds\":\"0\"}]");
                 Notification nobasal = new Notification(Notification.BASAL_MISSING, MainApp.sResources.getString(R.string.basalmissing), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(nobasal));
             } else {
@@ -93,7 +93,7 @@ public class Profile {
             targetLow = json.getJSONArray("target_low");
             if (getTargetLow(0) == null) {
                 double defaultLow = units.equals(Constants.MGDL) ? 120 : 6;
-                isf = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultLow + "\",\"timeAsSeconds\":\"0\"}]");
+                targetLow = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultLow + "\",\"timeAsSeconds\":\"0\"}]");
                 Notification notarget = new Notification(Notification.TARGET_MISSING, MainApp.sResources.getString(R.string.targetmissing), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notarget));
             } else {
@@ -102,7 +102,7 @@ public class Profile {
             targetHigh = json.getJSONArray("target_high");
             if (getTargetHigh(0) == null) {
                 double defaultHigh = units.equals(Constants.MGDL) ? 160 : 8;
-                isf = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultHigh + "\",\"timeAsSeconds\":\"0\"}]");
+                targetHigh = new JSONArray("[{\"time\":\"00:00\",\"value\":\"" + defaultHigh + "\",\"timeAsSeconds\":\"0\"}]");
                 Notification notarget = new Notification(Notification.TARGET_MISSING, MainApp.sResources.getString(R.string.targetmissing), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(notarget));
             } else {
