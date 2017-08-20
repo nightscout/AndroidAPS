@@ -144,7 +144,7 @@
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
     <string name="nav_test_alert">Test Alarm</string>
     <string name="avgdelta">Avg. delta</string>
-    <string name="bolusconstraintapplied">Bolus Einschränkung angewendet</string>
+    <string name="bolusconstraintapplied">Bolus Beschränkung angewendet</string>
     <string name="careportal_announcement">Ankündigung</string>
     <string name="careportal_bgcheck">BZ Check</string>
     <string name="careportal_carbscorrection">Kohlehydrat Korrektur</string>
@@ -155,18 +155,18 @@
     <string name="careportal_newnstreatment_enteredby_title">Eingegeben durch</string>
     <string name="careportal_newnstreatment_other">Anderes</string>
     <string name="careportal_newnstreatment_split_label">Split</string>
-    <string name="configbuilder_constraints">Constraints</string>
+    <string name="configbuilder_constraints">Beschränkungen</string>
     <string name="configbuilder_general">Generell</string>
     <string name="configbuilder_treatments">Treatments</string>
-    <string name="constraintapllied">Constraint applied!</string>
-    <string name="constraints_violation">Constraints violation</string>
+    <string name="constraintapllied">Beschränkungen sind aktiv!</string>
+    <string name="constraints_violation">Beschränkungen wurden verletzt oder Limit erreicht</string>
     <string name="cs_lang">Czech</string>
     <string name="loop_setbypump_label">Gesetzt durch Pumpe</string>
-    <string name="loopdisabled">LOOP DISABLED BY CONSTRAINTS</string>
-    <string name="loop_constraintsprocessed_label">After processed constraints</string>
+    <string name="loopdisabled">LOOP DEAKTIVIERT DURCH DIE BESCHRÄNKUNG</string>
+    <string name="loop_constraintsprocessed_label">Nach Beschränkungen</string>
     <string name="loop">Loop</string>
     <string name="objectives_manualenacts">Manual enacts</string>
-    <string name="carbsconstraintapplied">Carbs constraint applied</string>
+    <string name="carbsconstraintapplied">Kohlenhydrate Beschränkung erreicht</string>
     <string name="nav_resetdb">Reset Datenbanken</string>
     <string name="objectives_minimalduration">Minimale Dauer</string>
     <string name="nav_refreshtreatments">Erneure Behandlungen von NS</string>
@@ -300,7 +300,7 @@
     <string name="button3">Knopf 3</string>
     <string name="configbuilder">Config Builder</string>
     <string name="minago">vor %d min</string>
-    <string name="actions_shortname">"AKT"</string>
+    <string name="actions_shortname">AKT</string>
     <string name="wear_shortname">WEAR</string>
     <string name="virtualpump_shortname">VP</string>
     <string name="treatments_shortname">TREAT</string>
@@ -317,7 +317,7 @@
     <string name="danarpump_shortname">DANA</string>
     <string name="configbuilder_shortname">"CONF"</string>
     <string name="circadian_percentage_profile_shortname">"CPP"</string>
-    <string name="careportal_shortname">"CP"</string>
+    <string name="careportal_shortname">CP</string>
     <string name="error_only_numeric_digits_allowed">Bitte verwenden Sie nur Ziffern.</string>
     <string name="error_field_must_not_be_empty">Pflichtfeld</string>
     <string name="error_phone_not_valid">Telefonnummer ist nicht gültig.</string>
@@ -462,7 +462,7 @@
     <string name="ns_localbroadcasts_title">Aktiviere lokalen Broadcast.</string>
     <string name="ns_logappstartedevent">Logge App-Start in NS</string>
     <string name="ns_noupload">Kein Upload zu NS</string>
-    <string name="ns_noupload_summary">Alle an NS gesendete Daten verworfen. AAPS ist verbunden, aber keine Änderungen in NS ist fertig</string>
+    <string name="ns_noupload_summary">Alle an NS gesendete Daten werden verworfen. AAPS ist verbunden, aber es wird keine Änderungen in NS gemacht</string>
     <string name="nsalarm_high">Hoch</string>
     <string name="nsalarm_low">Niedrig</string>
     <string name="nsalarm_summary">Gesetzt zu %f</string>
@@ -478,9 +478,9 @@
     <string name="nsclientinternal_url_dialogmessage">Nightscout URL eingeben</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
     <string name="objectives_0_gate">Verifiziere, dass der BZ und Pumpen Insulin Daten in Nightscout erfolgreich hoch geladen wurden</string>
-    <string name="objectives_0_objective">Konfiguriere Anzeige und das Monitoring und analysiere Basal und die Faktoren</string>
+    <string name="objectives_0_objective">Konfiguriere die Anzeige und das Monitoring (NS) und analysiere die Basal-Rate und die Faktoren</string>
     <string name="objectives_1_gate">Lasse den OpenLoop Modus für ein paar Tage laufen und setzte manuell temp Basal-Raten</string>
-    <string name="objectives_1_objective">Starte ein OpenLoop</string>
+    <string name="objectives_1_objective">Starte den OpenLoop Modus</string>
     <string name="old_data">VERALTETE DATEN</string>
     <string name="ongoingnotificaction">Laufende Benachrichtigungen</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
@@ -496,7 +496,7 @@
     <string name="overview_newtempbasal_basalabsolute">Basal Wert [U/h]</string>
     <string name="profile">Profil</string>
     <string name="profile_set_failed">Setzten vom Basal Profil fehlgeschlagen</string>
-    <string name="profile_set_ok">Basal Profil in der Pumpe erfolgreich aktualisiert</string>
+    <string name="profile_set_ok">Basal Profil in der Pumpe aktualisiert</string>
     <string name="profileswitch">Profilwechsel</string>
     <string name="pump">Pumpe</string>
     <string name="pumpNotInitialized">Pumpe nicht initialisiert!</string>
@@ -561,7 +561,7 @@
     <string name="sensitivityweightedaverage">Durschnittliche Sensitivität</string>
     <string name="settingextendedbolus">Einstellung Extended Bolus</string>
     <string name="sms_minago">vor %dMin</string>
-    <string formatted="false" name="smscommunicator_basalstopreplywithcode">"Um das temp Basal zu stoppen, antworte mit dem Code %s"</string>
+    <string formatted="false" name="smscommunicator_basalstopreplywithcode">Um das temp Basal zu stoppen, antworte mit dem Code %s</string>
     <string formatted="false" name="smscommunicator_bolusdelivered">Bolus %.2fU erfolgreich abgegeben</string>
     <string name="smscommunicator_calibrationfailed">xDrip hat die Kalbrierung nicht erhalten</string>
     <string formatted="false" name="smscommunicator_calibrationreplywithcode">Um die Kalibrierung %.2f zu senden, antworte mit dem Code %s</string>
@@ -591,4 +591,33 @@
     <string formatted="false" name="danar_model">Model: %02X Protokoll: %02X Code: %02X</string>
     <string name="configbuilder_sensitivity">Empfindlichkeitserkennung</string>
     <string name="cob">COB</string>
+    <string name="enablesuperbolus_summary">Aktiviere die SuperBolus-Funktion im Wizard. Nicht aktivieren, wenn du nicht weißt, was es macht! ES KANN ZU EINER ÜBERDOSIERUNG AN INSULIN KOMMEN, WENN DU ES BLIND BENUTZT!</string>
+    <string name="objectives_2_objective">"Verstehen des OpenLoops und der Temp-Basal-Empfehlungen</string>
+    <string name="openapsama_useautosens">Verwende AMA Autosense</string>
+    <string formatted="false" name="smscommunicator_basalreplywithcode">Um Basal mit %.2fU/h zu starten, antworte mit dem Code %s</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="wear_overviewnotifications_summary">Zeige die Übersichtsbenachrichtigungen auch als Wear Bestätigungsmeldung auf der Uhr an.</string>
+    <string name="short_avgdelta">Kurzes Durschnitts-Delta</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="openapsama_autosens_adjusttargets_summary">Default Eintrag: true. Erlaubt Autosense den Ziel-BZ-Bereich in Verbindung mit ISF und Basal anzupassen.</string>
+    <string name="openapsama_autosens_period">Intervall für Autosense [h]</string>
+    <string name="openapsama_autosens_period_summary">Anzahl der Stunde von der Vergangenheit, die verwendet werden um die Sensitivität zu erkennen (Kohlenhydrate absorptuinszeit ist nicht enthalten)</string>
+    <string name="objectives_2_gate">Anhand von dieser Erfahrung, entscheide wie hoch max Basal sein sollte und setzte dies in der Pumpe und den Einstellungen</string>
+    <string name="objectives_3_gate">Lasse es im ClosedLoop Modus mit max IOB = 0 für ein paar Tage laufen ohne zu viele Unterzuckeren zu haben</string>
+    <string name="objectives_3_objective">Starte den ClosedLoop Modus mit Abschaltung bei niedrigen Werte</string>
+    <string name="objectives_4_gate">Verwende es ein paar Tage, und zumindest eine Nacht ohne Niedrig-Alarme (UZ), bevor du den BZ-Zielbereich senkst.</string>
+    <string name="objectives_4_objective">Fein-Einstellung des Closed-Loops, Erhöhen von max IOB über 0 und langsames Heruntersetzen des Zielbereichs.</string>
+    <string name="objectives_5_gate">Eine Woche erfolgreiches Looping am Tag mit regelmäßiger Kohlenhydrat-Eingabe</string>
+    <string name="objectives_5_objective">Passe Basal und Faktoren an, falls notwendig, und aktiviere dann die Autosense-Funktion</string>
+    <string name="objectives_6_objective">Aktiviere zusätzliche Funktionen tagsüber, wie z.B. den Mahlzeitenassistent</string>
+    <string name="nsalarm_urgentstaledata">Stark veraltete Daten</string>
+    <string name="nsalarm_urgent_staledatavalue_label">Stark veraltete Daten nach [min]</string>
+    <string name="nl_lang">Dutch</string>
+    <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="insulin_oref_peak">IOB Kurve Peak Time</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string formatted="false" name="dia_too_short">DIA von %s ist zu kurz - aaps nutzt stattdessen %s!</string>
+    <string name="danar_stats_warning_Message">Möglicherweise ungenau, wenn zum Befüllen ein Bolus verwendet wurde!</string>
+    <string name="danar_stats_ratio">Verhältnis</string>
 </resources>
