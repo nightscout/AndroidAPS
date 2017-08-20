@@ -333,7 +333,7 @@ public class Profile {
     public double getMaxDailyBasal() {
         Double max = 0d;
         for (Integer hour = 0; hour < 24; hour++) {
-            double value = getBasal((Integer)(hour * 60 * 60));
+            double value = getBasal((Integer) (hour * 60 * 60));
             if (value > max) max = value;
         }
         return max;
@@ -378,6 +378,11 @@ public class Profile {
         else return value * Constants.MMOLL_TO_MGDL;
     }
 
+    public static Double toMmol(Double value, String units) {
+        if (units.equals(Constants.MGDL)) return value * Constants.MGDL_TO_MMOLL;
+        else return value;
+    }
+
     public static Double fromMgdlToUnits(Double value, String units) {
         if (units.equals(Constants.MGDL)) return value;
         else return value * Constants.MGDL_TO_MMOLL;
@@ -393,9 +398,16 @@ public class Profile {
         else return DecimalFormatter.to1Decimal(valueInMmol);
     }
 
-    // targets are stored in mg/dl
-    public static String toTargetRangeString(double low, double high, String units) {
-        if (low == high) return toUnitsString(low, Profile.fromMgdlToUnits(low, Constants.MMOL), units);
-        else return toUnitsString(low, Profile.fromMgdlToUnits(low, Constants.MMOL), units) + " - " + toUnitsString(high, Profile.fromMgdlToUnits(high, Constants.MMOL), units);
+    // targets are stored in mg/dl but profile vary
+    public static String toTargetRangeString(double low, double high, String sourceUnits, String units) {
+        double lowMgdl = toMgdl(low, sourceUnits);
+        double highMgdl = toMgdl(high, sourceUnits);
+        double lowMmol = toMmol(low, sourceUnits);
+        double highMmol = toMmol(high, sourceUnits);
+        if (low == high)
+            return toUnitsString(lowMgdl, lowMmol, units);
+        else
+            return toUnitsString(lowMgdl, lowMmol, units) + " - " + toUnitsString(highMgdl, highMmol, units);
+
     }
 }
