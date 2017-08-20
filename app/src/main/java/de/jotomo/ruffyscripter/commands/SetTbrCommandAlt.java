@@ -119,10 +119,10 @@ public class SetTbrCommandAlt implements Command {
         log.debug("Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
         for (int i = 0; i < percentageSteps; i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+            log.debug("Push #" + (i + 1));
             if (increasePercentage) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(100);
-            log.debug("Push #" + (i + 1));
         }
         // Give the pump time to finish any scrolling that might still be going on, can take
         // up to 1100ms. Plus some extra time to be sure
