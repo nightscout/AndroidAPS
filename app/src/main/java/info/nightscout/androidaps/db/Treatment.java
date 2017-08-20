@@ -183,10 +183,8 @@ public class Treatment implements DataPointWithLabelInterface {
     public Iob iobCalc(long time, double dia) {
         if (!isValid)
             return new Iob();
-        InsulinInterface insulinInterface = MainApp.getInsulinIterfaceById(insulinInterfaceID);
-        if (insulinInterface == null)
-            insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
 
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
         return insulinInterface.iobCalcForTreatment(this, time, dia);
     }
 }
