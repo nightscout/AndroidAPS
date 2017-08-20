@@ -84,7 +84,7 @@ public class BolusCommand implements Command {
             progressReportCallback.report(DELIVERING, 0, 0);
             Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             double lastBolusReported = 0;
-            List<String> alarmsRaised = new ArrayList<>();
+            boolean lowCartdrigeAlarmTriggered = false;
             // wait for bolus delivery to complete; the remaining units to deliver are counted
             // down and are displayed on the main menu.
             // TODO extract into method
@@ -94,20 +94,19 @@ public class BolusCommand implements Command {
             while (bolusRemaining != null) {
                 if (cancelRequested) {
                     progressReportCallback.report(STOPPING, 0, 0);
-                    // TODO just press up 3s in a separated thread and let this loop run
-                    // and at the end handle the outcome and returned raise alarms, whether cancel was reuqested etc
-
-                    // TODO press up 3s, deal with bolus cancelled error, retrieved amount actually delivered from history and return it
-                    // since the cancellation takes three seconds some insulin will have definitely been delivered (delivery speed is roughly 0.1U/s),
-                    // but the pump may also finish delivering the bolus while we try to cancel it
-                    // so, press a button, keep it press and deal with three outcomes:
-                    // * delivery finished (no more remaining bolus displayed)
-                    // * bolus was cancelled (warning raised)
-                    // * any other error (low cartridge, occlusion, both will also trigger 'bolus cancelled' errors)
-                    // cancelBolusInDelivery()
-                    // TODO new thread to press button and then deal with outcomes below, since all errors can occur at all time, pressing
-                    // abort just forces an error (if keyrpess is in time)
+                    scripter.pressKeyMs(RuffyScripter.Key.UP, 3000);
                     progressReportCallback.report(STOPPED, 0, 0);
+                    // if the bolus finished while we attempted to cancel it, there'll be no alarm
+                    long timeout = System.currentTimeMillis() + 2000;
+                    while (scripter.currentMenu.getType() != MenuType.WARNING_OR_ERROR && System.currentTimeMillis() < timeout) {
+                        SystemClock.sleep(10);
+                    }
+                    while (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+                        // TODO make this cleaner, extract method, needed below too
+                        scripter.pressCheckKey();
+                        SystemClock.sleep(200);
+                    }
+                    break;
                 }
                 if (lastBolusReported != bolusRemaining) {
                     log.debug("Delivering bolus, remaining: " + bolusRemaining);
@@ -115,23 +114,12 @@ public class BolusCommand implements Command {
                     progressReportCallback.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
                     lastBolusReported = bolusRemaining;
                 }
-                // TODO deal with alarms that can arise; an oclussion with raise an oclussion alert as well as a bolus cancelled alert
-                // occlusion cancels the bolus -> abort routine to report back delivered bolus;
-                // low cartridge alert lets bolus run out
-                // also, any other error or warning can occur and we should return in a controlled fashion -
-                // communicating back what was actually delivered.
-                // generally: cancel an alert on the pump and raise the error in AAPS?
-                // letting the alert go off disrupts comms if the user interacts with the pump,
-                // then we need to schedule a history read in the near future, let thee user know
-                // the data will be out of sync for a bit.
-                // how does the dana handle pump errors? has no vibration, but sound i guess
-                // should this be configurabe? initially?
 
                 if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
                     String message = (String) scripter.currentMenu.getAttribute(MenuAttribute.MESSAGE);
                     if (message.equals("LOW CARTRIDGE")) {
-                        alarmsRaised.add(message);
-                        // confirm, note alert was raised and continue bolusing)
+                        lowCartdrigeAlarmTriggered = true;
+                        confirmAlert("LOW CARTRIDGE", 2000);
                     } else {
                         // any other alert
                         break;
@@ -141,7 +129,7 @@ public class BolusCommand implements Command {
                 bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
 
-            // wait up to 2s for any possible warning to be raised
+            // wait up to 2s for any possible warning to be raised, if not raised already
             long minWait = System.currentTimeMillis() + 2 * 1000;
             while (scripter.currentMenu.getType() != MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < minWait) {
                 SystemClock.sleep(50);
@@ -177,6 +165,8 @@ public class BolusCommand implements Command {
                         .message("Bolus was delivered, but unable to confirm it with history record");
             }
 
+            // TODO check date so we don't pick a false record if the previous bolus had the same amount;
+            // also, report back partial bolus. Just call ReadHsstory(timestamp, boluses=true) cmd ...
             double lastBolusInHistory = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
             if (Math.abs(bolus - lastBolusInHistory) > 0.05) {
                 throw new CommandException().success(false).enacted(true)
