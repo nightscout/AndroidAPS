@@ -45,6 +45,7 @@ public class BolusCommand implements Command {
     @Override
     public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
         try {
+            // TODO read reservoir level and reject request if reservoir < bolus
             enterBolusMenu(scripter);
             inputBolusAmount(scripter);
             verifyDisplayedBolusAmount(scripter);
