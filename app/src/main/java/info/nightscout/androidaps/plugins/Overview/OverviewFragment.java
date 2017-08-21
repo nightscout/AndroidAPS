@@ -103,8 +103,6 @@ import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.Loop.events.EventNewOpenLoopNotification;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastAckAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSDeviceStatus;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.DetermineBasalResultAMA;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
@@ -126,9 +124,6 @@ import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.ToastUtils;
-//Added By Rumen for staledata alarm
-import info.nightscout.androidaps.plugins.Overview.Notification;
-import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
@@ -1189,8 +1184,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             cobView.setText(cobText);
         }
 
-        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.constraintsProcessed.getClass().equals(DetermineBasalResultAMA.class);
-        if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS)) {
+        boolean showPrediction = showPredictionView.isChecked() && finalLastRun != null && finalLastRun.request.hasPredictions;
+        if (showPrediction) {
             showPredictionView.setVisibility(View.VISIBLE);
             getActivity().findViewById(R.id.overview_showprediction_label).setVisibility(View.VISIBLE);
         } else {
@@ -1247,7 +1242,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         long fromTime;
         long endTime;
         if (showPrediction) {
-            int predHours = (int) (Math.ceil(((DetermineBasalResultAMA) finalLastRun.constraintsProcessed).getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
+            int predHours = (int) (Math.ceil(finalLastRun.constraintsProcessed.getLatestPredictionsTime() - System.currentTimeMillis()) / (60 * 60 * 1000));
             predHours = Math.min(2, predHours);
             predHours = Math.max(0, predHours);
             hoursToFetch = rangeToDisplay - predHours;
@@ -1573,8 +1568,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             bgListArray.add(bg);
         }
         if (showPrediction) {
-            DetermineBasalResultAMA amaResult = (DetermineBasalResultAMA) finalLastRun.constraintsProcessed;
-            List<BgReading> predArray = amaResult.getPredictions();
+            List<BgReading> predArray = finalLastRun.constraintsProcessed.getPredictions();
             bgListArray.addAll(predArray);
         }
 
