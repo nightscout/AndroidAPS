@@ -247,6 +247,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             result.mealCOB = autosensData.cob;
             result.minDeviationSlope = autosensData.minDeviationSlope;
         }
+        result.lastBolusTime = getLastSMBTime();
         return result;
     }
 

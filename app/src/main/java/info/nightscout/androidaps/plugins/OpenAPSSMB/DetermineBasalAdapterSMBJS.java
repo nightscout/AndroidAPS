@@ -283,6 +283,7 @@ public class DetermineBasalAdapterSMBJS {
         mMealData.add("boluses", mealData.boluses);
         mMealData.add("mealCOB", mealData.mealCOB);
         mMealData.add("minDeviationSlope", mealData.minDeviationSlope);
+        mMealData.add("lastBolusTime", mealData.lastBolusTime);
         mV8rt.add(PARAM_meal_data, mMealData);
 
         if (MainApp.getConfigBuilder().isAMAModeEnabled()) {
