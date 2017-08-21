@@ -20,9 +20,6 @@ public class DetermineBasalResultSMB extends APSResult {
     public JSONObject json = new JSONObject();
     public double eventualBG;
     public double snoozeBG;
-    public IobTotal iob;
-    public double smbValue;
-    public long deliverAt;
 
     public DetermineBasalResultSMB(JSONObject result) {
         date = new Date();
@@ -54,9 +51,9 @@ public class DetermineBasalResultSMB extends APSResult {
                 }
                 if (result.has("units")) {
                     changeRequested = true;
-                    smbValue = result.getDouble("units");
+                    smb = result.getDouble("units");
                 } else {
-                    smbValue = 0.0;
+                    smb = 0d;
                     //changeRequested as above
                 }
                 if (result.has("deliverAt")) {
@@ -85,7 +82,8 @@ public class DetermineBasalResultSMB extends APSResult {
         newResult.changeRequested = changeRequested;
         newResult.rate = rate;
         newResult.duration = duration;
-        newResult.smbValue = smbValue;
+        newResult.smb = smb;
+        newResult.deliverAt = deliverAt;
 
         try {
             newResult.json = new JSONObject(json.toString());

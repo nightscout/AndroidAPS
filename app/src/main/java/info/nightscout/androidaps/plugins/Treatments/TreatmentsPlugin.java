@@ -269,6 +269,19 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
     }
 
     @Override
+    public long getLastSMBTime() {
+        long last = 0;
+        for (Integer pos = 0; pos < treatments.size(); pos++) {
+            Treatment t = treatments.get(pos);
+            if (!t.isValid)
+                continue;
+            if (t.isSMB && t.date > last)
+                last = t.date;
+        }
+        return last;
+    }
+
+    @Override
     public boolean isInHistoryRealTempBasalInProgress() {
         return getRealTempBasalFromHistory(System.currentTimeMillis()) != null;
     }

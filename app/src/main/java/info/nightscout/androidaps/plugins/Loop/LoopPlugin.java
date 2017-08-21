@@ -260,6 +260,7 @@ public class LoopPlugin implements PluginBase {
             // check rate for constrais
             final APSResult resultAfterConstraints = result.clone();
             resultAfterConstraints.rate = constraintsInterface.applyBasalConstraints(resultAfterConstraints.rate);
+            resultAfterConstraints.smb = constraintsInterface.applyBolusConstraints(resultAfterConstraints.smb);
 
             if (lastRun == null) lastRun = new LastRun();
             lastRun.request = result;

@@ -30,6 +30,7 @@ public interface TreatmentsInterface {
 
     List<Treatment> getTreatmentsFromHistory();
     List<Treatment> getTreatments5MinBackFromHistory(long time);
+    long getLastSMBTime();
 
     // real basals (not faked by extended bolus)
     boolean isInHistoryRealTempBasalInProgress();

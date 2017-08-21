@@ -19,7 +19,6 @@ public class DetermineBasalResultAMA extends APSResult {
     public JSONObject json = new JSONObject();
     public double eventualBG;
     public double snoozeBG;
-    public IobTotal iob;
 
     public DetermineBasalResultAMA(V8Object result, JSONObject j) {
         date = new Date();

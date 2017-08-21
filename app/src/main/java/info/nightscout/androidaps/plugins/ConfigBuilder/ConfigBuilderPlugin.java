@@ -27,6 +27,7 @@ import info.nightscout.androidaps.data.Intervals;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileIntervals;
 import info.nightscout.androidaps.data.PumpEnactResult;
+import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
 import info.nightscout.androidaps.db.TempTarget;
@@ -442,6 +443,8 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             bolusProgressDialog = new BolusProgressDialog();
             bolusProgressDialog.setInsulin(detailedBolusInfo.insulin);
             bolusProgressDialog.show(((AppCompatActivity) detailedBolusInfo.context).getSupportFragmentManager(), "BolusProgress");
+        } else if (detailedBolusInfo.isSMB) {
+            // do not show bolus progress dialog
         } else {
             Intent i = new Intent();
             i.putExtra("insulin", detailedBolusInfo.insulin);
@@ -587,6 +590,23 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             if (Config.logCongigBuilderActions)
                 log.debug("applyAPSRequest: setTempBasalAbsolute()");
             result = setTempBasalAbsolute(request.rate, request.duration);
+        }
+
+        if (request.smb != 0) {
+            long lastSMBTime = getLastSMBTime();
+            if (lastSMBTime != 0 && lastSMBTime + 4.5 * 60 * 1000 > System.currentTimeMillis()) {
+                log.debug("SMS requsted but still in 5 min interval");
+            } else {
+                DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
+                detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                detailedBolusInfo.insulin = request.smb;
+                detailedBolusInfo.isSMB = true;
+                PumpEnactResult smbResult = deliverTreatment(detailedBolusInfo);
+                if (smbResult.success)
+                    return result;
+                else
+                    return smbResult;
+            }
         }
         return result;
     }
@@ -795,6 +815,11 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     @Override
     public List<Treatment> getTreatments5MinBackFromHistory(long time) {
         return activeTreatments.getTreatments5MinBackFromHistory(time);
+    }
+
+    @Override
+    public long getLastSMBTime() {
+        return activeTreatments.getLastSMBTime();
     }
 
     @Override

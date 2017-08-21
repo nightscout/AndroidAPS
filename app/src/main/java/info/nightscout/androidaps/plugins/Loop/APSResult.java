@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -21,6 +22,10 @@ public class APSResult {
     public double rate;
     public int duration;
     public boolean changeRequested = false;
+    public IobTotal iob;
+    public double smb = 0d; // super micro bolus in units
+    public long deliverAt = 0;
+
     @Override
     public String toString() {
         final ConfigBuilderPlugin configBuilder = MainApp.getConfigBuilder();
@@ -31,6 +36,7 @@ public class APSResult {
                 return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                         "(" + DecimalFormatter.to2Decimal(rate/configBuilder.getBaseBasalRate() *100) + "%)\n" +
                         MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
+                        (smb != 0 ? ("SMB" + ": " + DecimalFormatter.to2Decimal(smb) + " U") : "") +
                         MainApp.sResources.getString(R.string.reason) + ": " + reason;
         } else
             return MainApp.sResources.getString(R.string.nochangerequested);
@@ -45,6 +51,7 @@ public class APSResult {
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                         "(" + DecimalFormatter.to2Decimal(rate/configBuilder.getBaseBasalRate() *100) + "%) <br>" +
                         "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
+                        (smb != 0 ? ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U") : "") +
                         "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return Html.fromHtml(ret);
         } else
@@ -60,6 +67,7 @@ public class APSResult {
         newResult.rate = rate;
         newResult.duration = duration;
         newResult.changeRequested = changeRequested;
+        newResult.iob = iob;
         return newResult;
     }
 

@@ -17,7 +17,6 @@ public class DetermineBasalResultMA extends APSResult {
     public double eventualBG;
     public double snoozeBG;
     public String mealAssist;
-    public IobTotal iob;
 
     public DetermineBasalResultMA(V8Object result, JSONObject j) {
         json = j;
