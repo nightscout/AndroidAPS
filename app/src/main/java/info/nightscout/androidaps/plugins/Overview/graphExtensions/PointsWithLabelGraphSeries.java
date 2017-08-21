@@ -55,6 +55,7 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
         TRIANGLE,
         RECTANGLE,
         BOLUS,
+        SMB,
         EXTENDEDBOLUS,
         PROFILE,
         MBG,
@@ -218,6 +219,14 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                     if (value.getLabel() != null) {
                         drawLabel45(endX, endY, value, canvas);
                     }
+                } else if (value.getShape() == Shape.SMB) {
+                    mPaint.setStrokeWidth(2);
+                    Point[] points = new Point[3];
+                    points[0] = new Point((int)endX, (int)(endY-value.getSize()));
+                    points[1] = new Point((int)(endX+value.getSize()), (int)(endY+value.getSize()*0.67));
+                    points[2] = new Point((int)(endX-value.getSize()), (int)(endY+value.getSize()*0.67));
+                    mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                    drawArrows(points, canvas, mPaint);
                 } else if (value.getShape() == Shape.EXTENDEDBOLUS) {
                     mPaint.setStrokeWidth(0);
                     if (value.getLabel() != null) {

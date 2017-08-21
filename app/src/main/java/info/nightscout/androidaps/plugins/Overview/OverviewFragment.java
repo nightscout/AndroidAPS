@@ -1595,7 +1595,10 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             if (!t.isValid)
                 continue;
             if (t.getX() < fromTime || t.getX() > endTime) continue;
-            t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
+            if (t.isSMB)
+                t.setY(lowLine);
+            else
+                t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
             filteredTreatments.add(t);
         }
 
@@ -1734,7 +1737,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
-            if(notification.text == MainApp.sResources.getString(R.string.nsalarm_staledata))
+            if (notification.text == MainApp.sResources.getString(R.string.nsalarm_staledata))
                 holder.dismiss.setText("snooze");
             holder.text.setText(notification.text);
             holder.time.setText(DateUtil.timeString(notification.date));
@@ -1785,12 +1788,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
                         }
                         // Adding current time to snooze if we got staleData
-                        log.debug("Notification text is: "+notification.text);
-                        if(notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))){
+                        log.debug("Notification text is: " + notification.text);
+                        if (notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))) {
                             NotificationStore nstore = getPlugin().notificationStore;
-                            long msToSnooze = SP.getInt("nsalarm_staledatavalue",15)*60*1000L;
-                            log.debug("snooze nsalarm_staledatavalue in minutes is "+SP.getInt("nsalarm_staledatavalue",15)+"\n in ms is: "+msToSnooze+" currentTimeMillis is: "+System.currentTimeMillis());
-                            nstore.snoozeTo(System.currentTimeMillis()+(SP.getInt("nsalarm_staledatavalue",15)*60*1000L));
+                            long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
+                            log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
+                            nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
                         }
                         break;
                 }

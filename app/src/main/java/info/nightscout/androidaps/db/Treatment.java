@@ -14,6 +14,7 @@ import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -160,7 +161,10 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public PointsWithLabelGraphSeries.Shape getShape() {
-        return PointsWithLabelGraphSeries.Shape.BOLUS;
+        if (isSMB)
+            return PointsWithLabelGraphSeries.Shape.SMB;
+        else
+            return PointsWithLabelGraphSeries.Shape.BOLUS;
     }
 
     @Override
@@ -170,7 +174,10 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        return Color.CYAN;
+        if (isSMB)
+            return MainApp.sResources.getColor(R.color.tempbasal);
+        else
+            return Color.CYAN;
     }
 
     @Override
