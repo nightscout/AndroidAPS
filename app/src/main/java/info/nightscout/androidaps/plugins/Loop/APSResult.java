@@ -104,7 +104,7 @@ public class APSResult {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
                         bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isPrediction = true;
+                        bg.isIOBPrediction = true;
                         array.add(bg);
                     }
                 }
@@ -114,7 +114,7 @@ public class APSResult {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
                         bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isPrediction = true;
+                        bg.isaCOBPrediction = true;
                         array.add(bg);
                     }
                 }
@@ -124,7 +124,7 @@ public class APSResult {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
                         bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isPrediction = true;
+                        bg.isCOBPrediction = true;
                         array.add(bg);
                     }
                 }
@@ -134,7 +134,7 @@ public class APSResult {
                         BgReading bg = new BgReading();
                         bg.value = iob.getInt(i);
                         bg.date = startTime + i * 5 * 60 * 1000L;
-                        bg.isPrediction = true;
+                        bg.isUAMPrediction = true;
                         array.add(bg);
                     }
                 }

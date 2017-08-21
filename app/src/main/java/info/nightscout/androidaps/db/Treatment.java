@@ -174,6 +174,11 @@ public class Treatment implements DataPointWithLabelInterface {
     }
 
     @Override
+    public int getSecondColor() {
+        return 0;
+    }
+
+    @Override
     public void setY(double y) {
         yValue = y;
     }
