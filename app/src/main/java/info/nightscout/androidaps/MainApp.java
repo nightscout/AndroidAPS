@@ -265,8 +265,6 @@ public class MainApp extends Application {
 
     @Nullable
     public static InsulinInterface getInsulinIterfaceById(int id) {
-        ArrayList<PluginBase> newList = new ArrayList<>();
-
         if (pluginsList != null) {
             for (PluginBase p : pluginsList) {
                 if (p.getType() == PluginBase.INSULIN && ((InsulinInterface) p).getId() == id)
@@ -323,11 +321,11 @@ public class MainApp extends Application {
     }
 
     @Nullable
-    public static PluginBase getSpecificPlugin(Class pluginClass) {
+    public static <T extends PluginBase> T getSpecificPlugin(Class<T> pluginClass) {
         if (pluginsList != null) {
             for (PluginBase p : pluginsList) {
-                if (p.getClass() == pluginClass)
-                    return p;
+                if (pluginClass.isAssignableFrom(p.getClass()))
+                    return (T) p;
             }
         } else {
             log.error("pluginsList=null");

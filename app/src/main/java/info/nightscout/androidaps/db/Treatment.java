@@ -8,8 +8,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -18,7 +16,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
@@ -52,29 +49,11 @@ public class Treatment implements DataPointWithLabelInterface {
     public boolean isSMB = false;
 
     @DatabaseField
-    public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN;
+    public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN; // currently unused, will be used in the future
     @DatabaseField
-    public double dia = Constants.defaultDIA;
+    public double dia = Constants.defaultDIA; // currently unused, will be used in the future
 
     public Treatment() {
-    }
-
-    public Treatment(long date) {
-        this.date = date;
-    }
-
-    public Treatment(InsulinInterface insulin) {
-        insulinInterfaceID = insulin.getId();
-        dia = insulin.getDia();
-    }
-
-    public Treatment(InsulinInterface insulin, double dia) {
-        insulinInterfaceID = insulin.getId();
-        this.dia = dia;
-    }
-
-    public long getMillisecondsFromStart() {
-        return System.currentTimeMillis() - date;
     }
 
     public String toString() {
@@ -176,8 +155,10 @@ public class Treatment implements DataPointWithLabelInterface {
     public int getColor() {
         if (isSMB)
             return MainApp.sResources.getColor(R.color.tempbasal);
-        else
+        else if (isValid)
             return Color.CYAN;
+        else
+            return MainApp.instance().getResources().getColor(android.R.color.holo_red_light);
     }
 
     @Override

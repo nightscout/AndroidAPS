@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Objects;
 
 /*
  {
@@ -188,7 +189,7 @@ public class NSSettingsStatus {
                         return result;
                     }
                 }
-                if (settingsO.has("alarmTimeagoWarnMins") && what == "alarmTimeagoWarnMins"){
+                if (settingsO.has("alarmTimeagoWarnMins") && Objects.equals(what, "alarmTimeagoWarnMins")){
                     Double result = settingsO.getDouble(what);
                     return result;
                 }

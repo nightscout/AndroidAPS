@@ -187,7 +187,7 @@ public class ExtendedBolus implements Interval, DataPointWithLabelInterface {
                 if (calcdate > dia_ago && calcdate <= time) {
                     double tempBolusSize = absoluteRate() * spacing / 60d;
 
-                    Treatment tempBolusPart = new Treatment(insulinInterface, dia);
+                    Treatment tempBolusPart = new Treatment();
                     tempBolusPart.insulin = tempBolusSize;
                     tempBolusPart.date = calcdate;
 

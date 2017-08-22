@@ -129,7 +129,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Override
     public void onResume() {
-        super.onPause();
+        super.onResume();
         MainApp.bus().register(this);
     }
 
@@ -243,7 +243,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
         editBg.setParams(0d, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, textWatcher);
         editCarbs.setParams(0d, 0d, (double) maxCarbs, 1d, new DecimalFormat("0"), false, textWatcher);
-        editCorr.setParams(0d, -maxCorrection, maxCorrection, 0.05d, new DecimalFormat("0.00"), false, textWatcher);
+        double bolusstep = MainApp.getConfigBuilder().getPumpDescription().bolusStep;
+        editCorr.setParams(0d, -maxCorrection, maxCorrection, bolusstep, new DecimalFormat("0.00"), false, textWatcher);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
         initDialog();
 

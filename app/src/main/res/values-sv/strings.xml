@@ -73,7 +73,7 @@
     <string name="careportal_pumpsitechange">Pump Kanyl Byte</string>
     <string name="careportal_question">Fråga</string>
     <string name="careportal_shortname">CP</string>
-    <string name="careportal_snackbolus">Bolus för Mellis</string>
+    <string name="careportal_snackbolus">Snack Bolus</string>
     <string name="careportal_tempbasalend">Temp Basal Slut</string>
     <string name="careportal_tempbasalstart">Temp Basal Start</string>
     <string name="careportal_temporarytarget">Temp Mål BG</string>
@@ -142,7 +142,7 @@
     <string name="danar_stats_date">Datum</string>
     <string name="danar_stats_expweight">Exponentiellt viktad TDD</string>
     <string name="danar_stats_olddata_Message">Gammal Data Vg tryck \"Ladda om\"</string>
-    <string name="danar_stats_ratio">Ratio</string>
+    <string name="danar_stats_ratio">Kvot</string>
     <string name="danar_useextended_title">Använd förlängd bolus med >200%</string>
     <string name="danar_valuenotsetproperly">Värde ej korrekt angivet</string>
     <string name="danar_viewprofile">Se profil</string>
@@ -169,7 +169,7 @@
     <string name="disconnectpumpfor2h">Frånkoppla pump i 2 h</string>
     <string name="disconnectpumpfor30m">Frånkoppla pump i 30 min</string>
     <string name="disconnectpumpfor3h">Frånkoppla pump i 3 h</string>
-    <string name="dismiss">AVBÖJ</string>
+    <string name="dismiss">TA BORT</string>
     <string name="do_not_track_profile_switch">Ignorera profilbyten</string>
     <string name="do_not_track_profile_switch_summary">Alla profilbyten ignoreras och aktiv profil används alltid</string>
     <string name="dont_show_again">Visa inte detta igen</string>
@@ -329,7 +329,7 @@
     <string name="units">Enheter:</string>
     <string name="treatmentssafety_title">Säkerhet vid behandling</string>
     <string name="treatmentssafety_maxcarbs_title">Max tillåtna KH (g)</string>
-    <string name="treatmentssafety_maxbolus_title">Max tillåten</string>
+    <string name="treatmentssafety_maxbolus_title">Max tillåten bolus [E]</string>
     <string name="treatments_wizard_unit_label">E</string>
     <string name="treatments_wizard_total_label">TOTAL</string>
     <string name="treatments_wizard_correction_label">Korr</string>
@@ -581,5 +581,9 @@
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_minago" formatted="false">%dmin sedan</string>
-    <string name="app_name">AndroidAPS</string>
+    <string name="nsalarm_staledatavalue_label">Gammal data tröskelvärde</string>
+    <string name="nsalarm_urgent_staledatavalue_label">Bråttom gammal data tröskelvärde</string>
+    <string name="nsalarm_urgenthigh">Bråttom hög</string>
+    <string name="nsalarm_urgentlow">Bråttom låg</string>
+    <string name="nsalarm_urgentstaledata">Bråttom gammal data</string>
 </resources>
