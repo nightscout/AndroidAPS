@@ -188,7 +188,7 @@ public class NSClientService extends Service {
             nsAPIhashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString();
 
         MainApp.bus().post(new EventNSClientStatus("Initializing"));
-        if (((NSClientInternalPlugin)MainApp.getSpecificPlugin(NSClientInternalPlugin.class)).paused) {
+        if (MainApp.getSpecificPlugin(NSClientInternalPlugin.class).paused) {
             MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "paused"));
             MainApp.bus().post(new EventNSClientStatus("Paused"));
         } else if (!nsEnabled) {
@@ -421,7 +421,7 @@ public class NSClientService extends Service {
                             MainApp.bus().post(new EventNSClientNewLog("DATA", "Data packet #" + dataCounter++ + (isDelta ? " delta" : " full")));
 
                             if (data.has("profiles")) {
-                                JSONArray profiles = (JSONArray) data.getJSONArray("profiles");
+                                JSONArray profiles = data.getJSONArray("profiles");
                                 if (profiles.length() > 0) {
                                     JSONObject profile = (JSONObject) profiles.get(profiles.length() - 1);
                                     profileStore = new ProfileStore(profile);

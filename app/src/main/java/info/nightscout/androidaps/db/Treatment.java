@@ -51,29 +51,11 @@ public class Treatment implements DataPointWithLabelInterface {
     public boolean isSMB = false;
 
     @DatabaseField
-    public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN;
+    public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN; // currently unused, will be used in the future
     @DatabaseField
-    public double dia = Constants.defaultDIA;
+    public double dia = Constants.defaultDIA; // currently unused, will be used in the future
 
     public Treatment() {
-    }
-
-    public Treatment(long date) {
-        this.date = date;
-    }
-
-    public Treatment(InsulinInterface insulin) {
-        insulinInterfaceID = insulin.getId();
-        dia = insulin.getDia();
-    }
-
-    public Treatment(InsulinInterface insulin, double dia) {
-        insulinInterfaceID = insulin.getId();
-        this.dia = dia;
-    }
-
-    public long getMillisecondsFromStart() {
-        return System.currentTimeMillis() - date;
     }
 
     public String toString() {

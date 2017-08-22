@@ -9,7 +9,6 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import info.nightscout.androidaps.data.Iob;
@@ -39,14 +38,14 @@ public class ActivityGraph extends GraphView {
         double dia = insulin.getDia();
         int hours = (int) Math.floor(dia + 1);
 
-        Treatment t = new Treatment(insulin, dia);
+        Treatment t = new Treatment();
         t.date = 0;
         t.insulin = 1d;
 
         LineGraphSeries<DataPoint> activitySeries = null;
         LineGraphSeries<DataPoint> iobSeries = null;
-        List<DataPoint> activityArray = new ArrayList<DataPoint>();
-        List<DataPoint> iobArray = new ArrayList<DataPoint>();
+        List<DataPoint> activityArray = new ArrayList<>();
+        List<DataPoint> iobArray = new ArrayList<>();
 
         for (long time = 0; time <= hours * 60 * 60 * 1000; time += 5 * 60 * 1000L) {
             Iob iob = t.iobCalc(time, dia);
@@ -56,7 +55,7 @@ public class ActivityGraph extends GraphView {
 
         DataPoint[] activityDataPoints = new DataPoint[activityArray.size()];
         activityDataPoints = activityArray.toArray(activityDataPoints);
-        addSeries(activitySeries = new LineGraphSeries<DataPoint>(activityDataPoints));
+        addSeries(activitySeries = new LineGraphSeries<>(activityDataPoints));
         activitySeries.setThickness(8);
 
         getViewport().setXAxisBoundsManual(true);
@@ -68,7 +67,7 @@ public class ActivityGraph extends GraphView {
 
         DataPoint[] iobDataPoints = new DataPoint[iobArray.size()];
         iobDataPoints = iobArray.toArray(iobDataPoints);
-        getSecondScale().addSeries(iobSeries = new LineGraphSeries<DataPoint>(iobDataPoints));
+        getSecondScale().addSeries(iobSeries = new LineGraphSeries<>(iobDataPoints));
         iobSeries.setDrawBackground(true);
         iobSeries.setColor(Color.MAGENTA);
         iobSeries.setBackgroundColor(Color.argb(70, 255, 0, 255));

@@ -269,7 +269,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         switch (splited[1].toUpperCase()) {
                             case "DISABLE":
                             case "STOP":
-                                LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                                LoopPlugin loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && loopPlugin.isEnabled(PluginBase.LOOP)) {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, false);
                                     PumpEnactResult result = MainApp.getConfigBuilder().cancelTempBasal(true);
@@ -283,7 +283,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 break;
                             case "ENABLE":
                             case "START":
-                                loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                                loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null && !loopPlugin.isEnabled(PluginBase.LOOP)) {
                                     loopPlugin.setFragmentEnabled(PluginBase.LOOP, true);
                                     reply = MainApp.sResources.getString(R.string.smscommunicator_loophasbeenenabled);
@@ -294,7 +294,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                                 Answers.getInstance().logCustom(new CustomEvent("SMS_Loop_Start"));
                                 break;
                             case "STATUS":
-                                loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
+                                loopPlugin = MainApp.getSpecificPlugin(LoopPlugin.class);
                                 if (loopPlugin != null) {
                                     if (loopPlugin.isEnabled(PluginBase.LOOP)) {
                                         if (loopPlugin.isSuspended())
@@ -371,12 +371,12 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         }
                     break;
                 case "DANAR":
-                    DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+                    DanaRPlugin danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
                     if (danaRPlugin != null && danaRPlugin.isEnabled(PluginBase.PUMP)) {
                         reply = danaRPlugin.shortStatus(true);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
                     }
-                    DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+                    DanaRKoreanPlugin danaRKoreanPlugin = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
                     if (danaRKoreanPlugin != null && danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
                         reply = danaRKoreanPlugin.shortStatus(true);
                         sendSMS(new Sms(receivedSms.phoneNumber, reply, new Date()));
@@ -463,7 +463,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         bolusWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
-                            danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+                            danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
                             DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                             detailedBolusInfo.insulin = bolusWaitingForConfirmation.bolusRequested;
                             detailedBolusInfo.source = Source.USER;
@@ -486,7 +486,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         tempBasalWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
-                            danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+                            danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
                             PumpEnactResult result = pumpInterface.setTempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, false);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
@@ -505,7 +505,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         cancelTempBasalWaitingForConfirmation.processed = true;
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
-                            danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
+                            danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
                             PumpEnactResult result = pumpInterface.cancelTempBasal(true);
                             if (result.success) {
                                 reply = MainApp.sResources.getString(R.string.smscommunicator_tempbasalcanceled);

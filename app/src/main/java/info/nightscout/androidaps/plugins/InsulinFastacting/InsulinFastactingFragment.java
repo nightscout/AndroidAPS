@@ -49,7 +49,7 @@ public class InsulinFastactingFragment extends Fragment {
     private void updateGUI() {
         insulinName.setText(insulinFastactingPlugin.getFriendlyName());
         insulinComment.setText(insulinFastactingPlugin.getComment());
-        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + new Double(insulinFastactingPlugin.getDia()).toString() + "h");
+        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(insulinFastactingPlugin.getDia()) + "h");
         insulinGraph.show(insulinFastactingPlugin);
     }
 
