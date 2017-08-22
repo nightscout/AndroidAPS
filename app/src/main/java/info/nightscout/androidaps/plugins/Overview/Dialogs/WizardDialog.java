@@ -129,7 +129,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Override
     public void onResume() {
-        super.onPause();
+        super.onResume();
         MainApp.bus().register(this);
     }
 
