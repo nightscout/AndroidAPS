@@ -8,8 +8,6 @@ import com.j256.ormlite.table.DatabaseTable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
@@ -17,7 +15,6 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
@@ -152,7 +149,10 @@ public class Treatment implements DataPointWithLabelInterface {
 
     @Override
     public int getColor() {
-        return Color.CYAN;
+        if (isValid)
+            return Color.CYAN;
+        else
+            return MainApp.instance().getResources().getColor(android.R.color.holo_red_light);
     }
 
     @Override

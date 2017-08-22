@@ -1599,8 +1599,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
-            if (!t.isValid)
-                continue;
             if (t.getX() < fromTime || t.getX() > endTime) continue;
             t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
             filteredTreatments.add(t);
