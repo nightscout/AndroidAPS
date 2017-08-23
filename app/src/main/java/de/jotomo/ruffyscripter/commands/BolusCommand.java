@@ -35,7 +35,7 @@ public class BolusCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute(PumpState initialPumpState) {
         try {
             enterBolusMenu(scripter);
 

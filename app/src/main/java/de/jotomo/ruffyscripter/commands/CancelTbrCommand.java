@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 
 import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.RuffyScripter;
 import info.nightscout.androidaps.MainApp;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?
@@ -23,7 +22,7 @@ public class CancelTbrCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute(PumpState initialPumpState) {
         try {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
             if (!initialPumpState.tbrActive) {
@@ -49,7 +48,7 @@ public class CancelTbrCommand extends BaseCommand {
             }
             log.debug("Cancelling active TBR of " + initialPumpState.tbrPercent
                     + "% with " + initialPumpState.tbrRemainingDuration + " min remaining");
-            return new SetTbrCommand(100, 0).execute(scripter, initialPumpState);
+            return new SetTbrCommand(100, 0).execute(initialPumpState);
         } catch (CommandException e) {
             return e.toCommandResult();
         }

@@ -60,7 +60,7 @@ public class SetTbrCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute(PumpState initialPumpState) {
         try {
             log.debug("1. going from " + scripter.currentMenu + " to TBR_MENU");
             int retries = 5;

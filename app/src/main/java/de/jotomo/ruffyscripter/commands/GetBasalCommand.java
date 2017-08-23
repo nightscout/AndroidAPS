@@ -102,7 +102,7 @@ public class GetBasalCommand extends BaseCommand {
 //        }
 //    }
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute(PumpState initialPumpState) {
         try {
             Map<Integer,Double> rate = new HashMap<>();
 

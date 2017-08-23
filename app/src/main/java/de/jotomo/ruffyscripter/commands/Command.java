@@ -13,6 +13,7 @@ import de.jotomo.ruffyscripter.RuffyScripter;
  * sequence, letting the methods take care of waits.
  */
 public interface Command {
-    CommandResult execute(RuffyScripter ruffyScripter, PumpState initialPumpState);
+    CommandResult execute(PumpState initialPumpState);
     List<String> validateArguments();
+    void setScripter(RuffyScripter scripter);
 }

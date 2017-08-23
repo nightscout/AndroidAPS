@@ -304,7 +304,8 @@ public class RuffyScripter {
                             PumpState pumpState = readPumpState();
                             log.debug("Pump state before running command: " + pumpState);
                             long cmdStartTime = System.currentTimeMillis();
-                            returnable.cmdResult = cmd.execute(scripter, pumpState);
+                            cmd.setScripter(scripter);
+                            returnable.cmdResult = cmd.execute(pumpState);
                             long cmdEndTime = System.currentTimeMillis();
                             returnable.cmdResult.completionTime = cmdEndTime;
                             log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");

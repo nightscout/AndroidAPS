@@ -2,8 +2,6 @@ package de.jotomo.ruffyscripter.commands;
 
 import android.os.SystemClock;
 
-import com.j256.ormlite.stmt.query.In;
-
 import org.monkey.d.ruffy.ruffy.driver.display.MenuAttribute;
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.monkey.d.ruffy.ruffy.driver.display.menu.MenuTime;
@@ -12,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import de.jotomo.ruffyscripter.PumpCapabilities;
 import de.jotomo.ruffyscripter.PumpState;
@@ -30,7 +27,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute(PumpState initialPumpState) {
         try {
 
             //read main menu 100% or TBR? Read remaining duration.
