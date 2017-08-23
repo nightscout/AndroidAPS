@@ -32,7 +32,7 @@ import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
-import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
+import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommandAlt;
 import info.nightscout.androidaps.BuildConfig;
@@ -348,7 +348,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
-            runCommand(new ReadPumpStateCommand());
+            runCommand(new GetPumpStateCommand());
         }
     }
 
