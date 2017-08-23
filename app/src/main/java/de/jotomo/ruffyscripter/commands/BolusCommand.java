@@ -36,10 +36,10 @@ public class BolusCommand extends BaseCommand {
     @Override
     public CommandResult execute() {
         try {
-            enterBolusMenu(scripter);
+            enterBolusMenu();
 
-            inputBolusAmount(scripter);
-            verifyDisplayedBolusAmount(scripter);
+            inputBolusAmount();
+            verifyDisplayedBolusAmount();
 
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
@@ -105,7 +105,7 @@ public class BolusCommand extends BaseCommand {
         }
     }
 
-    private void enterBolusMenu(RuffyScripter scripter) {
+    private void enterBolusMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.BOLUS_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_MENU);
@@ -114,7 +114,7 @@ public class BolusCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
     }
 
-    private void inputBolusAmount(RuffyScripter scripter) {
+    private void inputBolusAmount() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         // press 'up' once for each 0.1 U increment
         long steps = Math.round(bolus * 10);
@@ -128,9 +128,9 @@ public class BolusCommand extends BaseCommand {
         SystemClock.sleep(2000);
     }
 
-    private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
+    private void verifyDisplayedBolusAmount() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        double displayedBolus = readDisplayedBolusAmount(scripter);
+        double displayedBolus = readDisplayedBolusAmount();
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
@@ -138,14 +138,14 @@ public class BolusCommand extends BaseCommand {
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(2000);
-        double refreshedDisplayedBolus = readDisplayedBolusAmount(scripter);
+        double refreshedDisplayedBolus = readDisplayedBolusAmount();
         if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
             throw new CommandException().message("Failed to set bolus: bolus changed after input stopped from "
                     + displayedBolus + " -> " + refreshedDisplayedBolus);
         }
     }
 
-    private double readDisplayedBolusAmount(RuffyScripter scripter) {
+    private double readDisplayedBolusAmount() {
         // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         // bolus amount is blinking, so we need to make sure we catch it at the right moment

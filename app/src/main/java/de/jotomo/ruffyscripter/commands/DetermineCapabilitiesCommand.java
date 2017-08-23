@@ -30,11 +30,11 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
         try {
 
             //read main menu 100% or TBR? Read remaining duration.
-            long durationBefore =  readDisplayedTbrDurationMainMenu(scripter);
-            long percentageBefore = readDisplayedTbrPercentageMainMenu(scripter);
+            long durationBefore =  readDisplayedTbrDurationMainMenu();
+            long percentageBefore = readDisplayedTbrPercentageMainMenu();
 
-            enterTbrMenu(scripter);
-            long maxTbrPercentage = findMaxTbrPercentage(scripter);
+            enterTbrMenu();
+            long maxTbrPercentage = findMaxTbrPercentage();
 
             // TODO v2 this can probably be removed by now
             SystemClock.sleep(750);
@@ -45,8 +45,8 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
 
 
             //TODO: check if TBR is still the same or duration was less than 5 minutes
-            long durationAfter =  readDisplayedTbrDurationMainMenu(scripter);
-            long percentageAfter = readDisplayedTbrPercentageMainMenu(scripter);
+            long durationAfter =  readDisplayedTbrDurationMainMenu();
+            long percentageAfter = readDisplayedTbrPercentageMainMenu();
 
             if(Math.abs(durationBefore-durationAfter) > 5){
                 throw new CommandException().message("Duration jump during DetermineCapabilities");
@@ -65,7 +65,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
         }
     }
 
-    private void enterTbrMenu(RuffyScripter scripter) {
+    private void enterTbrMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.TBR_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_MENU);
@@ -74,9 +74,9 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
     }
 
-    private long findMaxTbrPercentage(RuffyScripter scripter) {
+    private long findMaxTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long activeTempBasal = readDisplayedTbrPercentage(scripter);
+        long activeTempBasal = readDisplayedTbrPercentage();
 
         // pretend to increase the TBR to more than 500%
         log.debug("Pressing up " + UP_STEPS + " times to get to maximum");
@@ -89,7 +89,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
 
         //read the displayed maximum value
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long maximumTempBasal = readDisplayedTbrPercentage(scripter);
+        long maximumTempBasal = readDisplayedTbrPercentage();
 
         //reset the TBR in a controlled manner
         long percentageChange = maximumTempBasal - activeTempBasal;
@@ -106,7 +106,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
             }
             //do the rest if button-presses failed.
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-            long currentPercentage = readDisplayedTbrPercentage(scripter);
+            long currentPercentage = readDisplayedTbrPercentage();
             percentageChange = currentPercentage - activeTempBasal;
             percentageSteps = percentageChange / 10;
             retries++;
@@ -120,7 +120,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
     }
 
 
-    private long readDisplayedTbrPercentage(RuffyScripter scripter) {
+    private long readDisplayedTbrPercentage() {
         SystemClock.sleep(1000);
         // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
@@ -133,7 +133,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
         return ((Double) percentageObj).longValue();
     }
 
-    private int readDisplayedTbrDurationMainMenu(RuffyScripter scripter) {
+    private int readDisplayedTbrDurationMainMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         if(scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME)){
             // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
@@ -145,7 +145,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
         }
     }
 
-    private int readDisplayedTbrPercentageMainMenu(RuffyScripter scripter) {
+    private int readDisplayedTbrPercentageMainMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         if(scripter.currentMenu.attributes().contains(MenuAttribute.TBR)){
             return (int)((Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR)).doubleValue();

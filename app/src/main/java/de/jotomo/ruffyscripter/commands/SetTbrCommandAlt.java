@@ -55,12 +55,12 @@ public class SetTbrCommandAlt extends BaseCommand {
     @Override
     public CommandResult execute() {
         try {
-            enterTbrMenu(scripter);
-            inputTbrPercentage(scripter);
-            verifyDisplayedTbrPercentage(scripter);
+            enterTbrMenu();
+            inputTbrPercentage();
+            verifyDisplayedTbrPercentage();
 
             if (percentage == 100) {
-                cancelTbrAndConfirmCancellationWarning(scripter);
+                cancelTbrAndConfirmCancellationWarning();
             } else {
                 // switch to TBR_DURATION menu by pressing menu key
                 scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
@@ -68,8 +68,8 @@ public class SetTbrCommandAlt extends BaseCommand {
                 scripter.waitForMenuUpdate();
                 scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
-                inputTbrDuration(scripter);
-                verifyDisplayedTbrDuration(scripter);
+                inputTbrDuration();
+                verifyDisplayedTbrDuration();
 
                 // confirm TBR
                 scripter.pressCheckKey();
@@ -82,10 +82,10 @@ public class SetTbrCommandAlt extends BaseCommand {
 
             // check main menu shows the same values we just set
             if (percentage == 100) {
-                verifyMainMenuShowsNoActiveTbr(scripter);
+                verifyMainMenuShowsNoActiveTbr();
                 return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
             } else {
-                verifyMainMenuShowsExpectedTbrActive(scripter);
+                verifyMainMenuShowsExpectedTbrActive();
                 return new CommandResult().success(true).enacted(true).message(
                         String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
             }
@@ -95,7 +95,7 @@ public class SetTbrCommandAlt extends BaseCommand {
         }
     }
 
-    private void enterTbrMenu(RuffyScripter scripter) {
+    private void enterTbrMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.TBR_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_MENU);
@@ -104,9 +104,9 @@ public class SetTbrCommandAlt extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
     }
 
-    private void inputTbrPercentage(RuffyScripter scripter) {
+    private void inputTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long currentPercent = readDisplayedTbrPercentage(scripter);
+        long currentPercent = readDisplayedTbrPercentage();
         log.debug("Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
         long percentageSteps = percentageChange / 10;
@@ -128,9 +128,9 @@ public class SetTbrCommandAlt extends BaseCommand {
         SystemClock.sleep(2000);
     }
 
-    private void verifyDisplayedTbrPercentage(RuffyScripter scripter) {
+    private void verifyDisplayedTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long displayedPercentage = readDisplayedTbrPercentage(scripter);
+        long displayedPercentage = readDisplayedTbrPercentage();
         if (displayedPercentage != percentage) {
             log.debug("Final displayed TBR percentage: " + displayedPercentage);
             throw new CommandException().message("Failed to set TBR percentage");
@@ -138,7 +138,7 @@ public class SetTbrCommandAlt extends BaseCommand {
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(2000);
-        long refreshedDisplayedTbrPecentage = readDisplayedTbrPercentage(scripter);
+        long refreshedDisplayedTbrPecentage = readDisplayedTbrPercentage();
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
             throw new CommandException().message("Failed to set TBR percentage: " +
                     "percentage changed after input stopped from "
@@ -146,7 +146,7 @@ public class SetTbrCommandAlt extends BaseCommand {
         }
     }
 
-    private long readDisplayedTbrPercentage(RuffyScripter scripter) {
+    private long readDisplayedTbrPercentage() {
         // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
         // this as a bit hacky, the display value is blinking, so we might catch that, so
@@ -158,9 +158,9 @@ public class SetTbrCommandAlt extends BaseCommand {
         return ((Double) percentageObj).longValue();
     }
 
-    private void inputTbrDuration(RuffyScripter scripter) {
+    private void inputTbrDuration() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        long currentDuration = readDisplayedTbrDuration(scripter);
+        long currentDuration = readDisplayedTbrDuration();
         if (currentDuration % 15 != 0) {
             // The duration displayed is how long an active TBR will still run,
             // which might be something like 0:13, hence not in 15 minute steps.
@@ -170,7 +170,7 @@ public class SetTbrCommandAlt extends BaseCommand {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
             scripter.pressUpKey();
             scripter.waitForMenuUpdate();
-            currentDuration = readDisplayedTbrDuration(scripter);
+            currentDuration = readDisplayedTbrDuration();
         }
         log.debug("Current TBR duration: " + currentDuration);
         long durationChange = duration - currentDuration;
@@ -193,9 +193,9 @@ public class SetTbrCommandAlt extends BaseCommand {
         SystemClock.sleep(2000);
     }
 
-    private void verifyDisplayedTbrDuration(RuffyScripter scripter) {
+    private void verifyDisplayedTbrDuration() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        long displayedDuration = readDisplayedTbrDuration(scripter);
+        long displayedDuration = readDisplayedTbrDuration();
         if (displayedDuration != duration) {
             log.debug("Final displayed TBR duration: " + displayedDuration);
             throw new CommandException().message("Failed to set TBR duration");
@@ -203,7 +203,7 @@ public class SetTbrCommandAlt extends BaseCommand {
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(2000);
-        long refreshedDisplayedTbrDuration = readDisplayedTbrDuration(scripter);
+        long refreshedDisplayedTbrDuration = readDisplayedTbrDuration();
         if (displayedDuration != refreshedDisplayedTbrDuration) {
             throw new CommandException().message("Failed to set TBR duration: " +
                     "duration changed after input stopped from "
@@ -211,7 +211,7 @@ public class SetTbrCommandAlt extends BaseCommand {
         }
     }
 
-    private long readDisplayedTbrDuration(RuffyScripter scripter) {
+    private long readDisplayedTbrDuration() {
         // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
@@ -225,7 +225,7 @@ public class SetTbrCommandAlt extends BaseCommand {
         return duration.getHour() * 60 + duration.getMinute();
     }
 
-    private void cancelTbrAndConfirmCancellationWarning(RuffyScripter scripter) {
+    private void cancelTbrAndConfirmCancellationWarning() {
         // confirm entered TBR
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         scripter.pressCheckKey();
@@ -264,7 +264,7 @@ public class SetTbrCommandAlt extends BaseCommand {
         }
     }
 
-    private void verifyMainMenuShowsNoActiveTbr(RuffyScripter scripter) {
+    private void verifyMainMenuShowsNoActiveTbr() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         Double tbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
         boolean runtimeDisplayed = scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME);
@@ -273,7 +273,7 @@ public class SetTbrCommandAlt extends BaseCommand {
         }
     }
 
-    private void verifyMainMenuShowsExpectedTbrActive(RuffyScripter scripter) {
+    private void verifyMainMenuShowsExpectedTbrActive() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         // new TBR set; percentage and duration must be displayed ...
         if (!scripter.currentMenu.attributes().contains(MenuAttribute.TBR) ||
