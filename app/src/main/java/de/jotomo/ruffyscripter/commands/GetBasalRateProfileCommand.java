@@ -12,12 +12,12 @@ import java.util.Map;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-public class GetBasalCommand extends BaseCommand {
-    private static final Logger log = LoggerFactory.getLogger(GetBasalCommand.class);
+public class GetBasalRateProfileCommand extends BaseCommand {
+    private static final Logger log = LoggerFactory.getLogger(GetBasalRateProfileCommand.class);
 
     private RuffyScripter scripter;
 
-    public GetBasalCommand() {}
+    public GetBasalRateProfileCommand() {}
 
     @Override
     public List<String> validateArguments() {
@@ -94,8 +94,8 @@ public class GetBasalCommand extends BaseCommand {
 //            case ERROR:
 //            case AFTER:
 //                scripter.goToMainMenuScreen(MenuType.MAIN_MENU,2000);
-//                synchronized(GetBasalCommand.this) {
-//                    GetBasalCommand.this.notify();
+//                synchronized(GetBasalRateProfileCommand.this) {
+//                    GetBasalRateProfileCommand.this.notify();
 //                }
 //                break;
 //        }
