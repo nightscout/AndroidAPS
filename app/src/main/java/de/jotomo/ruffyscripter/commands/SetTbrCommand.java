@@ -21,7 +21,7 @@ import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_MENU;
 import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_SET;
 import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.WARNING_OR_ERROR;
 
-public class SetTbrCommand implements Command {
+public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
 
     private final long percentage;

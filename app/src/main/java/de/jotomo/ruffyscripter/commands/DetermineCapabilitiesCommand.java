@@ -19,7 +19,7 @@ import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 
-public class DetermineCapabilitiesCommand implements Command {
+public class DetermineCapabilitiesCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(DetermineCapabilitiesCommand.class);
     public static final int UP_STEPS = 75;
     public static final int RETRIES = 5;

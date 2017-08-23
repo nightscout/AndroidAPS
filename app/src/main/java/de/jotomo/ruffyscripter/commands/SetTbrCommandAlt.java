@@ -15,7 +15,7 @@ import java.util.Locale;
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-public class SetTbrCommandAlt implements Command {
+public class SetTbrCommandAlt extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
 
     private final long percentage;

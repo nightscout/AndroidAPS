@@ -14,7 +14,7 @@ import java.util.Locale;
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-public class BolusCommand implements Command {
+public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
     private final double bolus;

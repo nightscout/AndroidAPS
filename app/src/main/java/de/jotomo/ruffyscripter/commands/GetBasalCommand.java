@@ -13,7 +13,7 @@ import java.util.Map;
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-public class GetBasalCommand implements Command {
+public class GetBasalCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(GetBasalCommand.class);
 
     private RuffyScripter scripter;
