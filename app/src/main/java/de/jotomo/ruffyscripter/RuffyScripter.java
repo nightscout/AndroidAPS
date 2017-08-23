@@ -138,7 +138,7 @@ public class RuffyScripter {
     private IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
         public void log(String message) throws RemoteException {
-            log.trace("Ruffy says: " + message);
+            log.debug("Ruffy says: " + message);
         }
 
         @Override
