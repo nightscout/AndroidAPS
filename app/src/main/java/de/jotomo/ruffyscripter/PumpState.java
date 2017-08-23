@@ -20,7 +20,8 @@ public class PumpState {
     public String errorMsg;
     public boolean suspended;
     public boolean lowBattery;
-    public int insulinState;
+    public int insulinState = -1;
+    public int reservoirLevel = -1;
 
     public PumpState tbrActive(boolean tbrActive) {
         this.tbrActive = tbrActive;
@@ -52,6 +53,21 @@ public class PumpState {
         return this;
     }
 
+    public PumpState lowBattery(boolean lowBattery) {
+        this.lowBattery = lowBattery;
+        return this;
+    }
+
+    public PumpState insulinState(int insulinState) {
+        this.insulinState = insulinState;
+        return this;
+    }
+
+    public PumpState reservoirLevel(int reservoirLevel) {
+        this.reservoirLevel = reservoirLevel;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "PumpState{" +
@@ -63,6 +79,7 @@ public class PumpState {
                 ", suspended=" + suspended +
                 ", lowBattery=" + lowBattery +
                 ", insulinState=" + insulinState +
+                ", reversoirLevel=" + reservoirLevel +
                 ", timestamp=" + timestamp +
                 '}';
     }
