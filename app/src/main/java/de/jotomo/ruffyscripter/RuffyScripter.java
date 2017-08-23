@@ -33,9 +33,7 @@ import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 public class RuffyScripter {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
-
     private IRuffyService ruffyService;
-    private final long connectionTimeOutMs = 5000;
     private String unrecoverableError = null;
 
     public volatile Menu currentMenu;
@@ -43,9 +41,6 @@ public class RuffyScripter {
 
     private volatile long lastCmdExecutionTime;
     private volatile Command activeCmd = null;
-
-    private volatile boolean connected = false;
-    private volatile long lastDisconnected = 0;
 
     private boolean started = false;
 
@@ -99,23 +94,25 @@ public class RuffyScripter {
     }
 
     private boolean canDisconnect = false;
+    private volatile boolean connected = false;
+    private volatile long lastDisconnected = 0;
+
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
         @Override
         public void run() {
-            long lastDisconnect = System.currentTimeMillis();
             while (unrecoverableError == null) {
                 try {
                     long now = System.currentTimeMillis();
+                    long connectionTimeOutMs = 5000;
                     if (connected && activeCmd == null
                             && now > lastCmdExecutionTime + connectionTimeOutMs
                             // don't disconnect too frequently, confuses ruffy?
-                            && now > lastDisconnect + 15 * 1000) {
+                            && now > lastDisconnected + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
-                        lastDisconnect = now;
+                        lastDisconnected = now;
                         canDisconnect = true;
                         ruffyService.doRTDisconnect(mHandler);
                         connected = false;
-                        lastDisconnect = System.currentTimeMillis();
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
                     } else {
@@ -388,6 +385,8 @@ public class RuffyScripter {
             // When connecting again shortly after disconnecting, the pump sometimes fails
             // to come up. So for v1, just wait. This happens rarely, so no overly fancy logic needed.
             // TODO v2 see if we can do this cleaner, use isDisconnected as well maybe. GL#34.
+            // TODO remove this, will be in the way of quickly reconnecting after an exception and dealing
+            // with an alarm; we'll then see if the pump can deal with this
             if (System.currentTimeMillis() < lastDisconnected + 10 * 1000) {
                 log.debug("Waiting 10s to let pump settle after recent disconnect");
                 SystemClock.sleep(10 * 1000);
