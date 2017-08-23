@@ -399,7 +399,9 @@ public class RuffyScripter {
             // if the user just pressed a button on the combo, the screen needs to time first
             // before a connection is possible. In that case, it takes 45s before the
             // connection comes up.
-            waitForMenuUpdate(90);
+            waitForMenuUpdate(90, "Timeout connecting to pump");
+        } catch (CommandException e) {
+            throw e;
         } catch (Exception e) {
             throw new CommandException().exception(e).message("Unexpected exception while initiating/restoring pump connection");
         }
@@ -505,16 +507,17 @@ public class RuffyScripter {
     /**
      * Wait until the menu update is in
      */
+    // TODO donn't use this in ensureConnected
     public void waitForMenuUpdate() {
-        waitForMenuUpdate(60);
+        waitForMenuUpdate(60, "Timeout waiting for menu update");
     }
 
-    public void waitForMenuUpdate(long timeoutInSeconds) {
+    public void waitForMenuUpdate(long timeoutInSeconds, String errorMessage) {
         long timeoutExpired = System.currentTimeMillis() + timeoutInSeconds * 1000;
         long initialUpdateTime = menuLastUpdated;
         while (initialUpdateTime == menuLastUpdated) {
             if (System.currentTimeMillis() > timeoutExpired) {
-                throw new CommandException().message("Timeout waiting for menu update");
+                throw new CommandException().message(errorMessage);
             }
             SystemClock.sleep(50);
         }
@@ -589,6 +592,9 @@ public class RuffyScripter {
 
     // TODO v2 add remaining info we can extract from the main menu, low battery and low
     // cartridge warnings, running extended bolus (how does that look if a TBR is active as well?)
+
+    /** This reads the state of the, which is whatever is currently displayed on the display,
+     * no actions are performed. */
     private PumpState readPumpState() {
         PumpState state = new PumpState();
         Menu menu = currentMenu;
