@@ -124,9 +124,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_profile);
             }
             if (Config.DANAR) {
-                DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
-                DanaRv2Plugin danaRv2Plugin = (DanaRv2Plugin) MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+                DanaRPlugin danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
+                DanaRKoreanPlugin danaRKoreanPlugin = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+                DanaRv2Plugin danaRv2Plugin = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
                 if (danaRPlugin.isEnabled(PluginBase.PUMP) || danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danar);
                 }
@@ -143,16 +143,16 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                     addPreferencesFromResource(R.xml.pref_combo);
                 }
             }
-            VirtualPumpPlugin virtualPumpPlugin = (VirtualPumpPlugin) MainApp.getSpecificPlugin(VirtualPumpPlugin.class);
+            VirtualPumpPlugin virtualPumpPlugin = MainApp.getSpecificPlugin(VirtualPumpPlugin.class);
             if (virtualPumpPlugin != null && virtualPumpPlugin.isEnabled(PluginBase.PUMP)) {
                 addPreferencesFromResource(R.xml.pref_virtualpump);
             }
-            InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin = (InsulinOrefFreePeakPlugin) MainApp.getSpecificPlugin(InsulinOrefFreePeakPlugin.class);
+            InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin = MainApp.getSpecificPlugin(InsulinOrefFreePeakPlugin.class);
             if(insulinOrefFreePeakPlugin.isEnabled(PluginBase.INSULIN)){
                 addPreferencesFromResource(R.xml.pref_insulinoreffreepeak);
             }
 
-            NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+            NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
             if (nsClientInternalPlugin != null && nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
                 addPreferencesFromResource(R.xml.pref_nsclientinternal);
             }
@@ -164,13 +164,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             addPreferencesFromResource(R.xml.pref_advanced);
 
             if (Config.WEAR) {
-                WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
+                WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
                 if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
                     addPreferencesFromResource(R.xml.pref_wear);
                 }
             }
 
-            StatuslinePlugin statuslinePlugin = (StatuslinePlugin) MainApp.getSpecificPlugin(StatuslinePlugin.class);
+            StatuslinePlugin statuslinePlugin = MainApp.getSpecificPlugin(StatuslinePlugin.class);
             if (statuslinePlugin != null && statuslinePlugin.isEnabled(PluginBase.GENERAL)) {
                 addPreferencesFromResource(R.xml.pref_xdripstatus);
             }

@@ -55,6 +55,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -615,7 +616,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     finalLastRun.lastEnact = new Date();
                                     finalLastRun.lastOpenModeAccept = new Date();
                                     NSUpload.uploadDeviceStatus();
-                                    ObjectivesPlugin objectivesPlugin = (ObjectivesPlugin) MainApp.getSpecificPlugin(ObjectivesPlugin.class);
+                                    ObjectivesPlugin objectivesPlugin = MainApp.getSpecificPlugin(ObjectivesPlugin.class);
                                     if (objectivesPlugin != null) {
                                         ObjectivesPlugin.manualEnacts++;
                                         ObjectivesPlugin.saveProgress();
@@ -912,6 +913,34 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             return;
         }
 
+        Double lowLine = SP.getDouble("low_mark", 0d);
+        Double highLine = SP.getDouble("high_mark", 0d);
+
+        //Start with updating the BG as it is unaffected by loop.
+        // **** BG value ****
+        if (lastBG != null) {
+            int color = MainApp.sResources.getColor(R.color.inrange);
+            if (lastBG.valueToUnits(units) < lowLine)
+                color = MainApp.sResources.getColor(R.color.low);
+            else if (lastBG.valueToUnits(units) > highLine)
+                color = MainApp.sResources.getColor(R.color.high);
+            bgView.setText(lastBG.valueToUnitsToString(units));
+            arrowView.setText(lastBG.directionToSymbol());
+            bgView.setTextColor(color);
+            arrowView.setTextColor(color);
+            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
+            if (glucoseStatus != null) {
+                deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
+                if (avgdeltaView != null)
+                    avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
+                            "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
+            } else {
+                deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
+                if (avgdeltaView != null)
+                    avgdeltaView.setText("");
+            }
+        }
+
         // open loop mode
         final LoopPlugin.LastRun finalLastRun = LoopPlugin.lastRun;
         if (Config.APS && MainApp.getConfigBuilder().getPumpDescription().isTempBasalCapable) {
@@ -952,11 +981,11 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
             tempTargetView.setVisibility(View.VISIBLE);
-            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, units));
+            tempTargetView.setText(Profile.toTargetRangeString(tempTarget.low, tempTarget.high, Constants.MGDL, units));
         } else {
             tempTargetView.setTextColor(Color.WHITE);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetDisabledBackground));
-            tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units));
+            tempTargetView.setText(Profile.toTargetRangeString(profile.getTargetLow(), profile.getTargetHigh(), units, units));
             tempTargetView.setVisibility(View.VISIBLE);
         }
         if (Config.NSCLIENT && tempTarget == null) {
@@ -1105,8 +1134,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             treatmentButton.setVisibility(View.GONE);
         }
 
-        Double lowLine = SP.getDouble("low_mark", 0d);
-        Double highLine = SP.getDouble("high_mark", 0d);
+
         if (lowLine < 1) {
             lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
         }
@@ -1115,28 +1143,8 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // **** BG value ****
-        if (lastBG != null) {
-            int color = MainApp.sResources.getColor(R.color.inrange);
-            if (lastBG.valueToUnits(units) < lowLine)
-                color = MainApp.sResources.getColor(R.color.low);
-            else if (lastBG.valueToUnits(units) > highLine)
-                color = MainApp.sResources.getColor(R.color.high);
-            bgView.setText(lastBG.valueToUnitsToString(units));
-            arrowView.setText(lastBG.directionToSymbol());
-            bgView.setTextColor(color);
-            arrowView.setTextColor(color);
-            GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-            if (glucoseStatus != null) {
-                deltaView.setText("Δ " + Profile.toUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units) + " " + units);
-                if (avgdeltaView != null)
-                    avgdeltaView.setText("øΔ15m: " + Profile.toUnitsString(glucoseStatus.short_avgdelta, glucoseStatus.short_avgdelta * Constants.MGDL_TO_MMOLL, units) +
-                            "  øΔ40m: " + Profile.toUnitsString(glucoseStatus.long_avgdelta, glucoseStatus.long_avgdelta * Constants.MGDL_TO_MMOLL, units));
-            } else {
-                deltaView.setText("Δ " + MainApp.sResources.getString(R.string.notavailable));
-                if (avgdeltaView != null)
-                    avgdeltaView.setText("");
-            }
-        } else {
+        if (lastBG == null) { //left this here as it seems you want to exit at this point if it is null...
+
             return;
         }
         Integer flag = bgView.getPaintFlags();
@@ -1598,8 +1606,6 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
 
         for (int tx = 0; tx < treatments.size(); tx++) {
             Treatment t = treatments.get(tx);
-            if (!t.isValid)
-                continue;
             if (t.getX() < fromTime || t.getX() > endTime) continue;
             t.setY(getNearestBg((long) t.getX(), bgReadingsArray));
             filteredTreatments.add(t);
@@ -1740,7 +1746,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
-            if(notification.text == MainApp.sResources.getString(R.string.nsalarm_staledata))
+            if(Objects.equals(notification.text, MainApp.sResources.getString(R.string.nsalarm_staledata)))
                 holder.dismiss.setText("snooze");
             holder.text.setText(notification.text);
             holder.time.setText(DateUtil.timeString(notification.date));

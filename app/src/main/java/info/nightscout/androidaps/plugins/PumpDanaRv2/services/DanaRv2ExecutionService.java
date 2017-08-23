@@ -289,7 +289,7 @@ public class DanaRv2ExecutionService extends Service {
             }
 
             Date now = new Date();
-            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !((DanaRv2Plugin)MainApp.getSpecificPlugin(DanaRv2Plugin.class)).isInitialized()) {
+            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()) {
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());

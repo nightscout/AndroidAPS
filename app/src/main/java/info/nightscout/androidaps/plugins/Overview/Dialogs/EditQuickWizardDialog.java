@@ -29,7 +29,7 @@ import info.nightscout.utils.SafeParse;
 public class EditQuickWizardDialog extends DialogFragment implements View.OnClickListener {
 
     QuickWizard.QuickWizardEntry entry = new QuickWizard().newEmptyItem();
-    QuickWizard quickWizard = ((OverviewPlugin) MainApp.getSpecificPlugin(OverviewPlugin.class)).quickWizard;
+    QuickWizard quickWizard = MainApp.getSpecificPlugin(OverviewPlugin.class).quickWizard;
 
     EditText buttonEdit;
     EditText carbsEdit;

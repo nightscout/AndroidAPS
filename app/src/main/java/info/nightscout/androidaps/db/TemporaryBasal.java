@@ -223,7 +223,7 @@ public class TemporaryBasal implements Interval {
                     double tempBolusSize = netBasalRate * tempBolusSpacing / 60d;
                     netBasalAmount += tempBolusSize;
 
-                    Treatment tempBolusPart = new Treatment(insulinInterface, dia);
+                    Treatment tempBolusPart = new Treatment();
                     tempBolusPart.insulin = tempBolusSize;
                     tempBolusPart.date = calcdate;
 

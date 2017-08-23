@@ -185,7 +185,11 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
             total.iob += tIOB.iobContrib;
             total.activity += tIOB.activityContrib;
             if (!t.isSMB) {
-                Iob bIOB = t.iobCalc(time, dia / SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                // instead of dividing the DIA that only worked on the bilinear curves,
+                // multiply the time the treatment is seen active.
+                long timeSinceTreatment =  time - t.date;
+                long snoozeTime = t.date + (long)(timeSinceTreatment * SP.getDouble("openapsama_bolussnooze_dia_divisor", 2.0));
+                Iob bIOB = t.iobCalc(snoozeTime, dia);
                 total.bolussnooze += bIOB.iobContrib;
             } else {
                 total.basaliob += t.insulin;
@@ -411,7 +415,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo) {
-        Treatment treatment = new Treatment(detailedBolusInfo.insulinInterface);
+        Treatment treatment = new Treatment();
         treatment.date = detailedBolusInfo.date;
         treatment.source = detailedBolusInfo.source;
         treatment.pumpId = detailedBolusInfo.pumpId;
@@ -425,7 +429,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         boolean newRecordCreated = MainApp.getDbHelper().createOrUpdate(treatment);
         //log.debug("Adding new Treatment record" + treatment.toString());
         if (detailedBolusInfo.carbTime != 0) {
-            Treatment carbsTreatment = new Treatment(detailedBolusInfo.insulinInterface);
+            Treatment carbsTreatment = new Treatment();
             carbsTreatment.source = detailedBolusInfo.source;
             carbsTreatment.pumpId = detailedBolusInfo.pumpId; // but this should never happen
             carbsTreatment.date = detailedBolusInfo.date + detailedBolusInfo.carbTime * 60 * 1000L + 1000L; // add 1 sec to make them different records

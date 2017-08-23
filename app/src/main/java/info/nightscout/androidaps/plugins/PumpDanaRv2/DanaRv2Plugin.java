@@ -73,8 +73,6 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     public static PumpDescription pumpDescription = new PumpDescription();
 
     public DanaRv2Plugin() {
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
-
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, DanaRv2ExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -105,7 +103,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         pumpDescription.isRefillingCapable = true;
     }
 
-    ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
             log.debug("Service is disconnected");
@@ -288,7 +286,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
-            Treatment t = new Treatment(detailedBolusInfo.insulinInterface);
+            Treatment t = new Treatment();
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, System.currentTimeMillis() + detailedBolusInfo.carbTime * 60 * 1000 + 1000, t); // +1000 to make the record different
