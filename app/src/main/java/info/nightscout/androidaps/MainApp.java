@@ -101,8 +101,6 @@ public class MainApp extends Application {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
-        Answers.getInstance().logCustom(new CustomEvent("AppStart"));
-
         sBus = new Bus(ThreadEnforcer.ANY);
         sInstance = this;
         sResources = getResources();
@@ -160,6 +158,11 @@ public class MainApp extends Application {
             MainApp.getConfigBuilder().initialize();
         }
         NSUpload.uploadAppStart();
+        if (MainApp.getConfigBuilder().isClosedModeEnabled())
+            Answers.getInstance().logCustom(new CustomEvent("AppStart-ClosedLoop"));
+        else
+            Answers.getInstance().logCustom(new CustomEvent("AppStart"));
+
 
         startKeepAliveService();
 
