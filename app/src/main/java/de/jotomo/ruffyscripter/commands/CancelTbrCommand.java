@@ -22,10 +22,11 @@ public class CancelTbrCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute(PumpState initialPumpState) {
+    public CommandResult execute() {
         try {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-            if (!initialPumpState.tbrActive) {
+            PumpState pumpState = scripter.readPumpState();
+            if (!pumpState.tbrActive) {
                 log.debug("active temp basal 90s ago: " +
                         MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis() - 90 * 1000));
                 log.debug("active temp basal 60s ago: " +
@@ -46,9 +47,9 @@ public class CancelTbrCommand extends BaseCommand {
                         .enacted(true)
                         .message("No TBR active");
             }
-            log.debug("Cancelling active TBR of " + initialPumpState.tbrPercent
-                    + "% with " + initialPumpState.tbrRemainingDuration + " min remaining");
-            return new SetTbrCommand(100, 0).execute(initialPumpState);
+            log.debug("Cancelling active TBR of " + pumpState.tbrPercent
+                    + "% with " + pumpState.tbrRemainingDuration + " min remaining");
+            return new SetTbrCommand(100, 0).execute();
         } catch (CommandException e) {
             return e.toCommandResult();
         }

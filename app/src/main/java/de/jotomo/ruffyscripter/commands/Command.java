@@ -2,7 +2,6 @@ package de.jotomo.ruffyscripter.commands;
 
 import java.util.List;
 
-import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 /**
@@ -13,7 +12,7 @@ import de.jotomo.ruffyscripter.RuffyScripter;
  * sequence, letting the methods take care of waits.
  */
 public interface Command {
-    CommandResult execute(PumpState initialPumpState);
+    CommandResult execute();
     List<String> validateArguments();
     void setScripter(RuffyScripter scripter);
 }

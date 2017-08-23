@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 import de.jotomo.ruffyscripter.PumpCapabilities;
-import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 
@@ -27,7 +26,7 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute(PumpState initialPumpState) {
+    public CommandResult execute() {
         try {
 
             //read main menu 100% or TBR? Read remaining duration.

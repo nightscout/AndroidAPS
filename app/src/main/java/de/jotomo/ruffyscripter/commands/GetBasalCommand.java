@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 public class GetBasalCommand extends BaseCommand {
@@ -102,7 +101,7 @@ public class GetBasalCommand extends BaseCommand {
 //        }
 //    }
     @Override
-    public CommandResult execute(PumpState initialPumpState) {
+    public CommandResult execute() {
         try {
             Map<Integer,Double> rate = new HashMap<>();
 

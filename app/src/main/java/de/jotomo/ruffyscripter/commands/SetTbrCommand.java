@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
 import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.MAIN_MENU;
@@ -60,7 +59,7 @@ public class SetTbrCommand extends BaseCommand {
     }
 
     @Override
-    public CommandResult execute(PumpState initialPumpState) {
+    public CommandResult execute() {
         try {
             log.debug("1. going from " + scripter.currentMenu + " to TBR_MENU");
             int retries = 5;

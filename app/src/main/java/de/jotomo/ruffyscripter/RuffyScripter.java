@@ -305,7 +305,7 @@ public class RuffyScripter {
                             log.debug("Pump state before running command: " + pumpState);
                             long cmdStartTime = System.currentTimeMillis();
                             cmd.setScripter(scripter);
-                            returnable.cmdResult = cmd.execute(pumpState);
+                            returnable.cmdResult = cmd.execute();
                             long cmdEndTime = System.currentTimeMillis();
                             returnable.cmdResult.completionTime = cmdEndTime;
                             log.debug("Executing " + cmd + " took " + (cmdEndTime - cmdStartTime) + "ms");
@@ -602,7 +602,7 @@ public class RuffyScripter {
 
     /** This reads the state of the, which is whatever is currently displayed on the display,
      * no actions are performed. */
-    private PumpState readPumpState() {
+    public PumpState readPumpState() {
         PumpState state = new PumpState();
         Menu menu = currentMenu;
         if (menu == null) {
