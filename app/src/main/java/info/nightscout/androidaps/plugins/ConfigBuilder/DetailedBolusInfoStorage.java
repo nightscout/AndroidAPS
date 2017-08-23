@@ -32,10 +32,20 @@ public class DetailedBolusInfoStorage {
             log.debug("Existing info: " + new Date(infoTime).toLocaleString());
             if (bolustime > infoTime - 60 * 1000 && bolustime < infoTime + 60 * 1000) {
                 found = store.get(i);
-                store.remove(i);
                 break;
             }
         }
         return found;
+    }
+
+    public static void remove(long bolustime) {
+        for (int i = 0; i < store.size(); i++) {
+            long infoTime = store.get(i).date;
+            if (bolustime > infoTime - 60 * 1000 && bolustime < infoTime + 60 * 1000) {
+                log.debug("Removing info: " + new Date(infoTime).toLocaleString());
+                store.remove(i);
+                break;
+            }
+        }
     }
 }
