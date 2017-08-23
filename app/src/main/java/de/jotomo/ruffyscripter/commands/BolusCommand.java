@@ -130,7 +130,7 @@ public class BolusCommand extends BaseCommand {
 
     private void verifyDisplayedBolusAmount() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        double displayedBolus = readDisplayedBolusAmount();
+        double displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
@@ -138,23 +138,12 @@ public class BolusCommand extends BaseCommand {
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(2000);
-        double refreshedDisplayedBolus = readDisplayedBolusAmount();
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
+        double refreshedDisplayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
         if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
             throw new CommandException().message("Failed to set bolus: bolus changed after input stopped from "
                     + displayedBolus + " -> " + refreshedDisplayedBolus);
         }
-    }
-
-    private double readDisplayedBolusAmount() {
-        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        // bolus amount is blinking, so we need to make sure we catch it at the right moment
-        Object amountObj = scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
-        while (!(amountObj instanceof Double)) {
-            scripter.waitForMenuUpdate();
-            amountObj = scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
-        }
-        return (double) amountObj;
     }
 
     @Override

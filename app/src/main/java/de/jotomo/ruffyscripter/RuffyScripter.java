@@ -597,6 +597,26 @@ public class RuffyScripter {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> T readBlinkingValue(Class<T> expectedType, MenuAttribute attribute) {
+        int retries = 5;
+        Object value = currentMenu.getAttribute(attribute);
+        while (!value.getClass().isAssignableFrom(expectedType.getClass())) {
+            value = currentMenu.getAttribute(attribute);
+            waitForScreenUpdate(1000);
+            retries--;
+            if (retries == 0) {
+                throw new CommandException().message("Failed to read blinkng value: " + attribute);
+            }
+        }
+        return (T) value;
+    }
+
+    public long readDisplayedDuration() {
+        MenuTime duration = readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
+        return duration.getHour() * 60 + duration.getMinute();
+    }
+
     // TODO v2 add remaining info we can extract from the main menu, low battery and low
     // cartridge warnings, running extended bolus (how does that look if a TBR is active as well?)
 

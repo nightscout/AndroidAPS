@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffyscripter.RuffyScripter;
-
 public class SetTbrCommandAlt extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
 
@@ -106,7 +104,7 @@ public class SetTbrCommandAlt extends BaseCommand {
 
     private void inputTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long currentPercent = readDisplayedTbrPercentage();
+        long currentPercent = scripter.readBlinkingValue(Long.class, MenuAttribute.BASAL_RATE);
         log.debug("Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
         long percentageSteps = percentageChange / 10;
@@ -130,7 +128,7 @@ public class SetTbrCommandAlt extends BaseCommand {
 
     private void verifyDisplayedTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long displayedPercentage = readDisplayedTbrPercentage();
+        long displayedPercentage = scripter.readBlinkingValue(Long.class, MenuAttribute.BASAL_RATE);
         if (displayedPercentage != percentage) {
             log.debug("Final displayed TBR percentage: " + displayedPercentage);
             throw new CommandException().message("Failed to set TBR percentage");
@@ -138,7 +136,8 @@ public class SetTbrCommandAlt extends BaseCommand {
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(2000);
-        long refreshedDisplayedTbrPecentage = readDisplayedTbrPercentage();
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+        long refreshedDisplayedTbrPecentage = scripter.readBlinkingValue(Long.class, MenuAttribute.BASAL_RATE);
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
             throw new CommandException().message("Failed to set TBR percentage: " +
                     "percentage changed after input stopped from "
@@ -146,21 +145,9 @@ public class SetTbrCommandAlt extends BaseCommand {
         }
     }
 
-    private long readDisplayedTbrPercentage() {
-        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
-        Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
-        // this as a bit hacky, the display value is blinking, so we might catch that, so
-        // keep trying till we get the Double we want
-        while (!(percentageObj instanceof Double)) {
-            scripter.waitForMenuUpdate();
-            percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
-        }
-        return ((Double) percentageObj).longValue();
-    }
-
     private void inputTbrDuration() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        long currentDuration = readDisplayedTbrDuration();
+        long currentDuration = scripter.readDisplayedDuration();
         if (currentDuration % 15 != 0) {
             // The duration displayed is how long an active TBR will still run,
             // which might be something like 0:13, hence not in 15 minute steps.
@@ -170,7 +157,7 @@ public class SetTbrCommandAlt extends BaseCommand {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
             scripter.pressUpKey();
             scripter.waitForMenuUpdate();
-            currentDuration = readDisplayedTbrDuration();
+            currentDuration = scripter.readDisplayedDuration();
         }
         log.debug("Current TBR duration: " + currentDuration);
         long durationChange = duration - currentDuration;
@@ -195,7 +182,7 @@ public class SetTbrCommandAlt extends BaseCommand {
 
     private void verifyDisplayedTbrDuration() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        long displayedDuration = readDisplayedTbrDuration();
+        long displayedDuration = scripter.readDisplayedDuration();
         if (displayedDuration != duration) {
             log.debug("Final displayed TBR duration: " + displayedDuration);
             throw new CommandException().message("Failed to set TBR duration");
@@ -203,7 +190,8 @@ public class SetTbrCommandAlt extends BaseCommand {
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(2000);
-        long refreshedDisplayedTbrDuration = readDisplayedTbrDuration();
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+        long refreshedDisplayedTbrDuration = scripter.readDisplayedDuration();
         if (displayedDuration != refreshedDisplayedTbrDuration) {
             throw new CommandException().message("Failed to set TBR duration: " +
                     "duration changed after input stopped from "
@@ -211,19 +199,7 @@ public class SetTbrCommandAlt extends BaseCommand {
         }
     }
 
-    private long readDisplayedTbrDuration() {
-        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
-        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-        // this as a bit hacky, the display value is blinking, so we might catch that, so
-        // keep trying till we get the Double we want
-        while (!(durationObj instanceof MenuTime)) {
-            scripter.waitForMenuUpdate();
-            durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-        }
-        MenuTime duration = (MenuTime) durationObj;
-        return duration.getHour() * 60 + duration.getMinute();
-    }
+
 
     private void cancelTbrAndConfirmCancellationWarning() {
         // confirm entered TBR

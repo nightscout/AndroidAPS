@@ -8,8 +8,10 @@ public abstract class BaseCommand implements Command {
     @Override public void setScripter(RuffyScripter scripter) { this.scripter = scripter; }
 
     // TODO upcoming
+    protected final boolean canBeCancelled = true;
     protected volatile boolean cancelRequested = false;
     public void requestCancellation() {
        cancelRequested = true;
     }
+    public boolean isCancellable() { return canBeCancelled; }
 }

@@ -93,25 +93,17 @@ public class SetTbrCommand extends BaseCommand {
             log.debug("SetTbrCommand: 3. getting/setting basal percentage in " + scripter.currentMenu);
             retries = 30;
 
-            double currentPercentage = -100;
+            double currentPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
             while (currentPercentage != percentage && retries >= 0) {
                 retries--;
-                Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
-
-                if (percentageObj != null && (percentageObj instanceof Double)) {
-                    currentPercentage = ((Double) percentageObj).doubleValue();
-
-                    if (currentPercentage != percentage) {
-                        int requestedPercentage = (int) percentage;
-                        int actualPercentage = (int) currentPercentage;
-                        int steps = (requestedPercentage - actualPercentage) / 10;
-                        log.debug("Adjusting basal(" + requestedPercentage + "/" + actualPercentage + ") with " + steps + " steps and " + retries + " retries left");
-                        scripter.step(steps, (steps < 0 ? RuffyScripter.Key.DOWN : RuffyScripter.Key.UP), 500);
-                        scripter.waitForScreenUpdate(1000);
-                    }
-
-                } else {
-                    currentPercentage = -100;
+                currentPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
+                if (currentPercentage != percentage) {
+                    int requestedPercentage = (int) percentage;
+                    int actualPercentage = (int) currentPercentage;
+                    int steps = (requestedPercentage - actualPercentage) / 10;
+                    log.debug("Adjusting basal(" + requestedPercentage + "/" + actualPercentage + ") with " + steps + " steps and " + retries + " retries left");
+                    scripter.step(steps, (steps < 0 ? RuffyScripter.Key.DOWN : RuffyScripter.Key.UP), 500);
+                    scripter.waitForScreenUpdate(1000);
                 }
                 scripter.waitForScreenUpdate(1000);
             }
@@ -120,20 +112,8 @@ public class SetTbrCommand extends BaseCommand {
 
             log.debug("4. checking basal percentage in " + scripter.currentMenu);
             scripter.waitForScreenUpdate(1000);
-            currentPercentage = -1000;
-            retries = 10;
-            while (currentPercentage < 0 && retries >= 0) {
-                retries--;
-                Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
-
-                if (percentageObj != null && (percentageObj instanceof Double)) {
-                    currentPercentage = ((Double) percentageObj).doubleValue();
-                } else {
-                    scripter.waitForScreenUpdate(1000);
-                }
-            }
-
-            if (retries < 0 || currentPercentage != percentage)
+            currentPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE);
+            if (currentPercentage != percentage)
                 throw new CommandException().message("Unable to set percentage. Requested: " + percentage + ", value displayed on pump: " + currentPercentage);
 
             if (currentPercentage != 100) {
@@ -155,47 +135,31 @@ public class SetTbrCommand extends BaseCommand {
                 log.debug("6. getting/setting duration in " + scripter.currentMenu);
                 retries = 30;
 
-                double currentDuration = -100;
+                double currentDuration = scripter.readDisplayedDuration();
                 while (currentDuration != duration && retries >= 0) {
                     retries--;
-                    Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-                    log.debug("Requested time: " + duration + " actual time: " + durationObj);
-                    if (durationObj != null && durationObj instanceof MenuTime) {
-                        MenuTime time = (MenuTime) durationObj;
-                        currentDuration = (time.getHour() * 60) + time.getMinute();
-                        if (currentDuration != duration) {
-                            int requestedDuration = (int) duration;
-                            int actualDuration = (int) currentDuration;
-                            int steps = (requestedDuration - actualDuration) / 15;
-                            if (currentDuration + (steps * 15) < requestedDuration)
-                                steps++;
-                            else if (currentDuration + (steps * 15) > requestedDuration)
-                                steps--;
-                            log.debug("Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
-                            scripter.step(steps, (steps > 0 ? RuffyScripter.Key.UP : RuffyScripter.Key.DOWN), 500);
-                            scripter.waitForScreenUpdate(1000);
-                        }
+                    currentDuration = scripter.readDisplayedDuration();
+                    log.debug("Requested time: " + duration + " actual time: " + currentDuration);
+                    if (currentDuration != duration) {
+                        int requestedDuration = (int) duration;
+                        int actualDuration = (int) currentDuration;
+                        int steps = (requestedDuration - actualDuration) / 15;
+                        if (currentDuration + (steps * 15) < requestedDuration)
+                            steps++;
+                        else if (currentDuration + (steps * 15) > requestedDuration)
+                            steps--;
+                        log.debug("Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
+                        scripter.step(steps, (steps > 0 ? RuffyScripter.Key.UP : RuffyScripter.Key.DOWN), 500);
+                        scripter.waitForScreenUpdate(1000);
                     }
-                    scripter.waitForScreenUpdate(1000);
                 }
                 if (currentDuration < 0 || retries < 0)
                     throw new CommandException().message("unable to set duration, requested:" + duration + ", displayed on pump: " + currentDuration);
 
                 log.debug("7. checking duration in " + scripter.currentMenu);
                 scripter.waitForScreenUpdate(1000);
-                currentDuration = -1000;
-                retries = 10;
-                while (currentDuration < 0 && retries >= 0) {
-                    retries--;
-                    Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-
-                    if (durationObj != null && durationObj instanceof MenuTime) {
-                        MenuTime time = (MenuTime) durationObj;
-                        currentDuration = (time.getHour() * 60) + time.getMinute();
-                    } else
-                        scripter.waitForScreenUpdate(1000);
-                }
-                if (retries < 0 || currentDuration != duration)
+                currentDuration = scripter.readDisplayedDuration();
+                if (currentDuration != duration)
                     throw new CommandException().message("wrong duration! Requested: " + duration + ", displayed on pump: " + currentDuration);
             }
 
@@ -216,6 +180,7 @@ public class SetTbrCommand extends BaseCommand {
                 // TODO how probable is it, that a totally unrelated error (like occlusion alert)
                 // is raised at this point, which we'd cancel together with the TBR cancelled alert?
                 if (percentage == 100 && scripter.currentMenu.getType() == WARNING_OR_ERROR) {
+                    // TODO extract method confirmAlert(alert)
                     scripter.pressCheckKey();
                     retries++;
                     cancelledError = true;
