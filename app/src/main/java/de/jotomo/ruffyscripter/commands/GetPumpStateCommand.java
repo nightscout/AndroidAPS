@@ -4,6 +4,7 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.TreeSet;
 
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
@@ -68,6 +69,7 @@ public class GetPumpStateCommand extends BaseCommand {
         public StepBuilder cancel(Step step) {
             return  this;
         }
+        public StepBuilder failure(Step step) { return this; }
         public StepBuilder run() {
             return this;
         }
@@ -106,6 +108,12 @@ public class GetPumpStateCommand extends BaseCommand {
                 .run();
         new StepBuilder("Input bolus") // turn into a method createStep() or so, which has access to the scripter
                 .retries(5)
+                .failure(new Step() {
+                    @Override
+                    public void doStep() {
+                        System.out.println("retry command");
+                    }
+                })
                 .step(new Step() {
                     @Override
                     public void doStep() {

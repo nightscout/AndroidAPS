@@ -214,14 +214,14 @@ public class SetTbrCommandAlt extends BaseCommand {
         long inFiveSeconds = System.currentTimeMillis() + 5 * 1000;
         boolean alertProcessed = false;
         while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
-            if (scripter.currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
+            if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 // Check the raised alarm is TBR CANCELLED, so we're not accidentally cancelling
                 // a different alarm that might be raised at the same time.
                 // Note that the message is permanently displayed, while the error code is blinking.
                 // A wait till the error code can be read results in the code hanging, despite
                 // menu updates coming in, so just check the message.
                 // TODO v2 this only works when the pump's language is English
-                String errorMsg = (String) scripter.currentMenu.getAttribute(MenuAttribute.MESSAGE);
+                String errorMsg = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
                 if (!errorMsg.equals("TBR CANCELLED")) {
                     throw new CommandException().success(false).enacted(false)
                             .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
@@ -242,8 +242,8 @@ public class SetTbrCommandAlt extends BaseCommand {
 
     private void verifyMainMenuShowsNoActiveTbr() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        Double tbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
-        boolean runtimeDisplayed = scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME);
+        Double tbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
+        boolean runtimeDisplayed = scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME);
         if (tbrPercentage != 100 || runtimeDisplayed) {
             throw new CommandException().message("Cancelling TBR failed, TBR is still set according to MAIN_MENU");
         }
@@ -252,12 +252,12 @@ public class SetTbrCommandAlt extends BaseCommand {
     private void verifyMainMenuShowsExpectedTbrActive() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         // new TBR set; percentage and duration must be displayed ...
-        if (!scripter.currentMenu.attributes().contains(MenuAttribute.TBR) ||
-                !scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME)) {
+        if (!scripter.getCurrentMenu().attributes().contains(MenuAttribute.TBR) ||
+                !scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME)) {
             throw new CommandException().message("Setting TBR failed, according to MAIN_MENU no TBR is active");
         }
-        Double mmTbrPercentage = (Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR);
-        MenuTime mmTbrDuration = (MenuTime) scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
+        Double mmTbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
+        MenuTime mmTbrDuration = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
         // ... and be the same as what we set
         // note that displayed duration might have already counted down, e.g. from 30 minutes to
         // 29 minutes and 59 seconds, so that 29 minutes are displayed

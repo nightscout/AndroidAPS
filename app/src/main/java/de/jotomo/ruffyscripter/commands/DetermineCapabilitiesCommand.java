@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 
 import de.jotomo.ruffyscripter.PumpCapabilities;
-import de.jotomo.ruffyscripter.RuffyScripter;
 
 
 public class DetermineCapabilitiesCommand extends BaseCommand {
@@ -123,21 +122,21 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
     private long readDisplayedTbrPercentage() {
         SystemClock.sleep(1000);
         // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
-        Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
+        Object percentageObj = scripter.getCurrentMenu().getAttribute(MenuAttribute.BASAL_RATE);
         // this as a bit hacky, the display value is blinking, so we might catch that, so
         // keep trying till we get the Double we want
         while (!(percentageObj instanceof Double)) {
             scripter.waitForMenuUpdate();
-            percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
+            percentageObj = scripter.getCurrentMenu().getAttribute(MenuAttribute.BASAL_RATE);
         }
         return ((Double) percentageObj).longValue();
     }
 
     private int readDisplayedTbrDurationMainMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        if(scripter.currentMenu.attributes().contains(MenuAttribute.RUNTIME)){
+        if(scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME)){
             // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
-            Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
+            Object durationObj = scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
             MenuTime duration = (MenuTime) durationObj;
             return duration.getHour() * 60 + duration.getMinute();
         } else {
@@ -147,8 +146,8 @@ public class DetermineCapabilitiesCommand extends BaseCommand {
 
     private int readDisplayedTbrPercentageMainMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        if(scripter.currentMenu.attributes().contains(MenuAttribute.TBR)){
-            return (int)((Double) scripter.currentMenu.getAttribute(MenuAttribute.TBR)).doubleValue();
+        if(scripter.getCurrentMenu().attributes().contains(MenuAttribute.TBR)){
+            return (int)((Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR)).doubleValue();
         } else {
             return 100;
         }

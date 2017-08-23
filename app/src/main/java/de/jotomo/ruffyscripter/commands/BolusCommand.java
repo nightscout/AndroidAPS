@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffyscripter.RuffyScripter;
-
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
@@ -54,11 +52,11 @@ public class BolusCommand extends BaseCommand {
 
             // wait for bolus delivery to complete; the remaining units to deliver are counted
             // down and are displayed on the main menu.
-            Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
+            Double bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             while (bolusRemaining != null) {
                 log.debug("Delivering bolus, remaining: " + bolusRemaining);
                 SystemClock.sleep(200);
-                bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
+                bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
 
             // TODO what if we hit 'cartridge low' alert here? is it immediately displayed or after the bolus?
@@ -74,16 +72,16 @@ public class BolusCommand extends BaseCommand {
             scripter.navigateToMenu(MenuType.MY_DATA_MENU);
             scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
             scripter.pressCheckKey();
-            if (scripter.currentMenu.getType() != MenuType.BOLUS_DATA) {
+            if (scripter.getCurrentMenu().getType() != MenuType.BOLUS_DATA) {
                 scripter.waitForMenuUpdate();
             }
 
-            if (!scripter.currentMenu.attributes().contains(MenuAttribute.BOLUS)) {
+            if (!scripter.getCurrentMenu().attributes().contains(MenuAttribute.BOLUS)) {
                 throw new CommandException().success(false).enacted(true)
                         .message("Bolus was delivered, but unable to confirm it with history record");
             }
 
-            double lastBolusInHistory = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+            double lastBolusInHistory = (double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
             if (Math.abs(bolus - lastBolusInHistory) > 0.05) {
                 throw new CommandException().success(false).enacted(true)
                         .message("Last bolus shows " + lastBolusInHistory

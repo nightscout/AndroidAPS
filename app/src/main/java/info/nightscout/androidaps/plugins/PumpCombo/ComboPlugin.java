@@ -189,10 +189,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             // this must be the base package of the app (check package attribute in
                             // manifest element in the manifest file of the providing app)
                             "org.monkey.d.ruffy.ruffy",
-                            // full path to the driver
+                            // full path to the driver;
                             // in the logs this service is mentioned as (note the slash)
-                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
-                            //org.monkey.d.ruffy.ruffy is the base package identifier and /.driver.Ruffy the service within the package
+                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy";
+                            // org.monkey.d.ruffy.ruffy is the base package identifier
+                            // and /.driver.Ruffy the service within the package
                             "org.monkey.d.ruffy.ruffy.driver.Ruffy"
                     ));
             context.startService(intent);
@@ -208,9 +209,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
-                    ruffyScripter.stop();
                     log.debug("ruffy service disconnected");
-                    // try to reconnect ruffy service unless unbind was explicitely requested
+                    // try to reconnect ruffy service unless unbind was explicitly requested
                     // via unbindRuffyService
                     if(!keepUnbound) {
                         SystemClock.sleep(250);
@@ -311,7 +311,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public boolean isBusy() {
-        return ruffyScripter == null || ruffyScripter.isPumpBusy();
+        return ruffyScripter.isPumpBusy();
     }
 
     // TODO
@@ -337,8 +337,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         log.debug("RefreshDataFromPump called");
 
         // if Android is sluggish this might get called before ruffy is bound
-        if (ruffyScripter == null) {
-            log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
+        if (!ruffyScripter.isRunning()) {
+            log.warn("Rejecting call to RefreshDataFromPump: scripter not ready yet.");
             return;
         }
 

@@ -36,7 +36,7 @@ public class RuffyScripter {
     private IRuffyService ruffyService;
     private String unrecoverableError = null;
 
-    public volatile Menu currentMenu;
+    private volatile Menu currentMenu;
     private volatile long menuLastUpdated = 0;
 
     private volatile long lastCmdExecutionTime;
@@ -48,10 +48,6 @@ public class RuffyScripter {
     private int keynotwait = 0;
 
     private final Object screenlock = new Object();
-
-    public RuffyScripter() {
-
-    }
 
     public void start(IRuffyService newService) {
         try {
@@ -72,20 +68,8 @@ public class RuffyScripter {
                 newService.addHandler(mHandler);
             }
         } catch (Exception e) {
+            log.error("Unhandled exception starting RuffyScripter", e);
             throw new RuntimeException(e);
-        }
-    }
-
-    public void stop() {
-        if (started) {
-            started = false;
-            // TODO ruffy removes dead handlers automatically by now.
-            // still, check this when going through recovery logic
-/*            try {
-                ruffyService.removeHandler(mHandler);
-            } catch (RemoteException e) {
-                log.warn("Removing IRTHandler from Ruffy service failed, ignoring", e);
-            }*/
         }
     }
 
@@ -232,6 +216,10 @@ public class RuffyScripter {
                 // ignore
             }
         this.ruffyService = null;
+    }
+
+    public Menu getCurrentMenu() {
+        return currentMenu;
     }
 
     private static class Returnable {
