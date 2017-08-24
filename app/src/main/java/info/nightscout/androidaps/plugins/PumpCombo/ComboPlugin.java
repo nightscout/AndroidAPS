@@ -84,6 +84,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     volatile CommandResult lastCmdResult;
     @NonNull
     volatile Date lastCmdTime = new Date(0);
+    // TODO move into ComboPump? Accessor for fragment; more accessors? solves volatile issues;
     volatile PumpState pumpState = new PumpState();
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
@@ -434,6 +435,36 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return pumpEnactResult;
     }
 
+    @NonNull
+    private PumpEnactResult deliverSplittedBolus(DetailedBolusInfo detailedBolusInfo) {
+        // split up bolus into 2 U parts
+        PumpEnactResult pumpEnactResult = new PumpEnactResult();
+        pumpEnactResult.success = true;
+        pumpEnactResult.enacted = true;
+        pumpEnactResult.bolusDelivered = 0d;
+        pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+        pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+
+        double remainingBolus = detailedBolusInfo.insulin;
+        int split = 1;
+        while (remainingBolus > 0.05) {
+            double bolus = remainingBolus > 2 ? 2 : remainingBolus;
+            DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
+            bolusInfo.insulin = bolus;
+            bolusInfo.isValid = false;
+            log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
+            PumpEnactResult bolusResult = deliverBolus(bolusInfo);
+            if (!bolusResult.success) {
+                return bolusResult;
+            }
+            pumpEnactResult.bolusDelivered += bolus;
+            remainingBolus -= 2;
+            split++;
+        }
+        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+        return pumpEnactResult;
+    }
+
     private CommandResult runCommand(Command command) {
         if (ruffyScripter == null) {
             String msg = "No connection to ruffy. Pump control not available.";
@@ -728,7 +759,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         double origAbsoluteRate = absoluteRate;
-        // TODO GL#56
+        // TODO GL#56, #42
         if (absoluteRate > 25d) {
             absoluteRate = 25d;
             if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
@@ -751,7 +782,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public Double applyBolusConstraints(Double insulin) {
         // Hard pump limits are not directly readable from pump and serve as a fail safe.
-        // TODO GL#56
+        // TODO GL#56, #42
         return insulin;
     }
 
