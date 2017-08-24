@@ -148,9 +148,9 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    statusText.setText(getPlugin().statusSummary);
+                    statusText.setText(getPlugin().getPump().stateSummary);
                     if (getPlugin().isInitialized()) {
-                        PumpState ps = getPlugin().pumpState;
+                        PumpState ps = getPlugin().getPump().state;
                         if (ps != null) {
                             boolean tbrActive = ps.tbrPercent != -1 && ps.tbrPercent != 100;
                             if (tbrActive) {
@@ -183,16 +183,16 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             }
                         }
 
-                        Command lastCmd = getPlugin().lastCmd;
+                        Command lastCmd = getPlugin().getPump().lastCmd;
                         if (lastCmd != null) {
                             lastCmdText.setText(lastCmd.toString());
-                            lastCmdTimeText.setText(getPlugin().lastCmdTime.toLocaleString());
+                            lastCmdTimeText.setText(getPlugin().getPump().lastCmdTime.toLocaleString());
                         } else {
                             lastCmdText.setText("");
                             lastCmdTimeText.setText("");
                         }
 
-                        CommandResult lastCmdResult = getPlugin().lastCmdResult;
+                        CommandResult lastCmdResult = getPlugin().getPump().lastCmdResult;
                         if (lastCmdResult != null && lastCmdResult.message != null) {
                             lastCmdResultText.setText(lastCmdResult.message);
                             lastCmdDurationText.setText(lastCmdResult.duration);

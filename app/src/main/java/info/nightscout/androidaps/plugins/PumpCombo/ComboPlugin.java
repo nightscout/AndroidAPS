@@ -75,17 +75,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private RuffyScripter ruffyScripter;
     private ServiceConnection mRuffyServiceConnection;
 
-    // package-protected only so ComboFragment can access these
-    @NonNull
-    volatile String statusSummary = "Initializing";
-    @Nullable
-    volatile Command lastCmd;
-    @Nullable
-    volatile CommandResult lastCmdResult;
-    @NonNull
-    volatile Date lastCmdTime = new Date(0);
-    // TODO move into ComboPump? Accessor for fragment; more accessors? solves volatile issues;
-    volatile PumpState pumpState = new PumpState();
+    private ComboPump pump = new ComboPump();
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -129,6 +119,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.isRefillingCapable = true;
     }
 
+    public ComboPump getPump() {
+        return pump;
+    }
+
     /**
      * The alerter frequently checks the result of the last executed command via the lastCmdResult
      * field and shows a notification with sound and vibration if an error occurred.
@@ -146,15 +140,15 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 int id = 1000;
                 long lastAlarmTime = 0;
                 while (true) {
-                    Command localLastCmd = lastCmd;
-                    CommandResult localLastCmdResult = lastCmdResult;
+                    Command localLastCmd = pump.lastCmd;
+                    CommandResult localLastCmdResult = pump.lastCmdResult;
                     if (localLastCmdResult != null && !localLastCmdResult.success) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         if (now > fiveMinutesSinceLastAlarm) {
                             log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
-                            PumpState localPumpState = pumpState;
+                            PumpState localPumpState = pump.state;
                             if (localPumpState != null && localPumpState.errorMsg != null) {
                                 log.warn("Pump is in error state, displaying; " + localPumpState.errorMsg);
                             }
@@ -231,7 +225,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         if (!boundSucceeded) {
-            statusSummary = "No connection to ruffy. Pump control not available.";
+            pump.stateSummary = "No connection to ruffy. Pump control not available.";
         }
         return true;
     }
@@ -308,12 +302,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     public boolean isInitialized() {
         // consider initialized when the pump's state was initially fetched,
         // after that lastCmd* variables will have values
-        return lastCmdTime.getTime() > 0;
+        return pump.lastCmdTime.getTime() > 0;
     }
 
     @Override
     public boolean isSuspended() {
-        return pumpState != null && pumpState.suspended;
+        return pump.state != null && pump.state.suspended;
     }
 
     @Override
@@ -335,7 +329,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     @Override
     public Date lastDataTime() {
-        return lastCmdTime;
+        return pump.lastCmdTime;
     }
 
     // this method is regularly called from info.nightscout.androidaps.receivers.KeepAliveReceiver
@@ -350,8 +344,8 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
 
         boolean notAUserRequest = !reason.toLowerCase().contains("user");
-        boolean wasRunAtLeastOnce = lastCmdTime.getTime() > 0;
-        boolean ranWithinTheLastMinute = System.currentTimeMillis() < lastCmdTime.getTime() + 60 * 1000;
+        boolean wasRunAtLeastOnce = pump.lastCmdTime.getTime() > 0;
+        boolean ranWithinTheLastMinute = System.currentTimeMillis() < pump.lastCmdTime.getTime() + 60 * 1000;
         if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
@@ -468,11 +462,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     private CommandResult runCommand(Command command) {
         if (ruffyScripter == null) {
             String msg = "No connection to ruffy. Pump control not available.";
-            statusSummary = msg;
+            pump.stateSummary = msg;
             return new CommandResult().message(msg);
         }
 
-        statusSummary = "Executing " + command;
+        pump.stateSummary = "Executing " + command;
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
@@ -481,17 +475,17 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             log.error("Exception received from pump", commandResult.exception);
         }
 
-        lastCmd = command;
-        lastCmdTime = new Date();
-        lastCmdResult = commandResult;
-        pumpState = commandResult.state;
+        pump.lastCmd = command;
+        pump.lastCmdTime = new Date();
+        pump.lastCmdResult = commandResult;
+        pump.state = commandResult.state;
 
         if (commandResult.success && commandResult.state.suspended) {
-            statusSummary = "Suspended";
+            pump.stateSummary = "Suspended";
         } else if (commandResult.success) {
-            statusSummary = "Idle";
+            pump.stateSummary = "Idle";
         } else {
-            statusSummary = "Error";
+            pump.stateSummary = "Error";
         }
 
         MainApp.bus().post(new EventComboPumpUpdateGUI());
@@ -639,41 +633,41 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     // TODO v2 add battery, reservoir info when we start reading that and clean up the code
     @Override
     public JSONObject getJSONStatus() {
-        if (lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (pump.lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
 
         try {
-            JSONObject pump = new JSONObject();
-            JSONObject status = new JSONObject();
-            JSONObject extended = new JSONObject();
-            status.put("status", statusSummary);
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            JSONObject pumpJson = new JSONObject();
+            JSONObject statusJson = new JSONObject();
+            JSONObject extendedJson = new JSONObject();
+            statusJson.put("status", pump.stateSummary);
+            extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
+                extendedJson.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
-            status.put("timestamp", lastCmdTime);
+            statusJson.put("timestamp", pump.lastCmdTime);
 
-            PumpState ps = pumpState;
+            PumpState ps = pump.state;
             if (ps != null) {
                 if (ps.tbrActive) {
-                    extended.put("TempBasalAbsoluteRate", ps.tbrRate);
-                    extended.put("TempBasalPercent", ps.tbrPercent);
-                    extended.put("TempBasalRemaining", ps.tbrRemainingDuration);
+                    extendedJson.put("TempBasalAbsoluteRate", ps.tbrRate);
+                    extendedJson.put("TempBasalPercent", ps.tbrPercent);
+                    extendedJson.put("TempBasalRemaining", ps.tbrRemainingDuration);
                 }
                 if (ps.errorMsg != null) {
-                    extended.put("ErrorMessage", ps.errorMsg);
+                    extendedJson.put("ErrorMessage", ps.errorMsg);
                 }
             }
 
 // more info here .... look at dana plugin
 
-            pump.put("status", status);
-            pump.put("extended", extended);
-            pump.put("clock", DateUtil.toISOString(lastCmdTime));
+            pumpJson.put("status", statusJson);
+            pumpJson.put("extended", extendedJson);
+            pumpJson.put("clock", DateUtil.toISOString(pump.lastCmdTime));
 
-            return pump;
+            return pumpJson;
         } catch (Exception e) {
             log.warn("Failed to gather device status for upload", e);
         }
@@ -696,7 +690,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     @Override
     public String shortStatus(boolean veryShort) {
         // TODO trim for wear if veryShort==true
-        return statusSummary;
+        return pump.stateSummary;
     }
 
     @Override
