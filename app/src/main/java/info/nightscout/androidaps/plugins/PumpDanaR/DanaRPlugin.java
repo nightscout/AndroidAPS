@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
@@ -66,6 +67,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     public static DanaRExecutionService sExecutionService;
 
 
+    @NonNull
     private static DanaRPump pump = DanaRPump.getInstance();
     private static boolean useExtendedBoluses = false;
 
@@ -743,21 +745,17 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         return true;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Double applyBasalConstraints(Double absoluteRate) {
         double origAbsoluteRate = absoluteRate;
-        if (pump != null) {
-            if (absoluteRate > pump.maxBasal) {
-                absoluteRate = pump.maxBasal;
-                if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
-                    log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
-            }
+        if (absoluteRate > pump.maxBasal) {
+            absoluteRate = pump.maxBasal;
+            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
+                log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
         }
         return absoluteRate;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Integer applyBasalConstraints(Integer percentRate) {
         Integer origPercentRate = percentRate;
@@ -769,16 +767,13 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         return percentRate;
     }
 
-    @SuppressWarnings("PointlessBooleanExpression")
     @Override
     public Double applyBolusConstraints(Double insulin) {
         double origInsulin = insulin;
-        if (pump != null) {
-            if (insulin > pump.maxBolus) {
-                insulin = pump.maxBolus;
-                if (Config.logConstraintsChanges && origInsulin != Constants.bolusOnlyForCheckLimit)
-                    log.debug("Limiting bolus " + origInsulin + "U by pump constraint to " + insulin + "U");
-            }
+        if (insulin > pump.maxBolus) {
+            insulin = pump.maxBolus;
+            if (Config.logConstraintsChanges && origInsulin != Constants.bolusOnlyForCheckLimit)
+                log.debug("Limiting bolus " + origInsulin + "U by pump constraint to " + insulin + "U");
         }
         return insulin;
     }

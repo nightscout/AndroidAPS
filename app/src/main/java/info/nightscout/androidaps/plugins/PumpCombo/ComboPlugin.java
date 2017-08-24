@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
@@ -37,15 +38,19 @@ import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommandAlt;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.events.EventAppExit;
+import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -57,7 +62,7 @@ import info.nightscout.utils.ToastUtils;
 /**
  * Created by mike on 05.08.2016.
  */
-public class ComboPlugin implements PluginBase, PumpInterface {
+public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
     public static final String COMBO_MAX_TEMP_PERCENT_SP = "combo_maxTempPercent";
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
@@ -100,7 +105,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
-        pumpDescription.isExtendedBolusCapable = false; // TODO
+        pumpDescription.isExtendedBolusCapable = false; // TODO GL#70
         pumpDescription.extendedBolusStep = 0.1d;
         pumpDescription.extendedBolusDurationStep = 15;
         pumpDescription.extendedBolusMaxDuration = 12 * 60;
@@ -115,7 +120,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
-        pumpDescription.isSetBasalProfileCapable = false; // TODO
+        pumpDescription.isSetBasalProfileCapable = false; // TODO GL#14
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.0d;
 
@@ -517,11 +522,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         int adjustedPercent = percent;
 
-        if (adjustedPercent > pumpDescription.maxTempPercent) {
-            log.debug("Reducing requested TBR to the maximum support by the pump: " + percent + " -> " + pumpDescription.maxTempPercent);
-            adjustedPercent = pumpDescription.maxTempPercent;
-        }
-
         if (adjustedPercent % 10 != 0) {
             Long rounded = Math.round(adjustedPercent / 10d) * 10;
             log.debug("Rounded requested percentage:" + adjustedPercent + " -> " + rounded);
@@ -561,6 +561,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes) {
+        // TODO GL#70
         return OPERATION_NOT_SUPPORTED;
     }
 
@@ -688,6 +689,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public String shortStatus(boolean veryShort) {
+        // TODO trim for wear if veryShort==true
         return statusSummary;
     }
 
@@ -698,7 +700,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @SuppressWarnings("UnusedParameters")
     @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
+    public void onStatusEvent(final EventAppExit ignored) {
         unbindRuffyService();
     }
 
@@ -728,10 +730,84 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
     }
 
+    @Override
+    public boolean isLoopEnabled() {
+        return true;
+    }
 
+    @Override
+    public boolean isClosedModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAutosensModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isAMAModeEnabled() {
+        return true;
+    }
+
+    @Override
+    public Double applyBasalConstraints(Double absoluteRate) {
+        double origAbsoluteRate = absoluteRate;
+        // TODO GL#56
+        if (absoluteRate > 25d) {
+            absoluteRate = 25d;
+            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
+                log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
+        }
+        return absoluteRate;
+    }
+
+    @Override
+    public Integer applyBasalConstraints(Integer percentRate) {
+        Integer origPercentRate = percentRate;
+        if (percentRate < 0) percentRate = 0;
+        if (percentRate > pumpDescription.maxTempPercent)
+            percentRate = pumpDescription.maxTempPercent;
+        if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
+            log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
+        return percentRate;
+    }
+
+    @Override
+    public Double applyBolusConstraints(Double insulin) {
+        // Hard pump limits are not directly readable from pump and serve as a fail safe.
+        // TODO GL#56
+        return insulin;
+    }
+
+    @Override
+    public Integer applyCarbsConstraints(Integer carbs) {
+        // pump is oblivious to carbs
+        return carbs;
+    }
+
+    @Override
+    public Double applyMaxIOBConstraints(Double maxIob) {
+        // pump is oblivious to IOB
+        return maxIob;
+    }
+
+    @Nullable
+    @Override
+    public ProfileStore getProfile() {
+        // TODO GL#13
+        return null;
+    }
+
+    @Override
+    public String getUnits() {
+        // pump has no concept of senors/blood glucose
+        return Constants.MGDL;
+    }
+
+    @Override
+    public String getProfileName() {
+        // TODO GL#13
+        return "Profile 1";
+    }
 }
-
-
-// If you want update fragment call
-//        MainApp.bus().post(new EventComboPumpUpdateGUI());
-// fragment should fetch data from plugin and display status, buttons etc ...
