@@ -54,6 +54,7 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
@@ -377,40 +378,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 if (!Config.comboSplitBoluses) {
                     return deliverBolus(detailedBolusInfo);
                 } else {
-                    // split up bolus into 2 U parts
-                    PumpEnactResult pumpEnactResult = new PumpEnactResult();
-                    pumpEnactResult.success = true;
-                    pumpEnactResult.enacted = true;
-                    pumpEnactResult.bolusDelivered = 0d;
-                    pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-                    pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-
-                    double remainingBolus = detailedBolusInfo.insulin;
-                    int split = 1;
-                    while (remainingBolus > 0.05) {
-                        double bolus = remainingBolus > 2 ? 2 : remainingBolus;
-                        DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
-                        bolusInfo.insulin = bolus;
-                        bolusInfo.isValid = false;
-                        log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
-                        PumpEnactResult bolusResult = deliverBolus(bolusInfo);
-                        if (!bolusResult.success) {
-                            return bolusResult;
-                        }
-                        pumpEnactResult.bolusDelivered += bolus;
-                        remainingBolus -= 2;
-                        split++;
-                    }
-                    MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-                    return pumpEnactResult;
+                    return deliverSplittedBolus(detailedBolusInfo);
                 }
             } else {
                 // no bolus required, carb only treatment
-
-                // TODO the ui freezes when the calculator issues a carb-only treatment
-                // so just wait, yeah, this is dumb. for now; proper fix via GL#10
-                // info.nightscout.androidaps.plugins.Overview.Dialogs.BolusProgressDialog.scheduleDismiss()
-                SystemClock.sleep(6000);
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
                 pumpEnactResult.success = true;
                 pumpEnactResult.enacted = true;
@@ -418,6 +389,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
                 pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+
+                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                bolusingEvent.percent = 100;
+                MainApp.bus().post(bolusingEvent);
                 return pumpEnactResult;
             }
         } else {
