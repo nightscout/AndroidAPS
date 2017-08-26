@@ -17,7 +17,7 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.Services.Intents;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 
 /**
  * Created by mike on 10.02.2017.
@@ -44,13 +44,11 @@ public class XdripCalibrations {
     }
 
     public static boolean sendIntent(Double bg) {
-        final NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-
         Context context = MainApp.instance().getApplicationContext();
         Bundle bundle = new Bundle();
         bundle.putDouble("glucose_number", bg);
-        bundle.putString("units", profile.getUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
-        bundle.putLong("timestamp", new Date().getTime());
+        bundle.putString("units", MainApp.getConfigBuilder().getProfileUnits().equals(Constants.MGDL) ? "mgdl" : "mmol");
+        bundle.putLong("timestamp", System.currentTimeMillis());
         Intent intent = new Intent(Intents.ACTION_REMOTE_CALIBRATION);
         intent.putExtras(bundle);
         intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);

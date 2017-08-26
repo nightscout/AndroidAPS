@@ -1,15 +1,14 @@
 package info.nightscout.androidaps.db;
 
+import android.graphics.Color;
+
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-import java.util.List;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -17,7 +16,7 @@ import info.nightscout.androidaps.data.Iob;
 import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -25,81 +24,95 @@ import info.nightscout.utils.DecimalFormatter;
 public class Treatment implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(Treatment.class);
 
-    public long getTimeIndex() {
-        return created_at.getTime();
-    }
+    @DatabaseField(id = true)
+    public long date;
 
-    public void setTimeIndex(long timeIndex) {
-        this.timeIndex = timeIndex;
-    }
+    @DatabaseField
+    public boolean isValid = true;
 
-    @DatabaseField(id = true, useGetSet = true)
-    public long timeIndex;
+    @DatabaseField(index = true)
+    public long pumpId = 0;
 
+    @DatabaseField
+    public int source = Source.NONE;
     @DatabaseField
     public String _id;
 
     @DatabaseField
-    public Date created_at;
-
+    public double insulin = 0d;
     @DatabaseField
-    public Double insulin = 0d;
-
-    @DatabaseField
-    public int insulinType = InsulinInterface.FASTACTINGINSULIN;
-
-    @DatabaseField
-    public double dia = Constants.defaultDIA;
-
-    @DatabaseField
-    public Double carbs = 0d;
-
+    public double carbs = 0d;
     @DatabaseField
     public boolean mealBolus = true; // true for meal bolus , false for correction bolus
+    @DatabaseField
+    public boolean isSMB = false;
+
+    @DatabaseField
+    public int insulinInterfaceID = InsulinInterface.FASTACTINGINSULIN; // currently unused, will be used in the future
+    @DatabaseField
+    public double dia = Constants.defaultDIA; // currently unused, will be used in the future
 
     public Treatment() {
-        InsulinInterface insulin = MainApp.getConfigBuilder().getActiveInsulin();
-        if (insulin != null) {
-            insulinType = insulin.getId();
-            dia = insulin.getDia();
-        } else {
-            insulinType = InsulinInterface.FASTACTINGINSULIN;
-            dia = Constants.defaultDIA;
-        }
     }
 
-    public Treatment(InsulinInterface insulin) {
-        insulinType = insulin.getId();
-        dia = insulin.getDia();
-    }
-
-    public void copyFrom(Treatment t) {
-        this._id = t._id;
-        this.created_at = t.created_at;
-        this.insulin = t.insulin;
-        this.carbs = t.carbs;
-        this.mealBolus = t.mealBolus;
-    }
-
-    public long getMillisecondsFromStart() {
-        return new Date().getTime() - created_at.getTime();
-    }
-
-    public String log() {
+    public String toString() {
         return "Treatment{" +
-                "timeIndex: " + timeIndex +
-                ", _id: " + _id +
-                ", insulin: " + insulin +
-                ", carbs: " + carbs +
-                ", mealBolus: " + mealBolus +
-                ", created_at: " +
+                "date= " + date +
+                ", date= " + DateUtil.dateAndTimeString(date) +
+                ", isValid= " + isValid +
+                ", isSMB= " + isSMB +
+                ", _id= " + _id +
+                ", pumpId= " + pumpId +
+                ", insulin= " + insulin +
+                ", carbs= " + carbs +
+                ", mealBolus= " + mealBolus +
                 "}";
     }
 
-    // DataPointInterface
+    public boolean isDataChanging(Treatment other) {
+        if (date != other.date) {
+            return true;
+        }
+        if (insulin != other.insulin)
+            return true;
+        if (carbs != other.carbs)
+            return true;
+        return false;
+    }
+
+    public boolean isEqual(Treatment other) {
+        if (date != other.date) {
+            return false;
+        }
+        if (insulin != other.insulin)
+            return false;
+        if (carbs != other.carbs)
+            return false;
+        if (mealBolus != other.mealBolus)
+            return false;
+        if (pumpId != other.pumpId)
+            return false;
+        if (isSMB != other.isSMB)
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(Treatment t) {
+        date = t.date;
+        _id = t._id;
+        insulin = t.insulin;
+        carbs = t.carbs;
+        mealBolus = t.mealBolus;
+        pumpId = t.pumpId;
+        isSMB = t.isSMB;
+    }
+
+    //  ----------------- DataPointInterface --------------------
     @Override
     public double getX() {
-        return timeIndex;
+        return date;
     }
 
     // default when no sgv around available
@@ -115,36 +128,45 @@ public class Treatment implements DataPointWithLabelInterface {
         String label = "";
         if (insulin > 0) label += DecimalFormatter.to2Decimal(insulin) + "U";
         if (carbs > 0)
-            label += (label.equals("") ? "" : " ") + DecimalFormatter.to0Decimal(carbs) + "g";
+            label += "~" + DecimalFormatter.to0Decimal(carbs) + "g";
         return label;
     }
 
-    public void setYValue(List<BgReading> bgReadingsArray) {
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (profile == null) return;
-        for (int r = bgReadingsArray.size() - 1; r >= 0; r--) {
-            BgReading reading = bgReadingsArray.get(r);
-            if (reading.timeIndex > timeIndex) continue;
-            yValue = NSProfile.fromMgdlToUnits(reading.value, profile.getUnits());
-            break;
-        }
+    @Override
+    public long getDuration() {
+        return 0;
     }
 
-    public void sendToNSClient() {
-        JSONObject data = new JSONObject();
-        try {
-            if (mealBolus)
-                data.put("eventType", "Meal Bolus");
-            else
-                data.put("eventType", "Correction Bolus");
-            if (insulin != 0d) data.put("insulin", insulin);
-            if (carbs != 0d) data.put("carbs", carbs.intValue());
-            data.put("created_at", DateUtil.toISOString(created_at));
-            data.put("timeIndex", timeIndex);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        ConfigBuilderPlugin.uploadCareportalEntryToNS(data);
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.BOLUS;
     }
 
+    @Override
+    public float getSize() {
+        return 10;
+    }
+
+    @Override
+    public int getColor() {
+        if (isValid)
+            return Color.CYAN;
+        else
+            return MainApp.instance().getResources().getColor(android.R.color.holo_red_light);
+    }
+
+    @Override
+    public void setY(double y) {
+        yValue = y;
+    }
+
+    //  ----------------- DataPointInterface end --------------------
+
+    public Iob iobCalc(long time, double dia) {
+        if (!isValid)
+            return new Iob();
+
+        InsulinInterface insulinInterface = ConfigBuilderPlugin.getActiveInsulin();
+        return insulinInterface.iobCalcForTreatment(this, time, dia);
+    }
 }

@@ -12,12 +12,17 @@ public interface Intents {
     String ACTION_NEW_CAL = "info.nightscout.client.NEW_CAL";
     String ACTION_NEW_STATUS = "info.nightscout.client.NEW_STATUS";
     String ACTION_QUEUE_STATUS = "info.nightscout.client.QUEUE_STATUS";
+    String ACTION_ANNOUNCEMENT = "info.nightscout.client.ANNOUNCEMENT";
+    String ACTION_ALARM = "info.nightscout.client.ALARM";
+    String ACTION_URGENT_ALARM = "info.nightscout.client.URGENT_ALARM";
+    String ACTION_CLEAR_ALARM = "info.nightscout.client.CLEAR_ALARM";
 
 
     // App -> NSClient
     String ACTION_DATABASE = "info.nightscout.client.DBACCESS";
     String ACTION_RESTART = "info.nightscout.client.RESTART";
     String ACTION_RESEND = "info.nightscout.client.RESEND";
+    String ACTION_ACK_ALARM = "info.nightscout.client.ACK_ALARM";
 
     // xDrip -> App
     String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_BG_ESTIMATE";

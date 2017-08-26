@@ -122,6 +122,13 @@
         app:wear_iconOn="@drawable/settings_on"/>
 
     <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="showWizard"
+        android:summary="Wizard from watch possible"
+        android:title="Wizard in Menu"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+    <CheckBoxPreference
         android:defaultValue="false"
         android:key="primefill"
         android:summary="Prime/Fill from watch possible"
@@ -129,10 +136,24 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="singletarget"
         android:summary="Single temp-target instead of a range."
         android:title="Single Target"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on"/>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="wizardpercentage"
+        android:summary="Percentage correction."
+        android:title="Wizard Percentage"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on"/>
+    <info.nightscout.androidaps.interaction.utils.VersionPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="version_number"
+        android:summary="Input Design"
+        android:title="Version:" />
 </PreferenceScreen>

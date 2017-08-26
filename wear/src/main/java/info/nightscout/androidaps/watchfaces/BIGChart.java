@@ -626,7 +626,7 @@ public class BIGChart extends WatchFace implements SharedPreferences.OnSharedPre
         }
 
         for (int i = 0; i < bgDataList.size(); i++) {
-            if (bgDataList.get(i).timestamp < (new Date().getTime() - (1000 * 60 * 60 * 5))) {
+            if (bgDataList.get(i).timestamp < (System.currentTimeMillis() - (1000 * 60 * 60 * 5))) {
                 bgDataList.remove(i); //Get rid of anything more than 5 hours old
                 break;
             }

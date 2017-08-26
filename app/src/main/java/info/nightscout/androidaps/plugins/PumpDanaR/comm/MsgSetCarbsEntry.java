@@ -14,20 +14,21 @@ public class MsgSetCarbsEntry extends MessageBase {
         SetCommand(0x0402);
     }
 
-    public MsgSetCarbsEntry(Calendar time, int amount) {
+    public MsgSetCarbsEntry(long time, int amount) {
         this();
-
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(time);
         AddParamByte((byte) RecordTypes.RECORD_TYPE_CARBO);
-        AddParamByte((byte) (time.get(Calendar.YEAR) % 100));
-        AddParamByte((byte) (time.get(Calendar.MONTH) + 1));
-        AddParamByte((byte) (time.get(Calendar.DAY_OF_MONTH)));
-        AddParamByte((byte) (time.get(Calendar.HOUR_OF_DAY)));
-        AddParamByte((byte) (time.get(Calendar.MINUTE)));
-        AddParamByte((byte) (time.get(Calendar.SECOND)));
+        AddParamByte((byte) (calendar.get(Calendar.YEAR) % 100));
+        AddParamByte((byte) (calendar.get(Calendar.MONTH) + 1));
+        AddParamByte((byte) (calendar.get(Calendar.DAY_OF_MONTH)));
+        AddParamByte((byte) (calendar.get(Calendar.HOUR_OF_DAY)));
+        AddParamByte((byte) (calendar.get(Calendar.MINUTE)));
+        AddParamByte((byte) (calendar.get(Calendar.SECOND)));
         AddParamByte((byte) 0x43); //??
         AddParamInt(amount);
         if (Config.logDanaMessageDetail)
-            log.debug("Set carb entry: " + amount + " date " + time.getTime().toString());
+            log.debug("Set carb entry: " + amount + " date " + calendar.getTime().toString());
     }
 
     @Override

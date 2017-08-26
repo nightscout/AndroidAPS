@@ -14,15 +14,22 @@ import android.preference.PreferenceManager;
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
+import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
+import info.nightscout.androidaps.plugins.SensitivityWeightedAverage.SensitivityWeightedAveragePlugin;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.androidaps.plugins.XDripStatusline.StatuslinePlugin;
 import info.nightscout.utils.LocaleHelper;
+import info.nightscout.utils.OKDialog;
+import info.nightscout.utils.SP;
 
 public class PreferencesActivity extends PreferenceActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
     MyPreferenceFragment myPreferenceFragment;
@@ -42,10 +49,13 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             String lang = sharedPreferences.getString("language", "en");
             LocaleHelper.setLocale(getApplicationContext(), lang);
             recreate();
-            MainApp.bus().post(new EventRefreshGui(true));
+            MainApp.bus().post(new EventRefreshGui());
         }
         if (key.equals("short_tabtitles")) {
-            MainApp.bus().post(new EventRefreshGui(true));
+            MainApp.bus().post(new EventRefreshGui());
+        }
+        if (key.equals("openapsama_useautosens") && SP.getBoolean("openapsama_useautosens", false)) {
+            OKDialog.show(this, MainApp.sResources.getString(R.string.configbuilder_sensitivity), MainApp.sResources.getString(R.string.sensitivity_warning), null);
         }
         updatePrefSummary(myPreferenceFragment.getPreference(key));
     }
@@ -87,8 +97,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             super.onCreate(savedInstanceState);
             if (Config.ALLPREFERENCES) {
                 addPreferencesFromResource(R.xml.pref_password);
-                addPreferencesFromResource(R.xml.pref_age);
             }
+            addPreferencesFromResource(R.xml.pref_age);
             addPreferencesFromResource(R.xml.pref_language);
             if (Config.ALLPREFERENCES) {
                 addPreferencesFromResource(R.xml.pref_quickwizard);
@@ -104,24 +114,38 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 if (MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class) != null && MainApp.getSpecificPlugin(OpenAPSAMAPlugin.class).isEnabled(PluginBase.APS))
                     addPreferencesFromResource(R.xml.pref_openapsama);
             }
+            if (MainApp.getSpecificPlugin(SensitivityAAPSPlugin.class) != null && MainApp.getSpecificPlugin(SensitivityAAPSPlugin.class).isEnabled(PluginBase.SENSITIVITY)
+                    || MainApp.getSpecificPlugin(SensitivityWeightedAveragePlugin.class) != null && MainApp.getSpecificPlugin(SensitivityWeightedAveragePlugin.class).isEnabled(PluginBase.SENSITIVITY))
+                addPreferencesFromResource(R.xml.pref_absorption_aaps);
+            if (MainApp.getSpecificPlugin(SensitivityOref0Plugin.class) != null && MainApp.getSpecificPlugin(SensitivityOref0Plugin.class).isEnabled(PluginBase.SENSITIVITY))
+                addPreferencesFromResource(R.xml.pref_absorption_oref0);
             if (Config.ALLPREFERENCES) {
                 addPreferencesFromResource(R.xml.pref_profile);
             }
             if (Config.DANAR) {
-                DanaRPlugin danaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-                DanaRKoreanPlugin danaRKoreanPlugin = (DanaRKoreanPlugin) MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+                DanaRPlugin danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
+                DanaRKoreanPlugin danaRKoreanPlugin = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
+                DanaRv2Plugin danaRv2Plugin = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
                 if (danaRPlugin.isEnabled(PluginBase.PUMP) || danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danar);
                 }
-                if (danaRPlugin.isEnabled(PluginBase.PROFILE) || danaRKoreanPlugin.isEnabled(PluginBase.PROFILE)) {
+                if (danaRv2Plugin != null && danaRv2Plugin.isEnabled(PluginBase.PUMP)) {
+                    addPreferencesFromResource(R.xml.pref_danarv2);
+                }
+                if (danaRPlugin.isEnabled(PluginBase.PROFILE) || danaRKoreanPlugin.isEnabled(PluginBase.PROFILE) || danaRv2Plugin != null && danaRv2Plugin.isEnabled(PluginBase.PROFILE)) {
                     addPreferencesFromResource(R.xml.pref_danarprofile);
                 }
             }
-            VirtualPumpPlugin virtualPumpPlugin = (VirtualPumpPlugin) MainApp.getSpecificPlugin(VirtualPumpPlugin.class);
+            VirtualPumpPlugin virtualPumpPlugin = MainApp.getSpecificPlugin(VirtualPumpPlugin.class);
             if (virtualPumpPlugin != null && virtualPumpPlugin.isEnabled(PluginBase.PUMP)) {
                 addPreferencesFromResource(R.xml.pref_virtualpump);
             }
-            NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+            InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin = MainApp.getSpecificPlugin(InsulinOrefFreePeakPlugin.class);
+            if(insulinOrefFreePeakPlugin.isEnabled(PluginBase.INSULIN)){
+                addPreferencesFromResource(R.xml.pref_insulinoreffreepeak);
+            }
+
+            NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
             if (nsClientInternalPlugin != null && nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
                 addPreferencesFromResource(R.xml.pref_nsclientinternal);
             }
@@ -129,17 +153,17 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_smscommunicator);
             if (Config.ALLPREFERENCES) {
                 addPreferencesFromResource(R.xml.pref_others);
-                addPreferencesFromResource(R.xml.pref_advanced);
             }
+            addPreferencesFromResource(R.xml.pref_advanced);
 
             if (Config.WEAR) {
-                WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
+                WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
                 if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
                     addPreferencesFromResource(R.xml.pref_wear);
                 }
             }
 
-            StatuslinePlugin statuslinePlugin = (StatuslinePlugin) MainApp.getSpecificPlugin(StatuslinePlugin.class);
+            StatuslinePlugin statuslinePlugin = MainApp.getSpecificPlugin(StatuslinePlugin.class);
             if (statuslinePlugin != null && statuslinePlugin.isEnabled(PluginBase.GENERAL)) {
                 addPreferencesFromResource(R.xml.pref_xdripstatus);
             }

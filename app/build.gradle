@@ -43,8 +43,8 @@ android {
         applicationId "info.nightscout.androidaps"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 1400
-        version "1.46"
+        versionCode 1500
+        version "1.51"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
     }
@@ -173,6 +173,9 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
     compile(name: 'android-edittext-validator-v1.3.4-mod', ext: 'aar')
+    compile ('com.google.android:flexbox:0.3.0') {
+        exclude group: 'com.android.support'
+    }
     compile('io.socket:socket.io-client:0.8.3') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'

@@ -18,7 +18,7 @@ public class MsgSettingBasal extends MessageBase {
     }
 
     public void handleMessage(byte[] bytes) {
-        DanaRPump pump = DanaRPlugin.getDanaRPump();
+        DanaRPump pump = DanaRPump.getInstance();
         if (pump.pumpProfiles == null) pump.pumpProfiles = new double[4][];
         pump.pumpProfiles[pump.activeProfile] = new double[24];
         for (int index = 0; index < 24; index++) {
@@ -29,7 +29,7 @@ public class MsgSettingBasal extends MessageBase {
 
         if (Config.logDanaMessageDetail)
             for (int index = 0; index < 24; index++) {
-                log.debug("Basal " + String.format("%02d", index) + "h: " + DanaRPlugin.getDanaRPump().pumpProfiles[DanaRPlugin.getDanaRPump().activeProfile][index]);
+                log.debug("Basal " + String.format("%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
             }
     }
 }

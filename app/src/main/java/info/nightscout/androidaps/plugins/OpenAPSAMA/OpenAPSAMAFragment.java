@@ -20,11 +20,12 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.utils.JSONFormatter;
 
-public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener {
+public class OpenAPSAMAFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(OpenAPSAMAFragment.class);
 
     private static OpenAPSAMAPlugin openAPSAMAPlugin;
@@ -81,18 +82,6 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
 
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventOpenAPSUpdateGui ev) {
         updateGUI();
@@ -103,7 +92,8 @@ public class OpenAPSAMAFragment extends Fragment implements View.OnClickListener
         updateResultGUI(ev.text);
     }
 
-    void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

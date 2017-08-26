@@ -2,50 +2,54 @@ package info.nightscout.androidaps.db;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.jjoe64.graphview.series.DataPointInterface;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Date;
+import java.util.Objects;
 
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSgv;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
+import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_BGREADINGS)
-public class BgReading implements DataPointInterface {
+public class BgReading implements DataPointWithLabelInterface {
     private static Logger log = LoggerFactory.getLogger(BgReading.class);
 
-    public long getTimeIndex() {
-        return timeIndex;
-    }
+    @DatabaseField(id = true)
+    public long date;
 
-    public void setTimeIndex(long timeIndex) {
-        this.timeIndex = timeIndex;
-    }
-
-    @DatabaseField(id = true, useGetSet = true)
-    public long timeIndex;
+    @DatabaseField
+    public boolean isValid = true;
 
     @DatabaseField
     public double value;
-
     @DatabaseField
     public String direction;
-
     @DatabaseField
     public double raw;
 
     @DatabaseField
-    public int battery_level;
+    public int source = Source.NONE;
+    @DatabaseField
+    public String _id = null; // NS _id
 
-    public static String units = Constants.MGDL;
+    public boolean isPrediction = false; // true when drawing predictions as bg points
 
-    public BgReading() {}
+    public BgReading() {
+    }
 
     public BgReading(NSSgv sgv) {
-        timeIndex = sgv.getMills();
+        date = sgv.getMills();
         value = sgv.getMgdl();
         raw = sgv.getFiltered() != null ? sgv.getFiltered() : value;
         direction = sgv.getDirection();
@@ -63,9 +67,11 @@ public class BgReading implements DataPointInterface {
         else return DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL);
     }
 
-     public String directionToSymbol() {
+    public String directionToSymbol() {
         String symbol = "";
-        if (direction.compareTo("DoubleDown") == 0) {
+        if (direction == null) {
+            symbol = "??";
+        } else if (direction.compareTo("DoubleDown") == 0) {
             symbol = "\u21ca";
         } else if (direction.compareTo("SingleDown") == 0) {
             symbol = "\u2193";
@@ -101,23 +107,108 @@ public class BgReading implements DataPointInterface {
     @Override
     public String toString() {
         return "BgReading{" +
-                "timeIndex=" + timeIndex +
-                ", date=" + new Date(timeIndex) +
+                "date=" + date +
+                ", date=" + new Date(date).toLocaleString() +
                 ", value=" + value +
                 ", direction=" + direction +
                 ", raw=" + raw +
-                ", battery_level=" + battery_level +
                 '}';
     }
 
+    public boolean isDataChanging(BgReading other) {
+        if (date != other.date) {
+            log.error("Comparing different");
+            return false;
+        }
+        if (value != other.value)
+            return true;
+        return false;
+    }
+
+    public boolean isEqual(BgReading other) {
+        if (date != other.date) {
+            log.error("Comparing different");
+            return false;
+        }
+        if (value != other.value)
+            return false;
+        if (raw != other.raw)
+            return false;
+        if (!direction.equals(other.direction))
+            return false;
+        if (!Objects.equals(_id, other._id))
+            return false;
+        return true;
+    }
+
+    public void copyFrom(BgReading other) {
+        if (date != other.date) {
+            log.error("Copying different");
+            return;
+        }
+        value = other.value;
+        raw = other.raw;
+        direction = other.direction;
+        _id = other._id;
+    }
+
+    // ------------------ DataPointWithLabelInterface ------------------
     @Override
     public double getX() {
-        return timeIndex;
+        return date;
     }
 
     @Override
     public double getY() {
+        String units = MainApp.getConfigBuilder().getProfileUnits();
         return valueToUnits(units);
+    }
+
+    @Override
+    public void setY(double y) {
+
+    }
+
+    @Override
+    public String getLabel() {
+        return null;
+    }
+
+    @Override
+    public long getDuration() {
+        return 0;
+    }
+
+    @Override
+    public PointsWithLabelGraphSeries.Shape getShape() {
+        return PointsWithLabelGraphSeries.Shape.POINT;
+    }
+
+    @Override
+    public float getSize() {
+        boolean isTablet = MainApp.sResources.getBoolean(R.bool.isTablet);
+        return isTablet ? 8 : 5;
+    }
+
+    @Override
+    public int getColor() {
+        String units = MainApp.getConfigBuilder().getProfileUnits();
+        Double lowLine = SP.getDouble("low_mark", 0d);
+        Double highLine = SP.getDouble("high_mark", 0d);
+        if (lowLine < 1) {
+            lowLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetLow, units);
+        }
+        if (highLine < 1) {
+            highLine = Profile.fromMgdlToUnits(OverviewPlugin.bgTargetHigh, units);
+        }
+        int color = MainApp.sResources.getColor(R.color.inrange);
+        if (isPrediction)
+            color = MainApp.sResources.getColor(R.color.prediction);
+        else if (valueToUnits(units) < lowLine)
+            color = MainApp.sResources.getColor(R.color.low);
+        else if (valueToUnits(units) > highLine)
+            color = MainApp.sResources.getColor(R.color.high);
+        return color;
     }
 
 }

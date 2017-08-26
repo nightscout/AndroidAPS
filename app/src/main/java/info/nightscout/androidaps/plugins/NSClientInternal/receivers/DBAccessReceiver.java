@@ -19,6 +19,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.UploadQueue;
 import info.nightscout.androidaps.db.DbRequest;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.AlarmAck;
+import info.nightscout.androidaps.plugins.NSClientInternal.services.NSClientService;
 import info.nightscout.utils.SP;
 
 public class DBAccessReceiver extends BroadcastReceiver {
@@ -29,8 +31,8 @@ public class DBAccessReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         PowerManager powerManager = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
         PowerManager.WakeLock wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "sendQueue");
-        NSClientInternalPlugin nsClientInternalPlugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+                DBAccessReceiver.class.getSimpleName());
+        NSClientInternalPlugin nsClientInternalPlugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
         if (!nsClientInternalPlugin.isEnabled(PluginBase.GENERAL)) {
             return;
         }
@@ -61,7 +63,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
                 data = new JSONObject();
             }
             // mark by id
-            Long nsclientid = new Date().getTime();
+            Long nsclientid = System.currentTimeMillis();
             try {
                 data.put("NSCLIENT_ID", nsclientid);
             } catch (JSONException e) {

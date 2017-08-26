@@ -103,30 +103,26 @@
                     android:title="@string/openapsama_autosens_adjusttargets"
                     android:summary="@string/openapsama_autosens_adjusttargets_summary"/>
                 <com.andreabaccega.widget.ValidatingEditTextPreference
-                    validate:testType="numericRange"
+                    validate:testType="floatNumericRange"
                     validate:minNumber="1"
-                    validate:maxNumber="5"
+                    validate:maxNumber="10"
                     android:digits="0123456789.,"
                     android:defaultValue="2"
                     android:selectAllOnFocus="true"
                     android:singleLine="true"
-                    android:inputType="number"
+                    android:inputType="numberDecimal"
                     android:maxLines="20"
                     android:title="@string/openapsama_bolussnooze_dia_divisor"
                     android:dialogMessage="@string/openapsama_bolussnooze_dia_divisor_summary"
                     android:key="openapsama_bolussnooze_dia_divisor" />
-                <com.andreabaccega.widget.ValidatingEditTextPreference
-                    validate:testType="floatNumericRange"
-                    validate:floatminNumber="0.1"
-                    validate:floatmaxNumber="5.0"
-                    android:defaultValue="3.0"
-                    android:selectAllOnFocus="true"
-                    android:singleLine="true"
-                    android:inputType="numberDecimal"
-                    android:maxLines="20"
-                    android:title="@string/openapsama_min_5m_carbimpact"
-                    android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
-                    android:key="openapsama_min_5m_carbimpact" />
+            </PreferenceCategory>
+            <PreferenceCategory
+                android:title="@string/profile">
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:key="@string/key_do_not_track_profile_switch"
+                    android:title="@string/do_not_track_profile_switch"
+                    android:summary="@string/do_not_track_profile_switch_summary"/>
             </PreferenceCategory>
         </PreferenceScreen>
     </PreferenceCategory>

@@ -8,7 +8,6 @@ import org.json.JSONObject;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
@@ -25,7 +24,7 @@ public class PumpEnactResult extends Object {
     public boolean isTempCancel = false; // if true we are caceling temp basal
     // Result of treatment delivery
     public Double bolusDelivered = 0d; // real value of delivered insulin
-    public Integer carbsDelivered = 0; // real value of delivered carbs
+    public Double carbsDelivered = 0d; // real value of delivered carbs
 
     public boolean queued = false;
 
@@ -94,7 +93,7 @@ public class PumpEnactResult extends Object {
                 result.put("duration", 0);
             } else if (isPercent) {
                 // Nightscout is expecting absolute value
-                Double abs = Round.roundTo(MainApp.getConfigBuilder().getActiveProfile().getProfile().getBasal(NSProfile.secondsFromMidnight()) * percent / 100, 0.01);
+                Double abs = Round.roundTo(MainApp.getConfigBuilder().getProfile().getBasal() * percent / 100, 0.01);
                 result.put("rate", abs);
                 result.put("duration", duration);
             } else {

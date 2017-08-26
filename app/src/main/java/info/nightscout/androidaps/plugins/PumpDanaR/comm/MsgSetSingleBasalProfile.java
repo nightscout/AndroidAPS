@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpDanaR.comm;
 
+import com.j256.ormlite.stmt.query.Not;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

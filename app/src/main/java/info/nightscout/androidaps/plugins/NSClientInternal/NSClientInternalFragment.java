@@ -28,12 +28,13 @@ import org.slf4j.LoggerFactory;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPreferenceChange;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientNewLog;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientRestart;
 import info.nightscout.androidaps.plugins.NSClientInternal.events.EventNSClientUpdateGUI;
 import info.nightscout.utils.SP;
 
-public class NSClientInternalFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class NSClientInternalFragment extends SubscriberFragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalFragment.class);
 
     static NSClientInternalPlugin nsClientInternalPlugin;
@@ -57,8 +58,6 @@ public class NSClientInternalFragment extends Fragment implements View.OnClickLi
     private ScrollView logScrollview;
     private CheckBox autoscrollCheckbox;
     private CheckBox pausedCheckbox;
-
-    String status = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -119,7 +118,7 @@ public class NSClientInternalFragment extends Fragment implements View.OnClickLi
                 builder.setMessage("Clear queue? All data in queue will be lost!");
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        getPlugin().queue().clearQueue();
+                        UploadQueue.clearQueue();
                         updateGUI();
                         Answers.getInstance().logCustom(new CustomEvent("NSClientClearQueue"));
                     }
@@ -152,36 +151,25 @@ public class NSClientInternalFragment extends Fragment implements View.OnClickLi
         }
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        updateGUI();
-    }
-
     @Subscribe
     public void onStatusEvent(final EventNSClientUpdateGUI ev) {
         updateGUI();
     }
 
-    private void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    logTextView.setText(getPlugin().textLog);
+                    NSClientInternalPlugin.updateLog();
+                    logTextView.setText(NSClientInternalPlugin.textLog);
                     if (getPlugin().autoscroll) {
                         logScrollview.fullScroll(ScrollView.FOCUS_DOWN);
                     }
                     urlTextView.setText(getPlugin().url());
-                    Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + getPlugin().queue().size() + "</b>");
+                    Spanned queuetext = Html.fromHtml(MainApp.sResources.getString(R.string.queue) + " <b>" + UploadQueue.size() + "</b>");
                     queueTextView.setText(queuetext);
                     statusTextView.setText(getPlugin().status);
                 }

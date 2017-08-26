@@ -38,15 +38,21 @@ public interface DataPointWithLabelInterface extends DataPointInterface{
     /**
      * @return the x value
      */
-    public double getX();
+    double getX();
 
     /**
      * @return the y value
      */
-    public double getY();
+    double getY();
+    void setY(double y);
 
     /**
      * @return the label value
      */
-    public String getLabel();
+    String getLabel();
+
+    long getDuration();
+    PointsWithLabelGraphSeries.Shape getShape();
+    float getSize();
+    int getColor();
 }

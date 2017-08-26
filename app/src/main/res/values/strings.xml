@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="treatmentssafety_title">Tratments safety</string>
     <string name="treatmentssafety_maxbolus_title">Max allowed bolus [U]</string>
     <string name="treatmentssafety_maxcarbs_title">Max allowed carbs [g]</string>
@@ -32,15 +32,15 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="sms_iob">IOB:</string>
     <string name="treatments_activity_string">Activity:</string>
-    <string name="treatments_iobtotal_label_string">Toal IOB:</string>
+    <string name="treatments_iobtotal_label_string">Total IOB:</string>
     <string name="treatments_iobactivitytotal_label_string">Total IOB activity:</string>
     <string name="tempbasals_realduration_label_string">Dur:</string>
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_newtreatment_insulinamount_label">Insulin amount</string>
-    <string name="treatments_newtreatment_carbsamount_label">Carbs amount</string>
+    <string name="treatments_newtreatment_insulinamount_label">Insulin</string>
+    <string name="treatments_newtreatment_carbsamount_label">Carbs</string>
     <string name="treatments_wizard_bg_label">BG</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
@@ -63,14 +63,13 @@
     <string name="openapsma_iobdata_label">IOB data</string>
     <string name="openapsma_profile_label">Profile</string>
     <string name="openapsma_mealdata_label">Meal data</string>
-    <string name="openapsma_result_label">Result</string>
+    <string name="result">Result</string>
     <string name="openapsma_noglucosedata">No glucose data available</string>
     <string name="openapsma_noprofile">No profile available</string>
     <string name="openapsma_nopump">No pump available</string>
     <string name="nochangerequested">No change requested</string>
     <string name="openapsma_request_label">Request</string>
-    <string name="openapsma_minbg_label">Low target</string>
-    <string name="rate">Rate</string>
+     <string name="rate">Rate</string>
     <string name="duration">Duration</string>
     <string name="reason">Reason</string>
     <string name="glucose">Glucose</string>
@@ -84,7 +83,7 @@
     <string name="overview">Overview</string>
     <string name="profileviewer">NS Profile</string>
     <string name="simpleprofile">Simple profile</string>
-    <string name="tempbasals">Temp Basals</string>
+    <string name="tempbasal">TempBasal</string>
     <string name="treatments">Treatments</string>
     <string name="virtualpump">Virtual Pump</string>
     <string name="careportal">Careportal</string>
@@ -106,8 +105,6 @@
     <string name="loop_constraintsprocessed_label">After processed constraints</string>
     <string name="loop_setbypump_label">Set by pump</string>
     <string name="openapsma_lastenact_label">Last enacted</string>
-    <string name="refreshtreatmentsfromnightscout">Do you want to refresh treatments from Nightscout</string>
-    <string name="refreshtemptargetsfromnightscout">Do you want to refresh temp targets from Nightscout</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="noapsselected">NO APS SELECTED OR PROVIDED RESULT</string>
@@ -116,7 +113,7 @@
     <string name="constraints_violation">Constraints violation</string>
     <string name="treatmentdeliveryerror">Bolus delivery error</string>
     <string name="tempbasaldeliveryerror">Tempbasal delivery error</string>
-    <string name="overview_newtempbasal_basal_label">Basal value</string>
+    <string name="overview_newtempbasal_basalpercent">Basal value [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="setbasalquestion">Accept new temp basal:</string>
     <string name="overview_bolus_label">Bolus</string>
@@ -144,6 +141,7 @@
 
     <string name="openloop_newsuggestion">New suggestion available</string>
     <string name="unsupportedclientver">Unsupported version of NSClient</string>
+    <string name="unsupportednsversion">Unsupported version of Nightscout</string>
     <string name="nsclientnotinstalled">NSClient not installed. Record lost!</string>
     <string name="objectives_bgavailableinns">BG available in NS</string>
     <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
@@ -184,7 +182,6 @@
     <string name="careportal_newnstreatment_duration_label">Duration</string>
     <string name="careportal_newnstreatment_percent_label">Percent</string>
     <string name="careportal_newnstreatment_absolute_label">Absolute</string>
-    <string name="careportal_newnstreatment_minutes">min</string>
     <string name="careportal_newnstreatment_notes_label">Notes</string>
     <string name="careportal_newnstreatment_eventtime_label">Event time</string>
     <string name="careportal_newnstreatment_profile_label">Profile</string>
@@ -193,7 +190,6 @@
     <string name="noprofile">No profile loaded from NS yet</string>
     <string name="overview_tempbasal_button">TempBasal</string>
     <string name="overview_extendedbolus_button">Extended Bolus</string>
-    <string name="configbuilder_nsclientversion_label">NSClient version:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout version:</string>
     <string name="send">SEND</string>
     <string name="missing">Missing</string>
@@ -207,13 +203,13 @@
     <string name="filenotfound">File not found</string>
     <string name="nav_export">Export settings</string>
     <string name="nav_import">Import settings</string>
+    <string name="nl_lang">Dutch</string>
     <string name="de_lang">German</string>
     <string name="es_lang">Spanish</string>
     <string name="el_lang">Greek</string>
     <string name="it_lang">Italian</string>
     <string name="ru_lang">Russian</string>
-    <string name="openapsma_low_summary">The minimum BG value to be in range.</string>
-    <string name="openapsma_high_summary">The maximum BG value to be in range.</string>
+    <string name="sv_lang">Swedish</string>
     <string name="openapsma_maxbasal_title">Max U/hr a Temp Basal can be set to</string>
     <string name="openapsma_maxbasal_summary">This value is called max basal in OpenAPS context</string>
     <string name="openapsma_maxiob_title">Maximum basal IOB OpenAPS can deliver [U]</string>
@@ -321,7 +317,6 @@
     <string name="objectives_5_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_6_objective">Enabling additional features for daytime use, such as advanced meal assist</string>
     <string name="youareonallowedlimit">You reached allowed limit</string>
-    <string name="openapsma_target_bg">Target value for calculations</string>
     <string name="noprofileselected">No profile selected</string>
     <string name="smscommunicator_loophasbeendisabled">Loop has been disabled</string>
     <string name="smscommunicator_loophasbeenenabled">Loop has been enabled</string>
@@ -355,7 +350,6 @@
     <string name="androidaps_start">AndroidAPS started</string>
     <string name="ns_upload_only">NS upload only (disabled sync)</string>
     <string name="ns_upload_only_summary">NS upload only. Not effective on SGV unless a local source like xDrip is selected. Not effective on Profiles while NS-Profiles is used.</string>
-    <string name="ns_upload_only_enabled">Please deactivate "NS upload only" to use this feature.</string>
     <string name="pumpNotInitialized">Pump not initialized!</string>
     <string name="pumpNotInitializedProfileNotSet">Pump not initialized, profile not set!</string>
     <string name="primefill">Prime/Fill</string>
@@ -378,8 +372,6 @@
     <string name="edit_base_ic">Edit Base-IC:</string>
     <string name="base_profile_label">Base Profile:</string>
     <string name="circadian_percentage_profile">CircadianPercentageProfile</string>
-    <string name="androidaps_tempbasalendnote">Basal Temp End</string>
-    <string name="androidaps_tempbasalstartnote">Basal Temp Start</string>
     <string name="prefs_range_title">Range for Visualization</string>
     <string name="prefs_range_summary">High and low mark for the charts in Overview and Smartwatch</string>
     <string name="low_mark">LOW mark</string>
@@ -416,8 +408,7 @@
     <string name="openapsma_autosensdata_label">Autosens data</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsama_useautosens">Use AMA autosens feature</string>
-    <string name="temptargetrange">Temp Target</string>
-    <string name="temptargetrange_refreshfromnightscout">Refresh temp targets from NS</string>
+    <string name="refresheventsfromnightscout">Refresh events from NS</string>
     <string name="eatingsoon">Eating Soon</string>
     <string name="activity">Activity</string>
     <string name="removerecord">Remove record:</string>
@@ -486,7 +477,7 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="nav_show_logcat">Show log</string>
     <string name="overview_calibration">Calibration</string>
-    <string name="overview_calibration_bg_label">Calibration BG</string>
+    <string name="overview_calibration_bg_label">Calibration</string>
     <string name="send_calibration" formatted="false">Send calibration %.1f to xDrip?</string>
     <string name="xdripnotinstalled">xDrip+ not installed</string>
     <string name="calibrationsent">Calibration sent to xDrip</string>
@@ -535,6 +526,7 @@
     <string name="key_danar_bt_name" translatable="false">danar_bt_name</string>
     <string name="key_danar_password" translatable="false">danar_password</string>
     <string name="key_danar_useextended" translatable="false">danar_useextended</string>
+    <string name="key_danar_visualizeextendedaspercentage" translatable="false">danar_visualizeextendedaspercentage"</string>
     <string name="key_danarprofile_dia" translatable="false">danarprofile_dia</string>
     <string name="clearlog">Clear log</string>
     <string name="key_nsclientinternal_autoscroll" translatable="false">nsclientinternal_autoscroll</string>
@@ -583,10 +575,13 @@
     <string name="superbolus">Superbolus</string>
     <string name="ns_logappstartedevent">Log app start to NS</string>
     <string name="key_ns_logappstartedevent" translatable="false">ns_logappstartedevent</string>
+    <string name="key_ns_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
     <string name="restartingapp">Exiting application to apply settings.</string>
+    <string name="danarv2pump">DanaRv2</string>
     <string name="configbuilder_insulin">Insulin</string>
     <string name="fastactinginsulin">Fast Acting Insulin</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
     <string name="insulin_shortname">INS</string>
     <string name="fastactinginsulinprolonged">Fast Acting Insulin Prolonged</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
@@ -613,4 +608,98 @@
     <string name="key_ns_noupload" translatable="false">ns_noupload</string>
     <string name="basal_step">Basal Step</string>
     <string name="bolus_step">Bolus Step</string>
+    <string name="extendedbolus">ExtendedBolus</string>
+    <string name="temptarget">TempTarget</string>
+    <string name="overview_extendedbolus_cancel_button">Cancel Extended Bolus</string>
+    <string name="careportal_sensorage_label">Sensor age</string>
+    <string name="careportal_canulaage_label">Canula age</string>
+    <string name="careportal_insulinage_label">Insulin age</string>
+    <string name="hours">hours</string>
+    <string name="overview_newtempbasal_basaltype_label">Basal type</string>
+    <string name="isfmissing">ISF missing in profile. Using default.</string>
+    <string name="icmissing">IC missing in profile. Using default.</string>
+    <string name="basalmissing">Basal missing in profile. Using default.</string>
+    <string name="targetmissing">Target missing in profile. Using default.</string>
+    <string name="invalidprofile">Invalid profile !!!</string>
+    <string name="profileswitch">ProfileSwitch</string>
+    <string name="careportal_pbage_label">Pump battery age</string>
+    <string name="careportal_pumpbatterychange">Pump Battery Change</string>
+    <string name="ns_alarmoptions">Alarm options</string>
+    <string name="key_nsalarm_urgent_high" translatable="false">nsalarm_urgent_high</string>
+    <string name="key_nsalarm_high" translatable="false">nsalarm_high</string>
+    <string name="key_nsalarm_low" translatable="false">nsalarm_low</string>
+    <string name="key_nsalarm_urgent_low" translatable="false">nsalarm_urgent_low</string>
+    <string name="key_nsalarm_staledata" translatable="false">nsalarm_staledata</string>
+    <string name="key_nsalarm_urgent_staledata" translatable="false">nsalarm_urgent_staledata</string>
+    <string name="key_nsalarm_staledatavalue" translatable="false">nsalarm_staledatavalue</string>
+    <string name="key_nsalarm_urgent_staledatavalue" translatable="false">nsalarm_urgent_staledatavalue</string>
+    <string name="nsalarm_urgenthigh">Urgent high</string>
+    <string name="nsalarm_high">High</string>
+    <string name="nsalarm_low">Low</string>
+    <string name="nsalarm_urgentlow">Urgent low</string>
+    <string name="nsalarm_summary" formatted="false">Currently set to %f</string>
+    <string name="nsalarm_staledata">Stale data</string>
+    <string name="nsalarm_urgentstaledata">Urgent stale data</string>
+    <string name="nsalarm_staledatavalue_label">Stale data threshold [min]</string>
+    <string name="nsalarm_urgent_staledatavalue_label">Urgent stale data threshold [min]</string>
+    <string name="openapsama_autosens_period">Interval for autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Amount of hours in the past for sensitivity detection (carbs absorption time is excluded)</string>
+    <string name="key_openapsama_autosens_period" translatable="false">openapsama_autosens_period</string>
+    <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
+    <string name="ratio_short">SEN</string>
+    <string name="key_do_not_track_profile_switch" translatable="false">do_not_track_profile_switch</string>
+    <string name="do_not_track_profile_switch">Ignore profile switch events</string>
+    <string name="do_not_track_profile_switch_summary">All profile switch events are ignored and active profile is always used</string>
+    <string name="pump">Pump</string>
+    <string name="openaps">OpenAPS</string>
+    <string name="device">Device</string>
+    <string name="uploader">Uploader</string>
+    <string name="configbuilder_sensitivity">Sensitivity detection</string>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivityoref0">Sensitivity Oref0</string>
+    <string name="sensitivityaaps">Sensitivity AAPS</string>
+    <string name="absorptionsettings_title">Absorption settings</string>
+    <string name="key_absorption_maxtime" translatable="false">absorption_maxtime</string>
+    <string name="absorption_maxtime_title">Meal max absorption time [h]</string>
+    <string name="absorption_maxtime_summary">Time in hours where is expected all carbs from meal will be absorbed</string>
+    <string name="key_rangetodisplay" translatable="false">rangetodisplay</string>
+    <string name="danar_visualizeextendedaspercentage_title">Visualize extended bolus as %</string>
+    <string name="careportal_sensorage_label_short">SAGE</string>
+    <string name="careportal_insulinage_label_short">IAGE</string>
+    <string name="careportal_canulaage_label_short">CAGE</string>
+    <string name="careportal_pbage_label_short">PBAGE</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <string name="basal_short">BAS</string>
+    <string name="virtualpump_extendedbolus_label_short">EXT</string>
+    <string name="lock_screen">Lock screen</string>
+    <string name="lock_screen_short">Lock</string>
+    <string name="sensitivity_warning">By turning on Autosense feature remember to enter all eated carbs. Otherwise carbs deviations will be identified wrong as sensitivity change !!</string>
+    <string name="sensitivityweightedaverage">Sensitivity WeightedAverage</string>
+    <string name="mdtp_ok">OK</string>
+    <string name="mdtp_cancel">Cancel</string>
+    <string name="cpp_sync_setting_missing">needs to be activated to send values to the pump!</string>
+    <string name="cpp_notloadedplugins">Not all profiles loaded!</string>
+    <string name="cpp_valuesnotstored">Values not stored!</string>
+    <string name="wear_overviewnotifications">Overview Notifications</string>
+    <string name="wear_overviewnotifications_summary">Pass the Overview Notifications through as wear confirmation messages.</string>
+    <string name="ns_localbroadcasts">Enable broadcasts to other apps (like xDrip).</string>
+    <string name="ns_localbroadcasts_title">Enable local Broadcasts.</string>
+	<string name="careportal_activity_label">ACTIVITY &amp; FEEDBACK</string>
+	<string name="careportal_carbsandbolus_label">CARBS &amp; BOLUS</string>
+	<string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
+	<string name="careportal_pump_label">PUMP</string>
+    <string name="overview_newtempbasal_basalabsolute">Basal value [U/h]</string>
+    <string name="careportal_newnstreatment_duration_min_label">Duration [min]</string>
+    <string name="key_insulin_oref_peak" translatable="false">insulin_oref_peak</string>
+    <string name="insulin_oref_peak">IOB Curve Peak Time</string>
+    <string name="insulin_peak_time">Peak Time [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultrarapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short" formatted="false">DIA of %s too short - using %s instead!</string>
+    <string name="activate_profile">ACTIVATE PROFILE</string>
+    <string name="date">Date</string>
+    <string name="invalid">INVALID</string>
 </resources>
+

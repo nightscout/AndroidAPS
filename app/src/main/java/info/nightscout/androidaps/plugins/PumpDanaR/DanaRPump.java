@@ -9,13 +9,20 @@ import java.util.Date;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 04.07.2016.
  */
 public class DanaRPump {
+    private static DanaRPump instance = null;
+
+    public static DanaRPump getInstance() {
+        if (instance == null) instance = new DanaRPump();
+        return instance;
+    }
+
     public static final int UNITS_MGDL = 0;
     public static final int UNITS_MMOL = 1;
 
@@ -25,6 +32,22 @@ public class DanaRPump {
     public static final int DELIVERY_EXT_BOLUS = 0x08;
 
     public static final String PROFILE_PREFIX = "DanaR-";
+
+    // v2 history entries
+    public static final int TEMPSTART = 1;
+    public static final int TEMPSTOP = 2;
+    public static final int EXTENDEDSTART = 3;
+    public static final int EXTENDEDSTOP = 4;
+    public static final int BOLUS = 5;
+    public static final int DUALBOLUS = 6;
+    public static final int DUALEXTENDEDSTART = 7;
+    public static final int DUALEXTENDEDSTOP = 8;
+    public static final int SUSPENDON = 9;
+    public static final int SUSPENDOFF = 10;
+    public static final int REFILL = 11;
+    public static final int PRIME = 12;
+    public static final int PROFILECHANGE = 13;
+    public static final int CARBS = 14;
 
     public Date lastConnection = new Date(0);
     public Date lastSettingsRead = new Date(0);
@@ -45,7 +68,7 @@ public class DanaRPump {
 
     public boolean isConfigUD;
     public boolean isExtendedBolusEnabled;
-
+    public boolean isEasyModeEnabled;
 
     // Status
     public boolean pumpSuspended;
@@ -109,7 +132,11 @@ public class DanaRPump {
     public double maxBolus;
     public double maxBasal;
 
-    public NSProfile createConvertedProfile() {
+    public String getUnits() {
+        return units == UNITS_MGDL ? Constants.MGDL : Constants.MMOL;
+    }
+
+    public ProfileStore createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();
@@ -166,7 +193,12 @@ public class DanaRPump {
         } catch (Exception e) {
             return null;
         }
-        return new NSProfile(json, PROFILE_PREFIX + (activeProfile + 1));
+
+        return new ProfileStore(json);
+    }
+
+    public String createConvertedProfileName() {
+        return PROFILE_PREFIX + (activeProfile + 1);
     }
 
 }

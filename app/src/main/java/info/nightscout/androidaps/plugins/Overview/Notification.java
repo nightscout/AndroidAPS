@@ -1,16 +1,30 @@
+
 package info.nightscout.androidaps.plugins.Overview;
 
 import java.util.Date;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.db.BgReading;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSAlarm;
+import info.nightscout.androidaps.plugins.NSClientInternal.data.NSSettingsStatus;
+import info.nightscout.utils.SP;
+
+// Added by Rumen for debugging
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /**
  * Created by mike on 03.12.2016.
  */
 
 public class Notification {
+    private static Logger log = LoggerFactory.getLogger(Notification.class);
+    
     public static final int URGENT = 0;
     public static final int NORMAL = 1;
     public static final int LOW = 2;
     public static final int INFO = 3;
+    public static final int ANNOUNCEMENT = 4;
 
     public static final int PROFILE_SET_FAILED = 0;
     public static final int PROFILE_SET_OK = 1;
@@ -21,16 +35,30 @@ public class Notification {
     public static final int FAILED_UDPATE_PROFILE = 6;
     public static final int BASAL_VALUE_BELOW_MINIMUM = 7;
     public static final int OLD_NSCLIENT = 8;
-    public static final int INVALID_PHONE_NUMBER = 9;
-    public static final int APPROACHING_DAILY_LIMIT = 10;
-    public static final int NSCLIENT_NO_WRITE_PERMISSION = 11;
-    public static final int MISSING_SMS_PERMISSION = 12;
+    public static final int OLD_NS = 9;
+    public static final int INVALID_PHONE_NUMBER = 10;
+    public static final int APPROACHING_DAILY_LIMIT = 11;
+    public static final int NSCLIENT_NO_WRITE_PERMISSION = 12;
+    public static final int MISSING_SMS_PERMISSION = 13;
+    public static final int ISF_MISSING = 14;
+    public static final int IC_MISSING = 15;
+    public static final int BASAL_MISSING = 16;
+    public static final int TARGET_MISSING = 17;
+    public static final int NSANNOUNCEMENT = 18;
+    public static final int NSALARM = 19;
+    public static final int NSURGENTALARM = 20;
+    public static final int SHORT_DIA = 21;
+    public static final int TOAST_ALARM = 22;
+
 
     public int id;
     public Date date;
     public String text;
     public int level;
     public Date validTo = new Date(0);
+
+    public NSAlarm nsAlarm = null;
+    public Integer soundId = null;
 
     public Notification() {
     }
@@ -48,7 +76,7 @@ public class Notification {
         this.date = new Date();
         this.text = text;
         this.level = level;
-        this.validTo = new Date(new Date().getTime() + validMinutes * 60 * 1000L);
+        this.validTo = new Date(System.currentTimeMillis() + validMinutes * 60 * 1000L);
     }
 
     public Notification(int id, String text, int level) {
@@ -57,5 +85,102 @@ public class Notification {
         this.text = text;
         this.level = level;
         this.validTo = new Date(0);
+    }
+
+    public Notification(NSAlarm nsAlarm) {
+        this.date = new Date();
+        this.validTo = new Date(0);
+        this.nsAlarm = nsAlarm;
+        switch (nsAlarm.getLevel()) {
+            case 0:
+                this.id = NSANNOUNCEMENT;
+                this.level = ANNOUNCEMENT;
+                this.text = nsAlarm.getMessage();
+                this.validTo = new Date(System.currentTimeMillis() + 60 * 60 * 1000L);
+                break;
+            case 1:
+                this.id = NSALARM;
+                this.level = NORMAL;
+                this.text = nsAlarm.getTile();
+                if (isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_staledata,false))
+                    this.soundId = R.raw.alarm;
+                break;
+            case 2:
+                this.id = NSURGENTALARM;
+                this.level = URGENT;
+                this.text = nsAlarm.getTile();
+                if (isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_urgent_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_urgent_high, false))
+                    this.soundId = R.raw.urgentalarm;
+                break;
+        }
+    }
+
+    public boolean isEnabled() {
+        if (nsAlarm == null)
+            return true;
+        if (level == ANNOUNCEMENT)
+            return true;
+        if (level == NORMAL && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_staledata, false))
+        {   
+            return true;
+        }
+        if (level == URGENT && isAlarmForLow() && SP.getBoolean(R.string.key_nsalarm_urgent_low, false) || isAlarmForHigh() && SP.getBoolean(R.string.key_nsalarm_urgent_high, false) || isAlarmForStaleData() && SP.getBoolean(R.string.key_nsalarm_urgent_staledata, false))
+            return true;
+        return false;
+    }
+
+    boolean isAlarmForLow() {
+        BgReading bgReading = MainApp.getDbHelper().lastBg();
+        if (bgReading == null)
+            return false;
+        Double threshold = NSSettingsStatus.getInstance().getThreshold("bgTargetTop");
+        if (threshold == null)
+            return false;
+        if (bgReading.value <= threshold)
+            return true;
+        return false;
+    }
+
+    boolean isAlarmForHigh() {
+        BgReading bgReading = MainApp.getDbHelper().lastBg();
+        if (bgReading == null)
+            return false;
+        Double threshold = NSSettingsStatus.getInstance().getThreshold("bgTargetBottom");
+        if (threshold == null)
+            return false;
+        if (bgReading.value >= threshold)
+            return true;
+        return false;
+    }
+    
+    static boolean isAlarmForStaleData(){
+        if(SP.getLong("snoozedTo", 0L) != 0L){
+            if(System.currentTimeMillis() < SP.getLong("snoozedTo", 0L)) {
+                //log.debug("Alarm is snoozed for next "+(SP.getLong("snoozedTo", 0L)-System.currentTimeMillis())/1000+" seconds");
+                return false;
+            }
+        } 
+        BgReading bgReading = MainApp.getDbHelper().lastBg();
+        if (bgReading == null)
+            return false;
+        long bgReadingAgo = System.currentTimeMillis() - bgReading.date;
+        int bgReadingAgoMin = (int) (bgReadingAgo / (1000 * 60));
+        // Added for testing
+        //bgReadingAgoMin = 20;
+        log.debug("bgReadingAgoMin value is:"+bgReadingAgoMin);
+        Double threshold = NSSettingsStatus.getInstance().getThreshold("alarmTimeagoWarnMins");
+		boolean openAPSEnabledAlerts = NSSettingsStatus.getInstance().openAPSEnabledAlerts();
+		log.debug("OpenAPS Alerts enabled: "+openAPSEnabledAlerts);
+		// if no thresshold from Ns get it loccally
+        if(threshold == null) threshold = SP.getDouble(R.string.key_nsalarm_staledatavalue,15D);
+		// No threshold of OpenAPS Alarm so using the one for BG 
+		// Added OpenAPSEnabledAlerts to alarm check
+        if((bgReadingAgoMin > threshold && SP.getBoolean(R.string.key_nsalarm_staledata, false))||(bgReadingAgoMin > threshold && openAPSEnabledAlerts)){
+            return true;
+        } 
+	//snoozing for threshold
+        SP.putLong("snoozedTo", (long) (bgReading.date+(threshold*1000*60L)));
+	//log.debug("New bg data is available Alarm is snoozed for next "+threshold*1000*60+" seconds");
+        return false;
     }
 }

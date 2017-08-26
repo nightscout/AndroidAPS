@@ -5,14 +5,13 @@ import android.support.annotation.NonNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.SQLException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.events.EventTempBasalChange;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class MsgStatusBolusExtended extends MessageBase {
@@ -29,19 +28,23 @@ public class MsgStatusBolusExtended extends MessageBase {
 
         double extendedBolusAmount = intFromBuff(bytes, 2, 2) / 100d;
         int extendedBolusSoFarInSecs = intFromBuff(bytes, 4, 3);
+// This is available only on korean, but not needed now
+//        int extendedBolusDeliveryPulse = intFromBuff(bytes, 7, 2);
+//        int isEasyUIUserSleep = intFromBuff(bytes, 9, 1);
 
         int extendedBolusSoFarInMinutes = extendedBolusSoFarInSecs / 60;
         double extendedBolusAbsoluteRate = isExtendedInProgress ? extendedBolusAmount / extendedBolusMinutes * 60 : 0d;
         Date extendedBolusStart = isExtendedInProgress ? getDateFromSecAgo(extendedBolusSoFarInSecs) : new Date(0);
         int extendedBolusRemainingMinutes = extendedBolusMinutes - extendedBolusSoFarInMinutes;
 
-        DanaRPlugin.getDanaRPump().isExtendedInProgress = isExtendedInProgress;
-        DanaRPlugin.getDanaRPump().extendedBolusMinutes = extendedBolusMinutes;
-        DanaRPlugin.getDanaRPump().extendedBolusAmount = extendedBolusAmount;
-        DanaRPlugin.getDanaRPump().extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes;
-        DanaRPlugin.getDanaRPump().extendedBolusAbsoluteRate = extendedBolusAbsoluteRate;
-        DanaRPlugin.getDanaRPump().extendedBolusStart = extendedBolusStart;
-        DanaRPlugin.getDanaRPump().extendedBolusRemainingMinutes = extendedBolusRemainingMinutes;
+        DanaRPump pump = DanaRPump.getInstance();
+        pump.isExtendedInProgress = isExtendedInProgress;
+        pump.extendedBolusMinutes = extendedBolusMinutes;
+        pump.extendedBolusAmount = extendedBolusAmount;
+        pump.extendedBolusSoFarInMinutes = extendedBolusSoFarInMinutes;
+        pump.extendedBolusAbsoluteRate = extendedBolusAbsoluteRate;
+        pump.extendedBolusStart = extendedBolusStart;
+        pump.extendedBolusRemainingMinutes = extendedBolusRemainingMinutes;
 
         updateExtendedBolusInDB();
 
@@ -58,54 +61,46 @@ public class MsgStatusBolusExtended extends MessageBase {
 
     @NonNull
     private Date getDateFromSecAgo(int tempBasalAgoSecs) {
-        return new Date((long) (Math.ceil(new Date().getTime() / 1000d) - tempBasalAgoSecs) * 1000);
+        return new Date((long) (Math.ceil(System.currentTimeMillis() / 1000d) - tempBasalAgoSecs) * 1000);
     }
 
     public static void updateExtendedBolusInDB() {
-        DanaRPlugin DanaRPlugin = (DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class);
-        DanaRPump danaRPump = DanaRPlugin.getDanaRPump();
-        Date now = new Date();
+        TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
+        DanaRPump pump = DanaRPump.getInstance();
+        long now = System.currentTimeMillis();
 
-        try {
-
-            if (DanaRPlugin.isExtendedBoluslInProgress()) {
-                TempBasal extendedBolus = DanaRPlugin.getExtendedBolus();
-                if (danaRPump.isExtendedInProgress) {
-                    if (extendedBolus.absolute != danaRPump.extendedBolusAbsoluteRate) {
-                        // Close current extended
-                        extendedBolus.timeEnd = now;
-                        MainApp.getDbHelper().getDaoTempBasals().update(extendedBolus);
-                        // Create new
-                        TempBasal newExtended = new TempBasal();
-                        newExtended.timeStart = now;
-                        newExtended.absolute = danaRPump.extendedBolusAbsoluteRate;
-                        newExtended.isAbsolute = true;
-                        newExtended.duration = danaRPump.extendedBolusMinutes;
-                        newExtended.isExtended = true;
-                        MainApp.getDbHelper().getDaoTempBasals().create(newExtended);
-                        MainApp.bus().post(new EventTempBasalChange());
-                    }
-                } else {
-                    // Close curent temp basal
-                    extendedBolus.timeEnd = now;
-                    MainApp.getDbHelper().getDaoTempBasals().update(extendedBolus);
-                    MainApp.bus().post(new EventTempBasalChange());
+        if (treatmentsInterface.isInHistoryExtendedBoluslInProgress()) {
+            ExtendedBolus extendedBolus = treatmentsInterface.getExtendedBolusFromHistory(System.currentTimeMillis());
+            if (pump.isExtendedInProgress) {
+                if (extendedBolus.absoluteRate() != pump.extendedBolusAbsoluteRate) {
+                    // Close current extended
+                    ExtendedBolus exStop = new ExtendedBolus(pump.extendedBolusStart.getTime() - 1000);
+                    exStop.source = Source.USER;
+                    treatmentsInterface.addToHistoryExtendedBolus(exStop);
+                    // Create new
+                    ExtendedBolus newExtended = new ExtendedBolus();
+                    newExtended.date = pump.extendedBolusStart.getTime();
+                    newExtended.insulin = pump.extendedBolusAmount;
+                    newExtended.durationInMinutes = pump.extendedBolusMinutes;
+                    newExtended.source = Source.USER;
+                    treatmentsInterface.addToHistoryExtendedBolus(newExtended);
                 }
             } else {
-                if (danaRPump.isExtendedInProgress) {
-                    // Create new
-                    TempBasal newExtended = new TempBasal();
-                    newExtended.timeStart = now;
-                    newExtended.absolute = danaRPump.extendedBolusAbsoluteRate;
-                    newExtended.isAbsolute = true;
-                    newExtended.duration = danaRPump.extendedBolusMinutes;
-                    newExtended.isExtended = true;
-                    MainApp.getDbHelper().getDaoTempBasals().create(newExtended);
-                    MainApp.bus().post(new EventTempBasalChange());
-                }
+                // Close curent temp basal
+                ExtendedBolus exStop = new ExtendedBolus(now);
+                exStop.source = Source.USER;
+                treatmentsInterface.addToHistoryExtendedBolus(exStop);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } else {
+            if (pump.isExtendedInProgress) {
+                // Create new
+                ExtendedBolus newExtended = new ExtendedBolus();
+                newExtended.date = pump.extendedBolusStart.getTime();
+                newExtended.insulin = pump.extendedBolusAmount;
+                newExtended.durationInMinutes = pump.extendedBolusMinutes;
+                newExtended.source = Source.USER;
+                treatmentsInterface.addToHistoryExtendedBolus(newExtended);
+            }
         }
     }
 }

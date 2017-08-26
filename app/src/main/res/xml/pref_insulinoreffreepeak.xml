@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:key="InsulinOrefFreePeak"
+        android:title="@string/insulin_oref_peak">
+
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            validate:testType="numericRange"
+            validate:minNumber="35"
+            validate:maxNumber="120"
+            android:digits="0123456789"
+            android:defaultValue="75"
+            android:selectAllOnFocus="true"
+            android:inputType="number"
+            android:maxLines="20"
+            android:title="@string/insulin_peak_time"
+            android:key="@string/key_insulin_oref_peak" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

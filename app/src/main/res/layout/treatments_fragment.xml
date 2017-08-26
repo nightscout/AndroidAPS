@@ -4,64 +4,79 @@
     android:layout_height="match_parent"
     tools:context=".plugins.Treatments.TreatmentsFragment">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp">
+            android:background="@color/defaultbackground"
+            app:alignContent="stretch"
+            app:alignItems="stretch"
+            app:flexDirection="row"
+            app:flexWrap="wrap"
+            app:justifyContent="space_between">
 
             <TextView
-                android:id="@+id/treatments_iobtotal_label"
+                android:id="@+id/treatments_treatments"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/treatments_iobtotal_label_string"
-                android:textStyle="bold" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/bolus" />
 
             <TextView
-                android:id="@+id/treatments_iobtotal"
+                android:id="@+id/treatments_extendedboluses"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/extendedbolus" />
 
             <TextView
-                android:id="@+id/treatments_iobactivitytotal_label"
+                android:id="@+id/treatments_tempbasals"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:text="@string/treatments_iobactivitytotal_label_string"
-                android:textStyle="bold" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/tempbasal" />
 
             <TextView
-                android:id="@+id/treatments_iobactivitytotal"
+                android:id="@+id/treatments_temptargets"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/temptarget" />
 
-        </LinearLayout>
+            <TextView
+                android:id="@+id/treatments_profileswitches"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|center_horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="@string/profileswitch" />
 
-        <Button
-            android:id="@+id/treatments_reshreshfromnightscout"
-            style="?android:attr/buttonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/nav_refreshtreatments" />
+        </com.google.android.flexbox.FlexboxLayout>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/treatments_recyclerview"
+        <FrameLayout
+            android:id="@+id/treatments_fragment_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 

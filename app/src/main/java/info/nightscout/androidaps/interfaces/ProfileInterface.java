@@ -2,12 +2,14 @@ package info.nightscout.androidaps.interfaces;
 
 import android.support.annotation.Nullable;
 
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.ProfileStore;
 
 /**
  * Created by mike on 14.06.2016.
  */
 public interface ProfileInterface {
     @Nullable
-    NSProfile getProfile();
+    ProfileStore getProfile();
+    String getUnits();
+    String getProfileName();
 }

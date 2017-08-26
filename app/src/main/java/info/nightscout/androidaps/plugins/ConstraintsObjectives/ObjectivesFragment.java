@@ -91,7 +91,7 @@ public class ObjectivesFragment extends Fragment {
                 }
             });
 
-            Long now = new Date().getTime();
+            Long now = System.currentTimeMillis();
             if (position > 0 && objectives.get(position - 1).accomplished.getTime() == 0) {
                 // Phase 0: previous not completed
                 holder.startedLayout.setVisibility(View.GONE);

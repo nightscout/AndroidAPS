@@ -116,6 +116,10 @@ public class PlusMinusEditText implements View.OnKeyListener,
         return value;
     }
 
+    public String getText() {
+        return editText.getText().toString();
+    }
+
     public void setStep(Double step) {
         this.step = step;
     }

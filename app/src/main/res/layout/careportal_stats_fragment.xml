@@ -1,0 +1,205 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    tools:context="info.nightscout.androidaps.plugins.Careportal.CareportalFragment">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+				android:drawableLeft="@drawable/icon_cp_age_sensor"
+                android:paddingRight="5dp"
+                android:paddingStart="15dp"
+                android:text="@string/careportal_sensorage_label"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
+                android:text=":"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/careportal_sensorage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/icon_cp_age_insulin"
+                android:paddingRight="5dp"
+                android:paddingStart="15dp"
+                android:text="@string/careportal_insulinage_label"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
+                android:text=":"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/careportal_insulinage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/icon_cp_age_canula"
+                android:paddingRight="5dp"
+                android:paddingStart="15dp"
+                android:text="@string/careportal_canulaage_label"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
+                android:text=":"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/careportal_canulaage"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/icon_cp_age_battery"
+                android:paddingRight="5dp"
+                android:paddingStart="15dp"
+                android:text="@string/careportal_pbage_label"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="5dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:gravity="center_horizontal"
+                android:paddingEnd="2dp"
+                android:paddingStart="2dp"
+                android:text=":"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/careportal_pbage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="start"
+                android:paddingLeft="5dp"
+                android:textColor="@android:color/white"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2dip"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/listdelimiter" />
+
+    </LinearLayout>
+
+</FrameLayout>

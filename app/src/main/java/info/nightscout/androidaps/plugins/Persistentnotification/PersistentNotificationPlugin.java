@@ -11,34 +11,32 @@ import android.support.v7.app.NotificationCompat;
 
 import com.squareup.otto.Subscribe;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainActivity;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
+import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.db.BgReading;
-import info.nightscout.androidaps.db.TempBasal;
+import info.nightscout.androidaps.db.DatabaseHelper;
+import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.events.EventExtendedBolusChange;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.events.EventPreferenceChange;
-import info.nightscout.androidaps.events.EventRefreshGui;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.data.IobTotal;
-import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
  * Created by adrian on 23/12/16.
  */
 
-public class PersistentNotificationPlugin implements PluginBase{
+public class PersistentNotificationPlugin implements PluginBase {
 
     private static final int ONGOING_NOTIFICATION_ID = 4711;
     static boolean fragmentEnabled = true;
@@ -56,7 +54,7 @@ public class PersistentNotificationPlugin implements PluginBase{
 
     @Override
     public String getFragmentClass() {
-        return PersistentNotificationFragment.class.getName();
+        return null;
     }
 
     @Override
@@ -98,17 +96,17 @@ public class PersistentNotificationPlugin implements PluginBase{
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
 
-        if(getType() == type){
+        if (getType() == type) {
             this.fragmentEnabled = fragmentEnabled;
             checkBusRegistration();
-            updateNotification();
+            //updateNotification();
         }
 
     }
 
     private void updateNotification() {
 
-        if(!fragmentEnabled){
+        if (!fragmentEnabled) {
             NotificationManager mNotificationManager =
                     (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
             mNotificationManager.cancel(ONGOING_NOTIFICATION_ID);
@@ -117,18 +115,20 @@ public class PersistentNotificationPlugin implements PluginBase{
 
 
         String line1 = ctx.getString(R.string.noprofile);
-        if (MainApp.getConfigBuilder().getActiveProfile() == null) return;
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+
+        if (MainApp.getConfigBuilder().getActiveProfileInterface() == null || MainApp.getConfigBuilder().getProfile() == null)
+            return;
+        String units = MainApp.getConfigBuilder().getProfileUnits();
 
 
-        BgReading lastBG = GlucoseStatus.lastBg();
+        BgReading lastBG = DatabaseHelper.lastBg();
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
 
-        if(profile != null && lastBG != null) {
-            line1 = lastBG.valueToUnitsToString(profile.getUnits());
+        if (lastBG != null) {
+            line1 = lastBG.valueToUnitsToString(units);
             if (glucoseStatus != null) {
-                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, profile.getUnits())
-                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, profile.getUnits());
+                line1 += "  Δ" + deltastring(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                        + " avgΔ" + deltastring(glucoseStatus.avgdelta, glucoseStatus.avgdelta * Constants.MGDL_TO_MMOLL, units);
             } else {
                 line1 += " " +
                         ctx.getString(R.string.old_data) +
@@ -138,19 +138,17 @@ public class PersistentNotificationPlugin implements PluginBase{
 
         PumpInterface pump = MainApp.getConfigBuilder();
 
-        if (pump.isTempBasalInProgress()) {
-            TempBasal activeTemp = pump.getTempBasal();
+        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+            TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
             line1 += "  " + activeTemp.toStringShort();
         }
 
         //IOB
-        ConfigBuilderPlugin.getActiveTreatments().updateTotalIOB();
-        IobTotal bolusIob = ConfigBuilderPlugin.getActiveTreatments().getLastCalculation().round();
-        IobTotal basalIob = new IobTotal(new Date().getTime());
-        if (ConfigBuilderPlugin.getActiveTempBasals() != null) {
-            ConfigBuilderPlugin.getActiveTempBasals().updateTotalIOB();
-            basalIob = ConfigBuilderPlugin.getActiveTempBasals().getLastCalculation().round();
-        }
+        MainApp.getConfigBuilder().updateTotalIOBTreatments();
+        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments().round();
+        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals().round();
+
         String line2 = ctx.getString(R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
                 + ctx.getString(R.string.bolus) + ": " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
                 + ctx.getString(R.string.basal) + ": " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U)";
@@ -159,9 +157,8 @@ public class PersistentNotificationPlugin implements PluginBase{
         String line3 = DecimalFormatter.to2Decimal(pump.getBaseBasalRate()) + " U/h";
 
 
-        if (profile != null && profile.getActiveProfile() != null)
-            line3 += " - " + profile.getActiveProfile();
-        
+        line3 += " - " + MainApp.getConfigBuilder().getProfileName();
+
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx);
         builder.setOngoing(true);
@@ -193,32 +190,32 @@ public class PersistentNotificationPlugin implements PluginBase{
     }
 
     private void checkBusRegistration() {
-        if(fragmentEnabled){
+        if (fragmentEnabled) {
             MainApp.bus().register(this);
         } else {
             try {
                 MainApp.bus().unregister(this);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
-            //no visible fragment
+        //no visible fragment
     }
 
     private String deltastring(double deltaMGDL, double deltaMMOL, String units) {
         String deltastring = "";
-        if (deltaMGDL >=0){
+        if (deltaMGDL >= 0) {
             deltastring += "+";
-        } else{
+        } else {
             deltastring += "-";
 
         }
-        if (units.equals(Constants.MGDL)){
+        if (units.equals(Constants.MGDL)) {
             deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMGDL));
-        }
-        else {
+        } else {
             deltastring += DecimalFormatter.to1Decimal(Math.abs(deltaMMOL));
         }
         return deltastring;
@@ -241,6 +238,11 @@ public class PersistentNotificationPlugin implements PluginBase{
     }
 
     @Subscribe
+    public void onStatusEvent(final EventExtendedBolusChange ev) {
+        updateNotification();
+    }
+
+    @Subscribe
     public void onStatusEvent(final EventNewBG ev) {
         updateNotification();
     }
@@ -256,7 +258,7 @@ public class PersistentNotificationPlugin implements PluginBase{
     }
 
     @Subscribe
-    public void onStatusEvent(final EventRefreshGui ev) {
+    public void onStatusEvent(final EventRefreshOverview ev) {
         updateNotification();
     }
 

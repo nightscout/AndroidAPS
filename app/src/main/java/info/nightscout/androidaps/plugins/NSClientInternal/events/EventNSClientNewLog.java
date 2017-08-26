@@ -22,9 +22,16 @@ public class EventNSClientNewLog {
         this.logText = logText;
     }
 
-    public Spanned toHtml() {
-        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        Spanned line = Html.fromHtml(timeFormat.format(date) + " <b>" + action + "</b> " + logText + "<br>");
-        return line;
+    SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
+
+    public StringBuilder toPreparedHtml() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(timeFormat.format(date));
+        stringBuilder.append(" <b>");
+        stringBuilder.append(action);
+        stringBuilder.append("</b> ");
+        stringBuilder.append(logText);
+        stringBuilder.append("<br>");
+        return stringBuilder;
     }
 }

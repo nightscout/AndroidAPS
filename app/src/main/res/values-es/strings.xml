@@ -60,13 +60,12 @@
     <string name="openapsma_iobdata_label">IOB datos</string>
     <string name="openapsma_profile_label">Perfil</string>
     <string name="openapsma_mealdata_label">Datos de comidas</string>
-    <string name="openapsma_result_label">Resultado</string>
+    <string name="result">Resultado</string>
     <string name="openapsma_noglucosedata">No hay disponibles datos de glucosa</string>
     <string name="openapsma_noprofile">Sin perfil disponible</string>
     <string name="openapsma_nopump">No se dispone de bomba</string>
     <string name="nochangerequested">Ninguna acción requerida</string>
     <string name="openapsma_request_label">Solicitud</string>
-    <string name="openapsma_minbg_label">Objetivo mínimo</string>
     <string name="rate">Dosis</string>
     <string name="duration">Duración</string>
     <string name="reason">Razón</string>
@@ -80,7 +79,6 @@
     <string name="overview">Sinopsis</string>
     <string name="profileviewer">Perfil NS</string>
     <string name="simpleprofile">Perfil simple</string>
-    <string name="tempbasals">Temp basales</string>
     <string name="treatments">Tratamientos</string>
     <string name="virtualpump">Bomba virtual</string>
     <string name="careportal">Careportal</string>
@@ -102,7 +100,6 @@
     <string name="loop_constraintsprocessed_label">Tras procesar limitaciones</string>
     <string name="loop_setbypump_label">Definido por la bomba</string>
     <string name="openapsma_lastenact_label">Última aceptada</string>
-    <string name="refreshtreatmentsfromnightscout">¿Quieres actualizar tratamientos de Nightscout?</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancelar</string>
     <string name="noapsselected">NO APS Seleccionado</string>
@@ -110,7 +107,7 @@
     <string name="openapsma_disabled">Plugin está desactivado</string>
     <string name="constraints_violation">Violación restricciones</string>
     <string name="treatmentdeliveryerror">Error de administración del bolo</string>
-    <string name="overview_newtempbasal_basal_label">Valor basal</string>
+    <string name="overview_newtempbasal_basalpercent">Valor basal [%]</string>
     <string name="overview_newtempbasal_percent_label">% (100% = actual)</string>
     <string name="setbasalquestion">Aceptar nueva basal temporal:</string>
     <string name="overview_bolus_label">Bolo</string>
@@ -172,7 +169,6 @@
     <string name="careportal_newnstreatment_duration_label">Duración</string>
     <string name="careportal_newnstreatment_percent_label">Dosis</string>
     <string name="careportal_newnstreatment_absolute_label">Absoluto</string>
-    <string name="careportal_newnstreatment_minutes"> min</string>
     <string name="careportal_newnstreatment_notes_label">Notas</string>
     <string name="careportal_newnstreatment_eventtime_label">Fecha Hora</string>
     <string name="careportal_newnstreatment_profile_label">Perfil</string>
@@ -181,7 +177,6 @@
     <string name="noprofile">Pendiente carga perfil NS</string>
     <string name="overview_tempbasal_button">Basal Temporal</string>
     <string name="overview_extendedbolus_button">Bolo extendido</string>
-    <string name="configbuilder_nsclientversion_label">NSClient versión:</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versión:</string>
     <string name="send">ENVIAR</string>
     <string name="missing">Faltan</string>
@@ -196,8 +191,6 @@
     <string name="nav_export">Exportar ajustes</string>
     <string name="nav_import">Importar ajustes</string>
     <string name="de_lang">German</string>
-    <string name="openapsma_low_summary">Valor mínimo de BG para estar en rango</string>
-    <string name="openapsma_high_summary">Valor máximo BG para estar en rango</string>
     <string name="openapsma_maxbasal_summary">Max valor U / hr en Basal temporal</string>
     <string name="openapsma_maxiob_summary">Máximos basales IOB para OpenAPS [U]</string>
     <string name="bg_lang">Bulgarian</string>
@@ -298,7 +291,6 @@
     <string name="objectives_5_gate">1 semana lazo cerrado completado con entrada regular de carbohidratos</string>
     <string name="objectives_6_objective">Habilitar funciones adicionales para su uso durante el día, como asistente de comida avanzado</string>
     <string name="youareonallowedlimit">Alcanzado el límite permitido</string>
-    <string name="openapsma_target_bg">Valor objetivo para los cálculos</string>
     <string name="noprofileselected">Sin perfil seleccionado</string>
     <string name="ko_lang">Korean</string>
     <string name="actions">Acciones</string>
@@ -327,7 +319,6 @@
     <string name="androidaps_start">AndroidAPS iniciado</string>
     <string name="es_lang">Español</string>
     <string name="ns_upload_only">NS solo subida (sinc. inactiva)</string>
-    <string name="ns_upload_only_enabled">Por favor desactiva \"NS solo subida\" para usar esta característica.</string>
     <string name="ns_upload_only_summary">NS solo subida. No efectivo con SGV salvo que este seleccionada una fuente local como xDrip. No efectivo en perfiles usando perfiles NS</string>
     <string name="othersettings_title">Otros</string>
     <string name="pumpNotInitialized">¡Bomba no iniciada!</string>
@@ -336,8 +327,6 @@
     <string name="smscommunicator_unknowncommand">Comando desconocido o respuesta incorrecta</string>
     <string name="fillwarning">¡Por favor asegurar que la cantidad coincide con la especificación del set de infusión!</string>
     <string formatted="false" name="smscommunicator_basalreplywithcode">Para iniciar basal %.2fU/h responder con código %s</string>
-    <string name="androidaps_tempbasalstartnote">Inicio Basal Temporal</string>
-    <string name="androidaps_tempbasalendnote">Fin Basal Temporal</string>
     <string name="actions_shortname">" "</string>
     <string name="wear_shortname">" "</string>
     <string name="virtualpump_shortname">" "</string>
@@ -386,19 +375,15 @@
     <string name="pumpNotInitializedProfileNotSet">Bomba no iniciada, ¡perfil no ajustado!</string>
     <string name="pumperror">Error en bomba</string>
     <string name="pumpshutdown">Apagando Bomba</string>
-    <string name="refreshtemptargetsfromnightscout">¿Quiere actualizar objetivo temporal desde Nightscout?</string>
     <string name="removerecord">Eliminar registro:</string>
     <string name="resend_all_data">Enviar todos los datos</string>
     <string name="send_to_pump">ENVIAR A BOMBA</string>
     <string name="short_avgdelta">Media corta delta</string>
     <string name="sms_bolus">Bolo:</string>
-    <string name="sms_lastbg">Ultimo BG:</string>
+    <string name="sms_lastbg">Último BG:</string>
     <string name="sms_minago">%dmin antes</string>
     <string name="smscommunicator_bolusdelivered">Bolo %.2fU enviado correctamente</string>
     <string name="target_range">Rango Objetivo:</string>
-    <string name="temptargetrange">Objetivo Temp</string>
-    <string name="temptargetrange_refreshfromnightscout">Actualizar objetivo temporal desde NS</string>
-    <string name="timeshift_hint"></string>
     <string name="units">Unidades:</string>
     <string name="error_only_numeric_digits_allowed">Sólo se permiten caracteres numéricos</string>
     <string name="error_only_numeric_digits_range_allowed">Sólo se permiten dígitos en el rango %1$s - %2$s</string>
@@ -406,4 +391,5 @@
     <string name="error_phone_not_valid">Número de teléfono inválido</string>
     <string name="waitingforpump">Esperando bomba</string>
     <string name="it_lang">Italian</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>

@@ -17,8 +17,14 @@ import java.util.Date;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.androidaps.interfaces.PluginBase;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.utils.DecimalFormatter;
 
 /**
@@ -27,28 +33,25 @@ import info.nightscout.utils.DecimalFormatter;
 public class ProfileViewDialog extends DialogFragment {
     private static Logger log = LoggerFactory.getLogger(ProfileViewDialog.class);
 
-    private static TextView noProfile;
-    private static TextView units;
-    private static TextView dia;
-    private static TextView activeProfile;
-    private static TextView ic;
-    private static TextView isf;
-    private static TextView basal;
-    private static TextView target;
+    private  TextView noProfile;
+    private  TextView units;
+    private  TextView dia;
+    private  TextView activeProfile;
+    private  TextView ic;
+    private  TextView isf;
+    private  TextView basal;
+    private  TextView target;
 
-    private static Button refreshButton;
+    private  Button refreshButton;
 
     Handler mHandler;
     static HandlerThread mHandlerThread;
-
-    NSProfile profile = null;
 
     public ProfileViewDialog() {
         mHandlerThread = new HandlerThread(ProfileViewDialog.class.getSimpleName());
         mHandlerThread.start();
 
         mHandler = new Handler(mHandlerThread.getLooper());
-        profile = ((DanaRPlugin) MainApp.getSpecificPlugin(DanaRPlugin.class)).getProfile();
     }
 
     @Override
@@ -72,8 +75,13 @@ public class ProfileViewDialog extends DialogFragment {
                 mHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        DanaRPlugin.getDanaRPump().lastSettingsRead = new Date(0);
-                        DanaRPlugin.doConnect("ProfileViewDialog");
+                        DanaRPump.getInstance().lastSettingsRead = new Date(0);
+                        if (MainApp.getSpecificPlugin(DanaRPlugin.class).isEnabled(PluginBase.PUMP))
+                            DanaRPlugin.doConnect("ProfileViewDialog");
+                        if (MainApp.getSpecificPlugin(DanaRKoreanPlugin.class).isEnabled(PluginBase.PUMP))
+                            DanaRKoreanPlugin.doConnect("ProfileViewDialog");
+                        if (MainApp.getSpecificPlugin(DanaRv2Plugin.class).isEnabled(PluginBase.PUMP))
+                            DanaRv2Plugin.doConnect("ProfileViewDialog");
                     }
                 });
                 dismiss();
@@ -91,19 +99,26 @@ public class ProfileViewDialog extends DialogFragment {
     }
 
     private void setContent() {
-        if (profile == null) {
-            noProfile.setVisibility(View.VISIBLE);
-            return;
-        } else {
+//        if (profile == null) {
+//            noProfile.setVisibility(View.VISIBLE);
+//            return;
+//        } else {
+//            noProfile.setVisibility(View.GONE);
+//        }
+        ProfileStore store = ((ProfileInterface)MainApp.getConfigBuilder().getActivePump()).getProfile();
+        if (store != null) {
             noProfile.setVisibility(View.GONE);
+            Profile profile = store.getDefaultProfile();
+            units.setText(profile.getUnits());
+            dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
+            activeProfile.setText(((ProfileInterface) MainApp.getConfigBuilder().getActivePump()).getProfileName());
+            ic.setText(profile.getIcList());
+            isf.setText(profile.getIsfList());
+            basal.setText(profile.getBasalList());
+            target.setText(profile.getTargetList());
+        } else {
+            noProfile.setVisibility(View.VISIBLE);
         }
-        units.setText(profile.getUnits());
-        dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-        activeProfile.setText(profile.getActiveProfile());
-        ic.setText(profile.getIcList());
-        isf.setText(profile.getIsfList());
-        basal.setText(profile.getBasalList());
-        target.setText(profile.getTargetList());
     }
 
 

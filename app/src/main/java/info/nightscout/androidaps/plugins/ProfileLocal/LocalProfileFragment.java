@@ -24,12 +24,14 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.TimeListEdit;
 
-public class LocalProfileFragment extends Fragment {
+public class LocalProfileFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(LocalProfileFragment.class);
 
     private static LocalProfilePlugin localProfilePlugin = new LocalProfilePlugin();
@@ -72,7 +74,7 @@ public class LocalProfileFragment extends Fragment {
             layout.findViewById(R.id.localprofile_basal).setVisibility(View.GONE);
         }
 
-        onStatusEvent(null);
+        updateGUI();
 
         mgdlView.setChecked(localProfilePlugin.mgdl);
         mmolView.setChecked(localProfilePlugin.mmol);
@@ -101,9 +103,9 @@ public class LocalProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = new OptionsToShow(R.id.careportal_profileswitch, R.string.careportal_profileswitch, true, false, false, false, false, false, false, true, false, false);
+                final OptionsToShow profileswitch = CareportalFragment.profileswitch;
                 profileswitch.executeProfileSwitch = true;
-                newDialog.setOptions(profileswitch);
+                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
             }
         });
@@ -129,34 +131,30 @@ public class LocalProfileFragment extends Fragment {
 
         diaView.addTextChangedListener(textWatch);
 
-        onStatusEvent(null);
+        updateGUI();
 
         return layout;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-        onStatusEvent(null);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventInitializationChanged e) {
+        updateGUI();
+    }
+
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended() || !MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
+                    if (!MainApp.getConfigBuilder().isInitialized() || MainApp.getConfigBuilder().isSuspended()) {
                         profileswitchButton.setVisibility(View.GONE);
+                    } else if (!MainApp.getConfigBuilder().getPumpDescription().isSetBasalProfileCapable) {
+                        profileswitchButton.setText(MainApp.instance().getText(R.string.activate_profile));
+                        profileswitchButton.setVisibility(View.VISIBLE);
                     } else {
+                        profileswitchButton.setText(MainApp.instance().getText(R.string.send_to_pump));
                         profileswitchButton.setVisibility(View.VISIBLE);
                     }
                 }

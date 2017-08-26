@@ -13,12 +13,13 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.MealData;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.utils.SP;
 
 public class DetermineBasalAdapterMAJS {
@@ -45,8 +46,8 @@ public class DetermineBasalAdapterMAJS {
     private String storedProfile = null;
     private String storedMeal_data = null;
 
-     /**
-     *  Main code
+    /**
+     * Main code
      */
 
     public DetermineBasalAdapterMAJS(ScriptReader scriptReader) throws IOException {
@@ -106,10 +107,10 @@ public class DetermineBasalAdapterMAJS {
         mV8rt.executeVoidScript(
                 "console.error(\"determine_basal(\"+\n" +
                         "JSON.stringify(" + PARAM_glucoseStatus + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_currentTemp +   ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_iobData +       ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_profile +       ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_meal_data +     ")+ \") \");"
+                        "JSON.stringify(" + PARAM_currentTemp + ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_iobData + ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_profile + ")+ \", \" +\n" +
+                        "JSON.stringify(" + PARAM_meal_data + ")+ \") \");"
         );
         mV8rt.executeVoidScript(
                 "var rT = determine_basal(" +
@@ -216,7 +217,7 @@ public class DetermineBasalAdapterMAJS {
     }
 
 
-    public void setData(NSProfile profile,
+    public void setData(Profile profile,
                         double maxIob,
                         double maxBasal,
                         double minBg,
@@ -230,19 +231,19 @@ public class DetermineBasalAdapterMAJS {
         String units = profile.getUnits();
 
         mProfile.add("max_iob", maxIob);
-        mProfile.add("dia", profile.getDia());
+        mProfile.add("dia", Math.min(profile.getDia(), 3d));
         mProfile.add("type", "current");
         mProfile.add("max_daily_basal", profile.getMaxDailyBasal());
         mProfile.add("max_basal", maxBasal);
         mProfile.add("min_bg", minBg);
         mProfile.add("max_bg", maxBg);
         mProfile.add("target_bg", targetBg);
-        mProfile.add("carb_ratio", profile.getIc(profile.secondsFromMidnight()));
-        mProfile.add("sens", NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units));
+        mProfile.add("carb_ratio", profile.getIc());
+        mProfile.add("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
 
         mProfile.add("current_basal", pump.getBaseBasalRate());
-        mCurrentTemp.add("duration", pump.getTempBasalRemainingMinutes());
-        mCurrentTemp.add("rate", pump.getTempBasalAbsoluteRate());
+        mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
+        mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
 
         mIobData.add("iob", iobData.iob); //netIob
         mIobData.add("activity", iobData.activity); //netActivity
@@ -252,7 +253,7 @@ public class DetermineBasalAdapterMAJS {
         mIobData.add("hightempinsulin", iobData.hightempinsulin);
 
         mGlucoseStatus.add("glucose", glucoseStatus.glucose);
-        if(SP.getBoolean("always_use_shortavg", false)){
+        if (SP.getBoolean("always_use_shortavg", false)) {
             mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
         } else {
             mGlucoseStatus.add("delta", glucoseStatus.delta);
@@ -264,7 +265,7 @@ public class DetermineBasalAdapterMAJS {
     }
 
 
-     public void release() {
+    public void release() {
         mProfile.release();
         mCurrentTemp.release();
         mIobData.release();

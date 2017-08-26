@@ -9,90 +9,43 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="10dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_gravity="center_horizontal"
+                android:padding="10dp"
+                android:text="@string/overview_calibration_bg_label"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:text="@string/overview_calibration_bg_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
+            <TextView
+                android:id="@+id/overview_calibration_units"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:padding="10dp"
-                    android:id="@+id/overview_calibration_units"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:orientation="horizontal">
+            <info.nightscout.utils.NumberPicker
+                android:id="@+id/overview_calibration_bg"
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp" />
 
 
-                    <ImageView
-                        android:id="@+id/overview_calibration_bg_minus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/circle"
-                        android:backgroundTint="#ffffff"
-                        android:src="@drawable/ic_action_minus"
-                        android:tint="#ffffff" />
-
-                    <EditText
-                        android:id="@+id/overview_calibration_bg"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="0.5"
-                        android:gravity="center_horizontal"
-                        android:inputType="numberDecimal"
-                        android:minWidth="100dp"
-                        android:padding="10dp"
-                        android:text=""
-                        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-                    <ImageView
-                        android:id="@+id/overview_calibration_bg_plus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="0.5"
-                        android:background="@drawable/circle"
-                        android:backgroundTint="#ffffff"
-                        android:src="@drawable/ic_action_add"
-                        android:tint="#ffffff" />
-
-
-                </LinearLayout>
-
-                <Button
-                    android:id="@+id/overview_calibration_okbutton"
-                    style="?android:attr/buttonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text="OK"
-                    android:textSize="20sp"
-                    android:layout_marginTop="30dp" />
-
-            </LinearLayout>
+            <include layout="@layout/mdtp_done_button" />
 
         </LinearLayout>
+
     </ScrollView>
+
 </FrameLayout>

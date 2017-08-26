@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        android:key="absorption"
+        android:title="@string/absorptionsettings_title">
+        <com.andreabaccega.widget.ValidatingEditTextPreference
+            validate:testType="floatNumericRange"
+            validate:floatminNumber="0.1"
+            validate:floatmaxNumber="5.0"
+            android:defaultValue="3.0"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:inputType="numberDecimal"
+            android:maxLines="20"
+            android:title="@string/openapsama_min_5m_carbimpact"
+            android:dialogMessage="@string/openapsama_min_5m_carbimpact_summary"
+            android:key="openapsama_min_5m_carbimpact" />
+
+    </PreferenceCategory>
+</PreferenceScreen>

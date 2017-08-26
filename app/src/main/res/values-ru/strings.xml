@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AndroidAPS</string>
     <string name="Glimp">Glimp</string>
     <string name="MM640g">MM640g</string>
     <string name="absolute">абсолют</string>
@@ -13,8 +12,6 @@
     <string name="always_use_shortavg">всегда используйте укороченное среднее приращение вместо простого</string>
     <string name="androidaps_start">AndroidAPS запущен</string>
     <string name="always_use_shortavg_summary">полезно когда данные из нефильтруемых источников вроде Xdrip зашумляются</string>
-    <string name="androidaps_tempbasalendnote">конец действия временного базала</string>
-    <string name="androidaps_tempbasalstartnote">начало действия временного базала</string>
     <string name="approachingdailylimit">приближается суточный лимит инсулина</string>
     <string name="apsmode_title">режим APS</string>
     <string name="array_of_elements" formatted="false">массив %d элементов. актуальная величина:</string>
@@ -63,7 +60,6 @@
     <string name="careportal_newnstreatment_glucosetype">тип глюкозы</string>
     <string name="careportal_newnstreatment_insulin_label">инсулин</string>
     <string name="careportal_newnstreatment_meter">глюкометр</string>
-    <string name="careportal_newnstreatment_minutes">минут</string>
     <string name="careportal_newnstreatment_notes_label">заметки</string>
     <string name="careportal_newnstreatment_other">другое</string>
     <string name="careportal_newnstreatment_percent_label">процент</string>
@@ -98,7 +94,6 @@
     <string name="configbuilder_insulin">инсулин</string>
     <string name="configbuilder_loop">замкнутый цикл</string>
     <string name="configbuilder_nightscoutversion_label">версия Nightscout:</string>
-    <string name="configbuilder_nsclientversion_label">версия NSClient:</string>
     <string name="configbuilder_profile">профиль</string>
     <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_shortname">КОНФ</string>
@@ -196,7 +191,7 @@
     <string name="edit_base_ic">редактировать инсулин/ВХ:</string>
     <string name="edit_base_isf">редактировать чувствительность к инсулину:</string>
     <string name="el_lang">греческий</string>
-    <string name="en_lang">английский</string>
+    <string name="en_lang">English</string>
     <string name="enabled">активировано</string>
     <string name="enableloop">активировать цикличность</string>
     <string name="enablesuperbolus">активировать суперболюс</string>
@@ -282,7 +277,6 @@
     <string name="ns_noupload_summary">данные передаваемые в NS не доходят. AAPS соединяется с NS но изменения туда не вносятся</string>
     <string name="ns_sync_use_absolute_title">только абсолютные величины для базала</string>
     <string name="ns_upload_only">только передача в NS (синхронизация отсутствует)</string>
-    <string name="ns_upload_only_enabled">отключите \"только передача в NS\" чтобы активировать эту опцию</string>
     <string name="ns_upload_only_summary">только передача в NS. работает в SGV только если выбран местный источник вроде xdrip. не работает в профилях при действующем профиле NS</string>
     <string name="nsclient">NSClient</string>
     <string name="nsclientinternal">внутренний клиент NS</string>
@@ -351,27 +345,23 @@
     <string name="openapsma_currenttemp_label">текущий врем базал</string>
     <string name="openapsma_disabled">модуль не активен</string>
     <string name="openapsma_glucosestatus_label">статус гликемии</string>
-    <string name="openapsma_high_summary">макс значение СК диапазона</string>
     <string name="openapsma_inputparameters_label">параметры ввода</string>
     <string name="openapsma_iobdata_label">данные IOB (активн инс)</string>
     <string name="openapsma_lastenact_label">последнее заданное</string>
     <string name="openapsma_lastrun_label">последнее выполненное</string>
-    <string name="openapsma_low_summary">мин значение СК диапазона</string>
     <string name="openapsma_maxbasal_summary">в контексте OpenAPS называется макс базал</string>
     <string name="openapsma_maxbasal_title">макс разрешенный врем базал Е/ч</string>
     <string name="openapsma_maxiob_summary">эта величина называется макс IOB (макс активн инс) в OpenAPS. Значение по умолчанию 0. Через несколько дней или недель пользования величину можно юстировать в зависимости от вашего уровня комфорта.</string>
     <string name="openapsma_maxiob_title">макс базал активн инс подаваемый с OpenAPS (ед)</string>
     <string name="openapsma_mealdata_label">данные приема пищи</string>
-    <string name="openapsma_minbg_label">нижнее целевое значение СК</string>
-    <string name="openapsma_noglucosedata">данные гликемии недоступны</string>
+   <string name="openapsma_noglucosedata">данные гликемии недоступны</string>
     <string name="openapsma_noprofile">профиль недоступен</string>
     <string name="openapsma_nopump">помпа недоступна</string>
     <string name="openapsma_profile_label">профиль</string>
     <string name="openapsma_request_label">запрос</string>
-    <string name="openapsma_result_label">результат</string>
+    <string name="result">результат</string>
     <string name="openapsma_run">выполнить сейчас</string>
     <string name="openapsma_scriptdebugdata_label">отладка скрипта</string>
-    <string name="openapsma_target_bg">целевое значение для расчетов</string>
     <string name="openapsma_valuelimitedto" formatted="false">%.2f ограничено до %.2f</string>
     <string name="openapsma_valueoutofrange" formatted="false">величина %s недопустима</string>
     <string name="openloop">открытый цикл</string>
@@ -392,7 +382,7 @@
     <string name="overview_editquickwizard_valid">использовать до:</string>
     <string name="overview_editquickwizardlistactivity_add">добавить</string>
     <string name="overview_extendedbolus_button">расширенный болюс</string>
-    <string name="overview_newtempbasal_basal_label">величина базала</string>
+    <string name="overview_newtempbasal_basalpercent">величина базала</string>
     <string name="overview_newtempbasal_percent_label">% (100% = current)</string>
     <string name="overview_quickwizard_item_edit_button">редактировать</string>
     <string name="overview_quickwizard_item_remove_button">удалить</string>
@@ -426,8 +416,6 @@
     <string name="quickwizardsettings">БыстрыйБолюс настройки</string>
     <string name="rate">значение</string>
     <string name="reason">основание</string>
-    <string name="refreshtemptargetsfromnightscout">хотите обновить врем цели из Nightscout?</string>
-    <string name="refreshtreatmentsfromnightscout">хотите обновить назначения из Nightscout?</string>
     <string name="reloadprofile">обновить профиль</string>
     <string name="removerecord">удалить запись</string>
     <string name="resend_all_data">повторить отправку всех данных</string>
@@ -435,7 +423,6 @@
     <string name="restart">перезапуск</string>
     <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="resume">возобновить</string>
-    <string name="ro_lang">русский</string>
     <string name="safety">безопасность</string>
     <string name="save">сохранить</string>
     <string name="send">ОТПРАВИТЬ</string>
@@ -504,15 +491,12 @@
     <string name="target_range">целевой диапазон</string>
     <string name="teenage">подросток</string>
     <string name="tempbasaldeliveryerror">ошибка доставки врем базала</string>
-    <string name="tempbasals">врем базалы</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
     <string name="tempbasals_iobtotal_label_string">общий IOB</string>
     <string name="tempbasals_netinsulin_label_string">инс:</string>
     <string name="tempbasals_netratio_label_string">соотношение:</string>
     <string name="tempbasals_realduration_label_string">длит:</string>
     <string name="tempbasals_shortname">ВремБаз</string>
-    <string name="temptargetrange">врем цель</string>
-    <string name="temptargetrange_refreshfromnightscout">обновить врем цели из NS</string>
     <string name="temptargetrange_shortname">ВремЦель</string>
     <string name="timeshift_hint">Время в часах к которому профиль перейдет на след сутки</string>
     <string name="treatmentdeliveryerror">ошибка доставки болюса</string>
@@ -578,4 +562,5 @@
     <string name="xdripstatus_settings">"состояние xdrip (часы) "</string>
     <string name="xdripstatus_shortname">xds</string>
     <string name="youareonallowedlimit">разрешенный предел достигнут</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>

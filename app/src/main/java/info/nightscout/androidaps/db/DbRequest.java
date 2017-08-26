@@ -19,15 +19,7 @@ import org.slf4j.LoggerFactory;
 public class DbRequest {
     private static Logger log = LoggerFactory.getLogger(DbRequest.class);
 
-    public String getNsClientID() {
-        return nsClientID;
-    }
-
-    public void setNsClientID(String nsClientID) {
-        this.nsClientID = nsClientID;
-    }
-
-    @DatabaseField(id = true, useGetSet = true)
+    @DatabaseField(id = true)
     public String nsClientID = null;
 
     @DatabaseField

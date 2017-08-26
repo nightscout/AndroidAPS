@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 
+import java.util.Vector;
+
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.data.ListenerService;
 import info.nightscout.androidaps.interaction.AAPSPreferences;
@@ -39,74 +41,50 @@ public class MainMenuActivity extends MenuListActivity {
 
 
         boolean showPrimeFill  = sp.getBoolean("primefill", false);
-        return new String[] {
-                "TempT",
-                "Bolus",
-                "Wizard",
-                "Settings",
-                "Re-Sync",
-                "Status",
-                showPrimeFill?"Prime/Fill":""};
+        boolean showWizard  = sp.getBoolean("showWizard", true);
+
+        Vector<String> menuitems = new Vector<String>();
+        menuitems.add("TempT");
+        menuitems.add("Bolus");
+        if(showWizard) menuitems.add("Wizard");
+        menuitems.add("Settings");
+        menuitems.add("Status");
+        if (showPrimeFill) menuitems.add("Prime/Fill");
+
+        return menuitems.toArray(new String[menuitems.size()]);
     }
 
     @Override
-    protected void doAction(int position) {
+    protected void doAction(String action) {
 
         Intent intent;
 
-        if(!BuildConfig.WEAR_CONTROL) {
-            switch (position) {
-                case 0:
-                    intent = new Intent(this, AAPSPreferences.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    this.startActivity(intent);
-                    break;
-                case 1:
-                    ListenerService.requestData(this);
-                    break;
-            }
-            return;
+        if ("Settings".equals(action)) {
+            intent = new Intent(this, AAPSPreferences.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        } else if ("Re-Sync".equals(action)) {
+            ListenerService.requestData(this);
+        } else if ("TempT".equals(action)) {
+            intent = new Intent(this, TempTargetActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        } else if ("Bolus".equals(action)) {
+            intent = new Intent(this, BolusActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        } else if ("Wizard".equals(action)) {
+            intent = new Intent(this, WizardActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        } else if ("Status".equals(action)) {
+            intent = new Intent(this, StatusMenuActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
+        } else if ("Prime/Fill".equals(action)) {
+            intent = new Intent(this, FillMenuActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            this.startActivity(intent);
         }
-
-
-        switch (position) {
-            case 0:
-                intent = new Intent(this, TempTargetActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
-                break;
-            case 1:
-                intent = new Intent(this, BolusActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
-                break;
-            case 2:
-                intent = new Intent(this, WizardActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
-                break;
-            case 3:
-                intent = new Intent(this, AAPSPreferences.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
-                break;
-            case 4:
-                ListenerService.requestData(this);
-                break;
-            case 5:
-                intent = new Intent(this, StatusMenuActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                this.startActivity(intent);
-                break;
-            case 6:
-                boolean showPrimeFill  = sp.getBoolean("primefill", false);
-                if(showPrimeFill) {
-                    intent = new Intent(this, FillMenuActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    this.startActivity(intent);
-                }
-                break;
-        }
-
     }
 }

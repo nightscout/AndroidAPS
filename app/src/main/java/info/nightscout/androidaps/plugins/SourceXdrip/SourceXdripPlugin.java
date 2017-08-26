@@ -4,16 +4,23 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.BgSourceInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.SourceNSClient.SourceNSClientFragment;
 
 /**
  * Created by mike on 05.08.2016.
  */
 public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
 
+    static SourceXdripPlugin plugin = null;
+
+    public static SourceXdripPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new SourceXdripPlugin();
+        return plugin;
+    }
+
     @Override
     public String getFragmentClass() {
-        return SourceNSClientFragment.class.getName();
+        return null;
     }
 
     private static boolean fragmentEnabled = false;
