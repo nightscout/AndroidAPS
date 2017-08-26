@@ -118,8 +118,8 @@ public class MainApp extends Application {
             pluginsList.add(InsulinOrefUltraRapidActingFragment.getPlugin());
             pluginsList.add(InsulinOrefFreePeakFragment.getPlugin());
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
-            pluginsList.add(SensitivityAAPSPlugin.getPlugin());
-            pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
+            //pluginsList.add(SensitivityAAPSPlugin.getPlugin());
+            //pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
             if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());
