@@ -224,14 +224,22 @@ public class BolusCommand extends BaseCommand {
 
     private void verifyDisplayedBolusAmount() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
+
+        // wait up to 5s for any scrolling to finish
         double displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
+        long timeout = System.currentTimeMillis() + 10 * 1000;
+        while (timeout > System.currentTimeMillis() && bolus - displayedBolus > 0.05) {
+            log.debug("Waiting for pump to process scrolling input for amount, current: " + displayedBolus + ", desired: " + bolus);
+            displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
+        }
+
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(2000);
+        SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         double refreshedDisplayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
         if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {

@@ -69,8 +69,8 @@ public class SetTbrCommand extends BaseCommand {
             }
 
             enterTbrMenu();
-            inputTbrPercentage();
-            verifyDisplayedTbrPercentage();
+            boolean increasingPercentage = inputTbrPercentage();
+            verifyDisplayedTbrPercentage(increasingPercentage);
 
             if (cancellingTbr) {
                 cancelTbrAndConfirmCancellationWarning();
@@ -81,8 +81,8 @@ public class SetTbrCommand extends BaseCommand {
                 scripter.waitForMenuUpdate();
                 scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
-                inputTbrDuration();
-                verifyDisplayedTbrDuration();
+                boolean increasingDuration = inputTbrDuration();
+                verifyDisplayedTbrDuration(increasingDuration);
 
                 // confirm TBR
                 scripter.pressCheckKey();
@@ -117,7 +117,7 @@ public class SetTbrCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
     }
 
-    private void inputTbrPercentage() {
+    private boolean inputTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long currentPercent = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
         log.debug("Current TBR %: " + currentPercent);
@@ -136,21 +136,29 @@ public class SetTbrCommand extends BaseCommand {
             else scripter.pressDownKey();
             SystemClock.sleep(100);
         }
-        // Give the pump time to finish any scrolling that might still be going on, can take
-        // up to 1100ms. Plus some extra time to be sure
-        SystemClock.sleep(2000);
+        return increasePercentage;
     }
 
-    private void verifyDisplayedTbrPercentage() {
+    // TODO extract verification into a method TBR percentage, duration and bolus amount
+    private void verifyDisplayedTbrPercentage(boolean increasingPercentage) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+        // wait up to 5s for any scrolling to finish
         long displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long timeout = System.currentTimeMillis() + 10 * 1000;
+        while (timeout > System.currentTimeMillis()
+                && ((increasingPercentage && displayedPercentage < percentage)
+                || (!increasingPercentage && displayedPercentage > percentage))) {
+            log.debug("Waiting for pump to process scrolling input for percentage, current: "
+                    + displayedPercentage + ", desired: " + percentage + ", scrolling up: " + increasingPercentage);
+            displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        }
+        log.debug("Final displayed TBR percentage: " + displayedPercentage);
         if (displayedPercentage != percentage) {
-            log.debug("Final displayed TBR percentage: " + displayedPercentage);
             throw new CommandException().message("Failed to set TBR percentage, requested: " + percentage + ", actual: " + displayedPercentage);
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(2000);
+        SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         long refreshedDisplayedTbrPecentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
@@ -160,7 +168,7 @@ public class SetTbrCommand extends BaseCommand {
         }
     }
 
-    private void inputTbrDuration() {
+    private boolean inputTbrDuration() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long currentDuration = scripter.readDisplayedDuration();
         if (currentDuration % 15 != 0) {
@@ -190,21 +198,30 @@ public class SetTbrCommand extends BaseCommand {
             SystemClock.sleep(100);
             log.debug("Push #" + (i + 1));
         }
-        // Give the pump time to finish any scrolling that might still be going on, can take
-        // up to 1100ms. Plus some extra time to be sure
-        SystemClock.sleep(2000);
+        return increaseDuration;
     }
 
-    private void verifyDisplayedTbrDuration() {
+    private void verifyDisplayedTbrDuration(boolean increasingPercentage) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+
+        // wait up to 5s for any scrolling to finish
         long displayedDuration = scripter.readDisplayedDuration();
+        long timeout = System.currentTimeMillis() + 10 * 1000;
+        while (timeout > System.currentTimeMillis()
+                && ((increasingPercentage && displayedDuration < duration)
+                || (!increasingPercentage && displayedDuration > duration))) {
+            log.debug("Waiting for pump to process scrolling input for duration, current: "
+                    + displayedDuration + ", desired: " + duration + ", scrolling up: " + increasingPercentage);
+            displayedDuration = scripter.readDisplayedDuration();
+        }
+
+        log.debug("Final displayed TBR duration: " + displayedDuration);
         if (displayedDuration != duration) {
-            log.debug("Final displayed TBR duration: " + displayedDuration);
             throw new CommandException().message("Failed to set TBR duration, requested: " + duration + ", actual: " + displayedDuration);
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(2000);
+        SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long refreshedDisplayedTbrDuration = scripter.readDisplayedDuration();
         if (displayedDuration != refreshedDisplayedTbrDuration) {
