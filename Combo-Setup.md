@@ -32,10 +32,15 @@ How to use:
 - Enter all treatments via AndroidAPS, since AAPS will be oblivious to boluses entered on the pump, as the pump history is not read yet
 - There are no warnings regarding low cartridge/battery since we're not reading that data from the pump just yet (next version)
 - Ensure you set the basal rate on the pump to the values of the profile used in AAPS, the profile isn't synced to the pump yet! Also don't forget to set/create a profile in AAPS **and** trigger a profile switch afterwards to activate it.
-- When there's an error, check the Combo tab, there should be a clue. Save logs (_adb logcat_, or fetch them from /_storage/emulated/0/Android/data/info.nightscout.androidaps/_) when encountering errors if appropriate, try to reproduce and open a ticket.
 - Don't press any buttons while commands are running (BT logo is displayed on pump display), or the command will fail
+- Let the ruffy app run in the background, don't interact with it, esp. not while AndroidAPS is issuning commands to the pump.
 - To change cartridge: stop the loop, wait for AAPS to cancel any running TBR (check Combo tab), suspend/stop the pump, change cartridge, start the pump again and re-enable the loop. To enable/disable the loop, long press on the "Closed loop" label on the home screen (try long pressing all items next to it too ...).
-- Configure the pump's language to be English
 - AAPS guides first time users through objectives (tab must be set visible in config first, it's enabled irregardless of visibility). This ensures users learn to use AndroidAPS step by step as more and more advanced options are enabled.
-- Update this page if something is unclear or missing
 - If a running TBR was cancelled on the pump or through the pump: press _Cancel TBR_ in in AAPS, so AAPS knows about this as well. AAPS will issue a _cancel TBR command_ to the pump, which the pump will ignore. AAPS will set a new TBR the next time the loop runs or is manually triggered.
+- Update this page if something is unclear or missing
+
+Testing:
+- When there's an error, check the Combo tab, there should be a clue.
+- Save logs (_adb logcat_, or fetch them from /_storage/emulated/0/Android/data/info.nightscout.androidaps/_)
+- Try to reproduce and open a ticket, add the hash of the commit used (right-click on the branch name select
+ _Copy revision number_ or use _git show_ on the command-line) the branch name.
