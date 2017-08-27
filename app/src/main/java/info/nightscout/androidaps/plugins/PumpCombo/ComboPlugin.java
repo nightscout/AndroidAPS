@@ -26,11 +26,13 @@ import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
+import de.jotomo.ruffyscripter.commands.CancellableBolusCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -47,6 +49,11 @@ import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProg
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
+
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERED;
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERING;
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPED;
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPING;
 
 /**
  * Created by mike on 05.08.2016.
@@ -356,9 +363,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    private static BolusCommand.ProgressReportCallback bolusProgressReportCallback = new BolusCommand.ProgressReportCallback() {
+    private static CancellableBolusCommand.ProgressReportCallback bolusProgressReportCallback =
+            new CancellableBolusCommand.ProgressReportCallback() {
         @Override
-        public void report(BolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
+        public void report(CancellableBolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
             EventOverviewBolusProgress enent = EventOverviewBolusProgress.getInstance();
             switch (state) {
                 case DELIVERING:
@@ -391,7 +399,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
                 // Note that the BolusCommand sends progress updates to the bolusProgressReporterCallback,
                 // which then posts appropriate events on the bus, so in this branch no posts are needed
-                runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
+                runningBolusCommand = Config.comboExperimentalBolus
+                        ? new CancellableBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
+                        : new BolusCommand(detailedBolusInfo.insulin);
                 CommandResult bolusCmdResult = runCommand(runningBolusCommand);
                 runningBolusCommand = null;
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();

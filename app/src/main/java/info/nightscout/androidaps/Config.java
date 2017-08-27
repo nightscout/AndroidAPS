@@ -47,4 +47,7 @@ public class Config {
     public static final boolean logDanaBTComm = true;
     public static final boolean logDanaMessageDetail = true;
     public static final boolean logDanaSerialEngine = true;
+
+    // Combo specific
+    public static final boolean comboExperimentalBolus = false;
 }
