@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.jotomo.ruffyscripter.PumpState;
+
 public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
 
@@ -53,11 +55,24 @@ public class SetTbrCommand extends BaseCommand {
     @Override
     public CommandResult execute() {
         try {
+            boolean cancellingTbr = percentage == 100;
+            PumpState pumpState = scripter.readPumpState();
+
+            // TODO hack, cancelling a TBR that isn't running is dealt with in CancelTbrCommand,
+            // this avoids setting a TBR twice until that AAPS bug is squished which calls this
+            // twice within a minute GL#27
+            if (!cancellingTbr
+                    && pumpState.tbrActive
+                    && pumpState.tbrPercent == percentage
+                    && (pumpState.tbrRemainingDuration == duration || pumpState.tbrRemainingDuration + 1 == duration)) {
+                        return new CommandResult().success(true).enacted(false).message("Requested TBR already running");
+            }
+
             enterTbrMenu();
             inputTbrPercentage();
             verifyDisplayedTbrPercentage();
 
-            if (percentage == 100) {
+            if (cancellingTbr) {
                 cancelTbrAndConfirmCancellationWarning();
             } else {
                 // switch to TBR_DURATION menu by pressing menu key
@@ -79,7 +94,7 @@ public class SetTbrCommand extends BaseCommand {
                             "Check pump manually, the TBR might not have been set/cancelled.");
 
             // check main menu shows the same values we just set
-            if (percentage == 100) {
+            if (cancellingTbr) {
                 verifyMainMenuShowsNoActiveTbr();
                 return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
             } else {
