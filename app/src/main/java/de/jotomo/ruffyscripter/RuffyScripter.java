@@ -138,7 +138,7 @@ public class RuffyScripter {
     private IRTHandler mHandler = new IRTHandler.Stub() {
         @Override
         public void log(String message) throws RemoteException {
-            log.debug("Ruffy says: " + message);
+//            log.debug("Ruffy says: " + message);
         }
 
         @Override
@@ -256,6 +256,7 @@ public class RuffyScripter {
 
         synchronized (RuffyScripter.class) {
             try {
+                long connectStart = System.currentTimeMillis();
                 activeCmd = cmd;
                 ensureConnected();
                 final RuffyScripter scripter = this;
@@ -317,6 +318,7 @@ public class RuffyScripter {
                         }
                     }
                 }, cmd.toString());
+                long executionStart = System.currentTimeMillis();
                 cmdThread.start();
 
                 // time out if nothing has been happening for more than 90s or after 4m
@@ -351,6 +353,10 @@ public class RuffyScripter {
                 if (returnable.cmdResult.state == null) {
                     returnable.cmdResult.state = readPumpState();
                 }
+                long connectDurationSec = (executionStart - connectStart) / 1000;
+                long now = System.currentTimeMillis();
+                long executionDurationSec = (now - executionStart) / 1000;
+                returnable.cmdResult.duration = "Connect: " + connectDurationSec + "s, execution: " + executionDurationSec + "s";
                 log.debug("Command result: " + returnable.cmdResult);
                 return returnable.cmdResult;
             } catch (CommandException e) {

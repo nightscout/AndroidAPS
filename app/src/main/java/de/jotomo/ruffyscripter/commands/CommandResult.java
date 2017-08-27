@@ -15,6 +15,7 @@ public class CommandResult {
     public PumpState state;
     public History history;
     public PumpCapabilities capabilities;
+    public String duration;
 
     public CommandResult() {
     }
@@ -31,6 +32,11 @@ public class CommandResult {
 
     public CommandResult completionTime(long completionTime) {
         this.completionTime = completionTime ;
+        return this;
+    }
+
+    public CommandResult duration(String duration) {
+        this.duration = duration;
         return this;
     }
 
@@ -64,7 +70,8 @@ public class CommandResult {
         return "CommandResult{" +
                 "success=" + success +
                 ", enacted=" + enacted +
-                ", completienTime=" + completionTime + "(" + new Date(completionTime) + ")" +
+                ", completionTime=" + completionTime + "(" + new Date(completionTime) + ")" +
+                "' duration=" + duration +
                 ", exception=" + exception +
                 ", message='" + message + '\'' +
                 ", state=" + state +

@@ -46,6 +46,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     private TextView lastCmdText;
     private TextView lastCmdTimeText;
     private TextView lastCmdResultText;
+    private TextView lastCmdDurationText;
 
     private TextView tbrCapabilityText;
     private TextView pumpstateBatteryText;
@@ -70,6 +71,7 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         lastCmdText = (TextView) view.findViewById(R.id.combo_last_command);
         lastCmdTimeText = (TextView) view.findViewById(R.id.combo_last_command_time);
         lastCmdResultText = (TextView) view.findViewById(R.id.combo_last_command_result);
+        lastCmdDurationText = (TextView) view.findViewById(R.id.combo_last_command_duration);
         tbrCapabilityText = (TextView) view.findViewById(R.id.combo_tbr_capability);
         pumpstateBatteryText = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         insulinstateText = (TextView) view.findViewById(R.id.combo_insulinstate);
@@ -193,8 +195,10 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                         CommandResult lastCmdResult = getPlugin().lastCmdResult;
                         if (lastCmdResult != null && lastCmdResult.message != null) {
                             lastCmdResultText.setText(lastCmdResult.message);
+                            lastCmdDurationText.setText(lastCmdResult.duration);
                         } else {
                             lastCmdResultText.setText("");
+                            lastCmdDurationText.setText("");
                         }
                     }
                     tbrCapabilityText.setText(getPlugin().getPumpDescription().maxTempPercent + "%");
