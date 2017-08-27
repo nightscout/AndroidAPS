@@ -4,10 +4,6 @@ import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeSet;
-
-import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.RuffyScripter;
 
 import static de.jotomo.ruffyscripter.commands.GetPumpStateCommand.Stepper.runStep;
 

@@ -218,10 +218,6 @@ public class RuffyScripter {
         this.ruffyService = null;
     }
 
-    public Menu getCurrentMenu() {
-        return currentMenu;
-    }
-
     private static class Returnable {
         CommandResult cmdResult;
     }
@@ -401,6 +397,53 @@ public class RuffyScripter {
         }
     }
 
+    // TODO v2 add remaining info we can extract from the main menu, low battery and low
+    // cartridge warnings, running extended bolus (how does that look if a TBR is active as well?)
+
+    /** This reads the state of the, which is whatever is currently displayed on the display,
+     * no actions are performed. */
+    public PumpState readPumpState() {
+        PumpState state = new PumpState();
+        Menu menu = currentMenu;
+        if (menu == null) {
+            return new PumpState().errorMsg("Menu is not available");
+        }
+        MenuType menuType = menu.getType();
+        if (menuType == MenuType.MAIN_MENU) {
+            Double tbrPercentage = (Double) menu.getAttribute(MenuAttribute.TBR);
+            if (tbrPercentage != 100) {
+                state.tbrActive = true;
+                Double displayedTbr = (Double) menu.getAttribute(MenuAttribute.TBR);
+                state.tbrPercent = displayedTbr.intValue();
+                MenuTime durationMenuTime = ((MenuTime) menu.getAttribute(MenuAttribute.RUNTIME));
+                state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
+                state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
+            }
+            state.lowBattery = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY));
+            state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
+            // TODO v2, read current base basal rate, which is shown center when no TBR is active.
+            // Check if that holds true when an extended bolus is running.
+            // Add a field to PumpStatus, rather than renaming/overloading tbrRate to mean
+            // either TBR rate or basal rate depending on whether a TBR is active.
+        } else if (menuType == MenuType.WARNING_OR_ERROR) {
+            state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
+        } else if (menuType == MenuType.STOP) {
+            state.suspended = true;
+            state.lowBattery = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY));
+            state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
+        } else {
+            StringBuilder sb = new StringBuilder();
+            for (MenuAttribute menuAttribute : menu.attributes()) {
+                sb.append(menuAttribute);
+                sb.append(": ");
+                sb.append(menu.getAttribute(menuAttribute));
+                sb.append("\n");
+            }
+            state.errorMsg = "Pump is on menu " + menuType + ", listing attributes: \n" + sb.toString();
+        }
+        return state;
+    }
+
     // below: methods to be used by commands
     // TODO move into a new Operations(scripter) class commands can delegate to,
     // so this class can focus on providing a connection to run commands
@@ -415,10 +458,50 @@ public class RuffyScripter {
         public static byte BACK = (byte) 0x33;
     }
 
+    interface Step {
+        void run(boolean waitForPumpUpdateAfterwards);
+    }
+/*
+
+    private long lastPumpWrite = 0;
+
+    private void wrapNoNotTheSubwayKind(Step step, boolean waitForPumpUpdateAfterwards) {
+       if (!connected) {
+          // try to reconnect, with a timeout before the pump raises a menu timeout
+           // timeout = lastPumpWrite + 15 * 1000 // avoid default pump timeout of 20s
+       }
+       step.run(waitForPumpUpdateAfterwards);
+        // TODO there's a chance the above was not executed by the pump; assume that if we're not
+        // still connected and abort the command and retry if it it's retryable
+        // isConnected
+       lastPumpWrite = System.currentTimeMillis();
+
+        // TODO: spike: source the ruffy driver package and do away with the remote service
+
+        refuse to debug and fix incomprehensive code that Sandra wrote, can't explain why she
+                did what she did nor commented on it
+
+        if (!connected) {
+//            cancelInternal();
+//          if (activeCmd.isRetriable) {
+        }
+    }
+*/
+
+    // === pump ops ===
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
+
     public void pressUpKey() {
-        log.debug("Pressing up key");
-        pressKey(Key.UP, 2000);
-        log.debug("Releasing up key");
+//        wrapNoNotTheSubwayKind(new Step() {
+//            @Override
+//            public void doStep() {
+                log.debug("Pressing up key");
+                pressKey(Key.UP, 2000);
+                log.debug("Releasing up key");
+//            }
+//        });
     }
 
     public void pressDownKey() {
@@ -588,12 +671,12 @@ public class RuffyScripter {
     public <T> T readBlinkingValue(Class<T> expectedType, MenuAttribute attribute) {
         int retries = 5;
         Object value = currentMenu.getAttribute(attribute);
-        while (!value.getClass().isAssignableFrom(expectedType.getClass())) {
+        while (!expectedType.isInstance(value)) {
             value = currentMenu.getAttribute(attribute);
             waitForScreenUpdate(1000);
             retries--;
             if (retries == 0) {
-                throw new CommandException().message("Failed to read blinkng value: " + attribute);
+                throw new CommandException().message("Failed to read blinkng value: " + attribute + "=" + value + " type=" + value.getClass());
             }
         }
         return (T) value;
@@ -602,52 +685,5 @@ public class RuffyScripter {
     public long readDisplayedDuration() {
         MenuTime duration = readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
         return duration.getHour() * 60 + duration.getMinute();
-    }
-
-    // TODO v2 add remaining info we can extract from the main menu, low battery and low
-    // cartridge warnings, running extended bolus (how does that look if a TBR is active as well?)
-
-    /** This reads the state of the, which is whatever is currently displayed on the display,
-     * no actions are performed. */
-    public PumpState readPumpState() {
-        PumpState state = new PumpState();
-        Menu menu = currentMenu;
-        if (menu == null) {
-            return new PumpState().errorMsg("Menu is not available");
-        }
-        MenuType menuType = menu.getType();
-        if (menuType == MenuType.MAIN_MENU) {
-            Double tbrPercentage = (Double) menu.getAttribute(MenuAttribute.TBR);
-            if (tbrPercentage != 100) {
-                state.tbrActive = true;
-                Double displayedTbr = (Double) menu.getAttribute(MenuAttribute.TBR);
-                state.tbrPercent = displayedTbr.intValue();
-                MenuTime durationMenuTime = ((MenuTime) menu.getAttribute(MenuAttribute.RUNTIME));
-                state.tbrRemainingDuration = durationMenuTime.getHour() * 60 + durationMenuTime.getMinute();
-                state.tbrRate = ((double) menu.getAttribute(MenuAttribute.BASAL_RATE));
-            }
-            state.lowBattery = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY));
-            state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
-            // TODO v2, read current base basal rate, which is shown center when no TBR is active.
-            // Check if that holds true when an extended bolus is running.
-            // Add a field to PumpStatus, rather than renaming/overloading tbrRate to mean
-            // either TBR rate or basal rate depending on whether a TBR is active.
-        } else if (menuType == MenuType.WARNING_OR_ERROR) {
-            state.errorMsg = (String) menu.getAttribute(MenuAttribute.MESSAGE);
-        } else if (menuType == MenuType.STOP) {
-            state.suspended = true;
-            state.lowBattery = ((boolean) menu.getAttribute(MenuAttribute.LOW_BATTERY));
-            state.insulinState = ((int) menu.getAttribute(MenuAttribute.INSULIN_STATE));
-        } else {
-            StringBuilder sb = new StringBuilder();
-            for (MenuAttribute menuAttribute : menu.attributes()) {
-                sb.append(menuAttribute);
-                sb.append(": ");
-                sb.append(menu.getAttribute(menuAttribute));
-                sb.append("\n");
-            }
-            state.errorMsg = "Pump is on menu " + menuType + ", listing attributes: \n" + sb.toString();
-        }
-        return state;
     }
 }

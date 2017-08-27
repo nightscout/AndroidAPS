@@ -49,7 +49,9 @@ public class CancelTbrCommand extends BaseCommand {
             }
             log.debug("Cancelling active TBR of " + pumpState.tbrPercent
                     + "% with " + pumpState.tbrRemainingDuration + " min remaining");
-            return new SetTbrCommand(100, 0).execute();
+            SetTbrCommand setTbrCommand = new SetTbrCommand(100, 0);
+            setTbrCommand.setScripter(scripter);
+            return setTbrCommand.execute();
         } catch (CommandException e) {
             return e.toCommandResult();
         }

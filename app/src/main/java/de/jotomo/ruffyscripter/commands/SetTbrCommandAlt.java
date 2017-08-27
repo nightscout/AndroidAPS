@@ -104,7 +104,7 @@ public class SetTbrCommandAlt extends BaseCommand {
 
     private void inputTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long currentPercent = scripter.readBlinkingValue(Long.class, MenuAttribute.BASAL_RATE);
+        long currentPercent = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
         log.debug("Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
         long percentageSteps = percentageChange / 10;
@@ -128,16 +128,16 @@ public class SetTbrCommandAlt extends BaseCommand {
 
     private void verifyDisplayedTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long displayedPercentage = scripter.readBlinkingValue(Long.class, MenuAttribute.BASAL_RATE);
+        long displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
         if (displayedPercentage != percentage) {
             log.debug("Final displayed TBR percentage: " + displayedPercentage);
-            throw new CommandException().message("Failed to set TBR percentage");
+            throw new CommandException().message("Failed to set TBR percentage, requested: " + percentage + ", actual: " + displayedPercentage);
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(2000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long refreshedDisplayedTbrPecentage = scripter.readBlinkingValue(Long.class, MenuAttribute.BASAL_RATE);
+        long refreshedDisplayedTbrPecentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
             throw new CommandException().message("Failed to set TBR percentage: " +
                     "percentage changed after input stopped from "

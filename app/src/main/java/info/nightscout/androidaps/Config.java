@@ -50,7 +50,7 @@ public class Config {
 
     // Combo specific
     /** use alternate SetTbrCommand (uses the initial implementation) */
-    public static final boolean comboUseAlternateSetTbrCommand = false;
+    public static final boolean comboUseAlternateSetTbrCommand = true;
     /** very quick hack to split up bolus into 2 U parts, spaced roughly 45s apart */
     public static final boolean comboSplitBoluses = false;
 }
