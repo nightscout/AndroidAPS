@@ -62,7 +62,7 @@ import info.nightscout.utils.ToastUtils;
 /**
  * Created by mike on 05.08.2016.
  */
-public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterface, ProfileInterface {
+public class ComboPlugin implements PluginBase, PumpInterface {
     public static final String COMBO_MAX_TEMP_PERCENT_SP = "combo_maxTempPercent";
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
@@ -513,6 +513,11 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
         int adjustedPercent = percent;
 
+        if (adjustedPercent > pumpDescription.maxTempPercent) {
+            log.debug("Reducing requested TBR to the maximum support by the pump: " + percent + " -> " + pumpDescription.maxTempPercent);
+            adjustedPercent = pumpDescription.maxTempPercent;
+        }
+
         if (adjustedPercent % 10 != 0) {
             Long rounded = Math.round(adjustedPercent / 10d) * 10;
             log.debug("Rounded requested percentage:" + adjustedPercent + " -> " + rounded);
@@ -693,7 +698,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
 
     public void updateCapabilities() {
-
         // if Android is sluggish this might get called before ruffy is bound
         if (ruffyScripter == null) {
             log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
@@ -715,86 +719,5 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         } else {
             ToastUtils.showToastInUiThread(MainApp.instance(), "No success.");
         }
-    }
-
-    @Override
-    public boolean isLoopEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isClosedModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isAutosensModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public boolean isAMAModeEnabled() {
-        return true;
-    }
-
-    @Override
-    public Double applyBasalConstraints(Double absoluteRate) {
-        double origAbsoluteRate = absoluteRate;
-        // TODO GL#56, #42
-        if (absoluteRate > 25d) {
-            absoluteRate = 25d;
-            if (Config.logConstraintsChanges && origAbsoluteRate != Constants.basalAbsoluteOnlyForCheckLimit)
-                log.debug("Limiting rate " + origAbsoluteRate + "U/h by pump constraint to " + absoluteRate + "U/h");
-        }
-        return absoluteRate;
-    }
-
-    @Override
-    public Integer applyBasalConstraints(Integer percentRate) {
-        Integer origPercentRate = percentRate;
-        if (percentRate < 0) percentRate = 0;
-        if (percentRate > pumpDescription.maxTempPercent)
-            percentRate = pumpDescription.maxTempPercent;
-        if (!Objects.equals(percentRate, origPercentRate) && Config.logConstraintsChanges && !Objects.equals(origPercentRate, Constants.basalPercentOnlyForCheckLimit))
-            log.debug("Limiting percent rate " + origPercentRate + "% to " + percentRate + "%");
-        return percentRate;
-    }
-
-    @Override
-    public Double applyBolusConstraints(Double insulin) {
-        // Hard pump limits are not directly readable from pump and serve as a fail safe.
-        // TODO GL#56, #42
-        return insulin;
-    }
-
-    @Override
-    public Integer applyCarbsConstraints(Integer carbs) {
-        // pump is oblivious to carbs
-        return carbs;
-    }
-
-    @Override
-    public Double applyMaxIOBConstraints(Double maxIob) {
-        // pump is oblivious to IOB
-        return maxIob;
-    }
-
-    @Nullable
-    @Override
-    public ProfileStore getProfile() {
-        // TODO GL#13
-        return null;
-    }
-
-    @Override
-    public String getUnits() {
-        // pump has no concept of senors/blood glucose
-        return Constants.MGDL;
-    }
-
-    @Override
-    public String getProfileName() {
-        // TODO GL#13
-        return "Profile 1";
     }
 }
