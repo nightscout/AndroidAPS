@@ -49,11 +49,19 @@ public class SP {
     }
 
     static public int getInt(int resourceID, Integer defaultValue) {
-        return SafeParse.stringToInt(sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue.toString()));
+        try {
+            return sharedPreferences.getInt(MainApp.sResources.getString(resourceID), defaultValue);
+        } catch (Exception e) {
+            return SafeParse.stringToInt(sharedPreferences.getString(MainApp.sResources.getString(resourceID), defaultValue.toString()));
+        }
     }
 
     static public int getInt(String key, Integer defaultValue) {
-        return SafeParse.stringToInt(sharedPreferences.getString(key, defaultValue.toString()));
+        try {
+            return sharedPreferences.getInt(key, defaultValue);
+        } catch (Exception e) {
+            return SafeParse.stringToInt(sharedPreferences.getString(key, defaultValue.toString()));
+        }
     }
 
     static public long getLong(int resourceID, Long defaultValue) {
@@ -80,15 +88,27 @@ public class SP {
         editor.apply();
     }
 
-    static public void removeBoolean(int resourceID) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.remove(MainApp.sResources.getString(resourceID));
-        editor.apply();
-    }
-
     static public void putLong(String key, long value) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putLong(key, value);
+        editor.apply();
+    }
+
+    static public void putLong(int resourceID, long value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong(MainApp.sResources.getString(resourceID), value);
+        editor.apply();
+    }
+
+    static public void putInt(String key, int value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, value);
+        editor.apply();
+    }
+
+    static public void putInt(int resourceID, int value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(MainApp.sResources.getString(resourceID), value);
         editor.apply();
     }
 
@@ -98,9 +118,21 @@ public class SP {
         editor.apply();
     }
 
-    static public void removeString(int resourceID) {
+    static public void putString(String key, String value) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+    }
+
+    static public void remove(int resourceID) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.remove(MainApp.sResources.getString(resourceID));
+        editor.apply();
+    }
+
+    static public void remove(String key) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(key);
         editor.apply();
     }
 }

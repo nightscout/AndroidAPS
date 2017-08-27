@@ -56,8 +56,8 @@ public class BgGraphBuilder {
 
     //used for low resolution screen.
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
-        end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
-        start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
+        end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
+        start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
         this.context = context;
         this.highMark = aBgList.get(aBgList.size() - 1).high;
@@ -76,8 +76,8 @@ public class BgGraphBuilder {
     }
 
     public BgGraphBuilder(Context context, List<BgWatchData> aBgList, List<TempWatchData> tempWatchDataList, ArrayList<BasalWatchData> basalWatchDataList, int aPointSize, int aHighColor, int aLowColor, int aMidColor, int gridColour, int basalBackgroundColor, int basalCenterColor, int timespan) {
-        end_time = new Date().getTime() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
-        start_time = new Date().getTime()  - (1000 * 60 * 60 * timespan); //timespan hours ago
+        end_time = System.currentTimeMillis() + (1000 * 60 * 6 * timespan); //Now plus 30 minutes padding (for 5 hours. Less if less.)
+        start_time = System.currentTimeMillis()  - (1000 * 60 * 60 * timespan); //timespan hours ago
         this.bgDataList = aBgList;
         this.context = context;
         this.highMark = aBgList.get(aBgList.size() - 1).high;
@@ -317,7 +317,7 @@ public class BgGraphBuilder {
         SimpleDateFormat timeFormat = new SimpleDateFormat(is24? "HH" : "h a");
         timeFormat.setTimeZone(TimeZone.getDefault());
         double start_hour = today.getTime().getTime();
-        double timeNow = new Date().getTime();
+        double timeNow = System.currentTimeMillis();
         for (int l = 0; l <= 24; l++) {
             if ((start_hour + (60000 * 60 * (l))) < timeNow) {
                 if ((start_hour + (60000 * 60 * (l + 1))) >= timeNow) {

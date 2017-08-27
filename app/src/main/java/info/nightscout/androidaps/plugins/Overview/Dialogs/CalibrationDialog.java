@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -24,18 +23,16 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.GlucoseStatus;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
-import info.nightscout.utils.PlusMinusEditText;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.utils.NumberPicker;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.XdripCalibrations;
 
 public class CalibrationDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(CalibrationDialog.class);
 
-    Button okButton;
-    PlusMinusEditText bgText;
+    NumberPicker bgNumber;
     TextView unitsView;
-    TextView bgView;
 
     Context context;
 
@@ -50,6 +47,12 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        this.context = null;
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.overview_calibration_dialog, container, false);
@@ -57,24 +60,21 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        okButton = (Button) view.findViewById(R.id.overview_calibration_okbutton);
-        okButton.setOnClickListener(this);
+        view.findViewById(R.id.ok).setOnClickListener(this);
+        view.findViewById(R.id.cancel).setOnClickListener(this);
 
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        Double bg = profile != null ? NSProfile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile.getUnits()) : 0d;
+        String units = MainApp.getConfigBuilder().getProfileUnits();
+        Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, units);
 
-        String units = Constants.MGDL;
-        if (profile != null)
-            units = profile.getUnits();
+        bgNumber = (NumberPicker) view.findViewById(R.id.overview_calibration_bg);
 
         if (units.equals(Constants.MMOL))
-            bgText = new PlusMinusEditText(view, R.id.overview_calibration_bg, R.id.overview_calibration_bg_plus, R.id.overview_calibration_bg_minus, bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
+            bgNumber.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
         else
-            bgText = new PlusMinusEditText(view, R.id.overview_calibration_bg, R.id.overview_calibration_bg_plus, R.id.overview_calibration_bg_minus, bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
+            bgNumber.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
 
         unitsView = (TextView) view.findViewById(R.id.overview_calibration_units);
         unitsView.setText(units);
-        bgView = (TextView) view.findViewById(R.id.overview_calibration_bg);
 
         return view;
     }
@@ -82,11 +82,14 @@ public class CalibrationDialog extends DialogFragment implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.overview_calibration_okbutton:
-                final Double bg = SafeParse.stringToDouble(this.bgView.getText().toString());;
+            case R.id.ok:
+                final Double bg = SafeParse.stringToDouble(bgNumber.getText());
                 XdripCalibrations.confirmAndSendCalibration(bg, context);
                 dismiss();
                 Answers.getInstance().logCustom(new CustomEvent("Calibration"));
+                break;
+            case R.id.cancel:
+                dismiss();
                 break;
         }
     }

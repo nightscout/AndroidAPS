@@ -31,6 +31,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
     Double step = 1d;
     NumberFormat formater;
     boolean allowZero = false;
+    boolean roundRobin;
 
     private Handler mHandler;
     private ScheduledExecutorService mUpdater;
@@ -65,6 +66,10 @@ public class PlusMinusEditText implements View.OnKeyListener,
     private static final int MSG_DEC = 1;
 
     public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero) {
+        this( view,  editTextID,  plusID,  minusID,  initValue,  minValue,  maxValue,  step,  formater,  allowZero, false);
+    }
+
+    public PlusMinusEditText(View view, int editTextID, int plusID, int minusID, Double initValue, Double minValue, Double maxValue, Double step, NumberFormat formater, boolean allowZero, boolean roundRobin) {
         editText = (TextView) view.findViewById(editTextID);
         minusImage = (ImageView) view.findViewById(minusID);
         plusImage = (ImageView) view.findViewById(plusID);
@@ -75,6 +80,7 @@ public class PlusMinusEditText implements View.OnKeyListener,
         this.step = step;
         this.formater = formater;
         this.allowZero = allowZero;
+        this.roundRobin = roundRobin;
 
         mHandler = new Handler() {
             @Override
@@ -112,12 +118,15 @@ public class PlusMinusEditText implements View.OnKeyListener,
     public void setStep(Double step) {
         this.step = step;
     }
-
     private void inc(int multiplier) {
         value += step * multiplier;
         if (value > maxValue) {
-            value = maxValue;
-            stopUpdating();
+            if(roundRobin){
+                value = minValue;
+            } else {
+                value = maxValue;
+                stopUpdating();
+            }
         }
         updateEditText();
     }
@@ -125,8 +134,12 @@ public class PlusMinusEditText implements View.OnKeyListener,
     private void dec( int multiplier) {
         value -= step * multiplier;
         if (value < minValue) {
-            value = minValue;
-            stopUpdating();
+            if(roundRobin){
+                value = maxValue;
+            } else {
+                value = minValue;
+                stopUpdating();
+            }
         }
         updateEditText();
     }

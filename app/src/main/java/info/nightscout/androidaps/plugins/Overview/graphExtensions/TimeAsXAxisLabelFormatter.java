@@ -23,10 +23,8 @@ public class TimeAsXAxisLabelFormatter extends DefaultLabelFormatter {
     public String formatLabel(double value, boolean isValueX) {
         if (isValueX) {
             // format as date
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis((long) value);
             DateFormat dateFormat = new SimpleDateFormat(mFormat);
-            return dateFormat.format(calendar.getTimeInMillis());
+            return dateFormat.format((long) value);
         } else {
             return super.formatLabel(value, isValueX);
         }

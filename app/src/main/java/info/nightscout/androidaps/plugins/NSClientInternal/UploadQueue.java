@@ -50,7 +50,7 @@ public class UploadQueue {
                 public void run() {
                     log.debug("QUEUE adding: " + dbr.data);
                     MainApp.getDbHelper().create(dbr);
-                    NSClientInternalPlugin plugin = (NSClientInternalPlugin) MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
+                    NSClientInternalPlugin plugin = MainApp.getSpecificPlugin(NSClientInternalPlugin.class);
                     if (plugin != null) {
                         plugin.resend("newdata");
                     }
@@ -113,7 +113,7 @@ public class UploadQueue {
         String result = "";
         CloseableIterator<DbRequest> iterator = null;
         try {
-            iterator = MainApp.getDbHelper().getDaoDbRequest().closeableIterator();
+            iterator = MainApp.getDbHelper().getDbRequestInterator();
             try {
                 while (iterator.hasNext()) {
                     DbRequest dbr = iterator.next();

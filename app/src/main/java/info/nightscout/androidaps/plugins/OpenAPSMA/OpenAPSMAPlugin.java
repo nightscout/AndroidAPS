@@ -18,14 +18,11 @@ import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.interfaces.APSInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.interfaces.TempBasalsInterface;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
-import info.nightscout.androidaps.plugins.TempTargetRange.TempTargetRangePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
@@ -133,8 +130,15 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         }
 
         GlucoseStatus glucoseStatus = GlucoseStatus.getGlucoseStatusData();
-        NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
+        Profile profile = MainApp.getConfigBuilder().getProfile();
         PumpInterface pump = MainApp.getConfigBuilder();
+
+        if (profile == null) {
+            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.noprofileselected)));
+            if (Config.logAPSResult)
+                log.debug(MainApp.instance().getString(R.string.noprofileselected));
+            return;
+        }
 
         if (!isEnabled(PluginBase.APS)) {
             MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_disabled)));
@@ -150,53 +154,28 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             return;
         }
 
-        if (profile == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_noprofile)));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_noprofile));
-            return;
-        }
-
-        if (pump == null) {
-            MainApp.bus().post(new EventOpenAPSUpdateResultGui(MainApp.instance().getString(R.string.openapsma_nopump)));
-            if (Config.logAPSResult)
-                log.debug(MainApp.instance().getString(R.string.openapsma_nopump));
-            return;
-        }
-
         String units = profile.getUnits();
-
-        Double maxBgDefault = Constants.MAX_BG_DEFAULT_MGDL;
-        Double minBgDefault = Constants.MIN_BG_DEFAULT_MGDL;
-        Double targetBgDefault = Constants.TARGET_BG_DEFAULT_MGDL;
-        if (!units.equals(Constants.MGDL)) {
-            maxBgDefault = Constants.MAX_BG_DEFAULT_MMOL;
-            minBgDefault = Constants.MIN_BG_DEFAULT_MMOL;
-            targetBgDefault = Constants.TARGET_BG_DEFAULT_MMOL;
-        }
 
         Date now = new Date();
 
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
-        double minBg = NSProfile.toMgdl(SP.getDouble("openapsma_min_bg", minBgDefault), units);
-        double maxBg = NSProfile.toMgdl(SP.getDouble("openapsma_max_bg", maxBgDefault), units);
-        double targetBg = NSProfile.toMgdl(SP.getDouble("openapsma_target_bg", targetBgDefault), units);
+        double minBg =  Profile.toMgdl(profile.getTargetLow(), units);
+        double maxBg =  Profile.toMgdl(profile.getTargetHigh(), units);
+        double targetBg = (minBg + maxBg) / 2;
 
         minBg = Round.roundTo(minBg, 0.1d);
         maxBg = Round.roundTo(maxBg, 0.1d);
 
         Date start = new Date();
-        TreatmentsInterface treatments = MainApp.getConfigBuilder().getActiveTreatments();
-        TempBasalsInterface tempBasals = MainApp.getConfigBuilder().getActiveTempBasals();
-        treatments.updateTotalIOB();
-        tempBasals.updateTotalIOB();
-        IobTotal bolusIob = treatments.getLastCalculation();
-        IobTotal basalIob = tempBasals.getLastCalculation();
+        MainApp.getConfigBuilder().updateTotalIOBTreatments();
+        MainApp.getConfigBuilder().updateTotalIOBTempBasals();
+        IobTotal bolusIob = MainApp.getConfigBuilder().getLastCalculationTreatments();
+        IobTotal basalIob = MainApp.getConfigBuilder().getLastCalculationTempBasals();
 
         IobTotal iobTotal = IobTotal.combine(bolusIob, basalIob).round();
 
-        MealData mealData = treatments.getMealData();
+        MealData mealData = MainApp.getConfigBuilder().getMealData();
 
         maxIob = MainApp.getConfigBuilder().applyMaxIOBConstraints(maxIob);
         Profiler.log(log, "MA data gathering", start);
@@ -204,23 +183,20 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         minBg = verifyHardLimits(minBg, "minBg", Constants.VERY_HARD_LIMIT_MIN_BG[0], Constants.VERY_HARD_LIMIT_MIN_BG[1]);
         maxBg = verifyHardLimits(maxBg, "maxBg", Constants.VERY_HARD_LIMIT_MAX_BG[0], Constants.VERY_HARD_LIMIT_MAX_BG[1]);
         targetBg = verifyHardLimits(targetBg, "targetBg", Constants.VERY_HARD_LIMIT_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TARGET_BG[1]);
-        
-        TempTargetRangePlugin tempTargetRangePlugin = (TempTargetRangePlugin) MainApp.getSpecificPlugin(TempTargetRangePlugin.class);
-        if (tempTargetRangePlugin != null && tempTargetRangePlugin.isEnabled(PluginBase.GENERAL)) {
-            TempTarget tempTarget = tempTargetRangePlugin.getTempTargetInProgress(new Date().getTime());
-            if (tempTarget != null) {
-                minBg = verifyHardLimits(tempTarget.low, "minBg", Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
-                maxBg = verifyHardLimits(tempTarget.high, "maxBg", Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
-                targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
-            }
+
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
+        if (tempTarget != null) {
+            minBg = verifyHardLimits(tempTarget.low, "minBg", Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MIN_BG[1]);
+            maxBg = verifyHardLimits(tempTarget.high, "maxBg", Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[0], Constants.VERY_HARD_LIMIT_TEMP_MAX_BG[1]);
+            targetBg = verifyHardLimits((tempTarget.low + tempTarget.high) / 2, "targetBg", Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[0], Constants.VERY_HARD_LIMIT_TEMP_TARGET_BG[1]);
         }
 
         maxIob = verifyHardLimits(maxIob, "maxIob", 0, 7);
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
-        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100)) return;
-        if (!checkOnlyHardLimits(NSProfile.toMgdl(profile.getIsf(NSProfile.secondsFromMidnight()).doubleValue(), units), "sens", 2, 900)) return;
+        if (!checkOnlyHardLimits(profile.getIc(), "carbratio", 2, 100)) return;
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900)) return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
@@ -235,7 +211,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
             determineBasalResultMA.changeRequested = false;
         // limit requests on openloop mode
         if (!MainApp.getConfigBuilder().isClosedModeEnabled()) {
-            if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRate()) < 0.1)
+            if (MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory()) < 0.1)
                 determineBasalResultMA.changeRequested = false;
             if (!MainApp.getConfigBuilder().isTempBasalInProgress() && Math.abs(determineBasalResultMA.rate - MainApp.getConfigBuilder().getBaseBasalRate()) < 0.1)
                 determineBasalResultMA.changeRequested = false;

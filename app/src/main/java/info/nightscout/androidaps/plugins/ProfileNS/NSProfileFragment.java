@@ -12,24 +12,26 @@ import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.events.EventNSProfileUpdateGUI;
 import info.nightscout.utils.DecimalFormatter;
 
-public class NSProfileFragment extends Fragment {
+public class NSProfileFragment extends SubscriberFragment {
     private static NSProfilePlugin nsProfilePlugin = new NSProfilePlugin();
 
     public static NSProfilePlugin getPlugin() {
         return nsProfilePlugin;
     }
 
-    private static TextView noProfile;
-    private static TextView units;
-    private static TextView dia;
-    private static TextView activeProfile;
-    private static TextView ic;
-    private static TextView isf;
-    private static TextView basal;
-    private static TextView target;
+    private TextView noProfile;
+    private TextView units;
+    private TextView dia;
+    private TextView activeProfile;
+    private TextView ic;
+    private TextView isf;
+    private TextView basal;
+    private TextView target;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -49,18 +51,6 @@ public class NSProfileFragment extends Fragment {
         return layout;
     }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
     @Subscribe
     public void onStatusEvent(final EventNSProfileUpdateGUI ev) {
         Activity activity = getActivity();
@@ -73,20 +63,23 @@ public class NSProfileFragment extends Fragment {
             });
     }
 
-    private void updateGUI() {
-        if (nsProfilePlugin.profile == null) {
+    @Override
+    protected void updateGUI() {
+        if (MainApp.getConfigBuilder().getProfile() == null) {
             noProfile.setVisibility(View.VISIBLE);
             return;
         } else {
             noProfile.setVisibility(View.GONE);
         }
-        units.setText(nsProfilePlugin.profile.getUnits());
-        dia.setText(DecimalFormatter.to2Decimal(nsProfilePlugin.profile.getDia()) + " h");
-        activeProfile.setText(nsProfilePlugin.profile.getActiveProfile());
-        ic.setText(nsProfilePlugin.profile.getIcList());
-        isf.setText(nsProfilePlugin.profile.getIsfList());
-        basal.setText(nsProfilePlugin.profile.getBasalList());
-        target.setText(nsProfilePlugin.profile.getTargetList());
+
+        Profile profile = MainApp.getConfigBuilder().getProfile();
+        units.setText(profile.getUnits());
+        dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
+        activeProfile.setText(MainApp.getConfigBuilder().getProfileName());
+        ic.setText(profile.getIcList());
+        isf.setText(profile.getIsfList());
+        basal.setText(profile.getBasalList());
+        target.setText(profile.getTargetList());
     }
 
 }

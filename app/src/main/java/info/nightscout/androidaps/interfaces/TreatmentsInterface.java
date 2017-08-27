@@ -2,19 +2,63 @@ package info.nightscout.androidaps.interfaces;
 
 import java.util.List;
 
-import info.nightscout.androidaps.data.MealData;
-import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
 import info.nightscout.androidaps.data.IobTotal;
+import info.nightscout.androidaps.data.MealData;
+import info.nightscout.androidaps.db.ExtendedBolus;
+import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.db.TemporaryBasal;
+import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.data.Intervals;
+import info.nightscout.androidaps.data.ProfileIntervals;
 
 /**
  * Created by mike on 14.06.2016.
  */
 public interface TreatmentsInterface {
 
-    void updateTotalIOB();
-    IobTotal getLastCalculation();
-    IobTotal getCalculationToTime(long time);
+    void updateTotalIOBTreatments();
+    void updateTotalIOBTempBasals();
+
+    IobTotal getLastCalculationTreatments();
+    IobTotal getCalculationToTimeTreatments(long time);
+    IobTotal getLastCalculationTempBasals();
+    IobTotal getCalculationToTimeTempBasals(long time);
+
     MealData getMealData();
-    List<Treatment> getTreatments();
-    List<Treatment> getTreatments5MinBack(long time);
+
+    List<Treatment> getTreatmentsFromHistory();
+    List<Treatment> getTreatments5MinBackFromHistory(long time);
+
+    // real basals (not faked by extended bolus)
+    boolean isInHistoryRealTempBasalInProgress();
+    TemporaryBasal getRealTempBasalFromHistory(long time);
+
+    boolean addToHistoryTempBasal(TemporaryBasal tempBasal);
+
+    // basal that can be faked by extended boluses
+    boolean isTempBasalInProgress();
+    TemporaryBasal getTempBasalFromHistory(long time);
+    double getTempBasalAbsoluteRateHistory();
+    double getTempBasalRemainingMinutesFromHistory();
+    Intervals<TemporaryBasal> getTemporaryBasalsFromHistory();
+
+    boolean isInHistoryExtendedBoluslInProgress();
+    ExtendedBolus getExtendedBolusFromHistory(long time);
+    Intervals<ExtendedBolus> getExtendedBolusesFromHistory();
+
+    boolean addToHistoryExtendedBolus(ExtendedBolus extendedBolus);
+
+    boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo);
+
+    TempTarget getTempTargetFromHistory(long time);
+    Intervals<TempTarget> getTempTargetsFromHistory();
+
+    ProfileSwitch getProfileSwitchFromHistory(long time);
+    ProfileIntervals<ProfileSwitch> getProfileSwitchesFromHistory();
+    void addToHistoryProfileSwitch(ProfileSwitch profileSwitch);
+
+    long oldestDataAvailable();
+
 }

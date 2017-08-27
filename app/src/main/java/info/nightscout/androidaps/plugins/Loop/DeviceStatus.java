@@ -402,16 +402,4 @@ public class DeviceStatus {
         return record;
     }
 
-    public void sendToNSClient() {
-        Context context = MainApp.instance().getApplicationContext();
-        Bundle bundle = new Bundle();
-        bundle.putString("action", "dbAdd");
-        bundle.putString("collection", "devicestatus");
-        bundle.putString("data", mongoRecord().toString());
-        Intent intent = new Intent(Intents.ACTION_DATABASE);
-        intent.putExtras(bundle);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        context.sendBroadcast(intent);
-        DbLogger.dbAdd(intent, mongoRecord().toString(), DeviceStatus.class);
-    }
 }

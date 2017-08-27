@@ -7,6 +7,7 @@ import org.json.JSONException;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -17,8 +18,8 @@ import info.nightscout.utils.SP;
  */
 public class OverviewPlugin implements PluginBase {
 
-    public static Double bgTargetLow = 80d;
-    public static Double bgTargetHigh = 180d;
+    public static double bgTargetLow = 80d;
+    public static double bgTargetHigh = 180d;
 
     public QuickWizard quickWizard = new QuickWizard();
 
@@ -99,11 +100,13 @@ public class OverviewPlugin implements PluginBase {
     @Subscribe
     public void onStatusEvent(final EventNewNotification n) {
         notificationStore.add(n.notification);
+        MainApp.bus().post(new EventRefreshOverview("EventNewNotification"));
     }
 
     @Subscribe
     public void onStatusEvent(final EventDismissNotification n) {
-        notificationStore.remove(n.id);
+        if (notificationStore.remove(n.id))
+            MainApp.bus().post(new EventRefreshOverview("EventDismissNotification"));
     }
 
 }

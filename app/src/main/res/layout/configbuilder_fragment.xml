@@ -41,8 +41,8 @@
                     android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
-
                 <TextView
+                    android:id="@+id/configbuilder_bgsourcelabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -76,6 +76,21 @@
                     android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/configbuilder_sensitivity"
+                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textStyle="bold" />
+
+                <ListView
+                    android:id="@+id/configbuilder_sensitivitylistview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@color/cardColorBackground" />
 
                 <TextView
                     android:id="@+id/configbuilder_apslabel"
@@ -113,6 +128,7 @@
                     android:background="@color/cardColorBackground" />
 
                 <TextView
+                    android:id="@+id/configbuilder_profilelabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -129,6 +145,7 @@
                     android:background="@color/cardColorBackground" />
 
                 <TextView
+                    android:id="@+id/configbuilder_treatmentslabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
@@ -143,24 +160,6 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
-
-                <TextView
-                    android:id="@+id/configbuilder_tempslabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/configbuilder_tempbasals"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/configbuilder_tempslistview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/cardColorBackground" />
-
 
                 <TextView
                     android:id="@+id/configbuilder_constraintslabel"
@@ -194,45 +193,6 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/configbuilder_nsclientversion_label"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:id="@+id/configbuilder_nsclientversion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/configbuilder_nightscoutversion_label"
-                        android:textAppearance="?android:attr/textAppearanceSmall" />
-
-                    <TextView
-                        android:id="@+id/configbuilder_nightscoutversion"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:textAppearance="?android:attr/textAppearanceMedium" />
-                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

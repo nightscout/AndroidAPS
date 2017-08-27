@@ -21,7 +21,7 @@ import java.util.Date;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
+import info.nightscout.androidaps.data.Profile;
 
 public class KeepAliveReceiver extends BroadcastReceiver {
     private static Logger log = LoggerFactory.getLogger(KeepAliveReceiver.class);
@@ -34,15 +34,15 @@ public class KeepAliveReceiver extends BroadcastReceiver {
 
 
         final PumpInterface pump = MainApp.getConfigBuilder();
-        final NSProfile profile = MainApp.getConfigBuilder().getActiveProfile().getProfile();
-        if (pump != null && profile != null && profile.getBasal(NSProfile.secondsFromMidnight()) != null) {
+        final Profile profile = MainApp.getConfigBuilder().getProfile();
+        if (pump != null && profile != null && profile.getBasal() != null) {
             boolean isBasalOutdated = false;
             boolean isStatusOutdated = false;
 
             Date lastConnection = pump.lastDataTime();
-            if (lastConnection.getTime() + 30 * 60 * 1000L < new Date().getTime())
+            if (lastConnection.getTime() + 30 * 60 * 1000L < System.currentTimeMillis())
                 isStatusOutdated = true;
-            if (Math.abs(profile.getBasal(NSProfile.secondsFromMidnight()) - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep)
+            if (Math.abs(profile.getBasal() - pump.getBaseBasalRate()) > pump.getPumpDescription().basalStep)
                 isBasalOutdated = true;
 
             SharedPreferences SP = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());

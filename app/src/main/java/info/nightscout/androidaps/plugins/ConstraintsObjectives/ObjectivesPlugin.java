@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -67,8 +68,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
 
     @Override
     public boolean isVisibleInTabs(int type) {
-        LoopPlugin loopPlugin = (LoopPlugin) MainApp.getSpecificPlugin(LoopPlugin.class);
-        return type == CONSTRAINTS && fragmentVisible && loopPlugin != null && loopPlugin.isVisibleInTabs(LOOP);
+        return type == CONSTRAINTS && fragmentVisible && !BuildConfig.NSCLIENTOLNY;
     }
 
     @Override

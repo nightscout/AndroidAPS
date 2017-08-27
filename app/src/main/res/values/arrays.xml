@@ -15,22 +15,26 @@
         <item>@string/bg_lang</item>
         <item>@string/cs_lang</item>
         <item>@string/de_lang</item>
+        <item>@string/nl_lang</item>
         <item>@string/es_lang</item>
         <item>@string/el_lang</item>
         <item>@string/it_lang</item>
         <item>@string/ko_lang</item>
         <item>@string/ru_lang</item>
+        <item>@string/sv_lang</item>
     </string-array>
     <string-array name="languagesValues" translatable="false">
         <item>en</item>
         <item>bg</item>
         <item>cs</item>
         <item>de</item>
+        <item>nl</item>
         <item>es</item>
         <item>el</item>
         <item>it</item>
         <item>ko</item>
         <item>ru</item>
+        <item>sv</item>
     </string-array>
 
     <string-array name="ageArray">
@@ -43,6 +47,4 @@
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
     </string-array>
-
-    <string name="ro_lang">Russian</string>
 </resources>

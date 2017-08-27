@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.Careportal;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -57,7 +58,7 @@ public class CareportalPlugin implements PluginBase {
 
     @Override
     public boolean showInList(int type) {
-        return true;
+        return !Config.NSCLIENT;
     }
 
     @Override

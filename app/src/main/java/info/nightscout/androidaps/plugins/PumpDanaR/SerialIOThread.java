@@ -177,7 +177,7 @@ public class SerialIOThread extends Thread {
         if (!message.received) {
             log.warn("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
-                DanaRPlugin.getDanaRPump().isNewPump = false;
+                DanaRPump.getInstance().isNewPump = false;
                 log.debug("Old firmware detected");
             }
         }

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.Loop;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +18,11 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopSetLastRunGui;
 import info.nightscout.androidaps.plugins.Loop.events.EventLoopUpdateGui;
 
-public class LoopFragment extends Fragment implements View.OnClickListener {
+public class LoopFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(LoopFragment.class);
 
     private static LoopPlugin loopPlugin;
@@ -62,18 +62,6 @@ public class LoopFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        MainApp.bus().unregister(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MainApp.bus().register(this);
-    }
-
-    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.loop_run:
@@ -110,7 +98,8 @@ public class LoopFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    void updateGUI() {
+    @Override
+    protected void updateGUI() {
         Activity activity = getActivity();
         if (activity != null)
             activity.runOnUiThread(new Runnable() {

@@ -36,12 +36,22 @@ public class InsulinFastactingProlongedFragment extends Fragment {
         insulinDia = (TextView) view.findViewById(R.id.insulin_dia);
         insulinGraph = (ActivityGraph) view.findViewById(R.id.insuling_graph);
 
-        insulinName.setText(insulinFastactingProlongedPlugin.getFriendlyName());
-        insulinComment.setText(insulinFastactingProlongedPlugin.getComment());
-        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + new Double(insulinFastactingProlongedPlugin.getDia()).toString() + "h");
-        insulinGraph.show(insulinFastactingProlongedPlugin);
+        updateGUI();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateGUI();
+    }
+
+    private void updateGUI() {
+        insulinName.setText(insulinFastactingProlongedPlugin.getFriendlyName());
+        insulinComment.setText(insulinFastactingProlongedPlugin.getComment());
+        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(insulinFastactingProlongedPlugin.getDia()) + "h");
+        insulinGraph.show(insulinFastactingProlongedPlugin);
     }
 
 }

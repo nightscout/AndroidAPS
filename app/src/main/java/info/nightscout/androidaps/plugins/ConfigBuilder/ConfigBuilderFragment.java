@@ -34,9 +34,11 @@ import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.interfaces.SensitivityInterface;
 import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingPlugin;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
+import info.nightscout.androidaps.plugins.SensitivityOref0.SensitivityOref0Plugin;
 import info.nightscout.utils.PasswordProtection;
 
 
@@ -49,32 +51,32 @@ public class ConfigBuilderFragment extends Fragment {
     }
 
     ListView insulinListView;
+    ListView sensitivityListView;
     ListView bgsourceListView;
+    TextView bgsourceLabel;
     ListView pumpListView;
     TextView pumpLabel;
     ListView loopListView;
     TextView loopLabel;
     ListView treatmentsListView;
-    ListView tempsListView;
-    TextView tempsLabel;
+    TextView treatmentsLabel;
     ListView profileListView;
+    TextView profileLabel;
     ListView apsListView;
     TextView apsLabel;
     ListView constraintsListView;
     TextView constraintsLabel;
     ListView generalListView;
-    TextView nsclientVerView;
-    TextView nightscoutVerView;
 
     LinearLayout mainLayout;
     Button unlock;
 
     PluginCustomAdapter insulinDataAdapter = null;
+    PluginCustomAdapter sensivityDataAdapter = null;
     PluginCustomAdapter bgsourceDataAdapter = null;
     PluginCustomAdapter pumpDataAdapter = null;
     PluginCustomAdapter loopDataAdapter = null;
     PluginCustomAdapter treatmentsDataAdapter = null;
-    PluginCustomAdapter tempsDataAdapter = null;
     PluginCustomAdapter profileDataAdapter = null;
     PluginCustomAdapter apsDataAdapter = null;
     PluginCustomAdapter constraintsDataAdapter = null;
@@ -96,31 +98,26 @@ public class ConfigBuilderFragment extends Fragment {
         smallWidth = screen_width < Constants.SMALL_WIDTH;
 
         insulinListView = (ListView) view.findViewById(R.id.configbuilder_insulinlistview);
+        sensitivityListView = (ListView) view.findViewById(R.id.configbuilder_sensitivitylistview);
         bgsourceListView = (ListView) view.findViewById(R.id.configbuilder_bgsourcelistview);
+        bgsourceLabel = (TextView) view.findViewById(R.id.configbuilder_bgsourcelabel);
         pumpListView = (ListView) view.findViewById(R.id.configbuilder_pumplistview);
         pumpLabel = (TextView) view.findViewById(R.id.configbuilder_pumplabel);
         loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
         loopLabel = (TextView) view.findViewById(R.id.configbuilder_looplabel);
         treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
-        tempsListView = (ListView) view.findViewById(R.id.configbuilder_tempslistview);
-        tempsLabel = (TextView) view.findViewById(R.id.configbuilder_tempslabel);
+        treatmentsLabel = (TextView) view.findViewById(R.id.configbuilder_treatmentslabel);
         profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
+        profileLabel = (TextView) view.findViewById(R.id.configbuilder_profilelabel);
         apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
         apsLabel = (TextView) view.findViewById(R.id.configbuilder_apslabel);
         constraintsListView = (ListView) view.findViewById(R.id.configbuilder_constraintslistview);
         constraintsLabel = (TextView) view.findViewById(R.id.configbuilder_constraintslabel);
         generalListView = (ListView) view.findViewById(R.id.configbuilder_generallistview);
-        nsclientVerView = (TextView) view.findViewById(R.id.configbuilder_nsclientversion);
-        nightscoutVerView = (TextView) view.findViewById(R.id.configbuilder_nightscoutversion);
 
         mainLayout = (LinearLayout) view.findViewById(R.id.configbuilder_mainlayout);
         unlock = (Button) view.findViewById(R.id.configbuilder_unlock);
 
-        nsclientVerView.setText(ConfigBuilderPlugin.nsClientVersionName);
-        nightscoutVerView.setText(ConfigBuilderPlugin.nightscoutVersionName);
-        if (ConfigBuilderPlugin.nsClientVersionCode < 117) nsclientVerView.setTextColor(Color.RED);
-        if (ConfigBuilderPlugin.nightscoutVersionCode < 900)
-            nightscoutVerView.setTextColor(Color.RED);
         setViews();
 
         if (PasswordProtection.isLocked("settings_password")) {
@@ -149,6 +146,8 @@ public class ConfigBuilderFragment extends Fragment {
         setListViewHeightBasedOnChildren(insulinListView);
         bgsourceDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(BgSourceInterface.class, PluginBase.BGSOURCE), PluginBase.BGSOURCE);
         bgsourceListView.setAdapter(bgsourceDataAdapter);
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.BGSOURCE).size() == 0)
+            bgsourceLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(bgsourceListView);
         pumpDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.PUMP), PluginBase.PUMP);
         pumpListView.setAdapter(pumpDataAdapter);
@@ -162,21 +161,23 @@ public class ConfigBuilderFragment extends Fragment {
             loopLabel.setVisibility(View.GONE);
         treatmentsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT), PluginBase.TREATMENT);
         treatmentsListView.setAdapter(treatmentsDataAdapter);
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT).size() == 0)
+            treatmentsLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(treatmentsListView);
-        tempsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TEMPBASAL), PluginBase.TEMPBASAL);
-        tempsListView.setAdapter(tempsDataAdapter);
-        setListViewHeightBasedOnChildren(tempsListView);
-        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.TEMPBASAL).size() == 0)
-            tempsLabel.setVisibility(View.GONE);
-        profileDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginBase.BGSOURCE), PluginBase.PROFILE);
+        profileDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginBase.PROFILE), PluginBase.PROFILE);
         profileListView.setAdapter(profileDataAdapter);
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.PROFILE).size() == 0)
+            profileLabel.setVisibility(View.GONE);
         setListViewHeightBasedOnChildren(profileListView);
         apsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.APS), PluginBase.APS);
         apsListView.setAdapter(apsDataAdapter);
         setListViewHeightBasedOnChildren(apsListView);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.APS).size() == 0)
             apsLabel.setVisibility(View.GONE);
-        constraintsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginBase.BGSOURCE), PluginBase.CONSTRAINTS);
+        sensivityDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(SensitivityInterface.class, PluginBase.SENSITIVITY), PluginBase.SENSITIVITY);
+        sensitivityListView.setAdapter(sensivityDataAdapter);
+        setListViewHeightBasedOnChildren(sensitivityListView);
+        constraintsDataAdapter = new PluginCustomAdapter(getContext(), smallWidth?R.layout.configbuilder_smallitem :R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ConstraintsInterface.class, PluginBase.CONSTRAINTS), PluginBase.CONSTRAINTS);
         constraintsListView.setAdapter(constraintsDataAdapter);
         setListViewHeightBasedOnChildren(constraintsListView);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.CONSTRAINTS).size() == 0)
@@ -232,7 +233,7 @@ public class ConfigBuilderFragment extends Fragment {
                         plugin.setFragmentVisible(type, cb.isChecked());
                         onEnabledCategoryChanged(plugin, type);
                         configBuilderPlugin.storeSettings();
-                        MainApp.bus().post(new EventRefreshGui(true));
+                        MainApp.bus().post(new EventRefreshGui());
                         MainApp.bus().post(new EventConfigBuilderChange());
                         getPlugin().logPluginStatus();
                         Answers.getInstance().logCustom(new CustomEvent("ConfigurationChange"));
@@ -245,7 +246,7 @@ public class ConfigBuilderFragment extends Fragment {
                         PluginBase plugin = (PluginBase) cb.getTag();
                         plugin.setFragmentVisible(type, cb.isChecked());
                         configBuilderPlugin.storeSettings();
-                        MainApp.bus().post(new EventRefreshGui(true));
+                        MainApp.bus().post(new EventRefreshGui());
                         getPlugin().logPluginStatus();
                     }
                 });
@@ -275,7 +276,7 @@ public class ConfigBuilderFragment extends Fragment {
             }
 
             // Hide enabled control and force enabled plugin if there is only one plugin available
-            if (type == PluginBase.INSULIN || type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.TEMPBASAL || type == PluginBase.PROFILE)
+            if (type == PluginBase.INSULIN || type == PluginBase.PUMP || type == PluginBase.TREATMENT || type == PluginBase.PROFILE || type == PluginBase.SENSITIVITY)
                 if (pluginList.size() < 2) {
                     holder.checkboxEnabled.setEnabled(false);
                     plugin.setFragmentEnabled(type, true);
@@ -324,6 +325,9 @@ public class ConfigBuilderFragment extends Fragment {
             case PluginBase.INSULIN:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(InsulinInterface.class);
                 break;
+            case PluginBase.SENSITIVITY:
+                pluginsInCategory = MainApp.getSpecificPluginsListByInterface(SensitivityInterface.class);
+                break;
             case PluginBase.APS:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(APSInterface.class);
                 break;
@@ -333,7 +337,6 @@ public class ConfigBuilderFragment extends Fragment {
             case PluginBase.BGSOURCE:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(BgSourceInterface.class);
                 break;
-            case PluginBase.TEMPBASAL:
             case PluginBase.TREATMENT:
             case PluginBase.PUMP:
                 pluginsInCategory = MainApp.getSpecificPluginsListByInterface(PumpInterface.class);
@@ -355,6 +358,8 @@ public class ConfigBuilderFragment extends Fragment {
                     MainApp.getSpecificPlugin(VirtualPumpPlugin.class).setFragmentEnabled(type, true);
                 else if (type == PluginBase.INSULIN)
                     MainApp.getSpecificPlugin(InsulinFastactingPlugin.class).setFragmentEnabled(type, true);
+                else if (type == PluginBase.SENSITIVITY)
+                    MainApp.getSpecificPlugin(SensitivityOref0Plugin.class).setFragmentEnabled(type, true);
                 else if (type == PluginBase.PROFILE)
                     MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(type, true);
                 else

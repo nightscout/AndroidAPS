@@ -4,7 +4,7 @@
         android:key="DanaRProfile"
         android:title="@string/danarprofile">
         <EditTextPreference
-            android:defaultValue=""
+            android:defaultValue="3"
             android:key="@string/key_danarprofile_dia"
             android:numeric="decimal"
             android:dialogMessage="@string/danarprofile_dia_summary"

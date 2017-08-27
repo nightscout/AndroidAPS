@@ -25,7 +25,7 @@ public class NSTreatment {
             }
         }
         return ret;
-    };
+    }
 
     private Double getDoubleOrNull(String key) {
         Double ret = null;
@@ -37,7 +37,7 @@ public class NSTreatment {
             }
         }
         return ret;
-    };
+    }
 
     private Integer getIntegerOrNull(String key) {
         Integer ret = null;
@@ -49,7 +49,7 @@ public class NSTreatment {
             }
         }
         return ret;
-    };
+    }
 
     private Long getLongOrNull(String key) {
         Long ret = null;
@@ -61,7 +61,7 @@ public class NSTreatment {
             }
         }
         return ret;
-    };
+    }
 
     private Date getDateOrNull(String key) {
         Date ret = null;
@@ -73,7 +73,7 @@ public class NSTreatment {
             }
         }
         return ret;
-    };
+    }
 
     public String getAction() { return action; }
     public JSONObject getData() { return data; }

@@ -14,23 +14,22 @@ public class StatusMenuActivity extends MenuListActivity {
         return new String[] {
                 "Pump",
                 "Loop",
-                "Targets"};
+                "CPP",
+                "TDD"};
+
+
     }
 
     @Override
-    protected void doAction(int position) {
-        switch (position) {
-
-            case 0:
-                ListenerService.initiateAction(this, "status pump");
-                break;
-            case 1:
-                ListenerService.initiateAction(this, "status loop");
-                break;
-            case 2:
-                ListenerService.initiateAction(this, "status targets");
-                break;
+    protected void doAction(String action) {
+        if ("Pump".equals(action)) {
+            ListenerService.initiateAction(this, "status pump");
+        } else if ("Loop".equals(action)) {
+            ListenerService.initiateAction(this, "status loop");
+        } else if ("CPP".equals(action)) {
+            ListenerService.initiateAction(this, "opencpp");
+        } else if ("TDD".equals(action)) {
+            ListenerService.initiateAction(this, "tddstats");
         }
-
     }
 }

@@ -7,6 +7,7 @@ import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
+import info.nightscout.utils.NSUpload;
 
 public class MsgError extends MessageBase {
     private static Logger log = LoggerFactory.getLogger(MsgError.class);
@@ -48,7 +49,7 @@ public class MsgError extends MessageBase {
         }
         if (Config.logDanaMessageDetail)
             log.debug("Error detected: " + errorString);
-        MainApp.getConfigBuilder().uploadError(errorString);
+        NSUpload.uploadError(errorString);
     }
 
 }

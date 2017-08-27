@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.Overview;
 
+import android.content.Intent;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +11,12 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.Services.AlarmSoundService;
+import info.nightscout.androidaps.plugins.Wear.WearPlugin;
+//Added by Rumen for snooze time 
+import info.nightscout.utils.SP;
 
 /**
  * Created by mike on 03.12.2016.
@@ -17,7 +25,7 @@ import java.util.List;
 public class NotificationStore {
     private static Logger log = LoggerFactory.getLogger(NotificationStore.class);
     public List<Notification> store = new ArrayList<Notification>();
-
+    public long snoozedUntil = 0L;
     public NotificationStore() {
     }
 
@@ -41,26 +49,56 @@ public class NotificationStore {
                 return;
             }
         }
+        if (n.soundId != null) {
+            Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+            alarm.putExtra("soundid", n.soundId);
+            MainApp.instance().startService(alarm);
+        }
         store.add(n);
+
+        WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
+        if(wearPlugin!= null && wearPlugin.isEnabled()) {
+            wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
+        }
+
         Collections.sort(store, new NotificationComparator());
     }
 
-    public void remove(int id) {
+    public boolean remove(int id) {
         for (int i = 0; i < store.size(); i++) {
             if (get(i).id == id) {
+                if (get(i).soundId != null) {
+                    Intent alarm = new Intent(MainApp.instance().getApplicationContext(), AlarmSoundService.class);
+                    MainApp.instance().stopService(alarm);
+                }
                 store.remove(i);
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     public void removeExpired() {
         for (int i = 0; i < store.size(); i++) {
             Notification n = get(i);
-            if (n.validTo.getTime() != 0 && n.validTo.getTime() < new Date().getTime()) {
+            if (n.validTo.getTime() != 0 && n.validTo.getTime() < System.currentTimeMillis()) {
                 store.remove(i);
                 i--;
             }
+        }
+    }
+    
+    public void snoozeTo(long timeToSnooze){
+        log.debug("Snoozing alarm until: "+timeToSnooze);
+        SP.putLong("snoozedTo", timeToSnooze);
+    }
+    
+    public void unSnooze(){
+        if(Notification.isAlarmForStaleData()){
+            Notification notification = new Notification(Notification.NSALARM, MainApp.sResources.getString(R.string.nsalarm_staledata), Notification.URGENT);
+            SP.putLong("snoozedTo", System.currentTimeMillis());
+            add(notification);
+            log.debug("Snoozed to current time and added back notification!");
         }
     }
 }

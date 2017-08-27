@@ -3,6 +3,7 @@ package info.nightscout.utils;
 import android.text.format.DateUtils;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 
 /**
  * The Class DateUtil. A simple wrapper around SimpleDateFormat to ease the handling of iso date string &lt;-&gt; date obj
@@ -23,6 +25,7 @@ public class DateUtil {
      * The date format in iso.
      */
     public static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     /**
      * Takes in an ISO date string of the following format:
@@ -35,8 +38,15 @@ public class DateUtil {
     public static Date fromISODateString(String isoDateString)
             throws Exception {
         SimpleDateFormat f = new SimpleDateFormat(FORMAT_DATE_ISO);
+        Date date;
         f.setTimeZone(TimeZone.getTimeZone("UTC"));
-        Date date = f.parse(isoDateString);
+        try {
+            date = f.parse(isoDateString);
+        } catch (ParseException e) {
+            f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC);
+            f.setTimeZone(TimeZone.getTimeZone("UTC"));
+            date = f.parse(isoDateString);
+        }
         return date;
     }
 
@@ -75,12 +85,16 @@ public class DateUtil {
     }
 
     public static int toSeconds(String hh_colon_mm) {
-        Pattern p = Pattern.compile("(\\d+):(\\d+)");
+        Pattern p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.|)");
         Matcher m = p.matcher(hh_colon_mm);
         int retval = 0;
 
         if (m.find()) {
             retval = SafeParse.stringToInt(m.group(1)) * 60 * 60 + SafeParse.stringToInt(m.group(2)) * 60;
+            if (m.group(3).equals(" .a.m") && m.group(1).equals("12"))
+                retval -= 12 * 60 * 60;
+            if (m.group(3).equals(" p.m.") && !m.group(1).equals("12"))
+                retval += 12 * 60 * 60;
         }
         return retval;
     }
@@ -111,4 +125,10 @@ public class DateUtil {
     public static String dateAndTimeString(long mills) {
         return dateString(mills) + " " + timeString(mills);
     }
+
+    public static String minAgo(long time) {
+        int mins = (int) ((System.currentTimeMillis() - time) / 1000 / 60);
+        return String.format(MainApp.sResources.getString(R.string.minago), mins);
+    }
+
 }

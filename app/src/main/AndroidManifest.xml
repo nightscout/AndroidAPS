@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
+
     <uses-permission-sdk-23 android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
 
     <!-- To receive data from xdrip. -->
@@ -41,14 +42,11 @@
             android:name=".plugins.Overview.Dialogs.BolusProgressHelperActivity"
             android:theme="@style/Theme.AppCompat.Translucent" />
         <activity android:name=".AgreementActivity" />
-        <activity android:name=".plugins.PumpDanaR.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRHistoryActivity" />
-        <activity android:name=".plugins.PumpDanaR.History.DanaRStatsActivity" />
-        <activity android:name=".plugins.PumpDanaRKorean.History.DanaRStatsActivity" />
+        <activity android:name=".plugins.PumpDanaR.activities.DanaRHistoryActivity" />
+        <activity android:name=".plugins.PumpDanaR.activities.DanaRStatsActivity" />
         <activity android:name=".plugins.Overview.activities.QuickWizardListActivity">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.Overview.activities.QuickWizardListActivity" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -58,17 +56,6 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-
-                <!-- Receiver from NSClient -->
-                <action android:name="info.nightscout.client.NEW_SGV" />
-                <action android:name="info.nightscout.client.NEW_TREATMENT" />
-                <action android:name="info.nightscout.client.CHANGED_TREATMENT" />
-                <action android:name="info.nightscout.client.REMOVED_TREATMENT" />
-                <action android:name="info.nightscout.client.NEW_PROFILE" />
-                <action android:name="info.nightscout.client.NEW_STATUS" />
-                <action android:name="info.nightscout.client.NEW_MBG" />
-                <action android:name="info.nightscout.client.NEW_DEVICESTATUS" />
-                <action android:name="info.nightscout.client.NEW_CAL" />
                 <!-- Receive new SMS messages -->
                 <action android:name="android.provider.Telephony.SMS_RECEIVED" />
                 <!-- Receiver from xDrip -->
@@ -79,7 +66,6 @@
                 <action android:name="it.ct.glicemia.ACTION_GLUCOSE_MEASURED" />
             </intent-filter>
         </receiver>
-
         <!-- Receiver keepalive, scheduled every 30 min -->
         <receiver android:name=".receivers.KeepAliveReceiver" />
 
@@ -116,11 +102,15 @@
             android:name=".Services.DataService"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaR.Services.ExecutionService"
+            android:name=".plugins.PumpDanaR.services.DanaRExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
-            android:name=".plugins.PumpDanaRKorean.Services.ExecutionService"
+            android:name=".plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService"
+            android:enabled="true"
+            android:exported="false" />
+        <service
+            android:name=".plugins.PumpDanaRv2.services.DanaRv2ExecutionService"
             android:enabled="true"
             android:exported="false" />
         <service
@@ -130,15 +120,18 @@
                 <action android:name="com.google.android.gms.wearable.BIND_LISTENER" />
             </intent-filter>
         </service>
-
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
-
         <service
             android:name=".plugins.NSClientInternal.services.NSClientService"
             android:enabled="true"
             android:exported="true" />
+        <service
+            android:name=".Services.AlarmSoundService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="59d462666c664c57b29e1d79ea123e01f8057cfa" />
 
     </application>
 

@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.PumpMDI;
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -13,13 +11,12 @@ import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
-import info.nightscout.androidaps.db.TempBasal;
-import info.nightscout.androidaps.interfaces.InsulinInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
-import info.nightscout.androidaps.plugins.NSClientInternal.data.NSProfile;
 import info.nightscout.utils.DateUtil;
 
 /**
@@ -33,37 +30,27 @@ public class MDIPlugin implements PluginBase, PumpInterface {
 
     PumpDescription pumpDescription = new PumpDescription();
 
+    static MDIPlugin plugin = null;
+
+    public static MDIPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new MDIPlugin();
+        return plugin;
+    }
+
     public MDIPlugin() {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.5d;
 
         pumpDescription.isExtendedBolusCapable = false;
-        pumpDescription.extendedBolusStep = 0d;
-
         pumpDescription.isTempBasalCapable = false;
-        pumpDescription.lowTempBasalStyle = PumpDescription.NONE;
-        pumpDescription.highTempBasalStyle = PumpDescription.NONE;
-        pumpDescription.maxHighTempPercent = 0;
-        pumpDescription.maxHighTempAbsolute = 0;
-        pumpDescription.lowTempPercentStep = 0;
-        pumpDescription.lowTempAbsoluteStep = 0;
-        pumpDescription.lowTempPercentDuration = 0;
-        pumpDescription.lowTempAbsoluteDuration = 0;
-        pumpDescription.highTempPercentStep = 0;
-        pumpDescription.highTempAbsoluteStep = 0d;
-        pumpDescription.highTempPercentDuration = 0;
-        pumpDescription.highTempAbsoluteDuration = 0;
-
         pumpDescription.isSetBasalProfileCapable = false;
-        pumpDescription.basalStep = 0d;
-        pumpDescription.basalMinimumRate = 0d;
-
         pumpDescription.isRefillingCapable = false;
     }
 
     @Override
     public String getFragmentClass() {
-        return MDIFragment.class.getName();
+        return null;
     }
 
     @Override
@@ -118,6 +105,11 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
+    public boolean isFakingTempsByExtendedBoluses() {
+        return false;
+    }
+
+    @Override
     public boolean isInitialized() {
         return true;
     }
@@ -133,23 +125,13 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public boolean isTempBasalInProgress() {
-        return false;
-    }
-
-    @Override
-    public boolean isExtendedBoluslInProgress() {
-        return false;
-    }
-
-    @Override
-    public int setNewBasalProfile(NSProfile profile) {
+    public int setNewBasalProfile(Profile profile) {
         // Do nothing here. we are using MainApp.getConfigBuilder().getActiveProfile().getProfile();
         return SUCCESS;
     }
 
     @Override
-    public boolean isThisProfileSet(NSProfile profile) {
+    public boolean isThisProfileSet(Profile profile) {
         return false;
     }
 
@@ -169,37 +151,13 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public double getTempBasalAbsoluteRate() {
-        return 0;
-    }
-
-    @Override
-    public TempBasal getTempBasal() {
-        return null;
-    }
-
-    @Override
-    public TempBasal getExtendedBolus() {
-        return null;
-    }
-
-    @Override
-    public double getTempBasalRemainingMinutes() {
-        return 0d;
-    }
-
-    @Override
-    public TempBasal getTempBasal(Date time) {
-        return null;
-    }
-
-    @Override
-    public PumpEnactResult deliverTreatment(InsulinInterface insulinType, Double insulin, Integer carbs, Context context) {
+    public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = true;
-        result.bolusDelivered = insulin;
-        result.carbsDelivered = carbs;
+        result.bolusDelivered = detailedBolusInfo.insulin;
+        result.carbsDelivered = detailedBolusInfo.carbs;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
+        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
         return result;
     }
 
@@ -208,7 +166,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes) {
+    public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.pumperror);
@@ -238,7 +196,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
     }
 
     @Override
-    public PumpEnactResult cancelTempBasal() {
+    public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         result.success = false;
         result.comment = MainApp.instance().getString(R.string.pumperror);
@@ -266,7 +224,7 @@ public class MDIPlugin implements PluginBase, PumpInterface {
             status.put("status", "normal");
             extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getActiveProfile().getProfile().getActiveProfile());
+                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
             status.put("timestamp", DateUtil.toISOString(new Date()));
