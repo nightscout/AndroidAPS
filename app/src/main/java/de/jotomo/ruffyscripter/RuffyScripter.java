@@ -46,9 +46,11 @@ public class RuffyScripter {
 
     private final Object screenlock = new Object();
 
+    private final Object keylock = new Object();
+    private int keynotwait = 0;
+
     public void start(IRuffyService newService) {
         try {
-/*
             if (ruffyService != null) {
                 try {
                     ruffyService.removeHandler(mHandler);
@@ -56,7 +58,6 @@ public class RuffyScripter {
                     // ignore
                 }
             }
-*/
             if (newService != null) {
                 this.ruffyService = newService;
                 // TODO this'll be done better in v2 via ConnectionManager
@@ -64,7 +65,7 @@ public class RuffyScripter {
                     idleDisconnectMonitorThread.start();
                 }
                 started = true;
-                newService.setHandler(mHandler);
+                newService.addHandler(mHandler);
             }
         } catch (Exception e) {
             log.error("Unhandled exception starting RuffyScripter", e);
@@ -77,6 +78,7 @@ public class RuffyScripter {
     }
 
     private volatile boolean connected = false;
+    private volatile boolean canDisconnect = false;
     private volatile long lastDisconnected = 0;
 
     private Thread idleDisconnectMonitorThread = new Thread(new Runnable() {
@@ -92,7 +94,8 @@ public class RuffyScripter {
                             && now > lastDisconnected + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
                         lastDisconnected = now;
-                        ruffyService.doRTDisconnect();
+                        canDisconnect = true;
+                        ruffyService.doRTDisconnect(mHandler);
                         connected = false;
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
@@ -128,6 +131,11 @@ public class RuffyScripter {
         }
 
         @Override
+        public boolean canDisconnect() throws RemoteException {
+            return canDisconnect;
+        }
+
+        @Override
         public void rtStopped() throws RemoteException {
             log.debug("rtStopped callback invoked");
             currentMenu = null;
@@ -149,7 +157,7 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleMenu(Menu menu) throws RemoteException {
+        public void rtDisplayHandleMenu(Menu menu, int sequence) throws RemoteException {
             // method is called every ~500ms
             log.debug("rtDisplayHandleMenu: " + menu);
 
@@ -172,9 +180,26 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleNoMenu() throws RemoteException {
+        public void rtDisplayHandleNoMenu(int sequence) throws RemoteException {
             log.debug("rtDisplayHandleNoMenu callback invoked");
         }
+
+
+        @Override
+        public void keySent(int sequence) throws RemoteException {
+            synchronized (keylock) {
+                if (keynotwait > 0)
+                    keynotwait--;
+                else
+                    keylock.notify();
+            }
+        }
+
+        @Override
+        public String getServiceIdentifier() throws RemoteException {
+            return this.toString();
+        }
+
     };
 
     public boolean isPumpBusy() {
@@ -182,14 +207,12 @@ public class RuffyScripter {
     }
 
     public void unbind() {
-        /*
         if (ruffyService != null)
             try {
                 ruffyService.removeHandler(mHandler);
             } catch (Exception e) {
                 // ignore
             }
-            */
         this.ruffyService = null;
     }
 
@@ -352,7 +375,8 @@ public class RuffyScripter {
                 SystemClock.sleep(10 * 1000);
             }
 
-            boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
+            canDisconnect = false;
+            boolean connectInitSuccessful = ruffyService.doRTConnect(mHandler) == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
             log.debug("Waiting for first menu update to be sent");
             // Note: there was an 'if(currentMenu == null)' around the next call, since
