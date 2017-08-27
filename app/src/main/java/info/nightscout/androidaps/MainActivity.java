@@ -95,9 +95,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (ev.lock) {
             mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
-            mWakeLock.acquire();
+            if (!mWakeLock.isHeld())
+                mWakeLock.acquire();
         } else {
-            if (mWakeLock != null)
+            if (mWakeLock != null && mWakeLock.isHeld())
                 mWakeLock.release();
         }
     }
