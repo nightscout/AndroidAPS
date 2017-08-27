@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 
@@ -213,6 +212,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
+                    // TODO stop?
                     log.debug("ruffy service disconnected");
                     // try to reconnect ruffy service unless unbind was explicitly requested
                     // via unbindRuffyService
