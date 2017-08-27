@@ -206,7 +206,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onDestroy() {
         if (mWakeLock != null)
-            mWakeLock.release();
+            if (mWakeLock.isHeld())
+                mWakeLock.release();
         super.onDestroy();
     }
 
