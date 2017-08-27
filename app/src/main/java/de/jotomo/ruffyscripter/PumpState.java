@@ -11,16 +11,18 @@ public class PumpState {
     public int tbrPercent = -1;
     public double tbrRate = -1;
     public int tbrRemainingDuration = -1;
-    /** This is the error message (if any) displayed by the pump if there is an alarm,
-       e.g. if a "TBR cancelled alarm" is active, the value will be "TBR CANCELLED".
-       Generally, an error code is also displayed, but it flashes and it might take
-       longer to read that and the pump connection gets interrupted if we're not
-       reacting quickly.
+    /**
+     * This is the error message (if any) displayed by the pump if there is an alarm,
+     * e.g. if a "TBR cancelled alarm" is active, the value will be "TBR CANCELLED".
+     * Generally, an error code is also displayed, but it flashes and it might take
+     * longer to read that and the pump connection gets interrupted if we're not
+     * reacting quickly.
      */
     public String errorMsg;
     public boolean suspended;
     public boolean lowBattery;
-    public int insulinState;
+    public int insulinState = -1;
+    public int reservoirLevel = -1;
 
     public PumpState tbrActive(boolean tbrActive) {
         this.tbrActive = tbrActive;
@@ -52,6 +54,21 @@ public class PumpState {
         return this;
     }
 
+    public PumpState lowBattery(boolean lowBattery) {
+        this.lowBattery = lowBattery;
+        return this;
+    }
+
+    public PumpState insulinState(int insulinState) {
+        this.insulinState = insulinState;
+        return this;
+    }
+
+    public PumpState reservoirLevel(int reservoirLevel) {
+        this.reservoirLevel = reservoirLevel;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "PumpState{" +
@@ -63,6 +80,7 @@ public class PumpState {
                 ", suspended=" + suspended +
                 ", lowBattery=" + lowBattery +
                 ", insulinState=" + insulinState +
+                ", reversoirLevel=" + reservoirLevel +
                 ", timestamp=" + timestamp +
                 '}';
     }

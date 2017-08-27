@@ -5,13 +5,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.IBinder;
 import android.os.SystemClock;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
@@ -29,12 +27,11 @@ import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
+import de.jotomo.ruffyscripter.commands.CancellableBolusCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
-import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
+import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
-import de.jotomo.ruffyscripter.commands.SetTbrCommandAlt;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
@@ -49,10 +46,15 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.ToastUtils;
+
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERED;
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERING;
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPED;
+import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPING;
 
 /**
  * Created by mike on 05.08.2016.
@@ -69,16 +71,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private RuffyScripter ruffyScripter;
     private ServiceConnection mRuffyServiceConnection;
 
-    // package-protected only so ComboFragment can access these
-    @NonNull
-    volatile String statusSummary = "Initializing";
+    private ComboPump pump = new ComboPump();
+
     @Nullable
-    volatile Command lastCmd;
-    @Nullable
-    volatile CommandResult lastCmdResult;
-    @NonNull
-    volatile Date lastCmdTime = new Date(0);
-    volatile PumpState pumpState = new PumpState();
+    private volatile BolusCommand runningBolusCommand;
 
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
@@ -100,7 +96,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
-        pumpDescription.isExtendedBolusCapable = false; // TODO
+        pumpDescription.isExtendedBolusCapable = false;
         pumpDescription.extendedBolusStep = 0.1d;
         pumpDescription.extendedBolusDurationStep = 15;
         pumpDescription.extendedBolusMaxDuration = 12 * 60;
@@ -115,18 +111,22 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.tempMaxDuration = 24 * 60;
 
 
-        pumpDescription.isSetBasalProfileCapable = false; // TODO
+        pumpDescription.isSetBasalProfileCapable = false; // TODO GL#14
         pumpDescription.basalStep = 0.01d;
         pumpDescription.basalMinimumRate = 0.0d;
 
         pumpDescription.isRefillingCapable = true;
     }
 
+    public ComboPump getPump() {
+        return pump;
+    }
+
     /**
      * The alerter frequently checks the result of the last executed command via the lastCmdResult
      * field and shows a notification with sound and vibration if an error occurred.
      * More details on the error can then be looked up in the Combo tab.
-     *
+     * <p>
      * The alarm is re-raised every 5 minutes for as long as the error persist. As soon
      * as a command succeeds no more new alerts are raised.
      */
@@ -139,15 +139,15 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 int id = 1000;
                 long lastAlarmTime = 0;
                 while (true) {
-                    Command localLastCmd = lastCmd;
-                    CommandResult localLastCmdResult = lastCmdResult;
+                    Command localLastCmd = pump.lastCmd;
+                    CommandResult localLastCmdResult = pump.lastCmdResult;
                     if (localLastCmdResult != null && !localLastCmdResult.success) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         if (now > fiveMinutesSinceLastAlarm) {
                             log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
-                            PumpState localPumpState = pumpState;
+                            PumpState localPumpState = pump.state;
                             if (localPumpState != null && localPumpState.errorMsg != null) {
                                 log.warn("Pump is in error state, displaying; " + localPumpState.errorMsg);
                             }
@@ -189,10 +189,11 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                             // this must be the base package of the app (check package attribute in
                             // manifest element in the manifest file of the providing app)
                             "org.monkey.d.ruffy.ruffy",
-                            // full path to the driver
+                            // full path to the driver;
                             // in the logs this service is mentioned as (note the slash)
-                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy"
-                            //org.monkey.d.ruffy.ruffy is the base package identifier and /.driver.Ruffy the service within the package
+                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy";
+                            // org.monkey.d.ruffy.ruffy is the base package identifier
+                            // and /.driver.Ruffy the service within the package
                             "org.monkey.d.ruffy.ruffy.driver.Ruffy"
                     ));
             context.startService(intent);
@@ -201,18 +202,18 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    keepUnbound=false;
+                    keepUnbound = false;
                     ruffyScripter.start(IRuffyService.Stub.asInterface(service));
                     log.debug("ruffy serivce connected");
                 }
 
                 @Override
                 public void onServiceDisconnected(ComponentName name) {
-                    ruffyScripter.stop();
+                    // TODO stop?
                     log.debug("ruffy service disconnected");
-                    // try to reconnect ruffy service unless unbind was explicitely requested
+                    // try to reconnect ruffy service unless unbind was explicitly requested
                     // via unbindRuffyService
-                    if(!keepUnbound) {
+                    if (!keepUnbound) {
                         SystemClock.sleep(250);
                         bindRuffyService();
                     }
@@ -224,12 +225,13 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         if (!boundSucceeded) {
-            statusSummary = "No connection to ruffy. Pump control not available.";
+            pump.stateSummary = "No connection to ruffy. Pump control unavailable.";
         }
         return true;
     }
 
     private boolean keepUnbound = false;
+
     private void unbindRuffyService() {
         keepUnbound = true;
         ruffyScripter.unbind();
@@ -301,17 +303,17 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     public boolean isInitialized() {
         // consider initialized when the pump's state was initially fetched,
         // after that lastCmd* variables will have values
-        return lastCmdTime.getTime() > 0;
+        return pump.lastCmdTime.getTime() > 0;
     }
 
     @Override
     public boolean isSuspended() {
-        return pumpState != null && pumpState.suspended;
+        return pump.state != null && pump.state.suspended;
     }
 
     @Override
     public boolean isBusy() {
-        return ruffyScripter == null || ruffyScripter.isPumpBusy();
+        return ruffyScripter.isPumpBusy();
     }
 
     // TODO
@@ -328,7 +330,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public Date lastDataTime() {
-        return lastCmdTime;
+        return pump.lastCmdTime;
     }
 
     // this method is regularly called from info.nightscout.androidaps.receivers.KeepAliveReceiver
@@ -337,18 +339,18 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         log.debug("RefreshDataFromPump called");
 
         // if Android is sluggish this might get called before ruffy is bound
-        if (ruffyScripter == null) {
-            log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
+        if (!ruffyScripter.isRunning()) {
+            log.warn("Rejecting call to RefreshDataFromPump: scripter not ready yet.");
             return;
         }
 
         boolean notAUserRequest = !reason.toLowerCase().contains("user");
-        boolean wasRunAtLeastOnce = lastCmdTime.getTime() > 0;
-        boolean ranWithinTheLastMinute = System.currentTimeMillis() < lastCmdTime.getTime() + 60 * 1000;
+        boolean wasRunAtLeastOnce = pump.lastCmdTime.getTime() > 0;
+        boolean ranWithinTheLastMinute = System.currentTimeMillis() < pump.lastCmdTime.getTime() + 60 * 1000;
         if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
-            runCommand(new ReadPumpStateCommand());
+            runCommand(new GetPumpStateCommand());
         }
     }
 
@@ -362,8 +364,31 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    // what a mess: pump integration code reading carb info from Detailed**Bolus**Info,
-    // writing carb treatments to the history table. What's PumpEnactResult for again?
+    private static CancellableBolusCommand.ProgressReportCallback bolusProgressReportCallback =
+            new CancellableBolusCommand.ProgressReportCallback() {
+        @Override
+        public void report(CancellableBolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
+            EventOverviewBolusProgress enent = EventOverviewBolusProgress.getInstance();
+            switch (state) {
+                case DELIVERING:
+                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
+                    break;
+                case DELIVERED:
+                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), delivered);
+                    break;
+                case STOPPING:
+                    enent.status = MainApp.sResources.getString(R.string.bolusstopping);
+                    break;
+                case STOPPED:
+                    enent.status = MainApp.sResources.getString(R.string.bolusstopped);
+                    break;
+            }
+            enent.percent = percent;
+            MainApp.bus().post(enent);
+        }
+    };
+
+    /** Updates Treatment records with carbs and boluses and delivers a bolus if needed */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
@@ -378,7 +403,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     pumpEnactResult.enacted = true;
                     pumpEnactResult.bolusDelivered = 0d;
                     pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-                    pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
 
                     double remainingBolus = detailedBolusInfo.insulin;
                     int split = 1;
@@ -413,6 +437,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
                 pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
                 MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
+
+                EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
+                bolusingEvent.percent = 100;
+                MainApp.bus().post(bolusingEvent);
                 return pumpEnactResult;
             }
         } else {
@@ -430,7 +458,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @NonNull
     private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
-        CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
+        runningBolusCommand = Config.comboExperimentalBolus
+                ? new CancellableBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
+                : new BolusCommand(detailedBolusInfo.insulin);
+        CommandResult bolusCmdResult = runCommand(runningBolusCommand);
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = bolusCmdResult.success;
         pumpEnactResult.enacted = bolusCmdResult.enacted;
@@ -454,14 +485,20 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return pumpEnactResult;
     }
 
+    @Override
+    public void stopBolusDelivering() {
+        BolusCommand localRunningBolusCommand = runningBolusCommand;
+        if (localRunningBolusCommand != null) localRunningBolusCommand.requestCancellation();
+    }
+
     private CommandResult runCommand(Command command) {
         if (ruffyScripter == null) {
             String msg = "No connection to ruffy. Pump control not available.";
-            statusSummary = msg;
+            pump.stateSummary = msg;
             return new CommandResult().message(msg);
         }
 
-        statusSummary = "Executing " + command;
+        pump.stateSummary = "Executing " + command;
         MainApp.bus().post(new EventComboPumpUpdateGUI());
 
         CommandResult commandResult = ruffyScripter.runCommand(command);
@@ -470,28 +507,21 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             log.error("Exception received from pump", commandResult.exception);
         }
 
-        lastCmd = command;
-        lastCmdTime = new Date();
-        lastCmdResult = commandResult;
-        pumpState = commandResult.state;
+        pump.lastCmd = command;
+        pump.lastCmdTime = new Date();
+        pump.lastCmdResult = commandResult;
+        pump.state = commandResult.state;
 
         if (commandResult.success && commandResult.state.suspended) {
-            statusSummary = "Suspended";
+            pump.stateSummary = "Suspended";
         } else if (commandResult.success) {
-            statusSummary = "Idle";
+            pump.stateSummary = "Idle";
         } else {
-            statusSummary = "Error";
+            pump.stateSummary = "Error";
         }
 
         MainApp.bus().post(new EventComboPumpUpdateGUI());
         return commandResult;
-    }
-
-    @Override
-    public void stopBolusDelivering() {
-        // there's no way to stop the combo once delivery has started
-        // but before that, we could interrupt the command thread ... pause
-        // till pump times out or raises an error
     }
 
     // Note: AAPS calls this only to enact OpenAPS recommendations
@@ -528,10 +558,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             adjustedPercent = rounded.intValue();
         }
 
-        Command cmd = !Config.comboUseAlternateSetTbrCommand
-                ? new SetTbrCommand(adjustedPercent, durationInMinutes)
-                : new SetTbrCommandAlt(adjustedPercent, durationInMinutes);
-        CommandResult commandResult = runCommand(cmd);
+        CommandResult commandResult = runCommand(new SetTbrCommand(adjustedPercent, durationInMinutes));
 
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
@@ -584,7 +611,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 tempBasal.source = Source.USER;
                 pumpEnactResult.isTempCancel = true;
             }
-        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15 ) {
+        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep running (see below)
             log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
             pumpEnactResult.comment = "cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.";
@@ -597,7 +624,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         } else {
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
-            long percentage = (activeTemp.percentRate > 100) ? 110:90;
+            long percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing tbr to " + percentage + "% for 15 mins.");
             commandResult = runCommand(new SetTbrCommand(percentage, 15));
             if (commandResult.enacted) {
@@ -622,7 +649,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return pumpEnactResult;
     }
 
-    // TODO
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         return OPERATION_NOT_SUPPORTED;
@@ -632,41 +658,41 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO v2 add battery, reservoir info when we start reading that and clean up the code
     @Override
     public JSONObject getJSONStatus() {
-        if (lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (true) { //pump.lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
 
         try {
-            JSONObject pump = new JSONObject();
-            JSONObject status = new JSONObject();
-            JSONObject extended = new JSONObject();
-            status.put("status", statusSummary);
-            extended.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
+            JSONObject pumpJson = new JSONObject();
+            JSONObject statusJson = new JSONObject();
+            JSONObject extendedJson = new JSONObject();
+            statusJson.put("status", pump.stateSummary);
+            extendedJson.put("Version", BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION);
             try {
-                extended.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
+                extendedJson.put("ActiveProfile", MainApp.getConfigBuilder().getProfileName());
             } catch (Exception e) {
             }
-            status.put("timestamp", lastCmdTime);
+            statusJson.put("timestamp", pump.lastCmdTime);
 
-            PumpState ps = pumpState;
+            PumpState ps = pump.state;
             if (ps != null) {
                 if (ps.tbrActive) {
-                    extended.put("TempBasalAbsoluteRate", ps.tbrRate);
-                    extended.put("TempBasalPercent", ps.tbrPercent);
-                    extended.put("TempBasalRemaining", ps.tbrRemainingDuration);
+                    extendedJson.put("TempBasalAbsoluteRate", ps.tbrRate);
+                    extendedJson.put("TempBasalPercent", ps.tbrPercent);
+                    extendedJson.put("TempBasalRemaining", ps.tbrRemainingDuration);
                 }
                 if (ps.errorMsg != null) {
-                    extended.put("ErrorMessage", ps.errorMsg);
+                    extendedJson.put("ErrorMessage", ps.errorMsg);
                 }
             }
 
 // more info here .... look at dana plugin
 
-            pump.put("status", status);
-            pump.put("extended", extended);
-            pump.put("clock", DateUtil.toISOString(lastCmdTime));
+            pumpJson.put("status", statusJson);
+            pumpJson.put("extended", extendedJson);
+            pumpJson.put("clock", DateUtil.toISOString(pump.lastCmdTime));
 
-            return pump;
+            return pumpJson;
         } catch (Exception e) {
             log.warn("Failed to gather device status for upload", e);
         }
@@ -688,7 +714,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @Override
     public String shortStatus(boolean veryShort) {
-        return statusSummary;
+        // TODO trim for wear if veryShort==true
+        return pump.stateSummary;
     }
 
     @Override
@@ -698,40 +725,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @SuppressWarnings("UnusedParameters")
     @Subscribe
-    public void onStatusEvent(final EventAppExit e) {
+    public void onStatusEvent(final EventAppExit ignored) {
         unbindRuffyService();
     }
-
-
-    public void updateCapabilities() {
-
-        // if Android is sluggish this might get called before ruffy is bound
-        if (ruffyScripter == null) {
-            log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
-            ToastUtils.showToastInUiThread(MainApp.instance(), "Ruffy not initialized.");
-            return;
-        }
-        if (isBusy()){
-            ToastUtils.showToastInUiThread(MainApp.instance(), "Pump busy!");
-            return;
-        }
-        CommandResult result = runCommand(new DetermineCapabilitiesCommand());
-        if (result.success){
-            pumpDescription.maxTempPercent = (int) result.capabilities.maxTempPercent;
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt(COMBO_MAX_TEMP_PERCENT_SP, pumpDescription.maxTempPercent);
-            editor.commit();
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
-        } else {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "No success.");
-        }
-    }
-
-
 }
-
-
-// If you want update fragment call
-//        MainApp.bus().post(new EventComboPumpUpdateGUI());
-// fragment should fetch data from plugin and display status, buttons etc ...

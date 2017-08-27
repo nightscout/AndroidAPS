@@ -11,13 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-public class BolusCommand implements Command {
+public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
-    private final double bolus;
+    protected final double bolus;
 
     public BolusCommand(double bolus) {
         this.bolus = bolus;
@@ -35,7 +34,7 @@ public class BolusCommand implements Command {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute() {
         try {
             enterBolusMenu(scripter);
 
@@ -55,12 +54,19 @@ public class BolusCommand implements Command {
 
             // wait for bolus delivery to complete; the remaining units to deliver are counted
             // down and are displayed on the main menu.
-            Double bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
+            Double bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             while (bolusRemaining != null) {
                 log.debug("Delivering bolus, remaining: " + bolusRemaining);
                 SystemClock.sleep(200);
-                bolusRemaining = (Double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS_REMAINING);
+                if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                    throw new CommandException().success(false).enacted(true)
+                            .message("Warning/error raised after bolus delivery started. " +
+                                    "The treatment has been recorded, please check it against the " +
+                                    "pumps records and delete it if it hasn't finished successfully.");
+                }
+                bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
+
 
             // TODO what if we hit 'cartridge low' alert here? is it immediately displayed or after the bolus?
             // TODO how are error states reported back to the caller that occur outside of calls in genal? Low battery, low cartridge?
@@ -75,16 +81,16 @@ public class BolusCommand implements Command {
             scripter.navigateToMenu(MenuType.MY_DATA_MENU);
             scripter.verifyMenuIsDisplayed(MenuType.MY_DATA_MENU);
             scripter.pressCheckKey();
-            if (scripter.currentMenu.getType() != MenuType.BOLUS_DATA) {
+            if (scripter.getCurrentMenu().getType() != MenuType.BOLUS_DATA) {
                 scripter.waitForMenuUpdate();
             }
 
-            if (!scripter.currentMenu.attributes().contains(MenuAttribute.BOLUS)) {
+            if (!scripter.getCurrentMenu().attributes().contains(MenuAttribute.BOLUS)) {
                 throw new CommandException().success(false).enacted(true)
                         .message("Bolus was delivered, but unable to confirm it with history record");
             }
 
-            double lastBolusInHistory = (double) scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+            double lastBolusInHistory = (double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
             if (Math.abs(bolus - lastBolusInHistory) > 0.05) {
                 throw new CommandException().success(false).enacted(true)
                         .message("Last bolus shows " + lastBolusInHistory
@@ -150,10 +156,10 @@ public class BolusCommand implements Command {
         // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         // bolus amount is blinking, so we need to make sure we catch it at the right moment
-        Object amountObj = scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+        Object amountObj = scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
         while (!(amountObj instanceof Double)) {
             scripter.waitForMenuUpdate();
-            amountObj = scripter.currentMenu.getAttribute(MenuAttribute.BOLUS);
+            amountObj = scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
         }
         return (double) amountObj;
     }

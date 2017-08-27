@@ -440,7 +440,7 @@ public class ActionStringHandler {
                 ret += "OPEN LOOP\n";
             }
             final APSInterface aps = MainApp.getConfigBuilder().getActiveAPS();
-            ret += "APS: " + ((aps == null) ? "NO APS SELECTED!" : ((PluginBase) aps).getName());
+            ret += "APS: " + ((aps == null) ? R.string.noapsselected : ((PluginBase) aps).getName());
             if (activeloop.lastRun != null) {
                 if (activeloop.lastRun.lastAPSRun != null)
                     ret += "\nLast Run: " + DateUtil.timeString(activeloop.lastRun.lastAPSRun);

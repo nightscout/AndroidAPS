@@ -6,7 +6,8 @@ public class CommandException extends RuntimeException {
     public Exception exception = null;
     public String message = null;
 
-    public CommandException() {}
+    public CommandException() {
+    }
 
     public CommandException success(boolean success) {
         this.success = success;

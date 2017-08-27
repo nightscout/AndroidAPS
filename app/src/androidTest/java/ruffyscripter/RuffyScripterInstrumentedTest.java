@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import de.jotomo.ruffyscripter.RuffyScripter;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.ReadPumpStateCommand;
+import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertNotNull;
@@ -99,7 +99,7 @@ public class RuffyScripterInstrumentedTest {
     // TODO now, how to get ruffy fired up in this test?
     @Test
     public void readPumpState() throws Exception {
-        CommandResult commandResult = ruffyScripter.runCommand(new ReadPumpStateCommand());
+        CommandResult commandResult = ruffyScripter.runCommand(new GetPumpStateCommand());
         assertTrue(commandResult.success);
         assertFalse(commandResult.enacted);
         assertNotNull(commandResult.state);

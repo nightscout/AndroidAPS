@@ -10,15 +10,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.jotomo.ruffyscripter.PumpState;
 import de.jotomo.ruffyscripter.RuffyScripter;
 
-public class GetBasalCommand implements Command {
-    private static final Logger log = LoggerFactory.getLogger(GetBasalCommand.class);
+public class GetBasalRateProfileCommand extends BaseCommand {
+    private static final Logger log = LoggerFactory.getLogger(GetBasalRateProfileCommand.class);
 
     private RuffyScripter scripter;
 
-    public GetBasalCommand() {}
+    public GetBasalRateProfileCommand() {}
 
     @Override
     public List<String> validateArguments() {
@@ -27,7 +26,7 @@ public class GetBasalCommand implements Command {
         return violations;
     }
 
-//    private void tick()
+    //    private void tick()
 //    {
 //        switch (state)
 //        {
@@ -95,24 +94,23 @@ public class GetBasalCommand implements Command {
 //            case ERROR:
 //            case AFTER:
 //                scripter.goToMainMenuScreen(MenuType.MAIN_MENU,2000);
-//                synchronized(GetBasalCommand.this) {
-//                    GetBasalCommand.this.notify();
+//                synchronized(GetBasalRateProfileCommand.this) {
+//                    GetBasalRateProfileCommand.this.notify();
 //                }
 //                break;
 //        }
 //    }
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute() {
         try {
-            Map<Integer,Double> rate = new HashMap<>();
+            Map<Integer, Double> rate = new HashMap<>();
 
-            for(int i = 0; i < 24;i++)
-            {
-                Log.v("BASAL_RATE","BASAL_RATE from "+String.format("%02d",i)+":00 = "+rate.get(i));
+            for (int i = 0; i < 24; i++) {
+                Log.v("BASAL_RATE", "BASAL_RATE from " + String.format("%02d", i) + ":00 = " + rate.get(i));
             }
         } catch (Exception e) {
-            log.error("failed to get basal",e);
-            return new CommandResult().success(false).message("failed to get basal: "+e.getMessage());
+            log.error("failed to get basal", e);
+            return new CommandResult().success(false).message("failed to get basal: " + e.getMessage());
         }
         return new CommandResult().success(true).enacted(true).message("Basal Rate was read");
     }

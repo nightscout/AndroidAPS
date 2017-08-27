@@ -13,15 +13,8 @@ import java.util.List;
 import java.util.Locale;
 
 import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.RuffyScripter;
 
-import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.MAIN_MENU;
-import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_DURATION;
-import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_MENU;
-import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.TBR_SET;
-import static org.monkey.d.ruffy.ruffy.driver.display.MenuType.WARNING_OR_ERROR;
-
-public class SetTbrCommand implements Command {
+public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
 
     private final long percentage;
@@ -60,207 +53,249 @@ public class SetTbrCommand implements Command {
     }
 
     @Override
-    public CommandResult execute(RuffyScripter scripter, PumpState initialPumpState) {
+    public CommandResult execute() {
         try {
-            log.debug("1. going from " + scripter.currentMenu + " to TBR_MENU");
-            int retries = 5;
-            while (!scripter.goToMainTypeScreen(TBR_MENU, 3000)) {
-                retries--;
-                if (retries == 0)
-                    throw new CommandException().message("not able to find TBR_MENU: stuck in " + scripter.currentMenu);
-                SystemClock.sleep(500);
-                if (scripter.currentMenu.getType() == TBR_MENU)
-                    break;
+            boolean cancellingTbr = percentage == 100;
+            PumpState pumpState = scripter.readPumpState();
+
+            // TODO hack, cancelling a TBR that isn't running is dealt with in CancelTbrCommand,
+            // this avoids setting a TBR twice until that AAPS bug is squished which calls this
+            // twice within a minute GL#27
+            if (!cancellingTbr
+                    && pumpState.tbrActive
+                    && pumpState.tbrPercent == percentage
+                    && (pumpState.tbrRemainingDuration == duration || pumpState.tbrRemainingDuration + 1 == duration)) {
+                        return new CommandResult().success(true).enacted(false).message("Requested TBR already running");
             }
 
-            if (scripter.currentMenu.getType() != TBR_MENU)
-                throw new CommandException().message("not able to find TBR_MENU: stuck in " + scripter.currentMenu);
+            enterTbrMenu();
+            boolean increasingPercentage = inputTbrPercentage();
+            verifyDisplayedTbrPercentage(increasingPercentage);
 
-            log.debug("2. entering " + scripter.currentMenu);
-            retries = 5;
-            while (!scripter.enterMenu(TBR_MENU, MenuType.TBR_SET, RuffyScripter.Key.CHECK, 2000)) {
-                retries--;
-                if (retries == 0)
-                    throw new CommandException().message("not able to find TBR_SET: stuck in " + scripter.currentMenu);
-                SystemClock.sleep(500);
-                if (scripter.currentMenu.getType() == TBR_SET)
-                    break;
-                if (scripter.currentMenu.getType() == TBR_DURATION) {
-                    scripter.pressMenuKey();
-                    scripter.waitForScreenUpdate(1000);
-                }
-            }
+            if (cancellingTbr) {
+                cancelTbrAndConfirmCancellationWarning();
+            } else {
+                // switch to TBR_DURATION menu by pressing menu key
+                scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+                scripter.pressMenuKey();
+                scripter.waitForMenuUpdate();
+                scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
-            log.debug("SetTbrCommand: 3. getting/setting basal percentage in " + scripter.currentMenu);
-            retries = 30;
+                boolean increasingDuration = inputTbrDuration();
+                verifyDisplayedTbrDuration(increasingDuration);
 
-            double currentPercentage = -100;
-            while (currentPercentage != percentage && retries >= 0) {
-                retries--;
-                Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
-
-                if (percentageObj != null && (percentageObj instanceof Double)) {
-                    currentPercentage = ((Double) percentageObj).doubleValue();
-
-                    if (currentPercentage != percentage) {
-                        int requestedPercentage = (int) percentage;
-                        int actualPercentage = (int) currentPercentage;
-                        int steps = (requestedPercentage - actualPercentage) / 10;
-                        log.debug("Adjusting basal(" + requestedPercentage + "/" + actualPercentage + ") with " + steps + " steps and " + retries + " retries left");
-                        scripter.step(steps, (steps < 0 ? RuffyScripter.Key.DOWN : RuffyScripter.Key.UP), 500);
-                        scripter.waitForScreenUpdate(1000);
-                    }
-
-                } else {
-                    currentPercentage = -100;
-                }
-                scripter.waitForScreenUpdate(1000);
-            }
-            if (currentPercentage < 0 || retries < 0)
-                throw new CommandException().message("unable to set basal percentage");
-
-            log.debug("4. checking basal percentage in " + scripter.currentMenu);
-            scripter.waitForScreenUpdate(1000);
-            currentPercentage = -1000;
-            retries = 10;
-            while (currentPercentage < 0 && retries >= 0) {
-                retries--;
-                Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.BASAL_RATE);
-
-                if (percentageObj != null && (percentageObj instanceof Double)) {
-                    currentPercentage = ((Double) percentageObj).doubleValue();
-                } else {
-                    scripter.waitForScreenUpdate(1000);
-                }
-            }
-
-            if (retries < 0 || currentPercentage != percentage)
-                throw new CommandException().message("Unable to set percentage. Requested: " + percentage + ", value displayed on pump: " + currentPercentage);
-
-            if (currentPercentage != 100) {
-                log.debug("5. change to TBR_DURATION from " + scripter.currentMenu);
-                retries = 5;
-                while (retries >= 0 && !scripter.enterMenu(TBR_SET, MenuType.TBR_DURATION, RuffyScripter.Key.MENU, 2000)) {
-                    retries--;
-                    if (retries == 0)
-                        throw new CommandException().message("not able to find TBR_SET: stuck in " + scripter.currentMenu);
-                    SystemClock.sleep(500);
-                    if (scripter.currentMenu.getType() == TBR_DURATION)
-                        break;
-                    if (scripter.currentMenu.getType() == TBR_SET) {
-                        scripter.pressMenuKey();
-                        scripter.waitForScreenUpdate(1000);
-                    }
-                }
-
-                log.debug("6. getting/setting duration in " + scripter.currentMenu);
-                retries = 30;
-
-                double currentDuration = -100;
-                while (currentDuration != duration && retries >= 0) {
-                    retries--;
-                    Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-                    log.debug("Requested time: " + duration + " actual time: " + durationObj);
-                    if (durationObj != null && durationObj instanceof MenuTime) {
-                        MenuTime time = (MenuTime) durationObj;
-                        currentDuration = (time.getHour() * 60) + time.getMinute();
-                        if (currentDuration != duration) {
-                            int requestedDuration = (int) duration;
-                            int actualDuration = (int) currentDuration;
-                            int steps = (requestedDuration - actualDuration) / 15;
-                            if (currentDuration + (steps * 15) < requestedDuration)
-                                steps++;
-                            else if (currentDuration + (steps * 15) > requestedDuration)
-                                steps--;
-                            log.debug("Adjusting duration(" + requestedDuration + "/" + actualDuration + ") with " + steps + " steps and " + retries + " retries left");
-                            scripter.step(steps, (steps > 0 ? RuffyScripter.Key.UP : RuffyScripter.Key.DOWN), 500);
-                            scripter.waitForScreenUpdate(1000);
-                        }
-                    }
-                    scripter.waitForScreenUpdate(1000);
-                }
-                if (currentDuration < 0 || retries < 0)
-                    throw new CommandException().message("unable to set duration, requested:" + duration + ", displayed on pump: " + currentDuration);
-
-                log.debug("7. checking duration in " + scripter.currentMenu);
-                scripter.waitForScreenUpdate(1000);
-                currentDuration = -1000;
-                retries = 10;
-                while (currentDuration < 0 && retries >= 0) {
-                    retries--;
-                    Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-
-                    if (durationObj != null && durationObj instanceof MenuTime) {
-                        MenuTime time = (MenuTime) durationObj;
-                        currentDuration = (time.getHour() * 60) + time.getMinute();
-                    } else
-                        scripter.waitForScreenUpdate(1000);
-                }
-                if (retries < 0 || currentDuration != duration)
-                    throw new CommandException().message("wrong duration! Requested: " + duration + ", displayed on pump: " + currentDuration);
-            }
-
-            log.debug("8. confirming TBR om " + scripter.currentMenu);
-            retries = 5;
-            while (retries >= 0 && (scripter.currentMenu.getType() == TBR_DURATION || scripter.currentMenu.getType() == TBR_SET)) {
-                retries--;
+                // confirm TBR
                 scripter.pressCheckKey();
-                scripter.waitForScreenUpdate(1000);
-            }
-            if (retries < 0 || scripter.currentMenu.getType() == TBR_DURATION || scripter.currentMenu.getType() == TBR_SET)
-                throw new CommandException().message("failed setting basal!");
-            retries = 10;
-            boolean cancelledError = true;
-            if (percentage == 100)
-                cancelledError = false;
-            while (retries >= 0 && scripter.currentMenu.getType() != MAIN_MENU) {
-                // TODO how probable is it, that a totally unrelated error (like occlusion alert)
-                // is raised at this point, which we'd cancel together with the TBR cancelled alert?
-                if (percentage == 100 && scripter.currentMenu.getType() == WARNING_OR_ERROR) {
-                    scripter.pressCheckKey();
-                    retries++;
-                    cancelledError = true;
-                    scripter.waitForScreenUpdate(1000);
-                } else {
-                    retries--;
-                    if (scripter.currentMenu.getType() == MAIN_MENU && cancelledError)
-                        break;
-                }
+                scripter.waitForMenuToBeLeft(MenuType.TBR_DURATION);
             }
 
-            log.debug("9. verifying the main menu display the TBR we just set/cancelled");
-            if (retries < 0 || scripter.currentMenu.getType() != MAIN_MENU)
-                throw new CommandException().message("failed going to main!");
+            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
+                    "Pump did not return to MAIN_MEU after setting TBR. " +
+                            "Check pump manually, the TBR might not have been set/cancelled.");
 
-            Object percentageObj = scripter.currentMenu.getAttribute(MenuAttribute.TBR);
-            Object durationObj = scripter.currentMenu.getAttribute(MenuAttribute.RUNTIME);
-
-            if (percentage == 100) {
-                if (durationObj != null)
-                    throw new CommandException().message("TBR cancelled, but main menu shows a running TBR");
-
+            // check main menu shows the same values we just set
+            if (cancellingTbr) {
+                verifyMainMenuShowsNoActiveTbr();
                 return new CommandResult().success(true).enacted(true).message("TBR was cancelled");
+            } else {
+                verifyMainMenuShowsExpectedTbrActive();
+                return new CommandResult().success(true).enacted(true).message(
+                        String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
             }
 
-            if (percentageObj == null || !(percentageObj instanceof Double))
-                throw new CommandException().message("not percentage");
+        } catch (CommandException e) {
+            return e.toCommandResult();
+        }
+    }
 
-            if (((double) percentageObj) != percentage)
-                throw new CommandException().message("wrong percentage set!");
+    private void enterTbrMenu() {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        scripter.navigateToMenu(MenuType.TBR_MENU);
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_MENU);
+        scripter.pressCheckKey();
+        scripter.waitForMenuUpdate();
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+    }
 
-            if (durationObj == null || !(durationObj instanceof MenuTime))
-                throw new CommandException().message("not time");
+    private boolean inputTbrPercentage() {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+        long currentPercent = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        log.debug("Current TBR %: " + currentPercent);
+        long percentageChange = percentage - currentPercent;
+        long percentageSteps = percentageChange / 10;
+        boolean increasePercentage = true;
+        if (percentageSteps < 0) {
+            increasePercentage = false;
+            percentageSteps = Math.abs(percentageSteps);
+        }
+        log.debug("Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
+        for (int i = 0; i < percentageSteps; i++) {
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+            log.debug("Push #" + (i + 1));
+            if (increasePercentage) scripter.pressUpKey();
+            else scripter.pressDownKey();
+            SystemClock.sleep(100);
+        }
+        return increasePercentage;
+    }
 
-            MenuTime t = (MenuTime) durationObj;
-            if (t.getMinute() + (60 * t.getHour()) > duration || t.getMinute() + (60 * t.getHour()) < duration - 5)
-                throw new CommandException().message("wrong time set!");
+    // TODO extract verification into a method TBR percentage, duration and bolus amount
+    private void verifyDisplayedTbrPercentage(boolean increasingPercentage) {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+        // wait up to 5s for any scrolling to finish
+        long displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long timeout = System.currentTimeMillis() + 10 * 1000;
+        while (timeout > System.currentTimeMillis()
+                && ((increasingPercentage && displayedPercentage < percentage)
+                || (!increasingPercentage && displayedPercentage > percentage))) {
+            log.debug("Waiting for pump to process scrolling input for percentage, current: "
+                    + displayedPercentage + ", desired: " + percentage + ", scrolling up: " + increasingPercentage);
+            displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        }
+        log.debug("Final displayed TBR percentage: " + displayedPercentage);
+        if (displayedPercentage != percentage) {
+            throw new CommandException().message("Failed to set TBR percentage, requested: " + percentage + ", actual: " + displayedPercentage);
+        }
+
+        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        SystemClock.sleep(1000);
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+        long refreshedDisplayedTbrPecentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        if (displayedPercentage != refreshedDisplayedTbrPecentage) {
+            throw new CommandException().message("Failed to set TBR percentage: " +
+                    "percentage changed after input stopped from "
+                    + displayedPercentage + " -> " + refreshedDisplayedTbrPecentage);
+        }
+    }
+
+    private boolean inputTbrDuration() {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+        long currentDuration = scripter.readDisplayedDuration();
+        if (currentDuration % 15 != 0) {
+            // The duration displayed is how long an active TBR will still run,
+            // which might be something like 0:13, hence not in 15 minute steps.
+            // Pressing up will go to the next higher 15 minute step.
+            // Don't press down, from 0:13 it can't go down, so press up.
+            // Pressing up from 23:59 works to go to 24:00.
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+            scripter.pressUpKey();
+            scripter.waitForMenuUpdate();
+            currentDuration = scripter.readDisplayedDuration();
+        }
+        log.debug("Current TBR duration: " + currentDuration);
+        long durationChange = duration - currentDuration;
+        long durationSteps = durationChange / 15;
+        boolean increaseDuration = true;
+        if (durationSteps < 0) {
+            increaseDuration = false;
+            durationSteps = Math.abs(durationSteps);
+        }
+        log.debug("Pressing " + (increaseDuration ? "up" : "down") + " " + durationSteps + " times");
+        for (int i = 0; i < durationSteps; i++) {
+            scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+            if (increaseDuration) scripter.pressUpKey();
+            else scripter.pressDownKey();
+            SystemClock.sleep(100);
+            log.debug("Push #" + (i + 1));
+        }
+        return increaseDuration;
+    }
+
+    private void verifyDisplayedTbrDuration(boolean increasingPercentage) {
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+
+        // wait up to 5s for any scrolling to finish
+        long displayedDuration = scripter.readDisplayedDuration();
+        long timeout = System.currentTimeMillis() + 10 * 1000;
+        while (timeout > System.currentTimeMillis()
+                && ((increasingPercentage && displayedDuration < duration)
+                || (!increasingPercentage && displayedDuration > duration))) {
+            log.debug("Waiting for pump to process scrolling input for duration, current: "
+                    + displayedDuration + ", desired: " + duration + ", scrolling up: " + increasingPercentage);
+            displayedDuration = scripter.readDisplayedDuration();
+        }
+
+        log.debug("Final displayed TBR duration: " + displayedDuration);
+        if (displayedDuration != duration) {
+            throw new CommandException().message("Failed to set TBR duration, requested: " + duration + ", actual: " + displayedDuration);
+        }
+
+        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        SystemClock.sleep(1000);
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+        long refreshedDisplayedTbrDuration = scripter.readDisplayedDuration();
+        if (displayedDuration != refreshedDisplayedTbrDuration) {
+            throw new CommandException().message("Failed to set TBR duration: " +
+                    "duration changed after input stopped from "
+                    + displayedDuration + " -> " + refreshedDisplayedTbrDuration);
+        }
+    }
 
 
-            return new CommandResult().success(true).enacted(true).message(
-                    String.format(Locale.US, "TBR set to %d%% for %d min", percentage, duration));
-        } catch (Exception e) {
-            log.error("got exception: ", e);
-            return new CommandResult().success(false).message(e.getMessage()).exception(e);
+
+    private void cancelTbrAndConfirmCancellationWarning() {
+        // confirm entered TBR
+        scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
+        scripter.pressCheckKey();
+
+        // A "TBR CANCELLED alert" is only raised by the pump when the remaining time is
+        // greater than 60s (displayed as 0:01, the pump goes from there to finished.
+        // We could read the remaining duration from MAIN_MENU, but by the time we're here,
+        // the pumup could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
+        // is raised and if so dismiss it
+        long inFiveSeconds = System.currentTimeMillis() + 5 * 1000;
+        boolean alertProcessed = false;
+        while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
+            if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                // Check the raised alarm is TBR CANCELLED, so we're not accidentally cancelling
+                // a different alarm that might be raised at the same time.
+                // Note that the message is permanently displayed, while the error code is blinking.
+                // A wait till the error code can be read results in the code hanging, despite
+                // menu updates coming in, so just check the message.
+                // TODO v2 this only works when the pump's language is English
+                String errorMsg = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                if (!errorMsg.equals("TBR CANCELLED")) {
+                    throw new CommandException().success(false).enacted(false)
+                            .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
+                                    + errorMsg + ". Please check the pump.");
+                }
+                // confirm "TBR CANCELLED" alert
+                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                scripter.pressCheckKey();
+                // dismiss "TBR CANCELLED" alert
+                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                scripter.pressCheckKey();
+                scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
+                alertProcessed = true;
+            }
+            SystemClock.sleep(10);
+        }
+    }
+
+    private void verifyMainMenuShowsNoActiveTbr() {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        Double tbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
+        boolean runtimeDisplayed = scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME);
+        if (tbrPercentage != 100 || runtimeDisplayed) {
+            throw new CommandException().message("Cancelling TBR failed, TBR is still set according to MAIN_MENU");
+        }
+    }
+
+    private void verifyMainMenuShowsExpectedTbrActive() {
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        // new TBR set; percentage and duration must be displayed ...
+        if (!scripter.getCurrentMenu().attributes().contains(MenuAttribute.TBR) ||
+                !scripter.getCurrentMenu().attributes().contains(MenuAttribute.RUNTIME)) {
+            throw new CommandException().message("Setting TBR failed, according to MAIN_MENU no TBR is active");
+        }
+        Double mmTbrPercentage = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.TBR);
+        MenuTime mmTbrDuration = (MenuTime) scripter.getCurrentMenu().getAttribute(MenuAttribute.RUNTIME);
+        // ... and be the same as what we set
+        // note that displayed duration might have already counted down, e.g. from 30 minutes to
+        // 29 minutes and 59 seconds, so that 29 minutes are displayed
+        int mmTbrDurationInMinutes = mmTbrDuration.getHour() * 60 + mmTbrDuration.getMinute();
+        if (mmTbrPercentage != percentage || (mmTbrDurationInMinutes != duration && mmTbrDurationInMinutes + 1 != duration)) {
+            throw new CommandException().message("Setting TBR failed, TBR in MAIN_MENU differs from expected");
         }
     }
 
