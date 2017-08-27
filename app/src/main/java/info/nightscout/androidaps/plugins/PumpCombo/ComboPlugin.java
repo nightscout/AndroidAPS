@@ -31,7 +31,6 @@ import de.jotomo.ruffyscripter.commands.BolusCommand;
 import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
 import de.jotomo.ruffyscripter.commands.Command;
 import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.DetermineCapabilitiesCommand;
 import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommandAlt;
@@ -694,30 +693,5 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Subscribe
     public void onStatusEvent(final EventAppExit ignored) {
         unbindRuffyService();
-    }
-
-
-    public void updateCapabilities() {
-        // if Android is sluggish this might get called before ruffy is bound
-        if (ruffyScripter == null) {
-            log.warn("Rejecting call to RefreshDataFromPump: ruffy service not bound (yet)");
-            ToastUtils.showToastInUiThread(MainApp.instance(), "Ruffy not initialized.");
-            return;
-        }
-        if (isBusy()) {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "Pump busy!");
-            return;
-        }
-        CommandResult result = runCommand(new DetermineCapabilitiesCommand());
-        if (result.success) {
-            pumpDescription.maxTempPercent = (int) result.capabilities.maxTempPercent;
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt(COMBO_MAX_TEMP_PERCENT_SP, pumpDescription.maxTempPercent);
-            editor.commit();
-            MainApp.bus().post(new EventComboPumpUpdateGUI());
-        } else {
-            ToastUtils.showToastInUiThread(MainApp.instance(), "No success.");
-        }
     }
 }

@@ -34,7 +34,6 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     }
 
     private Button refresh;
-    private TextView updateCapabilities;
 
     private TextView statusText;
 
@@ -48,7 +47,6 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
     private TextView lastCmdResultText;
     private TextView lastCmdDurationText;
 
-    private TextView tbrCapabilityText;
     private TextView pumpstateBatteryText;
     private TextView insulinstateText;
 
@@ -59,7 +57,6 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.combopump_fragment, container, false);
 
         refresh = (Button) view.findViewById(R.id.combo_refresh);
-        updateCapabilities = (TextView) view.findViewById(R.id.combo_update_capabilities);
 
         statusText = (TextView) view.findViewById(R.id.combo_status);
 
@@ -72,12 +69,10 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
         lastCmdTimeText = (TextView) view.findViewById(R.id.combo_last_command_time);
         lastCmdResultText = (TextView) view.findViewById(R.id.combo_last_command_result);
         lastCmdDurationText = (TextView) view.findViewById(R.id.combo_last_command_duration);
-        tbrCapabilityText = (TextView) view.findViewById(R.id.combo_tbr_capability);
         pumpstateBatteryText = (TextView) view.findViewById(R.id.combo_pumpstate_battery);
         insulinstateText = (TextView) view.findViewById(R.id.combo_insulinstate);
 
         refresh.setOnClickListener(this);
-        updateCapabilities.setOnClickListener(this);
 
         updateGUI();
         return view;
@@ -112,32 +107,6 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                     }
                 });
                 thread.start();
-                break;
-            case R.id.combo_update_capabilities:
-                (new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Activity activity = getActivity();
-                        if (activity != null)
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateCapabilities.setText("{fa-bluetooth spin}");
-                                }
-                            });
-
-                        getPlugin().updateCapabilities();
-
-                        if (activity != null)
-                            activity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    updateCapabilities.setText("{fa-bluetooth-b}");
-                                }
-                            });
-
-                    }
-                })).start();
                 break;
         }
     }
@@ -201,7 +170,6 @@ public class ComboFragment extends Fragment implements View.OnClickListener {
                             lastCmdDurationText.setText("");
                         }
                     }
-                    tbrCapabilityText.setText(getPlugin().getPumpDescription().maxTempPercent + "%");
                 }
             });
     }
