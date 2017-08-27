@@ -248,6 +248,11 @@ public class BolusCommand extends BaseCommand {
         }
     }
 
+    public void requestCancellation() {
+        cancelRequested = true;
+        progressReportCallback.report(STOPPING, 0, 0);
+    }
+
     @Override
     public String toString() {
         return "BolusCommand{" +
