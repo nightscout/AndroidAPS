@@ -51,6 +51,7 @@ public class RuffyScripter {
 
     public void start(IRuffyService newService) {
         try {
+/*
             if (ruffyService != null) {
                 try {
                     ruffyService.removeHandler(mHandler);
@@ -58,6 +59,7 @@ public class RuffyScripter {
                     // ignore
                 }
             }
+*/
             if (newService != null) {
                 this.ruffyService = newService;
                 // TODO this'll be done better in v2 via ConnectionManager
@@ -65,7 +67,7 @@ public class RuffyScripter {
                     idleDisconnectMonitorThread.start();
                 }
                 started = true;
-                newService.addHandler(mHandler);
+                newService.setHandler(mHandler);
             }
         } catch (Exception e) {
             log.error("Unhandled exception starting RuffyScripter", e);
@@ -95,7 +97,7 @@ public class RuffyScripter {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
                         lastDisconnected = now;
                         canDisconnect = true;
-                        ruffyService.doRTDisconnect(mHandler);
+                        ruffyService.doRTDisconnect();
                         connected = false;
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
@@ -133,11 +135,6 @@ public class RuffyScripter {
         }
 
         @Override
-        public boolean canDisconnect() throws RemoteException {
-            return canDisconnect;
-        }
-
-        @Override
         public void rtStopped() throws RemoteException {
             log.debug("rtStopped callback invoked");
             currentMenu = null;
@@ -159,7 +156,7 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleMenu(Menu menu, int sequence) throws RemoteException {
+        public void rtDisplayHandleMenu(Menu menu) throws RemoteException {
             // method is called every ~500ms
             log.debug("rtDisplayHandleMenu: " + menu);
 
@@ -182,26 +179,9 @@ public class RuffyScripter {
         }
 
         @Override
-        public void rtDisplayHandleNoMenu(int sequence) throws RemoteException {
+        public void rtDisplayHandleNoMenu() throws RemoteException {
             log.debug("rtDisplayHandleNoMenu callback invoked");
         }
-
-
-        @Override
-        public void keySent(int sequence) throws RemoteException {
-            synchronized (keylock) {
-                if (keynotwait > 0)
-                    keynotwait--;
-                else
-                    keylock.notify();
-            }
-        }
-
-        @Override
-        public String getServiceIdentifier() throws RemoteException {
-            return this.toString();
-        }
-
     };
 
     public boolean isPumpBusy() {
@@ -209,12 +189,14 @@ public class RuffyScripter {
     }
 
     public void unbind() {
+        /*
         if (ruffyService != null)
             try {
                 ruffyService.removeHandler(mHandler);
             } catch (Exception e) {
                 // ignore
             }
+            */
         this.ruffyService = null;
     }
 
@@ -378,7 +360,7 @@ public class RuffyScripter {
             }
 
             canDisconnect = false;
-            boolean connectInitSuccessful = ruffyService.doRTConnect(mHandler) == 0;
+            boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
             log.debug("Waiting for first menu update to be sent");
             // Note: there was an 'if(currentMenu == null)' around the next call, since
