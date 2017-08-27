@@ -58,8 +58,15 @@ public class BolusCommand extends BaseCommand {
             while (bolusRemaining != null) {
                 log.debug("Delivering bolus, remaining: " + bolusRemaining);
                 SystemClock.sleep(200);
+                if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                    throw new CommandException().success(false).enacted(true)
+                            .message("Warning/error raised after bolus delivery started. " +
+                                    "The treatment has been recorded, please check it against the " +
+                                    "pumps records and delete it if it hasn't finished successfully.");
+                }
                 bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
+
 
             // TODO what if we hit 'cartridge low' alert here? is it immediately displayed or after the bolus?
             // TODO how are error states reported back to the caller that occur outside of calls in genal? Low battery, low cartridge?
