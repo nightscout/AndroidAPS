@@ -48,7 +48,6 @@ public class RuffyScripter {
 
     public void start(IRuffyService newService) {
         try {
-/*
             if (ruffyService != null) {
                 try {
                     ruffyService.removeHandler(mHandler);
@@ -56,7 +55,6 @@ public class RuffyScripter {
                     // ignore
                 }
             }
-*/
             if (newService != null) {
                 this.ruffyService = newService;
                 // TODO this'll be done better in v2 via ConnectionManager
@@ -64,7 +62,7 @@ public class RuffyScripter {
                     idleDisconnectMonitorThread.start();
                 }
                 started = true;
-                newService.setHandler(mHandler);
+                newService.addHandler(mHandler);
             }
         } catch (Exception e) {
             log.error("Unhandled exception starting RuffyScripter", e);

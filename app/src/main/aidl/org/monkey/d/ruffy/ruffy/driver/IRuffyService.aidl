@@ -6,7 +6,8 @@ import org.monkey.d.ruffy.ruffy.driver.IRTHandler;
 
 interface IRuffyService {
 
-    void setHandler(IRTHandler handler);
+    void addHandler(IRTHandler handler);
+    void removeHandler(IRTHandler handler);
 
     /** Connect to the pump
     *
@@ -17,7 +18,10 @@ interface IRuffyService {
     /** Disconnect from the pump */
     void doRTDisconnect();
 
+    /*What's the meaning of 'changed'?
+     * changed means if a button state has been changed, like btton pressed is a change and button release another*/
     void rtSendKey(byte keyCode, boolean changed);
     void resetPairing();
     boolean isConnected();
+    boolean isBoundToPump();
 }
