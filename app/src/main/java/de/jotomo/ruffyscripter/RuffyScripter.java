@@ -311,8 +311,7 @@ public class RuffyScripter {
                     returnable.cmdResult.state = readPumpState();
                 }
                 long connectDurationSec = (executionStart - connectStart) / 1000;
-                long now = System.currentTimeMillis();
-                long executionDurationSec = (now - executionStart) / 1000;
+                long executionDurationSec = (System.currentTimeMillis() - executionStart) / 1000;
                 returnable.cmdResult.duration = "Connect: " + connectDurationSec + "s, execution: " + executionDurationSec + "s";
                 log.debug("Command result: " + returnable.cmdResult);
                 return returnable.cmdResult;
