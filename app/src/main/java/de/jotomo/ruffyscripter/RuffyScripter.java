@@ -44,9 +44,6 @@ public class RuffyScripter {
 
     private boolean started = false;
 
-    private final Object keylock = new Object();
-    private int keynotwait = 0;
-
     private final Object screenlock = new Object();
 
     public void start(IRuffyService newService) {
@@ -79,7 +76,6 @@ public class RuffyScripter {
         return started;
     }
 
-    private boolean canDisconnect = false;
     private volatile boolean connected = false;
     private volatile long lastDisconnected = 0;
 
@@ -96,13 +92,10 @@ public class RuffyScripter {
                             && now > lastDisconnected + 15 * 1000) {
                         log.debug("Disconnecting after " + (connectionTimeOutMs / 1000) + "s inactivity timeout");
                         lastDisconnected = now;
-                        canDisconnect = true;
                         ruffyService.doRTDisconnect();
                         connected = false;
                         // don't attempt anything fancy in the next 10s, let the pump settle
                         SystemClock.sleep(10 * 1000);
-                    } else {
-                        canDisconnect = false;
                     }
                 } catch (Exception e) {
                     // TODO do we need to catch this exception somewhere else too? right now it's
@@ -359,7 +352,6 @@ public class RuffyScripter {
                 SystemClock.sleep(10 * 1000);
             }
 
-            canDisconnect = false;
             boolean connectInitSuccessful = ruffyService.doRTConnect() == 0;
             log.debug("Connect init successful: " + connectInitSuccessful);
             log.debug("Waiting for first menu update to be sent");
@@ -606,17 +598,17 @@ public class RuffyScripter {
     private void pressKey(final byte key, long timeout) {
         try {
             ruffyService.rtSendKey(key, true);
-            //SystemClock.sleep(200);
+            SystemClock.sleep(200);
             ruffyService.rtSendKey(Key.NO_KEY, true);
-            if (timeout > 0) {
-                synchronized (keylock) {
-                    keylock.wait(timeout);
-                }
-            } else {
-                synchronized (keylock) {
-                    keynotwait++;
-                }
-            }
+//            if (timeout > 0) {
+//                synchronized (keylock) {
+//                    keylock.wait(timeout);
+//                }
+//            } else {
+//                synchronized (keylock) {
+//                    keynotwait++;
+//                }
+//            }
         } catch (Exception e) {
             throw new CommandException().exception(e).message("Error while pressing buttons");
         }
