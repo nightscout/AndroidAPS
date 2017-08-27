@@ -185,7 +185,7 @@ public class SetTbrCommand extends BaseCommand {
         long displayedDuration = scripter.readDisplayedDuration();
         if (displayedDuration != duration) {
             log.debug("Final displayed TBR duration: " + displayedDuration);
-            throw new CommandException().message("Failed to set TBR duration");
+            throw new CommandException().message("Failed to set TBR duration, requested: " + duration + ", actual: " + displayedDuration);
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
