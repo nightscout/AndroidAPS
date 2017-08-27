@@ -77,6 +77,9 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
     private ComboPump pump = new ComboPump();
 
+    @Nullable
+    private volatile BolusCommand runningBolusCommand;
+
     private static PumpEnactResult OPERATION_NOT_SUPPORTED = new PumpEnactResult();
 
     static {
@@ -97,7 +100,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         pumpDescription.isBolusCapable = true;
         pumpDescription.bolusStep = 0.1d;
 
-        pumpDescription.isExtendedBolusCapable = false; // TODO GL#70
+        pumpDescription.isExtendedBolusCapable = false;
         pumpDescription.extendedBolusStep = 0.1d;
         pumpDescription.extendedBolusDurationStep = 15;
         pumpDescription.extendedBolusMaxDuration = 12 * 60;
@@ -127,7 +130,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
      * The alerter frequently checks the result of the last executed command via the lastCmdResult
      * field and shows a notification with sound and vibration if an error occurred.
      * More details on the error can then be looked up in the Combo tab.
-     *
+     * <p>
      * The alarm is re-raised every 5 minutes for as long as the error persist. As soon
      * as a command succeeds no more new alerts are raised.
      */
@@ -203,7 +206,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
 
                 @Override
                 public void onServiceConnected(ComponentName name, IBinder service) {
-                    keepUnbound=false;
+                    keepUnbound = false;
                     ruffyScripter.start(IRuffyService.Stub.asInterface(service));
                     log.debug("ruffy serivce connected");
                 }
@@ -213,7 +216,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                     log.debug("ruffy service disconnected");
                     // try to reconnect ruffy service unless unbind was explicitly requested
                     // via unbindRuffyService
-                    if(!keepUnbound) {
+                    if (!keepUnbound) {
                         SystemClock.sleep(250);
                         bindRuffyService();
                     }
@@ -231,6 +234,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
     }
 
     private boolean keepUnbound = false;
+
     private void unbindRuffyService() {
         keepUnbound = true;
         ruffyScripter.unbind();
@@ -363,20 +367,64 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return basal;
     }
 
-    // what a mess: pump integration code reading carb info from Detailed**Bolus**Info,
-    // writing carb treatments to the history table. What's PumpEnactResult for again?
+    private static BolusCommand.ProgressReportCallback bolusProgressReportCallback = new BolusCommand.ProgressReportCallback() {
+        @Override
+        public void report(BolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
+            EventOverviewBolusProgress enent = EventOverviewBolusProgress.getInstance();
+            switch (state) {
+                case DELIVERING:
+                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
+                    break;
+                case DELIVERED:
+                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), delivered);
+                    break;
+                case STOPPING:
+                    enent.status = MainApp.sResources.getString(R.string.bolusstopping);
+                    break;
+                case STOPPED:
+                    enent.status = MainApp.sResources.getString(R.string.bolusstopped);
+                    break;
+            }
+            enent.percent = percent;
+            MainApp.bus().post(enent);
+        }
+    };
+
+    /** Updates Treatment records with carbs and boluses and delivers a bolus if needed */
     @Override
     public PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo) {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                if (!Config.comboSplitBoluses) {
-                    return deliverBolus(detailedBolusInfo);
+
+                // TODO read history to ensure there are no boluses delivered on the pump we aren't
+                // aware of and haven't included in the bolus calulation
+
+                // Note that the BolusCommand sends progress updates to the bolusProgressReporterCallback,
+                // which then posts appropriate events on the bus, so in this branch no posts are needed
+                runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
+                CommandResult bolusCmdResult = runCommand(runningBolusCommand);
+                runningBolusCommand = null;
+                PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                pumpEnactResult.success = bolusCmdResult.success;
+                pumpEnactResult.enacted = bolusCmdResult.enacted;
+                pumpEnactResult.comment = bolusCmdResult.message;
+
+                // if enacted by pump, add bolus and carbs to treatment history
+                if (pumpEnactResult.enacted) {
+                    pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
+                    pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
+
+                    detailedBolusInfo.date = bolusCmdResult.completionTime;
+                    MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                 } else {
-                    return deliverSplittedBolus(detailedBolusInfo);
+                    pumpEnactResult.bolusDelivered = 0d;
+                    pumpEnactResult.carbsDelivered = 0d;
                 }
+                return pumpEnactResult;
             } else {
                 // no bolus required, carb only treatment
+                SystemClock.sleep(6000);
                 PumpEnactResult pumpEnactResult = new PumpEnactResult();
                 pumpEnactResult.success = true;
                 pumpEnactResult.enacted = true;
@@ -403,60 +451,10 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         }
     }
 
-    @NonNull
-    private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
-        CommandResult bolusCmdResult = runCommand(new BolusCommand(detailedBolusInfo.insulin));
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = bolusCmdResult.success;
-        pumpEnactResult.enacted = bolusCmdResult.enacted;
-        pumpEnactResult.comment = bolusCmdResult.message;
-
-        // if enacted, add bolus and carbs to treatment history
-        if (pumpEnactResult.enacted) {
-            // TODO if no error occurred, the requested bolus is what the pump delievered,
-            // that has been checked. If an error occurred, we should check how much insulin
-            // was delivered, e.g. when the cartridge went empty mid-bolus
-            // For the first iteration, the alert the pump raises must suffice
-            pumpEnactResult.bolusDelivered = detailedBolusInfo.insulin;
-            pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-
-            detailedBolusInfo.date = bolusCmdResult.completionTime;
-            MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-        } else {
-            pumpEnactResult.bolusDelivered = 0d;
-            pumpEnactResult.carbsDelivered = 0d;
-        }
-        return pumpEnactResult;
-    }
-
-    @NonNull
-    private PumpEnactResult deliverSplittedBolus(DetailedBolusInfo detailedBolusInfo) {
-        // split up bolus into 2 U parts
-        PumpEnactResult pumpEnactResult = new PumpEnactResult();
-        pumpEnactResult.success = true;
-        pumpEnactResult.enacted = true;
-        pumpEnactResult.bolusDelivered = 0d;
-        pumpEnactResult.carbsDelivered = detailedBolusInfo.carbs;
-        pumpEnactResult.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
-
-        double remainingBolus = detailedBolusInfo.insulin;
-        int split = 1;
-        while (remainingBolus > 0.05) {
-            double bolus = remainingBolus > 2 ? 2 : remainingBolus;
-            DetailedBolusInfo bolusInfo = new DetailedBolusInfo();
-            bolusInfo.insulin = bolus;
-            bolusInfo.isValid = false;
-            log.debug("Delivering split bolus #" + split + " with " + bolus + " U");
-            PumpEnactResult bolusResult = deliverBolus(bolusInfo);
-            if (!bolusResult.success) {
-                return bolusResult;
-            }
-            pumpEnactResult.bolusDelivered += bolus;
-            remainingBolus -= 2;
-            split++;
-        }
-        MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
-        return pumpEnactResult;
+    @Override
+    public void stopBolusDelivering() {
+        BolusCommand localRunningBolusCommand = runningBolusCommand;
+        if (localRunningBolusCommand != null) localRunningBolusCommand.requestCancellation();
     }
 
     private CommandResult runCommand(Command command) {
@@ -492,13 +490,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return commandResult;
     }
 
-    @Override
-    public void stopBolusDelivering() {
-        // there's no way to stop the combo once delivery has started
-        // but before that, we could interrupt the command thread ... pause
-        // till pump times out or raises an error
-    }
-
     // Note: AAPS calls this only to enact OpenAPS recommendations
     @Override
     public PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force) {
@@ -528,10 +519,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             adjustedPercent = rounded.intValue();
         }
 
-        Command cmd = !Config.comboUseAlternateSetTbrCommand
-                ? new SetTbrCommand(adjustedPercent, durationInMinutes)
-                : new SetTbrCommandAlt(adjustedPercent, durationInMinutes);
-        CommandResult commandResult = runCommand(cmd);
+        CommandResult commandResult = runCommand(new SetTbrCommand(adjustedPercent, durationInMinutes));
 
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
@@ -585,7 +573,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
                 tempBasal.source = Source.USER;
                 pumpEnactResult.isTempCancel = true;
             }
-        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15 ) {
+        } else if ((activeTemp.percentRate >= 90 && activeTemp.percentRate <= 110) && activeTemp.getPlannedRemainingMinutes() <= 15) {
             // Let fake neutral temp keep running (see below)
             log.debug("cancelTempBasal: skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.");
             pumpEnactResult.comment = "cancelTempBasal skipping changing tbr since it already is at " + activeTemp.percentRate + "% and running for another " + activeTemp.getPlannedRemainingMinutes() + " mins.";
@@ -598,7 +586,7 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         } else {
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
-            long percentage = (activeTemp.percentRate > 100) ? 110:90;
+            long percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing tbr to " + percentage + "% for 15 mins.");
             commandResult = runCommand(new SetTbrCommand(percentage, 15));
             if (commandResult.enacted) {
@@ -623,7 +611,6 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
         return pumpEnactResult;
     }
 
-    // TODO
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         return OPERATION_NOT_SUPPORTED;
@@ -713,12 +700,12 @@ public class ComboPlugin implements PluginBase, PumpInterface, ConstraintsInterf
             ToastUtils.showToastInUiThread(MainApp.instance(), "Ruffy not initialized.");
             return;
         }
-        if (isBusy()){
+        if (isBusy()) {
             ToastUtils.showToastInUiThread(MainApp.instance(), "Pump busy!");
             return;
         }
         CommandResult result = runCommand(new DetermineCapabilitiesCommand());
-        if (result.success){
+        if (result.success) {
             pumpDescription.maxTempPercent = (int) result.capabilities.maxTempPercent;
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(MainApp.instance());
             SharedPreferences.Editor editor = preferences.edit();

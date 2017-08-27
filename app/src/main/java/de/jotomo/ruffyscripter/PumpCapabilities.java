@@ -2,7 +2,7 @@ package de.jotomo.ruffyscripter;
 
 /**
  * Created by adrian on 26/07/17.
- *
+ * <p>
  * Contains the capabilities of the current pump model.
  */
 

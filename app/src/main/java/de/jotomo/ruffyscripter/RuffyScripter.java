@@ -344,6 +344,7 @@ public class RuffyScripter {
             } catch (CommandException e) {
                 return e.toCommandResult();
             } catch (Exception e) {
+                // TODO detect and report pump warnings/errors differently?
                 log.error("Error in ruffyscripter/ruffy", e);
                 return new CommandResult().exception(e).message("Unexpected exception communication with ruffy: " + e.getMessage());
             } finally {
@@ -527,6 +528,26 @@ public class RuffyScripter {
         pressKey(Key.BACK, 2000);
         log.debug("Releasing back key");
     }
+
+    public void pressKeyMs(final byte key, long ms) {
+        long stepMs = 100;
+        try {
+            log.debug("Scroll: Pressing key for " + ms + " ms with step " + stepMs + " ms");
+            ruffyService.rtSendKey(key, true);
+            ruffyService.rtSendKey(key, false);
+            while (ms > stepMs) {
+                SystemClock.sleep(stepMs);
+                ruffyService.rtSendKey(key, false);
+                ms -= stepMs;
+            }
+            SystemClock.sleep(ms);
+            ruffyService.rtSendKey(Key.NO_KEY, true);
+            log.debug("Releasing key");
+        } catch (Exception e) {
+            throw new CommandException().exception(e).message("Error while pressing buttons");
+        }
+    }
+
 
     public boolean waitForScreenUpdate(long timeout) {
         synchronized (screenlock) {

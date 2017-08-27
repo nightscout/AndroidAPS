@@ -31,7 +31,7 @@ public class CommandResult {
     }
 
     public CommandResult completionTime(long completionTime) {
-        this.completionTime = completionTime ;
+        this.completionTime = completionTime;
         return this;
     }
 
@@ -57,12 +57,12 @@ public class CommandResult {
 
     public CommandResult history(History history) {
         this.history = history;
-        return  this;
+        return this;
     }
 
     public CommandResult capabilities(PumpCapabilities capabilities) {
         this.capabilities = capabilities;
-        return  this;
+        return this;
     }
 
     @Override

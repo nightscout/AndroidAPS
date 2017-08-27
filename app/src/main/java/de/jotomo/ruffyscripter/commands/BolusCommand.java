@@ -11,12 +11,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import de.jotomo.ruffyscripter.PumpState;
+import de.jotomo.ruffyscripter.RuffyScripter;
+
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.DELIVERING;
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.STOPPED;
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.STOPPING;
+import static de.jotomo.ruffyscripter.commands.BolusCommand.ProgressReportCallback.State.DELIVERED;
+
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
     private final double bolus;
+    private final ProgressReportCallback progressReportCallback;
+    private volatile boolean cancelRequested;
 
-    public BolusCommand(double bolus) {
+    public BolusCommand(double bolus, ProgressReportCallback progressReportCallback) {
+        this.progressReportCallback = progressReportCallback;
         this.bolus = bolus;
     }
 
@@ -34,29 +45,101 @@ public class BolusCommand extends BaseCommand {
     @Override
     public CommandResult execute() {
         try {
+            // TODO read reservoir level and reject request if reservoir < bolus
             enterBolusMenu();
 
             inputBolusAmount();
             verifyDisplayedBolusAmount();
 
+            if (cancelRequested) {
+                progressReportCallback.report(STOPPING, 0, 0);
+                scripter.goToMainTypeScreen(MenuType.MAIN_MENU, 30 * 1000);
+                progressReportCallback.report(STOPPED, 0, 0);
+                return new CommandResult().success(true).enacted(false)
+                        .message("Bolus cancelled as per user request with no insulin delivered");
+            }
+
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
             scripter.pressCheckKey();
 
-            // the pump displays the entered bolus and waits a bit to let user check and cancel
-            scripter.waitForMenuToBeLeft(MenuType.BOLUS_ENTER);
-
+            // the pump displays the entered bolus and waits a few seconds to let user check and cancel
+            while (scripter.getCurrentMenu().getType() == MenuType.BOLUS_ENTER) {
+                if (cancelRequested) {
+                    progressReportCallback.report(STOPPING, 0, 0);
+                    scripter.pressUpKey();
+                    // wait up to 1s for a BOLUS_CANCELLED alert, if it doesn't happen we missed
+                    // the window, simply continue and let the next cancel attempt try its luck
+                    boolean alertWasCancelled = confirmAlert("BOLUS CANCELLED", 1000);
+                    if (alertWasCancelled) {
+                        progressReportCallback.report(STOPPED, 0, 0);
+                        return new CommandResult().success(true).enacted(false)
+                                .message("Bolus cancelled as per user request with no insulin delivered");
+                    }
+                }
+                SystemClock.sleep(10);
+            }
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Pump did not return to MAIN_MEU from BOLUS_ENTER to deliver bolus. "
                             + "Check pump manually, the bolus might not have been delivered.");
 
+            progressReportCallback.report(DELIVERING, 0, 0);
+            Double bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+            double lastBolusReported = 0;
+            boolean lowCartdrigeAlarmTriggered = false;
             // wait for bolus delivery to complete; the remaining units to deliver are counted
             // down and are displayed on the main menu.
-            Double bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+            // TODO extract into method
+
+            // TODO 'low cartrdige' alarm must be handled inside, since the bolus continues regardless;
+            // it must be claread so we can see the remaining bolus again;
             while (bolusRemaining != null) {
-                log.debug("Delivering bolus, remaining: " + bolusRemaining);
-                SystemClock.sleep(200);
+                if (cancelRequested) {
+                    progressReportCallback.report(STOPPING, 0, 0);
+                    scripter.pressKeyMs(RuffyScripter.Key.UP, 3000);
+                    progressReportCallback.report(STOPPED, 0, 0);
+                    // if the bolus finished while we attempted to cancel it, there'll be no alarm
+                    long timeout = System.currentTimeMillis() + 2000;
+                    while (scripter.getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR && System.currentTimeMillis() < timeout) {
+                        SystemClock.sleep(10);
+                    }
+                    while (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                        // TODO make this cleaner, extract method, needed below too
+                        scripter.pressCheckKey();
+                        SystemClock.sleep(200);
+                    }
+                    break;
+                }
+                if (lastBolusReported != bolusRemaining) {
+                    log.debug("Delivering bolus, remaining: " + bolusRemaining);
+                    int percentDelivered = (int) (100 - (bolusRemaining / bolus * 100));
+                    progressReportCallback.report(DELIVERING, percentDelivered, bolus - bolusRemaining);
+                    lastBolusReported = bolusRemaining;
+                }
+
+                if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                    String message = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                    if (message.equals("LOW CARTRIDGE")) {
+                        lowCartdrigeAlarmTriggered = true;
+                        confirmAlert("LOW CARTRIDGE", 2000);
+                    } else {
+                        // any other alert
+                        break;
+                    }
+                }
+                SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
+            }
+
+            // wait up to 2s for any possible warning to be raised, if not raised already
+            long minWait = System.currentTimeMillis() + 2 * 1000;
+            while (scripter.getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < minWait) {
+                SystemClock.sleep(50);
+            }
+
+            // process warnings (confirm them, report back to AAPS about them)
+            while (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < minWait) {
+               // TODO
             }
 
             // TODO what if we hit 'cartridge low' alert here? is it immediately displayed or after the bolus?
@@ -66,6 +149,9 @@ public class BolusCommand extends BaseCommand {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Bolus delivery did not complete as expected. "
                             + "Check pump manually, the bolus might not have been delivered.");
+
+
+            // TODO report back what was read from history
 
             // read last bolus record; those menus display static data and therefore
             // only a single menu update is sent
@@ -81,6 +167,8 @@ public class BolusCommand extends BaseCommand {
                         .message("Bolus was delivered, but unable to confirm it with history record");
             }
 
+            // TODO check date so we don't pick a false record if the previous bolus had the same amount;
+            // also, report back partial bolus. Just call ReadHsstory(timestamp, boluses=true) cmd ...
             double lastBolusInHistory = (double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
             if (Math.abs(bolus - lastBolusInHistory) > 0.05) {
                 throw new CommandException().success(false).enacted(true)
@@ -89,18 +177,26 @@ public class BolusCommand extends BaseCommand {
             }
             log.debug("Bolus record in history confirms delivered bolus");
 
-            // leave menu to go back to main menu
-            scripter.pressCheckKey();
-            scripter.waitForMenuToBeLeft(MenuType.BOLUS_DATA);
-            scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
-                    "Bolus was correctly delivered and checked against history, but we "
-                            + "did not return the main menu successfully.");
+            if (!scripter.goToMainTypeScreen(MenuType.MAIN_MENU, 15 * 1000)) {
+                throw new CommandException().success(false).enacted(true)
+                        .message("Bolus was correctly delivered and checked against history, but we "
+                                + "did not return the main menu successfully.");
+            }
+
+            progressReportCallback.report(DELIVERED, 100, bolus);
 
             return new CommandResult().success(true).enacted(true)
                     .message(String.format(Locale.US, "Delivered %02.1f U", bolus));
         } catch (CommandException e) {
             return e.toCommandResult();
         }
+    }
+
+    // TODO confirmAlarms? and report back which were cancelled?
+
+    private boolean confirmAlert(String alertText, int maxWaitTillExpectedAlert) {
+        // TODO
+        return false;
     }
 
     private void enterBolusMenu() {
@@ -149,5 +245,16 @@ public class BolusCommand extends BaseCommand {
         return "BolusCommand{" +
                 "bolus=" + bolus +
                 '}';
+    }
+
+    public interface ProgressReportCallback {
+        enum State {
+            DELIVERING,
+            DELIVERED,
+            STOPPING,
+            STOPPED
+        }
+
+        void report(State state, int percent, double delivered);
     }
 }
