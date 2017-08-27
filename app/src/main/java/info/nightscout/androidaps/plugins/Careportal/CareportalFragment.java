@@ -9,6 +9,7 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.otto.Subscribe;
@@ -16,10 +17,13 @@ import com.squareup.otto.Subscribe;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.events.EventCareportalEventChange;
 import info.nightscout.androidaps.plugins.Careportal.Dialogs.NewNSTreatmentDialog;
 import info.nightscout.androidaps.plugins.Common.SubscriberFragment;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
 
 public class CareportalFragment extends SubscriberFragment implements View.OnClickListener {
@@ -32,6 +36,8 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
     TextView pbage;
 
     View statsLayout;
+    LinearLayout butonsLayout;
+    View noProfileView;
 
     static public CareportalPlugin getPlugin() {
         if (careportalPlugin == null) {
@@ -94,6 +100,18 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
         pbage = (TextView) view.findViewById(R.id.careportal_pbage);
 
         statsLayout = (View) view.findViewById(R.id.careportal_stats);
+
+        noProfileView = (View) view.findViewById(R.id.profileview_noprofile);
+        butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
+
+        ProfileStore profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+        if (profileStore == null) {
+            noProfileView.setVisibility(View.VISIBLE);
+            butonsLayout.setVisibility(View.GONE);
+        } else {
+            noProfileView.setVisibility(View.GONE);
+            butonsLayout.setVisibility(View.VISIBLE);
+        }
 
         if (BuildConfig.NSCLIENTOLNY)
             statsLayout.setVisibility(View.GONE); // visible on overview
