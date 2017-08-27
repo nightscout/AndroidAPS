@@ -625,7 +625,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO v2 add battery, reservoir info when we start reading that and clean up the code
     @Override
     public JSONObject getJSONStatus() {
-        if (pump.lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (true) { //pump.lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
 
