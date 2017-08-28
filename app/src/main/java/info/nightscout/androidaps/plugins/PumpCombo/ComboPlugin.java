@@ -51,11 +51,6 @@ import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateG
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERED;
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERING;
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPED;
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPING;
-
 /**
  * Created by mike on 05.08.2016.
  */
@@ -394,7 +389,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                if (!Config.comboSplitBoluses) {
+                if (!Config.comboExperimentalSplitBoluses) {
                     return deliverBolus(detailedBolusInfo);
                 } else {
                     // split up bolus into 2 U parts
@@ -419,6 +414,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         pumpEnactResult.bolusDelivered += bolus;
                         remainingBolus -= 2;
                         split++;
+                        // Programming the pump for 2 U takes ~20, so wait 20s more so the
+                        // boluses are spaced 40s apart.
+                        SystemClock.sleep(20 * 1000);
                     }
                     MainApp.getConfigBuilder().addToHistoryTreatment(detailedBolusInfo);
                     return pumpEnactResult;
