@@ -44,8 +44,8 @@ public class BolusCommand extends BaseCommand {
             scripter.pressCheckKey();
 
             // the pump displays the entered bolus and waits a bit to let user check and cancel
+            // and then returns to the main menu
             scripter.waitForMenuToBeLeft(MenuType.BOLUS_ENTER);
-
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Pump did not return to MAIN_MEU from BOLUS_ENTER to deliver bolus. "
                             + "Check pump manually, the bolus might not have been delivered.");
