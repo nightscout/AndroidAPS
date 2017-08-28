@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffyscripter.RuffyScripter;
-
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
@@ -36,10 +34,10 @@ public class BolusCommand extends BaseCommand {
     @Override
     public CommandResult execute() {
         try {
-            enterBolusMenu(scripter);
+            enterBolusMenu();
 
-            inputBolusAmount(scripter);
-            verifyDisplayedBolusAmount(scripter);
+            inputBolusAmount();
+            verifyDisplayedBolusAmount();
 
             // confirm bolus
             scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
@@ -112,7 +110,7 @@ public class BolusCommand extends BaseCommand {
         }
     }
 
-    private void enterBolusMenu(RuffyScripter scripter) {
+    protected void enterBolusMenu() {
         scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
         scripter.navigateToMenu(MenuType.BOLUS_MENU);
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_MENU);
@@ -121,7 +119,7 @@ public class BolusCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
     }
 
-    private void inputBolusAmount(RuffyScripter scripter) {
+    protected void inputBolusAmount() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
         // press 'up' once for each 0.1 U increment
         long steps = Math.round(bolus * 10);
@@ -135,33 +133,31 @@ public class BolusCommand extends BaseCommand {
         SystemClock.sleep(2000);
     }
 
-    private void verifyDisplayedBolusAmount(RuffyScripter scripter) {
+    protected void verifyDisplayedBolusAmount() {
         scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        double displayedBolus = readDisplayedBolusAmount(scripter);
+
+        // wait up to 5s for any scrolling to finish
+        double displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
+        long timeout = System.currentTimeMillis() + 10 * 1000;
+        while (timeout > System.currentTimeMillis() && bolus - displayedBolus > 0.05) {
+            log.debug("Waiting for pump to process scrolling input for amount, current: " + displayedBolus + ", desired: " + bolus);
+            SystemClock.sleep(50);
+            displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
+        }
+
         log.debug("Final bolus: " + displayedBolus);
         if (Math.abs(displayedBolus - bolus) > 0.05) {
             throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
         }
 
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(2000);
-        double refreshedDisplayedBolus = readDisplayedBolusAmount(scripter);
+        SystemClock.sleep(1000);
+        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
+        double refreshedDisplayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
         if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
             throw new CommandException().message("Failed to set bolus: bolus changed after input stopped from "
                     + displayedBolus + " -> " + refreshedDisplayedBolus);
         }
-    }
-
-    private double readDisplayedBolusAmount(RuffyScripter scripter) {
-        // TODO v2 add timeout? Currently the command execution timeout would trigger if exceeded
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        // bolus amount is blinking, so we need to make sure we catch it at the right moment
-        Object amountObj = scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
-        while (!(amountObj instanceof Double)) {
-            scripter.waitForMenuUpdate();
-            amountObj = scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS);
-        }
-        return (double) amountObj;
     }
 
     @Override

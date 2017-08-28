@@ -198,55 +198,6 @@ public class CancellableBolusCommand extends BolusCommand {
         return false;
     }
 
-    private void enterBolusMenu() {
-        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
-        scripter.navigateToMenu(MenuType.BOLUS_MENU);
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_MENU);
-        scripter.pressCheckKey();
-        scripter.waitForMenuUpdate();
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-    }
-
-    private void inputBolusAmount() {
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        // press 'up' once for each 0.1 U increment
-        long steps = Math.round(bolus * 10);
-        for (int i = 0; i < steps; i++) {
-            scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-            scripter.pressUpKey();
-            SystemClock.sleep(100);
-        }
-        // Give the pump time to finish any scrolling that might still be going on, can take
-        // up to 1100ms. Plus some extra time to be sure
-        SystemClock.sleep(2000);
-    }
-
-    private void verifyDisplayedBolusAmount() {
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-
-        // wait up to 5s for any scrolling to finish
-        double displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
-        long timeout = System.currentTimeMillis() + 10 * 1000;
-        while (timeout > System.currentTimeMillis() && bolus - displayedBolus > 0.05) {
-            log.debug("Waiting for pump to process scrolling input for amount, current: " + displayedBolus + ", desired: " + bolus);
-            displayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
-        }
-
-        log.debug("Final bolus: " + displayedBolus);
-        if (Math.abs(displayedBolus - bolus) > 0.05) {
-            throw new CommandException().message("Failed to set correct bolus. Expected: " + bolus + ", actual: " + displayedBolus);
-        }
-
-        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
-        SystemClock.sleep(1000);
-        scripter.verifyMenuIsDisplayed(MenuType.BOLUS_ENTER);
-        double refreshedDisplayedBolus = scripter.readBlinkingValue(Double.class, MenuAttribute.BOLUS);
-        if (Math.abs(displayedBolus - refreshedDisplayedBolus) > 0.05) {
-            throw new CommandException().message("Failed to set bolus: bolus changed after input stopped from "
-                    + displayedBolus + " -> " + refreshedDisplayedBolus);
-        }
-    }
-
     public void requestCancellation() {
         cancelRequested = true;
         progressReportCallback.report(STOPPING, 0, 0);
