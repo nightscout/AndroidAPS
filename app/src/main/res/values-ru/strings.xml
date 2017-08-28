@@ -191,7 +191,7 @@
     <string name="edit_base_ic">редактировать инсулин/ВХ:</string>
     <string name="edit_base_isf">редактировать чувствительность к инсулину:</string>
     <string name="el_lang">греческий</string>
-    <string name="en_lang">английский</string>
+    <string name="en_lang">English</string>
     <string name="enabled">активировано</string>
     <string name="enableloop">активировать цикличность</string>
     <string name="enablesuperbolus">активировать суперболюс</string>

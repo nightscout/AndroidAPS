@@ -620,4 +620,13 @@
     <string name="uploader">Uploader</string>
     <string name="uploader_short">UPLD</string>
     <string name="app_name">AndroidAPS</string>
+    <string name="activate_profile">AKTIVOVAT PROFIL</string>
+    <string name="danar_visualizeextendedaspercentage_title">Zobrazovat prodloužený bolus v %</string>
+    <string name="date">Datum</string>
+    <string name="dia_too_short" formatted="false">DIA %s je příliž krátké - použito %s !</string>
+    <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
+    <string name="insulin_peak_time">Vrchol křivky [min]</string>
+    <string name="invalid">NEPLATNÝ</string>
+    <string name="nl_lang">Nizozemština</string>
+    <string name="sv_lang">Švédština</string>
 </resources>
