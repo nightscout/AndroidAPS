@@ -181,11 +181,9 @@ public class SetTbrCommand extends BaseCommand {
         long durationSteps = difference / 15;
         long durationAfterInitialSteps = currentDuration + (durationSteps * 15);
 
-        long finalSteps = durationSteps;
-        if (durationAfterInitialSteps < duration) finalSteps++;
-        else if (durationAfterInitialSteps > duration) finalSteps--;
-
-        return finalSteps;
+        if (durationAfterInitialSteps < duration) return durationSteps + 1;
+        else if (durationAfterInitialSteps > duration) return durationSteps - 1;
+        else return durationSteps;
     }
 
     private void verifyDisplayedTbrDuration(boolean increasingPercentage) {
