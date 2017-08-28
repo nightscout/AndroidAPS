@@ -128,7 +128,7 @@ public class SetTbrCommand extends BaseCommand {
         return increasePercentage;
     }
 
-    // TODO extract verification into a method TBR percentage, duration and bolus amount
+    // TODO refactor: extract verification into a method TBR percentage, duration and bolus amount
     private void verifyDisplayedTbrPercentage(boolean increasingPercentage) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         // wait up to 5s for any scrolling to finish
@@ -160,39 +160,32 @@ public class SetTbrCommand extends BaseCommand {
 
     private boolean inputTbrDuration() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        long currentDuration = scripter.readDisplayedDuration();
-        if (currentDuration % 15 != 0) {
-            // The duration displayed is how long an active TBR will still run,
-            // which might be something like 0:13, hence not in 15 minute steps.
-            // Pressing up will go to the next higher 15 minute step.
-            // Don't press down, from 0:13 it can't go down, so press up.
-            // Pressing up from 23:59 works to go to 24:00.
-            scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-            scripter.pressUpKey();
-            // TODO optimization: replace with logic that calculates the amount of
-            // steps including this one and issues them in one go, with a final wait
-            do {
-                currentDuration = scripter.readDisplayedDuration();
-                scripter.waitForMenuUpdate();
-            } while (currentDuration % 15 != 0);
-        }
-        log.debug("Current TBR duration: " + currentDuration);
-        long durationChange = duration - currentDuration;
-        long durationSteps = durationChange / 15;
-        boolean increaseDuration = true;
-        if (durationSteps < 0) {
-            increaseDuration = false;
-            durationSteps = Math.abs(durationSteps);
-        }
+        long durationSteps = calculateDurationSteps();
+        boolean increaseDuration = durationSteps > 0;
         log.debug("Pressing " + (increaseDuration ? "up" : "down") + " " + durationSteps + " times");
-        for (int i = 0; i < durationSteps; i++) {
+        for (int i = 0; i < Math.abs(durationSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
+            log.debug("Push #" + (i + 1) + "/" + durationSteps);
             if (increaseDuration) scripter.pressUpKey();
             else scripter.pressDownKey();
             SystemClock.sleep(100);
-            log.debug("Push #" + (i + 1));
         }
         return increaseDuration;
+    }
+
+    private long calculateDurationSteps() {
+        long currentDuration = scripter.readDisplayedDuration();
+        log.debug("Initial TBR duration: " + currentDuration);
+
+        long difference = duration - currentDuration;
+        long durationSteps = difference / 15;
+        long durationAfterInitialSteps = currentDuration + (durationSteps * 15);
+
+        long finalSteps = durationSteps;
+        if (durationAfterInitialSteps < duration) finalSteps++;
+        else if (durationAfterInitialSteps > duration) finalSteps--;
+
+        return finalSteps;
     }
 
     private void verifyDisplayedTbrDuration(boolean increasingPercentage) {
