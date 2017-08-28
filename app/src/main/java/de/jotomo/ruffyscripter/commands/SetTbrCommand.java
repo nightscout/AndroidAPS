@@ -180,8 +180,12 @@ public class SetTbrCommand extends BaseCommand {
             // Pressing up from 23:59 works to go to 24:00.
             scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
             scripter.pressUpKey();
-            scripter.waitForMenuUpdate();
-            currentDuration = scripter.readDisplayedDuration();
+            // TODO optimization: replace with logic that calculates the amount of
+            // steps including this one and issues them in one go, with a final wait
+            do {
+                currentDuration = scripter.readDisplayedDuration();
+                scripter.waitForMenuUpdate();
+            } while (currentDuration % 15 != 0);
         }
         log.debug("Current TBR duration: " + currentDuration);
         long durationChange = duration - currentDuration;
