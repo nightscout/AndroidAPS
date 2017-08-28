@@ -150,6 +150,7 @@ public class SetTbrCommand extends BaseCommand {
                 || (!increasingPercentage && displayedPercentage > percentage))) {
             log.debug("Waiting for pump to process scrolling input for percentage, current: "
                     + displayedPercentage + ", desired: " + percentage + ", scrolling up: " + increasingPercentage);
+            SystemClock.sleep(50);
             displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
         }
         log.debug("Final displayed TBR percentage: " + displayedPercentage);
@@ -212,6 +213,7 @@ public class SetTbrCommand extends BaseCommand {
                 || (!increasingPercentage && displayedDuration > duration))) {
             log.debug("Waiting for pump to process scrolling input for duration, current: "
                     + displayedDuration + ", desired: " + duration + ", scrolling up: " + increasingPercentage);
+            SystemClock.sleep(50);
             displayedDuration = scripter.readDisplayedDuration();
         }
 
