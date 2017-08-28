@@ -48,6 +48,6 @@ How to use:
 
 Testing:
 - When there's an error, check the Combo tab, there should be a clue.
-- From /_storage/emulated/0/Android/data/info.nightscout.androidaps/_)
 - Try to reproduce and open a ticket, add tag if any, otherwise add the hash of the commit used (right-click on the branch name select
  _Copy revision number_ or use _git show_ on the command-line) the branch name. Attach the log to the issue and label it as a bug.
+  The logs can be found in _/storage/emulated/0/Android/data/info.nightscout.androidaps/_
