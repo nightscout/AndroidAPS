@@ -26,9 +26,14 @@ What works:
 How to use:
 - Note: Documentation on how to use AndroidAPS is available at https://github.com/MilosKozak/AndroidAPS/wiki
 - Configure the pumps settings as described here: https://gitlab.com/jotomo/AndroidAPS/wikis/pump-configuration
-- One the pump, go to the _Menu settings_ menu and select _Standard_. This disable extended and multiwave and all but one basal rate. Those aren't supported by AAPS-Combo.
-- Clone ruffy from git@gitlab.com:jotomo/ruffy.git and build from the `develop` branch and pair with your pump. After that, it's not required to open ruffy, as Android will start ruffy automatically when its services are required.
-- Clone AndroidAPS from git@gitlab.com:jotomo/AndroidAPS.git and build from the `develop` branch.
+- On the pump, go to the _Menu settings_ menu and select _Standard_. This disables extended and multiwave and all but one basal rate. Those aren't supported by AAPS-Combo.
+- Clone ruffy from git@gitlab.com:jotomo/ruffy.git and build from the `develop` branch.
+- If ruffy crashes during pairing, check out the `pairing` branch, build it, pair the pump and then switch back to `develop` and build and install.
+  After that, it's not required to open ruffy, as Android will start ruffy automatically when its services are required.
+  Ruffy enables bluetooth discovery for 60s, if that's an issue, start the pairing process in ruffy and on the pump and switch to the bluetooth settings of your phone
+  and keep it open. This leaves the bluetoth in discovery mode as long as the screen is on. When pump shows the pairing code switch back
+  to ruffy and enter the displayed code.
+- Clone AndroidAPS from git@gitlab.com:jotomo/AndroidAPS.git and build from the `develop` branch (see the AndroidAPS wiki for building options.
 - Enter all treatments via AndroidAPS, since AAPS will be oblivious to boluses entered on the pump, as the pump history is not read yet
 - There are no warnings regarding low cartridge/battery since we're not reading that data from the pump just yet (next version)
 - Ensure you set the basal rate on the pump to the values of the profile used in AAPS, the profile isn't synced to the pump yet! Also don't forget to set/create a profile in AAPS **and** trigger a profile switch afterwards to activate it.
@@ -41,6 +46,6 @@ How to use:
 
 Testing:
 - When there's an error, check the Combo tab, there should be a clue.
-- Save logs (_adb logcat_, or fetch them from /_storage/emulated/0/Android/data/info.nightscout.androidaps/_)
+- From /_storage/emulated/0/Android/data/info.nightscout.androidaps/_)
 - Try to reproduce and open a ticket, add the hash of the commit used (right-click on the branch name select
- _Copy revision number_ or use _git show_ on the command-line) the branch name.
+ _Copy revision number_ or use _git show_ on the command-line) the branch name. Attach the log to the issue and label it as a bug.
