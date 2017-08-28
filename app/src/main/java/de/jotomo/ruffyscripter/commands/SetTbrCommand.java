@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffyscripter.PumpState;
-
 public class SetTbrCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(SetTbrCommand.class);
 
@@ -174,7 +172,7 @@ public class SetTbrCommand extends BaseCommand {
     }
 
     private long calculateDurationSteps() {
-        long currentDuration = scripter.readDisplayedDuration();
+        long currentDuration = readDisplayedDuration();
         log.debug("Initial TBR duration: " + currentDuration);
 
         long difference = duration - currentDuration;
@@ -190,7 +188,7 @@ public class SetTbrCommand extends BaseCommand {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
 
         // wait up to 5s for any scrolling to finish
-        long displayedDuration = scripter.readDisplayedDuration();
+        long displayedDuration = readDisplayedDuration();
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis()
                 && ((increasingPercentage && displayedDuration < duration)
@@ -198,7 +196,7 @@ public class SetTbrCommand extends BaseCommand {
             log.debug("Waiting for pump to process scrolling input for duration, current: "
                     + displayedDuration + ", desired: " + duration + ", scrolling up: " + increasingPercentage);
             SystemClock.sleep(50);
-            displayedDuration = scripter.readDisplayedDuration();
+            displayedDuration = readDisplayedDuration();
         }
 
         log.debug("Final displayed TBR duration: " + displayedDuration);
@@ -209,15 +207,13 @@ public class SetTbrCommand extends BaseCommand {
         // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
-        long refreshedDisplayedTbrDuration = scripter.readDisplayedDuration();
+        long refreshedDisplayedTbrDuration = readDisplayedDuration();
         if (displayedDuration != refreshedDisplayedTbrDuration) {
             throw new CommandException().message("Failed to set TBR duration: " +
                     "duration changed after input stopped from "
                     + displayedDuration + " -> " + refreshedDisplayedTbrDuration);
         }
     }
-
-
 
     private void cancelTbrAndConfirmCancellationWarning() {
         // confirm entered TBR
@@ -239,6 +235,7 @@ public class SetTbrCommand extends BaseCommand {
                 // A wait till the error code can be read results in the code hanging, despite
                 // menu updates coming in, so just check the message.
                 // TODO v2 this only works when the pump's language is English
+                // TODO extract confirmAlert method
                 String errorMsg = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
                 if (!errorMsg.equals("TBR CANCELLED")) {
                     throw new CommandException().success(false).enacted(false)
@@ -283,6 +280,11 @@ public class SetTbrCommand extends BaseCommand {
         if (mmTbrPercentage != percentage || (mmTbrDurationInMinutes != duration && mmTbrDurationInMinutes + 1 != duration)) {
             throw new CommandException().message("Setting TBR failed, TBR in MAIN_MENU differs from expected");
         }
+    }
+
+    private long readDisplayedDuration() {
+        MenuTime duration = scripter.readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
+        return duration.getHour() * 60 + duration.getMinute();
     }
 
     @Override

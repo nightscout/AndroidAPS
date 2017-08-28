@@ -676,9 +676,4 @@ public class RuffyScripter {
         }
         return (T) value;
     }
-
-    public long readDisplayedDuration() {
-        MenuTime duration = readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
-        return duration.getHour() * 60 + duration.getMinute();
-    }
 }
