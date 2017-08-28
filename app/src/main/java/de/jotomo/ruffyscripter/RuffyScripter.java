@@ -521,7 +521,8 @@ public class RuffyScripter {
         }
     }
 
-
+    // TODO sort out usages of this method and waitForMenu update, which have the same intent,
+    // but approach things differently;
     public boolean waitForScreenUpdate(long timeout) {
         synchronized (screenlock) {
             try {

@@ -56,17 +56,6 @@ public class SetTbrCommand extends BaseCommand {
     public CommandResult execute() {
         try {
             boolean cancellingTbr = percentage == 100;
-            PumpState pumpState = scripter.readPumpState();
-
-            // TODO hack, cancelling a TBR that isn't running is dealt with in CancelTbrCommand,
-            // this avoids setting a TBR twice until that AAPS bug is squished which calls this
-            // twice within a minute GL#27
-            if (!cancellingTbr
-                    && pumpState.tbrActive
-                    && pumpState.tbrPercent == percentage
-                    && (pumpState.tbrRemainingDuration == duration || pumpState.tbrRemainingDuration + 1 == duration)) {
-                        return new CommandResult().success(true).enacted(false).message("Requested TBR already running");
-            }
 
             enterTbrMenu();
             boolean increasingPercentage = inputTbrPercentage();
