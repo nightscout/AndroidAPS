@@ -106,7 +106,7 @@ public class SetTbrCommand extends BaseCommand {
 
     private boolean inputTbrPercentage() {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long currentPercent = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long currentPercent = readDisplayedPercentage();
         log.debug("Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
         long percentageSteps = percentageChange / 10;
@@ -126,29 +126,31 @@ public class SetTbrCommand extends BaseCommand {
         return increasePercentage;
     }
 
-    // TODO refactor: extract verification into a method TBR percentage, duration and bolus amount
     private void verifyDisplayedTbrPercentage(boolean increasingPercentage) {
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
         // wait up to 5s for any scrolling to finish
-        long displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long displayedPercentage = readDisplayedPercentage();
         long timeout = System.currentTimeMillis() + 10 * 1000;
         while (timeout > System.currentTimeMillis()
                 && ((increasingPercentage && displayedPercentage < percentage)
                 || (!increasingPercentage && displayedPercentage > percentage))) {
             log.debug("Waiting for pump to process scrolling input for percentage, current: "
-                    + displayedPercentage + ", desired: " + percentage + ", scrolling up: " + increasingPercentage);
+                    + displayedPercentage + ", desired: " + percentage + ", scrolling "
+                    + (increasingPercentage ? "up" : "down"));
             SystemClock.sleep(50);
-            displayedPercentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+            displayedPercentage = readDisplayedPercentage();
         }
         log.debug("Final displayed TBR percentage: " + displayedPercentage);
         if (displayedPercentage != percentage) {
-            throw new CommandException().message("Failed to set TBR percentage, requested: " + percentage + ", actual: " + displayedPercentage);
+            throw new CommandException().message("Failed to set TBR percentage, requested: "
+                    + percentage + ", actual: " + displayedPercentage);
         }
 
-        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        // check again to ensure the displayed value hasn't change and scrolled past the desired
+        // value due to due scrolling taking extremely long
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
-        long refreshedDisplayedTbrPecentage = scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
+        long refreshedDisplayedTbrPecentage = readDisplayedPercentage();
         if (displayedPercentage != refreshedDisplayedTbrPecentage) {
             throw new CommandException().message("Failed to set TBR percentage: " +
                     "percentage changed after input stopped from "
@@ -194,17 +196,20 @@ public class SetTbrCommand extends BaseCommand {
                 && ((increasingPercentage && displayedDuration < duration)
                 || (!increasingPercentage && displayedDuration > duration))) {
             log.debug("Waiting for pump to process scrolling input for duration, current: "
-                    + displayedDuration + ", desired: " + duration + ", scrolling up: " + increasingPercentage);
+                    + displayedDuration + ", desired: " + duration
+                    + ", scrolling " + (increasingPercentage ? "up" : "down"));
             SystemClock.sleep(50);
             displayedDuration = readDisplayedDuration();
         }
 
         log.debug("Final displayed TBR duration: " + displayedDuration);
         if (displayedDuration != duration) {
-            throw new CommandException().message("Failed to set TBR duration, requested: " + duration + ", actual: " + displayedDuration);
+            throw new CommandException().message("Failed to set TBR duration, requested: "
+                    + duration + ", actual: " + displayedDuration);
         }
 
-        // check again to ensure the displayed value hasn't change due to due scrolling taking extremely long
+        // check again to ensure the displayed value hasn't change and scrolled past the desired
+        // value due to due scrolling taking extremely long
         SystemClock.sleep(1000);
         scripter.verifyMenuIsDisplayed(MenuType.TBR_DURATION);
         long refreshedDisplayedTbrDuration = readDisplayedDuration();
@@ -285,6 +290,10 @@ public class SetTbrCommand extends BaseCommand {
     private long readDisplayedDuration() {
         MenuTime duration = scripter.readBlinkingValue(MenuTime.class, MenuAttribute.RUNTIME);
         return duration.getHour() * 60 + duration.getMinute();
+    }
+
+    private long readDisplayedPercentage() {
+        return scripter.readBlinkingValue(Double.class, MenuAttribute.BASAL_RATE).longValue();
     }
 
     @Override
