@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,18 +26,34 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/configbuilder_profilelabel"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:background="@color/mdtp_circle_color"
-                    android:paddingLeft="5dp"
-                    android:text="@string/configbuilder_profile"
-                    android:textAllCaps="true"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold" />
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/configbuilder_profilelabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@color/mdtp_circle_color"
+                        android:paddingLeft="5dp"
+                        android:text="@string/configbuilder_profile"
+                        android:textAllCaps="true"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="false"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="1"
+                        android:paddingRight="10dp"
+                        app:srcCompat="@drawable/visibility_black_16x16" />
+                </RelativeLayout>
 
                 <ListView
                     android:id="@+id/configbuilder_profilelistview"
