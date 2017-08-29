@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -242,6 +243,11 @@ public class DetermineBasalAdapterMAJS {
         mProfile.add("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
 
         mProfile.add("current_basal", pump.getBaseBasalRate());
+
+        if (units.equals(Constants.MMOL)) {
+            mProfile.add("out_units", "mmol/L");
+        }
+
         mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
         mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
 
