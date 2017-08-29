@@ -6,7 +6,7 @@ Hardware requirements:
 - A Roche Accu-Chek Combo (any firmware, they all work)
 - A compatible phone:
     - An Android phone with either Android < 4.2 (and possibly >= 8.1 in the future) or a phone running LineageOS 14.1 (formerly CyanogenMod)
-    - Or root rigths on any android phone and use this method: http://github.com/gregorybel/combo-pairing/
+    - Or root rights on any android phone and use this method: http://github.com/gregorybel/combo-pairing/
 
 Limitations:
 - Only the state from the main menu is read from the pump and returned with every command and is displayed on the combo tab, nothing else is read back from the pump at this point. Hence, all treatments must be entered via AAPS, no operations shall be performed on the pump itself.
