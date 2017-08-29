@@ -3,41 +3,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
-
-    <CheckBox
-        android:id="@+id/configbuilder_simpleitem_checkboxenabled"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="@string/enabled" />
-
-    <CheckBox
-        android:id="@+id/configbuilder_simpleitem_checkboxvisible"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:text="@string/visible" />
-
-    <ImageView
-        android:id="@+id/configbuilder_simpleitem_upimage"
-        android:layout_width="50dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@android:drawable/arrow_up_float"
-        android:contentDescription="@string/up" />
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/configbuilder_simpleitem_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text=""
-        android:textStyle="bold" />
+        android:layout_gravity="left"
+        android:layout_marginLeft="5dp"
+        android:layout_weight="1"
+        android:text="ConfigBuilder plugin text" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/configbuilder_simpleitem_checkboxenabled"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/enabled" />
+
+        <CheckBox
+            android:id="@+id/configbuilder_simpleitem_checkboxvisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:text="@string/visible" />
+    </LinearLayout>
 
 </LinearLayout>

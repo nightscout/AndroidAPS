@@ -607,7 +607,7 @@
     <string name="ru_lang">Ruština</string>
     <string name="sensitivity_warning">Při zapnuté detektci sensitivity nezapomeňte vkládat všechny sacharidy. Jinak budou odchylky mylně vyhodnocovány jako změna sensitivity !!</string>
     <string name="sensitivityaaps">Sensitivita AAPS</string>
-    <string name="sensitivityoref0">Sensotivita Oref0</string>
+    <string name="sensitivityoref0">Sensitivita Oref0</string>
     <string name="sensitivityweightedaverage">Sensitivita vážený průměr</string>
     <string name="openaps">OpenAPS</string>
     <string name="openaps_short">OAPS</string>
