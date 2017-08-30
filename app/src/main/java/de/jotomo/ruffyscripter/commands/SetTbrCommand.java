@@ -110,13 +110,9 @@ public class SetTbrCommand extends BaseCommand {
         log.debug("Current TBR %: " + currentPercent);
         long percentageChange = percentage - currentPercent;
         long percentageSteps = percentageChange / 10;
-        boolean increasePercentage = true;
-        if (percentageSteps < 0) {
-            increasePercentage = false;
-            percentageSteps = Math.abs(percentageSteps);
-        }
+        boolean increasePercentage = percentageSteps > 0;
         log.debug("Pressing " + (increasePercentage ? "up" : "down") + " " + percentageSteps + " times");
-        for (int i = 0; i < percentageSteps; i++) {
+        for (int i = 0; i < Math.abs(percentageSteps); i++) {
             scripter.verifyMenuIsDisplayed(MenuType.TBR_SET);
             log.debug("Push #" + (i + 1));
             if (increasePercentage) scripter.pressUpKey();
