@@ -49,11 +49,14 @@ public class Config {
     public static final boolean logDanaSerialEngine = true;
 
     // Combo specific
+    // TODO try turning this into preferences
+    public static final boolean comboExperimentalFeatures = true;
+
     /** enable the UNFINISHED and currently BROKEN bolus cammand that reports progress and can be cancelled */
-    public static final boolean comboExperimentalBolus = false;
+    public static final boolean comboExperimentalBolus = false && comboExperimentalFeatures;
 
     /** Very quick hack to split up bolus into 2 U parts, spaced roughly 45s apart.
      * If there's an error during bolusing, no record is created in AAPS.
      * Don't combine with experimental bolus! */
-    public static final boolean comboExperimentalSplitBoluses = false && !comboExperimentalBolus;
+    public static final boolean comboExperimentalSplitBoluses = false && comboExperimentalFeatures && !comboExperimentalBolus;
 }

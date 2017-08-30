@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import info.nightscout.androidaps.Config;
+
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
 
@@ -96,9 +98,20 @@ public class BolusCommand extends BaseCommand {
             }
             log.debug("Bolus record in history confirms delivered bolus");
 
-            // leave menu to go back to main menu
-            scripter.pressCheckKey();
-            scripter.waitForMenuToBeLeft(MenuType.BOLUS_DATA);
+            if (Config.comboExperimentalFeatures) {
+                // returning to main menu using the 'back' key should not cause a vibration
+                // TODO this is too brute-force; at least check for WARNING_OR_ERROR menu type
+                do {
+                    log.debug("Going back to main menu, currently at " + scripter.getCurrentMenu().getType());
+                    scripter.pressBackKey();
+                    scripter.waitForMenuUpdate();
+                } while (scripter.getCurrentMenu().getType() != MenuType.MAIN_MENU);
+            } else {
+                // leave menu to go back to main menu
+                scripter.pressCheckKey();
+                scripter.waitForMenuToBeLeft(MenuType.BOLUS_DATA);
+            }
+
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Bolus was correctly delivered and checked against history, but we "
                             + "did not return the main menu successfully.");
