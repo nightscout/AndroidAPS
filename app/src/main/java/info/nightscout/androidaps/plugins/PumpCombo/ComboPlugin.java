@@ -139,7 +139,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                     if (localLastCmdResult != null && !localLastCmdResult.success) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
-                        if (now > fiveMinutesSinceLastAlarm) {
+                        boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
+                        if (now > fiveMinutesSinceLastAlarm && loopEnabled) {
                             log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
                             PumpState localPumpState = pump.state;
