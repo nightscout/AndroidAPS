@@ -33,7 +33,6 @@ import de.jotomo.ruffyscripter.commands.CommandResult;
 import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
 import de.jotomo.ruffyscripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
-import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
@@ -390,7 +389,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                if (!Config.comboExperimentalSplitBoluses) {
+                if (!SP.getBoolean(R.string.key_combo_enable_experimental_split_bolus, false)) {
                     return deliverBolus(detailedBolusInfo);
                 } else {
                     // split up bolus into 2 U parts
@@ -457,7 +456,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @NonNull
     private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
-        runningBolusCommand = Config.comboExperimentalBolus
+        runningBolusCommand = SP.getBoolean(R.string.key_combo_enable_experimental_bolus, false)
                 ? new CancellableBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
                 : new BolusCommand(detailedBolusInfo.insulin);
         CommandResult bolusCmdResult = runCommand(runningBolusCommand);

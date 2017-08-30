@@ -4,6 +4,21 @@
         android:key="combopump"
         android:title="@string/combopump_settings">
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_combo_enable_experimental_features"
+            android:title="@string/combo_enable_experimental_features" />
+        <SwitchPreference
+            android:dependency="@string/key_combo_enable_experimental_features"
+            android:defaultValue="false"
+            android:key="@string/key_combo_enable_experimental_bolus"
+            android:title="@string/combo_enable_experimental_bolus" />
+        <SwitchPreference
+            android:dependency="@string/key_combo_enable_experimental_features"
+            android:defaultValue="false"
+            android:key="@string/key_combo_enable_experimental_split_bolus"
+            android:title="@string/combo_enable_experimental_split_bolus" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

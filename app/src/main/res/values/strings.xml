@@ -712,5 +712,11 @@
     <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
+    <string name="key_combo_enable_experimental_features">combo_enable_experimental_features</string>
+    <string name="combo_enable_experimental_features">Enable experimental features</string>
+    <string name="key_combo_enable_experimental_bolus">combo_enable_experimental_bolus</string>
+    <string name="combo_enable_experimental_bolus">Experimental bolus</string>
+    <string name="key_combo_enable_experimental_split_bolus">combo_experimental_split_bolus</string>
+    <string name="combo_enable_experimental_split_bolus">Experimental split bolus feature</string>
 </resources>
 

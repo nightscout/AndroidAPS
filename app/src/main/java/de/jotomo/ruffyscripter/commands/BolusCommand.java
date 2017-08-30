@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.R;
+import info.nightscout.utils.SP;
 
 public class BolusCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(BolusCommand.class);
@@ -98,7 +99,7 @@ public class BolusCommand extends BaseCommand {
             }
             log.debug("Bolus record in history confirms delivered bolus");
 
-            if (Config.comboExperimentalFeatures) {
+            if(SP.getBoolean(R.string.key_combo_enable_experimental_features, false)) {
                 // returning to main menu using the 'back' key should not cause a vibration
                 // TODO this is too brute-force; at least check for WARNING_OR_ERROR menu type
                 do {
