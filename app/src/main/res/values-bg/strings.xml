@@ -91,7 +91,7 @@
     <string name="configbuilder_treatments">Treatments</string>
     <string name="configbuilder_tempbasals">Временен базал</string>
     <string name="configbuilder_profile">Профил</string>
-    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps">Алгоритъм за APS</string>
     <string name="configbuilder_general">Общи</string>
     <string name="days">дни</string>
     <string name="objectives_minimalduration">Минимална продължителност</string>
@@ -355,8 +355,8 @@
     <string name="units">Единици:</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
-    <string name="dia">DIA(време на действие на инсулина):</string>
-    <string name="target_range">Целеви диапазон:</string>
+    <string name="dia">DIA:</string>
+    <string name="target_range">Целева КЗ:</string>
     <string name="edit_base_basal">Редактирай базални стойности</string>
     <string name="edit_base_isf">Редактирай Инс. чувствителност</string>
     <string name="edit_base_ic">Редактирай Инс./ВХ</string>
@@ -540,7 +540,7 @@
     <string name="fastactinginsulin">Бързодействащ инсулин</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">ИНС</string>
-    <string name="fastactinginsulinprolonged">Бързодействащ инсулин с удължаване</string>
+    <string name="fastactinginsulinprolonged">Бързодействащ инсулин с удължение</string>
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="iob">IOB</string>
@@ -639,7 +639,7 @@
     <string name="careportal_pump_label">ПОМПА</string>
     <string name="date">Дата</string>
     <string name="dia_too_short" formatted="false">DIA от %s е твърде кратка - използвай %s вместо това!</string>
-    <string name="free_peak_oref">със свободен пик по Oref</string>
+    <string name="free_peak_oref">Със свободен пик по Oref</string>
     <string name="insulin_oref_peak">Пик на кривата на IOB</string>
     <string name="insulin_peak_time">Време на пик [мин.]</string>
     <string name="invalid">НЕВАЛИДНО</string>
