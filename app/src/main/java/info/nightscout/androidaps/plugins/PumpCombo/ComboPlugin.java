@@ -141,8 +141,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
-                        if (now > fiveMinutesSinceLastAlarm && loopEnabled
-                                && !(SP.getBoolean(R.string.key_combo_ignore_transient_tbr_errors, false) && localLastCmd instanceof SetTbrCommand && ignoreLastSetTbrFailure)) {
+                        boolean ignoreLastFailedTbrCmd = SP.getBoolean(R.string.key_combo_ignore_transient_tbr_errors, false)
+                                && localLastCmd instanceof SetTbrCommand && ignoreLastSetTbrFailure;
+                        if (now > fiveMinutesSinceLastAlarm && loopEnabled && !ignoreLastFailedTbrCmd) {
                             log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
                             PumpState localPumpState = pump.state;
@@ -392,7 +393,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
-                if (!SP.getBoolean(R.string.key_combo_enable_experimental_split_bolus, false)) {
+                if (!(SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
+                        && SP.getBoolean(R.string.key_combo_enable_experimental_split_bolus, false))) {
                     return deliverBolus(detailedBolusInfo);
                 } else {
                     // split up bolus into 2 U parts
@@ -459,7 +461,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @NonNull
     private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
-        runningBolusCommand = SP.getBoolean(R.string.key_combo_enable_experimental_bolus, false)
+        runningBolusCommand = SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
+                              && SP.getBoolean(R.string.key_combo_enable_experimental_bolus, false)
                 ? new CancellableBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
                 : new BolusCommand(detailedBolusInfo.insulin);
         CommandResult bolusCmdResult = runCommand(runningBolusCommand);
