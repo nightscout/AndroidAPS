@@ -47,11 +47,11 @@ import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPe
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanFragment;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Fragment;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -120,9 +120,9 @@ public class MainApp extends Application {
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
             pluginsList.add(SensitivityAAPSPlugin.getPlugin());
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
-            if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
+            if (Config.DANARv2) pluginsList.add(DanaRv2Plugin.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());

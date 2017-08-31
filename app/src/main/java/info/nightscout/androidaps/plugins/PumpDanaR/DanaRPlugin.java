@@ -69,6 +69,14 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     private static DanaRPump pump = DanaRPump.getInstance();
     private static boolean useExtendedBoluses = false;
 
+    private static DanaRPlugin plugin = null;
+
+    public static DanaRPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new DanaRPlugin();
+        return plugin;
+    }
+
     public static PumpDescription pumpDescription = new PumpDescription();
 
     public DanaRPlugin() {
