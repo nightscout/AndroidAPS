@@ -18,6 +18,10 @@
             android:defaultValue="false"
             android:key="@string/key_combo_enable_experimental_split_bolus"
             android:title="@string/combo_enable_experimental_split_bolus" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_combo_ignore_transient_tbr_errors"
+            android:title="@string/combo_ignore_transient_tbr_errors" />
 
     </PreferenceCategory>
 

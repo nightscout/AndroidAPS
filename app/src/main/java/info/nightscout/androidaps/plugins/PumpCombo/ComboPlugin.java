@@ -67,6 +67,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private ComboPump pump = new ComboPump();
 
+    private boolean ignoreLastSetTbrFailure = false;
+
     @Nullable
     private volatile BolusCommand runningBolusCommand;
 
@@ -98,7 +100,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         pumpDescription.isTempBasalCapable = true;
         pumpDescription.tempBasalStyle = PumpDescription.PERCENT;
 
-        pumpDescription.maxTempPercent = SP.getInt(COMBO_MAX_TEMP_PERCENT_SP, 500);
+        pumpDescription.maxTempPercent = 500;
         pumpDescription.tempPercentStep = 10;
 
         pumpDescription.tempDurationStep = 15;
@@ -139,7 +141,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
-                        if (now > fiveMinutesSinceLastAlarm && loopEnabled) {
+                        if (now > fiveMinutesSinceLastAlarm && loopEnabled
+                                && !(SP.getBoolean(R.string.key_combo_ignore_transient_tbr_errors, false) && localLastCmd instanceof SetTbrCommand && ignoreLastSetTbrFailure)) {
                             log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
                             PumpState localPumpState = pump.state;
@@ -503,6 +506,19 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
         if (commandResult.exception != null) {
             log.error("Exception received from pump", commandResult.exception);
+        }
+
+        // error tolerance
+        if (commandResult.success) ignoreLastSetTbrFailure = false;
+
+        if (command instanceof SetTbrCommand) {
+            if (!commandResult.success && !ignoreLastSetTbrFailure) {
+                // ignore this once
+                ignoreLastSetTbrFailure = true;
+            } else {
+                // second failure in a row
+                ignoreLastSetTbrFailure = false;
+            }
         }
 
         pump.lastCmd = command;

@@ -718,5 +718,7 @@
     <string name="combo_enable_experimental_bolus">Experimental bolus</string>
     <string name="key_combo_enable_experimental_split_bolus">combo_experimental_split_bolus</string>
     <string name="combo_enable_experimental_split_bolus">Experimental split bolus feature</string>
+    <string name="key_combo_ignore_transient_tbr_errors">combo_ignore_transient_tbr_errors</string>
+    <string name="combo_ignore_transient_tbr_errors">Ignore transient TBR errors</string>
 </resources>
 
