@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinFastactingProlonged;
+package info.nightscout.androidaps.plugins.Insulin;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
@@ -12,10 +12,18 @@ import info.nightscout.androidaps.interfaces.PluginBase;
  * Created by mike on 17.04.2017.
  */
 
-public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInterface {
+public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
 
-    private static boolean fragmentEnabled = false;
+    private static boolean fragmentEnabled = true;
     private static boolean fragmentVisible = false;
+
+    private static InsulinFastactingPlugin plugin = null;
+
+    public static InsulinFastactingPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new InsulinFastactingPlugin();
+        return plugin;
+    }
 
     @Override
     public int getType() {
@@ -24,12 +32,12 @@ public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInte
 
     @Override
     public String getFragmentClass() {
-        return InsulinFastactingProlongedFragment.class.getName();
+        return InsulinFragment.class.getName();
     }
 
     @Override
     public String getName() {
-        return MainApp.sResources.getString(R.string.fastactinginsulinprolonged);
+        return MainApp.sResources.getString(R.string.fastactinginsulin);
     }
 
     @Override
@@ -75,12 +83,12 @@ public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInte
     // Insulin interface
     @Override
     public int getId() {
-        return FASTACTINGINSULINPROLONGED;
+        return FASTACTINGINSULIN;
     }
 
     @Override
     public String getFriendlyName() {
-        return MainApp.sResources.getString(R.string.fastactinginsulinprolonged);
+        return MainApp.sResources.getString(R.string.fastactinginsulin);
     }
 
     @Override
@@ -97,32 +105,27 @@ public class InsulinFastactingProlongedPlugin implements PluginBase, InsulinInte
     public Iob iobCalcForTreatment(Treatment treatment, long time, Double dia) {
         Iob result = new Iob();
 
-        //Double scaleFactor = 3.0 / dia;
-        double peak = 75d * dia / 6.0;
-        double tail = 180d * dia / 6.0;
-        double end = 360d * dia / 6.0;
-        double Total = 2 * peak + (tail - peak) * 5 / 2 + (end - tail) / 2;
+        double scaleFactor = 3.0 / dia;
+        double peak = 75d;
+        double end = 180d;
 
         if (treatment.insulin != 0d) {
             long bolusTime = treatment.date;
-            double minAgo = (time - bolusTime) / 1000d / 60d;
+            double minAgo = scaleFactor * (time - bolusTime) / 1000d / 60d;
 
             if (minAgo < peak) {
-                double x1 = 6 / dia * minAgo / 5d + 1;
-                result.iobContrib = treatment.insulin * (1 - 0.0012595 * x1 * x1 + 0.0012595 * x1);
+                double x1 = minAgo / 5d + 1;
+                result.iobContrib = treatment.insulin * (1 - 0.001852 * x1 * x1 + 0.001852 * x1);
                 // units: BG (mg/dL)  = (BG/U) *    U insulin     * scalar
-                result.activityContrib = treatment.insulin * ((2 * peak / Total) * 2 / peak / peak * minAgo);
-            } else if (minAgo < tail) {
-                double x2 = (6 / dia * (minAgo - peak)) / 5;
-                result.iobContrib = treatment.insulin * (0.00074 * x2 * x2 - 0.0403 * x2 + 0.69772);
-                result.activityContrib = treatment.insulin * (-((2 * peak / Total) * 2 / peak * 3 / 4) / (tail - peak) * (minAgo - peak) + (2 * peak / Total) * 2 / peak);
-            } else if (minAgo < end) {
-                double x3 = (6 / dia * (minAgo - tail)) / 5;
-                result.iobContrib = treatment.insulin * (0.0001323 * x3 * x3 - 0.0097 * x3 + 0.17776);
-                result.activityContrib = treatment.insulin * (-((2 * peak / Total) * 2 / peak * 1 / 4) / (end - tail) * (minAgo - tail) + (2 * peak / Total) * 2 / peak / 4);
-            }
+                result.activityContrib = treatment.insulin * (2 / dia / 60 / peak) * minAgo;
 
+            } else if (minAgo < end) {
+                double x2 = (minAgo - 75) / 5;
+                result.iobContrib = treatment.insulin * (0.001323 * x2 * x2 - 0.054233 * x2 + 0.55556);
+                result.activityContrib = treatment.insulin * (2 / dia / 60 - (minAgo - peak) * 2 / dia / 60 / (60 * 3 - peak));
+            }
         }
         return result;
     }
+
 }

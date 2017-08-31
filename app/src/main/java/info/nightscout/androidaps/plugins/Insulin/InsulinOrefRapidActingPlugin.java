@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinOrefCurves;
+package info.nightscout.androidaps.plugins.Insulin;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -7,36 +7,44 @@ import info.nightscout.androidaps.R;
  * Created by adrian on 14/08/17.
  */
 
-public class InsulinOrefUltraRapidActingPlugin extends InsulinOrefBasePlugin {
+public class InsulinOrefRapidActingPlugin extends InsulinOrefBasePlugin {
 
     private static boolean fragmentEnabled = false;
     private static boolean fragmentVisible = false;
 
-    public static final int PEAK = 55;
+    private static InsulinOrefRapidActingPlugin plugin = null;
+
+    public static InsulinOrefRapidActingPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new InsulinOrefRapidActingPlugin();
+        return plugin;
+    }
+
+    public static final int PEAK = 75;
 
     @Override
     public int getId() {
-        return OREF_ULTRA_RAPID_ACTING;
+        return OREF_RAPID_ACTING;
     }
 
     @Override
     public String getName() {
-        return MainApp.sResources.getString(R.string.ultrarapid_oref);
+        return MainApp.sResources.getString(R.string.rapid_acting_oref);
     }
 
     @Override
     public String getFragmentClass() {
-        return InsulinOrefUltraRapidActingFragment.class.getName();
+        return InsulinFragment.class.getName();
     }
 
     @Override
     public String getFriendlyName() {
-        return MainApp.sResources.getString(R.string.ultrarapid_oref);
+        return MainApp.sResources.getString(R.string.rapid_acting_oref);
     }
 
     @Override
     public String commentStandardText() {
-        return MainApp.sResources.getString(R.string.ultrafastactinginsulincomment);
+        return MainApp.sResources.getString(R.string.fastactinginsulincomment);
     }
 
     @Override
