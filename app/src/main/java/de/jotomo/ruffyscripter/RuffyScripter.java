@@ -464,6 +464,12 @@ public class RuffyScripter {
 
     // === pump ops ===
     public Menu getCurrentMenu() {
+        // TODO workaround, supposedly fixed in latest ruffy?
+        while (currentMenu == null) {
+            log.error("currentMenu == null, waiting");
+            SystemClock.sleep(500);
+            waitForMenuUpdate();
+        }
         return currentMenu;
     }
 
