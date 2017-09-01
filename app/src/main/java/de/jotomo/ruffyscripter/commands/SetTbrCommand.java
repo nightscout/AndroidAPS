@@ -224,29 +224,31 @@ public class SetTbrCommand extends BaseCommand {
         // A "TBR CANCELLED alert" is only raised by the pump when the remaining time is
         // greater than 60s (displayed as 0:01, the pump goes from there to finished.
         // We could read the remaining duration from MAIN_MENU, but by the time we're here,
-        // the pumup could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
+        // the pump could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
         // is raised and if so dismiss it
-        long inFiveSeconds = System.currentTimeMillis() + 5 * 1000;
+        confirmAlert("TBR CANCELLED", 5000);
+    }
+
+    /** Confirms and dismisses the given alert if it's raised before the timeout */
+    private void confirmAlert(String alertMessage, int maxWaitMs) {
+        long inFiveSeconds = System.currentTimeMillis() + maxWaitMs;
         boolean alertProcessed = false;
         while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
             if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                // Check the raised alarm is TBR CANCELLED, so we're not accidentally cancelling
-                // a different alarm that might be raised at the same time.
                 // Note that the message is permanently displayed, while the error code is blinking.
                 // A wait till the error code can be read results in the code hanging, despite
                 // menu updates coming in, so just check the message.
-                // TODO v2 this only works when the pump's language is English
-                // TODO extract confirmAlert method
+                // TODO quick try if the can't make reading the error code work ..
                 String errorMsg = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
-                if (!errorMsg.equals("TBR CANCELLED")) {
+                if (!errorMsg.equals(alertMessage)) {
                     throw new CommandException().success(false).enacted(false)
-                            .message("An alert other than the expected TBR CANCELLED was raised by the pump: "
+                            .message("An alert other than the expected " + alertMessage + " was raised by the pump: "
                                     + errorMsg + ". Please check the pump.");
                 }
-                // confirm "TBR CANCELLED" alert
+                // confirm alert
                 scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 scripter.pressCheckKey();
-                // dismiss "TBR CANCELLED" alert
+                // dismiss alert
                 scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
                 scripter.pressCheckKey();
                 scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
