@@ -226,36 +226,7 @@ public class SetTbrCommand extends BaseCommand {
         // We could read the remaining duration from MAIN_MENU, but by the time we're here,
         // the pump could have moved from 0:02 to 0:01, so instead, check if a "TBR CANCELLED" alert
         // is raised and if so dismiss it
-        confirmAlert("TBR CANCELLED", 5000);
-    }
-
-    /** Confirms and dismisses the given alert if it's raised before the timeout */
-    private void confirmAlert(String alertMessage, int maxWaitMs) {
-        long inFiveSeconds = System.currentTimeMillis() + maxWaitMs;
-        boolean alertProcessed = false;
-        while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
-            if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
-                // Note that the message is permanently displayed, while the error code is blinking.
-                // A wait till the error code can be read results in the code hanging, despite
-                // menu updates coming in, so just check the message.
-                // TODO quick try if the can't make reading the error code work ..
-                String errorMsg = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
-                if (!errorMsg.equals(alertMessage)) {
-                    throw new CommandException().success(false).enacted(false)
-                            .message("An alert other than the expected " + alertMessage + " was raised by the pump: "
-                                    + errorMsg + ". Please check the pump.");
-                }
-                // confirm alert
-                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-                scripter.pressCheckKey();
-                // dismiss alert
-                scripter.verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
-                scripter.pressCheckKey();
-                scripter.waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
-                alertProcessed = true;
-            }
-            SystemClock.sleep(10);
-        }
+        scripter.confirmAlert("TBR CANCELLED", 5000);
     }
 
     private void verifyMainMenuShowsNoActiveTbr() {

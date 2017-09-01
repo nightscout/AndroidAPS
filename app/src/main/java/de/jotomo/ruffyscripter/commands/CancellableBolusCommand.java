@@ -191,13 +191,6 @@ public class CancellableBolusCommand extends BolusCommand {
         }
     }
 
-    // TODO confirmAlarms? and report back which were cancelled?
-
-    private boolean confirmAlert(String alertText, int maxWaitTillExpectedAlert) {
-        // TODO
-        return false;
-    }
-
     public void requestCancellation() {
         cancelRequested = true;
         progressReportCallback.report(STOPPING, 0, 0);

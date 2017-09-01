@@ -582,6 +582,39 @@ public class RuffyScripter {
     // only ensureConnected() uses the method with the timeout parameter; inline that code,
     // so we can use a custom timeout and give a better error message in case of failure
 
+
+    // TODO confirmAlarms? and report back which were cancelled?
+
+    /** Confirms and dismisses the given alert if it's raised before the timeout */
+    public boolean confirmAlert(String alertMessage, int maxWaitMs) {
+        long inFiveSeconds = System.currentTimeMillis() + maxWaitMs;
+        boolean alertProcessed = false;
+        while (System.currentTimeMillis() < inFiveSeconds && !alertProcessed) {
+            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                // Note that the message is permanently displayed, while the error code is blinking.
+                // A wait till the error code can be read results in the code hanging, despite
+                // menu updates coming in, so just check the message.
+                // TODO quick try if the can't make reading the error code work ..
+                String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                if (!errorMsg.equals(alertMessage)) {
+                    throw new CommandException().success(false).enacted(false)
+                            .message("An alert other than the expected " + alertMessage + " was raised by the pump: "
+                                    + errorMsg + ". Please check the pump.");
+                }
+                // confirm alert
+                verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                pressCheckKey();
+                // dismiss alert
+                verifyMenuIsDisplayed(MenuType.WARNING_OR_ERROR);
+                pressCheckKey();
+                waitForMenuToBeLeft(MenuType.WARNING_OR_ERROR);
+                alertProcessed = true;
+            }
+            SystemClock.sleep(10);
+        }
+        return alertProcessed;
+    }
+
     /**
      * Wait until the menu update is in
      */
