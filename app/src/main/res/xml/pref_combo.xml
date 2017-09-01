@@ -38,6 +38,12 @@
             android:numeric="decimal"
             android:dialogMessage="@string/combo_experimental_reject_tbr_changes_below_delta_summary"/>
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_combo_disable_alerts"
+            android:title="@string/combo_disable_alerts"
+            android:summary="@string/combo_disable_alerts_summary"/>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

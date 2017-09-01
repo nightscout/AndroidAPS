@@ -727,5 +727,8 @@
     <string name="combo_enable_experimental_split_bolus_summary">Splits boluses into 2 U parts and waits around 45 after each to slow down bolus delivery.</string>
     <string name="combo_enable_experimental_bolus_summary">Enables the in-development bolus with progress report and cancel option.</string>
     <string name="combo_enable_experimental_features_summary">Unlocks experimental features which are in development and might be broken entirely.</string>
+    <string name="key_combo_disable_alerts">combo_disable_alerts</string>
+    <string name="combo_disable_alerts">Disable all alerts</string>
+    <string name="combo_disable_alerts_summary">Ignore all errors encountered while communicating with the pump.</string>
 </resources>
 

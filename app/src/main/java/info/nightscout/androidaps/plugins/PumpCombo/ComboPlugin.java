@@ -137,7 +137,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 while (true) {
                     Command localLastCmd = pump.lastCmd;
                     CommandResult localLastCmdResult = pump.lastCmdResult;
-                    if (localLastCmdResult != null && !localLastCmdResult.success) {
+                    if (!SP.getBoolean(R.string.combo_disable_alerts, false) &&
+                            localLastCmdResult != null && !localLastCmdResult.success) {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
