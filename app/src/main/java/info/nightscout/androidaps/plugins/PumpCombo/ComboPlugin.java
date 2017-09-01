@@ -141,7 +141,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
-                        boolean ignoreLastFailedTbrCmd = SP.getBoolean(R.string.key_combo_ignore_transient_tbr_errors, false)
+                        boolean ignoreLastFailedTbrCmd = SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
+                                && SP.getBoolean(R.string.key_combo_experimental_ignore_transient_tbr_errors, false)
                                 && localLastCmd instanceof SetTbrCommand && ignoreLastSetTbrFailure;
                         if (now > fiveMinutesSinceLastAlarm && loopEnabled && !ignoreLastFailedTbrCmd) {
                             log.error("Command failed: " + localLastCmd);
@@ -553,6 +554,20 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
         if (unroundedPercentage != roundedPercentage) {
             log.debug("Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
+        }
+
+        TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (!force && activeTemp != null) {
+            int minRequiredDelta = SP.getInt(R.string.key_combo_experimental_reject_tbr_changes_below_delta, 0);
+            boolean deltaBelowThreshold = Math.abs(activeTemp.percentRate - roundedPercentage) < minRequiredDelta;
+            if (deltaBelowThreshold) {
+                log.debug("Skipping setting APS-requested TBR change, since the requested change from "
+                        + activeTemp.percentRate + " -> " + roundedPercentage + " is below the delta threshold of " + minRequiredDelta);
+                PumpEnactResult pumpEnactResult = new PumpEnactResult();
+                pumpEnactResult.success = true;
+                pumpEnactResult.enacted = false;
+                return pumpEnactResult;
+            }
         }
         return setTempBasalPercent(roundedPercentage, durationInMinutes);
     }
