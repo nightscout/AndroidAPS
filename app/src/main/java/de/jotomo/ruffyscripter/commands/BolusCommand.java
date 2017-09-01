@@ -100,13 +100,7 @@ public class BolusCommand extends BaseCommand {
             log.debug("Bolus record in history confirms delivered bolus");
 
             if(SP.getBoolean(R.string.key_combo_enable_experimental_features, false)) {
-                // returning to main menu using the 'back' key should not cause a vibration
-                // TODO this is too brute-force; at least check for WARNING_OR_ERROR menu type
-                do {
-                    log.debug("Going back to main menu, currently at " + scripter.getCurrentMenu().getType());
-                    scripter.pressBackKey();
-                    scripter.waitForMenuUpdate();
-                } while (scripter.getCurrentMenu().getType() != MenuType.MAIN_MENU);
+                scripter.returnToMainMenu();
             } else {
                 // leave menu to go back to main menu
                 scripter.pressCheckKey();

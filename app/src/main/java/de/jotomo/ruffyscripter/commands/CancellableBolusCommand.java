@@ -52,7 +52,7 @@ public class CancellableBolusCommand extends BolusCommand {
 
             if (cancelRequested) {
                 progressReportCallback.report(STOPPING, 0, 0);
-                scripter.goToMainTypeScreen(MenuType.MAIN_MENU, 30 * 1000);
+                scripter.returnToMainMenu();
                 progressReportCallback.report(STOPPED, 0, 0);
                 return new CommandResult().success(true).enacted(false)
                         .message("Bolus cancelled as per user request with no insulin delivered");
@@ -69,7 +69,7 @@ public class CancellableBolusCommand extends BolusCommand {
                     scripter.pressUpKey();
                     // wait up to 1s for a BOLUS_CANCELLED alert, if it doesn't happen we missed
                     // the window, simply continue and let the next cancel attempt try its luck
-                    boolean alertWasCancelled = confirmAlert("BOLUS CANCELLED", 1000);
+                    boolean alertWasCancelled = scripter.confirmAlert("BOLUS CANCELLED", 1000);
                     if (alertWasCancelled) {
                         progressReportCallback.report(STOPPED, 0, 0);
                         return new CommandResult().success(true).enacted(false)
@@ -120,7 +120,7 @@ public class CancellableBolusCommand extends BolusCommand {
                     String message = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
                     if (message.equals("LOW CARTRIDGE")) {
                         lowCartdrigeAlarmTriggered = true;
-                        confirmAlert("LOW CARTRIDGE", 2000);
+                        scripter.confirmAlert("LOW CARTRIDGE", 2000);
                     } else {
                         // any other alert
                         break;
@@ -176,7 +176,9 @@ public class CancellableBolusCommand extends BolusCommand {
             }
             log.debug("Bolus record in history confirms delivered bolus");
 
-            if (!scripter.goToMainTypeScreen(MenuType.MAIN_MENU, 15 * 1000)) {
+            // TODO how would this call fail? more generally ......
+            scripter.returnToMainMenu();
+            if (scripter.getCurrentMenu().getType() != MenuType.MAIN_MENU) {
                 throw new CommandException().success(false).enacted(true)
                         .message("Bolus was correctly delivered and checked against history, but we "
                                 + "did not return the main menu successfully.");

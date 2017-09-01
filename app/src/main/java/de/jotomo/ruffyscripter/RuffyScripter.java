@@ -193,6 +193,16 @@ public class RuffyScripter {
         this.ruffyService = null;
     }
 
+    public void returnToMainMenu() {
+        // returning to main menu using the 'back' key should not cause a vibration
+        // TODO this is too brute-force; at least check for WARNING_OR_ERROR menu type
+        do {
+            log.debug("Going back to main menu, currently at " + getCurrentMenu().getType());
+            pressBackKey();
+            waitForMenuUpdate();
+        } while (getCurrentMenu().getType() != MenuType.MAIN_MENU);
+    }
+
     private static class Returnable {
         CommandResult cmdResult;
     }
@@ -540,48 +550,10 @@ public class RuffyScripter {
         return true;
     }
 
-    public boolean goToMainTypeScreen(MenuType screen, long timeout) {
-        long start = System.currentTimeMillis();
-        while ((currentMenu == null || currentMenu.getType() != screen) && start + timeout > System.currentTimeMillis()) {
-            if (currentMenu != null && currentMenu.getType() == MenuType.WARNING_OR_ERROR) {
-                throw new CommandException().message("Warning/errors raised by pump, please check pump");
-                // since warnings and errors can occur at any time, they should be dealt with in
-                // a more general way, see the handleMenuUpdate callback above
-                //FIXME bad thing to do :D
-                // yup, commenting this out since I don't want an occlusionn alert to hidden by this :-)
-                //pressCheckKey();
-            } else if (currentMenu != null && !currentMenu.getType().isMaintype()) {
-                pressBackKey();
-            } else
-                pressMenuKey();
-            waitForScreenUpdate(250);
-        }
-        return currentMenu != null && currentMenu.getType() == screen;
-    }
-
-    public boolean enterMenu(MenuType startType, MenuType targetType, byte key, long timeout) {
-        if (currentMenu.getType() == targetType)
-            return true;
-        if (currentMenu == null || currentMenu.getType() != startType)
-            return false;
-        long start = System.currentTimeMillis();
-        pressKey(key, 2000);
-        while ((currentMenu == null || currentMenu.getType() != targetType) && start + timeout > System.currentTimeMillis()) {
-            waitForScreenUpdate(100);
-        }
-        return currentMenu != null && currentMenu.getType() == targetType;
-    }
-
-    public void step(int steps, byte key, long timeout) {
-        for (int i = 0; i < Math.abs(steps); i++)
-            pressKey(key, timeout);
-    }
-
     // TODO v2, rework these two methods: waitForMenuUpdate shoud only be used by commands
     // then anything longer than a few seconds is an error;
     // only ensureConnected() uses the method with the timeout parameter; inline that code,
     // so we can use a custom timeout and give a better error message in case of failure
-
 
     // TODO confirmAlarms? and report back which were cancelled?
 
@@ -615,10 +587,7 @@ public class RuffyScripter {
         return alertProcessed;
     }
 
-    /**
-     * Wait until the menu update is in
-     */
-    // TODO donn't use this in ensureConnected
+    /** Wait until the menu is updated */
     public void waitForMenuUpdate() {
         waitForMenuUpdate(60, "Timeout waiting for menu update");
     }
@@ -669,9 +638,7 @@ public class RuffyScripter {
         }
     }
 
-    /**
-     * Wait till a menu changed has completed, "away" from the menu provided as argument.
-     */
+    /** Wait till a menu changed has completed, "away" from the menu provided as argument. */
     public void waitForMenuToBeLeft(MenuType menuType) {
         long timeout = System.currentTimeMillis() + 60 * 1000;
         while (currentMenu.getType() == menuType) {
