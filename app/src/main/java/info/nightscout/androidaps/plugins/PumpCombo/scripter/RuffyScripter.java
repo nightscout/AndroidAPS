@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter;
 
 import android.os.RemoteException;
 import android.os.SystemClock;
@@ -16,10 +16,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-import de.jotomo.ruffyscripter.commands.Command;
-import de.jotomo.ruffyscripter.commands.CommandException;
-import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandException;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos

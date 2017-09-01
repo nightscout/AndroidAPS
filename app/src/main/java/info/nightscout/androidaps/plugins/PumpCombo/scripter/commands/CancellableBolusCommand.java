@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 import android.os.SystemClock;
 
@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
 
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERED;
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERING;
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPED;
-import static de.jotomo.ruffyscripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPING;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERED;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERING;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPED;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPING;
 
 public class CancellableBolusCommand extends BolusCommand {
     private static final Logger log = LoggerFactory.getLogger(CancellableBolusCommand.class);

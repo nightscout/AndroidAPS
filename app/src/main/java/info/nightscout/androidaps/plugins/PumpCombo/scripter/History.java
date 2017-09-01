@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter;
 
 /**
  * The history data read from "My data"

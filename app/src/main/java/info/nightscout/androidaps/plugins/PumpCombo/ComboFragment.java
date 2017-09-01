@@ -17,9 +17,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.commands.Command;
-import de.jotomo.ruffyscripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;

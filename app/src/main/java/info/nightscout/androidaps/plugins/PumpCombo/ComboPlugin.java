@@ -23,15 +23,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import de.jotomo.ruffyscripter.PumpState;
-import de.jotomo.ruffyscripter.RuffyScripter;
-import de.jotomo.ruffyscripter.commands.BolusCommand;
-import de.jotomo.ruffyscripter.commands.CancelTbrCommand;
-import de.jotomo.ruffyscripter.commands.CancellableBolusCommand;
-import de.jotomo.ruffyscripter.commands.Command;
-import de.jotomo.ruffyscripter.commands.CommandResult;
-import de.jotomo.ruffyscripter.commands.GetPumpStateCommand;
-import de.jotomo.ruffyscripter.commands.SetTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancelTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;

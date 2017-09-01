@@ -1,8 +1,8 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 import java.util.List;
 
-import de.jotomo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
 
 /**
  * Interface for all commands to be executed by the pump.

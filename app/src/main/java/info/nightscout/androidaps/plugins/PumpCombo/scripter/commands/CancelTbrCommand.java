@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 import org.monkey.d.ruffy.ruffy.driver.display.MenuType;
 import org.slf4j.Logger;
@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Collections;
 import java.util.List;
 
-import de.jotomo.ruffyscripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
 import info.nightscout.androidaps.MainApp;
 
 // TODO robustness: can a TBR run out, whilst we're trying to cancel it?

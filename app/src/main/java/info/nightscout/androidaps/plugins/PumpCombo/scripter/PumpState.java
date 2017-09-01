@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter;
 
 import java.util.Date;
 

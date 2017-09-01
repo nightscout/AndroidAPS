@@ -1,4 +1,4 @@
-package de.jotomo.ruffyscripter.commands;
+package info.nightscout.androidaps.plugins.PumpCombo.scripter.commands;
 
 import android.util.Log;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import de.jotomo.ruffyscripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
 
 public class GetBasalRateProfileCommand extends BaseCommand {
     private static final Logger log = LoggerFactory.getLogger(GetBasalRateProfileCommand.class);
