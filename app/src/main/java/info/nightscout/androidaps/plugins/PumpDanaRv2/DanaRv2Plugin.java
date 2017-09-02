@@ -86,7 +86,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
+        pumpDescription.bolusStep = 0.05d;
 
         pumpDescription.isExtendedBolusCapable = true;
         pumpDescription.extendedBolusStep = 0.05d;
