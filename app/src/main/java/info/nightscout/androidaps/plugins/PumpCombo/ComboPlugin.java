@@ -27,7 +27,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancelTbrCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand;
@@ -365,10 +365,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    private static CancellableBolusCommand.ProgressReportCallback bolusProgressReportCallback =
-            new CancellableBolusCommand.ProgressReportCallback() {
+    private static ExperimentalBolusCommand.ProgressReportCallback bolusProgressReportCallback =
+            new ExperimentalBolusCommand.ProgressReportCallback() {
         @Override
-        public void report(CancellableBolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
+        public void report(ExperimentalBolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
             EventOverviewBolusProgress enent = EventOverviewBolusProgress.getInstance();
             switch (state) {
                 case DELIVERING:
@@ -465,7 +465,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
         runningBolusCommand = SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
                               && SP.getBoolean(R.string.key_combo_enable_experimental_bolus, false)
-                ? new CancellableBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
+                ? new ExperimentalBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
                 : new BolusCommand(detailedBolusInfo.insulin);
         CommandResult bolusCmdResult = runCommand(runningBolusCommand);
         PumpEnactResult pumpEnactResult = new PumpEnactResult();

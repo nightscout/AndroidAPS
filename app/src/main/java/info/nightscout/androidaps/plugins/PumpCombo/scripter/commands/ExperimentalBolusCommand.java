@@ -14,18 +14,18 @@ import java.util.Locale;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
 
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERED;
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.DELIVERING;
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPED;
-import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancellableBolusCommand.ProgressReportCallback.State.STOPPING;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.DELIVERED;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.DELIVERING;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.STOPPED;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.STOPPING;
 
-public class CancellableBolusCommand extends BolusCommand {
-    private static final Logger log = LoggerFactory.getLogger(CancellableBolusCommand.class);
+public class ExperimentalBolusCommand extends BolusCommand {
+    private static final Logger log = LoggerFactory.getLogger(ExperimentalBolusCommand.class);
 
     private final ProgressReportCallback progressReportCallback;
     private volatile boolean cancelRequested;
 
-    public CancellableBolusCommand(double bolus, ProgressReportCallback progressReportCallback) {
+    public ExperimentalBolusCommand(double bolus, ProgressReportCallback progressReportCallback) {
         super(bolus);
         this.progressReportCallback = progressReportCallback;
     }

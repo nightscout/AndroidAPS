@@ -5,15 +5,19 @@ import java.util.List;
 public class GetReservoirLevelCommand extends BaseCommand {
     @Override
     public CommandResult execute() {
-        // TODO stub
-        // watch out, level goes into PumpState, which is usually set by RuffyScripter
-        // after a command ran, unless a command has already set it ... I don't like
-        // that, it's too implicit ...
+        // TODO merge this into GetPumpHistory / GetFullPumpState; or maybe just have
+        // GetPumpState and parameterize to just read the displayed menu, read reservoir level, read history?
+        // TODO rough version, no error handling thought out
 
-        // also, maybe ditch this command and add a parameter to GetPumpStateCommand to also
-        // read the reservoir level if possible (pump must be in a state to accept commands
-        // (possible on main, stop ...)
-        return null;
+        // turn into a method; bolus commands needs this as a precheck, parameterize GetPumpState command
+        // to include reservoir level if desired
+        scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU);
+        scripter.pressCheckKey();
+        scripter.waitForMenuToBeLeft(MenuType.MAIN_MENU);
+        scripter.verifyMenuIsDisplayed(MenuType.QUICK_INFO);
+        int remainingInsulin = ((Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.REMAINING_INSULIN)).intValue();
+        scripter.returnToMainMenu();
+        return new CommandResult().success(true).enacted(false).reservoirLevel(remainingInsulin);
     }
 
     @Override
