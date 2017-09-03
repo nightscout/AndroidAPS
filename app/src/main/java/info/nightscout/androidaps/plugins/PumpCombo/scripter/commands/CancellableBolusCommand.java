@@ -91,9 +91,11 @@ public class CancellableBolusCommand extends BolusCommand {
             // TODO extract into method
 
             // TODO 'low cartrdige' alarm must be handled inside, since the bolus continues regardless;
-            // it must be claread so we can see the remaining bolus again;
+            // it must be cleared so we can see the remaining bolus again;
             while (bolusRemaining != null) {
                 if (cancelRequested) {
+                    // cancel running bolus by pressing up for 3s, while raise a BOLUS CANCELLED
+                    // alert, unless the bolus finished within those 3s.
                     progressReportCallback.report(STOPPING, 0, 0);
                     scripter.pressKeyMs(RuffyScripter.Key.UP, 3000);
                     progressReportCallback.report(STOPPED, 0, 0);
@@ -116,6 +118,8 @@ public class CancellableBolusCommand extends BolusCommand {
                     lastBolusReported = bolusRemaining;
                 }
 
+                // TODO think through situatiotns where an alarm can be raised, not just when pressing a button,
+                // but a 'low battery' alarm can trigger at any time ...
                 if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                     String message = (String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
                     if (message.equals("LOW CARTRIDGE")) {
@@ -129,17 +133,23 @@ public class CancellableBolusCommand extends BolusCommand {
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
+            progressReportCallback.report(DELIVERED, 100, bolus);
 
             // wait up to 2s for any possible warning to be raised, if not raised already
-            long minWait = System.currentTimeMillis() + 2 * 1000;
-            while (scripter.getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < minWait) {
+            // TODO what could be raised here, other than those alarms than can ring at any time anyways?
+            long timeout = System.currentTimeMillis() + 2 * 1000;
+            while (scripter.getCurrentMenu().getType() != MenuType.WARNING_OR_ERROR && System.currentTimeMillis() < timeout) {
                 SystemClock.sleep(50);
             }
 
             // process warnings (confirm them, report back to AAPS about them)
-            while (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < minWait) {
-               // TODO
+//            while (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < timeout) {
+            // TODO brute-force hack
+            if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                scripter.confirmAlert(((String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE)), 1000);
             }
+//                SystemClock.sleep(50);
+//            }
 
             // TODO what if we hit 'cartridge low' alert here? is it immediately displayed or after the bolus?
             // TODO how are error states reported back to the caller that occur outside of calls in genal? Low battery, low cartridge?
@@ -148,7 +158,6 @@ public class CancellableBolusCommand extends BolusCommand {
             scripter.verifyMenuIsDisplayed(MenuType.MAIN_MENU,
                     "Bolus delivery did not complete as expected. "
                             + "Check pump manually, the bolus might not have been delivered.");
-
 
             // TODO report back what was read from history
 
@@ -184,7 +193,6 @@ public class CancellableBolusCommand extends BolusCommand {
                                 + "did not return the main menu successfully.");
             }
 
-            progressReportCallback.report(DELIVERED, 100, bolus);
 
             return new CommandResult().success(true).enacted(true)
                     .message(String.format(Locale.US, "Delivered %02.1f U", bolus));
