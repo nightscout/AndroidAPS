@@ -25,18 +25,18 @@
         <SwitchPreference
             android:dependency="@string/key_combo_enable_experimental_features"
             android:defaultValue="false"
-            android:key="@string/key_combo_experimental_ignore_transient_tbr_errors"
-            android:title="@string/combo_experimental_ignore_transient_tbr_errors"
-            android:summary="@string/combo_experimental_ignore_transient_tbr_errors_summary"/>
+            android:key="@string/key_combo_experimental_ignore_transient_errors"
+            android:title="@string/combo_experimental_ignore_transient_errors"
+            android:summary="@string/combo_experimental_ignore_transient_errors_summary"/>
 
         <!-- TODO add validation, to restrict values to rang 0-100, see pref_absorption_oref0.xml -->
         <EditTextPreference
             android:dependency="@string/key_combo_enable_experimental_features"
-            android:key="@string/key_combo_experimental_reject_tbr_changes_below_delta"
-            android:title="@string/combo_experimental_reject_tbr_changes_below_delta"
+            android:key="@string/key_combo_experimental_skip_tbr_changes_below_delta"
+            android:title="@string/combo_experimental_skip_tbr_changes_below_delta"
             android:defaultValue="0"
             android:numeric="decimal"
-            android:dialogMessage="@string/combo_experimental_reject_tbr_changes_below_delta_summary"/>
+            android:dialogMessage="@string/combo_experimental_skip_tbr_changes_below_delta_summary"/>
 
         <SwitchPreference
             android:defaultValue="false"

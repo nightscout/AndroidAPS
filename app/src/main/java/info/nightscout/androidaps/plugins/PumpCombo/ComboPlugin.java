@@ -67,7 +67,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     private ComboPump pump = new ComboPump();
 
-    private boolean ignoreLastSetTbrFailure = false;
+    private boolean ignoreLastSetTbrOrReadStateFailure = false;
 
     @Nullable
     private volatile BolusCommand runningBolusCommand;
@@ -143,8 +143,9 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
                         boolean ignoreLastFailedTbrCmd = SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
-                                && SP.getBoolean(R.string.key_combo_experimental_ignore_transient_tbr_errors, false)
-                                && localLastCmd instanceof SetTbrCommand && ignoreLastSetTbrFailure;
+                                && SP.getBoolean(R.string.key_combo_experimental_ignore_transient_errors, false)
+                                && (localLastCmd instanceof SetTbrCommand || localLastCmd instanceof GetPumpStateCommand)
+                                && ignoreLastSetTbrOrReadStateFailure;
                         if (now > fiveMinutesSinceLastAlarm && loopEnabled && !ignoreLastFailedTbrCmd) {
                             log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
@@ -514,15 +515,15 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         }
 
         // error tolerance
-        if (commandResult.success) ignoreLastSetTbrFailure = false;
+        if (commandResult.success) ignoreLastSetTbrOrReadStateFailure = false;
 
-        if (command instanceof SetTbrCommand) {
-            if (!commandResult.success && !ignoreLastSetTbrFailure) {
+        if (command instanceof SetTbrCommand || command instanceof GetPumpStateCommand) {
+            if (!commandResult.success && !ignoreLastSetTbrOrReadStateFailure) {
                 // ignore this once
-                ignoreLastSetTbrFailure = true;
+                ignoreLastSetTbrOrReadStateFailure = true;
             } else {
                 // second failure in a row
-                ignoreLastSetTbrFailure = false;
+                ignoreLastSetTbrOrReadStateFailure = false;
             }
         }
 
@@ -559,7 +560,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
         TemporaryBasal activeTemp = MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
         if (!force && activeTemp != null) {
-            int minRequiredDelta = SP.getInt(R.string.key_combo_experimental_reject_tbr_changes_below_delta, 0);
+            int minRequiredDelta = SP.getInt(R.string.key_combo_experimental_skip_tbr_changes_below_delta, 0);
             boolean deltaBelowThreshold = Math.abs(activeTemp.percentRate - roundedPercentage) < minRequiredDelta;
             if (deltaBelowThreshold) {
                 log.debug("Skipping setting APS-requested TBR change, since the requested change from "
