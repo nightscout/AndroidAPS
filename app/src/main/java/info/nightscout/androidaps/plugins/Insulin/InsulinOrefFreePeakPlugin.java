@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinOrefCurves;
+package info.nightscout.androidaps.plugins.Insulin;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -12,6 +12,14 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
 
     private static boolean fragmentEnabled = false;
     private static boolean fragmentVisible = false;
+
+    private static InsulinOrefFreePeakPlugin plugin = null;
+
+    public static InsulinOrefFreePeakPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new InsulinOrefFreePeakPlugin();
+        return plugin;
+    }
 
     public static final int DEFAULT_PEAK = 75;
 
@@ -27,7 +35,7 @@ public class InsulinOrefFreePeakPlugin extends InsulinOrefBasePlugin {
 
     @Override
     public String getFragmentClass() {
-        return InsulinOrefFreePeakFragment.class.getName();
+        return InsulinFragment.class.getName();
     }
 
     @Override

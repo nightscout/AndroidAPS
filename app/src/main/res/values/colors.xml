@@ -34,6 +34,7 @@
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="linearBlockBackground">#3e3d3d</color>
+    <color name="configBuilderSelectedBackground">#262525</color>
 
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>

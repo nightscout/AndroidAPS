@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinFastacting;
+package info.nightscout.androidaps.plugins.Insulin;
 
 import android.content.Context;
 import android.graphics.Color;

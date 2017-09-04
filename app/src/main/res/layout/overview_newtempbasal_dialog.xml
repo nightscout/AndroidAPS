@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment">
+    tools:context="info.nightscout.androidaps.plugins.Actions.dialogs.NewTempBasalDialog">
 
     <ScrollView
         android:layout_width="match_parent"

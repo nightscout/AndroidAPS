@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment">
+    tools:context="info.nightscout.androidaps.plugins.Insulin.InsulinFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 android:layout_margin="10dp"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <info.nightscout.androidaps.plugins.InsulinFastacting.ActivityGraph
+            <info.nightscout.androidaps.plugins.Insulin.ActivityGraph
                 android:id="@+id/insuling_graph"
                 android:layout_width="match_parent"
                 android:layout_margin="20dp"
