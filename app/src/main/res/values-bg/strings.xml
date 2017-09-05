@@ -82,7 +82,7 @@
     <string name="profileviewer">NS Профил</string>
     <string name="simpleprofile">Обикновен профил</string>
     <string name="tempbasal">TempBasal</string>
-    <string name="treatments">Treatments</string>
+    <string name="treatments">Лечения</string>
     <string name="virtualpump">Виртуална помпа</string>
     <string name="careportal">Careportal</string>
 
@@ -91,13 +91,13 @@
     <string name="configbuilder_treatments">Treatments</string>
     <string name="configbuilder_tempbasals">Временен базал</string>
     <string name="configbuilder_profile">Профил</string>
-    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps">Алгоритъм за APS</string>
     <string name="configbuilder_general">Общи</string>
     <string name="days">дни</string>
     <string name="objectives_minimalduration">Минимална продължителност</string>
     <string name="configbuilder_constraints">Ограничения</string>
-    <string name="loop">Цикъл</string>
-    <string name="configbuilder_loop">Цикъл</string>
+    <string name="loop">Loop</string>
+    <string name="configbuilder_loop">Loop</string>
     <string name="loop_aps_label">APS</string>
     <string name="loop_constraintsprocessed_label">След ограничения</string>
     <string name="loop_setbypump_label">Зададено на помпата</string>
@@ -106,7 +106,7 @@
     <string name="cancel">Откажи</string>
     <string name="noapsselected">НЕ Е ИЗБРАН APS ИЛИ НЯМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="safety">Сигурност</string>
-    <string name="openapsma_disabled">Плъгина е изключен</string>
+    <string name="openapsma_disabled">Модула е изключен</string>
     <string name="constraints_violation">Нарушено ограничение</string>
     <string name="treatmentdeliveryerror">Грешка при подаване на болус</string>
     <string name="tempbasaldeliveryerror">Грешка при подаване на временен базал</string>
@@ -130,10 +130,10 @@
     <string name="nsclient">NSClient</string>
     <string name="apsmode_title">APS режим</string>
 
-    <string name="closedloop">Затворен цикъл</string>
-    <string name="openloop">Отворен цикъл</string>
-    <string name="disabledloop">изключен</string>
-    <string name="disableloop">Изключи</string>
+    <string name="closedloop">Closed Loop</string>
+    <string name="openloop">Open Loop</string>
+    <string name="disabledloop">Loop изключен</string>
+    <string name="disableloop">Изключи Loop</string>
     <string name="enableloop">Включи</string>
     <string name="openloop_newsuggestion">Има ново предложение</string>
     <string name="unsupportedclientver">Несъвместима версия на NSClient</string>
@@ -142,7 +142,7 @@
     <string name="objectives_bgavailableinns">КЗ да се вижда в NS</string>
     <string name="objectives_pumpstatusavailableinns">Статуса на помпа да е достъпен в NS</string>
     <string name="objectives_manualenacts">Ръчно приложени</string>
-    <string name="loopdisabled">ЦИКЪЛА Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
+    <string name="loopdisabled">LOOP Е СПРЯН ОТ ОГРАНИЧЕНИЯТА</string>
     <string name="cs_lang">Czech</string>
     <string name="en_lang">English</string>
     <string name="treatments_wizard_basaliob_label">Базален IOB</string>
@@ -180,7 +180,7 @@
     <string name="careportal_newnstreatment_notes_label">Бележки</string>
     <string name="careportal_newnstreatment_eventtime_label">Време на събитие</string>
     <string name="careportal_newnstreatment_profile_label">Профил</string>
-    <string name="careportal_newnstreatment_enteredby_title">Въведен от</string>
+    <string name="careportal_newnstreatment_enteredby_title">Въведено от</string>
     <string name="careportal_newnstreatment_glucosetype">Тип КЗ</string>
     <string name="noprofile">Още не е зареден профила от NS</string>
     <string name="overview_tempbasal_button">Временен базал</string>
@@ -283,7 +283,7 @@
     <string name="danar_history_glucose">КЗ</string>
     <string name="danar_history_refill">Пълнене</string>
     <string name="danar_history_syspend">Спиране</string>
-    <string name="danar_history_connectingfor" formatted="false">Свързване с помпата за %d сек.</string>
+    <string name="danar_history_connectingfor" formatted="false">Свързва се с помпата за %d сек.</string>
     <string name="danar_password_title">Парола за помпата</string>
     <string name="wrongpumppassword">Грешна парола за помпата!</string>
     <string name="pumpbusy">Помпата е заета</string>
@@ -294,15 +294,15 @@
     <string name="overview_bolusprogress_stoppressed">Натиснат е СТОП!</string>
     <string name="waitingforpump">Очаква помпата</string>
     <string name="waitingforpumpclicktorefresh">Очаква резутат. Натисни за обновяване.</string>
-    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Ще доставя %.2fЕ</string>
+    <string name="overview_bolusprogress_goingtodeliver" formatted="false">Ще достави %.2fЕ</string>
     <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
-    <string name="objectives_1_gate">Работете в Отворен режим няколко дни и ръчно прилагайте на много временни базали</string>
-    <string name="objectives_1_objective">Стартиране на Отворен режим </string>
+    <string name="objectives_1_gate">Работете в Open Loop няколко дни и ръчно прилагайте на много временни базали</string>
+    <string name="objectives_1_objective">Стартиране на Open Loop </string>
     <string name="objectives_2_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
-    <string name="objectives_2_objective">Разбиране на вашият Отворен режим, включително препоръчваните временни базали</string>
-    <string name="objectives_3_objective">Стартиране на Затворен цикъл с изключване на базал при ниска КЗ</string>
-	<string name="objectives_3_gate">Стартиране на Затворен цикъл с макс. IOB=0 без твърде много събития тип ниска КЗ</string>
-    <string name="objectives_4_objective">Настройване на Затворения цикъл чрез повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
+    <string name="objectives_2_objective">Разбиране на вашият Open Loop, включително препоръчваните временни базали</string>
+    <string name="objectives_3_objective">Стартиране на Closed Loop с изключване на базал при ниска КЗ</string>
+	<string name="objectives_3_gate">Стартиране на Closed Loop с макс. IOB=0 без твърде много събития тип ниска КЗ</string>
+    <string name="objectives_4_objective">Настройване на Closed Loop чрез повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
     <string name="objectives_4_gate">Прекарайте няколко дни по този начин, като поне една нощ нямате аларма за ниска КЗ.</string>
     <string name="objectives_5_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
     <string name="objectives_5_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
@@ -355,8 +355,8 @@
     <string name="units">Единици:</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
-    <string name="dia">DIA(време на действие на инсулина):</string>
-    <string name="target_range">Целеви диапазон:</string>
+    <string name="dia">DIA:</string>
+    <string name="target_range">Целева КЗ:</string>
     <string name="edit_base_basal">Редактирай базални стойности</string>
     <string name="edit_base_isf">Редактирай Инс. чувствителност</string>
     <string name="edit_base_ic">Редактирай Инс./ВХ</string>
@@ -387,7 +387,7 @@
     <string name="mdi">Писалки</string>
     <string name="MM640g">MM640g</string>
     <string name="ongoingnotificaction">Текущи известия</string>
-    <string name="old_data">ПЕКАЛЕНО СТАРИ ДАННИ</string>
+    <string name="old_data">СТАРИ ДАННИ</string>
     <string name="minago">преди %d мин</string>
     <string name="sms_minago">%dmin ago</string>
     <string name="localprofile">Локален профил</string>
@@ -440,14 +440,14 @@
     <string name="always_use_shortavg">Използвай краткоср. Δ вместо разлика от последната КЗ</string>
     <string name="always_use_shortavg_summary">Полезно при данни за КЗ с много шум</string>
     <string name="advancedsettings_title">Разширени настройки</string>
-    <string name="danar_model" formatted="false">Медел: %02X Протокол: %02X Код: %02X</string>
+    <string name="danar_model" formatted="false">Модел: %02X Протокол: %02X Код: %02X</string>
     <string name="profile">Профил</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">По подразбиране: 3 Това е основен параметър в сигурността на OpenAPS. Той ограничава максималният базал да бъде 3 пъти най-голямата стойност от дневните базали. Не би трябвало да има нужа от промяна, защото от опит сме проверили, че максимумите са “3x от най-високия дневен; 4x от текущия”.</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">По подразбиране: 4\nТова е другият основен параметър в сигурността на OpenAPS, и другата половина от "3x от най-високия дневен; 4x от текущия". Това означава, че независимо от макс базал настроен в помпата, стойността на базала не може да е по-висока от тази стойност умножена по стойността на базала за текущият час от денонощието. Това е с цел да предпази от прекалено високи стойности на максималния базал преди да разбират как работи алгоритъма. Повечето от Вас няма да имат нужда от смяна на тази стойност и могат да се справят с настойки на другите параметри.</string>
     <string name="openapsama_autosens_max_summary">По подразбиране: 1.2\nТова е максималният множител на autosens (а скоро autotune) за да позволи 20% максимален лимит на autosens коефициента, който от своя страна настройва базалите, колко може да намали ISF, и колко ниско може да свали целевата КЗ.</string>
     <string name="openapsama_autosens_min_summary">По подразбиране: 0.7\nДругата част от сигурността на autosens, слагайки ограничение на колко ниско може да ограничи базалите, колко да повиши чувствителността (ISF) и целевите КЗ.</string>
     <string name="openapsama_autosens_adjusttargets_summary">По подразбиране: разрешено\nТова позволява на autosens да променя и целевите КЗ(освен чувствителност и базал).</string>
-    <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така цикъла няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
+    <string name="openapsama_bolussnooze_dia_divisor_summary">По подразбиране: 2\nBolus snooze се активира след като поставите болус за основно хранене, така Loop няма да пуснка/намаля базалите веднага след като сте се хранили. Примерът тук е с 2; така при 3 часа DIA това ще означава че bolus snooze ще бъде внимателно изместен 1.5 часа (3DIA/2).</string>
     <string name="openapsama_min_5m_carbimpact_summary">По подразбиране: 3.0\nТова е настройка на количеството на покачване на КЗ при усвояване на въглехидратите за всеки 5 минути. По подразбиране 3мг/дл/5мин. Това се отразява на това колко бързо се усвояват COB според алгоритъма, и как това се отразява в предвиждането на КЗ, когато тя не се покачва или пада с различен темп от очакваното.</string>
     <string name="openapsama_link_to_preferncejson_doc_txt">Attention!\nNormally you do not have to change these values below. Please CLICK HERE and READ the text and make sure you UNDERSTAND it before change any of these values.</string>
     <string name="openapsama_link_to_preferncejson_doc">http://openaps.readthedocs.io/en/latest/docs/walkthrough/phase-3/beyond-low-glucose-suspend.html</string>
@@ -487,7 +487,7 @@
     <string name="nsclientinternal">вътрешен NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
-    <string name="nsclientinternal_autoscroll">Autoscroll</string>
+    <string name="nsclientinternal_autoscroll">Автопревъртане</string>
     <string name="restart">Рестарт</string>
     <string name="nsclientinternal_title">Вътрешен NSClient</string>
     <string name="nsclientinternal_url_title">Nightscout адрес</string>
@@ -511,16 +511,16 @@
     <string name="patientage_summary">Изберете възраст за определяне лимитите на безопасност</string>
     <string name="Glimp">Glimp</string>
     <string name="batteryoptimalizationerror">Устройството изглежда не подържа изключване на оптимизиране на батерията!</string>
-    <string name="pleaseallowpermission">Моля, позволете рарешение</string>
+    <string name="pleaseallowpermission">Моля, добавете рарешение</string>
     <string name="needwhitelisting" formatted="false">%s се нуждае от зключване на оптимизиране на батерията за пълна функционалност</string>
-    <string name="loopsuspended">Цикъл изключен</string>
+    <string name="loopsuspended">Loop изключен</string>
     <string name="loopsuspendedfor" formatted="false">Изключен (%d мин)</string>
     <string name="loopsuperbolusfor" formatted="false">Суперболус (%d мин)</string>
-    <string name="loopmenu">Меню Цикъл</string>
-    <string name="suspendloopfor1h">Изключи цикъла за 1ч</string>
-    <string name="suspendloopfor2h">Изключи цикъла за 2ч</string>
-    <string name="suspendloopfor3h">Изключи цикъла за 3ч</string>
-    <string name="suspendloopfor10h">Изключи цикъла за 10 ч</string>
+    <string name="loopmenu">Меню Loop</string>
+    <string name="suspendloopfor1h">Изключи Loop за 1ч</string>
+    <string name="suspendloopfor2h">Изключи Loop за 2ч</string>
+    <string name="suspendloopfor3h">Изключи Loop за 3ч</string>
+    <string name="suspendloopfor10h">Изключи Loop за 10 ч</string>
     <string name="disconnectpumpfor30m">Изключи помпата за 30 мин.</string>
     <string name="disconnectpumpfor1h">Изключи помпата за 1 ч</string>
     <string name="disconnectpumpfor2h">Изключи помпата за 2 ч</string>
@@ -540,7 +540,7 @@
     <string name="fastactinginsulin">Бързодействащ инсулин</string>
     <string name="fastactinginsulincomment">Novorapid, Novolog, Humalog</string>
     <string name="insulin_shortname">ИНС</string>
-    <string name="fastactinginsulinprolonged">Бързодействащ инсулин с удължаване</string>
+    <string name="fastactinginsulinprolonged">Бързодействащ инсулин с удължение</string>
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
     <string name="enablesuperbolus_summary">Разреши функцията суперболус в съветника. Не я разрешавайте докато не научите какво наистина прави. ТОВА МОЖЕ ДА СЪЗДАДЕ ОПАСНОСТ ОТ ПРЕДОЗИРАНЕ С ИНСУЛИН.</string>
     <string name="iob">IOB</string>
@@ -631,4 +631,23 @@
     <string name="wear_detailedIOB_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="wear_detailedIOB_title">Покажи подробен IOB</string>
     <string name="app_name">AndroidAPS</string>
+    <string name="activate_profile">Активирай профила</string>
+    <string name="careportal_activity_label">АКТИВНОСТ И ОБРАТНА ВРЪЗКА</string>
+    <string name="careportal_carbsandbolus_label">ХРАНА И БОЛУС</string>
+    <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
+    <string name="careportal_newnstreatment_duration_min_label">Продължителност [мин.]</string>
+    <string name="careportal_pump_label">ПОМПА</string>
+    <string name="date">Дата</string>
+    <string name="dia_too_short" formatted="false">DIA от %s е твърде кратка - използвай %s вместо това!</string>
+    <string name="free_peak_oref">Със свободен пик по Oref</string>
+    <string name="insulin_oref_peak">Пик на кривата на IOB</string>
+    <string name="insulin_peak_time">Време на пик [мин.]</string>
+    <string name="invalid">НЕВАЛИДНО</string>
+    <string name="nl_lang">Dutch</string>
+    <string name="overview_newtempbasal_basalabsolute">Базална стойност [Е/ч]</string>
+    <string name="rapid_acting_oref">Бързодействащ по Oref</string>
+    <string name="ratio_short">SEN</string>
+    <string name="sv_lang">Swedish</string>
+    <string name="ultrafastactinginsulincomment">Fiasp</string>
+    <string name="ultrarapid_oref">Ултра бързодействащ по Oref</string>
 </resources>

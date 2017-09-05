@@ -56,7 +56,7 @@ public class NotificationStore {
         }
         store.add(n);
 
-        WearPlugin wearPlugin = (WearPlugin) MainApp.getSpecificPlugin(WearPlugin.class);
+        WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
         if(wearPlugin!= null && wearPlugin.isEnabled()) {
             wearPlugin.overviewNotification(n.id, "OverviewNotification:\n" + n.text);
         }

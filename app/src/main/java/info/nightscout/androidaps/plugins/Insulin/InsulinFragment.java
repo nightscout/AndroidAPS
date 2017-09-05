@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinOrefCurves;
+package info.nightscout.androidaps.plugins.Insulin;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,20 +9,12 @@ import android.widget.TextView;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.InsulinFastacting.ActivityGraph;
 
 /**
- * Created by adrian on 14/08/17.
+ * Created by mike on 17.04.2017.
  */
 
-public class InsulinOrefFreePeakFragment extends Fragment {
-
-    static InsulinOrefFreePeakPlugin insulinPlugin = new InsulinOrefFreePeakPlugin();
-
-    static public InsulinOrefFreePeakPlugin getPlugin() {
-        return insulinPlugin;
-    }
-
+public class InsulinFragment extends Fragment {
     TextView insulinName;
     TextView insulinComment;
     TextView insulinDia;
@@ -49,10 +41,10 @@ public class InsulinOrefFreePeakFragment extends Fragment {
     }
 
     private void updateGUI() {
-        insulinName.setText(insulinPlugin.getFriendlyName());
-        insulinComment.setText(insulinPlugin.getComment());
-        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + new Double(insulinPlugin.getDia()).toString() + "h");
-        insulinGraph.show(insulinPlugin);
+        insulinName.setText(MainApp.getConfigBuilder().getActiveInsulin().getFriendlyName());
+        insulinComment.setText(MainApp.getConfigBuilder().getActiveInsulin().getComment());
+        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(MainApp.getConfigBuilder().getActiveInsulin().getDia()) + "h");
+        insulinGraph.show(MainApp.getConfigBuilder().getActiveInsulin());
     }
 
 }

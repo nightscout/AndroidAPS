@@ -69,6 +69,14 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     private static DanaRPump pump = DanaRPump.getInstance();
     private static boolean useExtendedBoluses = false;
 
+    private static DanaRPlugin plugin = null;
+
+    public static DanaRPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new DanaRPlugin();
+        return plugin;
+    }
+
     public static PumpDescription pumpDescription = new PumpDescription();
 
     public DanaRPlugin() {
@@ -80,7 +88,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
+        pumpDescription.bolusStep = 0.05d;
 
         pumpDescription.isExtendedBolusCapable = true;
         pumpDescription.extendedBolusStep = 0.05d;
@@ -104,7 +112,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         pumpDescription.isRefillingCapable = true;
     }
 
-    ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
             log.debug("Service is disconnected");
@@ -298,7 +306,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            Treatment t = new Treatment(detailedBolusInfo.insulinInterface);
+            Treatment t = new Treatment();
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, t);
             PumpEnactResult result = new PumpEnactResult();

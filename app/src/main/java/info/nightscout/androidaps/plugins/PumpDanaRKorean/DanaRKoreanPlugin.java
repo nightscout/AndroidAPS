@@ -23,6 +23,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -36,12 +38,11 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
 import info.nightscout.utils.DateUtil;
@@ -57,7 +58,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
 
     @Override
     public String getFragmentClass() {
-        return DanaRKoreanFragment.class.getName();
+        return DanaRFragment.class.getName();
     }
 
     static boolean fragmentPumpEnabled = false;
@@ -70,9 +71,15 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     private static DanaRPump pump = DanaRPump.getInstance();
     private static boolean useExtendedBoluses = false;
 
-    public static PumpDescription pumpDescription = new PumpDescription();
+    private static DanaRKoreanPlugin plugin = null;
 
-    String textStatus = "";
+    public static DanaRKoreanPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new DanaRKoreanPlugin();
+        return plugin;
+    }
+
+    public static PumpDescription pumpDescription = new PumpDescription();
 
     public DanaRKoreanPlugin() {
         useExtendedBoluses = SP.getBoolean("danar_useextended", false);
@@ -107,7 +114,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         pumpDescription.isRefillingCapable = true;
     }
 
-    ServiceConnection mConnection = new ServiceConnection() {
+    private ServiceConnection mConnection = new ServiceConnection() {
 
         public void onServiceDisconnected(ComponentName name) {
             log.debug("Service is disconnected");
@@ -301,7 +308,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         ConfigBuilderPlugin configBuilderPlugin = MainApp.getConfigBuilder();
         detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            Treatment t = new Treatment(detailedBolusInfo.insulinInterface);
+            Treatment t = new Treatment();
             boolean connectionOK = false;
             if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, t);

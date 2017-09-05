@@ -176,7 +176,7 @@
     <string name="duration">Duration</string>
     <string name="eatingsoon">Äta snart</string>
     <string name="edit_base_basal">Ändra Base-Basal:</string>
-    <string name="en_lang">Engelska</string>
+    <string name="en_lang">English</string>
     <string name="enabled">Startad</string>
     <string name="enableloop">Starta loop</string>
     <string name="enablesuperbolus">Aktivera superbolus i kalkylatorn</string>
@@ -586,4 +586,5 @@
     <string name="nsalarm_urgenthigh">Bråttom hög</string>
     <string name="nsalarm_urgentlow">Bråttom låg</string>
     <string name="nsalarm_urgentstaledata">Bråttom gammal data</string>
+    <string name="app_name">AndroidAPS</string>
 </resources>

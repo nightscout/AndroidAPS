@@ -39,15 +39,6 @@ import info.nightscout.utils.SetWarnColor;
 public class DanaRFragment extends SubscriberFragment {
     private static Logger log = LoggerFactory.getLogger(DanaRFragment.class);
 
-    private static DanaRPlugin danaRPlugin;
-
-    public static DanaRPlugin getPlugin() {
-        if (danaRPlugin == null) {
-            danaRPlugin = new DanaRPlugin();
-        }
-        return danaRPlugin;
-    }
-
     private static Handler sHandler;
     private static HandlerThread sHandlerThread;
 
@@ -146,7 +137,7 @@ public class DanaRFragment extends SubscriberFragment {
                 sHandler.post(new Runnable() {
                                   @Override
                                   public void run() {
-                                      DanaRPlugin.sExecutionService.connect("Connect request from GUI");
+                                      MainApp.getConfigBuilder().refreshDataFromPump("Connect request from GUI");
                                   }
                               }
                 );
@@ -218,11 +209,21 @@ public class DanaRFragment extends SubscriberFragment {
 
                     dailyUnitsView.setText(DecimalFormatter.to0Decimal(pump.dailyTotalUnits) + " / " + pump.maxDailyTotalUnits + " U");
                     SetWarnColor.setColor(dailyUnitsView, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75d, pump.maxDailyTotalUnits * 0.9d);
-                    basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(getPlugin().getBaseBasalRate()) + " U/h");
-                    if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
-                        tempBasalView.setText(MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                    basaBasalRateView.setText("( " + (pump.activeProfile + 1) + " )  " + DecimalFormatter.to2Decimal(MainApp.getConfigBuilder().getBaseBasalRate()) + " U/h");
+                    // DanaRPlugin, DanaRKoreanPlugin
+                    if (MainApp.getConfigBuilder().isFakingTempsByExtendedBoluses()) {
+                        if (MainApp.getConfigBuilder().isInHistoryRealTempBasalInProgress()) {
+                            tempBasalView.setText(MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                        } else {
+                            tempBasalView.setText("");
+                        }
                     } else {
-                        tempBasalView.setText("");
+                        // v2 plugin
+                        if (MainApp.getConfigBuilder().isTempBasalInProgress()) {
+                            tempBasalView.setText(MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis()).toStringFull());
+                        } else {
+                            tempBasalView.setText("");
+                        }
                     }
                     if (MainApp.getConfigBuilder().isInHistoryExtendedBoluslInProgress()) {
                         extendedBolusView.setText(MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis()).toString());

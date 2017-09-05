@@ -124,7 +124,7 @@ public class QuickWizardListActivity extends AppCompatActivity implements View.O
         llm = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(llm);
 
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(((OverviewPlugin) MainApp.getSpecificPlugin(OverviewPlugin.class)).quickWizard, getSupportFragmentManager());
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getSpecificPlugin(OverviewPlugin.class).quickWizard, getSupportFragmentManager());
         recyclerView.setAdapter(adapter);
 
         adButton = (Button) findViewById(R.id.overview_quickwizardactivity_add_button);
@@ -164,7 +164,7 @@ public class QuickWizardListActivity extends AppCompatActivity implements View.O
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(((OverviewPlugin) MainApp.getSpecificPlugin(OverviewPlugin.class)).quickWizard, getSupportFragmentManager());
+                    RecyclerViewAdapter adapter = new RecyclerViewAdapter(MainApp.getSpecificPlugin(OverviewPlugin.class).quickWizard, getSupportFragmentManager());
                     recyclerView.swapAdapter(adapter, false);
                 }
             });
