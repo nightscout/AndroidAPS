@@ -684,10 +684,11 @@ public class NSClientService extends Service {
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
                 CloseableIterator<DbRequest> iterator = null;
+                int maxcount = 30;
                 try {
                     iterator = MainApp.getDbHelper().getDbRequestInterator();
                     try {
-                        while (iterator.hasNext()) {
+                        while (iterator.hasNext() && maxcount > 0) {
                             DbRequest dbr = iterator.next();
                             if (dbr.action.equals("dbAdd")) {
                                 NSAddAck addAck = new NSAddAck();
@@ -702,6 +703,7 @@ public class NSClientService extends Service {
                                 NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id);
                                 dbUpdateUnset(dbr, updateUnsetAck);
                             }
+                            maxcount--;
                         }
                     } finally {
                         iterator.close();
