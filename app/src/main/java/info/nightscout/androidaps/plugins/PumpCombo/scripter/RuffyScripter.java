@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.PumpCombo.scripter;
 
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.support.annotation.Nullable;
 
 import com.google.common.base.Joiner;
 
@@ -36,6 +37,7 @@ public class RuffyScripter {
     private IRuffyService ruffyService;
     private String unrecoverableError = null;
 
+    @Nullable
     private volatile Menu currentMenu;
     private volatile long menuLastUpdated = 0;
 
@@ -194,13 +196,20 @@ public class RuffyScripter {
     }
 
     public void returnToMainMenu() {
-        // returning to main menu using the 'back' key should not cause a vibration
-        // TODO this is too brute-force; at least check for WARNING_OR_ERROR menu type
-        do {
+        // returning to main menu using the 'back' key does not cause a vibration
+        while (getCurrentMenu().getType() != MenuType.MAIN_MENU) {
+            if (getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
+                String errorMsg = (String) getCurrentMenu().getAttribute(MenuAttribute.MESSAGE);
+                confirmAlert(errorMsg, 1000);
+                // TODO this isn't gonna work out ... this method can't know if something was enacted ...
+                // gotta keep that state in the command instance
+                throw new CommandException().success(false).enacted(false)
+                        .message("Warning/error " + errorMsg + " raised while returning to main menu");
+            }
             log.debug("Going back to main menu, currently at " + getCurrentMenu().getType());
             pressBackKey();
             waitForMenuUpdate();
-        } while (getCurrentMenu().getType() != MenuType.MAIN_MENU);
+        }
     }
 
     private static class Returnable {
