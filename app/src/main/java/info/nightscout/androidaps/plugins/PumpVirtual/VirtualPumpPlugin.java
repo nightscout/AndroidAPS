@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpVirtual;
 
 import android.content.SharedPreferences;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 
 import org.json.JSONException;
@@ -222,28 +223,19 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         Double delivering = 0d;
 
         while (delivering < detailedBolusInfo.insulin) {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-            }
+            SystemClock.sleep(200);
             EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
             bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivering);
             bolusingEvent.percent = Math.min((int) (delivering / detailedBolusInfo.insulin * 100), 100);
             MainApp.bus().post(bolusingEvent);
             delivering += 0.1d;
         }
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-        }
+        SystemClock.sleep(200);
         EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.getInstance();
         bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), detailedBolusInfo.insulin);
         bolusingEvent.percent = 100;
         MainApp.bus().post(bolusingEvent);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-        }
+        SystemClock.sleep(1000);
         if (Config.logPumpComm)
             log.debug("Delivering treatment insulin: " + detailedBolusInfo.insulin + "U carbs: " + detailedBolusInfo.carbs + "g " + result);
         MainApp.bus().post(new EventVirtualPumpUpdateGui());

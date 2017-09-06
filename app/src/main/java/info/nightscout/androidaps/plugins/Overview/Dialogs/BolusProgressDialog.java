@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -156,11 +157,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                SystemClock.sleep(5000);
                 BolusProgressDialog.bolusEnded = true;
                 Activity activity = getActivity();
                 if (activity != null) {

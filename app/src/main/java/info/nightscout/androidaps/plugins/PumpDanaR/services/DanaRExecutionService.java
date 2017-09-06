@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 
 import com.squareup.otto.Subscribe;
 
@@ -552,10 +553,6 @@ public class DanaRExecutionService extends Service {
     }
 
     private void waitMsec(long msecs) {
-        try {
-            Thread.sleep(msecs);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        SystemClock.sleep(msecs);
     }
 }
