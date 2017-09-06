@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
 
 import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.DELIVERED;

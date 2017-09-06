@@ -488,7 +488,7 @@ public class RuffyScripter {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException().message("Unable to read current menu");
             }
-            log.error("currentMenu == null, waiting");
+            log.debug("currentMenu == null, waiting");
             waitForMenuUpdate();
         }
         return currentMenu;
@@ -634,10 +634,10 @@ public class RuffyScripter {
     }
 
     public void navigateToMenu(MenuType desiredMenu) {
-        MenuType startedFrom = currentMenu.getType();
+        MenuType startedFrom = getCurrentMenu().getType();
         boolean movedOnce = false;
-        while (currentMenu.getType() != desiredMenu) {
-            MenuType currentMenuType = currentMenu.getType();
+        while (getCurrentMenu().getType() != desiredMenu) {
+            MenuType currentMenuType = getCurrentMenu().getType();
             log.debug("Navigating to menu " + desiredMenu + ", currenty menu: " + currentMenuType);
             if (movedOnce && currentMenuType == startedFrom) {
                 throw new CommandException().message("Menu not found searching for " + desiredMenu
@@ -652,7 +652,7 @@ public class RuffyScripter {
     /** Wait till a menu changed has completed, "away" from the menu provided as argument. */
     public void waitForMenuToBeLeft(MenuType menuType) {
         long timeout = System.currentTimeMillis() + 60 * 1000;
-        while (currentMenu.getType() == menuType) {
+        while (getCurrentMenu().getType() == menuType) {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException().message("Timeout waiting for menu " + menuType + " to be left");
             }
@@ -666,7 +666,7 @@ public class RuffyScripter {
 
     public void verifyMenuIsDisplayed(MenuType expectedMenu, String failureMessage) {
         int retries = 600;
-        while (currentMenu.getType() != expectedMenu) {
+        while (getCurrentMenu().getType() != expectedMenu) {
             if (retries > 0) {
                 SystemClock.sleep(100);
                 retries = retries - 1;
@@ -682,9 +682,9 @@ public class RuffyScripter {
     @SuppressWarnings("unchecked")
     public <T> T readBlinkingValue(Class<T> expectedType, MenuAttribute attribute) {
         int retries = 5;
-        Object value = currentMenu.getAttribute(attribute);
+        Object value = getCurrentMenu().getAttribute(attribute);
         while (!expectedType.isInstance(value)) {
-            value = currentMenu.getAttribute(attribute);
+            value = getCurrentMenu().getAttribute(attribute);
             waitForScreenUpdate(1000);
             retries--;
             if (retries == 0) {
