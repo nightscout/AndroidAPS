@@ -474,10 +474,12 @@ public class RuffyScripter {
 
     // === pump ops ===
     public Menu getCurrentMenu() {
-        // TODO workaround, supposedly fixed in latest ruffy?
+        long timeout = System.currentTimeMillis() + 5 * 1000;
         while (currentMenu == null) {
+            if (System.currentTimeMillis() > timeout) {
+                throw new CommandException().message("Unable to read current menu");
+            }
             log.error("currentMenu == null, waiting");
-            SystemClock.sleep(500);
             waitForMenuUpdate();
         }
         return currentMenu;
