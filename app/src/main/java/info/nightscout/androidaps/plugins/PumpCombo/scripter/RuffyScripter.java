@@ -484,6 +484,9 @@ public class RuffyScripter {
     // === pump ops ===
     public Menu getCurrentMenu() {
         long timeout = System.currentTimeMillis() + 5 * 1000;
+        // TODO this is probably due to a disconnect and rtDisconnect having nulled currentMenu.
+        // This here might just work, but needs a more controlled approach when implementing
+        // something to deal with connection loses
         while (currentMenu == null) {
             if (System.currentTimeMillis() > timeout) {
                 throw new CommandException().message("Unable to read current menu");
