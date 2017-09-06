@@ -118,6 +118,7 @@ public class ExperimentalBolusCommand extends BolusCommand {
                     lastBolusReported = bolusRemaining;
                 }
 
+                /*
                 // TODO think through situatiotns where an alarm can be raised, not just when pressing a button,
                 // but a 'low battery' alarm can trigger at any time ...
                 if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
@@ -130,11 +131,14 @@ public class ExperimentalBolusCommand extends BolusCommand {
                         break;
                     }
                 }
+                */
+
                 SystemClock.sleep(50);
                 bolusRemaining = (Double) scripter.getCurrentMenu().getAttribute(MenuAttribute.BOLUS_REMAINING);
             }
             progressReportCallback.report(DELIVERED, 100, bolus);
 
+            /*
             // wait up to 2s for any possible warning to be raised, if not raised already
             // TODO what could be raised here, other than those alarms than can ring at any time anyways?
             long timeout = System.currentTimeMillis() + 2 * 1000;
@@ -144,12 +148,12 @@ public class ExperimentalBolusCommand extends BolusCommand {
 
             // process warnings (confirm them, report back to AAPS about them)
 //            while (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR || System.currentTimeMillis() < timeout) {
-            // TODO brute-force hack
             if (scripter.getCurrentMenu().getType() == MenuType.WARNING_OR_ERROR) {
                 scripter.confirmAlert(((String) scripter.getCurrentMenu().getAttribute(MenuAttribute.MESSAGE)), 1000);
             }
 //                SystemClock.sleep(50);
 //            }
+             */
 
             // TODO what if we hit 'cartridge low' alert here? is it immediately displayed or after the bolus?
             // TODO how are error states reported back to the caller that occur outside of calls in genal? Low battery, low cartridge?
