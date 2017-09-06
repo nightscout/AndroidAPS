@@ -717,7 +717,7 @@
     <string name="combo_enable_experimental_features_summary">Unlocks experimental features which are in development and might be broken entirely.</string>
     <string name="key_combo_enable_experimental_bolus">combo_enable_experimental_bolus</string>
     <string name="combo_enable_experimental_bolus">Experimental bolus</string>
-    <string name="combo_enable_experimental_bolus_summary">Enables the in-development bolus with progress report and cancel option.</string>
+    <string name="combo_enable_experimental_bolus_summary">Enables the in-development bolus with progress report and semi-working cancel option.</string>
     <string name="key_combo_enable_experimental_split_bolus">combo_experimental_split_bolus</string>
     <string name="combo_enable_experimental_split_bolus">Experimental split bolus feature</string>
     <string name="combo_enable_experimental_split_bolus_summary">Splits boluses into 2 U parts and waits around 45s after each to slow down bolus delivery (only active with non-experimental bolus).</string>
@@ -728,7 +728,7 @@
     <string name="combo_experimental_skip_tbr_changes_below_delta">Skip TBR changes below threshold (%).</string>
     <string name="combo_experimental_skip_tbr_changes_below_delta_summary">Don\'t set a TBR if the difference between the new and a running TBR is below this threshold in percent. Specifying 0 disables this option.</string>
     <string name="key_combo_disable_alerts">combo_disable_alerts</string>
-    <string name="combo_disable_alerts">Dentist appointment mode</string>
-    <string name="combo_disable_alerts_summary">Ignore all errors encountered while communicating with the pump.</string>
+    <string name="combo_disable_alerts">Disable alerts</string>
+    <string name="combo_disable_alerts_summary">Ignore all errors encountered while communicating with the pump. Alerts raised by the pump (including those caused by AAPS) will still be raised.</string>
 </resources>
 
