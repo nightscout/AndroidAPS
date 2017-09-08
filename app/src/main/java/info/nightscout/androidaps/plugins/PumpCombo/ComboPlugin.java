@@ -370,23 +370,26 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             new ExperimentalBolusCommand.ProgressReportCallback() {
         @Override
         public void report(ExperimentalBolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
-            EventOverviewBolusProgress enent = EventOverviewBolusProgress.getInstance();
+            EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
             switch (state) {
+                case PROGRAMMING:
+                    event.status = MainApp.sResources.getString(R.string.bolusprogramming);
+                    break;
                 case DELIVERING:
-                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
+                    event.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), delivered);
                     break;
                 case DELIVERED:
-                    enent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), delivered);
+                    event.status = String.format(MainApp.sResources.getString(R.string.bolusdelivered), delivered);
                     break;
                 case STOPPING:
-                    enent.status = MainApp.sResources.getString(R.string.bolusstopping);
+                    event.status = MainApp.sResources.getString(R.string.bolusstopping);
                     break;
                 case STOPPED:
-                    enent.status = MainApp.sResources.getString(R.string.bolusstopped);
+                    event.status = MainApp.sResources.getString(R.string.bolusstopped);
                     break;
             }
-            enent.percent = percent;
-            MainApp.bus().post(enent);
+            event.percent = percent;
+            MainApp.bus().post(event);
         }
     };
 

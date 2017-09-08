@@ -730,5 +730,11 @@
     <string name="key_combo_disable_alerts">combo_disable_alerts</string>
     <string name="combo_disable_alerts">Disable alerts</string>
     <string name="combo_disable_alerts_summary">Ignore all errors encountered while communicating with the pump. Alerts raised by the pump (including those caused by AAPS) will still be raised.</string>
+    <string name="bolusprogramming">Programming pump for bolusing</string>
+    <string name="key_wizard_include_bg">wizard_include_bg</string>
+    <string name="key_wizard_include_cob">wizard_include_cob</string>
+    <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
+    <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
+    <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
 </resources>
 

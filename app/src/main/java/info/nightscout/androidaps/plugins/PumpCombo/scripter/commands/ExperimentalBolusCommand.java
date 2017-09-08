@@ -15,6 +15,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
 
 import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.DELIVERED;
 import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.DELIVERING;
+import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.PROGRAMMING;
 import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.STOPPED;
 import static info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand.ProgressReportCallback.State.STOPPING;
 
@@ -44,8 +45,11 @@ public class ExperimentalBolusCommand extends BolusCommand {
     public CommandResult execute() {
         try {
             // TODO read reservoir level and reject request if reservoir < bolus
-            enterBolusMenu();
+            // TODO also check if there's a bolus in history we're not aware of
+            //      press check twice to get reservoir level and last bolus quickly
 
+            progressReportCallback.report(PROGRAMMING, 0, 0);
+            enterBolusMenu();
             inputBolusAmount();
             verifyDisplayedBolusAmount();
 
@@ -218,6 +222,7 @@ public class ExperimentalBolusCommand extends BolusCommand {
 
     public interface ProgressReportCallback {
         enum State {
+            PROGRAMMING,
             DELIVERING,
             DELIVERED,
             STOPPING,
