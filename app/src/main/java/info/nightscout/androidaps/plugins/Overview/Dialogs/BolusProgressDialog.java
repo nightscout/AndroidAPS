@@ -33,8 +33,8 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     BolusProgressHelperActivity helperActivity;
 
     static double amount;
-    public static boolean bolusEnded = false;
-    public static boolean running = true;
+    private static boolean bolusEnded = false;
+    private static boolean running = true;
 
     public BolusProgressDialog() {
         super();
@@ -124,6 +124,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     @Subscribe
     public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
         if(BolusProgressDialog.running){
+            bolusEnded = true;
             dismiss();
         }
     }

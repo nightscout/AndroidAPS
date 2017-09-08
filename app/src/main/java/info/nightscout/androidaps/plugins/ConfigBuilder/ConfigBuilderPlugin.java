@@ -455,7 +455,6 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
         result = activePump.deliverTreatment(detailedBolusInfo);
 
-        BolusProgressDialog.bolusEnded = true;
         MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
 
         mWakeLock.release();
