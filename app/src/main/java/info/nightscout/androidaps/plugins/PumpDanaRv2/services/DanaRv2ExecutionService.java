@@ -38,7 +38,6 @@ import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
-import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.SerialIOThread;
@@ -413,7 +412,6 @@ public class DanaRv2ExecutionService extends Service {
         }
         if (amount > 0) {
             MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-            MainApp.bus().post(new EventDanaRBolusStart());
 
             if (!stop.stopped) {
                 mSerialIOThread.sendMessage(start);

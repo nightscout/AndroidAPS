@@ -76,7 +76,6 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBasic;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
-import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
@@ -416,7 +415,6 @@ public class DanaRExecutionService extends Service {
         }
 
         MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-        MainApp.bus().post(new EventDanaRBolusStart());
         long startTime = System.currentTimeMillis();
 
         if (!stop.stopped) {

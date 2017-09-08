@@ -67,7 +67,6 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgSettingShippingInfo;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusBolusExtended;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgStatusTempBasal;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
-import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.SerialIOThread;
@@ -409,7 +408,6 @@ public class DanaRKoreanExecutionService extends Service {
         }
 
         MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-        MainApp.bus().post(new EventDanaRBolusStart());
 
         if (!stop.stopped) {
             mSerialIOThread.sendMessage(start);
