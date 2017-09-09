@@ -703,7 +703,6 @@
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
     <string name="key_wizard_include_bg">wizard_include_bg</string>
-    <string name="key_wizard_include_tt">wizard_include_tt</string>
     <string name="key_wizard_include_cob">wizard_include_cob</string>
     <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
     <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>

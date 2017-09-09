@@ -266,7 +266,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     private void saveCheckedStates() {
         SP.putBoolean(getString(R.string.key_wizard_include_bg), bgCheckbox.isChecked());
-        SP.putBoolean(getString(R.string.key_wizard_include_tt), ttCheckbox.isChecked());
         SP.putBoolean(getString(R.string.key_wizard_include_cob), cobCheckbox.isChecked());
         SP.putBoolean(getString(R.string.key_wizard_include_trend_bg), bgtrendCheckbox.isChecked());
         SP.putBoolean(getString(R.string.key_wizard_include_bolus_iob), bolusIobCheckbox.isChecked());
@@ -275,7 +274,6 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     private void loadCheckedStates() {
         bgCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bg), true));
-        ttCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_tt), false));
         bgtrendCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_trend_bg), false));
         cobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_cob), false));
         bolusIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bolus_iob), true));
