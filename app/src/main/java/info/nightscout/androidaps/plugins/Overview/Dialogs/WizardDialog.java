@@ -50,6 +50,7 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
@@ -73,6 +74,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     TextView bgInsulin;
     TextView bgUnits;
     CheckBox bgCheckbox;
+    CheckBox ttCheckbox;
     TextView carbs;
     TextView carbsInsulin;
     TextView bolusIobInsulin;
@@ -216,17 +218,21 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         cobInsulin = (TextView) view.findViewById(R.id.treatments_wizard_cobinsulin);
 
         bgCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgcheckbox);
+        ttCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_ttcheckbox);
+        bgtrendCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgtrendcheckbox);
+        cobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_cobcheckbox);
         bolusIobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bolusiobcheckbox);
         basalIobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_basaliobcheckbox);
         superbolusCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_sbcheckbox);
-        bgtrendCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgtrendcheckbox);
-        cobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_cobcheckbox);
+        loadCheckedStates();
+
         bgCheckbox.setOnCheckedChangeListener(this);
+        ttCheckbox.setOnCheckedChangeListener(this);
+        bgtrendCheckbox.setOnCheckedChangeListener(this);
+        cobCheckbox.setOnCheckedChangeListener(this);
         basalIobCheckbox.setOnCheckedChangeListener(this);
         bolusIobCheckbox.setOnCheckedChangeListener(this);
         superbolusCheckbox.setOnCheckedChangeListener(this);
-        bgtrendCheckbox.setOnCheckedChangeListener(this);
-        cobCheckbox.setOnCheckedChangeListener(this);
 
         profileSpinner = (Spinner) view.findViewById(R.id.treatments_wizard_profile);
         profileSpinner.setOnItemSelectedListener(this);
@@ -253,7 +259,27 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        saveCheckedStates();
+        ttCheckbox.setEnabled(bgCheckbox.isChecked() && MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
         calculateInsulin();
+    }
+
+    private void saveCheckedStates() {
+        SP.putBoolean(getString(R.string.key_wizard_include_bg), bgCheckbox.isChecked());
+        SP.putBoolean(getString(R.string.key_wizard_include_tt), ttCheckbox.isChecked());
+        SP.putBoolean(getString(R.string.key_wizard_include_cob), cobCheckbox.isChecked());
+        SP.putBoolean(getString(R.string.key_wizard_include_trend_bg), bgtrendCheckbox.isChecked());
+        SP.putBoolean(getString(R.string.key_wizard_include_bolus_iob), bolusIobCheckbox.isChecked());
+        SP.putBoolean(getString(R.string.key_wizard_include_basal_iob), basalIobCheckbox.isChecked());
+    }
+
+    private void loadCheckedStates() {
+        bgCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bg), true));
+        ttCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_tt), false));
+        bgtrendCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_trend_bg), false));
+        cobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_cob), false));
+        bolusIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bolus_iob), true));
+        basalIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_basal_iob), true));
     }
 
     @Override
@@ -381,31 +407,17 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         BgReading lastBg = DatabaseHelper.actualBg();
 
         if (lastBg != null) {
-            Double lastBgValue = lastBg.valueToUnits(units);
-            Double sens = profile.getIsf();
-            Double targetBGLow = profile.getTargetLow();
-            Double targetBGHigh = profile.getTargetHigh();
-            Double bgDiff;
-            if (lastBgValue <= targetBGLow) {
-                bgDiff = lastBgValue - targetBGLow;
-            } else {
-                bgDiff = lastBgValue - targetBGHigh;
-            }
-
-            bg.setText(lastBg.valueToUnitsToString(units) + " ISF: " + DecimalFormatter.to1Decimal(sens));
-            bgInsulin.setText(DecimalFormatter.to2Decimal(bgDiff / sens) + "U");
             editBg.removeTextChangedListener(textWatcher);
             //bgInput.setText(lastBg.valueToUnitsToString(units));
             editBg.setValue(lastBg.valueToUnits(units));
             editBg.addTextChangedListener(textWatcher);
         } else {
-            bg.setText("");
-            bgInsulin.setText("");
             editBg.removeTextChangedListener(textWatcher);
             //bgInput.setText("");
             editBg.setValue(0d);
             editBg.addTextChangedListener(textWatcher);
         }
+        ttCheckbox.setEnabled(MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
 
         // IOB calculation
         MainApp.getConfigBuilder().updateTotalIOBTreatments();
@@ -458,6 +470,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         }
 
         c_bg = bgCheckbox.isChecked() ? c_bg : 0d;
+        TempTarget tempTarget = ttCheckbox.isChecked() ? MainApp.getConfigBuilder().getTempTargetFromHistory() : null;
 
         // COB
         Double c_cob = 0d;
@@ -466,12 +479,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 try {
                     c_cob = SafeParse.stringToDouble(ConfigBuilderPlugin.getActiveAPS().getLastAPSResult().json().getString("COB"));
                 } catch (JSONException e) {
+                    log.error("Unhandled exception", e);
                 }
             }
         }
 
         BolusWizard wizard = new BolusWizard();
-        wizard.doCalc(specificProfile, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), bgtrendCheckbox.isChecked());
+        wizard.doCalc(specificProfile, tempTarget, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), bgtrendCheckbox.isChecked());
 
         bg.setText(c_bg + " ISF: " + DecimalFormatter.to1Decimal(wizard.sens));
         bgInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromBG) + "U");
@@ -522,6 +536,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             total.setText(getString(R.string.result) + ": " + insulinText + " " + carbsText);
             okButton.setVisibility(View.VISIBLE);
         } else {
+            // TODO this should also be run when loading the dialog as the OK button is initially visible
+            //      but does nothing if neither carbs nor insulin is > 0
             total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
             okButton.setVisibility(View.INVISIBLE);
         }
