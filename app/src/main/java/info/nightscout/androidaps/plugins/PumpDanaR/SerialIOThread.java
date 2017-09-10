@@ -159,7 +159,6 @@ public class SerialIOThread extends Thread {
             mOutputStream.write(messageBytes);
         } catch (Exception e) {
             log.error("sendMessage write exception: ", e);
-            log.error("Unhandled exception", e);
         }
 
         synchronized (message) {
@@ -167,7 +166,6 @@ public class SerialIOThread extends Thread {
                 message.wait(5000);
             } catch (InterruptedException e) {
                 log.error("sendMessage InterruptedException", e);
-                log.error("Unhandled exception", e);
             }
         }
 
