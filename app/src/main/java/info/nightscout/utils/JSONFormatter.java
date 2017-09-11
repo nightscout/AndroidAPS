@@ -6,6 +6,8 @@ import android.text.Spanned;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Iterator;
 
@@ -13,6 +15,7 @@ import java.util.Iterator;
  * Created by mike on 11.07.2016.
  */
 public class JSONFormatter {
+    private static Logger log = LoggerFactory.getLogger(JSONFormatter.class);
 
     public static Spanned format(final String jsonString) {
         final JsonVisitor visitor = new JsonVisitor(4, ' ');
@@ -24,7 +27,7 @@ public class JSONFormatter {
             else
                 return Html.fromHtml(visitor.visit(new JSONObject(jsonString), 0));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             return Html.fromHtml("");
         }
     }
@@ -34,7 +37,7 @@ public class JSONFormatter {
         try {
             return Html.fromHtml(visitor.visit(object, 0));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             return Html.fromHtml("");
         }
     }

@@ -192,7 +192,7 @@ public class BroadcastTreatment {
                 ret.add(newarr);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             ret = new ArrayList<>();
             ret.add(array);
         }

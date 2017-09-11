@@ -2,6 +2,7 @@ package info.nightscout.utils;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.text.Spanned;
@@ -28,10 +29,7 @@ public class OKDialog {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     if (runnable != null) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                        }
+                        SystemClock.sleep(100);
                         activity.runOnUiThread(runnable);
                     }
                 }
@@ -52,10 +50,7 @@ public class OKDialog {
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                     if (runnable != null) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                        }
+                        SystemClock.sleep(100);
                         activity.runOnUiThread(runnable);
                     }
                 }

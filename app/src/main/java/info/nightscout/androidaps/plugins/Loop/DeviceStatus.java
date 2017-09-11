@@ -397,7 +397,7 @@ public class DeviceStatus {
             if (uploaderBattery != 0) record.put("uploaderBattery", uploaderBattery);
             if (created_at != null) record.put("created_at" , created_at);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return record;
     }

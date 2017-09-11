@@ -49,7 +49,7 @@ public class NSAddAck implements Ack {
             }
             return;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 }

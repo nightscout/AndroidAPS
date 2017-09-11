@@ -253,7 +253,7 @@ public class TimeListEdit {
                 return item.getInt("timeAsSeconds");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return 0;
     }
@@ -265,7 +265,7 @@ public class TimeListEdit {
                 return item.getDouble("value");
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return 0d;
     }
@@ -278,7 +278,7 @@ public class TimeListEdit {
                     return item.getDouble("value");
                 }
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         return 0d;
@@ -305,7 +305,7 @@ public class TimeListEdit {
             }
             if (save != null) save.run();
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
     }
@@ -322,7 +322,7 @@ public class TimeListEdit {
             editItem(index, timeAsSeconds, value1, value2);
             if (save != null) save.run();
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
     }

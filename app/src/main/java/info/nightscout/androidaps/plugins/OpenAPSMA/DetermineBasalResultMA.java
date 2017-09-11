@@ -7,11 +7,14 @@ import com.eclipsesource.v8.V8Object;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 
 public class DetermineBasalResultMA extends APSResult {
+    private static Logger log = LoggerFactory.getLogger(DetermineBasalResultMA.class);
 
     public JSONObject json = new JSONObject();
     public double eventualBG;
@@ -70,7 +73,7 @@ public class DetermineBasalResultMA extends APSResult {
         try {
             newResult.json = new JSONObject(json.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         newResult.eventualBG = eventualBG;
         newResult.snoozeBG = snoozeBG;
@@ -84,7 +87,7 @@ public class DetermineBasalResultMA extends APSResult {
             JSONObject ret = new JSONObject(this.json.toString());
             return ret;
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return null;
     }

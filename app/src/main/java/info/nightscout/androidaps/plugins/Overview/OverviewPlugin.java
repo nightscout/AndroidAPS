@@ -4,6 +4,8 @@ import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -17,6 +19,7 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class OverviewPlugin implements PluginBase {
+    private static Logger log = LoggerFactory.getLogger(OverviewPlugin.class);
 
     public static double bgTargetLow = 80d;
     public static double bgTargetHigh = 180d;
@@ -30,7 +33,7 @@ public class OverviewPlugin implements PluginBase {
         try {
             quickWizard.setData(new JSONArray(storedData));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         MainApp.bus().register(this);
     }

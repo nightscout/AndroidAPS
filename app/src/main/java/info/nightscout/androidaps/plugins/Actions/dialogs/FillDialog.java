@@ -21,6 +21,9 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
@@ -37,6 +40,7 @@ import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 public class FillDialog extends DialogFragment implements OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(FillDialog.class);
 
     Button deliverButton;
     TextView insulin;
@@ -183,8 +187,8 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             builder.setNegativeButton(getString(R.string.cancel), null);
             builder.show();
             dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            log.error("Unhandled exception", e);
         }
     }
 

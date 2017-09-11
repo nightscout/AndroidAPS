@@ -550,7 +550,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
             boluscalcJSON.put("insulin", calculatedTotalInsulin);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 

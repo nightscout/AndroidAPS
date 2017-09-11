@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.NSClientInternal;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.SystemClock;
 
 import com.j256.ormlite.dao.CloseableIterator;
 
@@ -35,10 +36,7 @@ public class UploadQueue {
         if (NSClientService.handler == null) {
             Context context = MainApp.instance();
             context.startService(new Intent(context, NSClientService.class));
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-            }
+            SystemClock.sleep(2000);
         }
     }
 
@@ -90,7 +88,7 @@ public class UploadQueue {
                             log.debug("Removed item from UploadQueue. " + UploadQueue.status());
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        log.error("Unhandled exception", e);
                     }
                 }
             });
@@ -126,7 +124,7 @@ public class UploadQueue {
                 iterator.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return result;
     }
