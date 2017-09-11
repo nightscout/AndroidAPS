@@ -67,8 +67,8 @@ public class BolusWizard {
         targetBGLow = specificProfile.getTargetLow();
         targetBGHigh = specificProfile.getTargetHigh();
         if (tempTarget != null) {
-            targetBGLow = tempTarget.low;
-            targetBGHigh = tempTarget.high;
+            targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, specificProfile.getUnits());
+            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, specificProfile.getUnits());
         }
         if (bg <= targetBGLow) {
             bgDiff = bg - targetBGLow;
