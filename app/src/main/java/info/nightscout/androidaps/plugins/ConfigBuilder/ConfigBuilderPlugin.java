@@ -595,7 +595,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         if (request.smb != 0) {
             long lastSMBTime = getLastSMBTime();
             if (lastSMBTime != 0 && lastSMBTime + 4.5 * 60 * 1000 > System.currentTimeMillis()) {
-                log.debug("SMS requsted but still in 5 min interval");
+                log.debug("SMB requsted but still in 5 min interval");
             } else {
                 DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
                 detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
