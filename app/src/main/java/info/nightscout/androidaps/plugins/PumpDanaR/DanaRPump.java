@@ -78,6 +78,8 @@ public class DanaRPump {
     public boolean pumpSuspended;
     public boolean calculatorEnabled;
     public double dailyTotalUnits;
+    public double dailyTotalBolusUnits = 0; // RS only
+    public double dailyTotalBasalUnits = 0; // RS only
     public int maxDailyTotalUnits;
 
     public double bolusStep;
@@ -108,6 +110,7 @@ public class DanaRPump {
     public int extendedBolusSoFarInMinutes;
     public Date extendedBolusStart;
     public int extendedBolusRemainingMinutes;
+    public double extendedBolusDeliveredSoFar; //RS only
 
     // Profile
     public int units;
@@ -135,6 +138,27 @@ public class DanaRPump {
     //Limits
     public double maxBolus;
     public double maxBasal;
+
+    // DanaRS specific
+
+    public String rs_password = "";
+
+    // User settings
+    public int timeDisplayType;
+    public int buttonScrollOnOff;
+    public int beepAndAlarm;
+    public int lcdOnTimeSec;
+    public int backlightOnTimeSec;
+    public int selectedLanguage;
+    public int shutdownHour;
+    public int lowReservoirRate;
+    public int cannulaVolume;
+    public int refillAmount;
+
+    public double initialBolusAmount;
+    // Bolus settings
+    public int bolusCalculationOption;
+    public int missedBolusConfig;
 
     public String getUnits() {
         return units == UNITS_MGDL ? Constants.MGDL : Constants.MMOL;

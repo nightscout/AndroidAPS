@@ -47,6 +47,10 @@ android {
         version "1.52"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
+
+        ndk {
+            moduleName "BleCommandUtil"
+        }
     }
     lintOptions {
         disable 'MissingTranslation'

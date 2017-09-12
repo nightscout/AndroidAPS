@@ -701,5 +701,20 @@
     <string name="activate_profile">ACTIVATE PROFILE</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
+    <string name="waitingforpairing">Waiting for pairing on pump</string>
+    <string name="pairingok">Paring OK</string>
+    <string name="pairingtimedout">Paring timed out</string>
+    <string name="pairing">PAIRING</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_paring_key</string>
+    <string name="key_danars_address" translatable="false">danars_address</string>
+    <string name="key_danars_name" translatable="false">danars_name</string>
+    <string name="danars_nodeviceavailable">No Device Available</string>
+    <string name="emptyreservoir">Empty reservoir</string>
+    <string name="bloodsugarmeasurementalert">Blood sugar measurement alert</string>
+    <string name="remaininsulinalert">Remaining insulin level</string>
+    <string name="danarspump">DanaRS</string>
+    <string name="danarspump_shortname">Dana</string>
+    <string name="selectedpump">Selected pump</string>
+    <string name="pairpump">Pair new pump</string>
 </resources>
 
