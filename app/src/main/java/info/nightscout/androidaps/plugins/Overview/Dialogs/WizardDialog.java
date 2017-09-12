@@ -9,6 +9,7 @@ import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -274,13 +275,16 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             case R.id.ok:
                 if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
                     DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+
                     String confirmMessage = getString(R.string.entertreatmentquestion);
 
                     Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(calculatedTotalInsulin);
                     Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(calculatedCarbs);
 
-                    confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
-                    confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+                    confirmMessage += "<br/>" + getString(R.string.bolus) + ": " + "<font color='"+ MainApp.sResources.getColor(R.color.bolus) + "'>" + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U" + "</font>";
+                    confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+
+
 
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -299,7 +303,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                    builder.setMessage(confirmMessage);
+                    builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
@@ -550,7 +554,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
             boluscalcJSON.put("insulin", calculatedTotalInsulin);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 

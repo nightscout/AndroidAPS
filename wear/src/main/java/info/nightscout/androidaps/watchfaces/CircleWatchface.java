@@ -15,6 +15,7 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.os.Bundle;
 import android.os.PowerManager;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.wearable.watchface.WatchFaceStyle;
@@ -504,11 +505,7 @@ public class CircleWatchface extends WatchFace implements SharedPreferences.OnSh
                 setIsAnimated(true);
                 for (int i = 0; i <= 8 * 1000 / 40; i++) {
                     animationStep();
-                    try {
-                        Thread.sleep(40);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    SystemClock.sleep(40);
                 }
                 setIsAnimated(false);
                 prepareDrawTime();

@@ -17,7 +17,7 @@ public class NSMbg {
             mbg = json.getDouble("mgdl");
             this.json = json.toString();
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             log.debug("Data: " + json.toString());
         }
     }
