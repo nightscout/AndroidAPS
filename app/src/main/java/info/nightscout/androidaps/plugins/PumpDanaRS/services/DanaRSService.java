@@ -25,10 +25,15 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.MainApp;
@@ -36,7 +41,6 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
-import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSConnection;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPairingSuccess;
 import info.nightscout.utils.SP;
@@ -69,6 +73,9 @@ public class DanaRSService extends Service {
     private IBinder mBinder = new LocalBinder();
 
     private Handler mHandler = null;
+
+    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+    private static ScheduledFuture<?> scheduledDisconnection = null;
 
     private DanaRS_Packet processsedMessage = null;
     private ArrayList<byte[]> mSendQueue = new ArrayList<>();
@@ -195,6 +202,7 @@ public class DanaRSService extends Service {
             return false;
         }
 
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING));
         isConnecting = true;
         if ((mBluetoothDeviceAddress != null) && (address.equals(mBluetoothDeviceAddress)) && (mBluetoothGatt != null)) {
             log.debug("Trying to use an existing mBluetoothGatt for connection.");
@@ -260,7 +268,7 @@ public class DanaRSService extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 close();
                 isConnected = false;
-                sendBTConnect(false, false, false, null);
+                MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
             }
         }
 
@@ -466,10 +474,12 @@ public class DanaRSService extends Service {
 
                                     } else if (inputBuffer.length == 6 && inputBuffer[2] == 'B' && inputBuffer[3] == 'U' && inputBuffer[4] == 'S' && inputBuffer[5] == 'Y') {
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRS_Packet.toHexString(inputBuffer));
-                                        sendBTConnect(false, true, false, null);
+                                        mSendQueue.clear();
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.sResources.getString(R.string.pumpbusy)));
                                     } else {
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRS_Packet.toHexString(inputBuffer));
-                                        sendBTConnect(false, false, true, null);
+                                        mSendQueue.clear();
+                                        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED, MainApp.sResources.getString(R.string.connectionerror)));
                                     }
                                     break;
                                 // 2nd packet, pairing key
@@ -508,7 +518,8 @@ public class DanaRSService extends Service {
                                     pass = pass ^ 3463;
                                     DanaRPump.getInstance().rs_password = Integer.toHexString(pass);
                                     log.debug("Pump user password: " + Integer.toHexString(pass));
-                                    sendBTConnect(true, false, false, getConnectDevice());
+                                    MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
+                                    scheduleDisconnection();
                                     break;
                             }
                             break;
@@ -538,6 +549,7 @@ public class DanaRSService extends Service {
                             } else {
                                 log.error("Unknown message received " + DanaRS_Packet.toHexString(inputBuffer));
                             }
+                            scheduleDisconnection();
                             break;
                     }
                 } catch (Exception e) {
@@ -638,6 +650,7 @@ public class DanaRSService extends Service {
         if (!message.isReceived()) {
             log.warn("Reply not received " + message.getFriendlyName());
         }
+        scheduleDisconnection();
     }
 
     private void SendPairingRequest() {
@@ -659,13 +672,20 @@ public class DanaRSService extends Service {
         writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
     }
 
-    private void sendBTConnect(boolean isConnected, boolean isBusy, boolean isError, BluetoothDevice device) {
-        if (isConnected) {
-            this.isConnected = true;
-        } else {
-            mSendQueue.clear();
+    public void scheduleDisconnection() {
+        class DisconnectRunnable implements Runnable {
+            public void run() {
+                disconnect("scheduleDisconnection");
+                scheduledDisconnection = null;
+            }
         }
-
-        MainApp.bus().post(new EventDanaRSConnection(isConnected, isBusy, isError, device));
+        // prepare task for execution in 5 sec
+        // cancel waiting task to prevent sending multiple disconnections
+        if (scheduledDisconnection != null)
+            scheduledDisconnection.cancel(false);
+        Runnable task = new DisconnectRunnable();
+        final int sec = 5;
+        scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
     }
+
 }
