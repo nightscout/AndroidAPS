@@ -30,6 +30,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.ProfileSwitch;
+import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
@@ -601,6 +602,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                 detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
                 detailedBolusInfo.insulin = request.smb;
                 detailedBolusInfo.isSMB = true;
+                detailedBolusInfo.source = Source.USER;
                 PumpEnactResult smbResult = deliverTreatment(detailedBolusInfo);
                 if (smbResult.success)
                     return result;
