@@ -217,6 +217,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
         result.success = true;
         result.bolusDelivered = detailedBolusInfo.insulin;
         result.carbsDelivered = detailedBolusInfo.carbs;
+        result.enacted = result.bolusDelivered > 0 || result.carbsDelivered > 0;
         result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
 
         Double delivering = 0d;
