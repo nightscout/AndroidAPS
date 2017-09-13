@@ -457,7 +457,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         MainApp.bus().post(new EventBolusRequested(detailedBolusInfo.insulin));
 
         result = activePump.deliverTreatment(detailedBolusInfo);
-        if(result.success) addToHistoryTreatment(detailedBolusInfo);
+
         BolusProgressDialog.bolusEnded = true;
         MainApp.bus().post(new EventDismissBolusprogressIfRunning(result));
 
