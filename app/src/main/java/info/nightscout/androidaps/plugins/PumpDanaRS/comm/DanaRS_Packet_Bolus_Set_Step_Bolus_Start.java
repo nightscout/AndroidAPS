@@ -14,6 +14,8 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
 	private double amount;
 	private int speed;
 
+	public boolean failed;
+
 	public DanaRS_Packet_Bolus_Set_Step_Bolus_Start() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BOLUS__SET_STEP_BOLUS_START;
@@ -49,6 +51,8 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
 		int dataIndex = DATA_START;
 		int dataSize = 1;
 		int status = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+
+		failed = status != 0x01;
 
 		if (Config.logDanaMessageDetail) {
 			log.debug("Result: " + status);

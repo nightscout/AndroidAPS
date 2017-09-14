@@ -21,7 +21,7 @@ public class DanaRSMessageHashTable {
             Config.logDanaMessageDetail = false;
 
             messages = new HashMap<>();
-            put(new DanaRS_Packet_Basal_Cancel_Temporary_Basal());
+            put(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
             put(new DanaRS_Packet_Basal_Get_Basal_Rate());
             put(new DanaRS_Packet_Basal_Get_Profile_Basal_Rate());
             put(new DanaRS_Packet_Basal_Get_Profile_Number());

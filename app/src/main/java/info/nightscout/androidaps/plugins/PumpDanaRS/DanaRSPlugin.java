@@ -212,6 +212,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         mDeviceName = SP.getString(R.string.key_danars_name, "");
     }
 
+    public static void connectIfNotConnected(String from) {
+        if (!isConnected())
+            connect(from);
+    }
+
     public static void connect(String from) {
         if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals(""))
             danaRSService.connect(from, mDeviceAddress);
@@ -427,6 +432,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
             Treatment t = new Treatment();
             boolean connectionOK = false;
+            connectIfNotConnected("bolus");
             if (detailedBolusInfo.insulin > 0 || carbs > 0)
                 connectionOK = danaRSService.bolus(detailedBolusInfo.insulin, (int) carbs, System.currentTimeMillis() + carbTime * 60 * 1000 + 1000, t); // +1000 to make the record different
             PumpEnactResult result = new PumpEnactResult();

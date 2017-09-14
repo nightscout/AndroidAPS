@@ -716,5 +716,7 @@
     <string name="danarspump_shortname">Dana</string>
     <string name="selectedpump">Selected pump</string>
     <string name="pairpump">Pair new pump</string>
+    <string name="bolusspeed">Bolus speed</string>
+    <string name="key_danars_bolusspeed">danars_bolusspeed</string>
 </resources>
 

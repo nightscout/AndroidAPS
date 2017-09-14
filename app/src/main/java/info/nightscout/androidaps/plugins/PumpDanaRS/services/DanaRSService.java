@@ -15,6 +15,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 
 import com.cozmo.danar.util.BleCommandUtil;
 import com.squareup.otto.Subscribe;
@@ -23,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -31,9 +33,15 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.MainApp;
@@ -41,8 +49,24 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Basal_Rate;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Profile_Number;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Temporary_Basal_State;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Get_Bolus_Option;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Get_CIR_CF_Array;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Get_Calculation_Information;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Get_Extended_Bolus_State;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Get_Step_Bolus_Information;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Step_Bolus_Start;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Step_Bolus_Stop;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Get_Shipping_Information;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Initial_Screen_Information;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPacket;
 import info.nightscout.androidaps.plugins.PumpDanaRS.events.EventDanaRSPairingSuccess;
+import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.SP;
 
 public class DanaRSService extends Service {
@@ -72,6 +96,9 @@ public class DanaRSService extends Service {
     private PowerManager.WakeLock mWakeLock;
     private IBinder mBinder = new LocalBinder();
 
+    private DanaRPump danaRPump = DanaRPump.getInstance();
+    private Treatment bolusingTreatment = null;
+
     private Handler mHandler = null;
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
@@ -90,10 +117,100 @@ public class DanaRSService extends Service {
         }
         initialize();
         MainApp.bus().register(this);
+
+        PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, DanaRSService.class.getSimpleName());
+    }
+
+    private boolean getPumpStatus() {
+        try {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpstatus)));
+
+            sendMessage(new DanaRS_Packet_General_Initial_Screen_Information());
+            sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State());
+            sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
+            sendMessage(new DanaRS_Packet_Basal_Temporary_Basal_State());
+
+            Date now = new Date();
+            if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
+                sendMessage(new DanaRS_Packet_General_Get_Shipping_Information());
+                sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
+                sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option()); // isExtendedEnabled
+                sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile
+                sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // bolusStep, maxBolus
+                sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basalStep, maxBasal
+                sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information()); // target
+                sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
+                sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
+                long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                log.debug("Pump time difference: " + timeDiff + " seconds");
+                if (Math.abs(timeDiff) > 10) {
+                    sendMessage(new DanaRS_Packet_Option_Set_Pump_Time(new Date()));
+                    sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
+                    timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
+                    log.debug("Pump time difference: " + timeDiff + " seconds");
+                }
+                danaRPump.lastSettingsRead = now;
+            }
+
+            loadEvents();
+
+            danaRPump.lastConnection = now;
+            MainApp.bus().post(new EventDanaRNewStatus());
+            MainApp.bus().post(new EventInitializationChanged());
+            NSUpload.uploadDeviceStatus();
+            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
+                log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
+                Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.sResources.getString(R.string.approachingdailylimit), Notification.URGENT);
+                MainApp.bus().post(new EventNewNotification(reportFail));
+                NSUpload.uploadError(MainApp.sResources.getString(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
+            }
+        } catch (Exception e) {
+            log.error("Unhandled exception", e);
+        }
+        return true;
+    }
+
+    private void loadEvents() {
     }
 
     public boolean bolus(double insulin, int carbs, long l, Treatment t) {
-        return false;
+        bolusingTreatment = t;
+        int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, speed);
+        DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t);
+
+        if (!isConnected()) return false;
+
+        if (carbs > 0) {
+//            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs);
+//            sendMessage(msg);
+//            MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, carbtime, carbs, 0);
+//            sendMessage(msgSetHistoryEntry_v2);
+//            lastHistoryFetched = carbtime - 60000;
+        }
+        if (insulin > 0) {
+            DanaRS_Packet_Notify_Delivery_Rate_Display progress = new DanaRS_Packet_Notify_Delivery_Rate_Display(insulin, t); // initialize static variables
+
+            if (!stop.stopped) {
+                sendMessage(start);
+            } else {
+                t.insulin = 0d;
+                return false;
+            }
+            while (!stop.stopped && !start.failed) {
+                SystemClock.sleep(100);
+                if ((System.currentTimeMillis() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
+                    stop.stopped = true;
+                    stop.forced = true;
+                    log.debug("Communication stopped");
+                }
+            }
+        }
+        SystemClock.sleep(3000);
+        bolusingTreatment = null;
+        loadEvents();
+        return true;
     }
 
     public void bolusStop() {
@@ -202,20 +319,25 @@ public class DanaRSService extends Service {
             return false;
         }
 
+        mWakeLock.acquire();
+
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING));
         isConnecting = true;
         if ((mBluetoothDeviceAddress != null) && (address.equals(mBluetoothDeviceAddress)) && (mBluetoothGatt != null)) {
             log.debug("Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
                 setCharacteristicNotification(getUARTReadBTGattChar(), true);
+                mWakeLock.release();
                 return true;
             }
+            mWakeLock.release();
             return false;
         }
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             log.debug("Device not found.  Unable to connect.");
+            mWakeLock.release();
             return false;
         }
 
@@ -225,6 +347,7 @@ public class DanaRSService extends Service {
         mBluetoothDevice = device;
         mBluetoothDeviceAddress = address;
         mBluetoothDeviceName = device.getName();
+        mWakeLock.release();
         return true;
     }
 
@@ -336,14 +459,11 @@ public class DanaRSService extends Service {
 
         new Thread(new Runnable() {
             public void run() {
-                try {
-                    Thread.sleep(WRITE_DELAY_MILLIS);
-                    characteristic.setValue(data);
-                    characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
-                    mBluetoothGatt.writeCharacteristic(characteristic);
-                    //log.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data));
-                } catch (Exception e) {
-                }
+                SystemClock.sleep(WRITE_DELAY_MILLIS);
+                characteristic.setValue(data);
+                characteristic.setWriteType(BluetoothGattCharacteristic.WRITE_TYPE_NO_RESPONSE);
+                log.debug("writeCharacteristic:" + DanaRS_Packet.toHexString(data));
+                mBluetoothGatt.writeCharacteristic(characteristic);
             }
         }).start();
     }
@@ -519,6 +639,8 @@ public class DanaRSService extends Service {
                                     DanaRPump.getInstance().rs_password = Integer.toHexString(pass);
                                     log.debug("Pump user password: " + Integer.toHexString(pass));
                                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
+
+                                    getPumpStatus();
                                     scheduleDisconnection();
                                     break;
                             }

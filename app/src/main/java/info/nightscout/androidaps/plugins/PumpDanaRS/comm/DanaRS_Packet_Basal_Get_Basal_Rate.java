@@ -10,7 +10,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import com.cozmo.danar.util.BleCommandUtil;
 
 public class DanaRS_Packet_Basal_Get_Basal_Rate extends DanaRS_Packet {
-	private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Cancel_Temporary_Basal.class);
+	private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal.class);
 
 
 	public DanaRS_Packet_Basal_Get_Basal_Rate() {

@@ -22,5 +22,12 @@
             android:inputType="textCapCharacters">
         </EditTextPreference>
 
+        <ListPreference
+            android:title="@string/bolusspeed"
+            android:key="@string/key_danars_bolusspeed"
+            android:defaultValue="0"
+            android:entries="@array/danaSpeedArray"
+            android:entryValues="@array/danaSpeedValues"/>
+
     </PreferenceCategory>
 </PreferenceScreen>
