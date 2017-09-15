@@ -218,8 +218,22 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     }
 
     public static void connect(String from) {
-        if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals(""))
-            danaRSService.connect(from, mDeviceAddress);
+
+        if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals("")) {
+            final Object o = new Object();
+
+            danaRSService.connect(from, mDeviceAddress, o);
+            synchronized (o) {
+                try {
+                    o.wait(20000);
+                } catch (InterruptedException e) {
+                    log.error("InterruptedException " + e);
+                }
+            }
+            pumpDescription.basalStep = pump.basalStep;
+            pumpDescription.bolusStep = pump.bolusStep;
+            log.debug("RS connected");
+        }
     }
 
     public static boolean isConnected() {

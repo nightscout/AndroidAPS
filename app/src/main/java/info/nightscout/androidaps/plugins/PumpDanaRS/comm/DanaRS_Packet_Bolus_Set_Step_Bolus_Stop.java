@@ -30,6 +30,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Stop extends DanaRS_Packet {
         this.t = t;
         this.amount = amount;
         forced = false;
+        stopped = false;
     }
 
     @Override

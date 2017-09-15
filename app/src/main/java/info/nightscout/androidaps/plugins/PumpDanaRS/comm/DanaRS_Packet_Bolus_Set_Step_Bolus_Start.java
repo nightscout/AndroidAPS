@@ -52,7 +52,7 @@ public class DanaRS_Packet_Bolus_Set_Step_Bolus_Start extends DanaRS_Packet {
 		int dataSize = 1;
 		int status = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
-		failed = status != 0x01;
+		failed = status != 0x00;
 
 		if (Config.logDanaMessageDetail) {
 			log.debug("Result: " + status);

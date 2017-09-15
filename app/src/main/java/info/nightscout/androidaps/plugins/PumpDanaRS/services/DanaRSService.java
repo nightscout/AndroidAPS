@@ -12,7 +12,6 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -34,21 +33,21 @@ import java.util.concurrent.TimeUnit;
 
 import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.events.EventInitializationChanged;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
-import info.nightscout.androidaps.MainApp;
-import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.events.EventAppExit;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
-import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Basal_Rate;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Profile_Number;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Temporary_Basal_State;
@@ -61,6 +60,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Se
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Step_Bolus_Stop;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Get_Shipping_Information;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Initial_Screen_Information;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Complete;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Set_Pump_Time;
@@ -99,7 +99,7 @@ public class DanaRSService extends Service {
     private DanaRPump danaRPump = DanaRPump.getInstance();
     private Treatment bolusingTreatment = null;
 
-    private Handler mHandler = null;
+    private Object mConfirmConnect = null;
 
     private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
     private static ScheduledFuture<?> scheduledDisconnection = null;
@@ -109,7 +109,6 @@ public class DanaRSService extends Service {
 
 
     public DanaRSService() {
-        mHandler = new Handler();
         try {
             MainApp.bus().unregister(this);
         } catch (RuntimeException x) {
@@ -179,6 +178,7 @@ public class DanaRSService extends Service {
         int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, speed);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t);
+        DanaRS_Packet_Notify_Delivery_Complete complete = new DanaRS_Packet_Notify_Delivery_Complete(insulin, t);
 
         if (!isConnected()) return false;
 
@@ -297,7 +297,8 @@ public class DanaRSService extends Service {
         return isConnecting;
     }
 
-    public boolean connect(String from, String address) {
+    public boolean connect(String from, String address, Object confirmConnect) {
+        mConfirmConnect = confirmConnect;
         BluetoothManager tBluetoothManager = ((BluetoothManager) MainApp.instance().getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE));
         if (tBluetoothManager == null) {
             return false;
@@ -412,24 +413,36 @@ public class DanaRSService extends Service {
 
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             log.debug("onCharacteristicRead" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
-            readDataParsing(characteristic.getValue());
+            addToReadBuffer(characteristic.getValue());
+            readDataParsing();
         }
 
-        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
+        public void onCharacteristicChanged(BluetoothGatt gatt, final BluetoothGattCharacteristic characteristic) {
             log.debug("onCharacteristicChanged" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
-            readDataParsing(characteristic.getValue());
+            addToReadBuffer(characteristic.getValue());
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    readDataParsing();
+                }
+            }).start();
         }
 
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             log.debug("onCharacteristicWrite" + (characteristic != null ? ":" + DanaRS_Packet.toHexString(characteristic.getValue()) : ""));
-            synchronized (mSendQueue) {
-                // after message sent, check if there is the rest of the message waiting and send it
-                if (mSendQueue.size() > 0) {
-                    byte[] bytes = mSendQueue.get(0);
-                    mSendQueue.remove(0);
-                    writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (mSendQueue) {
+                        // after message sent, check if there is the rest of the message waiting and send it
+                        if (mSendQueue.size() > 0) {
+                            byte[] bytes = mSendQueue.get(0);
+                            mSendQueue.remove(0);
+                            writeCharacteristic_NO_RESPONSE(getUARTWriteBTGattChar(), bytes);
+                        }
+                    }
                 }
-            }
+            }).start();
         }
     };
 
@@ -518,58 +531,74 @@ public class DanaRSService extends Service {
     private byte[] readBuffer = new byte[1024];
     private int bufferLength = 0;
 
-    private void readDataParsing(byte[] buffer) {
-        boolean startSignatureFound = false, packetIsValid = false;
-        boolean isProcessing;
-
+    private void addToReadBuffer(byte[] buffer) {
+        //log.debug("addToReadBuffer " + DanaRS_Packet.toHexString(buffer));
         if (buffer == null || buffer.length == 0) {
             return;
         }
+        synchronized (readBuffer) {
+            // Append incomming data to input buffer
+            System.arraycopy(buffer, 0, readBuffer, bufferLength, buffer.length);
+            bufferLength += buffer.length;
+        }
+    }
 
-        // Append incomming data to input buffer
-        System.arraycopy(buffer, 0, readBuffer, bufferLength, buffer.length);
-        bufferLength += buffer.length;
+    private void readDataParsing() {
+        boolean startSignatureFound = false, packetIsValid = false;
+        boolean isProcessing;
 
         isProcessing = true;
 
         while (isProcessing) {
-            // Find packet start [A5 A5]
-            if (bufferLength >= 6) {
-                for (int idxStartByte = 0; idxStartByte < bufferLength - 2; idxStartByte++) {
-                    if ((readBuffer[idxStartByte] == PACKET_START_BYTE) && (readBuffer[idxStartByte + 1] == PACKET_START_BYTE)) {
-                        if (idxStartByte > 0) {
-                            // if buffer doesn't start with signature remove the leading trash
-                            log.debug("Shifting the input buffer by " + idxStartByte + " bytes");
-                            System.arraycopy(readBuffer, idxStartByte, readBuffer, 0, bufferLength - idxStartByte);
-                            bufferLength -= idxStartByte;
+            int length = 0;
+            synchronized (readBuffer) {
+                // Find packet start [A5 A5]
+                if (bufferLength >= 6) {
+                    for (int idxStartByte = 0; idxStartByte < bufferLength - 2; idxStartByte++) {
+                        if ((readBuffer[idxStartByte] == PACKET_START_BYTE) && (readBuffer[idxStartByte + 1] == PACKET_START_BYTE)) {
+                            if (idxStartByte > 0) {
+                                // if buffer doesn't start with signature remove the leading trash
+                                log.debug("Shifting the input buffer by " + idxStartByte + " bytes");
+                                System.arraycopy(readBuffer, idxStartByte, readBuffer, 0, bufferLength - idxStartByte);
+                                bufferLength -= idxStartByte;
+                            }
+                            startSignatureFound = true;
+                            break;
                         }
-                        startSignatureFound = true;
-                        break;
+                    }
+                }
+                // A5 A5 LEN TYPE CODE PARAMS CHECKSUM1 CHECKSUM2 5A 5A
+                //           ^---- LEN -----^
+                // total packet length 2 + 1 + readBuffer[2] + 2 + 2
+                if (startSignatureFound) {
+                    length = readBuffer[2];
+                    // test if there is enough data loaded
+                    if (length + 7 > bufferLength)
+                        return;
+                    // Verify packed end [5A 5A]
+                    if ((readBuffer[length + 5] == PACKET_END_BYTE) && (readBuffer[length + 6] == PACKET_END_BYTE)) {
+                        packetIsValid = true;
                     }
                 }
             }
-            // A5 A5 LEN TYPE CODE PARAMS CHECKSUM1 CHECKSUM2 5A 5A
-            //           ^---- LEN -----^
-            // total packet length 2 + 1 + readBuffer[2] + 2 + 2
-            int length = 0;
-            if (startSignatureFound) {
-                length = readBuffer[2];
-                // test if there is enough data loaded
-                if (length + 7 > bufferLength)
-                    return;
-                // Verify packed end [5A 5A]
-                if ((readBuffer[length + 5] == PACKET_END_BYTE) && (readBuffer[length + 6] == PACKET_END_BYTE)) {
-                    packetIsValid = true;
-                }
-            }
             if (packetIsValid) {
-                // copy packet to input buffer
                 byte[] inputBuffer = new byte[length + 7];
-                System.arraycopy(readBuffer, 0, inputBuffer, 0, length + 7);
+                synchronized (readBuffer) {
+                    // copy packet to input buffer
+                    System.arraycopy(readBuffer, 0, inputBuffer, 0, length + 7);
+                    // Cut off the message from readBuffer
+                    System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7));
+                    bufferLength -= (length + 7);
+                }
                 // now we have encrypted packet in inputBuffer
                 try {
                     // decrypt the packet
                     inputBuffer = BleCommandUtil.getInstance().getDecryptedPacket(inputBuffer);
+
+                    if (inputBuffer == null) {
+                        log.debug("Null decryptedInputBuffer");
+                        return;
+                    }
 
                     switch (inputBuffer[0]) {
                         // initial handshake packet
@@ -642,6 +671,14 @@ public class DanaRSService extends Service {
 
                                     getPumpStatus();
                                     scheduleDisconnection();
+                                    isConnected = true;
+                                    isConnecting = false;
+                                    if (mConfirmConnect != null) {
+                                        synchronized (mConfirmConnect) {
+                                            mConfirmConnect.notify();
+                                            mConfirmConnect = null;
+                                        }
+                                    }
                                     break;
                             }
                             break;
@@ -677,9 +714,6 @@ public class DanaRSService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                // Cut off the message from readBuffer
-                System.arraycopy(readBuffer, length + 7, readBuffer, 0, bufferLength - (length + 7));
-                bufferLength -= (length + 7);
                 startSignatureFound = false;
                 packetIsValid = false;
                 if (bufferLength < 6) {
@@ -765,10 +799,7 @@ public class DanaRSService extends Service {
             }
         }
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-        }
+        SystemClock.sleep(200);
         if (!message.isReceived()) {
             log.warn("Reply not received " + message.getFriendlyName());
         }

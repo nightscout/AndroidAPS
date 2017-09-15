@@ -82,8 +82,8 @@ public class DanaRPump {
     public double dailyTotalBasalUnits = 0; // RS only
     public int maxDailyTotalUnits;
 
-    public double bolusStep;
-    public double basalStep;
+    public double bolusStep = 0.1;
+    public double basalStep = 0.1;
 
     public double iob;
 
