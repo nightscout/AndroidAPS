@@ -1,8 +1,5 @@
 package info.nightscout.utils;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import java.math.BigDecimal;
 
 /**
