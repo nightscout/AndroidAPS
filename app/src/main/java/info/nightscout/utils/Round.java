@@ -7,43 +7,31 @@ import java.math.BigDecimal;
  */
 public class Round {
     public static Double roundTo(Double x, Double step) {
+        return round(x, step, BigDecimal.ROUND_HALF_UP);
+    }
 
-        if (step > 1) {
-            return roundToWhole(x, step);
-        } else {
-            return roundToNrOfDecimals(x, getDecimalsFromStep(step));
-        }
+    public static Double floorTo(Double x, Double step) {
+        return round(x, step, BigDecimal.ROUND_FLOOR);
+    }
+
+    public static Double ceilTo(Double x, Double step) {
+        return round(x, step, BigDecimal.ROUND_CEILING);
+    }
+
+    private static Double round(Double x, Double step, int roundingMode) {
+        BigDecimal numberToRound = new BigDecimal((Double.toString(x)));
+        BigDecimal stepSize = new BigDecimal((Double.toString(step)));
+        int scale = getDecimalsFromStep(step);
+
+        numberToRound.setScale(scale, BigDecimal.ROUND_HALF_UP);
+
+        BigDecimal rounded = numberToRound.divide(stepSize, 0, roundingMode).multiply(stepSize);
+
+        return rounded.doubleValue();
     }
 
     private static int getDecimalsFromStep(Double step) {
         String stepString = Double.toString(step);
         return stepString.substring(stepString.indexOf('.') + 1).length();
-    }
-
-    private static Double roundToNrOfDecimals(Double x, int decimals) {
-        BigDecimal number = new BigDecimal(Double.toString(x));
-        number = number.setScale(decimals, BigDecimal.ROUND_HALF_UP);
-
-        return number.doubleValue();
-    }
-
-    private static Double roundToWhole(Double x, Double step) {
-        if (x != 0d) {
-            return Math.round(x / step) * step;
-        }
-        return 0d;
-    }
-
-    public static Double floorTo(Double x, Double step) {
-        if (x != 0d) {
-            return Math.floor(x / step) * step;
-        }
-        return 0d;
-    }
-    public static Double ceilTo(Double x, Double step) {
-        if (x != 0d) {
-            return Math.ceil(x / step) * step;
-        }
-        return 0d;
     }
 }
