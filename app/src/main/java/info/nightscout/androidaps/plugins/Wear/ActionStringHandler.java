@@ -202,9 +202,10 @@ public class ActionStringHandler {
                 sendError("No recent BG to base calculation on!");
                 return;
             }
+
             DecimalFormat format = new DecimalFormat("0.00");
             BolusWizard bolusWizard = new BolusWizard();
-            bolusWizard.doCalc(profile, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
+            bolusWizard.doCalc(profile, null, carbsAfterConstraints, 0d, useBG ? bgReading.valueToUnits(profile.getUnits()) : 0d, 0d, percentage, useBolusIOB, useBasalIOB, false, false);
 
             Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(bolusWizard.calculatedTotalInsulin);
             if (insulinAfterConstraints - bolusWizard.calculatedTotalInsulin != 0) {
@@ -470,7 +471,7 @@ public class ActionStringHandler {
         }
 
         //Check for Temp-Target:
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
         if (tempTarget != null) {
             ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.low, tempTarget.low, Constants.MGDL, profile.getUnits());
             ret += "\nuntil: " + DateUtil.timeString(tempTarget.originalEnd());

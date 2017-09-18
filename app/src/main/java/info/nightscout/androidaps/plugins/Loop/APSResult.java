@@ -7,6 +7,8 @@ import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -17,6 +19,8 @@ import info.nightscout.utils.DecimalFormatter;
  * Created by mike on 09.06.2016.
  */
 public class APSResult {
+    private static Logger log = LoggerFactory.getLogger(APSResult.class);
+
     public String reason;
     public double rate;
     public int duration;
@@ -72,7 +76,7 @@ public class APSResult {
                 json.put("reason", reason);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return json;
     }

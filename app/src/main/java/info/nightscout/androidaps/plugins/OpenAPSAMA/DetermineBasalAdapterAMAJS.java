@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -102,7 +103,7 @@ public class DetermineBasalAdapterAMAJS {
         try {
             result = new DetermineBasalResultAMA(v8ObjectReuslt, new JSONObject(ret));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         return result;
@@ -224,6 +225,11 @@ public class DetermineBasalAdapterAMAJS {
         mProfile.add("temptargetSet", tempTargetSet);
         mProfile.add("autosens_adjust_targets", SP.getBoolean("openapsama_autosens_adjusttargets", true));
         mProfile.add("min_5m_carbimpact", SP.getDouble("openapsama_min_5m_carbimpact", 3d));
+
+        if (units.equals(Constants.MMOL)) {
+            mProfile.add("out_units", "mmol/L");
+        }
+        
         mV8rt.add(PARAM_profile, mProfile);
 
         mCurrentTemp = new V8Object(mV8rt);

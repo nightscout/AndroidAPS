@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinFastactingProlonged;
+package info.nightscout.androidaps.plugins.Insulin;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,19 +9,12 @@ import android.widget.TextView;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
-import info.nightscout.androidaps.plugins.InsulinFastacting.ActivityGraph;
 
 /**
  * Created by mike on 17.04.2017.
  */
 
-public class InsulinFastactingProlongedFragment extends Fragment {
-    static InsulinFastactingProlongedPlugin insulinFastactingProlongedPlugin = new InsulinFastactingProlongedPlugin();
-
-    static public InsulinFastactingProlongedPlugin getPlugin() {
-        return insulinFastactingProlongedPlugin;
-    }
-
+public class InsulinFragment extends Fragment {
     TextView insulinName;
     TextView insulinComment;
     TextView insulinDia;
@@ -48,10 +41,10 @@ public class InsulinFastactingProlongedFragment extends Fragment {
     }
 
     private void updateGUI() {
-        insulinName.setText(insulinFastactingProlongedPlugin.getFriendlyName());
-        insulinComment.setText(insulinFastactingProlongedPlugin.getComment());
-        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(insulinFastactingProlongedPlugin.getDia()) + "h");
-        insulinGraph.show(insulinFastactingProlongedPlugin);
+        insulinName.setText(MainApp.getConfigBuilder().getActiveInsulin().getFriendlyName());
+        insulinComment.setText(MainApp.getConfigBuilder().getActiveInsulin().getComment());
+        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(MainApp.getConfigBuilder().getActiveInsulin().getDia()) + "h");
+        insulinGraph.show(MainApp.getConfigBuilder().getActiveInsulin());
     }
 
 }

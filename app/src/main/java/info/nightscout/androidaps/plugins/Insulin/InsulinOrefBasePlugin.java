@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.InsulinOrefCurves;
+package info.nightscout.androidaps.plugins.Insulin;
 
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;

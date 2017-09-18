@@ -95,9 +95,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         if (ev.lock) {
             mWakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK, "AAPS");
-            mWakeLock.acquire();
+            if (!mWakeLock.isHeld())
+                mWakeLock.acquire();
         } else {
-            if (mWakeLock != null)
+            if (mWakeLock != null && mWakeLock.isHeld())
                 mWakeLock.release();
         }
     }
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try { // activity may be destroyed
                     setUpTabs(true);
                 } catch (IllegalStateException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
                 boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
                 if (lockScreen)
@@ -206,7 +207,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onDestroy() {
         if (mWakeLock != null)
-            mWakeLock.release();
+            if (mWakeLock.isHeld())
+                mWakeLock.release();
         super.onDestroy();
     }
 

@@ -160,8 +160,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         double maxIob = SP.getDouble("openapsma_max_iob", 1.5d);
         double maxBasal = SafeParse.stringToDouble(SP.getString("openapsma_max_basal", "1"));
-        double minBg =  Profile.toMgdl(profile.getTargetLow(), units);
-        double maxBg =  Profile.toMgdl(profile.getTargetHigh(), units);
+        double minBg = Profile.toMgdl(profile.getTargetLow(), units);
+        double maxBg = Profile.toMgdl(profile.getTargetHigh(), units);
         double targetBg = (minBg + maxBg) / 2;
 
         minBg = Round.roundTo(minBg, 0.1d);
@@ -196,7 +196,8 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
         if (!checkOnlyHardLimits(profile.getIc(), "carbratio", 2, 100)) return;
-        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900)) return;
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900))
+            return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
@@ -224,7 +225,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         try {
             determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         lastDetermineBasalAdapterMAJS = determineBasalAdapterMAJS;

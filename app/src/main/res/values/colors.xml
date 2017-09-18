@@ -3,6 +3,7 @@
     <color name="prediction">#ff00ff</color>
     <color name="basal">#00ffff</color>
     <color name="iob">#FFFB8C00</color>
+    <color name="bolus">#FFFFCC03</color>
     <color name="cob">#8BC34A</color>
     <color name="ratio">#FFFFFF</color>
     <color name="inrange">#00FF00</color>
@@ -34,6 +35,7 @@
     <color name="cardObjectiveText">#779ECB</color>
 
     <color name="linearBlockBackground">#3e3d3d</color>
+    <color name="configBuilderSelectedBackground">#262525</color>
 
     <color name="colorAcceptTempButton">#f4d700</color>
     <color name="colorTreatmentButton">#67dfe8</color>

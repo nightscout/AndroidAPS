@@ -7,6 +7,8 @@ import android.os.Bundle;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.Services.Intents;
@@ -16,6 +18,7 @@ import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotificati
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 
 public class NSAlarmReceiver extends BroadcastReceiver {
+    private static Logger log = LoggerFactory.getLogger(NSAlarmReceiver.class);
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -27,7 +30,7 @@ public class NSAlarmReceiver extends BroadcastReceiver {
         try {
             json = new JSONObject(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             return;
         }
         NSAlarm nsAlarm = new NSAlarm(json);
