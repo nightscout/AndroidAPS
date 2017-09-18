@@ -380,6 +380,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         } else {
             MainApp.bus().post(new EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED));
         }
+        connectIfNotConnected("updateBasalsInPump");
         if (!danaRSService.updateBasalsInPump(profile)) {
             Notification notification = new Notification(Notification.FAILED_UDPATE_PROFILE, MainApp.sResources.getString(R.string.failedupdatebasalprofile), Notification.URGENT);
             MainApp.bus().post(new EventNewNotification(notification));
@@ -585,6 +586,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             return result;
         }
         int durationInHours = Math.max(durationInMinutes / 60, 1);
+        connectIfNotConnected("tempbasal");
         boolean connectionOK = danaRSService.tempBasal(percent, durationInHours);
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
@@ -648,6 +650,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
                 log.debug("setExtendedBolus: Correct extended bolus already set. Current: " + pump.extendedBolusAmount + " Asked: " + insulin);
             return result;
         }
+        connectIfNotConnected("extendedBolus");
         boolean connectionOK = danaRSService.extendedBolus(insulin, durationInHalfHours);
         if (connectionOK && pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = true;
@@ -673,6 +676,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
         if (pump.isTempBasalInProgress) {
+            connectIfNotConnected("tempBasalStop");
             danaRSService.tempBasalStop();
             result.enacted = true;
             result.isTempCancel = true;
@@ -697,6 +701,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
         if (pump.isExtendedInProgress) {
+            connectIfNotConnected("extendedBolusStop");
             danaRSService.extendedBolusStop();
             result.enacted = true;
             result.isTempCancel = true;

@@ -216,7 +216,7 @@ public class DanaRS_Packet {
 						ret = new DanaRS_Packet_Basal_Set_Temporary_Basal();
 						break;
 					case BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__TEMPORARY_BASAL_STATE:
-						ret = new DanaRS_Packet_Basal_Temporary_Basal_State();
+						ret = new DanaRS_Packet_Basal_Get_Temporary_Basal_State();
 						break;
 					case BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__CANCEL_TEMPORARY_BASAL:
 						ret = new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal();

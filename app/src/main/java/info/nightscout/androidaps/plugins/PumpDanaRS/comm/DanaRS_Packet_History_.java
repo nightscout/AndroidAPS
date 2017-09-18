@@ -34,13 +34,17 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
     public DanaRS_Packet_History_(Date from) {
         this();
         GregorianCalendar cal = new GregorianCalendar();
-        cal.setTime(from);
+        if (from.getTime() != 0)
+            cal.setTime(from);
+        else
+            cal.set(2000, 0, 1, 0, 0, 0);
         year = cal.get(Calendar.YEAR) - 1900 - 100;
         month = cal.get(Calendar.MONTH) + 1;
         day = cal.get(Calendar.DAY_OF_MONTH);
         hour = cal.get(Calendar.HOUR_OF_DAY);
         min = cal.get(Calendar.MINUTE);
         sec = cal.get(Calendar.SECOND);
+        log.debug("Loading event history from: " + new Date(cal.getTimeInMillis()).toLocaleString());
     }
 
     @Override

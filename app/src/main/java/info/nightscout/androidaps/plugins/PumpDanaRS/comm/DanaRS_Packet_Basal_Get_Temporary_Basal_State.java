@@ -11,10 +11,10 @@ import info.nightscout.androidaps.Config;
 import com.cozmo.danar.util.BleCommandUtil;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
-public class DanaRS_Packet_Basal_Temporary_Basal_State extends DanaRS_Packet {
-    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Temporary_Basal_State.class);
+public class DanaRS_Packet_Basal_Get_Temporary_Basal_State extends DanaRS_Packet {
+    private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_Basal_Get_Temporary_Basal_State.class);
 
-    public DanaRS_Packet_Basal_Temporary_Basal_State() {
+    public DanaRS_Packet_Basal_Get_Temporary_Basal_State() {
         super();
         opCode = BleCommandUtil.DANAR_PACKET__OPCODE_BASAL__TEMPORARY_BASAL_STATE;
         if (Config.logDanaMessageDetail) {

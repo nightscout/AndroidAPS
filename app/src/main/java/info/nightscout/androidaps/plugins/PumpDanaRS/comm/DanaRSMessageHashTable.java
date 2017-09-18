@@ -31,7 +31,7 @@ public class DanaRSMessageHashTable {
             put(new DanaRS_Packet_Basal_Set_Suspend_Off());
             put(new DanaRS_Packet_Basal_Set_Suspend_On());
             put(new DanaRS_Packet_Basal_Set_Temporary_Basal());
-            put(new DanaRS_Packet_Basal_Temporary_Basal_State());
+            put(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
             put(new DanaRS_Packet_Bolus_Get_Bolus_Option());
             put(new DanaRS_Packet_Bolus_Get_Initial_Bolus());
             put(new DanaRS_Packet_Bolus_Get_Calculation_Information());

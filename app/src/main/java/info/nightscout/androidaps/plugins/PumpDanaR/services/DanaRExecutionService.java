@@ -526,7 +526,7 @@ public class DanaRExecutionService extends Service {
         connect("updateBasalsInPump");
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.updatingbasalrates)));
-        double[] basal = buildDanaRProfileRecord(profile);
+        double[] basal = DanaRPump.buildDanaRProfileRecord(profile);
         MsgSetBasalProfile msgSet = new MsgSetBasalProfile((byte) 0, basal);
         mSerialIOThread.sendMessage(msgSet);
         MsgSetActivateBasalProfile msgActivate = new MsgSetActivateBasalProfile((byte) 0);
@@ -535,19 +535,6 @@ public class DanaRExecutionService extends Service {
         getPumpStatus();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
         return true;
-    }
-
-    private double[] buildDanaRProfileRecord(Profile nsProfile) {
-        double[] record = new double[24];
-        for (Integer hour = 0; hour < 24; hour++) {
-            //Some values get truncated to the next lower one.
-            // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
-            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
-            if (Config.logDanaMessageDetail)
-                log.debug("NS basal value for " + hour + ":00 is " + value);
-            record[hour] = value;
-        }
-        return record;
     }
 
     private void waitMsec(long msecs) {

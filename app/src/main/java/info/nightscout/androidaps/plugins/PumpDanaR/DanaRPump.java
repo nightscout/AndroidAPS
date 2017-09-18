@@ -9,8 +9,10 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
@@ -227,6 +229,19 @@ public class DanaRPump {
 
     public String createConvertedProfileName() {
         return PROFILE_PREFIX + (activeProfile + 1);
+    }
+
+    public static double[] buildDanaRProfileRecord(Profile nsProfile) {
+        double[] record = new double[24];
+        for (Integer hour = 0; hour < 24; hour++) {
+            //Some values get truncated to the next lower one.
+            // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
+            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
+            if (Config.logDanaMessageDetail)
+                log.debug("NS basal value for " + hour + ":00 is " + value);
+            record[hour] = value;
+        }
+        return record;
     }
 
 }
