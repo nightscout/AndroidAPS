@@ -5,6 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
 import com.cozmo.danar.util.BleCommandUtil;
+
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
@@ -94,6 +100,13 @@ public class DanaRS_Packet_Bolus_Get_Bolus_Option extends DanaRS_Packet {
         dataIndex += dataSize;
         dataSize = 1;
         int missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+
+        if (!pump.isExtendedBolusEnabled) {
+            Notification notification = new Notification(Notification.EXTENDED_BOLUS_DISABLED, MainApp.sResources.getString(R.string.danar_enableextendedbolus), Notification.URGENT);
+            MainApp.bus().post(new EventNewNotification(notification));
+        } else {
+            MainApp.bus().post(new EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED));
+        }
 
         if (Config.logDanaMessageDetail) {
             log.debug("Extended bolus enabled: " + pump.isExtendedBolusEnabled);
