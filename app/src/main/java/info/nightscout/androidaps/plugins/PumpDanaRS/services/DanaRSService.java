@@ -60,6 +60,8 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Se
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Step_Bolus_Stop;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Get_Shipping_Information;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Initial_Screen_Information;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_All_History;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Complete;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
@@ -107,6 +109,7 @@ public class DanaRSService extends Service {
     private DanaRS_Packet processsedMessage = null;
     private ArrayList<byte[]> mSendQueue = new ArrayList<>();
 
+    private long lastHistoryFetched = 0;
 
     public DanaRSService() {
         try {
@@ -170,15 +173,34 @@ public class DanaRSService extends Service {
         return true;
     }
 
-    private void loadEvents() {
+    public boolean loadEvents() {
+        if (!isConnected())
+            return false;
+        SystemClock.sleep(300);
+        DanaRS_Packet_History_All_History msg;
+        if (lastHistoryFetched == 0) {
+            msg = new DanaRS_Packet_History_All_History(new Date(System.currentTimeMillis() - 2 * 24 * 60 * 60 * 1000)); // 2 days
+            log.debug("Loading complete event history");
+        } else {
+            msg = new DanaRS_Packet_History_All_History(new Date(lastHistoryFetched));
+            log.debug("Loading event history from: " + new Date(lastHistoryFetched).toLocaleString());
+        }
+        sendMessage(msg);
+        while (!msg.done && isConnected()) {
+            SystemClock.sleep(100);
+        }
+        SystemClock.sleep(200);
+        lastHistoryFetched = DanaRS_Packet_History_.lastEventTimeLoaded;
+        return true;
     }
+
 
     public boolean bolus(double insulin, int carbs, long l, Treatment t) {
         bolusingTreatment = t;
         int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, speed);
-        DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t);
-        DanaRS_Packet_Notify_Delivery_Complete complete = new DanaRS_Packet_Notify_Delivery_Complete(insulin, t);
+        DanaRS_Packet_Bolus_Set_Step_Bolus_Stop stop = new DanaRS_Packet_Bolus_Set_Step_Bolus_Stop(insulin, t); // initialize static variables
+        DanaRS_Packet_Notify_Delivery_Complete complete = new DanaRS_Packet_Notify_Delivery_Complete(insulin, t); // initialize static variables
 
         if (!isConnected()) return false;
 
@@ -669,11 +691,11 @@ public class DanaRSService extends Service {
                                     log.debug("Pump user password: " + Integer.toHexString(pass));
                                     MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTED));
 
-                                    getPumpStatus();
-                                    scheduleDisconnection();
                                     isConnected = true;
                                     isConnecting = false;
-                                    if (mConfirmConnect != null) {
+                                    getPumpStatus();
+                                    scheduleDisconnection();
+                                   if (mConfirmConnect != null) {
                                         synchronized (mConfirmConnect) {
                                             mConfirmConnect.notify();
                                             mConfirmConnect = null;

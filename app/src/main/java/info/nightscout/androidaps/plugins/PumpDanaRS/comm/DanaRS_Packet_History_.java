@@ -12,12 +12,14 @@ import com.cozmo.danar.util.BleCommandUtil;
 public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
     private static Logger log = LoggerFactory.getLogger(DanaRS_Packet_History_.class);
 
-    private int year;
-    private int month;
-    private int day;
-    private int hour;
-    private int min;
-    private int sec;
+    private int year = 0;
+    private int month = 0;
+    private int day = 0;
+    private int hour = 0;
+    private int min = 0;
+    private int sec = 0;
+
+    public static long lastEventTimeLoaded = 0;
 
     public boolean done;
     public int totalCount;
@@ -41,16 +43,6 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
         sec = cal.get(Calendar.SECOND);
     }
 
-    public DanaRS_Packet_History_(int year, int month, int day, int hour, int min, int sec) {
-        this();
-        this.year = year;
-        this.month = month;
-        this.day = day;
-        this.hour = hour;
-        this.min = min;
-        this.sec = sec;
-    }
-
     @Override
     public byte[] getRequestParams() {
         byte[] request = new byte[6];
@@ -65,22 +57,24 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
 
     @Override
     public void handleMessage(byte[] data) {
-        int error = 0x00;
+        int error;
         totalCount = 0;
         if (data.length == 3) {
             int dataIndex = DATA_START;
             int dataSize = 1;
             error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-            done = error == 0x00;
+            done = true;
+            log.debug("History end. Code: " + error + " Success: " + (error == 0x00));
         } else if (data.length == 5) {
             int dataIndex = DATA_START;
             int dataSize = 1;
             error = byteArrayToInt(getBytes(data, dataIndex, dataSize));
-            done = error == 0x00;
+            done = true;
 
             dataIndex += dataSize;
             dataSize = 2;
             totalCount = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+            log.debug("History end. Code: " + error + " Success: " + (error == 0x00) + " Toatal count: " + totalCount);
         } else {
             int dataIndex = DATA_START;
             int dataSize = 1;
@@ -111,6 +105,7 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
             int historySecond = byteArrayToInt(getBytes(data, dataIndex, dataSize));
 
             Date date = new Date(100 + historyYear, historyMonth - 1, historyDay, historyHour, historyMinute, historySecond);
+            lastEventTimeLoaded = date.getTime();
 
             dataIndex += dataSize;
             dataSize = 1;
@@ -119,6 +114,8 @@ public abstract class DanaRS_Packet_History_ extends DanaRS_Packet {
             dataIndex += dataSize;
             dataSize = 2;
             int historyValue = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+
+            log.debug("History packet: " + historyType + " Date: " + date.toLocaleString() + " Code: " + historyCode + " Value: " + historyValue);
         }
     }
 }
