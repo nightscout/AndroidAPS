@@ -268,19 +268,19 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     }
 
     private void saveCheckedStates() {
-        SP.putBoolean(getString(R.string.key_wizard_include_bg), bgCheckbox.isChecked());
+        //SP.putBoolean(getString(R.string.key_wizard_include_bg), bgCheckbox.isChecked());
         SP.putBoolean(getString(R.string.key_wizard_include_cob), cobCheckbox.isChecked());
         SP.putBoolean(getString(R.string.key_wizard_include_trend_bg), bgtrendCheckbox.isChecked());
-        SP.putBoolean(getString(R.string.key_wizard_include_bolus_iob), bolusIobCheckbox.isChecked());
-        SP.putBoolean(getString(R.string.key_wizard_include_basal_iob), basalIobCheckbox.isChecked());
+        //SP.putBoolean(getString(R.string.key_wizard_include_bolus_iob), bolusIobCheckbox.isChecked());
+        //SP.putBoolean(getString(R.string.key_wizard_include_basal_iob), basalIobCheckbox.isChecked());
     }
 
     private void loadCheckedStates() {
-        bgCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bg), true));
+        //bgCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bg), true));
         bgtrendCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_trend_bg), false));
         cobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_cob), false));
-        bolusIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bolus_iob), true));
-        basalIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_basal_iob), true));
+        //bolusIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bolus_iob), true));
+        //basalIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_basal_iob), true));
     }
 
     @Override
