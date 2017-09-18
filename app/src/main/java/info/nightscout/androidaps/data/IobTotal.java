@@ -2,6 +2,8 @@ package info.nightscout.androidaps.data;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
@@ -9,6 +11,8 @@ import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.Round;
 
 public class IobTotal {
+    private static Logger log = LoggerFactory.getLogger(IobTotal.class);
+
     public double iob;
     public double activity;
     public double bolussnooze;
@@ -86,7 +90,7 @@ public class IobTotal {
             json.put("activity", activity);
             json.put("time", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return json;
     }
@@ -100,7 +104,7 @@ public class IobTotal {
             json.put("activity", activity);
             json.put("time", DateUtil.toISOString(new Date(time)));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return json;
     }

@@ -253,7 +253,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);
             store.put(profileName, profile);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         convertedProfile = new ProfileStore(json);
         convertedProfileName = profileName;

@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -110,6 +111,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -662,7 +664,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
                 boluscalcJSON.put("insulin", wizard.calculatedTotalInsulin);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             if (wizard.calculatedTotalInsulin > 0d && quickWizardEntry.carbs() > 0d) {
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -705,11 +707,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     detailedBolusInfo.source = Source.USER;
                                     PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                     if (!result.success) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                        builder.setMessage(result.comment);
-                                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                        builder.show();
+                                        try {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                            builder.setMessage(result.comment);
+                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                            builder.show();
+                                        } catch (WindowManager.BadTokenException e) {
+                                            // window has been destroyed
+                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                            MainApp.bus().post(new EventNewNotification(notification));
+                                        }
                                     }
                                 }
                             });
@@ -1744,7 +1752,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         public void onBindViewHolder(NotificationsViewHolder holder, int position) {
             Notification notification = notificationsList.get(position);
             holder.dismiss.setTag(notification);
-            if(Objects.equals(notification.text, MainApp.sResources.getString(R.string.nsalarm_staledata)))
+            if (Objects.equals(notification.text, MainApp.sResources.getString(R.string.nsalarm_staledata)))
                 holder.dismiss.setText("snooze");
             holder.text.setText(notification.text);
             holder.time.setText(DateUtil.timeString(notification.date));
@@ -1795,12 +1803,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                             BroadcastAckAlarm.handleClearAlarm(notification.nsAlarm, MainApp.instance().getApplicationContext(), 60 * 60 * 1000L);
                         }
                         // Adding current time to snooze if we got staleData
-                        log.debug("Notification text is: "+notification.text);
-                        if(notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))){
+                        log.debug("Notification text is: " + notification.text);
+                        if (notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))) {
                             NotificationStore nstore = getPlugin().notificationStore;
-                            long msToSnooze = SP.getInt("nsalarm_staledatavalue",15)*60*1000L;
-                            log.debug("snooze nsalarm_staledatavalue in minutes is "+SP.getInt("nsalarm_staledatavalue",15)+"\n in ms is: "+msToSnooze+" currentTimeMillis is: "+System.currentTimeMillis());
-                            nstore.snoozeTo(System.currentTimeMillis()+(SP.getInt("nsalarm_staledatavalue",15)*60*1000L));
+                            long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
+                            log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
+                            nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
                         }
                         break;
                 }

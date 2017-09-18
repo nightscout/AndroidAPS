@@ -19,7 +19,7 @@ public class NSCal {
             intercept = json.getDouble("intercept");
             scale = json.getDouble("scale");
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             log.debug("Data: " + json.toString());
         }
     }

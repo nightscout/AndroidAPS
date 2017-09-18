@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.plugins.PumpDanaRv2;
 
 import android.bluetooth.BluetoothSocket;
+import android.os.SystemClock;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +46,7 @@ public class SerialIOThread extends Thread {
             mOutputStream = mRfCommSocket.getOutputStream();
             mInputStream = mRfCommSocket.getInputStream();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         this.start();
     }
@@ -159,7 +160,6 @@ public class SerialIOThread extends Thread {
             mOutputStream.write(messageBytes);
         } catch (Exception e) {
             log.error("sendMessage write exception: ", e);
-            e.printStackTrace();
         }
 
         synchronized (message) {
@@ -167,14 +167,10 @@ public class SerialIOThread extends Thread {
                 message.wait(5000);
             } catch (InterruptedException e) {
                 log.error("sendMessage InterruptedException", e);
-                e.printStackTrace();
             }
         }
 
-        try {
-            Thread.sleep(200);
-        } catch (InterruptedException e) {
-        }
+        SystemClock.sleep(200);
         if (!message.received) {
             log.warn("Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {

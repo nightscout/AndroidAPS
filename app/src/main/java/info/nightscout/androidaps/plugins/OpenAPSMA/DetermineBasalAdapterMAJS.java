@@ -135,7 +135,7 @@ public class DetermineBasalAdapterMAJS {
         try {
             result = new DetermineBasalResultMA(v8ObjectReuslt, new JSONObject(ret));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");

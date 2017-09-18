@@ -109,7 +109,7 @@ public class Profile {
                 MainApp.bus().post(new EventDismissNotification(Notification.TARGET_MISSING));
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), MainApp.sResources.getString(R.string.invalidprofile));
         }
     }
@@ -129,7 +129,7 @@ public class Profile {
             try {
                 json.put("units", units);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         return json;
     }
@@ -156,7 +156,7 @@ public class Profile {
                 Double value = o.getDouble("value");
                 sparse.put(tas, value);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         return sparse;
@@ -176,7 +176,7 @@ public class Profile {
                 }
                 lastValue = value;
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         return lastValue;
@@ -215,7 +215,7 @@ public class Profile {
                 if (index + 1 < array.length())
                     retValue += "\n";
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         return retValue;
@@ -297,7 +297,7 @@ public class Profile {
             }
             return ret;
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return new BasalValue[0];
     }

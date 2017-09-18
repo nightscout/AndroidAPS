@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.app.NotificationCompat;
@@ -400,11 +401,7 @@ public class ListenerService extends WearableListenerService implements GoogleAp
 
         @Override
         public void run() {
-            try {
-                Thread.sleep(seconds * 1000);
-            } catch (InterruptedException e) {
-                //e.printStackTrace();
-            }
+            SystemClock.sleep(seconds * 1000);
             synchronized (this) {
                 if(valid) {
                     NotificationManagerCompat notificationManager =

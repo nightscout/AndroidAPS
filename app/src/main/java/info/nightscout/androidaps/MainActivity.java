@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try { // activity may be destroyed
                     setUpTabs(true);
                 } catch (IllegalStateException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
                 boolean lockScreen = BuildConfig.NSCLIENTOLNY && SP.getBoolean("lockscreen", false);
                 if (lockScreen)

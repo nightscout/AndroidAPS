@@ -50,9 +50,18 @@ public class DBAccessReceiver extends BroadcastReceiver {
             String _id = null;
             JSONObject data = null;
             String action = bundles.getString("action");
-            try { collection = bundles.getString("collection"); } catch (Exception e) {}
-            try { _id = bundles.getString("_id"); } catch (Exception e) {}
-            try { data = new JSONObject(bundles.getString("data")); } catch (Exception e) {}
+            try {
+                collection = bundles.getString("collection");
+            } catch (Exception e) {
+            }
+            try {
+                _id = bundles.getString("_id");
+            } catch (Exception e) {
+            }
+            try {
+                data = new JSONObject(bundles.getString("data"));
+            } catch (Exception e) {
+            }
 
             if (data == null && !action.equals("dbRemove") || _id == null && action.equals("dbRemove")) {
                 log.debug("DBACCESS no data inside record");
@@ -67,7 +76,7 @@ public class DBAccessReceiver extends BroadcastReceiver {
             try {
                 data.put("NSCLIENT_ID", nsclientid);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
 
             if (!isAllowedCollection(collection)) {

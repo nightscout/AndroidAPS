@@ -703,7 +703,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
             pumpjson.put("reservoir", (int) pump.reservoirRemainingUnits);
             pumpjson.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return pumpjson;
     }

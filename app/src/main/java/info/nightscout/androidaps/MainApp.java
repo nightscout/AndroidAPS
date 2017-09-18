@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -167,10 +168,7 @@ public class MainApp extends Application {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                }
+                SystemClock.sleep(5000);
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null)
                     pump.refreshDataFromPump("Initialization");
