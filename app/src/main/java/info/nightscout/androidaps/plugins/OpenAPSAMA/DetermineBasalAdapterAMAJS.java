@@ -103,7 +103,7 @@ public class DetermineBasalAdapterAMAJS {
         try {
             result = new DetermineBasalResultAMA(v8ObjectReuslt, new JSONObject(ret));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         return result;

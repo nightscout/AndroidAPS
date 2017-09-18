@@ -50,7 +50,7 @@ public class AlarmSoundService extends Service {
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
             afd.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         player.setLooping(true); // Set looping
         player.setVolume(100, 100);
@@ -59,7 +59,7 @@ public class AlarmSoundService extends Service {
             player.prepare();
             player.start();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         return START_STICKY;

@@ -664,7 +664,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
                 boluscalcJSON.put("insulin", wizard.calculatedTotalInsulin);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             if (wizard.calculatedTotalInsulin > 0d && quickWizardEntry.carbs() > 0d) {
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");

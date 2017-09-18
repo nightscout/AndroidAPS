@@ -20,6 +20,9 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DecimalFormat;
 import java.util.Objects;
 
@@ -36,6 +39,7 @@ import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(NewTreatmentDialog.class);
 
     NumberPicker editCarbs;
     NumberPicker editInsulin;
@@ -132,7 +136,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     builder.show();
                     dismiss();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
                 break;
             case R.id.cancel:

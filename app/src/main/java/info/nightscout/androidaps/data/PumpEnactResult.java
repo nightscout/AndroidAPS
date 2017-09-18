@@ -5,6 +5,8 @@ import android.text.Spanned;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -12,6 +14,8 @@ import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.Round;
 
 public class PumpEnactResult extends Object {
+    private static Logger log = LoggerFactory.getLogger(PumpEnactResult.class);
+
     public boolean success = false;    // request was processed successfully (but possible no change was needed)
     public boolean enacted = false;    // request was processed successfully and change has been made
     public String comment = "";
@@ -101,7 +105,7 @@ public class PumpEnactResult extends Object {
                 result.put("duration", duration);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return result;
     }
