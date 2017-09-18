@@ -42,6 +42,7 @@
     <string name="treatments_newtreatment_insulinamount_label">Insulin</string>
     <string name="treatments_newtreatment_carbsamount_label">Carbs</string>
     <string name="treatments_wizard_bg_label">BG</string>
+    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_carbs_label">Carbs</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="treatments_wizard_unit_label">U</string>
@@ -701,5 +702,10 @@
     <string name="activate_profile">ACTIVATE PROFILE</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
+    <string name="key_wizard_include_bg">wizard_include_bg</string>
+    <string name="key_wizard_include_cob">wizard_include_cob</string>
+    <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
+    <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
+    <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
 </resources>
 

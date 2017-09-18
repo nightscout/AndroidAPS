@@ -892,6 +892,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     @Nullable
+    public TempTarget getTempTargetFromHistory() {
+        return activeTreatments.getTempTargetFromHistory(System.currentTimeMillis());
+    }
+
+    @Override
+    @Nullable
     public TempTarget getTempTargetFromHistory(long time) {
         return activeTreatments.getTempTargetFromHistory(time);
     }
