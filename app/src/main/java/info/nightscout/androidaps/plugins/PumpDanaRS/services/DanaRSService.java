@@ -64,6 +64,7 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Se
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Extended_Bolus_Cancel;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Step_Bolus_Start;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Set_Step_Bolus_Stop;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Get_Pump_Check;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Get_Shipping_Information;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Initial_Screen_Information;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_;
@@ -141,7 +142,8 @@ public class DanaRSService extends Service {
 
             Date now = new Date();
             if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
-                sendMessage(new DanaRS_Packet_General_Get_Shipping_Information());
+                sendMessage(new DanaRS_Packet_General_Get_Shipping_Information()); // serial no
+                sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware
                 sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
                 sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option()); // isExtendedEnabled
                 sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // bolusStep, maxBolus
@@ -259,6 +261,7 @@ public class DanaRSService extends Service {
         }
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
         sendMessage(new DanaRS_Packet_Basal_Set_Temporary_Basal(percent, durationInHours));
+        SystemClock.sleep(200);
         sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
         loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
@@ -283,6 +286,7 @@ public class DanaRSService extends Service {
         if (!isConnected()) return false;
         MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingextendedbolus)));
         sendMessage(new DanaRS_Packet_Bolus_Set_Extended_Bolus(insulin, durationInHalfHours));
+        SystemClock.sleep(200);
         sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State());
         loadEvents();
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
@@ -626,6 +630,7 @@ public class DanaRSService extends Service {
 
         while (isProcessing) {
             int length = 0;
+            byte[] inputBuffer = null;
             synchronized (readBuffer) {
                 // Find packet start [A5 A5]
                 if (bufferLength >= 6) {
@@ -655,10 +660,8 @@ public class DanaRSService extends Service {
                         packetIsValid = true;
                     }
                 }
-            }
-            if (packetIsValid) {
-                byte[] inputBuffer = new byte[length + 7];
-                synchronized (readBuffer) {
+                if (packetIsValid) {
+                    inputBuffer = new byte[length + 7];
                     // copy packet to input buffer
                     System.arraycopy(readBuffer, 0, inputBuffer, 0, length + 7);
                     // Cut off the message from readBuffer
@@ -669,8 +672,10 @@ public class DanaRSService extends Service {
                         throw e;
                     }
                     bufferLength -= (length + 7);
+                    // now we have encrypted packet in inputBuffer
                 }
-                // now we have encrypted packet in inputBuffer
+            }
+            if (packetIsValid) {
                 try {
                     // decrypt the packet
                     inputBuffer = BleCommandUtil.getInstance().getDecryptedPacket(inputBuffer);

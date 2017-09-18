@@ -37,7 +37,7 @@ public class DanaRS_Packet_General_Initial_Screen_Information extends DanaRS_Pac
 
         dataIndex += dataSize;
         dataSize = 2;
-        pump.maxDailyTotalUnits = byteArrayToInt(getBytes(data, dataIndex, dataSize));
+        pump.maxDailyTotalUnits = (int) (byteArrayToInt(getBytes(data, dataIndex, dataSize)) / 100d);
 
         dataIndex += dataSize;
         dataSize = 2;
