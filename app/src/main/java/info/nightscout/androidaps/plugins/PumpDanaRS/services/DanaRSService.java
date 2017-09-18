@@ -144,9 +144,8 @@ public class DanaRSService extends Service {
                 sendMessage(new DanaRS_Packet_General_Get_Shipping_Information());
                 sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
                 sendMessage(new DanaRS_Packet_Bolus_Get_Bolus_Option()); // isExtendedEnabled
-                sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile
                 sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // bolusStep, maxBolus
-                sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basalStep, maxBasal
+                sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
                 sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information()); // target
                 sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
                 sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());

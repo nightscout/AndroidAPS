@@ -5,6 +5,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 
 import com.cozmo.danar.util.BleCommandUtil;
@@ -46,6 +51,14 @@ public class DanaRS_Packet_Basal_Get_Basal_Rate extends DanaRS_Packet {
 			for (int index = 0; index < 24; index++)
 				log.debug("Basal " + String.format("%02d", index) + "h: " + pump.pumpProfiles[pump.activeProfile][index]);
 		}
+
+		if (pump.basalStep != 0.01d) {
+			Notification notification = new Notification(Notification.WRONGBASALSTEP, MainApp.sResources.getString(R.string.danar_setbasalstep001), Notification.URGENT);
+			MainApp.bus().post(new EventNewNotification(notification));
+		} else {
+			MainApp.bus().post(new EventDismissNotification(Notification.WRONGBASALSTEP));
+		}
+
 	}
 
 	@Override

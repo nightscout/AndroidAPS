@@ -718,5 +718,6 @@
     <string name="pairpump">Pair new pump</string>
     <string name="bolusspeed">Bolus speed</string>
     <string name="key_danars_bolusspeed">danars_bolusspeed</string>
+    <string name="danar_setbasalstep001">Set basal step to 0.01 U/h</string>
 </resources>
 

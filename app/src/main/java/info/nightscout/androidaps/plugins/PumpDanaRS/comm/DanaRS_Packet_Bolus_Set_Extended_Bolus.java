@@ -29,7 +29,7 @@ public class DanaRS_Packet_Bolus_Set_Extended_Bolus extends DanaRS_Packet {
 
     @Override
     public byte[] getRequestParams() {
-        int extendedBolusRate = (int) (extendedAmount / 100d);
+        int extendedBolusRate = (int) (extendedAmount * 100d);
 
         byte[] request = new byte[3];
         request[0] = (byte) (extendedBolusRate & 0xff);
