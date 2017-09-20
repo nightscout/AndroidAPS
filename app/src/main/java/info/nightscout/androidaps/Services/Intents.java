@@ -8,6 +8,7 @@ public interface Intents {
     String ACTION_NEW_PROFILE = "info.nightscout.client.NEW_PROFILE";
     String ACTION_NEW_SGV = "info.nightscout.client.NEW_SGV";
     String ACTION_NEW_DEVICESTATUS = "info.nightscout.client.NEW_DEVICESTATUS";
+    String ACTION_NEW_FOOD = "info.nightscout.client.NEW_FOOD";
     String ACTION_NEW_MBG = "info.nightscout.client.NEW_MBG";
     String ACTION_NEW_CAL = "info.nightscout.client.NEW_CAL";
     String ACTION_NEW_STATUS = "info.nightscout.client.NEW_STATUS";

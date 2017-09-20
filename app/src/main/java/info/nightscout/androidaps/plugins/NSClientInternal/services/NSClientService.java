@@ -519,6 +519,18 @@ public class NSClientService extends Service {
                                     BroadcastDeviceStatus.handleNewDeviceStatus(devicestatuses, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                             }
+                            if (data.has("food")) {
+                                JSONArray foods = data.getJSONArray("food");
+                                if (foods.length() > 0) {
+                                    MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
+                                    for (Integer index = 0; index < foods.length(); index++) {
+                                        JSONObject jsonFood = foods.getJSONObject(index);
+                                        // remove from upload queue if Ack is failing
+                                        UploadQueue.removeID(jsonFood);
+                                    }
+                                    BroadcastDeviceStatus.handleNewFoods(foods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                            }
                             if (data.has("mbgs")) {
                                 JSONArray mbgs = data.getJSONArray("mbgs");
                                 if (mbgs.length() > 0)
