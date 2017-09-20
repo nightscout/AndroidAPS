@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -27,6 +28,8 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
@@ -103,11 +106,17 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                                 public void run() {
                                     PumpEnactResult result = pump.setExtendedBolus(finalInsulin, finalDurationInMinutes);
                                     if (!result.success) {
+                                        try {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
                                         builder.setTitle(context.getString(R.string.treatmentdeliveryerror));
                                         builder.setMessage(result.comment);
                                         builder.setPositiveButton(context.getString(R.string.ok), null);
                                         builder.show();
+                                        } catch (WindowManager.BadTokenException e) {
+                                            // window has been destroyed
+                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                            MainApp.bus().post(new EventNewNotification(notification));
+                                        }
                                     }
                                 }
                             });

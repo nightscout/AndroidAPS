@@ -192,6 +192,10 @@ public class StatuslinePlugin implements PluginBase {
                     + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")";
         }
         Profile profile = MainApp.getConfigBuilder().getProfile();
+
+        if (profile == null)
+            return status;
+
         if (!mPrefs.getBoolean("xdripstatus_showbgi", false)) {
             return status;
         }
