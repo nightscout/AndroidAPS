@@ -4,9 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 
 import com.squareup.otto.Subscribe;
@@ -25,6 +23,8 @@ import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.data.DetailedBolusInfo;
+import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
@@ -37,13 +37,12 @@ import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.data.Profile;
-import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.androidaps.plugins.ConfigBuilder.DetailedBolusInfoStorage;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfilePlugin;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.utils.DateUtil;
@@ -58,7 +57,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
 
     @Override
     public String getFragmentClass() {
-        return DanaRv2Fragment.class.getName();
+        return DanaRFragment.class.getName();
     }
 
     static boolean fragmentPumpEnabled = false;
@@ -67,6 +66,14 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
 
     public static DanaRv2ExecutionService sExecutionService;
 
+
+    private static DanaRv2Plugin plugin = null;
+
+    public static DanaRv2Plugin getPlugin() {
+        if (plugin == null)
+            plugin = new DanaRv2Plugin();
+        return plugin;
+    }
 
     private static DanaRPump pump = DanaRPump.getInstance();
 
@@ -79,7 +86,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
+        pumpDescription.bolusStep = 0.05d;
 
         pumpDescription.isExtendedBolusCapable = true;
         pumpDescription.extendedBolusStep = 0.05d;
@@ -625,7 +632,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
             pumpjson.put("reservoir", (int) pump.reservoirRemainingUnits);
             pumpjson.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return pumpjson;
     }

@@ -53,6 +53,7 @@ public interface TreatmentsInterface {
 
     boolean addToHistoryTreatment(DetailedBolusInfo detailedBolusInfo);
 
+    TempTarget getTempTargetFromHistory();
     TempTarget getTempTargetFromHistory(long time);
     Intervals<TempTarget> getTempTargetsFromHistory();
 

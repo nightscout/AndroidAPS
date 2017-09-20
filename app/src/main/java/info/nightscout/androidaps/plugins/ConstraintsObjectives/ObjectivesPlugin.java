@@ -227,7 +227,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
                 o.started = new Date(SP.getLong("Objectives" + num + "started", 0L));
                 o.accomplished = new Date(SP.getLong("Objectives" + num + "accomplished", 0L));
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         bgIsAvailableInNS = SP.getBoolean("Objectives" + "bgIsAvailableInNS", false);
@@ -235,7 +235,7 @@ public class ObjectivesPlugin implements PluginBase, ConstraintsInterface {
         try {
             manualEnacts = SP.getInt("Objectives" + "manualEnacts", 0);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         if (Config.logPrefsChange)
             log.debug("Objectives loaded");

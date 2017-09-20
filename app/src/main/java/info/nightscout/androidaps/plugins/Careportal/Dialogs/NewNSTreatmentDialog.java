@@ -482,7 +482,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 data.put("relative", enteredInsulin * (100 - SafeParse.stringToDouble(editSplit.getText())) / 100 / SafeParse.stringToDouble(editDuration.getText()) * 60);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return data;
     }
@@ -577,7 +577,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 ret += "\n";
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         return ret;
@@ -596,7 +596,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                         try {
                             doProfileSwitch(profileStore, data.getString("profile"), data.getInt("duration"));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                         }
                     }
                 } else if (options.executeTempTarget) {
@@ -623,13 +623,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                                         NSUpload.uploadCareportalEntryToNS(data);
                                         Answers.getInstance().logCustom(new CustomEvent("TempTarget"));
                                     } catch (JSONException e) {
-                                        e.printStackTrace();
+                                        log.error("Unhandled exception", e);
                                     }
                                 }
                             });
                         }
                     } catch (JSONException e) {
-                        e.printStackTrace();
+                        log.error("Unhandled exception", e);
                     }
                 } else {
                     NSUpload.uploadCareportalEntryToNS(data);

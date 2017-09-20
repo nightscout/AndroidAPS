@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -108,6 +109,7 @@ import info.nightscout.androidaps.plugins.Overview.Dialogs.CalibrationDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.NewTreatmentDialog;
 import info.nightscout.androidaps.plugins.Overview.Dialogs.WizardDialog;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventSetWakeLock;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.AreaGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
@@ -632,12 +634,13 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     void onClickQuickwizard() {
         final BgReading actualBg = DatabaseHelper.actualBg();
         final Profile profile = MainApp.getConfigBuilder().getProfile();
+        final TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
 
         QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
+            wizard.doCalc(profile, tempTarget, quickWizardEntry.carbs(), 0d, actualBg.valueToUnits(profile.getUnits()), 0d, true, true, false, false);
 
             final JSONObject boluscalcJSON = new JSONObject();
             try {
@@ -659,7 +662,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                 boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
                 boluscalcJSON.put("insulin", wizard.calculatedTotalInsulin);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             if (wizard.calculatedTotalInsulin > 0d && quickWizardEntry.carbs() > 0d) {
                 DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
@@ -702,11 +705,17 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                                     detailedBolusInfo.source = Source.USER;
                                     PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                     if (!result.success) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                        builder.setMessage(result.comment);
-                                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                        builder.show();
+                                        try {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                            builder.setMessage(result.comment);
+                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                            builder.show();
+                                        } catch (WindowManager.BadTokenException e) {
+                                            // window has been destroyed
+                                            Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                            MainApp.bus().post(new EventNewNotification(notification));
+                                        }
                                     }
                                 }
                             });
@@ -971,7 +980,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         }
 
         // temp target
-        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory(System.currentTimeMillis());
+        TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
         if (tempTarget != null) {
             tempTargetView.setTextColor(Color.BLACK);
             tempTargetView.setBackgroundColor(MainApp.sResources.getColor(R.color.tempTargetBackground));
@@ -1112,7 +1121,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
             BolusWizard wizard = new BolusWizard();
-            wizard.doCalc(profile, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(units), 0d, true, true, false, false);
+            wizard.doCalc(profile, tempTarget, quickWizardEntry.carbs(), 0d, lastBG.valueToUnits(units), 0d, true, true, false, false);
             text += " " + DecimalFormatter.to2Decimal(wizard.calculatedTotalInsulin) + "U";
             quickWizardButton.setText(text);
             if (wizard.calculatedTotalInsulin <= 0)

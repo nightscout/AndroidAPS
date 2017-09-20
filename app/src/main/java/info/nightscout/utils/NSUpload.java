@@ -61,7 +61,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -98,7 +98,7 @@ public class NSUpload {
                 DbLogger.dbAdd(intent, data.toString());
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -123,7 +123,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -151,7 +151,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -179,7 +179,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -231,7 +231,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, deviceStatus.mongoRecord().toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -255,7 +255,7 @@ public class NSUpload {
             if (detailedBolusInfo.carbTime != 0)
                 data.put("preBolus", detailedBolusInfo.carbTime);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         uploadCareportalEntryToNS(data);
     }
@@ -277,7 +277,7 @@ public class NSUpload {
             data.put("enteredBy", MainApp.instance().getString(R.string.app_name));
             uploadCareportalEntryToNS(data);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -306,7 +306,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
     }
@@ -324,7 +324,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbRemove(intent, _id);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
     }
@@ -347,7 +347,7 @@ public class NSUpload {
             context.sendBroadcast(intent);
             DbLogger.dbAdd(intent, data.toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -363,7 +363,7 @@ public class NSUpload {
             data.put("notes", error);
             data.put("isAnnouncement", true);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         bundle.putString("data", data.toString());
         Intent intent = new Intent(Intents.ACTION_DATABASE);
@@ -385,7 +385,7 @@ public class NSUpload {
                 data.put("created_at", DateUtil.toISOString(new Date()));
                 data.put("notes", MainApp.sResources.getString(R.string.androidaps_start));
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             bundle.putString("data", data.toString());
             Intent intent = new Intent(Intents.ACTION_DATABASE);

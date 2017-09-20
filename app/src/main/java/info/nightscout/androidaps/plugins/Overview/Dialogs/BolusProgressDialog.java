@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.Overview.Dialogs;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +23,6 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissBolusprogressIfRunning;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
-import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 
 public class BolusProgressDialog extends DialogFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(BolusProgressDialog.class);
@@ -35,8 +35,6 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     static double amount;
     public static boolean bolusEnded = false;
     public static boolean running = true;
-
-    boolean started = false;
 
     public BolusProgressDialog() {
         super();
@@ -124,11 +122,6 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
     }
 
     @Subscribe
-    public void onStatusEvent(final EventDanaRBolusStart ev) {
-        started = true;
-    }
-
-    @Subscribe
     public void onStatusEvent(final EventDismissBolusprogressIfRunning ev) {
         if(BolusProgressDialog.running){
             dismiss();
@@ -156,11 +149,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                SystemClock.sleep(5000);
                 BolusProgressDialog.bolusEnded = true;
                 Activity activity = getActivity();
                 if (activity != null) {
@@ -171,7 +160,7 @@ public class BolusProgressDialog extends DialogFragment implements View.OnClickL
                                     try {
                                         dismiss();
                                     } catch (Exception e) {
-                                        e.printStackTrace(); // TODO: do this better way
+                                        log.error("Unhandled exception", e);
                                     }
                                 }
                             });

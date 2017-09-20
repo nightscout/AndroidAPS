@@ -69,6 +69,14 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     private static DanaRPump pump = DanaRPump.getInstance();
     private static boolean useExtendedBoluses = false;
 
+    private static DanaRPlugin plugin = null;
+
+    public static DanaRPlugin getPlugin() {
+        if (plugin == null)
+            plugin = new DanaRPlugin();
+        return plugin;
+    }
+
     public static PumpDescription pumpDescription = new PumpDescription();
 
     public DanaRPlugin() {
@@ -80,7 +88,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         MainApp.bus().register(this);
 
         pumpDescription.isBolusCapable = true;
-        pumpDescription.bolusStep = 0.1d;
+        pumpDescription.bolusStep = 0.05d;
 
         pumpDescription.isExtendedBolusCapable = true;
         pumpDescription.extendedBolusStep = 0.05d;
@@ -695,7 +703,7 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
             pumpjson.put("reservoir", (int) pump.reservoirRemainingUnits);
             pumpjson.put("clock", DateUtil.toISOString(new Date()));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return pumpjson;
     }

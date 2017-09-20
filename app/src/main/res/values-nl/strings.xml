@@ -39,7 +39,7 @@
     <string name="waitingforpumpclicktorefresh">Wacht op pomp. Klik om te vernieuwen.</string>
     <string name="waitingforpump">Wacht op pomp</string>
     <string name="vitualpump_label">VIRTUELE POMP</string>
-    <string name="visible">Zichtbaar</string>
+    <string name="visible">Toon</string>
     <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
     <string name="virtualpump_tempbasal_label">Tijdelijk basaal</string>
     <string name="virtualpump_sqlerror">SQL Storing</string>
@@ -79,7 +79,7 @@
     <string name="button1">Knop 1</string>
     <string name="button2">Knop 2</string>
     <string name="button3">Knop 3</string>
-    <string name="calibrationsent">Kalibratie naat xDrip verzonden</string>
+    <string name="calibrationsent">Kalibratie naar xDrip verzonden</string>
     <string name="cancel">Annuleer</string>
     <string name="canceltemp">Annuleer tijdelijk basaal</string>
     <string name="carbs">Koolhydraten</string>
@@ -91,12 +91,12 @@
     <string name="careportal_carbsandbolus_label">KOOLHYDRATEN &amp; BOLUS</string>
     <string name="careportal_carbscorrection">Koolhydraten correctie</string>
     <string name="careportal_cgm_label">CGM &amp; OPENAPS</string>
-    <string name="careportal_cgmsensorinsert">CGM Sensor geplaatst</string>
-    <string name="careportal_cgmsensorstart">CGM Sensor Start</string>
+    <string name="careportal_cgmsensorinsert">CGM Sens. ingebracht</string>
+    <string name="careportal_cgmsensorstart">CGM Sens. Start</string>
     <string name="careportal_combobolus">Multiwave bolus</string>
     <string name="careportal_correctionbolus">Correctie bolus</string>
     <string name="careportal_exercise">Sport</string>
-    <string name="careportal_insulinage_label">Insuline leeftijd</string>
+    <string name="careportal_insulinage_label">Ouderdom insuline</string>
     <string name="careportal_insulinage_label_short">IAGE</string>
     <string name="careportal_insulincartridgechange">Insuline ampul wissel</string>
     <string name="careportal_mealbolus">Maaltijd bolus</string>
@@ -118,19 +118,19 @@
     <string name="careportal_newnstreatment_split_label">Splitzen</string>
     <string name="careportal_note">Notitie</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
-    <string name="careportal_pbage_label">Leeftijd batterij</string>
+    <string name="careportal_pbage_label">Ouderdom batterij</string>
     <string name="careportal_profileswitch">Profiel wissel</string>
     <string name="careportal_pump_label">Pomp</string>
-    <string name="careportal_pumpbatterychange">Pomp batterij wissel</string>
-    <string name="careportal_pumpsitechange">Infusieplaats wissel</string>
+    <string name="careportal_pumpbatterychange">Pomp bat. wissel</string>
+    <string name="careportal_pumpsitechange">Infuus wissel</string>
     <string name="careportal_question">Vraag</string>
-    <string name="careportal_sensorage_label">Leeftijd sensor</string>
+    <string name="careportal_sensorage_label">Ouderdom sensor</string>
     <string name="careportal_sensorage_label_short">SAGE</string>
     <string name="careportal_shortname">CP</string>
     <string name="careportal_snackbolus">Snack bolus</string>
-    <string name="careportal_tempbasalend">Einde tijdelijk basaal</string>
-    <string name="careportal_tempbasalstart">Begin tijdelijk basaal</string>
-    <string name="careportal_temporarytarget">Tijdelijk streefdoel</string>
+    <string name="careportal_tempbasalend">Einde tijd. basaal</string>
+    <string name="careportal_tempbasalstart">Start tijd. basaal</string>
+    <string name="careportal_temporarytarget">Tijd. streefdoel</string>
     <string name="careportal_temporarytargetcancel">Tijdelijk streefdoel annuleren</string>
     <string name="changeyourinput">Wijzig het ingegevene!</string>
     <string name="child">Kind</string>
@@ -143,7 +143,7 @@
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_constraints">Beperkingen</string>
     <string name="configbuilder_general">Algemeen</string>
-    <string name="configbuilder_insulin">insuline</string>
+    <string name="configbuilder_insulin">Insuline curve</string>
     <string name="clear_queue">Ledig wachtrij</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout versie:</string>
@@ -213,7 +213,7 @@
     <string name="smscommunicator_bolusreplywithcode" formatted="false">Om de bolus %.2fU toe te dienen antwoord met de code %s</string>
     <string name="smscommunicator_calibrationfailed">XDrip ontvangt geen callibraties</string>
     <string name="smscommunicator_calibrationreplywithcode" formatted="false">Om calibratie %.2f te verzenden antwoord met de code %s</string>
-    <string name="smscommunicator_calibrationsent">Callibratie verzonden. Het ontvangen van callibraties moet actief zijn in xDrip.</string>
+    <string name="smscommunicator_calibrationsent">Kalibratie verzonden. Het ontvangen van kalibraties moet actief zijn in xDrip.</string>
     <string name="ko_lang">한국어</string>
     <string name="language">Taal</string>
     <string name="localprofile">Lokaal profiel</string>
@@ -269,7 +269,7 @@
     <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
     <string name="enablesuperbolus_summary">Activeer de superbolus functie in de wizard. Activeer deze niet tot je begrijpt wat dit doet. OVERDOSISEN ZIJN MOGELIJK BIJ ONWETENDHEID</string>
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
-    <string name="enabled">Geactiveerd</string>
+    <string name="enabled">Actief</string>
     <string name="dont_show_again">Toon niet opnieuw</string>
     <string name="eatingsoon">Eet binnenkort</string>
     <string name="edit_base_basal">Verander basaal patroon</string>
@@ -306,7 +306,7 @@
     <string name="nsclientinternal_url">URL:</string>
     <string name="nsclientinternal_url_dialogmessage">Nightscout URL ingeven</string>
     <string name="nsclientinternal_url_title">Nightscout URL</string>
-    <string name="nsprofileview_target_label">Doelstelling</string>
+    <string name="nsprofileview_target_label">Streefdoel</string>
     <string name="nsprofileview_isf_label">ISF</string>
     <string name="nsclientinternal_secret_dialogtitle">NS API geheim</string>
     <string name="danar_invalidinput">Verkeerde ingave</string>
@@ -341,13 +341,13 @@
     <string name="nightscout">Nightscout</string>
     <string name="ok">Ok</string>
     <string name="danar_stats_basalrate">Basaal</string>
-    <string name="loopdisabled">Loop gedeactiveerd door beperkingen</string>
+    <string name="loopdisabled">Loop gedeactiveerd door doelen tab</string>
     <string name="loopmenu">Loop menu</string>
     <string name="loopsuperbolusfor" formatted="false">Superbolus (%d m)</string>
     <string name="loopsuspended">Loop pauzeren</string>
     <string name="loopsuspendedfor" formatted="false">Pauzeer (%d m)</string>
     <string name="lowbattery">Batterij bijna leeg</string>
-    <string name="manual">Maneel</string>
+    <string name="manual">Manueel</string>
     <string name="mdi">MDI</string>
     <string name="mdtp_cancel">Afbreken</string>
     <string name="mdtp_ok">OK</string>
@@ -430,17 +430,17 @@
     <string name="duration">Periode</string>
     <string name="openapsma_scriptdebugdata_label">Script debug</string>
     <string name="openapsma_mealdata_label">Maaltijd gegevens</string>
-    <string name="nsprofileview_units_label">éénheid</string>
+    <string name="nsprofileview_units_label">Eénheid</string>
     <string name="objectives">Doelen</string>
-    <string name="objectives_0_gate">Controleren dat BG beschikbaar is op Nightscout en dat de insulinepomp data is geupload</string>
-    <string name="objectives_0_objective">Opzetten van visualisatie en monitoring eveneens onalyze van basaal en ratio\'s</string>
-    <string name="objectives_1_gate">Werking in Open Loop modus voor enkele dagen, manueel vele tijdelijke basalen instellen</string>
+    <string name="objectives_0_gate">Controleren van beschikbaarheid BG en insuline pomp data op Nightscout</string>
+    <string name="objectives_0_objective">Opzetten van visualisatie en monitoring eveneens analyze van basaal en ratio\'s</string>
+    <string name="objectives_1_gate">In Open Loop modus werken voor enkele dagen, manueel tijdelijke basaal instellen</string>
     <string name="objectives_1_objective">Starten met de Open Loop modus</string>
-    <string name="objectives_2_gate">Gebaseerd op deze ervarinegen beslissen wat het maximale basaal mag zijn en dit in de pomp instellen</string>
+    <string name="objectives_2_gate">Gebaseerd op deze ervaringen beslissen wat het maximale basaal mag zijn en dit in de pomp instellen</string>
     <string name="objectives_2_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basalen</string>
-    <string name="objectives_3_gate">In gesloten Loop werken met een max. IOB = 0 voor enkele dagen met een beperkt aantal LBG</string>
-    <string name="objectives_3_objective">Starten met gesloten Loop met lage glucose begrenzing</string>
-    <string name="objectives_4_gate">Gebruik enkele dagen en ten miinste 1 naght zonder een laag BG alarm voordat je je BG doel laat dalen</string>
+    <string name="objectives_3_gate">In closed Loop werken met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>
+    <string name="objectives_3_objective">Starten met closed Loop met bescherming tegen lage BG</string>
+    <string name="objectives_4_gate">Verhoog max. IOB en test enkele dagen alsook minstens 1 nacht zonder een laag BG alarm voordat je jouw BG doel laat dalen</string>
     <string name="objectives_bgavailableinns">BG beschikbaar op NS</string>
     <string name="objectives_5_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
     <string name="openapsma_run">Bereken nu</string>
@@ -627,7 +627,7 @@
     <string name="openapsama_autosens_min_summary">Standaard waarde: 0.7 Dit is de andere kan van de autosens veiligheid limiet. Dit zet een limiet op hoe laag het basaal kan aangepast worden, en hoe hoog het ISF en het BG doel</string>
     <string name="openapsama_bolussnooze_dia_divisor_summary">Standaard waarde: 2 Bolus snooze is actief nadat je een maaltijd bolus toegediend hebt, zodat de loop geen tegenvoorstel met een verlaagd tijdelijk basaal doet nadat je gegeten hebt. Het voorbeeld hier van van standaard 2; dus een 3 u DIA betekent dat de bolus snooze gemiddeld 1.5u actief is (3DIA/2).</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Standaard waarde: 4 Dit is een combinatie van enerzijds het OpenAPS veiligheid limieten en anderzijds van “3 x max dagelijks basaal ; 4x actueel”. Dit betekent dat het basaal niet hoger kan ingesteld worden dan het ingestelde nummer keer het actueel basaal waarbij de limiet in de pomp geen invloed heeft.Dit is een veiligheidsmaatregel om te vermijden dat patiënten in gevaarlijke laag bereik komen zonder te snappen hoe het algoritme werkt. Nogmaals de standaard waarde is 4x; de meeste zullen deze waarde nooit moeten aanpassen maar zullen eerder andere waardes moeten aanpassen als ze tegen een limiet aanstoten.</string>
-    <string name="objectives_5_gate">1 week succesvol loop gedurende de dag met geregeld KH ingave</string>
+    <string name="objectives_5_gate">Gedurende 1 week succesvol closed loop met KH ingave</string>
     <string name="syncprofiletopump_title">Synchroniseer profiel met de pomp</string>
     <string name="careportal_activity_label">ACTIVITIJD &amp; FEEDBACK</string>
     <string name="danar_model" formatted="false">Model: %02X Protokoll: %02X Code: %02X</string>

@@ -1,12 +1,11 @@
 package info.nightscout.utils;
 
-import java.util.Date;
-
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
-import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.data.Profile;
+import info.nightscout.androidaps.db.TempTarget;
+import info.nightscout.androidaps.interfaces.TreatmentsInterface;
 
 /**
  * Created by mike on 11.10.2016.
@@ -15,6 +14,7 @@ import info.nightscout.androidaps.data.Profile;
 public class BolusWizard {
     // Inputs
     Profile specificProfile = null;
+    TempTarget tempTarget;
     public Integer carbs = 0;
     Double bg = 0d;
     Double correction;
@@ -33,9 +33,6 @@ public class BolusWizard {
     public Double targetBGHigh = 0d;
     public Double bgDiff = 0d;
 
-    IobTotal bolusIob;
-    IobTotal basalIob;
-
     public Double insulinFromBG = 0d;
     public Double insulinFromCarbs = 0d;
     public Double insulingFromBolusIOB = 0d;
@@ -50,23 +47,29 @@ public class BolusWizard {
     public Double totalBeforePercentageAdjustment = 0d;
     public Double carbsEquivalent = 0d;
 
-    public Double doCalc(Profile specificProfile, Integer carbs, Double cob, Double bg, Double correction, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
-        return doCalc(specificProfile, carbs, cob, bg, correction, 100d, includeBolusIOB, includeBasalIOB, superBolus, trend);
+    public Double doCalc(Profile specificProfile, TempTarget tempTarget, Integer carbs, Double cob, Double bg, Double correction, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
+        return doCalc(specificProfile, tempTarget, carbs, cob, bg, correction, 100d, includeBolusIOB, includeBasalIOB, superBolus, trend);
     }
 
-        public Double doCalc(Profile specificProfile, Integer carbs, Double cob, Double bg, Double correction, double percentageCorrection, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
+    public Double doCalc(Profile specificProfile, TempTarget tempTarget, Integer carbs, Double cob, Double bg, Double correction, double percentageCorrection, Boolean includeBolusIOB, Boolean includeBasalIOB, Boolean superBolus, Boolean trend) {
         this.specificProfile = specificProfile;
+        this.tempTarget = tempTarget;
         this.carbs = carbs;
         this.bg = bg;
         this.correction = correction;
+        this.includeBolusIOB = includeBolusIOB;
+        this.includeBasalIOB = includeBasalIOB;
         this.superBolus = superBolus;
         this.trend = trend;
-
 
         // Insulin from BG
         sens = specificProfile.getIsf();
         targetBGLow = specificProfile.getTargetLow();
         targetBGHigh = specificProfile.getTargetHigh();
+        if (tempTarget != null) {
+            targetBGLow = Profile.fromMgdlToUnits(tempTarget.low, specificProfile.getUnits());
+            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.high, specificProfile.getUnits());
+        }
         if (bg <= targetBGLow) {
             bgDiff = bg - targetBGLow;
         } else {
@@ -108,13 +111,13 @@ public class BolusWizard {
         }
 
         // Total
-            calculatedTotalInsulin = totalBeforePercentageAdjustment = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB;
+        calculatedTotalInsulin = insulinFromBG + insulinFromTrend + insulinFromCarbs + insulingFromBolusIOB + insulingFromBasalsIOB + insulinFromCorrection + insulinFromSuperBolus + insulinFromCOB;
 
-            //percentage
-            if(totalBeforePercentageAdjustment > 0){
-                calculatedTotalInsulin = totalBeforePercentageAdjustment*percentageCorrection/100d;
-            }
-
+        // Percentage adjustment
+        totalBeforePercentageAdjustment = calculatedTotalInsulin;
+        if (calculatedTotalInsulin > 0) {
+            calculatedTotalInsulin = calculatedTotalInsulin * percentageCorrection / 100d;
+        }
 
         if (calculatedTotalInsulin < 0) {
             carbsEquivalent = -calculatedTotalInsulin * ic;

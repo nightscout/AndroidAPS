@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -25,173 +26,193 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/configbuilder_profilelabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5dp"
+                        android:layout_weight="1"
+                        android:background="@color/mdtp_circle_color"
+                        android:paddingLeft="5dp"
+                        android:text="@string/configbuilder_profile"
+                        android:textAllCaps="true"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@android:color/black"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="false"
+                        android:layout_alignParentRight="true"
+                        android:layout_weight="1"
+                        android:paddingRight="10dp"
+                        app:srcCompat="@drawable/visibility_black_16x16" />
+                </RelativeLayout>
+
+                <ListView
+                    android:id="@+id/configbuilder_profilelistview"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:background="@color/cardColorBackground" />
+
+                <TextView
+                    android:id="@+id/configbuilder_insulinlabel"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_insulin"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
                 <ListView
                     android:id="@+id/configbuilder_insulinlistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
                 <TextView
                     android:id="@+id/configbuilder_bgsourcelabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_bgsource"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
                 <ListView
                     android:id="@+id/configbuilder_bgsourcelistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
 
                 <TextView
                     android:id="@+id/configbuilder_pumplabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_pump"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
-                <ListView
+                 <ListView
                     android:id="@+id/configbuilder_pumplistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/configbuilder_sensitivitylabel"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_sensitivity"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
-                <ListView
+                 <ListView
                     android:id="@+id/configbuilder_sensitivitylistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
                 <TextView
                     android:id="@+id/configbuilder_apslabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_aps"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
-                <ListView
+                 <ListView
                     android:id="@+id/configbuilder_apslistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
 
                 <TextView
                     android:id="@+id/configbuilder_looplabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_loop"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
-                <ListView
+                 <ListView
                     android:id="@+id/configbuilder_looplistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/cardColorBackground" />
-
-                <TextView
-                    android:id="@+id/configbuilder_profilelabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/configbuilder_profile"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/configbuilder_profilelistview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:background="@color/cardColorBackground" />
-
-                <TextView
-                    android:id="@+id/configbuilder_treatmentslabel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/configbuilder_treatments"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textStyle="bold" />
-
-                <ListView
-                    android:id="@+id/configbuilder_treatmentslistview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
                 <TextView
                     android:id="@+id/configbuilder_constraintslabel"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_constraints"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
-                <ListView
+                 <ListView
                     android:id="@+id/configbuilder_constraintslistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/configbuilder_generallabel"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="@color/mdtp_circle_color"
+                    android:paddingLeft="5dp"
                     android:text="@string/configbuilder_general"
+                    android:textAllCaps="true"
                     android:textAppearance="?android:attr/textAppearanceSmall"
+                    android:textColor="@android:color/black"
                     android:textStyle="bold" />
 
                 <ListView
                     android:id="@+id/configbuilder_generallistview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
                     android:background="@color/cardColorBackground" />
 
             </LinearLayout>

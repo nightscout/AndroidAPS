@@ -60,7 +60,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
             try {
                 profile = new Profile(new JSONObject(profileJson));
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         return profile;
     }

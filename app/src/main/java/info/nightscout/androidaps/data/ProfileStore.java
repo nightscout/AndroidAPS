@@ -50,7 +50,7 @@ public class ProfileStore {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return profile;
     }
@@ -65,7 +65,7 @@ public class ProfileStore {
                 return defaultProfileName;
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return defaultProfileName;
     }
@@ -90,7 +90,7 @@ public class ProfileStore {
                 }
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return profile;
     }
@@ -108,7 +108,7 @@ public class ProfileStore {
                 ret.add(profileName);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         return ret;
