@@ -60,9 +60,9 @@ public class APSResult {
             if (rate == 0 && duration == 0) ret = MainApp.sResources.getString(R.string.canceltemp);
             else
                 ret = "<b>" + MainApp.sResources.getString(R.string.rate) + "</b>: " + DecimalFormatter.to2Decimal(rate) + " U/h " +
-                        "(" + DecimalFormatter.to2Decimal(rate / configBuilder.getBaseBasalRate() * 100) + "%) <br>" +
+                        "(" + DecimalFormatter.to2Decimal(rate / configBuilder.getBaseBasalRate() * 100) + "%)<br>" +
                         "<b>" + MainApp.sResources.getString(R.string.duration) + "</b>: " + DecimalFormatter.to2Decimal(duration) + " min<br>" +
-                        (smb != 0 ? ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U") : "") +
+                        (smb != 0 ? ("<b>" + "SMB" + "</b>: " + DecimalFormatter.to2Decimal(smb) + " U<br>") : "") +
                         "<b>" + MainApp.sResources.getString(R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;");
             return Html.fromHtml(ret);
         } else
