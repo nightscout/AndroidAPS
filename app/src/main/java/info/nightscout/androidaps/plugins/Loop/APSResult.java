@@ -47,7 +47,7 @@ public class APSResult {
                 return MainApp.sResources.getString(R.string.rate) + ": " + DecimalFormatter.to2Decimal(rate) + " U/h " +
                         "(" + DecimalFormatter.to2Decimal(rate / configBuilder.getBaseBasalRate() * 100) + "%)\n" +
                         MainApp.sResources.getString(R.string.duration) + ": " + DecimalFormatter.to0Decimal(duration) + " min\n" +
-                        (smb != 0 ? ("SMB" + ": " + DecimalFormatter.to2Decimal(smb) + " U") : "") +
+                        (smb != 0 ? ("SMB: " + DecimalFormatter.to2Decimal(smb) + " U\n") : "") +
                         MainApp.sResources.getString(R.string.reason) + ": " + reason;
         } else
             return MainApp.sResources.getString(R.string.nochangerequested);
