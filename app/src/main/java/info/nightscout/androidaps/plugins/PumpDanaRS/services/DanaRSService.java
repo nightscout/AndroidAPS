@@ -43,6 +43,7 @@ import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
@@ -67,8 +68,17 @@ import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Bolus_Se
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Get_Pump_Check;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Get_Shipping_Information;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Initial_Screen_Information;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_General_Set_History_Upload_Mode;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_;
-import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_All_History;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Alarm;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Basal;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Blood_Glucose;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Bolus;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Carbohydrate;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Daily;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Prime;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Refill;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_History_Suspend;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Complete;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Notify_Delivery_Rate_Display;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Option_Get_Pump_Time;
@@ -181,17 +191,6 @@ public class DanaRSService extends Service {
     }
 
     public boolean loadEvents() {
-        if (!isConnected())
-            return false;
-        SystemClock.sleep(300);
-        DanaRS_Packet_History_All_History msg;
-        msg = new DanaRS_Packet_History_All_History(new Date(lastHistoryFetched));
-        sendMessage(msg);
-        while (!msg.done && isConnected()) {
-            SystemClock.sleep(100);
-        }
-        SystemClock.sleep(200); // #### nefunguje
-        lastHistoryFetched = DanaRS_Packet_History_.lastEventTimeLoaded;
         return true;
     }
 
@@ -318,7 +317,48 @@ public class DanaRSService extends Service {
     }
 
     public boolean loadHistory(byte type) {
-        return false;
+        if (!isConnected()) return false;
+        DanaRS_Packet_History_ msg = null;
+        switch (type) {
+            case RecordTypes.RECORD_TYPE_ALARM:
+                msg = new DanaRS_Packet_History_Alarm();
+                break;
+            case RecordTypes.RECORD_TYPE_PRIME:
+                msg = new DanaRS_Packet_History_Prime();
+                break;
+            case RecordTypes.RECORD_TYPE_BASALHOUR:
+                msg = new DanaRS_Packet_History_Basal();
+                break;
+            case RecordTypes.RECORD_TYPE_BOLUS:
+                msg = new DanaRS_Packet_History_Bolus();
+                break;
+            case RecordTypes.RECORD_TYPE_CARBO:
+                msg = new DanaRS_Packet_History_Carbohydrate();
+                break;
+            case RecordTypes.RECORD_TYPE_DAILY:
+                msg = new DanaRS_Packet_History_Daily();
+                break;
+            case RecordTypes.RECORD_TYPE_GLUCOSE:
+                msg = new DanaRS_Packet_History_Blood_Glucose();
+                break;
+            case RecordTypes.RECORD_TYPE_REFILL:
+                msg = new DanaRS_Packet_History_Refill();
+                break;
+            case RecordTypes.RECORD_TYPE_SUSPEND:
+                msg = new DanaRS_Packet_History_Suspend();
+                break;
+        }
+        if (msg != null) {
+            sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(1));
+            SystemClock.sleep(200);
+            sendMessage(msg);
+            while (!msg.done && isConnected()) {
+                SystemClock.sleep(100);
+            }
+            SystemClock.sleep(200);
+            sendMessage(new DanaRS_Packet_General_Set_History_Upload_Mode(0));
+        }
+        return true;
     }
 
 
@@ -326,6 +366,7 @@ public class DanaRSService extends Service {
         public DanaRSService getServiceInstance() {
             return DanaRSService.this;
         }
+
     }
 
     @Override

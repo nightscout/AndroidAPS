@@ -726,5 +726,6 @@
     <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
     <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
     <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
+    <string name="danar_history_prime">Prime</string>
 </resources>
 

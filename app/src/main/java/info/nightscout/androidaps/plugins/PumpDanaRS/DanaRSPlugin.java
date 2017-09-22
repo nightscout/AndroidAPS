@@ -256,6 +256,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public boolean loadHistory(byte type) {
+        connectIfNotConnected("loadHistory");
         return danaRSService.loadHistory(type);
     }
 
