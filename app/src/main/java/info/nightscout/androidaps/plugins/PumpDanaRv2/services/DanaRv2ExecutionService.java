@@ -261,10 +261,13 @@ public class DanaRv2ExecutionService extends Service {
                 }
             }
 
-            mSerialIOThread.sendMessage(tempStatusMsg); // do this before statusBasic because here is temp duration
-            mSerialIOThread.sendMessage(exStatusMsg);
             mSerialIOThread.sendMessage(statusMsg);
             mSerialIOThread.sendMessage(statusBasicMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
+            mSerialIOThread.sendMessage(tempStatusMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingextendedbolusstatus)));
+            mSerialIOThread.sendMessage(exStatusMsg);
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
 
             if (!statusMsg.received) {
                 mSerialIOThread.sendMessage(statusMsg);
@@ -290,6 +293,7 @@ public class DanaRv2ExecutionService extends Service {
 
             Date now = new Date();
             if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRv2Plugin.class).isInitialized()) {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpsettings)));
                 mSerialIOThread.sendMessage(new MsgSettingShippingInfo());
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingMeal());
@@ -300,6 +304,7 @@ public class DanaRv2ExecutionService extends Service {
                 mSerialIOThread.sendMessage(new MsgSettingActiveProfile());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatios());
                 mSerialIOThread.sendMessage(new MsgSettingProfileRatiosAll());
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumptime)));
                 mSerialIOThread.sendMessage(new MsgSettingPumpTime());
                 long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
