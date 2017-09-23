@@ -782,8 +782,8 @@ public class DanaRSService extends Service {
                                     SendTimeInfo();
                                     byte[] pairingKey = {inputBuffer[2], inputBuffer[3]};
                                     // store pairing key to preferences
-                                    SP.putString(R.string.key_danars_pairingkey, DanaRS_Packet.bytesToHex(pairingKey));
-                                    log.debug("Got pairing key: " + DanaRS_Packet.bytesToHex(pairingKey));
+                                    SP.putString(R.string.key_danars_pairingkey, DanaRS_Packet.toHexString(pairingKey));
+                                    log.debug("Got pairing key: " + DanaRS_Packet.toHexString(pairingKey));
                                     break;
                                 // time and user password information. last packet in handshake
                                 case (byte) BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION:
