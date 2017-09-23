@@ -58,7 +58,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     public Profile getProfileObject() {
         if (profile == null)
             try {
-                profile = new Profile(new JSONObject(profileJson));
+                profile = new Profile(new JSONObject(profileJson), percentage, timeshift);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }

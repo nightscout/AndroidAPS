@@ -40,6 +40,9 @@ public class Profile {
     JSONArray targetLow;
     JSONArray targetHigh;
 
+    int percentage = 100;
+    int timeshift = 0;
+
     public Profile(JSONObject json, String units) {
         this(json);
         if (this.units == null) {
@@ -50,6 +53,12 @@ public class Profile {
                 this.units = Constants.MGDL;
             }
         }
+    }
+
+    public Profile(JSONObject json, int percentage, int timeshift) {
+        this(json);
+        this.percentage = percentage;
+        this.timeshift = timeshift;
     }
 
     public Profile(JSONObject json) {
@@ -182,19 +191,71 @@ public class Profile {
         return lastValue;
     }
 
-    private Double getValueToTime(LongSparseArray<Double> array, long timeAsSeconds) {
+    Integer getShitfTimeSecs(Integer originalTime) {
+        int offset = -(timeshift % 24) + 24;
+        Integer shiftedTime = originalTime + offset * 60 * 60;
+        shiftedTime = shiftedTime % (24 * 60 * 60);
+        log.debug("(Sec) Original time: " + new Date(originalTime).toLocaleString() + " ShiftedTime: " + new Date(shiftedTime).toLocaleString());
+        return shiftedTime;
+    }
+
+    double getMultiplier(LongSparseArray<Double> array) {
+        double multiplier = 1d;
+
+        if (array == isf_v)
+            multiplier = 100d / percentage;
+        else if (array == ic_v)
+            multiplier = 100d / percentage;
+        else if (array == basal_v)
+            multiplier = percentage / 100d;
+        else
+            log.error("Unknown array type");
+        return multiplier;
+    }
+
+    double getMultiplier(JSONArray array) {
+        double multiplier = 1d;
+
+        if (array == isf)
+            multiplier = 100d / percentage;
+        else if (array == ic)
+            multiplier = 100d / percentage;
+        else if (array == basal)
+            multiplier = percentage / 100d;
+        else if (array == targetLow)
+            multiplier = 1d;
+        else if (array == targetHigh)
+            multiplier = 1d;
+        else
+            log.error("Unknown array type");
+        return multiplier;
+    }
+
+    private Double getValueToTime(LongSparseArray<Double> array, Integer timeAsSeconds) {
         Double lastValue = null;
+
+        long shiftedTime = getShitfTimeSecs(timeAsSeconds);
+        double multiplier = getMultiplier(array);
 
         for (Integer index = 0; index < array.size(); index++) {
             long tas = array.keyAt(index);
             double value = array.valueAt(index);
             if (lastValue == null) lastValue = value;
-            if (timeAsSeconds < tas) {
+            if (shiftedTime < tas) {
                 break;
             }
             lastValue = value;
         }
-        return lastValue;
+        return lastValue * multiplier;
+    }
+
+    private String format_HH_MM(Integer timeAsSeconds) {
+        String time;
+        int hour = timeAsSeconds / 60 / 60;
+        int minutes = timeAsSeconds - hour * 60 * 60;
+        DecimalFormat df = new DecimalFormat("00");
+        time = df.format(hour) + ":" + df.format(minutes);
+        return time;
     }
 
     private String getValuesList(JSONArray array, JSONArray array2, DecimalFormat format, String units) {
@@ -203,13 +264,13 @@ public class Profile {
         for (Integer index = 0; index < array.length(); index++) {
             try {
                 JSONObject o = array.getJSONObject(index);
-                retValue += o.getString("time");
+                retValue += format_HH_MM(getShitfTimeSecs(o.getInt("timeAsSeconds")));
                 retValue += "    ";
-                retValue += format.format(o.getDouble("value"));
+                retValue += format.format(getMultiplier(array) * o.getDouble("value"));
                 if (array2 != null) {
                     JSONObject o2 = array2.getJSONObject(index);
                     retValue += " - ";
-                    retValue += format.format(o2.getDouble("value"));
+                    retValue += format.format(getMultiplier(array2) * o2.getDouble("value"));
                 }
                 retValue += " " + units;
                 if (index + 1 < array.length())
@@ -291,8 +352,8 @@ public class Profile {
 
             for (Integer index = 0; index < basal.length(); index++) {
                 JSONObject o = basal.getJSONObject(index);
-                Integer tas = o.getInt("timeAsSeconds");
-                Double value = o.getDouble("value");
+                Integer tas = getShitfTimeSecs(o.getInt("timeAsSeconds"));
+                Double value = getMultiplier(basal) * o.getDouble("value");
                 ret[index] = new BasalValue(tas, value);
             }
             return ret;
@@ -342,18 +403,6 @@ public class Profile {
     public static Integer secondsFromMidnight() {
         Calendar c = Calendar.getInstance();
         long now = c.getTimeInMillis();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.set(Calendar.MILLISECOND, 0);
-        long passed = now - c.getTimeInMillis();
-        return (int) (passed / 1000);
-    }
-
-    public static Integer secondsFromMidnight(Date date) {
-        Calendar c = Calendar.getInstance();
-        long now = date.getTime();
-        c.setTime(date);
         c.set(Calendar.HOUR_OF_DAY, 0);
         c.set(Calendar.MINUTE, 0);
         c.set(Calendar.SECOND, 0);
