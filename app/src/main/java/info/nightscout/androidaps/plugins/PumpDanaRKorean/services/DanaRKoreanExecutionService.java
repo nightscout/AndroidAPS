@@ -105,7 +105,7 @@ public class DanaRKoreanExecutionService extends Service {
             BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_ACL_DISCONNECTED.equals(action)) {
-                log.debug("Device has disconnected " + device.getName());//Device has disconnected
+                log.debug("Device was disconnected " + device.getName());//Device was disconnected
                 if (mBTDevice != null && mBTDevice.getName() != null && mBTDevice.getName().equals(device.getName())) {
                     if (mSerialIOThread != null) {
                         mSerialIOThread.disconnect("BT disconnection broadcast");
