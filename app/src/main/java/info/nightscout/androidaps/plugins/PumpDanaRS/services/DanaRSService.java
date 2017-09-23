@@ -12,6 +12,8 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.SystemClock;
@@ -47,6 +49,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
+import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingProgressDialog;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Basal_Rate;
@@ -120,11 +123,24 @@ public class DanaRSService extends Service {
 
     private Object mConfirmConnect = null;
 
-    private static final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
-    private static ScheduledFuture<?> scheduledDisconnection = null;
+    private final ScheduledExecutorService worker = Executors.newSingleThreadScheduledExecutor();
+    private ScheduledFuture<?> scheduledDisconnection = null;
 
     private DanaRS_Packet processsedMessage = null;
     private ArrayList<byte[]> mSendQueue = new ArrayList<>();
+
+    // Variables pro connection progress (elapsed time)
+    private Handler sHandler;
+    private HandlerThread sHandlerThread;
+    private long connectionStartTime = 0;
+    private final Runnable updateProgress = new Runnable() {
+        @Override
+        public void run() {
+            long secondsElapsed = (System.currentTimeMillis() - connectionStartTime) / 1000;
+            MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING, (int) secondsElapsed));
+            sHandler.postDelayed(updateProgress, 1000);
+        }
+    };
 
     private long lastHistoryFetched = 0;
 
@@ -139,6 +155,12 @@ public class DanaRSService extends Service {
 
         PowerManager powerManager = (PowerManager) MainApp.instance().getApplicationContext().getSystemService(Context.POWER_SERVICE);
         mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, DanaRSService.class.getSimpleName());
+
+        if (sHandlerThread == null) {
+            sHandlerThread = new HandlerThread(PairingProgressDialog.class.getSimpleName());
+            sHandlerThread.start();
+            sHandler = new Handler(sHandlerThread.getLooper());
+        }
     }
 
     private boolean getPumpStatus() {
@@ -146,12 +168,16 @@ public class DanaRSService extends Service {
             MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpstatus)));
 
             sendMessage(new DanaRS_Packet_General_Initial_Screen_Information());
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingextendedbolusstatus)));
             sendMessage(new DanaRS_Packet_Bolus_Get_Extended_Bolus_State());
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingbolusstatus)));
             sendMessage(new DanaRS_Packet_Bolus_Get_Step_Bolus_Information()); // last bolus
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingtempbasalstatus)));
             sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
 
             Date now = new Date();
             if (danaRPump.lastSettingsRead.getTime() + 60 * 60 * 1000L < now.getTime() || !MainApp.getSpecificPlugin(DanaRSPlugin.class).isInitialized()) {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumpsettings)));
                 sendMessage(new DanaRS_Packet_General_Get_Shipping_Information()); // serial no
                 sendMessage(new DanaRS_Packet_General_Get_Pump_Check()); // firmware
                 sendMessage(new DanaRS_Packet_Basal_Get_Profile_Number());
@@ -160,6 +186,7 @@ public class DanaRSService extends Service {
                 sendMessage(new DanaRS_Packet_Basal_Get_Basal_Rate()); // basal profile, basalStep, maxBasal
                 sendMessage(new DanaRS_Packet_Bolus_Get_Calculation_Information()); // target
                 sendMessage(new DanaRS_Packet_Bolus_Get_CIR_CF_Array());
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.gettingpumptime)));
                 sendMessage(new DanaRS_Packet_Option_Get_Pump_Time());
                 long timeDiff = (danaRPump.pumpTime.getTime() - System.currentTimeMillis()) / 1000L;
                 log.debug("Pump time difference: " + timeDiff + " seconds");
@@ -440,35 +467,37 @@ public class DanaRSService extends Service {
             return false;
         }
 
-        mWakeLock.acquire();
+        connectionStartTime = System.currentTimeMillis();
 
         MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.CONNECTING));
         isConnecting = true;
+
+        // Following should be removed later because we close Gatt on disconnect and this should never happen
         if ((mBluetoothDeviceAddress != null) && (address.equals(mBluetoothDeviceAddress)) && (mBluetoothGatt != null)) {
             log.debug("Trying to use an existing mBluetoothGatt for connection.");
+            sHandler.post(updateProgress);
             if (mBluetoothGatt.connect()) {
                 setCharacteristicNotification(getUARTReadBTGattChar(), true);
-                mWakeLock.release();
                 return true;
             }
-            mWakeLock.release();
+            sHandler.removeCallbacks(updateProgress);
             return false;
         }
+        // end
 
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             log.debug("Device not found.  Unable to connect.");
-            mWakeLock.release();
             return false;
         }
 
+        sHandler.post(updateProgress);
         mBluetoothGatt = device.connectGatt(getApplicationContext(), false, mGattCallback);
         setCharacteristicNotification(getUARTReadBTGattChar(), true);
         log.debug("Trying to create a new connection.");
         mBluetoothDevice = device;
         mBluetoothDeviceAddress = address;
         mBluetoothDeviceName = device.getName();
-        mWakeLock.release();
         return true;
     }
 
@@ -512,7 +541,9 @@ public class DanaRSService extends Service {
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 close();
                 isConnected = false;
+                sHandler.removeCallbacks(updateProgress); // just to be sure
                 MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTED));
+                log.debug("Device was disconnected " + gatt.getDevice().getName());//Device was disconnected
             }
         }
 
@@ -524,6 +555,8 @@ public class DanaRSService extends Service {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 findCharacteristic();
             }
+            // stop sending connection progress
+            sHandler.removeCallbacks(updateProgress);
 
             // 1st message sent to pump after connect
             byte[] bytes = BleCommandUtil.getInstance().getEncryptedPacket(BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, getConnectDeviceName());
@@ -925,7 +958,7 @@ public class DanaRSService extends Service {
             }
         }
 
-        SystemClock.sleep(200);
+        //SystemClock.sleep(200);
         if (!message.isReceived()) {
             log.warn("Reply not received " + message.getFriendlyName());
         }

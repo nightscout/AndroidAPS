@@ -727,5 +727,10 @@
     <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
     <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
     <string name="danar_history_prime">Prime</string>
+    <string name="gettingextendedbolusstatus">Getting extended bolus status</string>
+    <string name="gettingbolusstatus">Getting bolus status</string>
+    <string name="gettingtempbasalstatus">Getting temporary basal status</string>
+    <string name="gettingpumpsettings">Gettings pump settings</string>
+    <string name="gettingpumptime">Getting pump time</string>
 </resources>
 
