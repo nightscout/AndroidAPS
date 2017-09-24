@@ -258,7 +258,7 @@ public class NSClientService extends Service {
             authMessage.put("from", latestDateInReceivedData); // send data newer than
             authMessage.put("secret", nsAPIhashCode);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             return;
         }
         MainApp.bus().post(new EventNSClientNewLog("AUTH", "requesting auth"));
@@ -326,7 +326,7 @@ public class NSClientService extends Service {
                 try {
                     MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", data.has("message") ? data.getString("message") : "received"));
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
             log.debug(data.toString());
@@ -561,7 +561,7 @@ public class NSClientService extends Service {
                             }
                             MainApp.bus().post(new EventNSClientNewLog("LAST", DateUtil.dateAndTimeString(latestDateInReceivedData)));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            log.error("Unhandled exception", e);
                         }
                         //MainApp.bus().post(new EventNSClientNewLog("NSCLIENT", "onDataUpdate end");
                     } finally {
@@ -583,7 +583,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbUpdate", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBUPDATE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -597,7 +597,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbUpdateUnset", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBUPDATEUNSET " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -610,7 +610,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbRemove", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBREMOVE " + dbr.collection, "Sent " + dbr._id));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -633,7 +633,7 @@ public class NSClientService extends Service {
             mSocket.emit("dbAdd", message, ack);
             MainApp.bus().post(new EventNSClientNewLog("DBADD " + dbr.collection, "Sent " + dbr.nsClientID));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 
@@ -684,10 +684,11 @@ public class NSClientService extends Service {
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend started: " + reason));
 
                 CloseableIterator<DbRequest> iterator = null;
+                int maxcount = 30;
                 try {
                     iterator = MainApp.getDbHelper().getDbRequestInterator();
                     try {
-                        while (iterator.hasNext()) {
+                        while (iterator.hasNext() && maxcount > 0) {
                             DbRequest dbr = iterator.next();
                             if (dbr.action.equals("dbAdd")) {
                                 NSAddAck addAck = new NSAddAck();
@@ -702,12 +703,13 @@ public class NSClientService extends Service {
                                 NSUpdateAck updateUnsetAck = new NSUpdateAck(dbr.action, dbr._id);
                                 dbUpdateUnset(dbr, updateUnsetAck);
                             }
+                            maxcount--;
                         }
                     } finally {
                         iterator.close();
                     }
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
 
                 MainApp.bus().post(new EventNSClientNewLog("QUEUE", "Resend ended: " + reason));

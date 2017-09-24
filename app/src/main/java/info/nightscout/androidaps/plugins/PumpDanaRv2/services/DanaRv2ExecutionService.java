@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.os.SystemClock;
 
 import com.squareup.otto.Subscribe;
 
@@ -37,7 +38,6 @@ import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.*;
-import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRBolusStart;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.SerialIOThread;
@@ -180,9 +180,9 @@ public class DanaRv2ExecutionService extends Service {
                 try {
                     mRfcommSocket.connect();
                 } catch (IOException e) {
-                    //e.printStackTrace();
+                    //log.error("Unhandled exception", e);
                     if (e.getMessage().contains("socket closed")) {
-                        e.printStackTrace();
+                        log.error("Unhandled exception", e);
                         break;
                     }
                 }
@@ -325,7 +325,7 @@ public class DanaRv2ExecutionService extends Service {
                 NSUpload.uploadError(MainApp.sResources.getString(R.string.approachingdailylimit) + ": " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits + "U");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return true;
     }
@@ -412,7 +412,6 @@ public class DanaRv2ExecutionService extends Service {
         }
         if (amount > 0) {
             MsgBolusProgress progress = new MsgBolusProgress(amount, t); // initialize static variables
-            MainApp.bus().post(new EventDanaRBolusStart());
 
             if (!stop.stopped) {
                 mSerialIOThread.sendMessage(start);
@@ -429,9 +428,17 @@ public class DanaRv2ExecutionService extends Service {
                 }
             }
         }
-        waitMsec(3000);
         bolusingTreatment = null;
-        loadEvents();
+        // run loading history in separate thread and allow bolus dialog to be closed
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                waitMsec(4000);
+                if (!(isConnected()))
+                    connect("loadEvents");
+                loadEvents();
+            }
+        }).start();
         return true;
     }
 
@@ -554,10 +561,6 @@ public class DanaRv2ExecutionService extends Service {
     }
 
     private void waitMsec(long msecs) {
-        try {
-            Thread.sleep(msecs);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        SystemClock.sleep(msecs);
     }
 }

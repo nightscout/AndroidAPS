@@ -10,11 +10,12 @@ import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceGroup;
 import android.preference.PreferenceManager;
+import android.text.TextUtils;
 
 import info.nightscout.androidaps.events.EventPreferenceChange;
 import info.nightscout.androidaps.events.EventRefreshGui;
 import info.nightscout.androidaps.interfaces.PluginBase;
-import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefFreePeakPlugin;
+import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
@@ -73,7 +74,10 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
             }
-        }
+            else if(pref.getKey().contains("smscommunicator_allowednumbers") && TextUtils.isEmpty(editTextPref.getText().toString().trim())){
+                pref.setSummary(MainApp.sResources.getString(R.string.smscommunicator_allowednumbers_summary));
+            }
+           }
         if (pref instanceof MultiSelectListPreference) {
             EditTextPreference editTextPref = (EditTextPreference) pref;
             pref.setSummary(editTextPref.getText());

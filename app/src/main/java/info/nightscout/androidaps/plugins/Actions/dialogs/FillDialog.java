@@ -21,6 +21,9 @@ import android.widget.TextView;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.DecimalFormat;
 
 import info.nightscout.androidaps.Constants;
@@ -31,12 +34,15 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 
 public class FillDialog extends DialogFragment implements OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(FillDialog.class);
 
     Button deliverButton;
     TextView insulin;
@@ -168,11 +174,17 @@ public class FillDialog extends DialogFragment implements OnClickListener {
                                 detailedBolusInfo.isValid = false; // do not count it in IOB (for pump history)
                                 PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                 if (!result.success) {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                    builder.setMessage(result.comment);
-                                    builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                    builder.show();
+                                    try {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                        builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                        builder.setMessage(result.comment);
+                                        builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                        builder.show();
+                                    } catch (WindowManager.BadTokenException | NullPointerException e) {
+                                        // window has been destroyed
+                                        Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                        MainApp.bus().post(new EventNewNotification(notification));
+                                    }
                                 }
                             }
                         });
@@ -183,8 +195,8 @@ public class FillDialog extends DialogFragment implements OnClickListener {
             builder.setNegativeButton(getString(R.string.cancel), null);
             builder.show();
             dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (RuntimeException e) {
+            log.error("Unhandled exception", e);
         }
     }
 

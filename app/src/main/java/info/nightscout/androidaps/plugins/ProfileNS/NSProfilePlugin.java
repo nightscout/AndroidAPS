@@ -134,7 +134,7 @@ public class NSProfilePlugin implements PluginBase, ProfileInterface {
                 try {
                     profile = new ProfileStore(new JSONObject(profileString));
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                     profile = null;
                 }
             }

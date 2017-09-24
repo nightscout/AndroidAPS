@@ -183,7 +183,7 @@ public class BroadcastTreatment {
                         ret.add(newarr);
                     }
                     newarr = new JSONArray();
-                    count = 200;
+                    count = 50;
                 }
                 newarr.put(array.get(i));
                 --count;
@@ -192,7 +192,7 @@ public class BroadcastTreatment {
                 ret.add(newarr);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
             ret = new ArrayList<>();
             ret.add(array);
         }

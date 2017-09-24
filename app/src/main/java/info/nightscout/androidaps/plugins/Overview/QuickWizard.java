@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
@@ -18,6 +20,7 @@ import info.nightscout.utils.DateUtil;
  */
 
 public class QuickWizard {
+    private static Logger log = LoggerFactory.getLogger(QuickWizard.class);
 
     public class QuickWizardEntry {
         public JSONObject storage;
@@ -36,7 +39,7 @@ public class QuickWizard {
             try {
                 storage = new JSONObject(emptyData);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             position = -1;
         }
@@ -54,7 +57,7 @@ public class QuickWizard {
             try {
                 return storage.getString("buttonText");
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             return "";
         }
@@ -63,7 +66,7 @@ public class QuickWizard {
             try {
                 return storage.getInt("carbs");
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             return 0;
         }
@@ -80,7 +83,7 @@ public class QuickWizard {
             try {
                 return storage.getInt("validFrom");
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             return 0;
         }
@@ -89,7 +92,7 @@ public class QuickWizard {
             try {
                 return storage.getInt("validTo");
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             return 0;
         }
@@ -117,7 +120,7 @@ public class QuickWizard {
         try {
             return new QuickWizardEntry((JSONObject) storage.get(position), position);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return null;
     }
@@ -127,7 +130,7 @@ public class QuickWizard {
             try {
                 if (new QuickWizardEntry((JSONObject) storage.get(i), i).isActive()) return true;
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         return false;
@@ -157,7 +160,7 @@ public class QuickWizard {
             try {
                 storage.put(newItem.position, newItem.storage);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         save();

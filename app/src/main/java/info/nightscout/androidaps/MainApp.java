@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -30,11 +31,11 @@ import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
-import info.nightscout.androidaps.plugins.InsulinFastacting.InsulinFastactingFragment;
-import info.nightscout.androidaps.plugins.InsulinFastactingProlonged.InsulinFastactingProlongedFragment;
-import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefFreePeakFragment;
-import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefRapidActingFragment;
-import info.nightscout.androidaps.plugins.InsulinOrefCurves.InsulinOrefUltraRapidActingFragment;
+import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingPlugin;
+import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingProlongedPlugin;
+import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
+import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
+import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopFragment;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
@@ -47,11 +48,11 @@ import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPe
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileNS.NSProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileSimple.SimpleProfileFragment;
-import info.nightscout.androidaps.plugins.PumpDanaR.DanaRFragment;
+import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
-import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanFragment;
+import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
-import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Fragment;
+import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
@@ -112,17 +113,17 @@ public class MainApp extends Application {
             pluginsList.add(OverviewFragment.getPlugin());
             pluginsList.add(IobCobCalculatorPlugin.getPlugin());
             if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
-            pluginsList.add(InsulinFastactingFragment.getPlugin());
-            pluginsList.add(InsulinFastactingProlongedFragment.getPlugin());
-            pluginsList.add(InsulinOrefRapidActingFragment.getPlugin());
-            pluginsList.add(InsulinOrefUltraRapidActingFragment.getPlugin());
-            pluginsList.add(InsulinOrefFreePeakFragment.getPlugin());
+            pluginsList.add(InsulinFastactingPlugin.getPlugin());
+            pluginsList.add(InsulinFastactingProlongedPlugin.getPlugin());
+            pluginsList.add(InsulinOrefRapidActingPlugin.getPlugin());
+            pluginsList.add(InsulinOrefUltraRapidActingPlugin.getPlugin());
+            pluginsList.add(InsulinOrefFreePeakPlugin.getPlugin());
             pluginsList.add(SensitivityOref0Plugin.getPlugin());
-            //pluginsList.add(SensitivityAAPSPlugin.getPlugin());
-            //pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRFragment.getPlugin());
-            if (Config.DANAR) pluginsList.add(DanaRKoreanFragment.getPlugin());
-            if (Config.DANARv2) pluginsList.add(DanaRv2Fragment.getPlugin());
+            pluginsList.add(SensitivityAAPSPlugin.getPlugin());
+            pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
+            if (Config.DANARv2) pluginsList.add(DanaRv2Plugin.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());
@@ -167,10 +168,7 @@ public class MainApp extends Application {
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
-                }
+                SystemClock.sleep(5000);
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null)
                     pump.refreshDataFromPump("Initialization");

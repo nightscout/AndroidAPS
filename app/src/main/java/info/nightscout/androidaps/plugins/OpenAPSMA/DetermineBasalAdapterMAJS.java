@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 import info.nightscout.androidaps.Config;
+import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.data.GlucoseStatus;
 import info.nightscout.androidaps.data.IobTotal;
@@ -134,7 +135,7 @@ public class DetermineBasalAdapterMAJS {
         try {
             result = new DetermineBasalResultMA(v8ObjectReuslt, new JSONObject(ret));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
 
         storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
@@ -242,6 +243,11 @@ public class DetermineBasalAdapterMAJS {
         mProfile.add("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
 
         mProfile.add("current_basal", pump.getBaseBasalRate());
+
+        if (units.equals(Constants.MMOL)) {
+            mProfile.add("out_units", "mmol/L");
+        }
+
         mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
         mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
 

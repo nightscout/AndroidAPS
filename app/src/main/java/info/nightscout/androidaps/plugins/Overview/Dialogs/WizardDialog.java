@@ -9,6 +9,7 @@ import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,12 +51,15 @@ import info.nightscout.androidaps.db.BgReading;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.DatabaseHelper;
 import info.nightscout.androidaps.db.Source;
+import info.nightscout.androidaps.db.TempTarget;
 import info.nightscout.androidaps.events.EventNewBG;
 import info.nightscout.androidaps.events.EventRefreshOverview;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -73,6 +77,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
     TextView bgInsulin;
     TextView bgUnits;
     CheckBox bgCheckbox;
+    CheckBox ttCheckbox;
     TextView carbs;
     TextView carbsInsulin;
     TextView bolusIobInsulin;
@@ -216,17 +221,21 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         cobInsulin = (TextView) view.findViewById(R.id.treatments_wizard_cobinsulin);
 
         bgCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgcheckbox);
+        ttCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_ttcheckbox);
+        bgtrendCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgtrendcheckbox);
+        cobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_cobcheckbox);
         bolusIobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bolusiobcheckbox);
         basalIobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_basaliobcheckbox);
         superbolusCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_sbcheckbox);
-        bgtrendCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_bgtrendcheckbox);
-        cobCheckbox = (CheckBox) view.findViewById(R.id.treatments_wizard_cobcheckbox);
+        loadCheckedStates();
+
         bgCheckbox.setOnCheckedChangeListener(this);
+        ttCheckbox.setOnCheckedChangeListener(this);
+        bgtrendCheckbox.setOnCheckedChangeListener(this);
+        cobCheckbox.setOnCheckedChangeListener(this);
         basalIobCheckbox.setOnCheckedChangeListener(this);
         bolusIobCheckbox.setOnCheckedChangeListener(this);
         superbolusCheckbox.setOnCheckedChangeListener(this);
-        bgtrendCheckbox.setOnCheckedChangeListener(this);
-        cobCheckbox.setOnCheckedChangeListener(this);
 
         profileSpinner = (Spinner) view.findViewById(R.id.treatments_wizard_profile);
         profileSpinner.setOnItemSelectedListener(this);
@@ -253,7 +262,25 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        saveCheckedStates();
+        ttCheckbox.setEnabled(bgCheckbox.isChecked() && MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
         calculateInsulin();
+    }
+
+    private void saveCheckedStates() {
+        //SP.putBoolean(getString(R.string.key_wizard_include_bg), bgCheckbox.isChecked());
+        SP.putBoolean(getString(R.string.key_wizard_include_cob), cobCheckbox.isChecked());
+        SP.putBoolean(getString(R.string.key_wizard_include_trend_bg), bgtrendCheckbox.isChecked());
+        //SP.putBoolean(getString(R.string.key_wizard_include_bolus_iob), bolusIobCheckbox.isChecked());
+        //SP.putBoolean(getString(R.string.key_wizard_include_basal_iob), basalIobCheckbox.isChecked());
+    }
+
+    private void loadCheckedStates() {
+        //bgCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bg), true));
+        bgtrendCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_trend_bg), false));
+        cobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_cob), false));
+        //bolusIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_bolus_iob), true));
+        //basalIobCheckbox.setChecked(SP.getBoolean(getString(R.string.key_wizard_include_basal_iob), true));
     }
 
     @Override
@@ -274,13 +301,15 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             case R.id.ok:
                 if (calculatedTotalInsulin > 0d || calculatedCarbs > 0d) {
                     DecimalFormat formatNumber2decimalplaces = new DecimalFormat("0.00");
+
                     String confirmMessage = getString(R.string.entertreatmentquestion);
 
                     Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(calculatedTotalInsulin);
                     Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(calculatedCarbs);
 
-                    confirmMessage += "\n" + getString(R.string.bolus) + ": " + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U";
-                    confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+                    confirmMessage += "<br/>" + getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + formatNumber2decimalplaces.format(insulinAfterConstraints) + "U" + "</font>";
+                    confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+
 
                     if (insulinAfterConstraints - calculatedTotalInsulin != 0 || !carbsAfterConstraints.equals(calculatedCarbs)) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -299,7 +328,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(MainApp.sResources.getString(R.string.confirmation));
-                    builder.setMessage(confirmMessage);
+                    builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
@@ -332,7 +361,17 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                         detailedBolusInfo.source = Source.USER;
                                         result = pump.deliverTreatment(detailedBolusInfo);
                                         if (!result.success) {
-                                            OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.treatmentdeliveryerror), result.comment, null);
+                                            try {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                                builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                builder.setMessage(result.comment);
+                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                                builder.show();
+                                            } catch (WindowManager.BadTokenException | NullPointerException e) {
+                                                // window has been destroyed
+                                                Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                                MainApp.bus().post(new EventNewNotification(notification));
+                                            }
                                         }
                                     }
                                 });
@@ -381,31 +420,17 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         BgReading lastBg = DatabaseHelper.actualBg();
 
         if (lastBg != null) {
-            Double lastBgValue = lastBg.valueToUnits(units);
-            Double sens = profile.getIsf();
-            Double targetBGLow = profile.getTargetLow();
-            Double targetBGHigh = profile.getTargetHigh();
-            Double bgDiff;
-            if (lastBgValue <= targetBGLow) {
-                bgDiff = lastBgValue - targetBGLow;
-            } else {
-                bgDiff = lastBgValue - targetBGHigh;
-            }
-
-            bg.setText(lastBg.valueToUnitsToString(units) + " ISF: " + DecimalFormatter.to1Decimal(sens));
-            bgInsulin.setText(DecimalFormatter.to2Decimal(bgDiff / sens) + "U");
             editBg.removeTextChangedListener(textWatcher);
             //bgInput.setText(lastBg.valueToUnitsToString(units));
             editBg.setValue(lastBg.valueToUnits(units));
             editBg.addTextChangedListener(textWatcher);
         } else {
-            bg.setText("");
-            bgInsulin.setText("");
             editBg.removeTextChangedListener(textWatcher);
             //bgInput.setText("");
             editBg.setValue(0d);
             editBg.addTextChangedListener(textWatcher);
         }
+        ttCheckbox.setEnabled(MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
 
         // IOB calculation
         MainApp.getConfigBuilder().updateTotalIOBTreatments();
@@ -458,6 +483,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         }
 
         c_bg = bgCheckbox.isChecked() ? c_bg : 0d;
+        TempTarget tempTarget = ttCheckbox.isChecked() ? MainApp.getConfigBuilder().getTempTargetFromHistory() : null;
 
         // COB
         Double c_cob = 0d;
@@ -466,12 +492,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                 try {
                     c_cob = SafeParse.stringToDouble(ConfigBuilderPlugin.getActiveAPS().getLastAPSResult().json().getString("COB"));
                 } catch (JSONException e) {
+                    log.error("Unhandled exception", e);
                 }
             }
         }
 
         BolusWizard wizard = new BolusWizard();
-        wizard.doCalc(specificProfile, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), bgtrendCheckbox.isChecked());
+        wizard.doCalc(specificProfile, tempTarget, carbsAfterConstraint, c_cob, c_bg, corrAfterConstraint, bolusIobCheckbox.isChecked(), basalIobCheckbox.isChecked(), superbolusCheckbox.isChecked(), bgtrendCheckbox.isChecked());
 
         bg.setText(c_bg + " ISF: " + DecimalFormatter.to1Decimal(wizard.sens));
         bgInsulin.setText(DecimalFormatter.to2Decimal(wizard.insulinFromBG) + "U");
@@ -522,6 +549,8 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             total.setText(getString(R.string.result) + ": " + insulinText + " " + carbsText);
             okButton.setVisibility(View.VISIBLE);
         } else {
+            // TODO this should also be run when loading the dialog as the OK button is initially visible
+            //      but does nothing if neither carbs nor insulin is > 0
             total.setText(getString(R.string.missing) + " " + DecimalFormatter.to0Decimal(wizard.carbsEquivalent) + "g");
             okButton.setVisibility(View.INVISIBLE);
         }
@@ -550,7 +579,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
             boluscalcJSON.put("insulintrend", wizard.insulinFromTrend);
             boluscalcJSON.put("insulin", calculatedTotalInsulin);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
     }
 

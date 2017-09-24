@@ -32,7 +32,7 @@ public class BroadcastStatus {
             bundle.putString("nsclientversionname", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionName);
             bundle.putInt("nsclientversioncode", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode);
         } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         bundle.putString("nightscoutversionname", NSClientService.nightscoutVersionName);
         bundle.putInt("nightscoutversioncode", NSClientService.nightscoutVersionCode);
@@ -49,7 +49,7 @@ public class BroadcastStatus {
                 bundle.putString("nsclientversionname", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionName);
                 bundle.putInt("nsclientversioncode", MainApp.instance().getPackageManager().getPackageInfo(MainApp.instance().getPackageName(), 0).versionCode);
             } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
             bundle.putString("nightscoutversionname", NSClientService.nightscoutVersionName);
             bundle.putInt("nightscoutversioncode", NSClientService.nightscoutVersionCode);

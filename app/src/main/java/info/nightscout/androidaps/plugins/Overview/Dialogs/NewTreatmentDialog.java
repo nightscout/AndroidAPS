@@ -7,17 +7,19 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.Objects;
@@ -30,11 +32,13 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.CareportalEvent;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.interfaces.PumpInterface;
+import info.nightscout.androidaps.plugins.Overview.Notification;
+import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewTreatmentDialog extends DialogFragment implements OnClickListener {
+    private static Logger log = LoggerFactory.getLogger(NewTreatmentDialog.class);
 
     NumberPicker editCarbs;
     NumberPicker editInsulin;
@@ -80,15 +84,16 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     Double insulin = SafeParse.stringToDouble(editInsulin.getText());
                     final Integer carbs = SafeParse.stringToInt(editCarbs.getText());
 
-                    String confirmMessage = getString(R.string.entertreatmentquestion) + "\n";
+                    String confirmMessage = getString(R.string.entertreatmentquestion) + "<br/>";
 
                     Double insulinAfterConstraints = MainApp.getConfigBuilder().applyBolusConstraints(insulin);
                     Integer carbsAfterConstraints = MainApp.getConfigBuilder().applyCarbsConstraints(carbs);
 
-                    confirmMessage += getString(R.string.bolus) + ": " + insulinAfterConstraints + "U";
-                    confirmMessage += "\n" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
+                    confirmMessage += getString(R.string.bolus) + ": " + "<font color='" + MainApp.sResources.getColor(R.color.bolus) + "'>" + insulinAfterConstraints + "U" + "</font>";
+                    confirmMessage += "<br/>" + getString(R.string.carbs) + ": " + carbsAfterConstraints + "g";
                     if (insulinAfterConstraints - insulin != 0 || !Objects.equals(carbsAfterConstraints, carbs))
-                        confirmMessage += "\n" + getString(R.string.constraintapllied);
+                        confirmMessage += "<br/>" + getString(R.string.constraintapllied);
+
 
                     final double finalInsulinAfterConstraints = insulinAfterConstraints;
                     final int finalCarbsAfterConstraints = carbsAfterConstraints;
@@ -97,7 +102,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
                     builder.setTitle(this.getContext().getString(R.string.confirmation));
-                    builder.setMessage(confirmMessage);
+                    builder.setMessage(Html.fromHtml(confirmMessage));
                     builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             if (finalInsulinAfterConstraints > 0 || finalCarbsAfterConstraints > 0) {
@@ -106,19 +111,27 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                                     @Override
                                     public void run() {
                                         DetailedBolusInfo detailedBolusInfo = new DetailedBolusInfo();
-                                        if (finalInsulinAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
-                                        if (finalCarbsAfterConstraints == 0) detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
+                                        if (finalInsulinAfterConstraints == 0)
+                                            detailedBolusInfo.eventType = CareportalEvent.CARBCORRECTION;
+                                        if (finalCarbsAfterConstraints == 0)
+                                            detailedBolusInfo.eventType = CareportalEvent.CORRECTIONBOLUS;
                                         detailedBolusInfo.insulin = finalInsulinAfterConstraints;
                                         detailedBolusInfo.carbs = finalCarbsAfterConstraints;
                                         detailedBolusInfo.context = context;
                                         detailedBolusInfo.source = Source.USER;
                                         PumpEnactResult result = pump.deliverTreatment(detailedBolusInfo);
                                         if (!result.success) {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                            builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
-                                            builder.setMessage(result.comment);
-                                            builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
-                                            builder.show();
+                                            try {
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                                builder.setTitle(MainApp.sResources.getString(R.string.treatmentdeliveryerror));
+                                                builder.setMessage(result.comment);
+                                                builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
+                                                builder.show();
+                                            } catch (WindowManager.BadTokenException | NullPointerException e) {
+                                                // window has been destroyed
+                                                Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
+                                                MainApp.bus().post(new EventNewNotification(notification));
+                                            }
                                         }
                                     }
                                 });
@@ -130,7 +143,7 @@ public class NewTreatmentDialog extends DialogFragment implements OnClickListene
                     builder.show();
                     dismiss();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
                 break;
             case R.id.cancel:

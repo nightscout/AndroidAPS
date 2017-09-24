@@ -229,7 +229,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             profile.put("units", mgdl ? Constants.MGDL : Constants.MMOL);
             store.put("LocalProfile", profile);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         convertedProfile = new ProfileStore(json);
         convertedProfileName = "LocalProfile";

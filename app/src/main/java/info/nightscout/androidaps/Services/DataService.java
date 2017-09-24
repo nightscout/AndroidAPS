@@ -244,7 +244,7 @@ public class DataService extends IntentService {
                         MainApp.bus().post(new EventDismissNotification(Notification.OLD_NSCLIENT));
                     }
                 } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
                 if (ConfigBuilderPlugin.nightscoutVersionCode < Config.SUPPORTEDNSVERSION) {
                     Notification notification = new Notification(Notification.OLD_NS, MainApp.sResources.getString(R.string.unsupportednsversion), Notification.URGENT);
@@ -269,7 +269,7 @@ public class DataService extends IntentService {
                     if (targetlow != null)
                         OverviewPlugin.bgTargetLow = targetlow;
                 } catch (JSONException e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
             }
         }
@@ -298,7 +298,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         // Handle profile
@@ -313,7 +313,7 @@ public class DataService extends IntentService {
                 if (Config.logIncommingData)
                     log.debug("Received profileStore: " + activeProfile + " " + profile);
             } catch (JSONException e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
         if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT)) {
@@ -332,7 +332,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
 
         }
@@ -353,7 +353,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
 
@@ -376,7 +376,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
 
@@ -401,7 +401,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
 
@@ -430,7 +430,7 @@ public class DataService extends IntentService {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("Unhandled exception", e);
             }
         }
     }

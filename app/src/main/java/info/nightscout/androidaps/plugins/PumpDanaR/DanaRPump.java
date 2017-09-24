@@ -3,6 +3,8 @@ package info.nightscout.androidaps.plugins.PumpDanaR;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.util.Date;
@@ -16,6 +18,8 @@ import info.nightscout.utils.SP;
  * Created by mike on 04.07.2016.
  */
 public class DanaRPump {
+    private static Logger log = LoggerFactory.getLogger(DanaRPump.class);
+
     private static DanaRPump instance = null;
 
     public static DanaRPump getInstance() {
@@ -189,7 +193,7 @@ public class DanaRPump {
             profile.put("units", units == UNITS_MGDL ? Constants.MGDL : Constants.MMOL);
             store.put(PROFILE_PREFIX + (activeProfile + 1), profile);
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         } catch (Exception e) {
             return null;
         }

@@ -185,7 +185,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
                     if (SP.contains(settingVisible))
                         p.setFragmentVisible(type, SP.getBoolean(settingVisible, true) && SP.getBoolean(settingEnabled, true));
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    log.error("Unhandled exception", e);
                 }
             }
         }
@@ -892,6 +892,12 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
 
     @Override
     @Nullable
+    public TempTarget getTempTargetFromHistory() {
+        return activeTreatments.getTempTargetFromHistory(System.currentTimeMillis());
+    }
+
+    @Override
+    @Nullable
     public TempTarget getTempTargetFromHistory(long time) {
         return activeTreatments.getTempTargetFromHistory(time);
     }
@@ -989,7 +995,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
             MainApp.bus().post(new EventNewNotification(notarget));
             return new Profile(new JSONObject("{\"dia\":\"3\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"20\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"20\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"0.1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"6\"}],\"target_high\":[{\"time\":\"00:00\",\"value\":\"8\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}}"));
         } catch (JSONException e) {
-            e.printStackTrace();
+            log.error("Unhandled exception", e);
         }
         return null;
     }

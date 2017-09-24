@@ -172,6 +172,10 @@ public class SensitivityWeightedAveragePlugin implements PluginBase, Sensitivity
             weightedsum += weight * value;
         }
 
+        if (weights == 0) {
+            return new AutosensResult();
+        }
+
         Profile profile = MainApp.getConfigBuilder().getProfile();
 
         double sens = profile.getIsf();
