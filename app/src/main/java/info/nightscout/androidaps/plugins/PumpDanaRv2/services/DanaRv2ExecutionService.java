@@ -428,9 +428,17 @@ public class DanaRv2ExecutionService extends Service {
                 }
             }
         }
-        waitMsec(3000);
         bolusingTreatment = null;
-        loadEvents();
+        // run loading history in separate thread and allow bolus dialog to be closed
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                waitMsec(4000);
+                if (!(isConnected()))
+                    connect("loadEvents");
+                loadEvents();
+            }
+        }).start();
         return true;
     }
 

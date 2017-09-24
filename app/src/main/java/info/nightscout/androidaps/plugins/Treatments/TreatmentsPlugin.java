@@ -272,7 +272,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public TemporaryBasal getRealTempBasalFromHistory(long time) {
-        return (TemporaryBasal) tempBasals.getValueByInterval(time);
+        return tempBasals.getValueByInterval(time);
     }
 
     @Override
@@ -358,7 +358,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Override
     public ExtendedBolus getExtendedBolusFromHistory(long time) {
-        return (ExtendedBolus) extendedBoluses.getValueByInterval(time);
+        return extendedBoluses.getValueByInterval(time);
     }
 
     @Override
@@ -466,8 +466,14 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
 
     @Nullable
     @Override
+    public TempTarget getTempTargetFromHistory() {
+        return tempTargets.getValueByInterval(System.currentTimeMillis());
+    }
+
+    @Nullable
+    @Override
     public TempTarget getTempTargetFromHistory(long time) {
-        return (TempTarget) tempTargets.getValueByInterval(time);
+        return tempTargets.getValueByInterval(time);
     }
 
     @Override

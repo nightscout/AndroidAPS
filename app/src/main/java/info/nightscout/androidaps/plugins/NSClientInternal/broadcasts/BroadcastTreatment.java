@@ -183,7 +183,7 @@ public class BroadcastTreatment {
                         ret.add(newarr);
                     }
                     newarr = new JSONArray();
-                    count = 100;
+                    count = 50;
                 }
                 newarr.put(array.get(i));
                 --count;
