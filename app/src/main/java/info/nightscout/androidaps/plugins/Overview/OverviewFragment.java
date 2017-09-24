@@ -1093,7 +1093,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             public boolean onLongClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = CareportalFragment.profileswitchdirect;
+                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
@@ -1108,7 +1108,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             public boolean onLongClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-                final OptionsToShow temptarget = CareportalFragment.temptarget;
+                final OptionsToShow temptarget = CareportalFragment.TEMPTARGET;
                 temptarget.executeTempTarget = true;
                 newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
                 newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");

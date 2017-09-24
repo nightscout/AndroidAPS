@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.ProfileSimple;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -101,7 +100,7 @@ public class SimpleProfileFragment extends SubscriberFragment {
             @Override
             public void onClick(View view) {
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = CareportalFragment.profileswitchdirect;
+                final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
