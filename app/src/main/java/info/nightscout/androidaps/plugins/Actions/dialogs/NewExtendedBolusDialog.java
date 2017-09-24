@@ -112,7 +112,7 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                                         builder.setMessage(result.comment);
                                         builder.setPositiveButton(context.getString(R.string.ok), null);
                                         builder.show();
-                                        } catch (WindowManager.BadTokenException e) {
+                                        } catch (WindowManager.BadTokenException | NullPointerException e) {
                                             // window has been destroyed
                                             Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
                                             MainApp.bus().post(new EventNewNotification(notification));
