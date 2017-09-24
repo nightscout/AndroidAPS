@@ -11,9 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -31,7 +28,6 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.NumberPicker;
-import info.nightscout.utils.PlusMinusEditText;
 import info.nightscout.utils.SafeParse;
 
 public class NewExtendedBolusDialog extends DialogFragment implements View.OnClickListener {
@@ -110,11 +106,11 @@ public class NewExtendedBolusDialog extends DialogFragment implements View.OnCli
                                     PumpEnactResult result = pump.setExtendedBolus(finalInsulin, finalDurationInMinutes);
                                     if (!result.success) {
                                         try {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                        builder.setTitle(context.getString(R.string.treatmentdeliveryerror));
-                                        builder.setMessage(result.comment);
-                                        builder.setPositiveButton(context.getString(R.string.ok), null);
-                                        builder.show();
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                            builder.setTitle(context.getString(R.string.treatmentdeliveryerror));
+                                            builder.setMessage(result.comment);
+                                            builder.setPositiveButton(context.getString(R.string.ok), null);
+                                            builder.show();
                                         } catch (WindowManager.BadTokenException | NullPointerException e) {
                                             // window has been destroyed
                                             Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
