@@ -43,7 +43,7 @@ public class ProfileViewerDialog extends DialogFragment {
     private TextView dateTextView;
     private Button refreshButton;
 
-    static ProfileViewerDialog newInstance(long time) {
+    public static ProfileViewerDialog newInstance(long time) {
         ProfileViewerDialog dialog = new ProfileViewerDialog();
 
         Bundle args = new Bundle();
