@@ -1093,7 +1093,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             public boolean onLongClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = CareportalFragment.profileswitch;
+                final OptionsToShow profileswitch = CareportalFragment.profileswitchdirect;
                 profileswitch.executeProfileSwitch = true;
                 newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
                 newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");

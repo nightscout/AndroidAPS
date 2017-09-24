@@ -52,7 +52,6 @@ import info.nightscout.androidaps.events.EventNewBasalProfile;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.Careportal.OptionsToShow;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfilePlugin;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.NumberPicker;
@@ -73,17 +72,9 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     String units;
 
     TextView eventTypeText;
-    LinearLayout layoutBg;
-    LinearLayout layoutBgSource;
-    LinearLayout layoutInsulin;
-    LinearLayout layoutCarbs;
-    LinearLayout layoutSplit;
-    LinearLayout layoutDuration;
     LinearLayout layoutPercent;
     LinearLayout layoutAbsolute;
-    LinearLayout layoutCarbTime;
-    LinearLayout layoutProfile;
-    LinearLayout layoutTempTarget;
+
     TextView dateButton;
     TextView timeButton;
 
@@ -104,6 +95,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     NumberPicker editAbsolute;
     NumberPicker editCarbTime;
     NumberPicker editTemptarget;
+    NumberPicker editPercentage;
+    NumberPicker editTimeshift;
 
     Date eventTime;
 
@@ -144,17 +137,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         setStyle(DialogFragment.STYLE_NORMAL, getTheme());
         View view = inflater.inflate(R.layout.careportal_newnstreatment_dialog, container, false);
 
-        layoutBg = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_bg_layout);
-        layoutBgSource = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_bgsource_layout);
-        layoutInsulin = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_insulin_layout);
-        layoutCarbs = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_carbs_layout);
-        layoutSplit = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_split_layout);
-        layoutDuration = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_duration_layout);
         layoutPercent = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_percent_layout);
         layoutAbsolute = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_absolute_layout);
-        layoutCarbTime = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_carbtime_layout);
-        layoutProfile = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_profile_layout);
-        layoutTempTarget = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout);
 
         eventTypeText = (TextView) view.findViewById(R.id.careportal_newnstreatment_eventtype);
         eventTypeText.setText(event);
@@ -297,18 +281,26 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editCarbTime = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbtimeinput);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
 
+        editPercentage = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentage);
+        editPercentage.setParams(100d, (double) Constants.CPP_MIN_PERCENTAGE, (double) Constants.CPP_MAX_PERCENTAGE, 5d, new DecimalFormat("0"), false);
 
-        showOrHide(layoutBg, options.bg);
-        showOrHide(layoutBgSource, options.bg);
-        showOrHide(layoutInsulin, options.insulin);
-        showOrHide(layoutCarbs, options.carbs);
-        showOrHide(layoutSplit, options.split);
-        showOrHide(layoutDuration, options.duration);
+        editTimeshift = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_timeshift);
+        editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false);
+
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_eventtime_layout), options.date);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_bg_layout), options.bg);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_bgsource_layout), options.bg);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_insulin_layout), options.insulin);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_carbs_layout), options.carbs);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_split_layout), options.split);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_duration_layout), options.duration);
         showOrHide(layoutPercent, options.percent);
         showOrHide(layoutAbsolute, options.absolute);
-        showOrHide(layoutCarbTime, options.prebolus);
-        showOrHide(layoutProfile, options.profile);
-        showOrHide(layoutTempTarget, options.tempTarget);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_carbtime_layout), options.prebolus);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_profile_layout), options.profile);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_percentage_layout), options.profile);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_timeshift_layout), options.profile);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout), options.tempTarget);
 
         return view;
     }
@@ -451,7 +443,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     allowZeroDuration = true;
                     break;
             }
-            if (SafeParse.stringToDouble(editBg.getText()) != 0d) {
+            if (options.bg && SafeParse.stringToDouble(editBg.getText()) != 0d) {
                 data.put("glucose", SafeParse.stringToDouble(editBg.getText()));
                 if (meterRadioButton.isChecked()) data.put("glucoseType", "Finger");
                 if (sensorRadioButton.isChecked()) data.put("glucoseType", "Sensor");
@@ -469,6 +461,10 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 data.put("absolute", SafeParse.stringToDouble(editAbsolute.getText()));
             if (options.profile && profileSpinner.getSelectedItem() != null)
                 data.put("profile", profileSpinner.getSelectedItem().toString());
+            if (options.profile)
+                data.put("percentage", SafeParse.stringToInt(editPercentage.getText()));
+            if (options.profile)
+                data.put("timeshift", SafeParse.stringToInt(editTimeshift.getText()));
             if (SafeParse.stringToDouble(editCarbTime.getText()) != 0d)
                 data.put("preBolus", SafeParse.stringToDouble(editCarbTime.getText()));
             if (!notesEdit.getText().toString().equals(""))
@@ -556,6 +552,18 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 ret += data.get("profile");
                 ret += "\n";
             }
+            if (data.has("percentage")) {
+                ret += getString(R.string.careportal_newnstreatment_percentage_label);
+                ret += ": ";
+                ret += data.get("percentage");
+                ret += " %\n";
+            }
+            if (data.has("timeshift")) {
+                ret += getString(R.string.careportal_newnstreatment_timeshift_label);
+                ret += ": ";
+                ret += data.get("timeshift");
+                ret += " h\n";
+            }
             if (data.has("targetBottom") && data.has("targetTop")) {
                 ret += getString(R.string.target_range);
                 ret += " ";
@@ -594,7 +602,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 if (options.executeProfileSwitch) {
                     if (data.has("profile")) {
                         try {
-                            doProfileSwitch(profileStore, data.getString("profile"), data.getInt("duration"));
+                            doProfileSwitch(profileStore, data.getString("profile"), data.getInt("duration"), data.getInt("percentage"), data.getInt("timeshift"));
                         } catch (JSONException e) {
                             log.error("Unhandled exception", e);
                         }
@@ -641,33 +649,30 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         builder.show();
     }
 
-    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration) {
+    public static void doProfileSwitch(final ProfileStore profileStore, final String profileName, final int duration, final int percentage, final int timeshift) {
         sHandler.post(new Runnable() {
             @Override
             public void run() {
-                    ProfileSwitch profileSwitch = new ProfileSwitch();
-                    profileSwitch.date = System.currentTimeMillis();
-                    profileSwitch.source = Source.USER;
-                    profileSwitch.profileName = profileName;
-                    profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
-                    profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
-                    profileSwitch.durationInMinutes = duration;
-                    if (ConfigBuilderPlugin.getActiveProfileInterface() instanceof CircadianPercentageProfilePlugin) {
-                        CircadianPercentageProfilePlugin cpp = (CircadianPercentageProfilePlugin) ConfigBuilderPlugin.getActiveProfileInterface();
-                        profileSwitch.isCPP = true;
-                        profileSwitch.timeshift = cpp.timeshift;
-                        profileSwitch.percentage = cpp.percentage;
-                    }
-                    MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+                ProfileSwitch profileSwitch = new ProfileSwitch();
+                profileSwitch.date = System.currentTimeMillis();
+                profileSwitch.source = Source.USER;
+                profileSwitch.profileName = profileName;
+                profileSwitch.profileJson = profileStore.getSpecificProfile(profileName).getData().toString();
+                profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
+                profileSwitch.durationInMinutes = duration;
+                profileSwitch.isCPP = percentage != 100 || timeshift != 0;
+                profileSwitch.timeshift = timeshift;
+                profileSwitch.percentage = percentage;
+                MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
 
-                    PumpInterface pump = MainApp.getConfigBuilder();
-                    if (pump != null) {
-                        pump.setNewBasalProfile(profileStore.getSpecificProfile(profileName));
-                        MainApp.bus().post(new EventNewBasalProfile());
-                    } else {
-                        log.error("No active pump selected");
-                    }
-                    Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
+                PumpInterface pump = MainApp.getConfigBuilder();
+                if (pump != null) {
+                    pump.setNewBasalProfile(profileStore.getSpecificProfile(profileName));
+                    MainApp.bus().post(new EventNewBasalProfile());
+                } else {
+                    log.error("No active pump selected");
+                }
+                Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
             }
         });
     }

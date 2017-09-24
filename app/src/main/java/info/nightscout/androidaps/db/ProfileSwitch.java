@@ -65,6 +65,14 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
         return profile;
     }
 
+    public String getCustomizedName() {
+        String name = profileName;
+        if (isCPP) {
+            name += "(" + percentage + "%," + timeshift + "h)";
+        }
+        return name;
+    }
+
     public boolean isEqual(ProfileSwitch other) {
         if (date != other.date) {
             return false;

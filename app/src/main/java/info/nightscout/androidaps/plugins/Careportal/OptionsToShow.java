@@ -7,6 +7,7 @@ package info.nightscout.androidaps.plugins.Careportal;
 public class OptionsToShow {
     public int eventType;
     public int eventName;
+    public boolean date;
     public boolean bg;
     public boolean insulin;
     public boolean carbs;
@@ -24,6 +25,7 @@ public class OptionsToShow {
 
     public OptionsToShow(int eventType,
                          int eventName,
+                         boolean date,
                          boolean bg,
                          boolean insulin,
                          boolean carbs,
@@ -36,6 +38,7 @@ public class OptionsToShow {
                          boolean tempTarget) {
         this.eventType = eventType;
         this.eventName = eventName;
+        this.date = date;
         this.bg = bg;
         this.insulin = insulin;
         this.carbs = carbs;

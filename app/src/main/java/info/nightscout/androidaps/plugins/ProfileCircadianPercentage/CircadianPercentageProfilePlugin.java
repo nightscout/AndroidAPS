@@ -199,7 +199,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
 
         //send profile to pumpe
         new NewNSTreatmentDialog(); //init
-        NewNSTreatmentDialog.doProfileSwitch(this.getProfile(), this.getProfileName(), 0);
+        NewNSTreatmentDialog.doProfileSwitch(this.getProfile(), this.getProfileName(), 0, percentage, timeshift);
 
         //return formatted string
         /*msg += "%: " + this.percentage + " h: +" + this.timeshift;

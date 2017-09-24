@@ -95,7 +95,7 @@ public class ProfileViewerDialog extends DialogFragment {
             noProfile.setVisibility(View.GONE);
             units.setText(profile.getUnits());
             dia.setText(DecimalFormatter.to2Decimal(profile.getDia()) + " h");
-            activeProfile.setText(profileSwitch.profileName);
+            activeProfile.setText(profileSwitch.getCustomizedName());
             dateTextView.setText(DateUtil.dateAndTimeString(profileSwitch.date));
             ic.setText(profile.getIcList());
             isf.setText(profile.getIsfList());
