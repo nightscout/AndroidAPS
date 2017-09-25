@@ -43,6 +43,7 @@ import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastA
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastCals;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastClearAlarm;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastDeviceStatus;
+import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastFood;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastMbgs;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastProfile;
 import info.nightscout.androidaps.plugins.NSClientInternal.broadcasts.BroadcastSgvs;
@@ -517,6 +518,55 @@ public class NSClientService extends Service {
                                         UploadQueue.removeID(jsonStatus);
                                     }
                                     BroadcastDeviceStatus.handleNewDeviceStatus(devicestatuses, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                            }
+                            if (data.has("food")) {
+                                JSONArray foods = data.getJSONArray("food");
+                                JSONArray removedFoods = new JSONArray();
+                                JSONArray updatedFoods = new JSONArray();
+                                JSONArray addedFoods = new JSONArray();
+                                if (foods.length() > 0)
+                                    MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
+                                for (Integer index = 0; index < foods.length(); index++) {
+                                    JSONObject jsonFood = foods.getJSONObject(index);
+                                    NSTreatment treatment = new NSTreatment(jsonFood);
+
+                                    // remove from upload queue if Ack is failing
+                                    UploadQueue.removeID(jsonFood);
+                                    //Find latest date in treatment
+                                    if (treatment.getMills() != null && treatment.getMills() < System.currentTimeMillis())
+                                        if (treatment.getMills() > latestDateInReceivedData)
+                                            latestDateInReceivedData = treatment.getMills();
+
+                                    if (treatment.getAction() == null) {
+                                        addedFoods.put(jsonFood);
+                                    } else if (treatment.getAction().equals("update")) {
+                                        updatedFoods.put(jsonFood);
+                                    } else if (treatment.getAction().equals("remove")) {
+                                        if (treatment.getMills() != null && treatment.getMills() > System.currentTimeMillis() - 24 * 60 * 60 * 1000L) // handle 1 day old deletions only
+                                            removedFoods.put(jsonFood);
+                                    }
+                                }
+                                if (removedFoods.length() > 0) {
+                                    BroadcastFood.handleRemovedFood(removedFoods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                                if (updatedFoods.length() > 0) {
+                                    BroadcastFood.handleChangedFood(updatedFoods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                                if (addedFoods.length() > 0) {
+                                    BroadcastFood.handleNewFood(addedFoods, MainApp.instance().getApplicationContext(), isDelta);
+                                }
+                            }
+                            if (data.has("")) {
+                                JSONArray foods = data.getJSONArray("food");
+                                if (foods.length() > 0) {
+                                    MainApp.bus().post(new EventNSClientNewLog("DATA", "received " + foods.length() + " foods"));
+                                    for (Integer index = 0; index < foods.length(); index++) {
+                                        JSONObject jsonFood = foods.getJSONObject(index);
+                                        // remove from upload queue if Ack is failing
+                                        UploadQueue.removeID(jsonFood);
+                                    }
+                                    BroadcastDeviceStatus.handleNewFoods(foods, MainApp.instance().getApplicationContext(), isDelta);
                                 }
                             }
                             if (data.has("mbgs")) {

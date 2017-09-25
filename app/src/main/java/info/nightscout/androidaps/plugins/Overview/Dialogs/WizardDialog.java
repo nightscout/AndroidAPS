@@ -367,7 +367,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                                 builder.setMessage(result.comment);
                                                 builder.setPositiveButton(MainApp.sResources.getString(R.string.ok), null);
                                                 builder.show();
-                                            } catch (WindowManager.BadTokenException e) {
+                                            } catch (WindowManager.BadTokenException | NullPointerException e) {
                                                 // window has been destroyed
                                                 Notification notification = new Notification(Notification.BOLUS_DELIVERY_ERROR, MainApp.sResources.getString(R.string.treatmentdeliveryerror), Notification.URGENT);
                                                 MainApp.bus().post(new EventNewNotification(notification));
