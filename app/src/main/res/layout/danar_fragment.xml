@@ -630,19 +630,17 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/danar_history" />
-
+		<Button
+                    android:id="@+id/danar_stats"
+                    style="@style/ButtonSmallFontStyle"
+                    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_weight="1"
+		    android:drawableTop="@drawable/icon_danarstats"
+                    android:paddingLeft="0dp"
+                    android:paddingRight="0dp"
+                    android:text="@string/danar_stats" />
             </LinearLayout>
-
-            <Button
-                android:id="@+id/danar_stats"
-                style="@style/ButtonSmallFontStyle"
-                android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_weight="1"
-		android:drawableTop="@drawable/icon_danarstats"
-                android:paddingLeft="0dp"
-                android:paddingRight="0dp"
-                android:text="@string/danar_stats" />
         </LinearLayout>
     </ScrollView>
 
