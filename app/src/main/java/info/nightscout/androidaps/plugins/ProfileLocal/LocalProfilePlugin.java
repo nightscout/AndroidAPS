@@ -24,11 +24,11 @@ import info.nightscout.utils.SP;
 public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = true;
 
-    private static ProfileStore convertedProfile = null;
-    private static String convertedProfileName = null;
+    private ProfileStore convertedProfile = null;
+    private String convertedProfileName = null;
 
     final private String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
 
@@ -107,8 +107,6 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     }
 
     public void storeSettings() {
-        if (Config.logPrefsChange)
-            log.debug("Storing settings");
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(MainApp.instance().getApplicationContext());
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean("LocalProfile" + "mmol", mmol);
@@ -120,8 +118,10 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         editor.putString("LocalProfile" + "targetlow", targetLow.toString());
         editor.putString("LocalProfile" + "targethigh", targetHigh.toString());
 
-        editor.commit();
+        editor.apply();
         createConvertedProfile();
+        if (Config.logPrefsChange)
+            log.debug("Storing settings: " + getProfile().getData().toString());
     }
 
     private void loadSettings() {
@@ -136,7 +136,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         } catch (JSONException e1) {
             try {
                 ic = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e2) {
+            } catch (JSONException ignored) {
             }
         }
         try {
@@ -144,7 +144,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         } catch (JSONException e1) {
             try {
                 isf = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e2) {
+            } catch (JSONException ignored) {
             }
         }
         try {
@@ -152,7 +152,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         } catch (JSONException e1) {
             try {
                 basal = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e2) {
+            } catch (JSONException ignored) {
             }
         }
         try {
@@ -160,7 +160,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         } catch (JSONException e1) {
             try {
                 targetLow = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e2) {
+            } catch (JSONException ignored) {
             }
         }
         try {
@@ -168,7 +168,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
         } catch (JSONException e1) {
             try {
                 targetHigh = new JSONArray(DEFAULTARRAY);
-            } catch (JSONException e2) {
+            } catch (JSONException ignored) {
             }
         }
         createConvertedProfile();
@@ -212,7 +212,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             "created_at": "2016-06-16T08:34:41.256Z"
         }
         */
-    void createConvertedProfile() {
+    private void createConvertedProfile() {
         JSONObject json = new JSONObject();
         JSONObject store = new JSONObject();
         JSONObject profile = new JSONObject();

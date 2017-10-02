@@ -195,7 +195,7 @@ public class Profile {
         int offset = -(timeshift % 24) + 24;
         Integer shiftedTime = originalTime + offset * 60 * 60;
         shiftedTime = shiftedTime % (24 * 60 * 60);
-        log.debug("(Sec) Original time: " + new Date(originalTime).toLocaleString() + " ShiftedTime: " + new Date(shiftedTime).toLocaleString());
+        //log.debug("(Sec) Original time: " + new Date(originalTime).toLocaleString() + " ShiftedTime: " + new Date(shiftedTime).toLocaleString());
         return shiftedTime;
     }
 

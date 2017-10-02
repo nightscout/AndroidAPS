@@ -1,6 +1,8 @@
 package info.nightscout.utils;
 
+import android.support.v4.util.LongSparseArray;
 import android.text.format.DateUtils;
+import android.util.SparseIntArray;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -131,5 +133,17 @@ public class DateUtil {
         int mins = (int) ((System.currentTimeMillis() - time) / 1000 / 60);
         return String.format(MainApp.sResources.getString(R.string.minago), mins);
     }
+
+    private static LongSparseArray<String> timeStrings = new LongSparseArray<>();
+
+    public static String timeStringFromSeconds(int seconds) {
+        String cached = timeStrings.get(seconds);
+        if (cached != null)
+            return cached;
+        String t = DateUtils.formatDateTime(MainApp.instance(), toDate(seconds).getTime(), DateUtils.FORMAT_SHOW_TIME);
+        timeStrings.put(seconds, t);
+        return t;
+    }
+
 
 }

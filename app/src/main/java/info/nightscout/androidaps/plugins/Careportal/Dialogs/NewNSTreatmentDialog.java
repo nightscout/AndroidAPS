@@ -190,20 +190,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         // bg
         bgUnitsView.setText(units);
 
-        Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile != null ? profile.getUnits() : Constants.MGDL);
-        editBg = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_bginput);
-        editTemptarget = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_temptarget);
-        if (profile == null) {
-            editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false);
-            editTemptarget.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false);
-        } else if (profile.getUnits().equals(Constants.MMOL)) {
-            editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
-            editTemptarget.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
-        } else {
-            editBg.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
-            editTemptarget.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
-        }
-        editBg.addTextChangedListener(new TextWatcher() {
+        TextWatcher bgTextWatcher  = new TextWatcher() {
             public void afterTextChanged(Editable s) {
             }
 
@@ -213,8 +200,21 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (sensorRadioButton.isChecked()) meterRadioButton.setChecked(true);
             }
-        });
+        };
 
+        Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile != null ? profile.getUnits() : Constants.MGDL);
+        editBg = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_bginput);
+        editTemptarget = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_temptarget);
+        if (profile == null) {
+            editBg.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
+            editTemptarget.setParams(bg, 0d, 500d, 0.1d, new DecimalFormat("0.0"), false);
+        } else if (profile.getUnits().equals(Constants.MMOL)) {
+            editBg.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false, bgTextWatcher);
+            editTemptarget.setParams(bg, 0d, 30d, 0.1d, new DecimalFormat("0.0"), false);
+        } else {
+            editBg.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false, bgTextWatcher);
+            editTemptarget.setParams(bg, 0d, 500d, 1d, new DecimalFormat("0"), false);
+        }
         sensorRadioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -236,10 +236,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editDuration = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_durationinput);
         editDuration.setParams(0d, 0d, 24 * 60d, 10d, new DecimalFormat("0"), false);
 
-        Integer maxPercent = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalPercentOnlyForCheckLimit);
-        editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
-        editPercent.setParams(0d, 0d, (double) maxPercent, 5d, new DecimalFormat("0"), true);
-        editPercent.addTextChangedListener(new TextWatcher() {
+        TextWatcher percentTextWatcher = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -255,12 +252,13 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 layoutPercent.setVisibility(View.VISIBLE);
                 layoutAbsolute.setVisibility(View.GONE);
             }
-        });
+        };
 
-        Double maxAbsolute = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
-        editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
-        editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true);
-        editAbsolute.addTextChangedListener(new TextWatcher() {
+        Integer maxPercent = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalPercentOnlyForCheckLimit);
+        editPercent = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentinput);
+        editPercent.setParams(0d, 0d, (double) maxPercent, 5d, new DecimalFormat("0"), true, percentTextWatcher);
+
+        TextWatcher absoluteTextWatcher = new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
             }
@@ -276,7 +274,11 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 layoutPercent.setVisibility(View.GONE);
                 layoutAbsolute.setVisibility(View.VISIBLE);
             }
-        });
+        };
+
+        Double maxAbsolute = MainApp.getConfigBuilder().applyBasalConstraints(Constants.basalAbsoluteOnlyForCheckLimit);
+        editAbsolute = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_absoluteinput);
+        editAbsolute.setParams(0d, 0d, maxAbsolute, 0.05d, new DecimalFormat("0.00"), true, absoluteTextWatcher);
 
         editCarbTime = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_carbtimeinput);
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);

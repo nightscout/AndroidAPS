@@ -40,7 +40,7 @@ public class Config {
     public static final boolean logNSUpload = true;
     public static final boolean logPumpActions = true;
     public static final boolean logCongigBuilderActions = true;
-    public static final boolean logAutosensData = true;
+    public static final boolean logAutosensData = false;
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;

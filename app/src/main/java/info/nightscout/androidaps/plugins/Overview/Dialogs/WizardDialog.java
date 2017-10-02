@@ -420,15 +420,9 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         BgReading lastBg = DatabaseHelper.actualBg();
 
         if (lastBg != null) {
-            editBg.removeTextChangedListener(textWatcher);
-            //bgInput.setText(lastBg.valueToUnitsToString(units));
             editBg.setValue(lastBg.valueToUnits(units));
-            editBg.addTextChangedListener(textWatcher);
         } else {
-            editBg.removeTextChangedListener(textWatcher);
-            //bgInput.setText("");
             editBg.setValue(0d);
-            editBg.addTextChangedListener(textWatcher);
         }
         ttCheckbox.setEnabled(MainApp.getConfigBuilder().getTempTargetFromHistory() != null);
 
@@ -465,19 +459,13 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
         Double c_correction = SafeParse.stringToDouble(editCorr.getText());
         Double corrAfterConstraint = MainApp.getConfigBuilder().applyBolusConstraints(c_correction);
         if (c_correction - corrAfterConstraint != 0) { // c_correction != corrAfterConstraint doesn't work
-            editCorr.removeTextChangedListener(textWatcher);
             editCorr.setValue(0d);
-            editCorr.addTextChangedListener(textWatcher);
-            //wizardDialogDeliverButton.setVisibility(Button.GONE);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.bolusconstraintapplied));
             return;
         }
         Integer carbsAfterConstraint = MainApp.getConfigBuilder().applyCarbsConstraints(c_carbs);
         if (c_carbs - carbsAfterConstraint != 0) {
-            editCarbs.removeTextChangedListener(textWatcher);
             editCarbs.setValue(0d);
-            editCarbs.addTextChangedListener(textWatcher);
-            //wizardDialogDeliverButton.setVisibility(Button.GONE);
             ToastUtils.showToastInUiThread(MainApp.instance().getApplicationContext(), getString(R.string.carbsconstraintapplied));
             return;
         }

@@ -23,6 +23,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center_horizontal"
                 android:orientation="horizontal">
 
                 <RadioButton
@@ -46,13 +47,11 @@
                 android:text="@string/dia"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
-            <EditText
+            <info.nightscout.utils.NumberPicker
                 android:id="@+id/localprofile_dia"
-                android:layout_width="70dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:inputType="numberDecimal"
-                android:textAlignment="center" />
+                android:layout_width="130dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal" />
 
             <LinearLayout
                 android:id="@+id/localprofile_ic"
