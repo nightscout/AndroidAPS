@@ -706,7 +706,7 @@
     <string name="pairingok">Paring OK</string>
     <string name="pairingtimedout">Paring timed out</string>
     <string name="pairing">PAIRING</string>
-    <string name="key_danars_pairingkey" translatable="false">danars_paring_key</string>
+    <string name="key_danars_pairingkey" translatable="false">danars_paring_key_</string>
     <string name="key_danars_address" translatable="false">danars_address</string>
     <string name="key_danars_name" translatable="false">danars_name</string>
     <string name="danars_nodeviceavailable">No Device Available</string>
@@ -732,5 +732,6 @@
     <string name="gettingtempbasalstatus">Getting temporary basal status</string>
     <string name="gettingpumpsettings">Gettings pump settings</string>
     <string name="gettingpumptime">Getting pump time</string>
+    <string name="unsupportedpumpfirmware">Unsupported pump firmware</string>
 </resources>
 

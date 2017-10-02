@@ -31,6 +31,7 @@ import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPump;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingHelperActivity;
 import info.nightscout.androidaps.plugins.PumpDanaRS.activities.PairingProgressDialog;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRSMessageHashTable;
@@ -457,7 +458,7 @@ public class BLEComm {
                                     if (inputBuffer.length == 4 && inputBuffer[2] == 'O' && inputBuffer[3] == 'K') {
                                         log.debug("<<<<< " + "ENCRYPTION__PUMP_CHECK (OK)" + " " + DanaRS_Packet.toHexString(inputBuffer));
                                         // Grab pairing key from preferences if exists
-                                        String pairingKey = SP.getString(R.string.key_danars_pairingkey, null);
+                                        String pairingKey = SP.getString(MainApp.sResources.getString(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, null);
                                         log.debug("Using stored pairing key: " + pairingKey);
                                         if (pairingKey != null) {
                                             byte[] encodedPairingKey = DanaRS_Packet.hexToBytes(pairingKey);
@@ -504,8 +505,8 @@ public class BLEComm {
                                     SendTimeInfo();
                                     byte[] pairingKey = {inputBuffer[2], inputBuffer[3]};
                                     // store pairing key to preferences
-                                    SP.putString(R.string.key_danars_pairingkey, DanaRS_Packet.toHexString(pairingKey));
-                                    log.debug("Got pairing key: " + DanaRS_Packet.toHexString(pairingKey));
+                                    SP.putString(MainApp.sResources.getString(R.string.key_danars_pairingkey) + DanaRSPlugin.mDeviceName, DanaRS_Packet.bytesToHex(pairingKey));
+                                    log.debug("Got pairing key: " + DanaRS_Packet.bytesToHex(pairingKey));
                                     break;
                                 // time and user password information. last packet in handshake
                                 case (byte) BleCommandUtil.DANAR_PACKET__OPCODE_ENCRYPTION__TIME_INFORMATION:

@@ -232,7 +232,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             }
             pumpDescription.basalStep = pump.basalStep;
             pumpDescription.bolusStep = pump.bolusStep;
-            log.debug("RS connected");
+            log.debug("RS connected:" + from);
         }
     }
 
