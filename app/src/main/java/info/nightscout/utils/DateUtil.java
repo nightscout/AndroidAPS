@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,8 +25,8 @@ public class DateUtil {
     /**
      * The date format in iso.
      */
-    public static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    public static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
+    private static String FORMAT_DATE_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    private static String FORMAT_DATE_ISO_MSEC = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     /**
      * Takes in an ISO date string of the following format:
@@ -37,13 +38,13 @@ public class DateUtil {
      */
     public static Date fromISODateString(String isoDateString)
             throws Exception {
-        SimpleDateFormat f = new SimpleDateFormat(FORMAT_DATE_ISO);
+        SimpleDateFormat f = new SimpleDateFormat(FORMAT_DATE_ISO, Locale.getDefault());
         Date date;
         f.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
             date = f.parse(isoDateString);
         } catch (ParseException e) {
-            f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC);
+            f = new SimpleDateFormat(FORMAT_DATE_ISO_MSEC, Locale.getDefault());
             f.setTimeZone(TimeZone.getTimeZone("UTC"));
             date = f.parse(isoDateString);
         }
@@ -61,7 +62,7 @@ public class DateUtil {
     public static String toISOString(Date date, String format, TimeZone tz) {
         if (format == null) format = FORMAT_DATE_ISO;
         if (tz == null) tz = TimeZone.getDefault();
-        DateFormat f = new SimpleDateFormat(format);
+        DateFormat f = new SimpleDateFormat(format, Locale.getDefault());
         f.setTimeZone(tz);
         return f.format(date);
     }
@@ -85,7 +86,7 @@ public class DateUtil {
     }
 
     public static int toSeconds(String hh_colon_mm) {
-        Pattern p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM | PM)");
+        Pattern p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM | PM|)");
         Matcher m = p.matcher(hh_colon_mm);
         int retval = 0;
 
