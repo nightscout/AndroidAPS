@@ -14,11 +14,13 @@ public class DanaRS_Packet {
     protected static final int DATA_START = 2;
 
     private boolean received;
+    protected boolean failed;
     protected int type = BleCommandUtil.DANAR_PACKET__TYPE_RESPONSE; // most of the messages, should be changed for others
     protected int opCode;
 
     public DanaRS_Packet() {
         received = false;
+        failed = false;
     }
 
     public void setReceived() {
@@ -90,6 +92,42 @@ public class DanaRS_Packet {
                 break;
             case 4:
                 ret = ((b[3] & 0x000000FF) << 24) + ((b[2] & 0x000000FF) << 16) + ((b[1] & 0x000000FF) << 8) + (b[0] & 0x000000FF);
+                break;
+            default:
+                ret = -1;
+                break;
+        }
+        return ret;
+    }
+
+    public static Date dateTimeSecFromBuff(byte[] buff, int offset) {
+        Date date =
+                new Date(
+                        100 + intFromBuff(buff, offset, 1),
+                        intFromBuff(buff, offset + 1, 1) - 1,
+                        intFromBuff(buff, offset + 2, 1),
+                        intFromBuff(buff, offset + 3, 1),
+                        intFromBuff(buff, offset + 4, 1),
+                        intFromBuff(buff, offset + 5, 1)
+                );
+        return date;
+    }
+
+    protected static int intFromBuff(byte[] b, int srcStart, int srcLength) {
+        int ret;
+
+        switch (srcLength) {
+            case 1:
+                ret = b[DATA_START + srcStart + 0] & 0x000000FF;
+                break;
+            case 2:
+                ret = ((b[DATA_START + srcStart + 1] & 0x000000FF) << 8) + (b[DATA_START + srcStart + 0] & 0x000000FF);
+                break;
+            case 3:
+                ret = ((b[DATA_START + srcStart + 2] & 0x000000FF) << 16) + ((b[DATA_START + srcStart + 1] & 0x000000FF) << 8) + (b[DATA_START + srcStart + 0] & 0x000000FF);
+                break;
+            case 4:
+                ret = ((b[DATA_START + srcStart + 3] & 0x000000FF) << 24) + ((b[DATA_START + srcStart + 2] & 0x000000FF) << 16) + ((b[DATA_START + srcStart + 1] & 0x000000FF) << 8) + (b[DATA_START + srcStart + 0] & 0x000000FF);
                 break;
             default:
                 ret = -1;

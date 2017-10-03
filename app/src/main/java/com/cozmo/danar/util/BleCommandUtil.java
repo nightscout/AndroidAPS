@@ -82,6 +82,10 @@ public class BleCommandUtil {
     public static final int DANAR_PACKET__OPCODE_OPTION__GET_USER_OPTION = 0x72;
     public static final int DANAR_PACKET__OPCODE_OPTION__SET_USER_OPTION = 0x73;
 
+    public static final int DANAR_PACKET__OPCODE_BASAL__APS_SET_TEMPORARY_BASAL = 0xC1;
+    public static final int DANAR_PACKET__OPCODE__APS_HISTORY_EVENTS = 0xC2;
+    public static final int DANAR_PACKET__OPCODE__APS_SET_EVENT_HISTORY = 0xC3;
+
     public static final int DANAR_PACKET__OPCODE_ETC__SET_HISTORY_SAVE = 0xE0;
     public static final int DANAR_PACKET__OPCODE_ETC__KEEP_CONNECTION = 0xFF;
 

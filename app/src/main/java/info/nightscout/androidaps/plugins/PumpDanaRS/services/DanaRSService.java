@@ -31,6 +31,8 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_APS_History_Events;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_APS_Set_Event_History;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Basal_Rate;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Profile_Number;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Temporary_Basal_State;
@@ -169,11 +171,25 @@ public class DanaRSService extends Service {
     }
 
     public boolean loadEvents() {
+        DanaRS_Packet_APS_History_Events msg;
+        if (lastHistoryFetched == 0) {
+            msg = new DanaRS_Packet_APS_History_Events(0);
+            log.debug("Loading complete event history");
+        } else {
+            msg = new DanaRS_Packet_APS_History_Events(lastHistoryFetched);
+            log.debug("Loading event history from: " + new Date(lastHistoryFetched).toLocaleString());
+        }
+        bleComm.sendMessage(msg);
+        while (!msg.done && bleComm.isConnected()) {
+            SystemClock.sleep(100);
+        }
+        SystemClock.sleep(200);
+        lastHistoryFetched = DanaRS_Packet_APS_History_Events.lastEventTimeLoaded;
         return true;
     }
 
 
-    public boolean bolus(double insulin, int carbs, long l, Treatment t) {
+    public boolean bolus(double insulin, int carbs, long carbtime, Treatment t) {
         bolusingTreatment = t;
         int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
         DanaRS_Packet_Bolus_Set_Step_Bolus_Start start = new DanaRS_Packet_Bolus_Set_Step_Bolus_Start(insulin, speed);
@@ -185,9 +201,9 @@ public class DanaRSService extends Service {
         if (carbs > 0) {
 //            MsgSetCarbsEntry msg = new MsgSetCarbsEntry(carbtime, carbs); ####
 //            bleComm.sendMessage(msg);
-//            MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(DanaRPump.CARBS, carbtime, carbs, 0);
-//            bleComm.sendMessage(msgSetHistoryEntry_v2);
-//            lastHistoryFetched = carbtime - 60000;
+            DanaRS_Packet_APS_Set_Event_History msgSetHistoryEntry_v2 = new DanaRS_Packet_APS_Set_Event_History(DanaRPump.CARBS, carbtime, carbs, 0);
+            bleComm.sendMessage(msgSetHistoryEntry_v2);
+            lastHistoryFetched = carbtime - 60000;
         }
         if (insulin > 0) {
             DanaRS_Packet_Notify_Delivery_Rate_Display progress = new DanaRS_Packet_Notify_Delivery_Rate_Display(insulin, t); // initialize static variables

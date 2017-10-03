@@ -84,6 +84,11 @@ public class DanaRSMessageHashTable {
             put(new DanaRS_Packet_History_Suspend());
             put(new DanaRS_Packet_History_Temporary());
 
+            // APS
+            put(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal());
+            put(new DanaRS_Packet_APS_History_Events());
+            put(new DanaRS_Packet_APS_Set_Event_History());
+
             Config.logDanaMessageDetail = savedState;
         }
     }
