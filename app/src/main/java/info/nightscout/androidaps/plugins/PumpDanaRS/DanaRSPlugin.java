@@ -353,7 +353,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection.getTime() > 0 && pump.protocol > 1;
+        return pump.lastConnection.getTime() > 0;
     }
 
     @Override

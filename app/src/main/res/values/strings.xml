@@ -732,6 +732,5 @@
     <string name="gettingtempbasalstatus">Getting temporary basal status</string>
     <string name="gettingpumpsettings">Gettings pump settings</string>
     <string name="gettingpumptime">Getting pump time</string>
-    <string name="unsupportedpumpfirmware">Unsupported pump firmware</string>
 </resources>
 

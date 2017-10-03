@@ -42,12 +42,6 @@ public class DanaRS_Packet_General_Get_Pump_Check extends DanaRS_Packet {
             log.debug("Protocol: " + String.format("%02X ", pump.protocol));
             log.debug("Product Code: " + String.format("%02X ", pump.productCode));
         }
-        if (pump.protocol == 1) {
-            Notification notification = new Notification(Notification.UNSUPPORTED_FIRMWARE, MainApp.sResources.getString(R.string.unsupportedpumpfirmware), Notification.URGENT);
-            MainApp.bus().post(new EventNewNotification(notification));
-        } else {
-            MainApp.bus().post(new EventDismissNotification(Notification.UNSUPPORTED_FIRMWARE));
-        }
     }
 
     @Override
