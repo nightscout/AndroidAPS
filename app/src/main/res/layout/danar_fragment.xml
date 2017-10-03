@@ -703,7 +703,7 @@
                     android:paddingLeft="0dp"
                     android:paddingRight="0dp"
                     android:text="@string/danar_stats" />
-                
+
             </LinearLayout>
 
         </LinearLayout>
