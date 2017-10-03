@@ -31,6 +31,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.comm.RecordTypes;
 import info.nightscout.androidaps.plugins.PumpDanaR.events.EventDanaRNewStatus;
 import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet;
+import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_APS_Basal_Set_Temporary_Basal;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_APS_History_Events;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_APS_Set_Event_History;
 import info.nightscout.androidaps.plugins.PumpDanaRS.comm.DanaRS_Packet_Basal_Get_Basal_Rate;
@@ -263,7 +264,17 @@ public class DanaRSService extends Service {
     }
 
     public boolean highTempBasal(Integer percent) {
-        return false;
+        if (danaRPump.isTempBasalInProgress) {
+            MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.stoppingtempbasal)));
+            bleComm.sendMessage(new DanaRS_Packet_Basal_Set_Cancel_Temporary_Basal());
+            SystemClock.sleep(500);
+        }
+        MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.settingtempbasal)));
+        bleComm.sendMessage(new DanaRS_Packet_APS_Basal_Set_Temporary_Basal(percent));
+        bleComm.sendMessage(new DanaRS_Packet_Basal_Get_Temporary_Basal_State());
+        loadEvents();
+        MainApp.bus().post(new EventPumpStatusChanged(EventPumpStatusChanged.DISCONNECTING));
+        return true;
     }
 
     public boolean tempBasalStop() {

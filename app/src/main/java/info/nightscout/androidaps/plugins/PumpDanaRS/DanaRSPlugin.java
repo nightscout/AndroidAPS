@@ -625,6 +625,7 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     public PumpEnactResult setHighTempBasalPercent(Integer percent) {
         PumpEnactResult result = new PumpEnactResult();
+        connectIfNotConnected("hightempbasal");
         boolean connectionOK = danaRSService.highTempBasal(percent);
         if (connectionOK && pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
             result.enacted = true;
