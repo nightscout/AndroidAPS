@@ -436,9 +436,22 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
         detailedBolusInfo.insulin = configBuilderPlugin.applyBolusConstraints(detailedBolusInfo.insulin);
         if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
             DetailedBolusInfoStorage.add(detailedBolusInfo); // will be picked up on reading history
+            int preferencesSpeed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+            int speed = 12;
+            switch (preferencesSpeed) {
+                case 0:
+                    speed = 12;
+                    break;
+                case 1:
+                    speed = 30;
+                    break;
+                case 2:
+                    speed = 60;
+                    break;
+            }
             // v2 stores end time for bolus, we need to adjust time
-            // delivery speed is 12 U/min
-            detailedBolusInfo.date += detailedBolusInfo.insulin / 12d * 60 * 1000;
+            // default delivery speed is 12 U/min
+            detailedBolusInfo.date += detailedBolusInfo.insulin / speed * 60d * 1000;
             // clean carbs to prevent counting them as twice because they will picked up as another record
             // I don't think it's necessary to copy DetailedBolusInfo right now for carbs records
             double carbs = detailedBolusInfo.carbs;

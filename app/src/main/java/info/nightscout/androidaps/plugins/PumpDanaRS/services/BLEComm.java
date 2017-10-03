@@ -695,6 +695,7 @@ public class BLEComm {
         Runnable task = new DisconnectRunnable();
         final int sec = 5;
         scheduledDisconnection = worker.schedule(task, sec, TimeUnit.SECONDS);
+        log.debug("Disconnection scheduled");
     }
 
 }

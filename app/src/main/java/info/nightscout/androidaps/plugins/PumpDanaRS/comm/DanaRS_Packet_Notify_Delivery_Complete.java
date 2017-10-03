@@ -17,6 +17,7 @@ public class DanaRS_Packet_Notify_Delivery_Complete extends DanaRS_Packet {
 
     private static Treatment t;
     private static double amount;
+    public static boolean done;
 
     public DanaRS_Packet_Notify_Delivery_Complete() {
         super();
@@ -28,6 +29,7 @@ public class DanaRS_Packet_Notify_Delivery_Complete extends DanaRS_Packet {
         this();
         this.amount = amount;
         this.t = t;
+        done = false;
     }
 
     @Override
@@ -40,6 +42,7 @@ public class DanaRS_Packet_Notify_Delivery_Complete extends DanaRS_Packet {
             bolusingEvent.status = String.format(MainApp.sResources.getString(R.string.bolusdelivering), deliveredInsulin);
             bolusingEvent.t = t;
             bolusingEvent.percent = Math.min((int) (deliveredInsulin / amount * 100), 100);
+            done = true;
             MainApp.bus().post(bolusingEvent);
         }
 

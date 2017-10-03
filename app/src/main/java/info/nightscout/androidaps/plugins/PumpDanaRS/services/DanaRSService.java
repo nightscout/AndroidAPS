@@ -214,7 +214,7 @@ public class DanaRSService extends Service {
                 t.insulin = 0d;
                 return false;
             }
-            while (!stop.stopped && !start.failed) {
+            while (!stop.stopped && !start.failed && !complete.done) {
                 SystemClock.sleep(100);
                 if ((System.currentTimeMillis() - progress.lastReceive) > 5 * 1000L) { // if i didn't receive status for more than 5 sec expecting broken comm
                     stop.stopped = true;
@@ -225,6 +225,7 @@ public class DanaRSService extends Service {
         }
         SystemClock.sleep(3000);
         bolusingTreatment = null;
+        DanaRSPlugin.connectIfNotConnected("ReadHistoryAfterBolus");
         loadEvents();
         return true;
     }
