@@ -5,4 +5,9 @@ package info.nightscout.androidaps.events;
  */
 
 public class EventReloadTreatmentData {
+    public Object next;
+
+    public EventReloadTreatmentData(Object next) {
+        this.next = next;
+    }
 }

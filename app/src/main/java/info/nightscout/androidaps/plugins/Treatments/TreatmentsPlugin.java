@@ -291,6 +291,7 @@ public class TreatmentsPlugin implements PluginBase, TreatmentsInterface {
         initializeTreatmentData();
         initializeExtendedBolusData();
         updateTotalIOBTreatments();
+        MainApp.bus().post(ev.next);
     }
 
     @Subscribe

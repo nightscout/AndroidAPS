@@ -663,8 +663,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventTreatmentChange");
-                MainApp.bus().post(new EventReloadTreatmentData());
-                MainApp.bus().post(new EventTreatmentChange());
+                MainApp.bus().post(new EventReloadTreatmentData(new EventTreatmentChange()));
                 if (earliestDataChange != null)
                     MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
@@ -1365,8 +1364,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         class PostRunnable implements Runnable {
             public void run() {
                 log.debug("Firing EventExtendedBolusChange");
-                MainApp.bus().post(new EventReloadTreatmentData());
-                MainApp.bus().post(new EventExtendedBolusChange());
+                MainApp.bus().post(new EventReloadTreatmentData(new EventExtendedBolusChange()));
                 if (earliestDataChange != null)
                     MainApp.bus().post(new EventNewHistoryData(earliestDataChange));
                 earliestDataChange = null;
