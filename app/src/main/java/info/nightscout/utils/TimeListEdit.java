@@ -41,17 +41,20 @@ public class TimeListEdit {
 
     final int ONEHOURINSECONDS = 60 * 60;
 
-    LinearLayout layout;
+    private LinearLayout layout;
+    private View[] intervals = new View[24];
+    private Spinner[] spinners = new Spinner[24];
 
-    Context context;
-    View view;
-    int resLayoutId;
-    String label;
-    JSONArray data1;
-    JSONArray data2;
-    double step;
-    NumberFormat formatter;
-    Runnable save;
+
+    private Context context;
+    private View view;
+    private int resLayoutId;
+    private String label;
+    private JSONArray data1;
+    private JSONArray data2;
+    private double step;
+    private NumberFormat formatter;
+    private Runnable save;
 
     public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, double step, NumberFormat formatter, Runnable save) {
         this.context = context;
@@ -68,7 +71,6 @@ public class TimeListEdit {
 
     private void buildView() {
         log.debug("buildView start");
-        LayoutInflater inflater = LayoutInflater.from(context);
         layout = (LinearLayout) view.findViewById(resLayoutId);
 
         layout.removeAllViews();
@@ -84,136 +86,7 @@ public class TimeListEdit {
         layout.addView(textlabel);
 
         for (int i = 0; i < itemsCount(); i++) {
-            View childview = inflater.inflate(R.layout.timelistedit_element, layout, false);
-            //childview.setId(View.generateViewId());
-            final Spinner timeSpinner = (Spinner) childview.findViewById(R.id.timelistedit_time);
-            //timeSpinner.setId(View.generateViewId());
-            int previous = i == 0 ? -1 * ONEHOURINSECONDS : secondFromMidnight(i - 1);
-            int next = i == itemsCount() - 1 ? 24 * ONEHOURINSECONDS : secondFromMidnight(i + 1);
-            if (i == 0) next = ONEHOURINSECONDS;
-            fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
-
-            final int fixedPos = i;
-            final NumberPicker editText1 = (NumberPicker) childview.findViewById(R.id.timelistedit_edit1);
-
-            TextWatcher tw1 = new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    log.debug("aaaa");
-                    editItem(fixedPos, secondFromMidnight(fixedPos), SafeParse.stringToDouble(editText1.getText()), value2(fixedPos));
-                    callSave();
-                    log();
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                }
-            };
-
-            editText1.setParams(value1(i), 0.1d, 100d, step, formatter, false, tw1);
-
-            final NumberPicker editText2 = (NumberPicker) childview.findViewById(R.id.timelistedit_edit2);
-
-            TextWatcher tw2 = new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    log.debug("bbbbb");
-                    editItem(fixedPos, secondFromMidnight(fixedPos), value1(fixedPos), SafeParse.stringToDouble(editText2.getText()));
-                    callSave();
-                    log();
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                }
-            };
-            editText2.setParams(value2(i), 0.1d, 100d, step, formatter, false, tw2);
-            if (data2 == null) {
-                editText2.setVisibility(View.GONE);
-            }
-
-
-            ImageView addbutton = (ImageView) childview.findViewById(R.id.timelistedit_add);
-            //addbutton.setId(View.generateViewId());
-            ImageView removebutton = (ImageView) childview.findViewById(R.id.timelistedit_remove);
-            //removebutton.setId(View.generateViewId());
-
-            if (itemsCount() == 1 || i == 0) {
-                removebutton.setVisibility(View.INVISIBLE);
-            }
-
-            if (itemsCount() >= 24 || secondFromMidnight(i) >= 82800) {
-                addbutton.setVisibility(View.INVISIBLE);
-            }
-
-            addbutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    log.debug("ccccc");
-                    layout.removeAllViews();
-                    int seconds = secondFromMidnight(fixedPos);
-                    addItem(fixedPos, seconds, 0, 0);
-                    // for here for the rest of values
-                    for (int i = fixedPos + 1; i < itemsCount(); i++) {
-                        if (secondFromMidnight(i - 1) >= secondFromMidnight(i)) {
-                            editItem(i, secondFromMidnight(i - 1) + ONEHOURINSECONDS, value1(i), value2(i));
-                        }
-                    }
-                    while (itemsCount() > 24 || secondFromMidnight(itemsCount() - 1) > 23 * ONEHOURINSECONDS)
-                        removeItem(itemsCount() - 1);
-                    callSave();
-                    log();
-                    buildView();
-                }
-            });
-
-            removebutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    log.debug("dddd");
-                    layout.removeAllViews();
-                    removeItem(fixedPos);
-                    callSave();
-                    log();
-                    buildView();
-                }
-            });
-
-            timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                                      @Override
-                                                      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                                          log.debug("eeeeee");
-                                                          layout.removeAllViews();
-                                                          int seconds = DateUtil.toSeconds(timeSpinner.getSelectedItem().toString());
-                                                          editItem(fixedPos, seconds, value1(fixedPos), value2(fixedPos));
-                                                          log();
-                                                          callSave();
-                                                          buildView();
-                                                      }
-
-                                                      @Override
-                                                      public void onNothingSelected(AdapterView<?> parent) {
-                                                          log.debug("fffff");
-                                                          layout.removeAllViews();
-                                                          editItem(fixedPos, 0, value1(fixedPos), value2(fixedPos));
-                                                          log();
-                                                          callSave();
-                                                          buildView();
-                                                      }
-                                                  }
-            );
+            View childview = intervals[i] = buildInterval(i);
             layout.addView(childview);
         }
 
@@ -239,7 +112,138 @@ public class TimeListEdit {
         log.debug("buildView end");
     }
 
-    public void fillSpinner(Spinner spinner, int secondsFromMidnight, int previous, int next) {
+    private View buildInterval(int i) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View childview = inflater.inflate(R.layout.timelistedit_element, layout, false);
+        final Spinner timeSpinner = spinners[i] = (Spinner) childview.findViewById(R.id.timelistedit_time);
+        int previous = i == 0 ? -1 * ONEHOURINSECONDS : secondFromMidnight(i - 1);
+        int next = i == itemsCount() - 1 ? 24 * ONEHOURINSECONDS : secondFromMidnight(i + 1);
+        if (i == 0) next = ONEHOURINSECONDS;
+        fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
+
+        final int fixedPos = i;
+        final NumberPicker editText1 = (NumberPicker) childview.findViewById(R.id.timelistedit_edit1);
+
+        TextWatcher tw1 = new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                log.debug("aaaa");
+                editItem(fixedPos, secondFromMidnight(fixedPos), SafeParse.stringToDouble(editText1.getText()), value2(fixedPos));
+                callSave();
+                log();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+        };
+
+        editText1.setParams(value1(i), 0.1d, 100d, step, formatter, false, tw1);
+
+        final NumberPicker editText2 = (NumberPicker) childview.findViewById(R.id.timelistedit_edit2);
+
+        TextWatcher tw2 = new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                log.debug("bbbbb");
+                editItem(fixedPos, secondFromMidnight(fixedPos), value1(fixedPos), SafeParse.stringToDouble(editText2.getText()));
+                callSave();
+                log();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+        };
+        editText2.setParams(value2(i), 0.1d, 100d, step, formatter, false, tw2);
+        if (data2 == null) {
+            editText2.setVisibility(View.GONE);
+        }
+
+
+        ImageView addbutton = (ImageView) childview.findViewById(R.id.timelistedit_add);
+        ImageView removebutton = (ImageView) childview.findViewById(R.id.timelistedit_remove);
+
+        if (itemsCount() == 1 || i == 0) {
+            removebutton.setVisibility(View.INVISIBLE);
+        }
+
+        if (itemsCount() >= 24 || secondFromMidnight(i) >= 82800) {
+            addbutton.setVisibility(View.INVISIBLE);
+        }
+
+        addbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                log.debug("ccccc");
+                layout.removeAllViews();
+                int seconds = secondFromMidnight(fixedPos);
+                addItem(fixedPos, seconds, 0, 0);
+                // for here for the rest of values
+                for (int i = fixedPos + 1; i < itemsCount(); i++) {
+                    if (secondFromMidnight(i - 1) >= secondFromMidnight(i)) {
+                        editItem(i, secondFromMidnight(i - 1) + ONEHOURINSECONDS, value1(i), value2(i));
+                    }
+                }
+                while (itemsCount() > 24 || secondFromMidnight(itemsCount() - 1) > 23 * ONEHOURINSECONDS)
+                    removeItem(itemsCount() - 1);
+                callSave();
+                log();
+                buildView();
+            }
+        });
+
+        removebutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                log.debug("dddd");
+                layout.removeAllViews();
+                removeItem(fixedPos);
+                callSave();
+                log();
+                buildView();
+            }
+        });
+
+        addSpinnerListener(timeSpinner, i);
+        return childview;
+    }
+
+    private void addSpinnerListener(final Spinner timeSpinner, final int fixedPos) {
+        timeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                                  @Override
+                                                  public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                                      log.debug("eeeeee");
+                                                      int seconds = DateUtil.toSeconds(timeSpinner.getSelectedItem().toString());
+                                                      editItem(fixedPos, seconds, value1(fixedPos), value2(fixedPos));
+                                                      log();
+                                                      callSave();
+                                                  }
+
+                                                  @Override
+                                                  public void onNothingSelected(AdapterView<?> parent) {
+                                                      log.debug("fffff");
+                                                      editItem(fixedPos, 0, value1(fixedPos), value2(fixedPos));
+                                                      log();
+                                                      callSave();
+                                                  }
+                                              }
+        );
+    }
+
+    private void fillSpinner(Spinner spinner, int secondsFromMidnight, int previous, int next) {
         int posInList = 0;
         ArrayList<CharSequence> timeList = new ArrayList<>();
         int pos = 0;
@@ -255,11 +259,11 @@ public class TimeListEdit {
         spinner.setSelection(posInList, false);
     }
 
-    public int itemsCount() {
+    private int itemsCount() {
         return data1.length();
     }
 
-    public int secondFromMidnight(int index) {
+    private int secondFromMidnight(int index) {
         try {
             JSONObject item = (JSONObject) data1.get(index);
             if (item.has("timeAsSeconds")) {
@@ -277,7 +281,7 @@ public class TimeListEdit {
         return 0;
     }
 
-    public double value1(int index) {
+    private double value1(int index) {
         try {
             JSONObject item = (JSONObject) data1.get(index);
             if (item.has("value")) {
@@ -289,7 +293,7 @@ public class TimeListEdit {
         return 0d;
     }
 
-    public double value2(int index) {
+    private double value2(int index) {
         if (data2 != null) {
             try {
                 JSONObject item = (JSONObject) data2.get(index);
@@ -303,7 +307,7 @@ public class TimeListEdit {
         return 0d;
     }
 
-    public void editItem(int index, int timeAsSeconds, double value1, double value2) {
+    private void editItem(int index, int timeAsSeconds, double value1, double value2) {
         try {
             String time;
             int hour = timeAsSeconds / 60 / 60;
@@ -328,7 +332,7 @@ public class TimeListEdit {
 
     }
 
-    public void addItem(int index, int timeAsSeconds, double value1, double value2) {
+    private void addItem(int index, int timeAsSeconds, double value1, double value2) {
         try {
             // shift data
             for (int i = data1.length(); i > index; i--) {
@@ -344,19 +348,19 @@ public class TimeListEdit {
 
     }
 
-    public void removeItem(int index) {
+    private void removeItem(int index) {
         data1.remove(index);
         if (data2 != null)
             data2.remove(index);
     }
 
-    void log() {
+    private void log() {
         for (int i = 0; i < data1.length(); i++) {
             log.debug(i + ": @" + DateUtil.timeStringFromSeconds(secondFromMidnight(i)) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
         }
     }
 
-    void callSave() {
+    private void callSave() {
         if (save != null) save.run();
     }
 }
