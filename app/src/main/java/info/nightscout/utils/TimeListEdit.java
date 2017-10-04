@@ -39,16 +39,15 @@ import info.nightscout.androidaps.R;
 public class TimeListEdit {
     private static Logger log = LoggerFactory.getLogger(TimeListEdit.class);
 
-    final int ONEHOURINSECONDS = 60 * 60;
+    private final int ONEHOURINSECONDS = 60 * 60;
 
-    private LinearLayout layout;
     private View[] intervals = new View[24];
     private Spinner[] spinners = new Spinner[24];
     private NumberPicker[] numberPickers1 = new NumberPicker[24];
     private NumberPicker[] numberPickers2 = new NumberPicker[24];
     private ImageView[] addButtons = new ImageView[24];
     private ImageView[] removeButtons = new ImageView[24];
-    ImageView finalAdd;
+    private ImageView finalAdd;
 
     private Context context;
     private View view;
@@ -74,11 +73,11 @@ public class TimeListEdit {
     }
 
     private void buildView() {
-        layout = (LinearLayout) view.findViewById(resLayoutId);
+        LinearLayout layout = (LinearLayout) view.findViewById(resLayoutId);
 
         TextView textlabel = new TextView(context);
         textlabel.setText(label);
-        textlabel.setGravity(Gravity.LEFT);
+        textlabel.setGravity(Gravity.START);
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         llp.setMargins(10, 0, 0, 0); // llp.setMargins(left, top, right, bottom);
         textlabel.setLayoutParams(llp);
@@ -99,7 +98,6 @@ public class TimeListEdit {
             addButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    log.debug("ccccc");
                     int seconds = secondFromMidnight(fixedPos);
                     addItem(fixedPos, seconds, 0, 0);
                     // for here for the rest of values
@@ -119,7 +117,6 @@ public class TimeListEdit {
             removeButtons[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    log.debug("dddd");
                     removeItem(fixedPos);
                     callSave();
                     log();
@@ -131,7 +128,6 @@ public class TimeListEdit {
                     new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            log.debug("eeeeee");
                             int seconds = DateUtil.toSeconds(spinners[fixedPos].getSelectedItem().toString());
                             editItem(fixedPos, seconds, value1(fixedPos), value2(fixedPos));
                             log();
@@ -148,7 +144,6 @@ public class TimeListEdit {
            numberPickers1[i].setTextWatcher(new TextWatcher() {
                 @Override
                 public void afterTextChanged(Editable s) {
-                    log.debug("aaaa");
                     editItem(fixedPos, secondFromMidnight(fixedPos), SafeParse.stringToDouble(numberPickers1[fixedPos].getText()), value2(fixedPos));
                     callSave();
                     log();
@@ -169,7 +164,6 @@ public class TimeListEdit {
             numberPickers2[i].setTextWatcher(new TextWatcher() {
                 @Override
                 public void afterTextChanged(Editable s) {
-                    log.debug("bbbbb");
                     editItem(fixedPos, secondFromMidnight(fixedPos), value1(fixedPos), SafeParse.stringToDouble(numberPickers2[fixedPos].getText()));
                     callSave();
                     log();
@@ -200,7 +194,6 @@ public class TimeListEdit {
         finalAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                log.debug("gggggggg");
                 addItem(itemsCount(), itemsCount() > 0 ? secondFromMidnight(itemsCount() - 1) + ONEHOURINSECONDS : 0, 0, 0);
                 callSave();
                 log();
@@ -238,8 +231,6 @@ public class TimeListEdit {
         int next = i == itemsCount() - 1 ? 24 * ONEHOURINSECONDS : secondFromMidnight(i + 1);
         if (i == 0) next = ONEHOURINSECONDS;
         fillSpinner(timeSpinner, secondFromMidnight(i), previous, next);
-
-        final int fixedPos = i;
 
         editText1.setParams(value1(i), 0.1d, 100d, step, formatter, false);
         editText2.setParams(value2(i), 0.1d, 100d, step, formatter, false);
