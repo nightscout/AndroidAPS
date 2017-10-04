@@ -38,13 +38,15 @@ public class Profile {
     JSONArray basal;
     private LongSparseArray<Double> basal_v = null; // oldest at index 0
     JSONArray targetLow;
+    private LongSparseArray<Double> targetLow_v = null; // oldest at index 0
     JSONArray targetHigh;
+    private LongSparseArray<Double> targetHigh_v = null; // oldest at index 0
 
     int percentage = 100;
     int timeshift = 0;
 
     public Profile(JSONObject json, String units) {
-        this(json);
+        this(json, 100, 0);
         if (this.units == null) {
             if (units != null)
                 this.units = units;
@@ -56,12 +58,8 @@ public class Profile {
     }
 
     public Profile(JSONObject json, int percentage, int timeshift) {
-        this(json);
         this.percentage = percentage;
         this.timeshift = timeshift;
-    }
-
-    public Profile(JSONObject json) {
         this.json = json;
         try {
             if (json.has("units"))
@@ -157,16 +155,24 @@ public class Profile {
     }
 
     private LongSparseArray<Double> convertToSparseArray(JSONArray array) {
+        double multiplier = getMultiplier(array);
+
         LongSparseArray<Double> sparse = new LongSparseArray<>();
         for (Integer index = 0; index < array.length(); index++) {
             try {
                 JSONObject o = array.getJSONObject(index);
-                long tas = o.getLong("timeAsSeconds");
-                Double value = o.getDouble("value");
+                long tas = getShitfTimeSecs((int) o.getLong("timeAsSeconds"));
+                Double value = o.getDouble("value") * multiplier;
                 sparse.put(tas, value);
             } catch (JSONException e) {
                 log.error("Unhandled exception", e);
             }
+        }
+
+        // check if start is at 0 (midnight)
+        // and add last value before midnight if not
+        if (sparse.keyAt(0) != 0) {
+            sparse.put(0, sparse.valueAt(sparse.size() - 1));
         }
         return sparse;
     }
@@ -192,10 +198,10 @@ public class Profile {
     }
 
     Integer getShitfTimeSecs(Integer originalTime) {
-        int offset = -(timeshift % 24) + 24;
-        Integer shiftedTime = originalTime + offset * 60 * 60;
+        Integer shiftedTime = originalTime + timeshift * 60 * 60;
         shiftedTime = shiftedTime % (24 * 60 * 60);
-        //log.debug("(Sec) Original time: " + new Date(originalTime).toLocaleString() + " ShiftedTime: " + new Date(shiftedTime).toLocaleString());
+        if (timeshift != 0)
+            log.debug("(Sec) Original time: " + originalTime + " ShiftedTime: " + shiftedTime);
         return shiftedTime;
     }
 
@@ -234,19 +240,16 @@ public class Profile {
     private Double getValueToTime(LongSparseArray<Double> array, Integer timeAsSeconds) {
         Double lastValue = null;
 
-        long shiftedTime = getShitfTimeSecs(timeAsSeconds);
-        double multiplier = getMultiplier(array);
-
         for (Integer index = 0; index < array.size(); index++) {
             long tas = array.keyAt(index);
             double value = array.valueAt(index);
             if (lastValue == null) lastValue = value;
-            if (shiftedTime < tas) {
+            if (timeAsSeconds < tas) {
                 break;
             }
             lastValue = value;
         }
-        return lastValue * multiplier;
+        return lastValue;
     }
 
     private String format_HH_MM(Integer timeAsSeconds) {
@@ -258,26 +261,20 @@ public class Profile {
         return time;
     }
 
-    private String getValuesList(JSONArray array, JSONArray array2, DecimalFormat format, String units) {
+    private String getValuesList(LongSparseArray<Double> array, LongSparseArray<Double> array2, DecimalFormat format, String units) {
         String retValue = "";
 
-        for (Integer index = 0; index < array.length(); index++) {
-            try {
-                JSONObject o = array.getJSONObject(index);
-                retValue += format_HH_MM(getShitfTimeSecs(o.getInt("timeAsSeconds")));
-                retValue += "    ";
-                retValue += format.format(getMultiplier(array) * o.getDouble("value"));
-                if (array2 != null) {
-                    JSONObject o2 = array2.getJSONObject(index);
-                    retValue += " - ";
-                    retValue += format.format(getMultiplier(array2) * o2.getDouble("value"));
-                }
-                retValue += " " + units;
-                if (index + 1 < array.length())
-                    retValue += "\n";
-            } catch (JSONException e) {
-                log.error("Unhandled exception", e);
+        for (Integer index = 0; index < array.size(); index++) {
+            retValue += format_HH_MM((int) array.keyAt(index));
+            retValue += "    ";
+            retValue += format.format(array.valueAt(index));
+            if (array2 != null) {
+                retValue += " - ";
+                retValue += format.format(array2.valueAt(index));
             }
+            retValue += " " + units;
+            if (index + 1 < array.size())
+                retValue += "\n";
         }
         return retValue;
     }
@@ -297,7 +294,7 @@ public class Profile {
     }
 
     public String getIsfList() {
-        return getValuesList(isf, null, new DecimalFormat("0.0"), getUnits() + "/U");
+        return getValuesList(isf_v, null, new DecimalFormat("0.0"), getUnits() + "/U");
     }
 
     public Double getIc() {
@@ -315,7 +312,7 @@ public class Profile {
     }
 
     public String getIcList() {
-        return getValuesList(ic, null, new DecimalFormat("0.0"), " g/U");
+        return getValuesList(ic_v, null, new DecimalFormat("0.0"), " g/U");
     }
 
     public Double getBasal() {
@@ -333,7 +330,7 @@ public class Profile {
     }
 
     public String getBasalList() {
-        return getValuesList(basal, null, new DecimalFormat("0.00"), "U");
+        return getValuesList(basal_v, null, new DecimalFormat("0.00"), "U");
     }
 
     public class BasalValue {
@@ -347,20 +344,14 @@ public class Profile {
     }
 
     public BasalValue[] getBasalValues() {
-        try {
-            BasalValue[] ret = new BasalValue[basal.length()];
+        BasalValue[] ret = new BasalValue[basal_v.size()];
 
-            for (Integer index = 0; index < basal.length(); index++) {
-                JSONObject o = basal.getJSONObject(index);
-                Integer tas = getShitfTimeSecs(o.getInt("timeAsSeconds"));
-                Double value = getMultiplier(basal) * o.getDouble("value");
-                ret[index] = new BasalValue(tas, value);
-            }
-            return ret;
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+        for (Integer index = 0; index < basal_v.size(); index++) {
+            Integer tas = (int) basal_v.keyAt(index);
+            Double value = basal_v.valueAt(index);
+            ret[index] = new BasalValue(tas, value);
         }
-        return new BasalValue[0];
+        return ret;
     }
 
     public Double getTargetLow() {
@@ -372,7 +363,9 @@ public class Profile {
     }
 
     public Double getTargetLow(Integer timeAsSeconds) {
-        return getValueToTime(targetLow, timeAsSeconds);
+        if (targetLow_v == null)
+            targetLow_v = convertToSparseArray(targetLow);
+        return getValueToTime(targetLow_v, timeAsSeconds);
     }
 
     public Double getTargetHigh() {
@@ -384,11 +377,13 @@ public class Profile {
     }
 
     public Double getTargetHigh(Integer timeAsSeconds) {
-        return getValueToTime(targetHigh, timeAsSeconds);
+        if (targetHigh_v == null)
+            targetHigh_v = convertToSparseArray(targetHigh);
+        return getValueToTime(targetHigh_v, timeAsSeconds);
     }
 
     public String getTargetList() {
-        return getValuesList(targetLow, targetHigh, new DecimalFormat("0.0"), getUnits());
+        return getValuesList(targetLow_v, targetHigh_v, new DecimalFormat("0.0"), getUnits());
     }
 
     public double getMaxDailyBasal() {
