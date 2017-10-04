@@ -340,7 +340,6 @@
     <string name="pumpshutdown">Pumpa vypnuta</string>
     <string name="resend_all_data">Znovu poslat všechny data</string>
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze</string>
-    <string name="send_to_pump">POSLAT DO PUMPY</string>
     <string name="target_range">Cílový rozsah:</string>
     <string name="timeshift_hint">Čas v hodinách, o který bude bazál posunutý.</string>
     <string name="units">Jednotky:</string>

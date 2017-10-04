@@ -351,8 +351,7 @@
     <string name="button3">Бутон 3</string>
     <string name="percentagefactor_hint">% с който базовият профил ще бъде променен.</string>
     <string name="timeshift_hint">Точен брой часове, с които ще бъде изместен профила!</string>
-    <string name="send_to_pump">ИЗПРАТИ КЪМ ПОМПАТА</string>
-    <string name="units">Единици:</string>
+     <string name="units">Единици:</string>
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммол/л</string>
     <string name="dia">DIA:</string>
