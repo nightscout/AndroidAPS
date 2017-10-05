@@ -1,22 +1,17 @@
 package info.nightscout.utils;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -42,7 +37,7 @@ public class TimeListEdit {
     private final int ONEHOURINSECONDS = 60 * 60;
 
     private View[] intervals = new View[24];
-    private Spinner[] spinners = new Spinner[24];
+    private SpinnerHelper[] spinners = new SpinnerHelper[24];
     private NumberPicker[] numberPickers1 = new NumberPicker[24];
     private NumberPicker[] numberPickers2 = new NumberPicker[24];
     private ImageView[] addButtons = new ImageView[24];
@@ -88,7 +83,7 @@ public class TimeListEdit {
         for (int i = 0; i < 24; i++) {
             LayoutInflater inflater = LayoutInflater.from(context);
             View childview = intervals[i] = inflater.inflate(R.layout.timelistedit_element, layout, false);
-            spinners[i] = (Spinner) childview.findViewById(R.id.timelistedit_time);
+            spinners[i] = new SpinnerHelper(childview.findViewById(R.id.timelistedit_time));
             numberPickers1[i] = (NumberPicker) childview.findViewById(R.id.timelistedit_edit1);
             numberPickers2[i] = (NumberPicker) childview.findViewById(R.id.timelistedit_edit2);
             addButtons[i] = (ImageView) childview.findViewById(R.id.timelistedit_add);
@@ -221,7 +216,7 @@ public class TimeListEdit {
     }
 
     private View buildInterval(int i) {
-        Spinner timeSpinner = spinners[i];
+        SpinnerHelper timeSpinner = spinners[i];
         View childview = intervals[i];
         final NumberPicker editText1 = numberPickers1[i];
         final NumberPicker editText2 = numberPickers2[i];
@@ -254,7 +249,7 @@ public class TimeListEdit {
         return childview;
     }
 
-    private void fillSpinner(Spinner spinner, int secondsFromMidnight, int previous, int next) {
+    private void fillSpinner(SpinnerHelper spinner, int secondsFromMidnight, int previous, int next) {
         int posInList = 0;
         ArrayList<CharSequence> timeList = new ArrayList<>();
         int pos = 0;
@@ -267,10 +262,7 @@ public class TimeListEdit {
         ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(context,
                 R.layout.spinner_centered, timeList);
         spinner.setAdapter(adapter);
-        AdapterView.OnItemSelectedListener l = spinner.getOnItemSelectedListener();
-        spinner.setOnItemSelectedListener(null);
         spinner.setSelection(posInList, false);
-        spinner.setOnItemSelectedListener(l);
     }
 
     private int itemsCount() {
@@ -369,8 +361,10 @@ public class TimeListEdit {
     }
 
     private void log() {
-        for (int i = 0; i < data1.length(); i++) {
-            log.debug(i + ": @" + DateUtil.timeStringFromSeconds(secondFromMidnight(i)) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
+        if (log.isDebugEnabled()) {
+            for (int i = 0; i < data1.length(); i++) {
+                log.debug(i + ": @" + DateUtil.timeStringFromSeconds(secondFromMidnight(i)) + " " + value1(i) + (data2 != null ? " " + value2(i) : ""));
+            }
         }
     }
 
