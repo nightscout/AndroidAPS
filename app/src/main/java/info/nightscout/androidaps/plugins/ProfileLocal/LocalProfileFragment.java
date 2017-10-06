@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import org.slf4j.Logger;
@@ -134,6 +135,7 @@ public class LocalProfileFragment extends SubscriberFragment {
             return layout;
         } catch (Exception e) {
             log.error("Unhandled exception: ", e);
+            Crashlytics.logException(e);
         }
 
         return null;
