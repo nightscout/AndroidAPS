@@ -4,22 +4,28 @@
         android:key="others"
         android:title="@string/othersettings_title">
         <PreferenceScreen
-            android:title="@string/fillbolus_title">
+            android:title="@string/default_temptargets">
             <EditTextPreference
-                android:title="@string/button1"
-                android:key="fill_button1"
-                android:defaultValue="0.3"
-                android:inputType="numberDecimal">
+                android:title="@string/eatingsoon_duration"
+                android:key="@string/key_eatingsoon_duration"
+                android:defaultValue="0"
+                android:inputType="number">
             </EditTextPreference>
             <EditTextPreference
-                android:title="@string/button2"
-                android:key="fill_button2"
+                android:title="@string/eatingsoon_target"
+                android:key="@string/key_eatingsoon_target"
                 android:defaultValue="0"
                 android:inputType="numberDecimal">
             </EditTextPreference>
             <EditTextPreference
-                android:title="@string/button3"
-                android:key="fill_button3"
+                android:title="@string/activity_duration"
+                android:key="@string/key_activity_duration"
+                android:defaultValue="0"
+                android:inputType="number">
+            </EditTextPreference>
+            <EditTextPreference
+                android:title="@string/activity_target"
+                android:key="@string/key_activity_target"
                 android:defaultValue="0"
                 android:inputType="numberDecimal">
             </EditTextPreference>
