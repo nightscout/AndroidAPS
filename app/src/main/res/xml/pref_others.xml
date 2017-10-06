@@ -31,6 +31,27 @@
             </EditTextPreference>
         </PreferenceScreen>
         <PreferenceScreen
+            android:title="@string/fillbolus_title">
+            <EditTextPreference
+                android:title="@string/button1"
+                android:key="fill_button1"
+                android:defaultValue="0.3"
+                android:inputType="numberDecimal">
+            </EditTextPreference>
+            <EditTextPreference
+                android:title="@string/button2"
+                android:key="fill_button2"
+                android:defaultValue="0"
+                android:inputType="numberDecimal">
+            </EditTextPreference>
+            <EditTextPreference
+                android:title="@string/button3"
+                android:key="fill_button3"
+                android:defaultValue="0"
+                android:inputType="numberDecimal">
+            </EditTextPreference>
+        </PreferenceScreen>
+        <PreferenceScreen
             android:title="@string/prefs_range_title"
             android:summary= "@string/prefs_range_summary">
             <EditTextPreference
