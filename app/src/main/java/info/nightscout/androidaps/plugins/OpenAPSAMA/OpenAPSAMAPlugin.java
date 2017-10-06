@@ -39,14 +39,23 @@ import info.nightscout.utils.ToastUtils;
 public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSAMAPlugin.class);
 
+    private static OpenAPSAMAPlugin openAPSAMAPlugin;
+
+    public static OpenAPSAMAPlugin getPlugin() {
+        if (openAPSAMAPlugin == null) {
+            openAPSAMAPlugin = new OpenAPSAMAPlugin();
+        }
+        return openAPSAMAPlugin;
+    }
+
     // last values
     DetermineBasalAdapterAMAJS lastDetermineBasalAdapterAMAJS = null;
     Date lastAPSRun = null;
     DetermineBasalResultAMA lastAPSResult = null;
     AutosensResult lastAutosensResult = null;
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = true;
 
     @Override
     public String getName() {
@@ -196,9 +205,9 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
         maxBasal = verifyHardLimits(maxBasal, "max_basal", 0.1, 10);
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
-        if (!checkOnlyHardLimits(profile.getIc(profile.secondsFromMidnight()), "carbratio", 2, 100))
+        if (!checkOnlyHardLimits(profile.getIc(Profile.secondsFromMidnight()), "carbratio", 2, 100))
             return;
-        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900))
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;

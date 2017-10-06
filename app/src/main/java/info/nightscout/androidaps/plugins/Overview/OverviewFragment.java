@@ -33,6 +33,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.jjoe64.graphview.GraphView;
@@ -133,12 +134,6 @@ import info.nightscout.utils.ToastUtils;
 public class OverviewFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     private static Logger log = LoggerFactory.getLogger(OverviewFragment.class);
 
-    private static OverviewPlugin overviewPlugin = new OverviewPlugin();
-
-    public static OverviewPlugin getPlugin() {
-        return overviewPlugin;
-    }
-
     TextView timeView;
     TextView bgView;
     TextView arrowView;
@@ -214,136 +209,142 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        //check screen width
-        final DisplayMetrics dm = new DisplayMetrics();
-        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int screen_width = dm.widthPixels;
-        int screen_height = dm.heightPixels;
-        smallWidth = screen_width < Constants.SMALL_WIDTH;
-        smallHeight = screen_height < Constants.SMALL_HEIGHT;
-        boolean landscape = screen_height < screen_width;
+        try {
+            //check screen width
+            final DisplayMetrics dm = new DisplayMetrics();
+            getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
+            int screen_width = dm.widthPixels;
+            int screen_height = dm.heightPixels;
+            smallWidth = screen_width < Constants.SMALL_WIDTH;
+            smallHeight = screen_height < Constants.SMALL_HEIGHT;
+            boolean landscape = screen_height < screen_width;
 
-        View view;
+            View view;
 
-        if (MainApp.sResources.getBoolean(R.bool.isTablet) && BuildConfig.NSCLIENTOLNY) {
-            view = inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false);
-        } else if (BuildConfig.NSCLIENTOLNY) {
-            view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
-            shorttextmode = true;
-        } else if (smallHeight || landscape) {
-            view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
-        } else {
-            view = inflater.inflate(R.layout.overview_fragment, container, false);
-        }
-
-        timeView = (TextView) view.findViewById(R.id.overview_time);
-        bgView = (TextView) view.findViewById(R.id.overview_bg);
-        arrowView = (TextView) view.findViewById(R.id.overview_arrow);
-        if (smallWidth) {
-            arrowView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35);
-        }
-        timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
-        deltaView = (TextView) view.findViewById(R.id.overview_delta);
-        avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
-        baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
-        extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
-        activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
-        pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
-        pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
-        openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
-        uploaderDeviceStatusView = (TextView) view.findViewById(R.id.overview_uploader);
-        loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
-        pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
-
-        pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
-
-        iobView = (TextView) view.findViewById(R.id.overview_iob);
-        cobView = (TextView) view.findViewById(R.id.overview_cob);
-        apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
-        tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
-
-        iage = (TextView) view.findViewById(R.id.careportal_insulinage);
-        cage = (TextView) view.findViewById(R.id.careportal_canulaage);
-        sage = (TextView) view.findViewById(R.id.careportal_sensorage);
-        pbage = (TextView) view.findViewById(R.id.careportal_pbage);
-
-        bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
-        iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
-
-        treatmentButton = (Button) view.findViewById(R.id.overview_treatmentbutton);
-        treatmentButton.setOnClickListener(this);
-        wizardButton = (Button) view.findViewById(R.id.overview_wizardbutton);
-        wizardButton.setOnClickListener(this);
-        acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
-        if (acceptTempButton != null)
-            acceptTempButton.setOnClickListener(this);
-        quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizardbutton);
-        quickWizardButton.setOnClickListener(this);
-        calibrationButton = (Button) view.findViewById(R.id.overview_calibrationbutton);
-        if (calibrationButton != null)
-            calibrationButton.setOnClickListener(this);
-
-        acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
-
-        showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
-        showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
-        showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
-        showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
-        showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
-        showRatiosView = (CheckBox) view.findViewById(R.id.overview_showratios);
-        showPredictionView.setChecked(SP.getBoolean("showprediction", false));
-        showBasalsView.setChecked(SP.getBoolean("showbasals", true));
-        showIobView.setChecked(SP.getBoolean("showiob", false));
-        showCobView.setChecked(SP.getBoolean("showcob", false));
-        showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
-        showRatiosView.setChecked(SP.getBoolean("showratios", false));
-        showPredictionView.setOnCheckedChangeListener(this);
-        showBasalsView.setOnCheckedChangeListener(this);
-        showIobView.setOnCheckedChangeListener(this);
-        showCobView.setOnCheckedChangeListener(this);
-        showDeviationsView.setOnCheckedChangeListener(this);
-        showRatiosView.setOnCheckedChangeListener(this);
-
-        notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
-        notificationsView.setHasFixedSize(true);
-        llm = new LinearLayoutManager(view.getContext());
-        notificationsView.setLayoutManager(llm);
-
-        bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
-        bgGraph.getGridLabelRenderer().reloadStyles();
-        iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
-        iobGraph.getGridLabelRenderer().reloadStyles();
-        iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
-        bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
-        iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
-        iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
-
-        rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
-
-        bgGraph.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                rangeToDisplay += 6;
-                rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
-                SP.putInt(R.string.key_rangetodisplay, rangeToDisplay);
-                updateGUI("rangeChange");
-                return false;
+            if (MainApp.sResources.getBoolean(R.bool.isTablet) && BuildConfig.NSCLIENTOLNY) {
+                view = inflater.inflate(R.layout.overview_fragment_nsclient_tablet, container, false);
+            } else if (BuildConfig.NSCLIENTOLNY) {
+                view = inflater.inflate(R.layout.overview_fragment_nsclient, container, false);
+                shorttextmode = true;
+            } else if (smallHeight || landscape) {
+                view = inflater.inflate(R.layout.overview_fragment_smallheight, container, false);
+            } else {
+                view = inflater.inflate(R.layout.overview_fragment, container, false);
             }
-        });
 
-        lockScreen = (CheckBox) view.findViewById(R.id.overview_lockscreen);
-        if (lockScreen != null) {
-            lockScreen.setChecked(SP.getBoolean("lockscreen", false));
-            lockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            timeView = (TextView) view.findViewById(R.id.overview_time);
+            bgView = (TextView) view.findViewById(R.id.overview_bg);
+            arrowView = (TextView) view.findViewById(R.id.overview_arrow);
+            if (smallWidth) {
+                arrowView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 35);
+            }
+            timeAgoView = (TextView) view.findViewById(R.id.overview_timeago);
+            deltaView = (TextView) view.findViewById(R.id.overview_delta);
+            avgdeltaView = (TextView) view.findViewById(R.id.overview_avgdelta);
+            baseBasalView = (TextView) view.findViewById(R.id.overview_basebasal);
+            extendedBolusView = (TextView) view.findViewById(R.id.overview_extendedbolus);
+            activeProfileView = (TextView) view.findViewById(R.id.overview_activeprofile);
+            pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
+            pumpDeviceStatusView = (TextView) view.findViewById(R.id.overview_pump);
+            openapsDeviceStatusView = (TextView) view.findViewById(R.id.overview_openaps);
+            uploaderDeviceStatusView = (TextView) view.findViewById(R.id.overview_uploader);
+            loopStatusLayout = (LinearLayout) view.findViewById(R.id.overview_looplayout);
+            pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
+
+            pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
+
+            iobView = (TextView) view.findViewById(R.id.overview_iob);
+            cobView = (TextView) view.findViewById(R.id.overview_cob);
+            apsModeView = (TextView) view.findViewById(R.id.overview_apsmode);
+            tempTargetView = (TextView) view.findViewById(R.id.overview_temptarget);
+
+            iage = (TextView) view.findViewById(R.id.careportal_insulinage);
+            cage = (TextView) view.findViewById(R.id.careportal_canulaage);
+            sage = (TextView) view.findViewById(R.id.careportal_sensorage);
+            pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+
+            bgGraph = (GraphView) view.findViewById(R.id.overview_bggraph);
+            iobGraph = (GraphView) view.findViewById(R.id.overview_iobgraph);
+
+            treatmentButton = (Button) view.findViewById(R.id.overview_treatmentbutton);
+            treatmentButton.setOnClickListener(this);
+            wizardButton = (Button) view.findViewById(R.id.overview_wizardbutton);
+            wizardButton.setOnClickListener(this);
+            acceptTempButton = (Button) view.findViewById(R.id.overview_accepttempbutton);
+            if (acceptTempButton != null)
+                acceptTempButton.setOnClickListener(this);
+            quickWizardButton = (Button) view.findViewById(R.id.overview_quickwizardbutton);
+            quickWizardButton.setOnClickListener(this);
+            calibrationButton = (Button) view.findViewById(R.id.overview_calibrationbutton);
+            if (calibrationButton != null)
+                calibrationButton.setOnClickListener(this);
+
+            acceptTempLayout = (LinearLayout) view.findViewById(R.id.overview_accepttemplayout);
+
+            showPredictionView = (CheckBox) view.findViewById(R.id.overview_showprediction);
+            showBasalsView = (CheckBox) view.findViewById(R.id.overview_showbasals);
+            showIobView = (CheckBox) view.findViewById(R.id.overview_showiob);
+            showCobView = (CheckBox) view.findViewById(R.id.overview_showcob);
+            showDeviationsView = (CheckBox) view.findViewById(R.id.overview_showdeviations);
+            showRatiosView = (CheckBox) view.findViewById(R.id.overview_showratios);
+            showPredictionView.setChecked(SP.getBoolean("showprediction", false));
+            showBasalsView.setChecked(SP.getBoolean("showbasals", true));
+            showIobView.setChecked(SP.getBoolean("showiob", false));
+            showCobView.setChecked(SP.getBoolean("showcob", false));
+            showDeviationsView.setChecked(SP.getBoolean("showdeviations", false));
+            showRatiosView.setChecked(SP.getBoolean("showratios", false));
+            showPredictionView.setOnCheckedChangeListener(this);
+            showBasalsView.setOnCheckedChangeListener(this);
+            showIobView.setOnCheckedChangeListener(this);
+            showCobView.setOnCheckedChangeListener(this);
+            showDeviationsView.setOnCheckedChangeListener(this);
+            showRatiosView.setOnCheckedChangeListener(this);
+
+            notificationsView = (RecyclerView) view.findViewById(R.id.overview_notifications);
+            notificationsView.setHasFixedSize(true);
+            llm = new LinearLayoutManager(view.getContext());
+            notificationsView.setLayoutManager(llm);
+
+            bgGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
+            bgGraph.getGridLabelRenderer().reloadStyles();
+            iobGraph.getGridLabelRenderer().setGridColor(MainApp.sResources.getColor(R.color.graphgrid));
+            iobGraph.getGridLabelRenderer().reloadStyles();
+            iobGraph.getGridLabelRenderer().setHorizontalLabelsVisible(false);
+            bgGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+            iobGraph.getGridLabelRenderer().setLabelVerticalWidth(50);
+            iobGraph.getGridLabelRenderer().setNumVerticalLabels(5);
+
+            rangeToDisplay = SP.getInt(R.string.key_rangetodisplay, 6);
+
+            bgGraph.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    SP.putBoolean("lockscreen", isChecked);
-                    MainApp.bus().post(new EventSetWakeLock(isChecked));
+                public boolean onLongClick(View v) {
+                    rangeToDisplay += 6;
+                    rangeToDisplay = rangeToDisplay > 24 ? 6 : rangeToDisplay;
+                    SP.putInt(R.string.key_rangetodisplay, rangeToDisplay);
+                    updateGUI("rangeChange");
+                    return false;
                 }
             });
+
+            lockScreen = (CheckBox) view.findViewById(R.id.overview_lockscreen);
+            if (lockScreen != null) {
+                lockScreen.setChecked(SP.getBoolean("lockscreen", false));
+                lockScreen.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        SP.putBoolean("lockscreen", isChecked);
+                        MainApp.bus().post(new EventSetWakeLock(isChecked));
+                    }
+                });
+            }
+
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
 
-        return view;
+        return null;
     }
 
 
@@ -638,7 +639,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         final Profile profile = MainApp.getConfigBuilder().getProfile();
         final TempTarget tempTarget = MainApp.getConfigBuilder().getTempTargetFromHistory();
 
-        QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
+        QuickWizard.QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && actualBg != null) {
             quickWizardButton.setVisibility(View.VISIBLE);
             BolusWizard wizard = new BolusWizard();
@@ -1118,7 +1119,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         tempTargetView.setLongClickable(true);
 
         // QuickWizard button
-        QuickWizard.QuickWizardEntry quickWizardEntry = getPlugin().quickWizard.getActive();
+        QuickWizard.QuickWizardEntry quickWizardEntry = OverviewPlugin.getPlugin().quickWizard.getActive();
         if (quickWizardEntry != null && lastBG != null && pump.isInitialized() && !pump.isSuspended()) {
             quickWizardButton.setVisibility(View.VISIBLE);
             String text = quickWizardEntry.buttonText() + "\n" + DecimalFormatter.to0Decimal(quickWizardEntry.carbs()) + "g";
@@ -1805,7 +1806,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
                         // Adding current time to snooze if we got staleData
                         log.debug("Notification text is: " + notification.text);
                         if (notification.text.equals(MainApp.sResources.getString(R.string.nsalarm_staledata))) {
-                            NotificationStore nstore = getPlugin().notificationStore;
+                            NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
                             long msToSnooze = SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L;
                             log.debug("snooze nsalarm_staledatavalue in minutes is " + SP.getInt("nsalarm_staledatavalue", 15) + "\n in ms is: " + msToSnooze + " currentTimeMillis is: " + System.currentTimeMillis());
                             nstore.snoozeTo(System.currentTimeMillis() + (SP.getInt("nsalarm_staledatavalue", 15) * 60 * 1000L));
@@ -1822,7 +1823,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    NotificationStore nstore = getPlugin().notificationStore;
+                    NotificationStore nstore = OverviewPlugin.getPlugin().notificationStore;
                     nstore.removeExpired();
                     nstore.unSnooze();
                     if (nstore.store.size() > 0) {

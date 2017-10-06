@@ -34,6 +34,15 @@ import info.nightscout.utils.ToastUtils;
 public class NSClientInternalPlugin implements PluginBase {
     private static Logger log = LoggerFactory.getLogger(NSClientInternalPlugin.class);
 
+    static NSClientInternalPlugin nsClientInternalPlugin;
+
+    static public NSClientInternalPlugin getPlugin() {
+        if (nsClientInternalPlugin == null) {
+            nsClientInternalPlugin = new NSClientInternalPlugin();
+        }
+        return nsClientInternalPlugin;
+    }
+
     private boolean fragmentEnabled = true;
     private boolean fragmentVisible = true;
 

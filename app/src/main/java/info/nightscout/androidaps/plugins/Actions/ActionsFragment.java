@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.squareup.otto.Subscribe;
@@ -69,26 +70,32 @@ public class ActionsFragment extends SubscriberFragment implements View.OnClickL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.actions_fragment, container, false);
+        try {
+            View view = inflater.inflate(R.layout.actions_fragment, container, false);
 
-        profileSwitch = (Button) view.findViewById(R.id.actions_profileswitch);
-        tempTarget = (Button) view.findViewById(R.id.actions_temptarget);
-        extendedBolus = (Button) view.findViewById(R.id.actions_extendedbolus);
-        extendedBolusCancel = (Button) view.findViewById(R.id.actions_extendedbolus_cancel);
-        tempBasal = (Button) view.findViewById(R.id.actions_settempbasal);
-        tempBasalCancel = (Button) view.findViewById(R.id.actions_canceltempbasal);
-        fill = (Button) view.findViewById(R.id.actions_fill);
+            profileSwitch = (Button) view.findViewById(R.id.actions_profileswitch);
+            tempTarget = (Button) view.findViewById(R.id.actions_temptarget);
+            extendedBolus = (Button) view.findViewById(R.id.actions_extendedbolus);
+            extendedBolusCancel = (Button) view.findViewById(R.id.actions_extendedbolus_cancel);
+            tempBasal = (Button) view.findViewById(R.id.actions_settempbasal);
+            tempBasalCancel = (Button) view.findViewById(R.id.actions_canceltempbasal);
+            fill = (Button) view.findViewById(R.id.actions_fill);
 
-        profileSwitch.setOnClickListener(this);
-        tempTarget.setOnClickListener(this);
-        extendedBolus.setOnClickListener(this);
-        extendedBolusCancel.setOnClickListener(this);
-        tempBasal.setOnClickListener(this);
-        tempBasalCancel.setOnClickListener(this);
-        fill.setOnClickListener(this);
+            profileSwitch.setOnClickListener(this);
+            tempTarget.setOnClickListener(this);
+            extendedBolus.setOnClickListener(this);
+            extendedBolusCancel.setOnClickListener(this);
+            tempBasal.setOnClickListener(this);
+            tempBasalCancel.setOnClickListener(this);
+            fill.setOnClickListener(this);
 
-        updateGUI();
-        return view;
+            updateGUI();
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
     }
 
     @Subscribe

@@ -29,7 +29,7 @@ import info.nightscout.androidaps.plugins.Actions.ActionsFragment;
 import info.nightscout.androidaps.plugins.Careportal.CareportalFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderFragment;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
-import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesFragment;
+import info.nightscout.androidaps.plugins.ConstraintsObjectives.ObjectivesPlugin;
 import info.nightscout.androidaps.plugins.ConstraintsSafety.SafetyPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinFastactingProlongedPlugin;
@@ -37,12 +37,13 @@ import info.nightscout.androidaps.plugins.Insulin.InsulinOrefFreePeakPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefRapidActingPlugin;
 import info.nightscout.androidaps.plugins.Insulin.InsulinOrefUltraRapidActingPlugin;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
-import info.nightscout.androidaps.plugins.Loop.LoopFragment;
-import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalFragment;
+import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
+import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.receivers.AckAlarmReceiver;
-import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAFragment;
-import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAFragment;
+import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.OpenAPSMA.OpenAPSMAPlugin;
 import info.nightscout.androidaps.plugins.Overview.OverviewFragment;
+import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Persistentnotification.PersistentNotificationPlugin;
 import info.nightscout.androidaps.plugins.ProfileCircadianPercentage.CircadianPercentageProfileFragment;
 import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfileFragment;
@@ -110,7 +111,7 @@ public class MainApp extends Application {
         if (pluginsList == null) {
             pluginsList = new ArrayList<>();
             // Register all tabs in app here
-            pluginsList.add(OverviewFragment.getPlugin());
+            pluginsList.add(OverviewPlugin.getPlugin());
             pluginsList.add(IobCobCalculatorPlugin.getPlugin());
             if (Config.ACTION) pluginsList.add(ActionsFragment.getPlugin());
             pluginsList.add(InsulinFastactingPlugin.getPlugin());
@@ -127,9 +128,9 @@ public class MainApp extends Application {
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());
-            if (Config.LOOPENABLED) pluginsList.add(LoopFragment.getPlugin());
-            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAFragment.getPlugin());
-            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSAMAFragment.getPlugin());
+            if (Config.LOOPENABLED) pluginsList.add(LoopPlugin.getPlugin());
+            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSMAPlugin.getPlugin());
+            if (Config.OPENAPSENABLED) pluginsList.add(OpenAPSAMAPlugin.getPlugin());
             pluginsList.add(NSProfileFragment.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(SimpleProfileFragment.getPlugin());
             if (Config.OTHERPROFILES) pluginsList.add(LocalProfileFragment.getPlugin());
@@ -137,7 +138,7 @@ public class MainApp extends Application {
                 pluginsList.add(CircadianPercentageProfileFragment.getPlugin());
             pluginsList.add(TreatmentsFragment.getPlugin());
             if (Config.SAFETY) pluginsList.add(SafetyPlugin.getPlugin());
-            if (Config.APS) pluginsList.add(ObjectivesFragment.getPlugin());
+            if (Config.APS) pluginsList.add(ObjectivesPlugin.getPlugin());
             if (!Config.NSCLIENT)
                 pluginsList.add(SourceXdripPlugin.getPlugin());
             pluginsList.add(SourceNSClientPlugin.getPlugin());
@@ -150,7 +151,7 @@ public class MainApp extends Application {
             if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
             pluginsList.add(StatuslinePlugin.getPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
-            pluginsList.add(NSClientInternalFragment.getPlugin());
+            pluginsList.add(NSClientInternalPlugin.getPlugin());
 
             pluginsList.add(sConfigBuilder = ConfigBuilderFragment.getPlugin());
 
