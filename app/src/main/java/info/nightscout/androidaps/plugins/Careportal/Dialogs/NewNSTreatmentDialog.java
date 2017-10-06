@@ -14,6 +14,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -194,19 +195,55 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                 profileSpinner.setSelection(p);
         }
 
+        final Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile != null ? profile.getUnits() : Constants.MGDL);
+
         // temp target
-        ArrayList<CharSequence> reasonList = new ArrayList<CharSequence>();
+        final ArrayList<CharSequence> reasonList = new ArrayList<CharSequence>();
+        reasonList.add(MainApp.sResources.getString(R.string.manual));
         reasonList.add(MainApp.sResources.getString(R.string.eatingsoon));
         reasonList.add(MainApp.sResources.getString(R.string.activity));
-        reasonList.add(MainApp.sResources.getString(R.string.manual));
         ArrayAdapter<CharSequence> adapterReason = new ArrayAdapter<CharSequence>(getContext(),
                 R.layout.spinner_centered, reasonList);
         reasonSpinner.setAdapter(adapterReason);
+        reasonSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                double defaultDuration = 0;
+                double defaultTarget = 0;
+                if(profile!=null){
+                    defaultTarget = bg.doubleValue();
+                }
+                boolean erase = false;
+
+                if(MainApp.sResources.getString(R.string.eatingsoon).equals(reasonList.get(position))){
+                    defaultDuration = SP.getDouble(R.string.key_eatingsoon_duration, 0d);
+                    defaultTarget = SP.getDouble(R.string.key_eatingsoon_target, 0d);;
+                } else if (MainApp.sResources.getString(R.string.activity).equals(reasonList.get(position))){
+                    defaultDuration = SP.getDouble(R.string.key_activity_duration, 0d);;
+                    defaultTarget = SP.getDouble(R.string.key_activity_target, 0d);;
+                } else {
+                    defaultDuration = 0;
+                    erase = true;
+                }
+                if(defaultTarget != 0 || erase){
+                    editTemptarget.setValue(defaultTarget);
+                }
+                if(defaultDuration != 0){
+                    editDuration.setValue(defaultDuration);
+                } else if (erase){
+                    editDuration.setValue(0d);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         // bg
         bgUnitsView.setText(units);
 
-        Double bg = Profile.fromMgdlToUnits(GlucoseStatus.getGlucoseStatusData() != null ? GlucoseStatus.getGlucoseStatusData().glucose : 0d, profile != null ? profile.getUnits() : Constants.MGDL);
         editBg = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_bginput);
         editTemptarget = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_temptarget);
         if (profile == null) {
