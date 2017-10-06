@@ -707,5 +707,14 @@
     <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
     <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
     <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
+    <string name="default_temptargets">Default Temp-Targets</string>
+    <string name="eatingsoon_duration">eatingsoon duration</string>
+    <string name="eatingsoon_target">eatingsoon target</string>
+    <string name="activity_duration">activity duration</string>
+    <string name="activity_target">activity target</string>
+    <string name="key_eatingsoon_duration">eatingsoon_duration</string>
+    <string name="key_eatingsoon_target">eatingsoon_target</string>
+    <string name="key_activity_duration">activity_duration</string>
+    <string name="key_activity_target">activity_target</string>
 </resources>
 
