@@ -199,7 +199,7 @@ public class Profile {
 
     Integer getShitfTimeSecs(Integer originalTime) {
         Integer shiftedTime = originalTime + timeshift * 60 * 60;
-        shiftedTime = shiftedTime % (24 * 60 * 60);
+        shiftedTime = (shiftedTime + 24 * 60 * 60) % (24 * 60 * 60);
         if (timeshift != 0)
             log.debug("(Sec) Original time: " + originalTime + " ShiftedTime: " + shiftedTime);
         return shiftedTime;
