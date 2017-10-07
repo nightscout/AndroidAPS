@@ -23,9 +23,6 @@ import info.nightscout.androidaps.plugins.IobCobCalculator.AutosensResult;
 import info.nightscout.androidaps.plugins.IobCobCalculator.IobCobCalculatorPlugin;
 import info.nightscout.androidaps.plugins.Loop.APSResult;
 import info.nightscout.androidaps.plugins.Loop.ScriptReader;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.DetermineBasalResultSMB;
-import info.nightscout.androidaps.plugins.OpenAPSSMB.DetermineBasalAdapterSMBJS;
-import info.nightscout.androidaps.data.IobTotal;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateGui;
 import info.nightscout.androidaps.plugins.OpenAPSMA.events.EventOpenAPSUpdateResultGui;
 import info.nightscout.utils.DateUtil;
@@ -33,7 +30,6 @@ import info.nightscout.utils.NSUpload;
 import info.nightscout.utils.Profiler;
 import info.nightscout.utils.Round;
 import info.nightscout.utils.SP;
-import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 /**
@@ -50,6 +46,18 @@ public class OpenAPSSMBPlugin implements PluginBase, APSInterface {
 
     boolean fragmentEnabled = false;
     boolean fragmentVisible = true;
+
+    private static OpenAPSSMBPlugin openAPSSMBPlugin;
+
+    private OpenAPSSMBPlugin() {
+    }
+
+    public static OpenAPSSMBPlugin getPlugin() {
+        if (openAPSSMBPlugin == null) {
+            openAPSSMBPlugin = new OpenAPSSMBPlugin();
+        }
+        return openAPSSMBPlugin;
+    }
 
     @Override
     public String getName() {

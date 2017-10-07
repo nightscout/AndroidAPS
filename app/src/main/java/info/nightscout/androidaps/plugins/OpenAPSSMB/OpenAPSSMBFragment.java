@@ -27,15 +27,6 @@ import info.nightscout.utils.JSONFormatter;
 public class OpenAPSSMBFragment extends SubscriberFragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(OpenAPSSMBFragment.class);
 
-    private static OpenAPSSMBPlugin openAPSSMBPlugin;
-
-    public static OpenAPSSMBPlugin getPlugin() {
-        if (openAPSSMBPlugin == null) {
-            openAPSSMBPlugin = new OpenAPSSMBPlugin();
-        }
-        return openAPSSMBPlugin;
-    }
-
     Button run;
     TextView lastRunView;
     TextView glucoseStatusView;
@@ -74,7 +65,7 @@ public class OpenAPSSMBFragment extends SubscriberFragment implements View.OnCli
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.openapsma_run:
-                getPlugin().invoke("OpenAPSAMA button");
+                OpenAPSSMBPlugin.getPlugin().invoke("OpenAPSAMA button");
                 Answers.getInstance().logCustom(new CustomEvent("OpenAPS_AMA_Run"));
                 break;
         }
@@ -98,12 +89,13 @@ public class OpenAPSSMBFragment extends SubscriberFragment implements View.OnCli
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    DetermineBasalResultSMB lastAPSResult = getPlugin().lastAPSResult;
+                    OpenAPSSMBPlugin plugin = OpenAPSSMBPlugin.getPlugin();
+                    DetermineBasalResultSMB lastAPSResult = plugin.lastAPSResult;
                     if (lastAPSResult != null) {
                         resultView.setText(JSONFormatter.format(lastAPSResult.json));
                         requestView.setText(lastAPSResult.toSpanned());
                     }
-                    DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = getPlugin().lastDetermineBasalAdapterSMBJS;
+                    DetermineBasalAdapterSMBJS determineBasalAdapterSMBJS = plugin.lastDetermineBasalAdapterSMBJS;
                     if (determineBasalAdapterSMBJS != null) {
                         glucoseStatusView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getGlucoseStatusParam()));
                         currentTempView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getCurrentTempParam()));
@@ -118,11 +110,11 @@ public class OpenAPSSMBFragment extends SubscriberFragment implements View.OnCli
                         mealDataView.setText(JSONFormatter.format(determineBasalAdapterSMBJS.getMealDataParam()));
                         scriptdebugView.setText(determineBasalAdapterSMBJS.getScriptDebug());
                     }
-                    if (getPlugin().lastAPSRun != null) {
-                        lastRunView.setText(getPlugin().lastAPSRun.toLocaleString());
+                    if (plugin.lastAPSRun != null) {
+                        lastRunView.setText(plugin.lastAPSRun.toLocaleString());
                     }
-                    if (getPlugin().lastAutosensResult != null) {
-                        autosensDataView.setText(JSONFormatter.format(getPlugin().lastAutosensResult.json()));
+                    if (plugin.lastAutosensResult != null) {
+                        autosensDataView.setText(JSONFormatter.format(plugin.lastAutosensResult.json()));
                     }
                 }
             });
