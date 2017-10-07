@@ -14,8 +14,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 
 public class InsulinFastactingPlugin implements PluginBase, InsulinInterface {
 
-    private static boolean fragmentEnabled = true;
-    private static boolean fragmentVisible = false;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = false;
 
     private static InsulinFastactingPlugin plugin = null;
 

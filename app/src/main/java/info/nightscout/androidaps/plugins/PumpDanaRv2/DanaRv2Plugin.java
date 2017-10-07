@@ -60,11 +60,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         return DanaRFragment.class.getName();
     }
 
-    static boolean fragmentPumpEnabled = false;
-    static boolean fragmentProfileEnabled = false;
-    static boolean fragmentPumpVisible = false;
+    private boolean fragmentPumpEnabled = false;
+    private boolean fragmentProfileEnabled = false;
+    private boolean fragmentPumpVisible = false;
 
-    public static DanaRv2ExecutionService sExecutionService;
+    private static DanaRv2ExecutionService sExecutionService;
 
 
     private static DanaRv2Plugin plugin = null;
@@ -77,9 +77,9 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
 
     private static DanaRPump pump = DanaRPump.getInstance();
 
-    public static PumpDescription pumpDescription = new PumpDescription();
+    private static PumpDescription pumpDescription = new PumpDescription();
 
-    public DanaRv2Plugin() {
+    private DanaRv2Plugin() {
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, DanaRv2ExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -192,8 +192,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentVisible(PluginBase.PROFILE, true);
         }
     }
 
@@ -429,7 +429,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         }
         if (percent > getPumpDescription().maxTempPercent)
             percent = getPumpDescription().maxTempPercent;
-        if (pump.isTempBasalInProgress && pump.tempBasalPercent == percent) {
+        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getRealTempBasalFromHistory(System.currentTimeMillis());
+        if (runningTB != null && runningTB.percentRate == percent) {
             result.enacted = false;
             result.success = true;
             result.isTempCancel = false;
@@ -494,7 +495,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         int durationInHalfHours = Math.max(durationInMinutes / 30, 1);
         insulin = Round.roundTo(insulin, getPumpDescription().extendedBolusStep * (1 + durationInHalfHours % 1));
         PumpEnactResult result = new PumpEnactResult();
-        if (pump.isExtendedInProgress && Math.abs(pump.extendedBolusAmount - insulin) < getPumpDescription().extendedBolusStep) {
+        ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (runningEB != null && Math.abs(runningEB.insulin - insulin) < getPumpDescription().extendedBolusStep) {
             result.enacted = false;
             result.success = true;
             result.comment = MainApp.instance().getString(R.string.virtualpump_resultok);
@@ -530,7 +532,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     @Override
     public PumpEnactResult cancelTempBasal(boolean force) {
         PumpEnactResult result = new PumpEnactResult();
-        if (pump.isTempBasalInProgress) {
+        TemporaryBasal runningTB =  MainApp.getConfigBuilder().getTempBasalFromHistory(System.currentTimeMillis());
+        if (runningTB != null) {
             sExecutionService.tempBasalStop();
             result.enacted = true;
             result.isTempCancel = true;
@@ -554,7 +557,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     @Override
     public PumpEnactResult cancelExtendedBolus() {
         PumpEnactResult result = new PumpEnactResult();
-        if (pump.isExtendedInProgress) {
+        ExtendedBolus runningEB = MainApp.getConfigBuilder().getExtendedBolusFromHistory(System.currentTimeMillis());
+        if (runningEB != null) {
             sExecutionService.extendedBolusStop();
             result.enacted = true;
             result.isTempCancel = true;

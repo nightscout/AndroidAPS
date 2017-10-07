@@ -38,13 +38,22 @@ import static info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin.ver
 public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     private static Logger log = LoggerFactory.getLogger(OpenAPSMAPlugin.class);
 
+    private static OpenAPSMAPlugin openAPSMAPlugin;
+
+    public static OpenAPSMAPlugin getPlugin() {
+        if (openAPSMAPlugin == null) {
+            openAPSMAPlugin = new OpenAPSMAPlugin();
+        }
+        return openAPSMAPlugin;
+    }
+
     // last values
     DetermineBasalAdapterMAJS lastDetermineBasalAdapterMAJS = null;
     Date lastAPSRun = null;
     DetermineBasalResultMA lastAPSResult = null;
 
-    boolean fragmentEnabled = false;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = true;
 
     @Override
     public String getName() {
@@ -196,7 +205,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         if (!checkOnlyHardLimits(profile.getDia(), "dia", 2, 7)) return;
         if (!checkOnlyHardLimits(profile.getIc(), "carbratio", 2, 100)) return;
-        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf().doubleValue(), units), "sens", 2, 900))
+        if (!checkOnlyHardLimits(Profile.toMgdl(profile.getIsf(), units), "sens", 2, 900))
             return;
         if (!checkOnlyHardLimits(profile.getMaxDailyBasal(), "max_daily_basal", 0.1, 10)) return;
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;

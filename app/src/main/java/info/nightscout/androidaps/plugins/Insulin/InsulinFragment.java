@@ -7,8 +7,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 
 /**
  * Created by mike on 17.04.2017.
@@ -22,16 +25,22 @@ public class InsulinFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.insulin_fragment, container, false);
+        try {
+            View view = inflater.inflate(R.layout.insulin_fragment, container, false);
 
-        insulinName = (TextView) view.findViewById(R.id.insulin_name);
-        insulinComment = (TextView) view.findViewById(R.id.insulin_comment);
-        insulinDia = (TextView) view.findViewById(R.id.insulin_dia);
-        insulinGraph = (ActivityGraph) view.findViewById(R.id.insuling_graph);
+            insulinName = (TextView) view.findViewById(R.id.insulin_name);
+            insulinComment = (TextView) view.findViewById(R.id.insulin_comment);
+            insulinDia = (TextView) view.findViewById(R.id.insulin_dia);
+            insulinGraph = (ActivityGraph) view.findViewById(R.id.insuling_graph);
 
-        updateGUI();
+            updateGUI();
 
-        return view;
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
     }
 
     @Override
@@ -41,10 +50,10 @@ public class InsulinFragment extends Fragment {
     }
 
     private void updateGUI() {
-        insulinName.setText(MainApp.getConfigBuilder().getActiveInsulin().getFriendlyName());
-        insulinComment.setText(MainApp.getConfigBuilder().getActiveInsulin().getComment());
-        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(MainApp.getConfigBuilder().getActiveInsulin().getDia()) + "h");
-        insulinGraph.show(MainApp.getConfigBuilder().getActiveInsulin());
+        insulinName.setText(ConfigBuilderPlugin.getActiveInsulin().getFriendlyName());
+        insulinComment.setText(ConfigBuilderPlugin.getActiveInsulin().getComment());
+        insulinDia.setText(MainApp.sResources.getText(R.string.dia) + "  " + Double.toString(ConfigBuilderPlugin.getActiveInsulin().getDia()) + "h");
+        insulinGraph.show(ConfigBuilderPlugin.getActiveInsulin());
     }
 
 }

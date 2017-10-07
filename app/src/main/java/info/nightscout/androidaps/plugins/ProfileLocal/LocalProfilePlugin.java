@@ -24,8 +24,8 @@ import info.nightscout.utils.SP;
 public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = true;
 
     private static ProfileStore convertedProfile = null;
     private static String convertedProfileName = null;

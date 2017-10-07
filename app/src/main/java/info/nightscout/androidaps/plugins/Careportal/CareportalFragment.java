@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Subscribe;
 
 import info.nightscout.androidaps.BuildConfig;
@@ -71,53 +72,59 @@ public class CareportalFragment extends SubscriberFragment implements View.OnCli
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.careportal_fragment, container, false);
+        try {
+            View view = inflater.inflate(R.layout.careportal_fragment, container, false);
 
-        view.findViewById(R.id.careportal_bgcheck).setOnClickListener(this);
-        view.findViewById(R.id.careportal_announcement).setOnClickListener(this);
-        view.findViewById(R.id.careportal_cgmsensorinsert).setOnClickListener(this);
-        view.findViewById(R.id.careportal_cgmsensorstart).setOnClickListener(this);
-        view.findViewById(R.id.careportal_combobolus).setOnClickListener(this);
-        view.findViewById(R.id.careportal_correctionbolus).setOnClickListener(this);
-        view.findViewById(R.id.careportal_carbscorrection).setOnClickListener(this);
-        view.findViewById(R.id.careportal_exercise).setOnClickListener(this);
-        view.findViewById(R.id.careportal_insulincartridgechange).setOnClickListener(this);
-        view.findViewById(R.id.careportal_pumpbatterychange).setOnClickListener(this);
-        view.findViewById(R.id.careportal_mealbolus).setOnClickListener(this);
-        view.findViewById(R.id.careportal_note).setOnClickListener(this);
-        view.findViewById(R.id.careportal_profileswitch).setOnClickListener(this);
-        view.findViewById(R.id.careportal_pumpsitechange).setOnClickListener(this);
-        view.findViewById(R.id.careportal_question).setOnClickListener(this);
-        view.findViewById(R.id.careportal_snackbolus).setOnClickListener(this);
-        view.findViewById(R.id.careportal_tempbasalend).setOnClickListener(this);
-        view.findViewById(R.id.careportal_tempbasalstart).setOnClickListener(this);
-        view.findViewById(R.id.careportal_openapsoffline).setOnClickListener(this);
-        view.findViewById(R.id.careportal_temporarytarget).setOnClickListener(this);
+            view.findViewById(R.id.careportal_bgcheck).setOnClickListener(this);
+            view.findViewById(R.id.careportal_announcement).setOnClickListener(this);
+            view.findViewById(R.id.careportal_cgmsensorinsert).setOnClickListener(this);
+            view.findViewById(R.id.careportal_cgmsensorstart).setOnClickListener(this);
+            view.findViewById(R.id.careportal_combobolus).setOnClickListener(this);
+            view.findViewById(R.id.careportal_correctionbolus).setOnClickListener(this);
+            view.findViewById(R.id.careportal_carbscorrection).setOnClickListener(this);
+            view.findViewById(R.id.careportal_exercise).setOnClickListener(this);
+            view.findViewById(R.id.careportal_insulincartridgechange).setOnClickListener(this);
+            view.findViewById(R.id.careportal_pumpbatterychange).setOnClickListener(this);
+            view.findViewById(R.id.careportal_mealbolus).setOnClickListener(this);
+            view.findViewById(R.id.careportal_note).setOnClickListener(this);
+            view.findViewById(R.id.careportal_profileswitch).setOnClickListener(this);
+            view.findViewById(R.id.careportal_pumpsitechange).setOnClickListener(this);
+            view.findViewById(R.id.careportal_question).setOnClickListener(this);
+            view.findViewById(R.id.careportal_snackbolus).setOnClickListener(this);
+            view.findViewById(R.id.careportal_tempbasalend).setOnClickListener(this);
+            view.findViewById(R.id.careportal_tempbasalstart).setOnClickListener(this);
+            view.findViewById(R.id.careportal_openapsoffline).setOnClickListener(this);
+            view.findViewById(R.id.careportal_temporarytarget).setOnClickListener(this);
 
-        iage = (TextView) view.findViewById(R.id.careportal_insulinage);
-        cage = (TextView) view.findViewById(R.id.careportal_canulaage);
-        sage = (TextView) view.findViewById(R.id.careportal_sensorage);
-        pbage = (TextView) view.findViewById(R.id.careportal_pbage);
+            iage = (TextView) view.findViewById(R.id.careportal_insulinage);
+            cage = (TextView) view.findViewById(R.id.careportal_canulaage);
+            sage = (TextView) view.findViewById(R.id.careportal_sensorage);
+            pbage = (TextView) view.findViewById(R.id.careportal_pbage);
 
-        statsLayout = (View) view.findViewById(R.id.careportal_stats);
+            statsLayout = view.findViewById(R.id.careportal_stats);
 
-        noProfileView = (View) view.findViewById(R.id.profileview_noprofile);
-        butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
+            noProfileView = view.findViewById(R.id.profileview_noprofile);
+            butonsLayout = (LinearLayout) view.findViewById(R.id.careportal_buttons);
 
-        ProfileStore profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
-        if (profileStore == null) {
-            noProfileView.setVisibility(View.VISIBLE);
-            butonsLayout.setVisibility(View.GONE);
-        } else {
-            noProfileView.setVisibility(View.GONE);
-            butonsLayout.setVisibility(View.VISIBLE);
+            ProfileStore profileStore = ConfigBuilderPlugin.getActiveProfileInterface().getProfile();
+            if (profileStore == null) {
+                noProfileView.setVisibility(View.VISIBLE);
+                butonsLayout.setVisibility(View.GONE);
+            } else {
+                noProfileView.setVisibility(View.GONE);
+                butonsLayout.setVisibility(View.VISIBLE);
+            }
+
+            if (BuildConfig.NSCLIENTOLNY)
+                statsLayout.setVisibility(View.GONE); // visible on overview
+
+            updateGUI();
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
         }
 
-        if (BuildConfig.NSCLIENTOLNY)
-            statsLayout.setVisibility(View.GONE); // visible on overview
-
-        updateGUI();
-        return view;
+        return null;
     }
 
     @Override

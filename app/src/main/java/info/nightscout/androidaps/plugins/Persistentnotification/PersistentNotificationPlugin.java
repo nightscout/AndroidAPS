@@ -39,7 +39,7 @@ import info.nightscout.utils.DecimalFormatter;
 public class PersistentNotificationPlugin implements PluginBase {
 
     private static final int ONGOING_NOTIFICATION_ID = 4711;
-    static boolean fragmentEnabled = true;
+    private boolean fragmentEnabled = true;
     private final Context ctx;
 
     public PersistentNotificationPlugin(Context ctx) {
