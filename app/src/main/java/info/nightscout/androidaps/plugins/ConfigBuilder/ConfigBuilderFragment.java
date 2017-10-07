@@ -56,6 +56,8 @@ public class ConfigBuilderFragment extends Fragment {
     TextView pumpLabel;
     ListView loopListView;
     TextView loopLabel;
+    ListView treatmentsListView;
+    TextView treatmentsLabel;
     ListView profileListView;
     TextView profileLabel;
     ListView apsListView;
@@ -72,6 +74,7 @@ public class ConfigBuilderFragment extends Fragment {
     PluginCustomAdapter bgsourceDataAdapter = null;
     PluginCustomAdapter pumpDataAdapter = null;
     PluginCustomAdapter loopDataAdapter = null;
+    PluginCustomAdapter treatmentDataAdapter = null;
     PluginCustomAdapter profileDataAdapter = null;
     PluginCustomAdapter apsDataAdapter = null;
     PluginCustomAdapter constraintsDataAdapter = null;
@@ -91,6 +94,8 @@ public class ConfigBuilderFragment extends Fragment {
             pumpLabel = (TextView) view.findViewById(R.id.configbuilder_pumplabel);
             loopListView = (ListView) view.findViewById(R.id.configbuilder_looplistview);
             loopLabel = (TextView) view.findViewById(R.id.configbuilder_looplabel);
+            treatmentsListView = (ListView) view.findViewById(R.id.configbuilder_treatmentslistview);
+            treatmentsLabel = (TextView) view.findViewById(R.id.configbuilder_treatmentslabel);
             profileListView = (ListView) view.findViewById(R.id.configbuilder_profilelistview);
             profileLabel = (TextView) view.findViewById(R.id.configbuilder_profilelabel);
             apsListView = (ListView) view.findViewById(R.id.configbuilder_apslistview);
@@ -148,6 +153,11 @@ public class ConfigBuilderFragment extends Fragment {
         setListViewHeightBasedOnChildren(loopListView);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.LOOP).size() == 0)
             loopLabel.setVisibility(View.GONE);
+        treatmentDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT), PluginBase.TREATMENT);
+        treatmentsListView.setAdapter(treatmentDataAdapter);
+        setListViewHeightBasedOnChildren(treatmentsListView);
+        if (MainApp.getSpecificPluginsVisibleInList(PluginBase.TREATMENT).size() == 0)
+            treatmentsLabel.setVisibility(View.GONE);
         profileDataAdapter = new PluginCustomAdapter(getContext(), R.layout.configbuilder_simpleitem, MainApp.getSpecificPluginsVisibleInListByInterface(ProfileInterface.class, PluginBase.PROFILE), PluginBase.PROFILE);
         profileListView.setAdapter(profileDataAdapter);
         if (MainApp.getSpecificPluginsVisibleInList(PluginBase.PROFILE).size() == 0)
