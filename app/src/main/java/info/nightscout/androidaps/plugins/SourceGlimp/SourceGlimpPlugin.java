@@ -9,9 +9,9 @@ import info.nightscout.androidaps.interfaces.PluginBase;
  * Created by mike on 05.08.2016.
  */
 public class SourceGlimpPlugin implements PluginBase, BgSourceInterface {
-    boolean fragmentEnabled = false;
+    private boolean fragmentEnabled = false;
 
-    static SourceGlimpPlugin plugin = null;
+    private static SourceGlimpPlugin plugin = null;
 
     public static SourceGlimpPlugin getPlugin() {
         if (plugin == null)

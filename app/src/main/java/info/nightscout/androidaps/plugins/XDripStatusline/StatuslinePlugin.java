@@ -23,6 +23,7 @@ import info.nightscout.androidaps.events.EventTempBasalChange;
 import info.nightscout.androidaps.events.EventTreatmentChange;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.TreatmentsInterface;
+import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Loop.LoopPlugin;
 import info.nightscout.utils.DecimalFormatter;
 
@@ -33,16 +34,16 @@ import info.nightscout.utils.DecimalFormatter;
 public class StatuslinePlugin implements PluginBase {
 
     //broadcast related constants
-    public static final String EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline";
-    public static final String ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline";
-    public static final String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE";
+    private static final String EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline";
+    private static final String ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline";
+    private static final String RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE";
 
 
-    static boolean fragmentEnabled = false;
-    private static boolean lastLoopStatus;
+    private boolean fragmentEnabled = false;
+    private boolean lastLoopStatus;
 
     private final Context ctx;
-    SharedPreferences mPrefs;
+    private SharedPreferences mPrefs;
 
     private static StatuslinePlugin statuslinePlugin;
 
@@ -55,7 +56,7 @@ public class StatuslinePlugin implements PluginBase {
         return statuslinePlugin;
     }
 
-    StatuslinePlugin(Context ctx) {
+    private StatuslinePlugin(Context ctx) {
         this.ctx = ctx;
         this.mPrefs = PreferenceManager.getDefaultSharedPreferences(ctx);
     }
@@ -160,7 +161,7 @@ public class StatuslinePlugin implements PluginBase {
     @NonNull
     private String buildStatusString() {
         String status = "";
-        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
 
         if (activeloop != null && !activeloop.isEnabled(PluginBase.LOOP)) {
             status += ctx.getString(R.string.disabledloop) + "\n";
@@ -239,7 +240,7 @@ public class StatuslinePlugin implements PluginBase {
 
         //Filter events where loop is (de)activated
 
-        LoopPlugin activeloop = MainApp.getConfigBuilder().getActiveLoop();
+        LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
         if (activeloop == null) return;
 
         if ((lastLoopStatus != activeloop.isEnabled(PluginBase.LOOP))) {
@@ -248,7 +249,7 @@ public class StatuslinePlugin implements PluginBase {
     }
 
 
-    public static boolean isEnabled() {
+    public boolean isEnabled() {
         return fragmentEnabled;
     }
 

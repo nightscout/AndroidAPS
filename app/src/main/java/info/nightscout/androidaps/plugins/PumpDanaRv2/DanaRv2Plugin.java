@@ -60,11 +60,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         return DanaRFragment.class.getName();
     }
 
-    static boolean fragmentPumpEnabled = false;
-    static boolean fragmentProfileEnabled = false;
-    static boolean fragmentPumpVisible = false;
+    private boolean fragmentPumpEnabled = false;
+    private boolean fragmentProfileEnabled = false;
+    private boolean fragmentPumpVisible = false;
 
-    public static DanaRv2ExecutionService sExecutionService;
+    private static DanaRv2ExecutionService sExecutionService;
 
 
     private static DanaRv2Plugin plugin = null;
@@ -77,9 +77,9 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
 
     private static DanaRPump pump = DanaRPump.getInstance();
 
-    public static PumpDescription pumpDescription = new PumpDescription();
+    private static PumpDescription pumpDescription = new PumpDescription();
 
-    public DanaRv2Plugin() {
+    private DanaRv2Plugin() {
         Context context = MainApp.instance().getApplicationContext();
         Intent intent = new Intent(context, DanaRv2ExecutionService.class);
         context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -192,8 +192,8 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
         if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentVisible(PluginBase.PROFILE, true);
         }
     }
 

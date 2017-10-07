@@ -61,15 +61,15 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         return DanaRFragment.class.getName();
     }
 
-    static boolean fragmentPumpEnabled = false;
-    static boolean fragmentProfileEnabled = false;
-    static boolean fragmentPumpVisible = true;
+    private boolean fragmentPumpEnabled = false;
+    private boolean fragmentProfileEnabled = false;
+    private boolean fragmentPumpVisible = true;
 
-    public static DanaRKoreanExecutionService sExecutionService;
+    private static DanaRKoreanExecutionService sExecutionService;
 
 
-    private static DanaRPump pump = DanaRPump.getInstance();
-    private static boolean useExtendedBoluses = false;
+    private DanaRPump pump = DanaRPump.getInstance();
+    private boolean useExtendedBoluses = false;
 
     private static DanaRKoreanPlugin plugin = null;
 
@@ -208,8 +208,8 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
         if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentVisible(PluginBase.PROFILE, true);
         }
     }
 

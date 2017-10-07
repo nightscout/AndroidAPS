@@ -59,11 +59,11 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
         return DanaRFragment.class.getName();
     }
 
-    static boolean fragmentPumpEnabled = false;
-    static boolean fragmentProfileEnabled = false;
-    static boolean fragmentPumpVisible = true;
+    private static boolean fragmentPumpEnabled = false;
+    private static boolean fragmentProfileEnabled = false;
+    private static boolean fragmentPumpVisible = true;
 
-    public static DanaRExecutionService sExecutionService;
+    private static DanaRExecutionService sExecutionService;
 
 
     private static DanaRPump pump = DanaRPump.getInstance();
@@ -199,22 +199,22 @@ public class DanaRPlugin implements PluginBase, PumpInterface, DanaRInterface, C
     @Override
     public void setFragmentEnabled(int type, boolean fragmentEnabled) {
         if (type == PluginBase.PROFILE)
-            this.fragmentProfileEnabled = fragmentEnabled;
+            fragmentProfileEnabled = fragmentEnabled;
         else if (type == PluginBase.PUMP)
-            this.fragmentPumpEnabled = fragmentEnabled;
+            fragmentPumpEnabled = fragmentEnabled;
         // if pump profile was enabled need to switch to another too
-        if (type == PluginBase.PUMP && !fragmentEnabled && this.fragmentProfileEnabled) {
+        if (type == PluginBase.PUMP && !fragmentEnabled && fragmentProfileEnabled) {
             setFragmentEnabled(PluginBase.PROFILE, false);
             setFragmentVisible(PluginBase.PROFILE, false);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentEnabled(PluginBase.PROFILE, true);
-            MainApp.getSpecificPlugin(NSProfilePlugin.class).setFragmentVisible(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentEnabled(PluginBase.PROFILE, true);
+            NSProfilePlugin.getPlugin().setFragmentVisible(PluginBase.PROFILE, true);
         }
     }
 
     @Override
     public void setFragmentVisible(int type, boolean fragmentVisible) {
         if (type == PluginBase.PUMP)
-            this.fragmentPumpVisible = fragmentVisible;
+            fragmentPumpVisible = fragmentVisible;
     }
 
     @Override
