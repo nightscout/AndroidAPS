@@ -10,7 +10,7 @@ import info.nightscout.androidaps.interfaces.PluginBase;
  */
 public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
 
-    static SourceXdripPlugin plugin = null;
+    private static SourceXdripPlugin plugin = null;
 
     public static SourceXdripPlugin getPlugin() {
         if (plugin == null)
@@ -23,7 +23,7 @@ public class SourceXdripPlugin implements PluginBase, BgSourceInterface {
         return null;
     }
 
-    private static boolean fragmentEnabled = false;
+    private boolean fragmentEnabled = false;
 
     @Override
     public int getType() {

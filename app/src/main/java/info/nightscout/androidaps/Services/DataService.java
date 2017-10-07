@@ -316,28 +316,8 @@ public class DataService extends IntentService {
                 log.error("Unhandled exception", e);
             }
         }
-        if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT)) {
-            try {
-                if (bundles.containsKey("treatment")) {
-                    String trstring = bundles.getString("treatment");
-                    handleAddChangeDataFromNS(trstring);
-                }
-                if (bundles.containsKey("treatments")) {
-                    String trstring = bundles.getString("treatments");
-                    JSONArray jsonArray = new JSONArray(trstring);
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject trJson = jsonArray.getJSONObject(i);
-                        String trstr = trJson.toString();
-                        handleAddChangeDataFromNS(trstr);
-                    }
-                }
-            } catch (Exception e) {
-                log.error("Unhandled exception", e);
-            }
 
-        }
-
-        if (intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
+        if (intent.getAction().equals(Intents.ACTION_NEW_TREATMENT) || intent.getAction().equals(Intents.ACTION_CHANGED_TREATMENT)) {
             try {
                 if (bundles.containsKey("treatment")) {
                     String trstring = bundles.getString("treatment");

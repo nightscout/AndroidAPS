@@ -10,8 +10,8 @@ import info.nightscout.androidaps.interfaces.PluginBase;
 
 public class ActionsPlugin implements PluginBase {
 
-    boolean fragmentEnabled = true;
-    boolean fragmentVisible = true;
+    private boolean fragmentEnabled = true;
+    private boolean fragmentVisible = true;
 
     @Override
     public int getType() {

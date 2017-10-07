@@ -35,8 +35,8 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
     public static final String SETTINGS_PREFIX = "CircadianPercentageProfile";
     private static Logger log = LoggerFactory.getLogger(CircadianPercentageProfilePlugin.class);
 
-    private static boolean fragmentEnabled = false;
-    private static boolean fragmentVisible = true;
+    private boolean fragmentEnabled = false;
+    private boolean fragmentVisible = true;
 
     private static ProfileStore convertedProfile = null;
     private static String convertedProfileName = null;

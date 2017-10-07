@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.Treatments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -8,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.crashlytics.android.Crashlytics;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,12 +24,6 @@ import info.nightscout.androidaps.plugins.Treatments.fragments.TreatmentsTempora
 public class TreatmentsFragment extends Fragment implements View.OnClickListener {
     private static Logger log = LoggerFactory.getLogger(TreatmentsFragment.class);
 
-    private static TreatmentsPlugin treatmentsPlugin = new TreatmentsPlugin();
-
-    public static TreatmentsPlugin getPlugin() {
-        return treatmentsPlugin;
-    }
-
     TextView treatmentsTab;
     TextView extendedBolusesTab;
     TextView tempBasalsTab;
@@ -38,23 +33,30 @@ public class TreatmentsFragment extends Fragment implements View.OnClickListener
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.treatments_fragment, container, false);
+        try {
+            View view = inflater.inflate(R.layout.treatments_fragment, container, false);
 
-        treatmentsTab = (TextView) view.findViewById(R.id.treatments_treatments);
-        extendedBolusesTab = (TextView) view.findViewById(R.id.treatments_extendedboluses);
-        tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
-        tempTargetTab = (TextView) view.findViewById(R.id.treatments_temptargets);
-        profileSwitchTab = (TextView) view.findViewById(R.id.treatments_profileswitches);
-        treatmentsTab.setOnClickListener(this);
-        extendedBolusesTab.setOnClickListener(this);
-        tempBasalsTab.setOnClickListener(this);
-        tempTargetTab.setOnClickListener(this);
-        profileSwitchTab.setOnClickListener(this);
+            treatmentsTab = (TextView) view.findViewById(R.id.treatments_treatments);
+            extendedBolusesTab = (TextView) view.findViewById(R.id.treatments_extendedboluses);
+            tempBasalsTab = (TextView) view.findViewById(R.id.treatments_tempbasals);
+            tempTargetTab = (TextView) view.findViewById(R.id.treatments_temptargets);
+            profileSwitchTab = (TextView) view.findViewById(R.id.treatments_profileswitches);
+            treatmentsTab.setOnClickListener(this);
+            extendedBolusesTab.setOnClickListener(this);
+            tempBasalsTab.setOnClickListener(this);
+            tempTargetTab.setOnClickListener(this);
+            profileSwitchTab.setOnClickListener(this);
 
-        setFragment(new TreatmentsBolusFragment());
-        setBackgroundColorOnSelected(treatmentsTab);
+            setFragment(new TreatmentsBolusFragment());
+            setBackgroundColorOnSelected(treatmentsTab);
 
-        return view;
+            return view;
+        } catch (Exception e) {
+            Crashlytics.logException(e);
+        }
+
+        return null;
+
     }
 
     @Override
