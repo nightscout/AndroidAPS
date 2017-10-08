@@ -22,6 +22,7 @@ import info.nightscout.androidaps.plugins.Overview.Notification;
 import info.nightscout.androidaps.plugins.Overview.events.EventDismissNotification;
 import info.nightscout.androidaps.plugins.Overview.events.EventNewNotification;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
 public class Profile {
@@ -453,5 +454,30 @@ public class Profile {
         else
             return toUnitsString(lowMgdl, lowMmol, units) + " - " + toUnitsString(highMgdl, highMmol, units);
 
+    }
+
+    public double percentageBasalSum() {
+        double result = 0d;
+        for (int i = 0; i < 24; i++) {
+            result += getBasal((Integer) (i * 60 * 60));
+        }
+        return result;
+    }
+
+
+    public double baseBasalSum() {
+        double result = 0d;
+        for (int i = 0; i < 24; i++) {
+            result += getBasal((Integer) (i * 60 * 60)) / getMultiplier(basal_v);
+        }
+        return result;
+    }
+
+    public int getPercentage() {
+        return percentage;
+    }
+
+    public int getTimeshift() {
+        return timeshift;
     }
 }
