@@ -716,6 +716,5 @@
     <string name="key_eatingsoon_target">eatingsoon_target</string>
     <string name="key_activity_duration">activity_duration</string>
     <string name="key_activity_target">activity_target</string>
-    <string name="target">Target</string>
 </resources>
 
