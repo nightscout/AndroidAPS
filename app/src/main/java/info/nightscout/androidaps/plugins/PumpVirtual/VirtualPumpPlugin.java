@@ -207,7 +207,7 @@ public class VirtualPumpPlugin implements PluginBase, PumpInterface {
     public double getBaseBasalRate() {
         Profile profile = MainApp.getConfigBuilder().getProfile();
         if (profile != null)
-            return profile.getBasal();
+            return profile.getBasal() != null ? profile.getBasal() : 0d;
         else
             return 0d;
     }
