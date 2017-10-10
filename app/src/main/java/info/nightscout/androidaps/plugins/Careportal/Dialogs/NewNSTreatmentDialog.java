@@ -726,7 +726,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     profileSwitch = new ProfileSwitch();
                     profileSwitch.date = System.currentTimeMillis();
                     profileSwitch.source = Source.USER;
-                    profileSwitch.profileName = MainApp.getConfigBuilder().getProfileName();
+                    profileSwitch.profileName = MainApp.getConfigBuilder().getProfileName(System.currentTimeMillis(), false);
                     profileSwitch.profileJson = MainApp.getConfigBuilder().getProfile().getData().toString();
                     profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
                     profileSwitch.durationInMinutes = duration;
