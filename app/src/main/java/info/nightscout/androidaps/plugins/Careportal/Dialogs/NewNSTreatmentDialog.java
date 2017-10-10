@@ -733,17 +733,19 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
                     profileSwitch.isCPP = percentage != 100 || timeshift != 0;
                     profileSwitch.timeshift = timeshift;
                     profileSwitch.percentage = percentage;
-                }
-                MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+                    MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
 
-                PumpInterface pump = MainApp.getConfigBuilder();
-                if (pump != null) {
-                    pump.setNewBasalProfile(profileSwitch.getProfileObject());
-                    MainApp.bus().post(new EventNewBasalProfile());
+                    PumpInterface pump = MainApp.getConfigBuilder();
+                    if (pump != null) {
+                        pump.setNewBasalProfile(profileSwitch.getProfileObject());
+                        MainApp.bus().post(new EventNewBasalProfile());
+                    } else {
+                        log.error("No active pump selected");
+                    }
+                    Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
                 } else {
-                    log.error("No active pump selected");
+                    log.error("No profile switch existing");
                 }
-                Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
             }
         });
     }
