@@ -565,7 +565,7 @@ public class ActionStringHandler {
         } else if ("cppset".equals(act[0])) {
             int timeshift = SafeParse.stringToInt(act[1]);
             int percentage = SafeParse.stringToInt(act[2]);
-            setCPP(percentage, timeshift);
+            setCPP(timeshift, percentage);
         } else if ("dismissoverviewnotification".equals(act[0])){
             MainApp.bus().post(new EventDismissNotification(SafeParse.stringToInt(act[1])));
         }
@@ -575,6 +575,7 @@ public class ActionStringHandler {
     private static void setCPP(int timeshift, int percentage) {
 
         String msg = "";
+
 
         //check for validity
         if (percentage < Constants.CPP_MIN_PERCENTAGE || percentage > Constants.CPP_MAX_PERCENTAGE) {

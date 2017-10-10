@@ -322,7 +322,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editCarbTime.setParams(0d, -60d, 60d, 5d, new DecimalFormat("0"), false);
 
         editPercentage = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_percentage);
-        editPercentage.setParams(100d, (double) Constants.CPP_MIN_PERCENTAGE, (double) Constants.CPP_MAX_PERCENTAGE, 5d, new DecimalFormat("0"), false);
+        editPercentage.setParams(100d, (double) Constants.CPP_MIN_PERCENTAGE, (double) Constants.CPP_MAX_PERCENTAGE, 1d, new DecimalFormat("0"), false);
 
         editTimeshift = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_timeshift);
         editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false);
@@ -722,7 +722,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
             @Override
             public void run() {
                 ProfileSwitch profileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
-                if (profileSwitch == null) {
+                if (profileSwitch != null) {
                     profileSwitch = new ProfileSwitch();
                     profileSwitch.date = System.currentTimeMillis();
                     profileSwitch.source = Source.USER;
