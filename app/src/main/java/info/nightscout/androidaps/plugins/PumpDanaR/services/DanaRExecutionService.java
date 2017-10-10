@@ -40,6 +40,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.SerialIOThread;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MessageBase;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusProgress;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStart;
+import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStartWithSpeed;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgBolusStop;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgCheckValue;
 import info.nightscout.androidaps.plugins.PumpDanaR.comm.MsgHistoryAlarm;
@@ -409,7 +410,12 @@ public class DanaRExecutionService extends Service {
 
     public boolean bolus(double amount, int carbs, Treatment t) {
         bolusingTreatment = t;
-        MsgBolusStart start = new MsgBolusStart(amount);
+        int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        MessageBase start;
+        if (speed == 0)
+            start = new MsgBolusStart(amount);
+        else
+            start = new MsgBolusStartWithSpeed(amount, speed);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
 
         connect("bolus");

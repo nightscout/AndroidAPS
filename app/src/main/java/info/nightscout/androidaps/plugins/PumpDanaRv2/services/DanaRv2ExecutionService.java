@@ -323,7 +323,7 @@ public class DanaRv2ExecutionService extends Service {
             MainApp.bus().post(new EventDanaRNewStatus());
             MainApp.bus().post(new EventInitializationChanged());
             NSUpload.uploadDeviceStatus();
-            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning ) {
+            if (danaRPump.dailyTotalUnits > danaRPump.maxDailyTotalUnits * Constants.dailyLimitWarning) {
                 log.debug("Approaching daily limit: " + danaRPump.dailyTotalUnits + "/" + danaRPump.maxDailyTotalUnits);
                 Notification reportFail = new Notification(Notification.APPROACHING_DAILY_LIMIT, MainApp.sResources.getString(R.string.approachingdailylimit), Notification.URGENT);
                 MainApp.bus().post(new EventNewNotification(reportFail));
@@ -402,7 +402,12 @@ public class DanaRv2ExecutionService extends Service {
 
     public boolean bolus(double amount, int carbs, long carbtime, Treatment t) {
         bolusingTreatment = t;
-        MsgBolusStart start = new MsgBolusStart(amount);
+        int speed = SP.getInt(R.string.key_danars_bolusspeed, 0);
+        MessageBase start;
+        if (speed == 0)
+            start = new MsgBolusStart(amount);
+        else
+            start = new MsgBolusStartWithSpeed(amount, speed);
         MsgBolusStop stop = new MsgBolusStop(amount, t);
 
         connect("bolus");

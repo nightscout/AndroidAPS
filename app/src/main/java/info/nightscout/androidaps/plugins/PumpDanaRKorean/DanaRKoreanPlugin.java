@@ -68,7 +68,7 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     private static DanaRKoreanExecutionService sExecutionService;
 
 
-    private DanaRPump pump = DanaRPump.getInstance();
+    private static DanaRPump pump = DanaRPump.getInstance();
     private boolean useExtendedBoluses = false;
 
     private static DanaRKoreanPlugin plugin = null;

@@ -134,8 +134,11 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 DanaRKoreanPlugin danaRKoreanPlugin = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
                 DanaRv2Plugin danaRv2Plugin = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
                 DanaRSPlugin danaRSPlugin = MainApp.getSpecificPlugin(DanaRSPlugin.class);
-                if (danaRPlugin.isEnabled(PluginBase.PUMP) || danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
+                if (danaRPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danar);
+                }
+                if (danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
+                    addPreferencesFromResource(R.xml.pref_danarkorean);
                 }
                 if (danaRv2Plugin != null && danaRv2Plugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danarv2);
