@@ -717,4 +717,35 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         });
     }
 
+    public static void doProfileSwitch(final int duration, final int percentage, final int timeshift) {
+        sHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                ProfileSwitch profileSwitch = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+                if (profileSwitch == null) {
+                    profileSwitch = new ProfileSwitch();
+                    profileSwitch.date = System.currentTimeMillis();
+                    profileSwitch.source = Source.USER;
+                    profileSwitch.profileName = MainApp.getConfigBuilder().getProfileName();
+                    profileSwitch.profileJson = MainApp.getConfigBuilder().getProfile().getData().toString();
+                    profileSwitch.profilePlugin = ConfigBuilderPlugin.getActiveProfileInterface().getClass().getName();
+                    profileSwitch.durationInMinutes = duration;
+                    profileSwitch.isCPP = percentage != 100 || timeshift != 0;
+                    profileSwitch.timeshift = timeshift;
+                    profileSwitch.percentage = percentage;
+                }
+                MainApp.getConfigBuilder().addToHistoryProfileSwitch(profileSwitch);
+
+                PumpInterface pump = MainApp.getConfigBuilder();
+                if (pump != null) {
+                    pump.setNewBasalProfile(profileSwitch.getProfileObject());
+                    MainApp.bus().post(new EventNewBasalProfile());
+                } else {
+                    log.error("No active pump selected");
+                }
+                Answers.getInstance().logCustom(new CustomEvent("ProfileSwitch"));
+            }
+        });
+    }
+
 }
