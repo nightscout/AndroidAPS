@@ -21,6 +21,7 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.NSClientInternal.NSClientInternalPlugin;
 import info.nightscout.androidaps.plugins.OpenAPSAMA.OpenAPSAMAPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpVirtual.VirtualPumpPlugin;
 import info.nightscout.androidaps.plugins.SensitivityAAPS.SensitivityAAPSPlugin;
@@ -70,6 +71,8 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             EditTextPreference editTextPref = (EditTextPreference) pref;
             if (pref.getKey().contains("password") || pref.getKey().contains("secret")) {
                 pref.setSummary("******");
+            } else if (pref.getKey().equals(MainApp.sResources.getString(R.string.key_danars_name))) {
+                pref.setSummary(SP.getString(R.string.key_danars_name,""));
             } else if (editTextPref.getText() != null && !editTextPref.getText().equals("")) {
                 ((EditTextPreference) pref).setDialogMessage(editTextPref.getDialogMessage());
                 pref.setSummary(editTextPref.getText());
@@ -130,11 +133,15 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 DanaRPlugin danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
                 DanaRKoreanPlugin danaRKoreanPlugin = MainApp.getSpecificPlugin(DanaRKoreanPlugin.class);
                 DanaRv2Plugin danaRv2Plugin = MainApp.getSpecificPlugin(DanaRv2Plugin.class);
+                DanaRSPlugin danaRSPlugin = MainApp.getSpecificPlugin(DanaRSPlugin.class);
                 if (danaRPlugin.isEnabled(PluginBase.PUMP) || danaRKoreanPlugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danar);
                 }
                 if (danaRv2Plugin != null && danaRv2Plugin.isEnabled(PluginBase.PUMP)) {
                     addPreferencesFromResource(R.xml.pref_danarv2);
+                }
+                if (danaRSPlugin != null && danaRSPlugin.isEnabled(PluginBase.PUMP)) {
+                    addPreferencesFromResource(R.xml.pref_danars);
                 }
                 if (danaRPlugin.isEnabled(PluginBase.PROFILE) || danaRKoreanPlugin.isEnabled(PluginBase.PROFILE) || danaRv2Plugin != null && danaRv2Plugin.isEnabled(PluginBase.PROFILE)) {
                     addPreferencesFromResource(R.xml.pref_danarprofile);
@@ -145,7 +152,7 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
                 addPreferencesFromResource(R.xml.pref_virtualpump);
             }
             InsulinOrefFreePeakPlugin insulinOrefFreePeakPlugin = MainApp.getSpecificPlugin(InsulinOrefFreePeakPlugin.class);
-            if(insulinOrefFreePeakPlugin.isEnabled(PluginBase.INSULIN)){
+            if (insulinOrefFreePeakPlugin.isEnabled(PluginBase.INSULIN)) {
                 addPreferencesFromResource(R.xml.pref_insulinoreffreepeak);
             }
 

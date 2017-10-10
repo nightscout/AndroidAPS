@@ -47,4 +47,16 @@
         <item>@string/key_teenage</item>
         <item>@string/key_adult</item>
     </string-array>
+
+    <string-array name="danaSpeedArray">
+        <item>12s 1U</item>
+        <item>30s 1U</item>
+        <item>60s 1U</item>
+    </string-array>
+    <string-array name="danaSpeedValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
 </resources>

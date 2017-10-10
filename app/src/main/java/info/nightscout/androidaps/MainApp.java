@@ -52,6 +52,8 @@ import info.nightscout.androidaps.plugins.PumpDanaR.DanaRPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaR.services.DanaRExecutionService;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.DanaRKoreanPlugin;
 import info.nightscout.androidaps.plugins.PumpDanaRKorean.services.DanaRKoreanExecutionService;
+import info.nightscout.androidaps.plugins.PumpDanaRS.DanaRSPlugin;
+import info.nightscout.androidaps.plugins.PumpDanaRS.services.DanaRSService;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.DanaRv2Plugin;
 import info.nightscout.androidaps.plugins.PumpDanaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.plugins.PumpMDI.MDIPlugin;
@@ -123,7 +125,8 @@ public class MainApp extends Application {
             pluginsList.add(SensitivityWeightedAveragePlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRPlugin.getPlugin());
             if (Config.DANAR) pluginsList.add(DanaRKoreanPlugin.getPlugin());
-            if (Config.DANARv2) pluginsList.add(DanaRv2Plugin.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRv2Plugin.getPlugin());
+            if (Config.DANAR) pluginsList.add(DanaRSPlugin.getPlugin());
             pluginsList.add(CareportalFragment.getPlugin());
             if (Config.MDI) pluginsList.add(MDIPlugin.getPlugin());
             if (Config.VIRTUALPUMP) pluginsList.add(VirtualPumpPlugin.getInstance());
@@ -207,6 +210,7 @@ public class MainApp extends Application {
                 startService(new Intent(this, DanaRExecutionService.class));
                 startService(new Intent(this, DanaRKoreanExecutionService.class));
                 startService(new Intent(this, DanaRv2ExecutionService.class));
+                startService(new Intent(this, DanaRSService.class));
             }
             keepAliveReceiver.setAlarm(this);
         }

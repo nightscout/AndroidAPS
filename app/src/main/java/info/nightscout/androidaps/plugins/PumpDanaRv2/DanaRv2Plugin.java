@@ -210,7 +210,7 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
 
     @Override
     public boolean isInitialized() {
-        return pump.lastConnection.getTime() > 0 && pump.isExtendedBolusEnabled;
+        return pump.lastConnection.getTime() > 0;
     }
 
     @Override
@@ -578,7 +578,11 @@ public class DanaRv2Plugin implements PluginBase, PumpInterface, DanaRInterface,
     }
 
     public static void doConnect(String from) {
-        if (sExecutionService != null) sExecutionService.connect(from);
+        if (sExecutionService != null) {
+            sExecutionService.connect(from);
+            pumpDescription.basalStep = pump.basalStep;
+            pumpDescription.bolusStep = pump.bolusStep;
+        }
     }
 
     public static boolean isConnected() {

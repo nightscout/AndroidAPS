@@ -646,7 +646,11 @@ public class DanaRKoreanPlugin implements PluginBase, PumpInterface, DanaRInterf
     }
 
     public static void doConnect(String from) {
-        if (sExecutionService != null) sExecutionService.connect(from);
+        if (sExecutionService != null) {
+            sExecutionService.connect(from);
+            pumpDescription.basalStep = pump.basalStep;
+            pumpDescription.bolusStep = pump.bolusStep;
+        }
     }
 
     public static boolean isConnected() {

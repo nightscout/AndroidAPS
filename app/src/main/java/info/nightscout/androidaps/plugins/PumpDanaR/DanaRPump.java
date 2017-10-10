@@ -9,8 +9,10 @@ import org.slf4j.LoggerFactory;
 import java.text.DecimalFormat;
 import java.util.Date;
 
+import info.nightscout.androidaps.Config;
 import info.nightscout.androidaps.Constants;
 import info.nightscout.androidaps.R;
+import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.ProfileStore;
 import info.nightscout.utils.SP;
 
@@ -52,6 +54,7 @@ public class DanaRPump {
     public static final int PRIME = 12;
     public static final int PROFILECHANGE = 13;
     public static final int CARBS = 14;
+    public static final int PRIMECANNULA = 15;
 
     public Date lastConnection = new Date(0);
     public Date lastSettingsRead = new Date(0);
@@ -78,10 +81,12 @@ public class DanaRPump {
     public boolean pumpSuspended;
     public boolean calculatorEnabled;
     public double dailyTotalUnits;
+    public double dailyTotalBolusUnits = 0; // RS only
+    public double dailyTotalBasalUnits = 0; // RS only
     public int maxDailyTotalUnits;
 
-    public double bolusStep;
-    public double basalStep;
+    public double bolusStep = 0.1;
+    public double basalStep = 0.1;
 
     public double iob;
 
@@ -108,6 +113,7 @@ public class DanaRPump {
     public int extendedBolusSoFarInMinutes;
     public Date extendedBolusStart;
     public int extendedBolusRemainingMinutes;
+    public double extendedBolusDeliveredSoFar; //RS only
 
     // Profile
     public int units;
@@ -135,6 +141,27 @@ public class DanaRPump {
     //Limits
     public double maxBolus;
     public double maxBasal;
+
+    // DanaRS specific
+
+    public String rs_password = "";
+
+    // User settings
+    public int timeDisplayType;
+    public int buttonScrollOnOff;
+    public int beepAndAlarm;
+    public int lcdOnTimeSec;
+    public int backlightOnTimeSec;
+    public int selectedLanguage;
+    public int shutdownHour;
+    public int lowReservoirRate;
+    public int cannulaVolume;
+    public int refillAmount;
+
+    public double initialBolusAmount;
+    // Bolus settings
+    public int bolusCalculationOption;
+    public int missedBolusConfig;
 
     public String getUnits() {
         return units == UNITS_MGDL ? Constants.MGDL : Constants.MMOL;
@@ -203,6 +230,19 @@ public class DanaRPump {
 
     public String createConvertedProfileName() {
         return PROFILE_PREFIX + (activeProfile + 1);
+    }
+
+    public static double[] buildDanaRProfileRecord(Profile nsProfile) {
+        double[] record = new double[24];
+        for (Integer hour = 0; hour < 24; hour++) {
+            //Some values get truncated to the next lower one.
+            // -> round them to two decimals and make sure we are a small delta larger (that will get truncated)
+            double value = Math.round(100d * nsProfile.getBasal((Integer) (hour * 60 * 60)))/100d + 0.00001;
+            if (Config.logDanaMessageDetail)
+                log.debug("NS basal value for " + hour + ":00 is " + value);
+            record[hour] = value;
+        }
+        return record;
     }
 
 }

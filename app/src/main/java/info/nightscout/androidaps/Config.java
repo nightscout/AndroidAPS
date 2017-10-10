@@ -44,6 +44,6 @@ public class Config {
 
     // DanaR specific
     public static final boolean logDanaBTComm = true;
-    public static final boolean logDanaMessageDetail = true;
+    public static boolean logDanaMessageDetail = true;
     public static final boolean logDanaSerialEngine = true;
 }
