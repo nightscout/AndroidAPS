@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -75,6 +76,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     TextView eventTypeText;
     LinearLayout layoutPercent;
     LinearLayout layoutAbsolute;
+    LinearLayout layoutReuse;
+
 
     TextView dateButton;
     TextView timeButton;
@@ -86,6 +89,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
     EditText notesEdit;
     Spinner profileSpinner;
     Spinner reasonSpinner;
+    Button reuseButton;
 
     NumberPicker editBg;
     NumberPicker editCarbs;
@@ -141,6 +145,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         layoutPercent = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_percent_layout);
         layoutAbsolute = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_absolute_layout);
 
+        layoutReuse = (LinearLayout) view.findViewById(R.id.careportal_newnstreatment_reuse_layout);
+
         eventTypeText = (TextView) view.findViewById(R.id.careportal_newnstreatment_eventtype);
         eventTypeText.setText(event);
         bgUnitsView = (TextView) view.findViewById(R.id.careportal_newnstreatment_bgunits);
@@ -148,6 +154,8 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         sensorRadioButton = (RadioButton) view.findViewById(R.id.careportal_newnstreatment_sensor);
         otherRadioButton = (RadioButton) view.findViewById(R.id.careportal_newnstreatment_other);
         profileSpinner = (Spinner) view.findViewById(R.id.careportal_newnstreatment_profile);
+
+        reuseButton = (Button) view.findViewById(R.id.careportal_newnstreatment_reusebutton);
 
         notesEdit = (EditText) view.findViewById(R.id.careportal_newnstreatment_notes);
 
@@ -327,6 +335,20 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         editTimeshift = (NumberPicker) view.findViewById(R.id.careportal_newnstreatment_timeshift);
         editTimeshift.setParams(0d, (double) Constants.CPP_MIN_TIMESHIFT, (double) Constants.CPP_MAX_TIMESHIFT, 1d, new DecimalFormat("0"), false);
 
+        ProfileSwitch ps = MainApp.getConfigBuilder().getProfileSwitchFromHistory(System.currentTimeMillis());
+        if(ps!=null && ps.isCPP){
+            final int percentage = ps.percentage;
+            final int timeshift = ps.timeshift;
+            reuseButton.setText(reuseButton.getText() + " " + percentage + "% " + timeshift +"h");
+            reuseButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    editPercentage.setValue((double)percentage);
+                    editTimeshift.setValue((double)timeshift);
+                }
+            });
+        }
+
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_eventtime_layout), options.date);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_bg_layout), options.bg);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_bgsource_layout), options.bg);
@@ -340,6 +362,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_profile_layout), options.profile);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_percentage_layout), options.profile);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_timeshift_layout), options.profile);
+        showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_reuse_layout), options.profile && ps!=null && ps.isCPP);
         showOrHide((ViewGroup) view.findViewById(R.id.careportal_newnstreatment_temptarget_layout), options.tempTarget);
 
         return view;
