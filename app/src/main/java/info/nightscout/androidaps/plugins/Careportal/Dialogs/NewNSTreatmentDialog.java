@@ -707,7 +707,7 @@ public class NewNSTreatmentDialog extends DialogFragment implements View.OnClick
 
                 PumpInterface pump = MainApp.getConfigBuilder();
                 if (pump != null) {
-                    pump.setNewBasalProfile(profileStore.getSpecificProfile(profileName));
+                    pump.setNewBasalProfile(profileSwitch.getProfileObject());
                     MainApp.bus().post(new EventNewBasalProfile());
                 } else {
                     log.error("No active pump selected");
