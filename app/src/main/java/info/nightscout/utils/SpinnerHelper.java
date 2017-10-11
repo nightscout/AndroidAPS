@@ -1,5 +1,6 @@
 package info.nightscout.utils;
 
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -69,6 +70,7 @@ import android.widget.SpinnerAdapter;
  */
 public class SpinnerHelper implements OnItemSelectedListener {
     private final Spinner spinner;
+    private boolean userTouched;
 
     private int lastPosition = -1;
     private OnItemSelectedListener proxiedItemSelectedListener = null;
@@ -93,11 +95,22 @@ public class SpinnerHelper implements OnItemSelectedListener {
 
     public void setOnItemSelectedListener(OnItemSelectedListener listener) {
         proxiedItemSelectedListener = listener;
+        setTouchListener();
         spinner.setOnItemSelectedListener(listener == null ? null : this);
     }
 
+    public void setTouchListener() {
+        spinner.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                userTouched = true;
+                return false;
+            }
+        });
+    }
+
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (position != lastPosition) {
+        if (position != lastPosition && userTouched) {
             lastPosition = position;
             if (proxiedItemSelectedListener != null) {
                 proxiedItemSelectedListener.onItemSelected(
