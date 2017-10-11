@@ -17,10 +17,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancelTbrCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandException;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadBasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadHistoryCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ReadReserverLevelCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetBasalProfile;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetTbrCommand;
 
 // TODO regularly read "My data" history (boluses, TBR) to double check all commands ran successfully.
 // Automatically compare against AAPS db, or log all requests in the PumpInterface (maybe Milos
@@ -31,7 +38,7 @@ import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpSta
  * class and inject that into executing commands, so that commands operately solely on
  * operations and are cleanly separated from the thread management, connection management etc
  */
-public class RuffyScripter {
+public class RuffyScripter implements RuffyCommands {
     private static final Logger log = LoggerFactory.getLogger(RuffyScripter.class);
 
     private IRuffyService ruffyService;
@@ -695,5 +702,47 @@ public class RuffyScripter {
             }
         }
         return (T) value;
+    }
+
+    @Override
+    public CommandResult deliverBolus(double amount, BolusCommand.ProgressReportCallback progressReportCallback) {
+        return runCommand(new BolusCommand(amount, progressReportCallback));
+    }
+
+    @Override
+    public void cancelBolus() {
+        if (activeCmd instanceof BolusCommand) {
+            ((BolusCommand) activeCmd).requestCancellation();
+        }
+    }
+
+    @Override
+    public CommandResult setTbr(int percent, int duraton) {
+        return runCommand(new SetTbrCommand(percent, duraton));
+    }
+
+    @Override
+    public CommandResult cancelTbr() {
+        return runCommand(new CancelTbrCommand());
+    }
+
+    @Override
+    public CommandResult readReservoirLevel() {
+        return runCommand(new ReadReserverLevelCommand());
+    }
+
+    @Override
+    public CommandResult readHistory(PumpHistory knownHistory) {
+        return runCommand(new ReadHistoryCommand(knownHistory));
+    }
+
+    @Override
+    public CommandResult readBasalProfile() {
+        return runCommand(new ReadBasalProfile());
+    }
+
+    @Override
+    public CommandResult setBasalProfile(BasalProfile basalProfile) {
+        return runCommand(new SetBasalProfile(basalProfile));
     }
 }

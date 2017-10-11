@@ -23,15 +23,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Date;
 
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CancelTbrCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.ExperimentalBolusCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.GetPumpStateCommand;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.SetTbrCommand;
 import info.nightscout.androidaps.BuildConfig;
 import info.nightscout.androidaps.MainApp;
 import info.nightscout.androidaps.R;
@@ -47,6 +38,11 @@ import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.PumpState;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.BolusCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.Command;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.commands.CommandResult;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
 
@@ -54,7 +50,6 @@ import info.nightscout.utils.SP;
  * Created by mike on 05.08.2016.
  */
 public class ComboPlugin implements PluginBase, PumpInterface {
-    public static final String COMBO_MAX_TEMP_PERCENT_SP = "combo_maxTempPercent";
     private static Logger log = LoggerFactory.getLogger(ComboPlugin.class);
 
     private boolean fragmentEnabled = false;
@@ -142,11 +137,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                         long now = System.currentTimeMillis();
                         long fiveMinutesSinceLastAlarm = lastAlarmTime + (5 * 60 * 1000) + (15 * 1000);
                         boolean loopEnabled = ConfigBuilderPlugin.getActiveLoop() != null;
-                        boolean ignoreLastFailedTbrCmd = SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
-                                && SP.getBoolean(R.string.key_combo_experimental_ignore_transient_errors, false)
-                                && (localLastCmd instanceof SetTbrCommand || localLastCmd instanceof GetPumpStateCommand)
-                                && ignoreLastSetTbrOrReadStateFailure;
-                        if (now > fiveMinutesSinceLastAlarm && loopEnabled && !ignoreLastFailedTbrCmd) {
+                        if (now > fiveMinutesSinceLastAlarm && loopEnabled) {
                             log.error("Command failed: " + localLastCmd);
                             log.error("Command result: " + localLastCmdResult);
                             PumpState localPumpState = pump.state;
@@ -352,7 +343,8 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (notAUserRequest && wasRunAtLeastOnce && ranWithinTheLastMinute) {
             log.debug("Not fetching state from pump, since we did already within the last 60 seconds");
         } else {
-            runCommand(new GetPumpStateCommand());
+            // TODO
+//            runCommand(new GetPumpStateCommand());
         }
     }
 
@@ -366,10 +358,10 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         return basal;
     }
 
-    private static ExperimentalBolusCommand.ProgressReportCallback bolusProgressReportCallback =
-            new ExperimentalBolusCommand.ProgressReportCallback() {
+    private static BolusCommand.ProgressReportCallback bolusProgressReportCallback =
+            new BolusCommand.ProgressReportCallback() {
         @Override
-        public void report(ExperimentalBolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
+        public void report(BolusCommand.ProgressReportCallback.State state, int percent, double delivered) {
             EventOverviewBolusProgress event = EventOverviewBolusProgress.getInstance();
             switch (state) {
                 case PROGRAMMING:
@@ -467,10 +459,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
 
     @NonNull
     private PumpEnactResult deliverBolus(DetailedBolusInfo detailedBolusInfo) {
-        runningBolusCommand = SP.getBoolean(R.string.key_combo_enable_experimental_features, false)
-                              && SP.getBoolean(R.string.key_combo_enable_experimental_bolus, false)
-                ? new ExperimentalBolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback)
-                : new BolusCommand(detailedBolusInfo.insulin);
+        runningBolusCommand = new BolusCommand(detailedBolusInfo.insulin, bolusProgressReportCallback);
         CommandResult bolusCmdResult = runCommand(runningBolusCommand);
         PumpEnactResult pumpEnactResult = new PumpEnactResult();
         pumpEnactResult.success = bolusCmdResult.success;
@@ -515,19 +504,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         log.debug("RuffyScripter returned from command invocation, result: " + commandResult);
         if (commandResult.exception != null) {
             log.error("Exception received from pump", commandResult.exception);
-        }
-
-        // error tolerance
-        if (commandResult.success) ignoreLastSetTbrOrReadStateFailure = false;
-
-        if (command instanceof SetTbrCommand || command instanceof GetPumpStateCommand) {
-            if (!commandResult.success && !ignoreLastSetTbrOrReadStateFailure) {
-                // ignore this once
-                ignoreLastSetTbrOrReadStateFailure = true;
-            } else {
-                // second failure in a row
-                ignoreLastSetTbrOrReadStateFailure = false;
-            }
         }
 
         pump.lastCmd = command;
@@ -595,7 +571,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
             adjustedPercent = rounded.intValue();
         }
 
-        CommandResult commandResult = runCommand(new SetTbrCommand(adjustedPercent, durationInMinutes));
+        CommandResult commandResult = ruffyScripter.setTbr(adjustedPercent, durationInMinutes);
 
         if (commandResult.enacted) {
             TemporaryBasal tempStart = new TemporaryBasal(commandResult.completionTime);
@@ -641,7 +617,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         if (activeTemp == null || userRequested) {
             /* v1 compatibility to sync DB to pump if they diverged (activeTemp == null) */
             log.debug("cancelTempBasal: hard-cancelling TBR since user requested");
-            commandResult = runCommand(new CancelTbrCommand());
+            commandResult = ruffyScripter.cancelTbr();
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(commandResult.completionTime);
                 tempBasal.durationInMinutes = 0;
@@ -661,14 +637,14 @@ public class ComboPlugin implements PluginBase, PumpInterface {
         } else {
             // Set a fake neutral temp to avoid TBR cancel alert. Decide 90% vs 110% based on
             // on whether the TBR we're cancelling is above or below 100%.
-            long percentage = (activeTemp.percentRate > 100) ? 110 : 90;
+            int percentage = (activeTemp.percentRate > 100) ? 110 : 90;
             log.debug("cancelTempBasal: changing tbr to " + percentage + "% for 15 mins.");
-            commandResult = runCommand(new SetTbrCommand(percentage, 15));
+            commandResult = ruffyScripter.setTbr(percentage, 15);
             if (commandResult.enacted) {
                 tempBasal = new TemporaryBasal(commandResult.completionTime);
                 tempBasal.durationInMinutes = 15;
                 tempBasal.source = Source.USER;
-                tempBasal.percentRate = (int) percentage;
+                tempBasal.percentRate = percentage;
                 tempBasal.isAbsolute = false;
             }
         }
@@ -695,7 +671,7 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     // TODO v2 add battery, reservoir info when we start reading that and clean up the code
     @Override
     public JSONObject getJSONStatus() {
-        if (true) { //pump.lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
+        if (pump.lastCmdTime.getTime() + 5 * 60 * 1000L < System.currentTimeMillis()) {
             return null;
         }
 

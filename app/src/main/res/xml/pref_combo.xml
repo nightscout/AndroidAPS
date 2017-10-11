@@ -12,22 +12,9 @@
         <SwitchPreference
             android:dependency="@string/key_combo_enable_experimental_features"
             android:defaultValue="false"
-            android:key="@string/key_combo_enable_experimental_bolus"
-            android:title="@string/combo_enable_experimental_bolus"
-            android:summary="@string/combo_enable_experimental_bolus_summary" />
-        <SwitchPreference
-            android:dependency="@string/key_combo_enable_experimental_features"
-            android:defaultValue="false"
             android:key="@string/key_combo_enable_experimental_split_bolus"
             android:title="@string/combo_enable_experimental_split_bolus"
             android:summary="@string/combo_enable_experimental_split_bolus_summary"/>
-
-        <SwitchPreference
-            android:dependency="@string/key_combo_enable_experimental_features"
-            android:defaultValue="false"
-            android:key="@string/key_combo_experimental_ignore_transient_errors"
-            android:title="@string/combo_experimental_ignore_transient_errors"
-            android:summary="@string/combo_experimental_ignore_transient_errors_summary"/>
 
         <!-- TODO add validation, to restrict values to rang 0-100, see pref_absorption_oref0.xml -->
         <EditTextPreference
