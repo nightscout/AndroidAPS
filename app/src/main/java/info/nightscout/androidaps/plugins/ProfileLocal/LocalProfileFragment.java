@@ -84,10 +84,10 @@ public class LocalProfileFragment extends SubscriberFragment {
             diaView.setParams(localProfilePlugin.dia, 2d, 48d, 0.1d, new DecimalFormat("0.0"), false, textWatch);
             mgdlView = (RadioButton) layout.findViewById(R.id.localprofile_mgdl);
             mmolView = (RadioButton) layout.findViewById(R.id.localprofile_mmol);
-            icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label), getPlugin().ic, null, 0.1d, new DecimalFormat("0.0"), save);
-            isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label), getPlugin().isf, null, 0.1d, new DecimalFormat("0.0"), save);
-            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label), getPlugin().basal, null, 0.01d, new DecimalFormat("0.00"), save);
-            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label), getPlugin().targetLow, getPlugin().targetHigh, 0.1d, new DecimalFormat("0.0"), save);
+            icView = new TimeListEdit(getContext(), layout, R.id.localprofile_ic, MainApp.sResources.getString(R.string.nsprofileview_ic_label) + ":", getPlugin().ic, null, 0.1d, new DecimalFormat("0.0"), save);
+            isfView = new TimeListEdit(getContext(), layout, R.id.localprofile_isf, MainApp.sResources.getString(R.string.nsprofileview_isf_label) + ":", getPlugin().isf, null, 0.1d, new DecimalFormat("0.0"), save);
+            basalView = new TimeListEdit(getContext(), layout, R.id.localprofile_basal, MainApp.sResources.getString(R.string.nsprofileview_basal_label)+ ":", getPlugin().basal, null, 0.01d, new DecimalFormat("0.00"), save);
+            targetView = new TimeListEdit(getContext(), layout, R.id.localprofile_target, MainApp.sResources.getString(R.string.nsprofileview_target_label)+ ":", getPlugin().targetLow, getPlugin().targetHigh, 0.1d, new DecimalFormat("0.0"), save);
             profileswitchButton = (Button) layout.findViewById(R.id.localprofile_profileswitch);
 
             PumpInterface pump = MainApp.getConfigBuilder();
