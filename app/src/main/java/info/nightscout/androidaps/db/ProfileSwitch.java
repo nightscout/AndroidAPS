@@ -68,7 +68,7 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
     }
 
     public String getCustomizedName() {
-        String name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U/h ";
+        String name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
         if (isCPP) {
             name += "(" + percentage + "%," + timeshift + "h)";
         }
