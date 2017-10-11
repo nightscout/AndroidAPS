@@ -54,7 +54,9 @@ public class TimeListEdit {
     private NumberFormat formatter;
     private Runnable save;
     private LinearLayout layout;
+    private TextView textlabel;
     private int inflatedUntil = -1;
+
 
     public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, double step, NumberFormat formatter, Runnable save) {
         this.context = context;
@@ -72,7 +74,7 @@ public class TimeListEdit {
     private void buildView() {
         layout = (LinearLayout) view.findViewById(resLayoutId);
 
-        TextView textlabel = new TextView(context);
+        textlabel = new TextView(context);
         textlabel.setText(label);
         textlabel.setGravity(Gravity.START);
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -384,5 +386,11 @@ public class TimeListEdit {
 
     private void callSave() {
         if (save != null) save.run();
+    }
+
+    public void updateLabel(String txt){
+        this.label = txt;
+        if(textlabel!=null)
+            textlabel.setText(txt);
     }
 }
