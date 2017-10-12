@@ -1,6 +1,7 @@
 package info.nightscout.utils;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.TextViewCompat;
 import android.text.Editable;
@@ -260,7 +261,7 @@ public class TimeListEdit {
         return childview;
     }
 
-    private void fillSpinner(SpinnerHelper spinner, int secondsFromMidnight, int previous, int next) {
+    private void fillSpinner(final SpinnerHelper spinner, int secondsFromMidnight, int previous, int next) {
         int posInList = 0;
         ArrayList<CharSequence> timeList = new ArrayList<>();
         int pos = 0;
@@ -270,10 +271,16 @@ public class TimeListEdit {
             pos++;
         }
 
-        ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(context,
+        final ArrayAdapter<CharSequence> adapter = new ArrayAdapter<>(context,
                 R.layout.spinner_centered, timeList);
         spinner.setAdapter(adapter);
-        spinner.setSelection(posInList, false);
+        final int finalPosInList = posInList;
+        new Handler().postDelayed(new Runnable() {
+            public void run() {
+                spinner.setSelection(finalPosInList, false);
+                adapter.notifyDataSetChanged();
+            }
+        }, 100);
     }
 
     private int itemsCount() {
