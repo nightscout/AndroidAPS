@@ -258,6 +258,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         try {
             JSONArray jsonArray = new JSONArray();
             double last = -1d;
+
             for (int i = 0; i < 24; i++) {
                 double value = SP.getDouble(SETTINGS_PREFIX + type + i, defaultValue);
                 String time;
@@ -267,8 +268,8 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
                     jsonArray.put(new JSONObject().put("time", time).put("timeAsSeconds", i * 60 * 60).put("value", value));
                 }
                 last =  value;
-                return jsonArray.toString();
             }
+            return jsonArray.toString();
         } catch (JSONException e) {
             log.error("Unhandled exception", e);
         }
