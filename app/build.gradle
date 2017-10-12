@@ -62,7 +62,7 @@ android {
         }
     }
     productFlavors {
-        flavorDimensions "standard", "wear"
+        flavorDimensions "standard"
         full {
             dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
@@ -111,22 +111,6 @@ android {
             buildConfigField "boolean", "NSCLIENTOLNY", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
         }
-        wear {
-            dimension "wear"
-            buildConfigField "boolean", "WEAR", "true"
-            buildConfigField "boolean", "WEAR_CONTROL", "false"
-
-        }
-        wearcontrol {
-            dimension "wear"
-            buildConfigField "boolean", "WEAR", "true"
-            buildConfigField "boolean", "WEAR_CONTROL", "true"
-        }
-        nowear {
-            dimension "wear"
-            buildConfigField "boolean", "WEAR", "false"
-            buildConfigField "boolean", "WEAR_CONTROL", "false"
-        }
     }
 }
 
@@ -140,8 +124,7 @@ allprojects {
 }
 
 dependencies {
-    wearWearApp project(path: ':wear', configuration: 'restrictedRelease')
-    wearcontrolWearApp project(path: ':wear', configuration: 'fullRelease')
+    wearApp project(':wear')
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {

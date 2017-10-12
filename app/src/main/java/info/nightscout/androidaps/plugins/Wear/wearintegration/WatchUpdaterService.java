@@ -42,6 +42,7 @@ import info.nightscout.androidaps.plugins.Overview.OverviewPlugin;
 import info.nightscout.androidaps.plugins.Wear.ActionStringHandler;
 import info.nightscout.androidaps.plugins.Wear.WearPlugin;
 import info.nightscout.utils.DecimalFormatter;
+import info.nightscout.utils.SP;
 import info.nightscout.utils.SafeParse;
 import info.nightscout.utils.ToastUtils;
 
@@ -65,6 +66,7 @@ public class WatchUpdaterService extends WearableListenerService implements
 
     private static final String OPEN_SETTINGS_PATH = "/openwearsettings";
     private static final String NEW_STATUS_PATH = "/sendstatustowear";
+    private static final String NEW_PREFERENCES_PATH = "/sendpreferencestowear";
     public static final String BASAL_DATA_PATH = "/nightscout_watch_basal";
     public static final String BOLUS_PROGRESS_PATH = "/nightscout_watch_bolusprogress";
     public static final String ACTION_CONFIRMATION_REQUEST_PATH = "/nightscout_watch_actionconfirmationrequest";
@@ -326,6 +328,7 @@ public class WatchUpdaterService extends WearableListenerService implements
             entries.putDataMapArrayList("entries", dataMaps);
             new SendToDataLayerThread(WEARABLE_DATA_PATH, googleApiClient).execute(entries);
         }
+        sendPreferences();
         sendBasals();
         sendStatus();
     }
@@ -520,6 +523,22 @@ public class WatchUpdaterService extends WearableListenerService implements
             //unique content
             dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
             dataMapRequest.getDataMap().putString("externalStatusString", status);
+            PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
+            Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
+        } else {
+            Log.e("SendStatus", "No connection to wearable available!");
+        }
+    }
+
+    private void sendPreferences() {
+        if (googleApiClient.isConnected()) {
+
+            boolean wearcontrol = SP.getBoolean("wearcontrol",false);
+
+            PutDataMapRequest dataMapRequest = PutDataMapRequest.create(NEW_PREFERENCES_PATH);
+            //unique content
+            dataMapRequest.getDataMap().putDouble("timestamp", System.currentTimeMillis());
+            dataMapRequest.getDataMap().putBoolean("wearcontrol", wearcontrol);
             PutDataRequest putDataRequest = dataMapRequest.asPutDataRequest();
             Wearable.DataApi.putDataItem(googleApiClient, putDataRequest);
         } else {

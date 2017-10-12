@@ -934,10 +934,14 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
     }
 
     public String getProfileName(long time) {
+        return getProfileName(time, true);
+    }
+
+    public String getProfileName(long time, boolean customized) {
         ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
             if (profileSwitch.profileJson != null) {
-                return profileSwitch.getCustomizedName();
+                return customized?profileSwitch.getCustomizedName():profileSwitch.profileName;
             } else {
                 Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
                 if (profile != null)

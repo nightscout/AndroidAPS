@@ -53,6 +53,10 @@ public class TimeListEdit {
     private double step;
     private NumberFormat formatter;
     private Runnable save;
+    private LinearLayout layout;
+    private TextView textlabel;
+    private int inflatedUntil = -1;
+
 
     public TimeListEdit(Context context, View view, int resLayoutId, String label, JSONArray data1, JSONArray data2, double step, NumberFormat formatter, Runnable save) {
         this.context = context;
@@ -68,9 +72,9 @@ public class TimeListEdit {
     }
 
     private void buildView() {
-        LinearLayout layout = (LinearLayout) view.findViewById(resLayoutId);
+        layout = (LinearLayout) view.findViewById(resLayoutId);
 
-        TextView textlabel = new TextView(context);
+        textlabel = new TextView(context);
         textlabel.setText(label);
         textlabel.setGravity(Gravity.START);
         LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -80,102 +84,9 @@ public class TimeListEdit {
         TextViewCompat.setTextAppearance(textlabel, android.R.style.TextAppearance_Medium);
         layout.addView(textlabel);
 
-        for (int i = 0; i < 24; i++) {
-            LayoutInflater inflater = LayoutInflater.from(context);
-            View childview = intervals[i] = inflater.inflate(R.layout.timelistedit_element, layout, false);
-            spinners[i] = new SpinnerHelper(childview.findViewById(R.id.timelistedit_time));
-            numberPickers1[i] = (NumberPicker) childview.findViewById(R.id.timelistedit_edit1);
-            numberPickers2[i] = (NumberPicker) childview.findViewById(R.id.timelistedit_edit2);
-            addButtons[i] = (ImageView) childview.findViewById(R.id.timelistedit_add);
-            removeButtons[i] = (ImageView) childview.findViewById(R.id.timelistedit_remove);
-
-            final int fixedPos = i;
-            addButtons[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int seconds = secondFromMidnight(fixedPos);
-                    addItem(fixedPos, seconds, 0, 0);
-                    // for here for the rest of values
-                    for (int i = fixedPos + 1; i < itemsCount(); i++) {
-                        if (secondFromMidnight(i - 1) >= secondFromMidnight(i)) {
-                            editItem(i, secondFromMidnight(i - 1) + ONEHOURINSECONDS, value1(i), value2(i));
-                        }
-                    }
-                    while (itemsCount() > 24 || secondFromMidnight(itemsCount() - 1) > 23 * ONEHOURINSECONDS)
-                        removeItem(itemsCount() - 1);
-                    callSave();
-                    log();
-                    fillView();
-                }
-            });
-
-            removeButtons[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    removeItem(fixedPos);
-                    callSave();
-                    log();
-                    fillView();
-                }
-            });
-
-            spinners[i].setOnItemSelectedListener(
-                    new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            int seconds = DateUtil.toSeconds(spinners[fixedPos].getSelectedItem().toString());
-                            editItem(fixedPos, seconds, value1(fixedPos), value2(fixedPos));
-                            log();
-                            callSave();
-                            fillView();
-                        }
-
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {
-                        }
-                    }
-            );
-
-           numberPickers1[i].setTextWatcher(new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    editItem(fixedPos, secondFromMidnight(fixedPos), SafeParse.stringToDouble(numberPickers1[fixedPos].getText()), value2(fixedPos));
-                    callSave();
-                    log();
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                }
-            });
-
-
-            numberPickers2[i].setTextWatcher(new TextWatcher() {
-                @Override
-                public void afterTextChanged(Editable s) {
-                    editItem(fixedPos, secondFromMidnight(fixedPos), value1(fixedPos), SafeParse.stringToDouble(numberPickers2[fixedPos].getText()));
-                    callSave();
-                    log();
-                }
-
-                @Override
-                public void beforeTextChanged(CharSequence s, int start,
-                                              int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start,
-                                          int before, int count) {
-                }
-            });
-
-            layout.addView(childview);
+        for (int i = 0; i < 24 && i < itemsCount(); i++) {
+            inflateRow(i);
+            inflatedUntil = i;
         }
 
         // last "plus" to append new interval
@@ -199,13 +110,113 @@ public class TimeListEdit {
         fillView();
     }
 
+    private void inflateRow(int i) {
+
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View childview = intervals[i] = inflater.inflate(R.layout.timelistedit_element, layout, false);
+        spinners[i] = new SpinnerHelper(childview.findViewById(R.id.timelistedit_time));
+        numberPickers1[i] = (NumberPicker) childview.findViewById(R.id.timelistedit_edit1);
+        numberPickers2[i] = (NumberPicker) childview.findViewById(R.id.timelistedit_edit2);
+        addButtons[i] = (ImageView) childview.findViewById(R.id.timelistedit_add);
+        removeButtons[i] = (ImageView) childview.findViewById(R.id.timelistedit_remove);
+
+        final int fixedPos = i;
+        addButtons[i].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int seconds = secondFromMidnight(fixedPos);
+                addItem(fixedPos, seconds, 0, 0);
+                // for here for the rest of values
+                for (int i = fixedPos + 1; i < itemsCount(); i++) {
+                    if (secondFromMidnight(i - 1) >= secondFromMidnight(i)) {
+                        editItem(i, secondFromMidnight(i - 1) + ONEHOURINSECONDS, value1(i), value2(i));
+                    }
+                }
+                while (itemsCount() > 24 || secondFromMidnight(itemsCount() - 1) > 23 * ONEHOURINSECONDS)
+                    removeItem(itemsCount() - 1);
+                callSave();
+                log();
+                fillView();
+            }
+        });
+
+        removeButtons[i].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                removeItem(fixedPos);
+                callSave();
+                log();
+                fillView();
+            }
+        });
+
+        spinners[i].setOnItemSelectedListener(
+                new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        int seconds = DateUtil.toSeconds(spinners[fixedPos].getSelectedItem().toString());
+                        editItem(fixedPos, seconds, value1(fixedPos), value2(fixedPos));
+                        log();
+                        callSave();
+                        fillView();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                }
+        );
+
+        numberPickers1[i].setTextWatcher(new TextWatcher() {
+             @Override
+             public void afterTextChanged(Editable s) {
+                 editItem(fixedPos, secondFromMidnight(fixedPos), SafeParse.stringToDouble(numberPickers1[fixedPos].getText()), value2(fixedPos));
+                 callSave();
+                 log();
+             }
+
+             @Override
+             public void beforeTextChanged(CharSequence s, int start,
+                                           int count, int after) {
+             }
+
+             @Override
+             public void onTextChanged(CharSequence s, int start,
+                                       int before, int count) {
+             }
+         });
+
+
+        numberPickers2[i].setTextWatcher(new TextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                editItem(fixedPos, secondFromMidnight(fixedPos), value1(fixedPos), SafeParse.stringToDouble(numberPickers2[fixedPos].getText()));
+                callSave();
+                log();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+        });
+
+        layout.addView(childview);
+    }
+
     private void fillView() {
         for (int i = 0; i < 24; i++) {
             if (i < itemsCount()) {
                 intervals[i].setVisibility(View.VISIBLE);
                 buildInterval(i);
-            } else
+            } else if (i <= inflatedUntil){
                 intervals[i].setVisibility(View.GONE);
+            }
         }
 
         if (!(itemsCount() > 0 && secondFromMidnight(itemsCount() - 1) == 23 * ONEHOURINSECONDS)) {
@@ -339,6 +350,11 @@ public class TimeListEdit {
     }
 
     private void addItem(int index, int timeAsSeconds, double value1, double value2) {
+        if(itemsCount()>inflatedUntil) {
+            layout.removeView(finalAdd);
+            inflateRow(++inflatedUntil);
+            layout.addView(finalAdd);
+        }
         try {
             // shift data
             for (int i = data1.length(); i > index; i--) {
@@ -370,5 +386,11 @@ public class TimeListEdit {
 
     private void callSave() {
         if (save != null) save.run();
+    }
+
+    public void updateLabel(String txt){
+        this.label = txt;
+        if(textlabel!=null)
+            textlabel.setText(txt);
     }
 }

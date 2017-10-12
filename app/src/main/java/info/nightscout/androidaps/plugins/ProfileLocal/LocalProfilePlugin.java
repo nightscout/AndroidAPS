@@ -30,7 +30,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private ProfileStore convertedProfile = null;
     private String convertedProfileName = null;
 
-    final private String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
+    public static final String DEFAULTARRAY = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]";
 
     boolean mgdl;
     boolean mmol;
@@ -124,7 +124,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
             log.debug("Storing settings: " + getProfile().getData().toString());
     }
 
-    private void loadSettings() {
+    public void loadSettings() {
         if (Config.logPrefsChange)
             log.debug("Loading stored settings");
 

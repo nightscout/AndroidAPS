@@ -170,11 +170,9 @@ public class PreferencesActivity extends PreferenceActivity implements SharedPre
             }
             addPreferencesFromResource(R.xml.pref_advanced);
 
-            if (Config.WEAR) {
-                WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
-                if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
-                    addPreferencesFromResource(R.xml.pref_wear);
-                }
+            WearPlugin wearPlugin = MainApp.getSpecificPlugin(WearPlugin.class);
+            if (wearPlugin != null && wearPlugin.isEnabled(PluginBase.GENERAL)) {
+                addPreferencesFromResource(R.xml.pref_wear);
             }
 
             StatuslinePlugin statuslinePlugin = MainApp.getSpecificPlugin(StatuslinePlugin.class);
