@@ -140,8 +140,7 @@ allprojects {
 }
 
 dependencies {
-    wearWearApp project(path: ':wear', configuration: 'restrictedRelease')
-    wearcontrolWearApp project(path: ':wear', configuration: 'fullRelease')
+    wearApp project(':wear')
 
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
