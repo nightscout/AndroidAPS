@@ -150,7 +150,7 @@ public class MainApp extends Application {
                 pluginsList.add(SourceGlimpPlugin.getPlugin());
             if (Config.SMSCOMMUNICATORENABLED) pluginsList.add(SmsCommunicatorPlugin.getPlugin());
 
-            if (Config.WEAR) pluginsList.add(WearFragment.getPlugin(this));
+            pluginsList.add(WearFragment.getPlugin(this));
             pluginsList.add(StatuslinePlugin.getPlugin(this));
             pluginsList.add(new PersistentNotificationPlugin(this));
             pluginsList.add(NSClientInternalPlugin.getPlugin());

@@ -62,7 +62,7 @@ android {
         }
     }
     productFlavors {
-        flavorDimensions "standard", "wear"
+        flavorDimensions "standard"
         full {
             dimension "standard"
             resValue "string", "app_name", "AndroidAPS"
@@ -110,22 +110,6 @@ android {
             buildConfigField "boolean", "PUMPDRIVERS", "false"
             buildConfigField "boolean", "NSCLIENTOLNY", "true"
             buildConfigField "boolean", "CLOSEDLOOP", "false"
-        }
-        wear {
-            dimension "wear"
-            buildConfigField "boolean", "WEAR", "true"
-            buildConfigField "boolean", "WEAR_CONTROL", "false"
-
-        }
-        wearcontrol {
-            dimension "wear"
-            buildConfigField "boolean", "WEAR", "true"
-            buildConfigField "boolean", "WEAR_CONTROL", "true"
-        }
-        nowear {
-            dimension "wear"
-            buildConfigField "boolean", "WEAR", "false"
-            buildConfigField "boolean", "WEAR_CONTROL", "false"
         }
     }
 }

@@ -11,7 +11,6 @@ public class Config {
     // PLUGINS
     public static final boolean OPENAPSENABLED = APS;
     public static final boolean LOOPENABLED = APS;
-    public static final boolean WEAR = BuildConfig.WEAR;
 
     public static final boolean NSCLIENT = BuildConfig.NSCLIENTOLNY;
 

@@ -69,8 +69,7 @@ public class ActionStringHandler {
 
     public synchronized static void handleInitiate(String actionstring) {
 
-        if (!BuildConfig.WEAR_CONTROL) return;
-
+        if (!SP.getBoolean("wearcontrol", false)) return;
 
         lastBolusWizard = null;
 
@@ -522,7 +521,7 @@ public class ActionStringHandler {
 
     public synchronized static void handleConfirmation(String actionString) {
 
-        if (!BuildConfig.WEAR_CONTROL) return;
+        if (!SP.getBoolean("wearcontrol", false)) return;
 
 
         //Guard from old or duplicate confirmations
