@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -60,6 +61,9 @@ public class DanaRFragment extends SubscriberFragment {
     Button viewProfileButton;
     Button historyButton;
     Button statsButton;
+
+    LinearLayout pumpStatusLayout;
+    TextView pumpStatusView;
 
     static Runnable connectRunnable = new Runnable() {
         @Override
@@ -115,6 +119,9 @@ public class DanaRFragment extends SubscriberFragment {
             bolusStepView = (TextView) view.findViewById(R.id.danar_bolusstep);
             serialNumberView = (TextView) view.findViewById(R.id.danar_serialnumber);
 
+            pumpStatusView = (TextView) view.findViewById(R.id.overview_pumpstatus);
+            pumpStatusView.setBackgroundColor(MainApp.sResources.getColor(R.color.colorInitializingBorder));
+            pumpStatusLayout = (LinearLayout) view.findViewById(R.id.overview_pumpstatuslayout);
 
             viewProfileButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -159,6 +166,7 @@ public class DanaRFragment extends SubscriberFragment {
     @Subscribe
     public void onStatusEvent(final EventPumpStatusChanged c) {
         Activity activity = getActivity();
+        final String status = c.textStatus();
         if (activity != null) {
             activity.runOnUiThread(
                     new Runnable() {
@@ -170,6 +178,13 @@ public class DanaRFragment extends SubscriberFragment {
                                 btConnectionView.setText("{fa-bluetooth}");
                             else if (c.sStatus == EventPumpStatusChanged.DISCONNECTED)
                                 btConnectionView.setText("{fa-bluetooth-b}");
+
+                            if (!status.equals("")) {
+                                pumpStatusView.setText(status);
+                                pumpStatusLayout.setVisibility(View.VISIBLE);
+                            } else {
+                                pumpStatusLayout.setVisibility(View.GONE);
+                            }
                         }
                     }
             );
