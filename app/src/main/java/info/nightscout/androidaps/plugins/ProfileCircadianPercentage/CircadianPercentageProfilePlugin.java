@@ -219,7 +219,7 @@ public class CircadianPercentageProfilePlugin implements PluginBase, ProfileInte
         editor.putBoolean("LocalProfile" + "mmol", SP.getBoolean(SETTINGS_PREFIX + "mmol", false));
         editor.putBoolean("LocalProfile" + "mgdl", SP.getBoolean(SETTINGS_PREFIX + "mgdl", true));
         editor.putString("LocalProfile" + "dia", "" + SP.getDouble(SETTINGS_PREFIX + "dia", Constants.defaultDIA));
-        editor.putString("LocalProfile" + "ic", getLPisf());
+        editor.putString("LocalProfile" + "ic", getLPic());
         editor.putString("LocalProfile" + "isf", getLPisf());
         editor.putString("LocalProfile" + "basal", getLPbasal());
         try {
