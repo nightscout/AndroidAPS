@@ -323,12 +323,18 @@ public class NSClientService extends Service {
  */
         @Override
         public void call(final Object... args) {
-            JSONObject data = (JSONObject) args[0];
+            JSONObject data;
+            try {
+                data = (JSONObject) args[0];
+            } catch (Exception e) {
+                Crashlytics.log("Wrong Announcement from NS: " + args[0]);
+                return;
+            }
             if (Config.detailedLog)
                 try {
                     MainApp.bus().post(new EventNSClientNewLog("ANNOUNCEMENT", data.has("message") ? data.getString("message") : "received"));
-                } catch (JSONException e) {
-                    log.error("Unhandled exception", e);
+                } catch (Exception e) {
+                    Crashlytics.logException(e);
                 }
             BroadcastAnnouncement.handleAnnouncement(data, getApplicationContext());
             log.debug(data.toString());
@@ -356,7 +362,7 @@ public class NSClientService extends Service {
             JSONObject data;
             try {
                 data = (JSONObject) args[0];
-            } catch (ClassCastException e) {
+            } catch (Exception e) {
                 Crashlytics.log("Wrong alarm from NS: " + args[0]);
                 return;
             }
@@ -381,7 +387,13 @@ public class NSClientService extends Service {
  */
         @Override
         public void call(final Object... args) {
-            JSONObject data = (JSONObject) args[0];
+            JSONObject data;
+            try {
+                data = (JSONObject) args[0];
+            } catch (Exception e) {
+                Crashlytics.log("Wrong Urgent alarm from NS: " + args[0]);
+                return;
+            }
             if (Config.detailedLog)
                 MainApp.bus().post(new EventNSClientNewLog("URGENTALARM", "received"));
             BroadcastUrgentAlarm.handleUrgentAlarm(data, getApplicationContext());
@@ -400,9 +412,15 @@ public class NSClientService extends Service {
  */
         @Override
         public void call(final Object... args) {
+            JSONObject data;
+            try {
+                data = (JSONObject) args[0];
+            } catch (Exception e) {
+                Crashlytics.log("Wrong Urgent alarm from NS: " + args[0]);
+                return;
+            }
             if (Config.detailedLog)
                 MainApp.bus().post(new EventNSClientNewLog("CLEARALARM", "received"));
-            JSONObject data = (JSONObject) args[0];
             BroadcastClearAlarm.handleClearAlarm(data, getApplicationContext());
             log.debug(data.toString());
         }
