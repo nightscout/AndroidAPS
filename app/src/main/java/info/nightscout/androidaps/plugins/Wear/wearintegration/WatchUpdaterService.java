@@ -568,8 +568,8 @@ public class WatchUpdaterService extends WearableListenerService implements
         //Temp basal
         TreatmentsInterface treatmentsInterface = MainApp.getConfigBuilder();
 
-        if (treatmentsInterface.isTempBasalInProgress()) {
-            TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        TemporaryBasal activeTemp = treatmentsInterface.getTempBasalFromHistory(System.currentTimeMillis());
+        if (activeTemp != null) {
             status += activeTemp.toStringShort();
 
         }
