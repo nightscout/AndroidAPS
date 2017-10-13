@@ -82,8 +82,8 @@ public class DanaRS_Packet_APS_History_Events extends DanaRS_Packet {
         }
 
         Date datetime = dateTimeSecFromBuff(data, 1);             // 6 bytes
-        int param1 = ((intFromBuff(data, 7, 1) << 8) & 0xFF) + (intFromBuff(data, 8, 1) & 0xFF);
-        int param2 = ((intFromBuff(data, 9, 1) << 8) & 0xFF) + (intFromBuff(data, 10, 1) & 0xFF);
+        int param1 = ((intFromBuff(data, 7, 1) << 8) & 0xFF00) + (intFromBuff(data, 8, 1) & 0xFF);
+        int param2 = ((intFromBuff(data, 9, 1) << 8) & 0xFF00) + (intFromBuff(data, 10, 1) & 0xFF);
 
         TemporaryBasal temporaryBasal = new TemporaryBasal();
         temporaryBasal.date = datetime.getTime();
