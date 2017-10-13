@@ -344,7 +344,7 @@ public class WizardDialog extends DialogFragment implements OnClickListener, Com
                                                 MainApp.bus().post(new EventRefreshOverview("WizardDialog"));
                                             }
                                             pump.cancelTempBasal(true);
-                                            result = pump.setTempBasalAbsolute(0d, 120);
+                                            result = pump.setTempBasalAbsolute(0d, 120, true);
                                             if (!result.success) {
                                                 OKDialog.show(getActivity(), MainApp.sResources.getString(R.string.tempbasaldeliveryerror), result.comment, null);
                                             }

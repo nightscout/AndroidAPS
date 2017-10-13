@@ -497,7 +497,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
                         PumpInterface pumpInterface = MainApp.getConfigBuilder();
                         if (pumpInterface != null) {
                             danaRPlugin = MainApp.getSpecificPlugin(DanaRPlugin.class);
-                            PumpEnactResult result = pumpInterface.setTempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, false);
+                            PumpEnactResult result = pumpInterface.setTempBasalAbsolute(tempBasalWaitingForConfirmation.tempBasal, 30, true);
                             if (result.success) {
                                 reply = String.format(MainApp.sResources.getString(R.string.smscommunicator_tempbasalset), result.absolute, result.duration);
                                 if (danaRPlugin != null)

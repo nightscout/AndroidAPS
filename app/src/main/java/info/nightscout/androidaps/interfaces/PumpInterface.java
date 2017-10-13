@@ -31,7 +31,7 @@ public interface PumpInterface {
 
     PumpEnactResult deliverTreatment(DetailedBolusInfo detailedBolusInfo);
     void stopBolusDelivering();
-    PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean force);
+    PumpEnactResult setTempBasalAbsolute(Double absoluteRate, Integer durationInMinutes, boolean enforceNew);
     PumpEnactResult setTempBasalPercent(Integer percent, Integer durationInMinutes);
     PumpEnactResult setExtendedBolus(Double insulin, Integer durationInMinutes);
     //some pumps might set a very short temp close to 100% as cancelling a temp can be noisy

@@ -157,7 +157,7 @@ public class NewTempBasalDialog extends DialogFragment implements View.OnClickLi
                                     if (setAsPercent) {
                                         result = pump.setTempBasalPercent(finalBasalPercent, finalDurationInMinutes);
                                     } else {
-                                        result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes, false);
+                                        result = pump.setTempBasalAbsolute(finalBasal, finalDurationInMinutes, true);
                                     }
                                     if (!result.success) {
                                         if (context instanceof Activity) {
