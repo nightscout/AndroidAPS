@@ -109,6 +109,10 @@ public class DanaRSService extends Service {
         return bleComm.connect(from, address, confirmConnect);
     }
 
+    public void stopConnecting() {
+        bleComm.stopConnecting();
+    }
+
     public void disconnect(String from) {
         bleComm.disconnect(from);
     }

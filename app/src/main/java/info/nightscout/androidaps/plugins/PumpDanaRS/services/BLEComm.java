@@ -194,6 +194,11 @@ public class BLEComm {
         return true;
     }
 
+    public void stopConnecting() {
+        isConnecting = false;
+        sHandler.removeCallbacks(updateProgress); // just to be sure
+    }
+
     public void disconnect(String from) {
         log.debug("disconnect from: " + from);
         if ((mBluetoothAdapter == null) || (mBluetoothGatt == null)) {

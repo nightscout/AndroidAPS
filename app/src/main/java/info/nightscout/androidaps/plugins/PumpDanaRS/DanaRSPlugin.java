@@ -27,6 +27,7 @@ import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.ExtendedBolus;
 import info.nightscout.androidaps.db.TemporaryBasal;
 import info.nightscout.androidaps.db.Treatment;
+import info.nightscout.androidaps.events.EventPumpStatusChanged;
 import info.nightscout.androidaps.interfaces.ConstraintsInterface;
 import info.nightscout.androidaps.interfaces.DanaRInterface;
 import info.nightscout.androidaps.interfaces.PluginBase;
@@ -217,8 +218,8 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             connect(from);
     }
 
-    public static void connect(String from) {
-
+    public static synchronized void connect(String from) {
+        log.debug("RS connect from: " + from);
         if (danaRSService != null && !mDeviceAddress.equals("") && !mDeviceName.equals("")) {
             final Object o = new Object();
 
@@ -232,7 +233,13 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
             }
             pumpDescription.basalStep = pump.basalStep;
             pumpDescription.bolusStep = pump.bolusStep;
-            log.debug("RS connected:" + from);
+            if (isConnected())
+                log.debug("RS connected: " + from);
+            else {
+                MainApp.bus().post(new EventPumpStatusChanged(MainApp.sResources.getString(R.string.connectiontimedout)));
+                danaRSService.stopConnecting();
+                log.debug("RS connect failed from: " + from);
+            }
         }
     }
 
@@ -420,9 +427,11 @@ public class DanaRSPlugin implements PluginBase, PumpInterface, DanaRInterface, 
 
     @Override
     public void refreshDataFromPump(String reason) {
+        log.debug("Refreshing data from pump");
         if (!isConnected() && !isConnecting()) {
             connect(reason);
-        }
+        } else
+            log.debug("Already connecting ...");
     }
 
     @Override

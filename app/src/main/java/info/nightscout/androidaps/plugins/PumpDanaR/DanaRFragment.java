@@ -61,6 +61,13 @@ public class DanaRFragment extends SubscriberFragment {
     Button historyButton;
     Button statsButton;
 
+    static Runnable connectRunnable = new Runnable() {
+        @Override
+        public void run() {
+            MainApp.getConfigBuilder().refreshDataFromPump("Connect request from GUI");
+        }
+    };
+
 
     public DanaRFragment() {
         if (sHandlerThread == null) {
@@ -135,13 +142,8 @@ public class DanaRFragment extends SubscriberFragment {
             btConnectionView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    sHandler.post(new Runnable() {
-                                      @Override
-                                      public void run() {
-                                          MainApp.getConfigBuilder().refreshDataFromPump("Connect request from GUI");
-                                      }
-                                  }
-                    );
+                    log.debug("Clicked connect to pump");
+                    sHandler.post(connectRunnable);
                 }
             });
 
