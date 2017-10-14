@@ -104,7 +104,9 @@ public class MainApp extends Application {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
-        sBus = new Bus(ThreadEnforcer.ANY);
+        Bus bus = new Bus(ThreadEnforcer.ANY);
+        sBus = Config.logEvents ? new LoggingBus(bus) : bus;
+
         sInstance = this;
         sResources = getResources();
 
