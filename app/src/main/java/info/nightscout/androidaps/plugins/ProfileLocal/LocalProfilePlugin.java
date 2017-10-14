@@ -27,7 +27,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
     private static Logger log = LoggerFactory.getLogger(LocalProfilePlugin.class);
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     private ProfileStore convertedProfile = null;
     private String convertedProfileName = null;

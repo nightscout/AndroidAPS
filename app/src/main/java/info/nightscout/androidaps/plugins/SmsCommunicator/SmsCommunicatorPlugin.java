@@ -64,7 +64,7 @@ public class SmsCommunicatorPlugin implements PluginBase {
     }
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     private final long CONFIRM_TIMEOUT = 5 * 60 * 1000L;
 

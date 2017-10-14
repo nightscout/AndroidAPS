@@ -53,7 +53,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
     DetermineBasalResultMA lastAPSResult = null;
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     @Override
     public String getName() {
