@@ -13,6 +13,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.squareup.otto.Bus;
+import com.squareup.otto.LoggingBus;
 import com.squareup.otto.ThreadEnforcer;
 
 import org.slf4j.Logger;
@@ -104,8 +105,7 @@ public class MainApp extends Application {
         log.info("Version: " + BuildConfig.VERSION_NAME);
         log.info("BuildVersion: " + BuildConfig.BUILDVERSION);
 
-        Bus bus = new Bus(ThreadEnforcer.ANY);
-        sBus = Config.logEvents ? new LoggingBus(bus) : bus;
+        sBus = Config.logEvents ? new LoggingBus(ThreadEnforcer.ANY) : new Bus(ThreadEnforcer.ANY);
 
         sInstance = this;
         sResources = getResources();
