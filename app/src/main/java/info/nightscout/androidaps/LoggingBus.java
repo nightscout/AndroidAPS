@@ -29,6 +29,14 @@ class LoggingBus extends Bus {
         }
 
         log.debug("Event posted: " + event);
+        try {
+            StackTraceElement caller = new Throwable().getStackTrace()[1];
+            String className = caller.getClassName();
+            className = className.substring(className.lastIndexOf(".") + 1);
+            log.debug("      source: " + className + "." + caller.getMethodName() + ":" + caller.getLineNumber());
+        } catch (RuntimeException e) {
+            log.debug("      source: <unknown>");
+        }
         delegate.post(event);
     }
 }
