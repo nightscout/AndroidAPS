@@ -5,11 +5,23 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import info.nightscout.androidaps.events.Event;
 
+/** Logs events has they're being posted to and dispatched from the event bus.
+ *
+ * A summary of references between sender and event and event and receiver is printed
+ * after 10s (after startup) and then again every 60s.
+ * */
 public class LoggingBus extends Bus {
     private static Logger log = LoggerFactory.getLogger(LoggingBus.class);
+
+    private static long everyMinute = System.currentTimeMillis() + 10 * 1000;
+    private Map<String, Set<String>> event2Receiver = new HashMap<>();
 
     public LoggingBus(ThreadEnforcer enforcer) {
         super(enforcer);
@@ -48,10 +60,28 @@ public class LoggingBus extends Bus {
             Method targcetMethod = (Method) methodField.get(wrapper);
             String className = targcetMethod.getDeclaringClass().getSimpleName();
             String methodName = targcetMethod.getName();
-            log.debug("    receiver: " + className + "." + methodName);
+            String receiverMethod = className + "." + methodName;
+            log.debug("    receiver: " + receiverMethod);
+
+            String key = event.getClass().getSimpleName();
+            if (!event2Receiver.containsKey(key)) event2Receiver.put(key, new HashSet<String>());
+            event2Receiver.get(key).add(receiverMethod);
         } catch (ReflectiveOperationException e) {
             log.debug("    receiver: <unknown>");
         }
+
+        if (everyMinute < System.currentTimeMillis()) {
+            log.debug("***************** The story so far ****************");
+            for (Map.Entry<String, Set<String>> stringSetEntry : event2Receiver.entrySet()) {
+                log.debug("  " + stringSetEntry.getKey());
+                for (String s : stringSetEntry.getValue()) {
+                    log.debug("    -> " + s);
+                }
+            }
+            log.debug("***************************************************");
+            everyMinute = System.currentTimeMillis() + 60 * 1000;
+        }
+
         super.dispatch(event, wrapper);
     }
 }
