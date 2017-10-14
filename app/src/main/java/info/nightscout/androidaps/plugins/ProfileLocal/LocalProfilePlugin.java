@@ -16,6 +16,7 @@ import info.nightscout.androidaps.R;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.ProfileInterface;
 import info.nightscout.androidaps.data.ProfileStore;
+import info.nightscout.utils.DecimalFormatter;
 import info.nightscout.utils.SP;
 
 /**
@@ -247,7 +248,7 @@ public class LocalProfilePlugin implements PluginBase, ProfileInterface {
 
     @Override
     public String getProfileName() {
-        return convertedProfileName;
+        return DecimalFormatter.to2Decimal(convertedProfile.getDefaultProfile().percentageBasalSum()) + "U ";
     }
 
 }

@@ -216,7 +216,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         return activePump;
     }
 
-   public static SensitivityInterface getActiveSensitivity() {
+    public static SensitivityInterface getActiveSensitivity() {
         return activeSensitivity;
     }
 
@@ -941,7 +941,7 @@ public class ConfigBuilderPlugin implements PluginBase, PumpInterface, Constrain
         ProfileSwitch profileSwitch = getProfileSwitchFromHistory(time);
         if (profileSwitch != null) {
             if (profileSwitch.profileJson != null) {
-                return customized?profileSwitch.getCustomizedName():profileSwitch.profileName;
+                return customized ? profileSwitch.getCustomizedName() : profileSwitch.profileName;
             } else {
                 Profile profile = activeProfile.getProfile().getSpecificProfile(profileSwitch.profileName);
                 if (profile != null)
