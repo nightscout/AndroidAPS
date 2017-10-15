@@ -89,15 +89,16 @@ public class DetermineBasalAdapterAMAJS {
 
             //set module parent
             rhino.evaluateString(scope, "var module = {\"parent\":Boolean(1)};", "JavaScript", 0, null);
+            rhino.evaluateString(scope, "var round_basal = function round_basal(basal, profile) { return basal; };", "JavaScript", 0, null);
+            rhino.evaluateString(scope, "require = function() {return round_basal;};", "JavaScript", 0, null);
 
             //generate functions "determine_basal" and "setTempBasal"
-            rhino.evaluateString(scope, readFile("OpenAPSMA/determine-basal.js"), "JavaScript", 0, null);
-
+            rhino.evaluateString(scope, readFile("OpenAPSAMA/determine-basal.js"), "JavaScript", 0, null);
             rhino.evaluateString(scope, readFile("OpenAPSAMA/basal-set-temp.js"), "setTempBasal.js", 0, null);
             Object determineBasalObj = scope.get("determine_basal", scope);
             Object setTempBasalFunctionsObj = scope.get("tempBasalFunctions", scope);
 
-            Object testParam = makeParam(null, rhino, scope);
+            Object testParam = makeParamArray(mIobData, rhino, scope);
 
             //call determine-basal
             if (determineBasalObj instanceof Function && setTempBasalFunctionsObj instanceof NativeObject) {
@@ -271,7 +272,8 @@ public class DetermineBasalAdapterAMAJS {
     }
 
     public Object makeParamArray(JSONArray jsonArray, Context rhino, Scriptable scope) {
-        Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), new Callable() {
+            //Object param = NativeJSON.parse(rhino, scope, "{myarray: " + jsonArray.toString() + " }", new Callable() {
+            Object param = NativeJSON.parse(rhino, scope, jsonArray.toString(), new Callable() {
             @Override
             public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
                 return objects[1];

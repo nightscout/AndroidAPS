@@ -230,7 +230,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
                     SafeParse.stringToDouble(SP.getString("openapsama_min_5m_carbimpact", "3.0"))//min_5m_carbimpact
             );
         } catch (JSONException e) {
-            log.debug(e.toString());
+            log.error("Unable to set data: " + e.toString());
         }
 
 
