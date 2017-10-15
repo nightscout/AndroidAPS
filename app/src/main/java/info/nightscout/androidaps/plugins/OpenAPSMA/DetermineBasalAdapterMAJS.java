@@ -8,8 +8,10 @@ import com.j256.ormlite.logger.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.Callable;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeJSON;
 import org.mozilla.javascript.NativeObject;
 import org.mozilla.javascript.Scriptable;
 import org.slf4j.Logger;
@@ -101,8 +103,15 @@ public class DetermineBasalAdapterMAJS {
 
                 // Call the function with params
 
+                Object param1 = NativeJSON.parse(rhino, scope, "{\"athing\": 2.3}", new Callable() {
+                    @Override
+                    public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
+                        return objects[1];
+                    }
+                });
+
                 Object[] params = {
-                        "undefined",
+                        param1,
                         "undefined",
                         "undefined",
                         "undefined",
