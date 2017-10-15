@@ -77,32 +77,29 @@ public class DetermineBasalAdapterMAJS {
         rhino.setOptimizationLevel(-1);
 
         try {
-            // Note the forth argument is 1, which means the JavaScript source has
-            // been compressed to only one line using something like YUI
-            //rhino.evaluateString(scope, javaScriptCode, "JavaScript", 1, null);
+
+            //generate functions "determine_basal" and "setTempBasal"
             rhino.evaluateString(scope, readFile("OpenAPSMA/determine-basal.js"), "JavaScript", 0, null);
-            String setTempBasal= "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
+
+            String setTempBasalCode= "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
                     "rT.duration = duration;\n" +
                     "    rT.rate = rate;" +
                     "return rT;" +
                     "};";
-
-            rhino.evaluateString(scope, setTempBasal, "setTempBasal.js", 0, null);
+            rhino.evaluateString(scope, setTempBasalCode, "setTempBasal.js", 0, null);
 
 
             // Get the functionName defined in JavaScriptCode
-            //Object obj = scope.get(functionNameInJavaScriptCode, scope);
-            Object obj = scope.get("determine_basal", scope);
+            // Object obj = scope.get(functionNameInJavaScriptCode, scope);
+            Object determineBasalObj = scope.get("determine_basal", scope);
 
-            Object obj2 = scope.get("setTempBasal", scope);
+            Object setTempBasalObj = scope.get("setTempBasal", scope);
 
-            if (obj instanceof Function && obj2 instanceof Function) {
-                Function jsFunction = (Function) obj;
-                Function jsFunctionSetTempBasal = (Function) obj2;
+            if (determineBasalObj instanceof Function && setTempBasalObj instanceof Function) {
+                Function determineBasalJS = (Function) determineBasalObj;
+                Function setTempBasalJS = (Function) setTempBasalObj;
 
-
-                // Call the function with params
-
+                //prepare parameters
                 Object param1 = NativeJSON.parse(rhino, scope, "{\"athing\": {\"anotherthing\": 2.3}}", new Callable() {
                     @Override
                     public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
@@ -117,9 +114,9 @@ public class DetermineBasalAdapterMAJS {
                         "undefined",
                         "undefined",
                         "undefined",
-                        jsFunctionSetTempBasal};
+                        setTempBasalJS};
 
-                NativeObject jsResult = (NativeObject) jsFunction.call(rhino, scope, scope, params);
+                NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
 
                 // Parse the jsResult object to a String
                 String result = rhino.toString(jsResult);
