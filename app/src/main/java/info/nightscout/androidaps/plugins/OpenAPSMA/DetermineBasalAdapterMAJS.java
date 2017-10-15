@@ -103,7 +103,7 @@ public class DetermineBasalAdapterMAJS {
 
                 // Call the function with params
 
-                Object param1 = NativeJSON.parse(rhino, scope, "{\"athing\": 2.3}", new Callable() {
+                Object param1 = NativeJSON.parse(rhino, scope, "{\"athing\": {\"anotherthing\": 2.3}}", new Callable() {
                     @Override
                     public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
                         return objects[1];
