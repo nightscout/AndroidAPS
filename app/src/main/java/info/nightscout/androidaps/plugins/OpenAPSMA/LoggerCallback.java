@@ -38,23 +38,24 @@ public class LoggerCallback extends ScriptableObject {
     public void jsFunction_log(Object obj1) {
         log.debug(obj1.toString());
         logBuffer.append(obj1.toString());
-        logBuffer.append('\n');
+        logBuffer.append(' ');
     }
 
     public void jsFunction_error(Object obj1) {
         log.error(obj1.toString());
         errorBuffer.append(obj1.toString());
-        errorBuffer.append('\n');
+        errorBuffer.append(' ');
     }
 
 
 
     public static String getScriptDebug(){
         String ret = "";
-        if(errorBuffer.length() >= 0){
+        if(errorBuffer.length() > 0){
             ret += "e:\n" + errorBuffer.toString();
         }
-        if(logBuffer.length() >= 0){
+        if(ret.length() > 0 && logBuffer.length() > 0) ret += '\n';
+        if(logBuffer.length() > 0){
             ret += "d:\n" + logBuffer.toString();
         }
         return ret;
