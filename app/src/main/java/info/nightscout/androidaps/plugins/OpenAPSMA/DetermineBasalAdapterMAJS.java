@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
-import com.eclipsesource.v8.V8;
-import com.eclipsesource.v8.V8Object;
 import com.j256.ormlite.logger.Log;
 
 import org.json.JSONException;
@@ -31,20 +29,12 @@ import info.nightscout.utils.SP;
 public class DetermineBasalAdapterMAJS {
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterMAJS.class);
 
-
     private ScriptReader mScriptReader = null;
-    V8 mV8rt;
     private JSONObject mProfile;
     private JSONObject mGlucoseStatus;
     private JSONObject mIobData;
     private JSONObject mMealData;
     private JSONObject mCurrentTemp;
-
-    private final String PARAM_currentTemp = "currentTemp";
-    private final String PARAM_iobData = "iobData";
-    private final String PARAM_glucoseStatus = "glucose_status";
-    private final String PARAM_profile = "profile";
-    private final String PARAM_meal_data = "meal_data";
 
     private String storedCurrentTemp = null;
     public String storedIobData = null;
@@ -57,17 +47,16 @@ public class DetermineBasalAdapterMAJS {
      */
 
     public DetermineBasalAdapterMAJS(ScriptReader scriptReader) throws IOException {
-        mV8rt = V8.createV8Runtime();
         mScriptReader = scriptReader;
 
         //initLogCallback();
         //initProcessExitCallback();
-        try {
+       /* try {
             setTestData();
             rhinotest();
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }*/
 
     }
 
@@ -103,25 +92,6 @@ public class DetermineBasalAdapterMAJS {
                 Function setTempBasalJS = (Function) setTempBasalObj;
 
                 //prepare parameters
-                Object param1 = NativeJSON.parse(rhino, scope, "{\"athing\": {\"anotherthing\": 2.3}}", new Callable() {
-                    @Override
-                    public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
-                        return objects[1];
-                    }
-                });
-
-                /*
-                                "var rT = determine_basal(" +
-                        PARAM_glucoseStatus + ", " +
-                        PARAM_currentTemp + ", " +
-                        PARAM_iobData + ", " +
-                        PARAM_profile + ", " +
-                        "undefined, " +
-                        PARAM_meal_data + ", " +
-                        "setTempBasal" +
-                        ");");
-                 */
-
                 Object[] params = new Object[]{
                         makeParam(mGlucoseStatus, rhino, scope),
                         makeParam(mCurrentTemp, rhino, scope),
@@ -134,10 +104,10 @@ public class DetermineBasalAdapterMAJS {
                 NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
 
                 // Parse the jsResult object to a String
-                String result = rhino.toString(jsResult); //TODO: remove, use NativeObject/HashMap
+                String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
                 log.debug("rhino result: + " + result);
             } else {
-                log.debug("hod ned kloppt");
+                log.debug("Problem loading JS Functions");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -158,46 +128,75 @@ public class DetermineBasalAdapterMAJS {
 
 
     public DetermineBasalResultMA invoke() {
-        mV8rt.executeVoidScript(
-                "console.error(\"determine_basal(\"+\n" +
-                        "JSON.stringify(" + PARAM_glucoseStatus + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_currentTemp + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_iobData + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_profile + ")+ \", \" +\n" +
-                        "JSON.stringify(" + PARAM_meal_data + ")+ \") \");"
-        );
-        mV8rt.executeVoidScript(
-                "var rT = determine_basal(" +
-                        PARAM_glucoseStatus + ", " +
-                        PARAM_currentTemp + ", " +
-                        PARAM_iobData + ", " +
-                        PARAM_profile + ", " +
-                        "undefined, " +
-                        PARAM_meal_data + ", " +
-                        "setTempBasal" +
-                        ");");
+        DetermineBasalResultMA determineBasalResultMA = null;
 
+        Context rhino = Context.enter();
+        Scriptable scope = rhino.initStandardObjects();
+        // Turn off optimization to make Rhino Android compatible
+        rhino.setOptimizationLevel(-1);
 
-        String ret = mV8rt.executeStringScript("JSON.stringify(rT);");
-        if (Config.logAPSResult)
-            log.debug("Result: " + ret);
-
-        V8Object v8ObjectReuslt = mV8rt.getObject("rT");
-
-        DetermineBasalResultMA result = null;
         try {
-            result = new DetermineBasalResultMA(v8ObjectReuslt, new JSONObject(ret));
-        } catch (JSONException e) {
-            log.error("Unhandled exception", e);
+            //set module parent
+            rhino.evaluateString(scope, "var module = {\"parent\":Boolean(1)};", "JavaScript", 0, null);
+
+            //generate functions "determine_basal" and "setTempBasal"
+            rhino.evaluateString(scope, readFile("OpenAPSMA/determine-basal.js"), "JavaScript", 0, null);
+
+            String setTempBasalCode= "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
+                    "rT.duration = duration;\n" +
+                    "    rT.rate = rate;" +
+                    "return rT;" +
+                    "};";
+            rhino.evaluateString(scope, setTempBasalCode, "setTempBasal.js", 0, null);
+
+
+            // Get the functionName defined in JavaScriptCode
+            // Object obj = scope.get(functionNameInJavaScriptCode, scope);
+            Object determineBasalObj = scope.get("determine_basal", scope);
+
+            Object setTempBasalObj = scope.get("setTempBasal", scope);
+
+            if (determineBasalObj instanceof Function && setTempBasalObj instanceof Function) {
+                Function determineBasalJS = (Function) determineBasalObj;
+                Function setTempBasalJS = (Function) setTempBasalObj;
+
+                //prepare parameters
+                Object[] params = new Object[]{
+                        makeParam(mGlucoseStatus, rhino, scope),
+                        makeParam(mCurrentTemp, rhino, scope),
+                        makeParam(mIobData, rhino, scope),
+                        makeParam(mProfile, rhino, scope),
+                        "undefined",
+                        makeParam(mMealData, rhino, scope),
+                        setTempBasalJS};
+
+                NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
+
+                // Parse the jsResult object to a String
+                String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
+                if (Config.logAPSResult)
+                    log.debug("Result: " + result);
+                try {
+                    determineBasalResultMA = new DetermineBasalResultMA(jsResult, new JSONObject(result));
+                } catch (JSONException e) {
+                    log.error("Unhandled exception", e);
+                }
+            } else {
+                log.debug("Problem loading JS Functions");
+            }
+        } catch (IOException e) {
+            log.debug("IOException");
+        } finally {
+            Context.exit();
         }
 
-        storedGlucoseStatus = mV8rt.executeStringScript("JSON.stringify(" + PARAM_glucoseStatus + ");");
-        storedIobData = mV8rt.executeStringScript("JSON.stringify(" + PARAM_iobData + ");");
-        storedCurrentTemp = mV8rt.executeStringScript("JSON.stringify(" + PARAM_currentTemp + ");");
-        storedProfile = mV8rt.executeStringScript("JSON.stringify(" + PARAM_profile + ");");
-        storedMeal_data = mV8rt.executeStringScript("JSON.stringify(" + PARAM_meal_data + ");");
+        storedGlucoseStatus = mGlucoseStatus.toString();
+        storedIobData = mIobData.toString();
+        storedCurrentTemp = mCurrentTemp.toString();
+        storedProfile = mProfile.toString();
+        storedMeal_data = mMealData.toString();
 
-        return result;
+        return determineBasalResultMA;
     }
 
     String getGlucoseStatusParam() {
