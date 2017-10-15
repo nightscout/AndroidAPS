@@ -79,24 +79,36 @@ public class DetermineBasalAdapterMAJS {
             // been compressed to only one line using something like YUI
             //rhino.evaluateString(scope, javaScriptCode, "JavaScript", 1, null);
             rhino.evaluateString(scope, readFile("OpenAPSMA/determine-basal.js"), "JavaScript", 0, null);
+            String setTempBasal= "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
+                    "rT.duration = duration;\n" +
+                    "    rT.rate = rate;" +
+                    "return rT;" +
+                    "};";
+
+            rhino.evaluateString(scope, setTempBasal, "setTempBasal.js", 0, null);
+
 
             // Get the functionName defined in JavaScriptCode
             //Object obj = scope.get(functionNameInJavaScriptCode, scope);
             Object obj = scope.get("determine_basal", scope);
 
-            if (obj instanceof Function) {
+            Object obj2 = scope.get("setTempBasal", scope);
+
+            if (obj instanceof Function && obj2 instanceof Function) {
                 Function jsFunction = (Function) obj;
+                Function jsFunctionSetTempBasal = (Function) obj2;
+
 
                 // Call the function with params
 
-                String[] params = {
+                Object[] params = {
                         "undefined",
                         "undefined",
                         "undefined",
                         "undefined",
                         "undefined",
                         "undefined",
-                        "setTempBasal"};
+                        jsFunctionSetTempBasal};
 
                 NativeObject jsResult = (NativeObject) jsFunction.call(rhino, scope, scope, params);
 
@@ -127,6 +139,7 @@ public class DetermineBasalAdapterMAJS {
         mProfile.add("carb_ratio", 0);
         mProfile.add("sens", 0);
         mProfile.add("current_basal", 0);
+        String profileString = mProfile.toString();
         mV8rt.add(PARAM_profile, mProfile);
         // Current temp
         mCurrentTemp = new V8Object(mV8rt);
