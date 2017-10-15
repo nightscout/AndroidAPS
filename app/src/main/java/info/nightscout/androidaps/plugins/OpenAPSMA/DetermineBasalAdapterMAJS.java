@@ -1,8 +1,6 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
-import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
-import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
 import com.j256.ormlite.logger.Log;
 
@@ -36,11 +34,11 @@ public class DetermineBasalAdapterMAJS {
 
     private ScriptReader mScriptReader = null;
     V8 mV8rt;
-    private V8Object mProfile;
-    private V8Object mGlucoseStatus;
-    private V8Object mIobData;
-    private V8Object mMealData;
-    private V8Object mCurrentTemp;
+    private JSONObject mProfile;
+    private JSONObject mGlucoseStatus;
+    private JSONObject mIobData;
+    private JSONObject mMealData;
+    private JSONObject mCurrentTemp;
 
     private final String PARAM_currentTemp = "currentTemp";
     private final String PARAM_iobData = "iobData";
@@ -62,12 +60,15 @@ public class DetermineBasalAdapterMAJS {
         mV8rt = V8.createV8Runtime();
         mScriptReader = scriptReader;
 
-        init();
-        initLogCallback();
-        initProcessExitCallback();
-        initModuleParent();
-        loadScript();
-        rhinotest();
+        //initLogCallback();
+        //initProcessExitCallback();
+        try {
+            setTestData();
+            rhinotest();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void rhinotest(){
@@ -77,6 +78,8 @@ public class DetermineBasalAdapterMAJS {
         rhino.setOptimizationLevel(-1);
 
         try {
+            //set module parent
+            rhino.evaluateString(scope, "var module = {\"parent\":Boolean(1)};", "JavaScript", 0, null);
 
             //generate functions "determine_basal" and "setTempBasal"
             rhino.evaluateString(scope, readFile("OpenAPSMA/determine-basal.js"), "JavaScript", 0, null);
@@ -107,19 +110,31 @@ public class DetermineBasalAdapterMAJS {
                     }
                 });
 
-                Object[] params = {
-                        param1,
+                /*
+                                "var rT = determine_basal(" +
+                        PARAM_glucoseStatus + ", " +
+                        PARAM_currentTemp + ", " +
+                        PARAM_iobData + ", " +
+                        PARAM_profile + ", " +
+                        "undefined, " +
+                        PARAM_meal_data + ", " +
+                        "setTempBasal" +
+                        ");");
+                 */
+
+                Object[] params = new Object[]{
+                        makeParam(mGlucoseStatus, rhino, scope),
+                        makeParam(mCurrentTemp, rhino, scope),
+                        makeParam(mIobData, rhino, scope),
+                        makeParam(mProfile, rhino, scope),
                         "undefined",
-                        "undefined",
-                        "undefined",
-                        "undefined",
-                        "undefined",
+                        makeParam(mMealData, rhino, scope),
                         setTempBasalJS};
 
                 NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
 
                 // Parse the jsResult object to a String
-                String result = rhino.toString(jsResult);
+                String result = rhino.toString(jsResult); //TODO: remove, use NativeObject/HashMap
                 log.debug("rhino result: + " + result);
             } else {
                 log.debug("hod ned kloppt");
@@ -131,49 +146,16 @@ public class DetermineBasalAdapterMAJS {
         }
     }
 
-    public void init() {
-
-        // Profile
-        mProfile = new V8Object(mV8rt);
-        mProfile.add("max_iob", 0);
-        mProfile.add("dia", 0);
-        mProfile.add("type", "current");
-        mProfile.add("max_daily_basal", 0);
-        mProfile.add("max_basal", 0);
-        mProfile.add("max_bg", 0);
-        mProfile.add("min_bg", 0);
-        mProfile.add("carb_ratio", 0);
-        mProfile.add("sens", 0);
-        mProfile.add("current_basal", 0);
-        String profileString = mProfile.toString();
-        mV8rt.add(PARAM_profile, mProfile);
-        // Current temp
-        mCurrentTemp = new V8Object(mV8rt);
-        mCurrentTemp.add("temp", "absolute");
-        mCurrentTemp.add("duration", 0);
-        mCurrentTemp.add("rate", 0);
-        mV8rt.add(PARAM_currentTemp, mCurrentTemp);
-        // IOB data
-        mIobData = new V8Object(mV8rt);
-        mIobData.add("iob", 0); //netIob
-        mIobData.add("activity", 0); //netActivity
-        mIobData.add("bolussnooze", 0); //bolusIob
-        mIobData.add("basaliob", 0);
-        mIobData.add("netbasalinsulin", 0);
-        mIobData.add("hightempinsulin", 0);
-        mV8rt.add(PARAM_iobData, mIobData);
-        // Glucose status
-        mGlucoseStatus = new V8Object(mV8rt);
-        mGlucoseStatus.add("glucose", 0);
-        mGlucoseStatus.add("delta", 0);
-        mGlucoseStatus.add("avgdelta", 0);
-        mV8rt.add(PARAM_glucoseStatus, mGlucoseStatus);
-        // Meal data
-        mMealData = new V8Object(mV8rt);
-        mMealData.add("carbs", 0);
-        mMealData.add("boluses", 0);
-        mV8rt.add(PARAM_meal_data, mMealData);
+    public Object makeParam(JSONObject jsonObject, Context rhino, Scriptable scope) {
+        Object param = NativeJSON.parse(rhino, scope, jsonObject.toString(), new Callable() {
+            @Override
+            public Object call(Context context, Scriptable scriptable, Scriptable scriptable1, Object[] objects) {
+                return objects[1];
+            }
+        });
+        return param;
     }
+
 
     public DetermineBasalResultMA invoke() {
         mV8rt.executeVoidScript(
@@ -238,27 +220,7 @@ public class DetermineBasalAdapterMAJS {
         return storedMeal_data;
     }
 
-    private void loadScript() throws IOException {
-        mV8rt.executeVoidScript(
-                readFile("OpenAPSMA/determine-basal.js"),
-                "OpenAPSMA/bin/oref0-determine-basal.js",
-                0);
-        mV8rt.executeVoidScript("var determine_basal = module.exports;");
-        mV8rt.executeVoidScript(
-                "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
-                        "rT.duration = duration;\n" +
-                        "    rT.rate = rate;" +
-                        "return rT;" +
-                        "};",
-                "setTempBasal.js",
-                0
-        );
-    }
-
-    private void initModuleParent() {
-        mV8rt.executeVoidScript("var module = {\"parent\":Boolean(1)};");
-    }
-
+    /*
     private void initProcessExitCallback() {
         JavaVoidCallback callbackProccessExit = new JavaVoidCallback() {
             @Override
@@ -287,7 +249,7 @@ public class DetermineBasalAdapterMAJS {
         mV8rt.registerJavaMethod(callbackLog, "log");
         mV8rt.executeVoidScript("var console = {\"log\":log, \"error\":log};");
     }
-
+*/
 
     public void setData(Profile profile,
                         double maxIob,
@@ -298,58 +260,97 @@ public class DetermineBasalAdapterMAJS {
                         PumpInterface pump,
                         IobTotal iobData,
                         GlucoseStatus glucoseStatus,
-                        MealData mealData) {
+                        MealData mealData) throws JSONException {
 
         String units = profile.getUnits();
 
-        mProfile.add("max_iob", maxIob);
-        mProfile.add("dia", Math.min(profile.getDia(), 3d));
-        mProfile.add("type", "current");
-        mProfile.add("max_daily_basal", profile.getMaxDailyBasal());
-        mProfile.add("max_basal", maxBasal);
-        mProfile.add("min_bg", minBg);
-        mProfile.add("max_bg", maxBg);
-        mProfile.add("target_bg", targetBg);
-        mProfile.add("carb_ratio", profile.getIc());
-        mProfile.add("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
+        mProfile = new JSONObject();
+        mProfile.put("max_iob", maxIob);
+        mProfile.put("dia", Math.min(profile.getDia(), 3d));
+        mProfile.put("type", "current");
+        mProfile.put("max_daily_basal", profile.getMaxDailyBasal());
+        mProfile.put("max_basal", maxBasal);
+        mProfile.put("min_bg", minBg);
+        mProfile.put("max_bg", maxBg);
+        mProfile.put("target_bg", targetBg);
+        mProfile.put("carb_ratio", profile.getIc());
+        mProfile.put("sens", Profile.toMgdl(profile.getIsf().doubleValue(), units));
 
-        mProfile.add("current_basal", pump.getBaseBasalRate());
+        mProfile.put("current_basal", pump.getBaseBasalRate());
 
         if (units.equals(Constants.MMOL)) {
-            mProfile.add("out_units", "mmol/L");
+            mProfile.put("out_units", "mmol/L");
         }
 
-        mCurrentTemp.add("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
-        mCurrentTemp.add("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
+        mCurrentTemp = new JSONObject();
+        mCurrentTemp.put("duration", MainApp.getConfigBuilder().getTempBasalRemainingMinutesFromHistory());
+        mCurrentTemp.put("rate", MainApp.getConfigBuilder().getTempBasalAbsoluteRateHistory());
 
-        mIobData.add("iob", iobData.iob); //netIob
-        mIobData.add("activity", iobData.activity); //netActivity
-        mIobData.add("bolussnooze", iobData.bolussnooze); //bolusIob
-        mIobData.add("basaliob", iobData.basaliob);
-        mIobData.add("netbasalinsulin", iobData.netbasalinsulin);
-        mIobData.add("hightempinsulin", iobData.hightempinsulin);
+        mIobData = new JSONObject();
+        mIobData.put("iob", iobData.iob); //netIob
+        mIobData.put("activity", iobData.activity); //netActivity
+        mIobData.put("bolussnooze", iobData.bolussnooze); //bolusIob
+        mIobData.put("basaliob", iobData.basaliob);
+        mIobData.put("netbasalinsulin", iobData.netbasalinsulin);
+        mIobData.put("hightempinsulin", iobData.hightempinsulin);
 
-        mGlucoseStatus.add("glucose", glucoseStatus.glucose);
+        mGlucoseStatus = new JSONObject();
+        mGlucoseStatus.put("glucose", glucoseStatus.glucose);
         if (SP.getBoolean("always_use_shortavg", false)) {
-            mGlucoseStatus.add("delta", glucoseStatus.short_avgdelta);
+            mGlucoseStatus.put("delta", glucoseStatus.short_avgdelta);
         } else {
-            mGlucoseStatus.add("delta", glucoseStatus.delta);
+            mGlucoseStatus.put("delta", glucoseStatus.delta);
         }
-        mGlucoseStatus.add("avgdelta", glucoseStatus.avgdelta);
+        mGlucoseStatus.put("avgdelta", glucoseStatus.avgdelta);
 
-        mMealData.add("carbs", mealData.carbs);
-        mMealData.add("boluses", mealData.boluses);
+        mMealData = new JSONObject();
+        mMealData.put("carbs", mealData.carbs);
+        mMealData.put("boluses", mealData.boluses);
     }
 
+    public void setTestData() throws JSONException {
 
-    public void release() {
-        mProfile.release();
-        mCurrentTemp.release();
-        mIobData.release();
-        mMealData.release();
-        mGlucoseStatus.release();
-        mV8rt.release();
+        mProfile = new JSONObject();
+        mProfile.put("max_iob", 5d);
+        mProfile.put("dia", 3d);
+        mProfile.put("type", "current");
+        mProfile.put("max_daily_basal", 1d);
+        mProfile.put("max_basal", 4d);
+        mProfile.put("min_bg", 89d);
+        mProfile.put("max_bg", 91d);
+        mProfile.put("target_bg", 90d);
+        mProfile.put("carb_ratio", 5d);
+        mProfile.put("sens", 40d);
+
+        mProfile.put("current_basal", 0.8);
+
+        if (true) {
+            mProfile.put("out_units", "mmol/L");
+        }
+
+        mCurrentTemp = new JSONObject();
+        mCurrentTemp.put("duration", 15d);
+        mCurrentTemp.put("rate", 0.2d);
+
+        mIobData = new JSONObject();
+        mIobData.put("iob", -0.1d); //netIob
+        mIobData.put("activity", -0.003d); //netActivity
+        mIobData.put("bolussnooze", 0d); //bolusIob
+        mIobData.put("basaliob", -0.1d);
+        mIobData.put("netbasalinsulin", -0.11);
+        mIobData.put("hightempinsulin", 0.03);
+
+        mGlucoseStatus = new JSONObject();
+        mGlucoseStatus.put("glucose", 170);
+        mGlucoseStatus.put("delta", 1.93);
+
+        mGlucoseStatus.put("avgdelta", 2.1);
+
+        mMealData = new JSONObject();
+        mMealData.put("carbs", 0);
+        mMealData.put("boluses", 0);
     }
+
 
     public String readFile(String filename) throws IOException {
         byte[] bytes = mScriptReader.readFile(filename);

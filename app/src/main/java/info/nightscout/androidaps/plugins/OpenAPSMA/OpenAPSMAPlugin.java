@@ -211,12 +211,16 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         if (!checkOnlyHardLimits(pump.getBaseBasalRate(), "current_basal", 0.01, 5)) return;
 
         start = new Date();
-        determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        try {
+            determineBasalAdapterMAJS.setData(profile, maxIob, maxBasal, minBg, maxBg, targetBg, pump, iobTotal, glucoseStatus, mealData);
+        } catch (JSONException e) {
+            log.error("Unhandled exception", e);
+        }
         Profiler.log(log, "MA calculation", start);
 
 
         DetermineBasalResultMA determineBasalResultMA = determineBasalAdapterMAJS.invoke();
-        // Fix bug determine basal
+        // Fix bug determinef basal
         if (determineBasalResultMA.rate == 0d && determineBasalResultMA.duration == 0 && !MainApp.getConfigBuilder().isTempBasalInProgress())
             determineBasalResultMA.changeRequested = false;
         // limit requests on openloop mode
@@ -229,7 +233,7 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         determineBasalResultMA.iob = iobTotal;
 
-        determineBasalAdapterMAJS.release();
+        //determineBasalAdapterMAJS.release(); TODO: Rhinoport
 
         try {
             determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
