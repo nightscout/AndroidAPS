@@ -233,8 +233,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
 
         determineBasalResultMA.iob = iobTotal;
 
-        //determineBasalAdapterMAJS.release(); TODO: Rhinoport
-
         try {
             determineBasalResultMA.json.put("timestamp", DateUtil.toISOString(now));
         } catch (JSONException e) {
@@ -245,8 +243,6 @@ public class OpenAPSMAPlugin implements PluginBase, APSInterface {
         lastAPSResult = determineBasalResultMA;
         lastAPSRun = now;
         MainApp.bus().post(new EventOpenAPSUpdateGui());
-
-        //deviceStatus.suggested = determineBasalResultMA.json;
     }
 
 

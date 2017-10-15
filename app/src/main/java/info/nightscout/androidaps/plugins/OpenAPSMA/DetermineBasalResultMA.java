@@ -1,10 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.eclipsesource.v8.V8Object;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.NativeObject;

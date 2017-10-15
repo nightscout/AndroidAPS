@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.OpenAPSMA;
 
-import com.j256.ormlite.logger.Log;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.mozilla.javascript.Callable;
@@ -70,7 +68,7 @@ public class DetermineBasalAdapterMAJS {
             //generate functions "determine_basal" and "setTempBasal"
             rhino.evaluateString(scope, readFile("OpenAPSMA/determine-basal.js"), "JavaScript", 0, null);
 
-            String setTempBasalCode= "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
+            String setTempBasalCode = "var setTempBasal = function (rate, duration, profile, rT, offline) {" +
                     "rT.duration = duration;\n" +
                     "    rT.rate = rate;" +
                     "return rT;" +
@@ -79,6 +77,7 @@ public class DetermineBasalAdapterMAJS {
             Object determineBasalObj = scope.get("determine_basal", scope);
             Object setTempBasalObj = scope.get("setTempBasal", scope);
 
+            //call determine-basal
             if (determineBasalObj instanceof Function && setTempBasalObj instanceof Function) {
                 Function determineBasalJS = (Function) determineBasalObj;
                 Function setTempBasalJS = (Function) setTempBasalObj;
@@ -95,7 +94,7 @@ public class DetermineBasalAdapterMAJS {
 
                 NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
 
-                // Parse the jsResult object to a String
+                // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();
                 if (Config.logAPSResult)
                     log.debug("Result: " + result);
@@ -109,14 +108,14 @@ public class DetermineBasalAdapterMAJS {
             }
         } catch (IOException e) {
             log.debug("IOException");
-        } catch (RhinoException e){
-            log.error("RhinoException: (" +  e.lineNumber() + ","+ e.columnNumber() + ") " + e.toString());
+        } catch (RhinoException e) {
+            log.error("RhinoException: (" + e.lineNumber() + "," + e.columnNumber() + ") " + e.toString());
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            log.error(e.toString());
         } catch (InstantiationException e) {
-            e.printStackTrace();
+            log.error(e.toString());
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            log.error(e.toString());
         } finally {
             Context.exit();
         }
