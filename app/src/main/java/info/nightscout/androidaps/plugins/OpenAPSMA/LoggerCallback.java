@@ -16,9 +16,14 @@ public class LoggerCallback extends ScriptableObject {
 
     private static Logger log = LoggerFactory.getLogger(DetermineBasalAdapterMAJS.class);
 
+    static StringBuffer errorBuffer = new StringBuffer();
+    static StringBuffer logBuffer = new StringBuffer();
+
 
     public LoggerCallback() {
         //empty constructor needed for Rhino
+        errorBuffer = new StringBuffer();
+        logBuffer = new StringBuffer();
     }
 
     @Override
@@ -30,11 +35,28 @@ public class LoggerCallback extends ScriptableObject {
         //empty constructor on JS site; could work as setter
     }
 
-    public void jsFunction_log(String s) {
-        log.debug(s);
+    public void jsFunction_log(Object obj1) {
+        log.debug(obj1.toString());
+        logBuffer.append(obj1.toString());
+        logBuffer.append('\n');
     }
 
-    public void jsFunction_error(String s) {
-        log.error(s);
+    public void jsFunction_error(Object obj1) {
+        log.error(obj1.toString());
+        errorBuffer.append(obj1.toString());
+        errorBuffer.append('\n');
+    }
+
+
+
+    public static String getScriptDebug(){
+        String ret = "";
+        if(errorBuffer.length() >= 0){
+            ret += "e:\n" + errorBuffer.toString();
+        }
+        if(logBuffer.length() >= 0){
+            ret += "d:\n" + logBuffer.toString();
+        }
+        return ret;
     }
 }

@@ -85,7 +85,8 @@ public class DetermineBasalAdapterAMAJS {
             //register logger callback for console.log and console.error
             ScriptableObject.defineClass(scope, LoggerCallback.class);
             Scriptable myLogger = rhino.newObject(scope, "LoggerCallback", null);
-            scope.put("console", scope, myLogger);
+            scope.put("console2", scope, myLogger);
+            rhino.evaluateString(scope, readFile("OpenAPSAMA/loggerhelper.js"), "JavaScript", 0, null);
 
             //set module parent
             rhino.evaluateString(scope, "var module = {\"parent\":Boolean(1)};", "JavaScript", 0, null);
@@ -97,8 +98,6 @@ public class DetermineBasalAdapterAMAJS {
             rhino.evaluateString(scope, readFile("OpenAPSAMA/basal-set-temp.js"), "setTempBasal.js", 0, null);
             Object determineBasalObj = scope.get("determine_basal", scope);
             Object setTempBasalFunctionsObj = scope.get("tempBasalFunctions", scope);
-
-            Object testParam = makeParamArray(mIobData, rhino, scope);
 
             //call determine-basal
             if (determineBasalObj instanceof Function && setTempBasalFunctionsObj instanceof NativeObject) {
@@ -115,6 +114,7 @@ public class DetermineBasalAdapterAMAJS {
                         setTempBasalFunctionsObj};
 
                 NativeObject jsResult = (NativeObject) determineBasalJS.call(rhino, scope, scope, params);
+                scriptDebug = LoggerCallback.getScriptDebug();
 
                 // Parse the jsResult object to a JSON-String
                 String result = NativeJSON.stringify(rhino, scope, jsResult, null, null).toString();

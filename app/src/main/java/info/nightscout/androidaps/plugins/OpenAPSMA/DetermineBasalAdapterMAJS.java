@@ -82,10 +82,7 @@ public class DetermineBasalAdapterMAJS {
                 Function determineBasalJS = (Function) determineBasalObj;
                 Function setTempBasalJS = (Function) setTempBasalObj;
 
-                Object testParam = makeParam(mIobData, rhino, scope);
-
-
-                        //prepare parameters
+                //prepare parameters
                 Object[] params = new Object[]{
                         makeParam(mGlucoseStatus, rhino, scope),
                         makeParam(mCurrentTemp, rhino, scope),
