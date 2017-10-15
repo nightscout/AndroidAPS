@@ -49,6 +49,7 @@ android {
         buildConfigField "String", "BUILDVERSION", generateGitBuild()
 
         ndk {
+            abiFilters "armeabi-v7a", "x86", "armeabi", "mips"
             moduleName "BleCommandUtil"
         }
     }
