@@ -16,6 +16,9 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     var rT = { //short for requestedTemp
     };
 
+    rT.error ='Error: could not get current basal rate';
+    return rT;
+
     if (typeof profile === 'undefined' || typeof profile.current_basal === 'undefined') {
         rT.error ='Error: could not get current basal rate';
         return rT;
@@ -313,4 +316,4 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
 
 };
 
-module.exports = determine_basal;
+//module.exports = determine_basal;

@@ -4,9 +4,14 @@ import com.eclipsesource.v8.JavaVoidCallback;
 import com.eclipsesource.v8.V8;
 import com.eclipsesource.v8.V8Array;
 import com.eclipsesource.v8.V8Object;
+import com.j256.ormlite.logger.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.NativeObject;
+import org.mozilla.javascript.Scriptable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,9 +65,56 @@ public class DetermineBasalAdapterMAJS {
         initProcessExitCallback();
         initModuleParent();
         loadScript();
+        rhinotest();
+    }
+
+    public void rhinotest(){
+        Context rhino = Context.enter();
+        Scriptable scope = rhino.initStandardObjects();
+        // Turn off optimization to make Rhino Android compatible
+        rhino.setOptimizationLevel(-1);
+
+        try {
+            // Note the forth argument is 1, which means the JavaScript source has
+            // been compressed to only one line using something like YUI
+            //rhino.evaluateString(scope, javaScriptCode, "JavaScript", 1, null);
+            rhino.evaluateString(scope, readFile("OpenAPSMA/determine-basal.js"), "JavaScript", 0, null);
+
+            // Get the functionName defined in JavaScriptCode
+            //Object obj = scope.get(functionNameInJavaScriptCode, scope);
+            Object obj = scope.get("determine_basal", scope);
+
+            if (obj instanceof Function) {
+                Function jsFunction = (Function) obj;
+
+                // Call the function with params
+
+                String[] params = {
+                        "undefined",
+                        "undefined",
+                        "undefined",
+                        "undefined",
+                        "undefined",
+                        "undefined",
+                        "setTempBasal"};
+
+                NativeObject jsResult = (NativeObject) jsFunction.call(rhino, scope, scope, params);
+
+                // Parse the jsResult object to a String
+                String result = rhino.toString(jsResult);
+                log.debug("rhino result: + " + result);
+            } else {
+                log.debug("hod ned kloppt");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            Context.exit();
+        }
     }
 
     public void init() {
+
         // Profile
         mProfile = new V8Object(mV8rt);
         mProfile.add("max_iob", 0);
