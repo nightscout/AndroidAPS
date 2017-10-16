@@ -16,7 +16,9 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.interfaces.Interval;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.DataPointWithLabelInterface;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
+import info.nightscout.androidaps.plugins.ProfileLocal.LocalProfilePlugin;
 import info.nightscout.utils.DateUtil;
+import info.nightscout.utils.DecimalFormatter;
 
 @DatabaseTable(tableName = DatabaseHelper.DATABASE_PROFILESWITCHES)
 public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
@@ -66,6 +68,9 @@ public class ProfileSwitch implements Interval, DataPointWithLabelInterface {
 
     public String getCustomizedName() {
         String name = profileName;
+        if(LocalProfilePlugin.LOCAL_PROFILE.equals(name)){
+            name = DecimalFormatter.to2Decimal(getProfileObject().percentageBasalSum()) + "U ";
+        }
         if (isCPP) {
             name += "(" + percentage + "%," + timeshift + "h)";
         }
