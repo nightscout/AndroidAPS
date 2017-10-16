@@ -121,6 +121,7 @@ import info.nightscout.androidaps.plugins.Overview.graphExtensions.FixedLineGrap
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.PointsWithLabelGraphSeries;
 import info.nightscout.androidaps.plugins.Overview.graphExtensions.TimeAsXAxisLabelFormatter;
 import info.nightscout.androidaps.plugins.SourceXdrip.SourceXdripPlugin;
+import info.nightscout.androidaps.plugins.Treatments.fragments.ProfileViewerDialog;
 import info.nightscout.utils.BolusWizard;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.DecimalFormatter;
@@ -351,27 +352,33 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
-        final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
-        if (activeloop == null)
-            return;
-        menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
-        if (activeloop.isEnabled(PluginBase.LOOP)) {
-            menu.add(MainApp.sResources.getString(R.string.disableloop));
-            if (!activeloop.isSuspended()) {
-                menu.add(MainApp.sResources.getString(R.string.suspendloopfor1h));
-                menu.add(MainApp.sResources.getString(R.string.suspendloopfor2h));
-                menu.add(MainApp.sResources.getString(R.string.suspendloopfor3h));
-                menu.add(MainApp.sResources.getString(R.string.suspendloopfor10h));
-                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
-                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor1h));
-                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor2h));
-                menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor3h));
-            } else {
-                menu.add(MainApp.sResources.getString(R.string.resume));
+        if (v == apsModeView) {
+            final LoopPlugin activeloop = ConfigBuilderPlugin.getActiveLoop();
+            if (activeloop == null)
+                return;
+            menu.setHeaderTitle(MainApp.sResources.getString(R.string.loop));
+            if (activeloop.isEnabled(PluginBase.LOOP)) {
+                menu.add(MainApp.sResources.getString(R.string.disableloop));
+                if (!activeloop.isSuspended()) {
+                    menu.add(MainApp.sResources.getString(R.string.suspendloopfor1h));
+                    menu.add(MainApp.sResources.getString(R.string.suspendloopfor2h));
+                    menu.add(MainApp.sResources.getString(R.string.suspendloopfor3h));
+                    menu.add(MainApp.sResources.getString(R.string.suspendloopfor10h));
+                    menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor30m));
+                    menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor1h));
+                    menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor2h));
+                    menu.add(MainApp.sResources.getString(R.string.disconnectpumpfor3h));
+                } else {
+                    menu.add(MainApp.sResources.getString(R.string.resume));
+                }
             }
+            if (!activeloop.isEnabled(PluginBase.LOOP))
+                menu.add(MainApp.sResources.getString(R.string.enableloop));
+        } else if (v == activeProfileView) {
+            menu.setHeaderTitle(MainApp.sResources.getString(R.string.profile));
+            menu.add(MainApp.sResources.getString(R.string.danar_viewprofile));
+            menu.add(MainApp.sResources.getString(R.string.careportal_profileswitch));
         }
-        if (!activeloop.isEnabled(PluginBase.LOOP))
-            menu.add(MainApp.sResources.getString(R.string.enableloop));
     }
 
     @Override
@@ -555,6 +562,16 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
             });
             NSUpload.uploadOpenAPSOffline(180);
             return true;
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.careportal_profileswitch))) {
+            NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
+            final OptionsToShow profileswitch = CareportalFragment.PROFILESWITCHDIRECT;
+            profileswitch.executeProfileSwitch = true;
+            newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
+            newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
+        } else if (item.getTitle().equals(MainApp.sResources.getString(R.string.danar_viewprofile))) {
+            ProfileViewerDialog pvd = ProfileViewerDialog.newInstance(System.currentTimeMillis());
+            FragmentManager manager = getFragmentManager();
+            pvd.show(manager, "ProfileViewDialog");
         }
 
         return super.onContextItemSelected(item);
@@ -739,6 +756,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         MainApp.bus().unregister(this);
         sLoopHandler.removeCallbacksAndMessages(null);
         unregisterForContextMenu(apsModeView);
+        unregisterForContextMenu(activeProfileView);
     }
 
     @Override
@@ -754,6 +772,7 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         };
         sLoopHandler.postDelayed(sRefreshLoop, 60 * 1000L);
         registerForContextMenu(apsModeView);
+        registerForContextMenu(activeProfileView);
         updateGUI("onResume");
     }
 
@@ -1089,27 +1108,12 @@ public class OverviewFragment extends Fragment implements View.OnClickListener, 
         activeProfileView.setText(MainApp.getConfigBuilder().getProfileName());
         activeProfileView.setBackgroundColor(Color.GRAY);
 
-        activeProfileView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                NewNSTreatmentDialog newDialog = new NewNSTreatmentDialog();
-                final OptionsToShow profileswitch = CareportalFragment.profileswitch;
-                profileswitch.executeProfileSwitch = true;
-                newDialog.setOptions(profileswitch, R.string.careportal_profileswitch);
-                newDialog.show(getFragmentManager(), "NewNSTreatmentDialog");
-                return true;
-            }
-        });
-        activeProfileView.setLongClickable(true);
-
-
         tempTargetView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
                 NewNSTreatmentDialog newTTDialog = new NewNSTreatmentDialog();
-                final OptionsToShow temptarget = CareportalFragment.temptarget;
+                final OptionsToShow temptarget = CareportalFragment.TEMPTARGET;
                 temptarget.executeTempTarget = true;
                 newTTDialog.setOptions(temptarget, R.string.careportal_temporarytarget);
                 newTTDialog.show(getFragmentManager(), "NewNSTreatmentDialog");

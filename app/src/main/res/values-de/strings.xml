@@ -288,7 +288,6 @@
     <string name="lowbattery">Niedrige Batterie</string>
     <string name="pumpbusy">Pumpe ist beschäftigt</string>
     <string name="pumperror">Pumpenfehler</string>
-    <string name="send_to_pump">an Pumpe senden</string>
     <string name="target_range">Zielbereich:</string>
     <string name="units">Einheiten:</string>
     <string name="wrongpumpdriverselected">Falscher Pumpentreiber ausgewählt</string>

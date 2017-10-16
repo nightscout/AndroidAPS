@@ -409,6 +409,107 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/careportal_newnstreatment_reuse_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:width="120dp"
+                    android:padding="10dp"
+                    android:text=""
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/careportal_newnstreatment_reusebutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reuse"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:minWidth="45dp"
+                    android:paddingLeft="5dp"
+                    android:text=" "
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/careportal_newnstreatment_percentage_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:width="120dp"
+                    android:padding="10dp"
+                    android:text="@string/careportal_newnstreatment_percentage_label"
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textStyle="bold" />
+
+                <info.nightscout.utils.NumberPicker
+                    android:id="@+id/careportal_newnstreatment_percentage"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:minWidth="45dp"
+                    android:paddingLeft="5dp"
+                    android:text="%"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+           <LinearLayout
+                android:id="@+id/careportal_newnstreatment_timeshift_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:width="120dp"
+                    android:padding="10dp"
+                    android:text="@string/careportal_newnstreatment_timeshift_label"
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textStyle="bold" />
+
+                <info.nightscout.utils.NumberPicker
+                    android:id="@+id/careportal_newnstreatment_timeshift"
+                    android:layout_width="130dp"
+                    android:layout_height="40dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="left"
+                    android:minWidth="45dp"
+                    android:paddingLeft="5dp"
+                    android:text="h"
+                    android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            </LinearLayout>
+
+           <LinearLayout
                 android:id="@+id/careportal_newnstreatment_notes_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

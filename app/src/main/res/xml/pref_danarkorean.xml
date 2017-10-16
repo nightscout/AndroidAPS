@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="danar"
+        android:title="@string/danar_pump_settings">
+
+        <info.nightscout.androidaps.plugins.PumpDanaR.BluetoothDevicePreference
+            android:dialogTitle="@string/danar_bt_name_title"
+            android:key="@string/key_danar_bt_name"
+            android:title="@string/danar_bt_name_title" />
+        <EditTextPreference
+            android:title="@string/danar_password_title"
+            android:key="@string/key_danar_password"
+            android:inputType="numberPassword">
+        </EditTextPreference>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_danar_useextended"
+            android:title="@string/danar_useextended_title" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:dependency="@string/key_danar_useextended"
+            android:key="@string/key_danar_visualizeextendedaspercentage"
+            android:title="@string/danar_visualizeextendedaspercentage_title" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

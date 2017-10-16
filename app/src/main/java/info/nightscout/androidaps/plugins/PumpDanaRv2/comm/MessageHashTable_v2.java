@@ -22,6 +22,7 @@ public class MessageHashTable_v2 {
             messages = new HashMap<Integer, MessageBase>();
             put(new MsgBolusStop());                 // 0x0101 CMD_MEALINS_STOP
             put(new MsgBolusStart());                // 0x0102 CMD_MEALINS_START_DATA
+            put(new MsgBolusStartWithSpeed());       // 0x0104 CMD_MEALINS_START_DATA_SPEED
             put(new MsgBolusProgress());             // 0x0202 CMD_PUMP_THIS_REMAINDER_MEAL_INS
             put(new MsgStatusProfile());             // 0x0204 CMD_PUMP_CALCULATION_SETTING
 

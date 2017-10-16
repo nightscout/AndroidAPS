@@ -58,8 +58,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     static final int CASE_STORAGE = 0x1;
     static final int CASE_SMS = 0x2;
+    static final int CASE_LOCATION = 0x3;
 
     private boolean askForSMS = false;
+    private boolean askForLocation = true;
 
     ImageButton menuButton;
 
@@ -202,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         askForSMSPermissions();
+        askForLocationPermissions();
     }
 
     @Override
@@ -256,6 +259,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private synchronized void askForLocationPermissions() {
+        if (askForLocation) { //only when settings were changed an MainActivity resumes.
+            askForLocation = false;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                askForPermission(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION}, CASE_LOCATION);
+            }
+        }
+    }
+
     private void askForPermission(String[] permission, Integer requestCode) {
         boolean test = false;
         for (int i = 0; i < permission.length; i++) {
@@ -279,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         alert.setPositiveButton(R.string.ok, null);
                         alert.show();
                         break;
+                    case CASE_LOCATION:
                     case CASE_SMS:
                         break;
                 }

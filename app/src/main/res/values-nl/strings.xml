@@ -185,7 +185,6 @@
     <string name="safety">Veiligheid</string>
     <string name="send">VERZEND</string>
     <string name="send_calibration" formatted="false">Verzend calibratie %.1f naar xDrip?</string>
-    <string name="send_to_pump">VERZEND NAAR POMP</string>
     <string name="sensitivity_warning">Vergeet niet alle gegeten koolhydraten in te geven bij het activeren van de Autosens functie. Anders zullen BG wijzigingen door maaltijden foutief geïnterpreteerd worden!!</string>
     <string name="sensitivityaaps">Gevoeligheid AAPS</string>
     <string name="sensitivityoref0">Gevoeligheid Oref0</string>
