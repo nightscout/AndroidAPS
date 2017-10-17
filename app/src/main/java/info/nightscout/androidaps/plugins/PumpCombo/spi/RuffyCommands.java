@@ -2,9 +2,6 @@ package info.nightscout.androidaps.plugins.PumpCombo.spi;
 
 import java.util.Date;
 
-/**
- * Main entry point for clients, implemented by RuffyScripter.
- */
 public interface RuffyCommands {
     CommandResult deliverBolus(double amount, BolusProgressReporter bolusProgressReporter);
 

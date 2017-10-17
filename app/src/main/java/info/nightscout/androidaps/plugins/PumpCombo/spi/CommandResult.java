@@ -10,7 +10,7 @@ public class CommandResult {
     public Exception exception;
     public String message;
     public PumpState state;
-    public History history;
+    public PumpHistory history;
     public String duration;
 
     public CommandResult() {
@@ -56,7 +56,7 @@ public class CommandResult {
         return this;
     }
 
-    public CommandResult history(History history) {
+    public CommandResult history(PumpHistory history) {
         this.history = history;
         return this;
     }
