@@ -55,7 +55,7 @@ public class OpenAPSAMAPlugin implements PluginBase, APSInterface {
     AutosensResult lastAutosensResult = null;
 
     private boolean fragmentEnabled = false;
-    private boolean fragmentVisible = true;
+    private boolean fragmentVisible = false;
 
     @Override
     public String getName() {
