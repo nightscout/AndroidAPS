@@ -1,5 +1,10 @@
 package info.nightscout.androidaps.plugins.PumpCombo.scripter;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -18,19 +23,20 @@ import org.slf4j.LoggerFactory;
 import java.util.Date;
 import java.util.List;
 
+import info.nightscout.androidaps.MainApp;
+import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.BolusCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.CancelTbrCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.Command;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.CommandException;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.BasalProfile;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
-import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.BolusCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.GetPumpStateCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadBasalProfileCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadHistoryCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.ReadReserverLevelCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.SetBasalProfileCommand;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.internal.commands.SetTbrCommand;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.BasalProfile;
 import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpHistory;
 import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.spi.RuffyCommands;
@@ -61,29 +67,47 @@ public class RuffyScripter implements RuffyCommands {
 
     private final Object screenlock = new Object();
 
-    public void start(IRuffyService newService) {
+    private ServiceConnection mRuffyServiceConnection;
+
+    public RuffyScripter() {
+        Context context = MainApp.instance().getApplicationContext();
+        boolean boundSucceeded = false;
+
         try {
-/*
-            if (ruffyService != null) {
-                try {
-                    ruffyService.removeHandler(mHandler);
-                } catch (Exception e) {
-                    // ignore
+            Intent intent = new Intent()
+                    .setComponent(new ComponentName(
+                            // this must be the base package of the app (check package attribute in
+                            // manifest element in the manifest file of the providing app)
+                            "org.monkey.d.ruffy.ruffy",
+                            // full path to the driver;
+                            // in the logs this service is mentioned as (note the slash)
+                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy";
+                            // org.monkey.d.ruffy.ruffy is the base package identifier
+                            // and /.driver.Ruffy the service within the package
+                            "org.monkey.d.ruffy.ruffy.driver.Ruffy"
+                    ));
+            context.startService(intent);
+
+            mRuffyServiceConnection = new ServiceConnection() {
+
+                @Override
+                public void onServiceConnected(ComponentName name, IBinder service) {
+                    ruffyService = IRuffyService.Stub.asInterface(service);
+                    log.debug("ruffy serivce connected");
                 }
-            }
-*/
-            if (newService != null) {
-                this.ruffyService = newService;
-                // TODO this'll be done better in v2 via ConnectionManager
-                if (idleDisconnectMonitorThread.getState() == Thread.State.NEW) {
-                    idleDisconnectMonitorThread.start();
+
+                @Override
+                public void onServiceDisconnected(ComponentName name) {
+                    log.debug("ruffy service disconnected");
                 }
-                started = true;
-                newService.setHandler(mHandler);
-            }
+            };
+            boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
         } catch (Exception e) {
-            log.error("Unhandled exception starting RuffyScripter", e);
-            throw new RuntimeException(e);
+            log.error("Binding to ruffy service failed", e);
+        }
+
+        if (!boundSucceeded) {
+            log.error("No connection to ruffy. Pump control unavailable.");
         }
     }
 

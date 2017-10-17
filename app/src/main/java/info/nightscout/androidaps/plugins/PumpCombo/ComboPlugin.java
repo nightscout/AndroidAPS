@@ -1,22 +1,15 @@
 package info.nightscout.androidaps.plugins.PumpCombo;
 
 import android.app.NotificationManager;
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 
-import com.squareup.otto.Subscribe;
-
 import org.json.JSONObject;
-import org.monkey.d.ruffy.ruffy.driver.IRuffyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,17 +23,16 @@ import info.nightscout.androidaps.data.Profile;
 import info.nightscout.androidaps.data.PumpEnactResult;
 import info.nightscout.androidaps.db.Source;
 import info.nightscout.androidaps.db.TemporaryBasal;
-import info.nightscout.androidaps.events.EventAppExit;
 import info.nightscout.androidaps.interfaces.PluginBase;
 import info.nightscout.androidaps.interfaces.PumpDescription;
 import info.nightscout.androidaps.interfaces.PumpInterface;
 import info.nightscout.androidaps.plugins.ConfigBuilder.ConfigBuilderPlugin;
 import info.nightscout.androidaps.plugins.Overview.events.EventOverviewBolusProgress;
 import info.nightscout.androidaps.plugins.PumpCombo.events.EventComboPumpUpdateGUI;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.scripter.RuffyScripter;
-import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
 import info.nightscout.androidaps.plugins.PumpCombo.spi.BolusProgressReporter;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.CommandResult;
+import info.nightscout.androidaps.plugins.PumpCombo.spi.PumpState;
 import info.nightscout.androidaps.plugins.PumpCombo.spi.RuffyCommands;
 import info.nightscout.utils.DateUtil;
 import info.nightscout.utils.SP;
@@ -57,7 +49,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private PumpDescription pumpDescription = new PumpDescription();
 
     private RuffyCommands ruffyScripter;
-    private ServiceConnection mRuffyServiceConnection;
 
     // TODO access to pump (and its members) is chaotic and needs an update
     private ComboPump pump = new ComboPump();
@@ -81,7 +72,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     private ComboPlugin() {
         definePumpCapabilities();
         MainApp.bus().register(this);
-        bindRuffyService();
         startAlerter();
         ruffyScripter = new RuffyScripter();
     }
@@ -170,69 +160,6 @@ public class ComboPlugin implements PluginBase, PumpInterface {
                 }
             }
         }, "combo-alerter").start();
-    }
-
-    private boolean bindRuffyService() {
-
-        Context context = MainApp.instance().getApplicationContext();
-        boolean boundSucceeded = false;
-
-        try {
-            Intent intent = new Intent()
-                    .setComponent(new ComponentName(
-                            // this must be the base package of the app (check package attribute in
-                            // manifest element in the manifest file of the providing app)
-                            "org.monkey.d.ruffy.ruffy",
-                            // full path to the driver;
-                            // in the logs this service is mentioned as (note the slash)
-                            // "org.monkey.d.ruffy.ruffy/.driver.Ruffy";
-                            // org.monkey.d.ruffy.ruffy is the base package identifier
-                            // and /.driver.Ruffy the service within the package
-                            "org.monkey.d.ruffy.ruffy.driver.Ruffy"
-                    ));
-            context.startService(intent);
-
-            mRuffyServiceConnection = new ServiceConnection() {
-
-                @Override
-                public void onServiceConnected(ComponentName name, IBinder service) {
-                    keepUnbound = false;
-                    // TODO fine until we know whether the impl will be an Android service or not
-                    // and binds things and what not.
-                    ((RuffyScripter) ruffyScripter).start(IRuffyService.Stub.asInterface(service));
-                    log.debug("ruffy serivce connected");
-                }
-
-                @Override
-                public void onServiceDisconnected(ComponentName name) {
-                    // TODO stop?
-                    log.debug("ruffy service disconnected");
-                    // try to reconnect ruffy service unless unbind was explicitly requested
-                    // via unbindRuffyService
-                    if (!keepUnbound) {
-                        SystemClock.sleep(250);
-                        bindRuffyService();
-                    }
-                }
-            };
-            boundSucceeded = context.bindService(intent, mRuffyServiceConnection, Context.BIND_AUTO_CREATE);
-        } catch (Exception e) {
-            log.error("Binding to ruffy service failed", e);
-        }
-
-        if (!boundSucceeded) {
-            pump.state.errorMsg = "No connection to ruffy. Pump control unavailable.";
-        }
-        return true;
-    }
-
-    private boolean keepUnbound = false;
-
-    private void unbindRuffyService() {
-        keepUnbound = true;
-        // TODO fine until we know whether the impl will be an Android service or not
-        ((RuffyScripter) ruffyScripter).unbind();
-        MainApp.instance().getApplicationContext().unbindService(mRuffyServiceConnection);
     }
 
     @Override
@@ -711,11 +638,5 @@ public class ComboPlugin implements PluginBase, PumpInterface {
     @Override
     public boolean isFakingTempsByExtendedBoluses() {
         return false;
-    }
-
-    @SuppressWarnings("UnusedParameters")
-    @Subscribe
-    public void onStatusEvent(final EventAppExit ignored) {
-        unbindRuffyService();
     }
 }
