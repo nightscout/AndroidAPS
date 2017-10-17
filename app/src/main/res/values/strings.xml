@@ -705,11 +705,6 @@
     <string name="activate_profile">ACTIVATE PROFILE</string>
     <string name="date">Date</string>
     <string name="invalid">INVALID</string>
-    <string name="key_wizard_include_bg">wizard_include_bg</string>
-    <string name="key_wizard_include_cob">wizard_include_cob</string>
-    <string name="key_wizard_include_trend_bg">wizard_include_trend_bg</string>
-    <string name="key_wizard_include_bolus_iob">wizard_include_bolus_iob</string>
-    <string name="key_wizard_include_basal_iob">wizard_include_basal_iob</string>
     <string name="bolusstopping">Stopping bolus delivery</string>
     <string name="bolusstopped">Bolus delivery stopped</string>
     <string name="key_combo_enable_experimental_features">combo_enable_experimental_features</string>
